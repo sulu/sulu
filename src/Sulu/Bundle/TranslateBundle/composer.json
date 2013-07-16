@@ -2,7 +2,7 @@
     "name": "sulu/translate-bundle",
     "type": "library",
     "description": "Symfony bundle that provides translate functionality",
-    "licence": "MIT",
+    "license": "MIT",
     "keywords": ["translate", "symfony"],
     "authors": [
         {
