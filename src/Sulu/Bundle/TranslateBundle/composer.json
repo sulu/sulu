@@ -1,5 +1,5 @@
 {
-    "name": "massiveart/SuluTranslateBundle",
+    "name": "massiveart/sulu-translate-bundle",
     "type": "library",
     "description": "Symfony bundle that provides translate functionality",
     "keywords": ["translate", "symfony"],
