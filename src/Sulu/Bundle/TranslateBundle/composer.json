@@ -1,7 +1,8 @@
 {
-    "name": "massiveart/sulu-translate-bundle",
+    "name": "sulu/translate-bundle",
     "type": "library",
     "description": "Symfony bundle that provides translate functionality",
+    "licence": "MIT",
     "keywords": ["translate", "symfony"],
     "authors": [
         {
