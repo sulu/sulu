@@ -1,0 +1,7 @@
+parameters:
+#    sulu_translate.example.class: Sulu\TranslateBundle\Example
+
+services:
+#    sulu_translate.example:
+#        class: %sulu_translate.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
