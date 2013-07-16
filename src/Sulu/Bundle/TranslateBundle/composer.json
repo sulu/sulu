@@ -10,5 +10,8 @@
             "email": "daniel.rotter@massiveart.com",
             "role": "developer"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {"Sulu\\TranslateBundle": ""}
+    }
 }
