@@ -1,0 +1,13 @@
+{
+    "name": "massiveart/SuluTranslateBundle",
+    "type": "library",
+    "description": "Symfony bundle that provides translate functionality",
+    "keywords": ["translate", "symfony"],
+    "authors": [
+        {
+            "name": "Daniel Rotter",
+            "email": "daniel.rotter@massiveart.com",
+            "role": "developer"
+        }
+    ]
+}
