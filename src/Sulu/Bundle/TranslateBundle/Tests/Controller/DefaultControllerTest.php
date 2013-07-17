@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\TranslateBundle\Tests\Controller;
+namespace Sulu\Bundle\TranslateBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

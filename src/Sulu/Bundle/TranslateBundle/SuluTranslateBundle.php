@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\TranslateBundle;
+namespace Sulu\Bundle\TranslateBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

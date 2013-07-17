@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\TranslateBundle\DependencyInjection;
+namespace Sulu\Bundle\TranslateBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

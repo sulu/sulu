@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\TranslateBundle\Controller;
+namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
