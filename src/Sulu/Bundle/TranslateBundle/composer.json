@@ -13,5 +13,6 @@
     ],
     "autoload": {
         "psr-0": {"Sulu\\TranslateBundle": ""}
-    }
+    },
+    "target-dir": "Sulu/TranslateBundle"
 }
