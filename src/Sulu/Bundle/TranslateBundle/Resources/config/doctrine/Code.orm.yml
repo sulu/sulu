@@ -31,4 +31,8 @@ Sulu\Bundle\TranslateBundle\Entity\Code:
             joinColumn:
                 name: idLocations
                 referencedColumnName: id
+    oneToMany:
+        translations:
+            targetEntity: Translation
+            mappedBy: tr_codes
     lifecycleCallbacks: {  }

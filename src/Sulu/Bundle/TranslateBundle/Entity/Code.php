@@ -43,6 +43,19 @@ class Code
      */
     private $location;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $translations;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 
     /**
      * Get id
@@ -190,5 +203,38 @@ class Code
     public function getLocation()
     {
         return $this->location;
+    }
+
+    /**
+     * Add translations
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     * @return Code
+     */
+    public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translations)
+    {
+        $this->translations[] = $translations;
+    
+        return $this;
+    }
+
+    /**
+     * Remove translations
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     */
+    public function removeTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translations)
+    {
+        $this->translations->removeElement($translations);
+    }
+
+    /**
+     * Get translations
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
     }
 }

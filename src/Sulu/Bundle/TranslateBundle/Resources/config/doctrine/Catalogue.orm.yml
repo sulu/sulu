@@ -13,4 +13,8 @@ Sulu\Bundle\TranslateBundle\Entity\Catalogue:
         code:
             type: string
             length: '60'
+    oneToMany:
+        translations:
+            targetEntity: Translation
+            mappedBy: tr_catalogues
     lifecycleCallbacks: {  }

@@ -23,6 +23,18 @@ class Catalogue
      */
     private $code;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $translations;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -78,5 +90,38 @@ class Catalogue
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Add translations
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     * @return Catalogue
+     */
+    public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
+    {
+        $this->translations[] = $translation;
+    
+        return $this;
+    }
+
+    /**
+     * Remove translations
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     */
+    public function removeTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
+    {
+        $this->translations->removeElement($translation);
+    }
+
+    /**
+     * Get translations
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
     }
 }
