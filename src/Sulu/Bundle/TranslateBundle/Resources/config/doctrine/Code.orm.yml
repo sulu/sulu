@@ -1,0 +1,34 @@
+Sulu\Bundle\TranslateBundle\Entity\Code:
+    type: entity
+    table: tr_codes
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        code:
+            type: string
+            length: '60'
+        backend:
+            type: boolean
+        frontend:
+            type: boolean
+        length:
+            type: integer
+            nullable: true
+    manyToOne:
+        package:
+            targetEntity: Package
+            inversedBy: tr_packages
+            joinColumn:
+                name: idPackages
+                referencedColumnName: id
+                nullable: false
+        location:
+            targetEntity: Location
+            inversedBy: tr_locations
+            joinColumn:
+                name: idLocations
+                referencedColumnName: id
+    lifecycleCallbacks: {  }

@@ -1,0 +1,16 @@
+Sulu\Bundle\TranslateBundle\Entity\Catalogue:
+    type: entity
+    table: tr_catalogues
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: '60'
+        code:
+            type: string
+            length: '60'
+    lifecycleCallbacks: {  }

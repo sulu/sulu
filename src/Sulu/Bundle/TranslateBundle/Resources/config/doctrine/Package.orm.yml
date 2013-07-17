@@ -1,0 +1,17 @@
+Sulu\Bundle\TranslateBundle\Entity\Package:
+    type: entity
+    table: tr_packages
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: '60'
+    oneToMany:
+        codes:
+            targetEntity: Code
+            mappedBy: tr_packages
+    lifecycleCallbacks: {  }

@@ -1,0 +1,96 @@
+<?php
+
+namespace Sulu\Bundle\TranslateBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Translation
+ */
+class Translation
+{
+    /**
+     * @var string
+     */
+    private $value;
+
+    /**
+     * @var \Sulu\Bundle\TranslateBundle\Entity\Code
+     */
+    private $code;
+
+    /**
+     * @var \Sulu\Bundle\TranslateBundle\Entity\Catalogue
+     */
+    private $catalogue;
+
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return Translation
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set code
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Code $code
+     * @return Translation
+     */
+    public function setCode(\Sulu\Bundle\TranslateBundle\Entity\Code $code = null)
+    {
+        $this->code = $code;
+    
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Code 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set catalogue
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogue
+     * @return Translation
+     */
+    public function setCatalogue(\Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogue = null)
+    {
+        $this->catalogue = $catalogue;
+    
+        return $this;
+    }
+
+    /**
+     * Get catalogue
+     *
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Catalogue 
+     */
+    public function getCatalogue()
+    {
+        return $this->catalogue;
+    }
+}

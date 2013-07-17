@@ -1,0 +1,28 @@
+Sulu\Bundle\TranslateBundle\Entity\Translation:
+    type: entity
+    table: tr_translations
+    id:
+        code:
+            type: string
+            column: idCodes
+            associationKey: id
+        catalogue:
+            type: string
+            column: idCatalogues
+            associationKey: id
+    fields:
+        value:
+            type: text
+    manyToOne:
+        code:
+            targetEntity: Code
+            inversedBy: tr_codes
+            joinColumn:
+                name: idCodes
+                referencedColumnName: id
+        catalogue:
+            targetEntity: Catalogue
+            inversedBy: tr_catalogues
+            joinColumn:
+                name: idCatalogues
+                referencedColumnName: id
