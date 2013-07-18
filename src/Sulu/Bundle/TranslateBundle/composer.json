@@ -15,7 +15,8 @@
         "psr-0": {"Sulu\\Bundle\\TranslateBundle": ""}
     },
     "require": {
-        "friendsofsymfony/rest-bundle": "0.12.*"
+        "friendsofsymfony/rest-bundle": "0.12.*",
+        "jms/serializer-bundle": "0.11.*"
     },
     "target-dir": "Sulu/Bundle/TranslateBundle"
 }
