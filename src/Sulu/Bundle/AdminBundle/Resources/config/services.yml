@@ -1,0 +1,7 @@
+parameters:
+#    sulu_admin.example.class: Sulu\Bundle\AdminBundle\Example
+
+services:
+#    sulu_admin.example:
+#        class: %sulu_admin.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
