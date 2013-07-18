@@ -15,7 +15,7 @@
         "psr-0": {"Sulu\\Bundle\\TranslateBundle": ""}
     },
     "require": {
-        "friendsofsymfony/rest-bundle": "0.8.*"
+        "friendsofsymfony/rest-bundle": "dev-remove_conflict"
     },
     "target-dir": "Sulu/Bundle/TranslateBundle"
 }
