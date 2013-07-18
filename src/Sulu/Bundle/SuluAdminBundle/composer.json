@@ -1,0 +1,18 @@
+{
+    "name": "sulu/admin-bundle",
+    "type": "library",
+    "description": "Symfony bundle that provides administration functionality",
+    "license": "MIT",
+    "keywords": ["admin", "cms", "symfony"],
+    "authors": [
+        {
+            "name": "Daniel Rotter",
+            "email": "daniel.rotter@massiveart.com",
+            "role": "developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {"Sulu\\Bundle\\AdminBundle": ""}
+    },
+    "target-dir": "Sulu/Bundle/AdminBundle"
+}
