@@ -24,6 +24,7 @@ class AddAdminPass implements CompilerPassInterface {
      */
     public function process(ContainerBuilder $container)
     {
-
+        $pool = $container->getDefinition('sulu_admin.admin_pool');
+        $pool->addMethodCall('addAdmin', array(1));
     }
 }

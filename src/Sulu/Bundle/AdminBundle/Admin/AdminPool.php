@@ -20,5 +20,9 @@ class AdminPool {
      * The array for all the admin-objects
      * @var array
      */
-    private $pool;
+    private $pool = array();
+
+    public function addAdmin($admin) { //TODO: force admin
+        $this->pool[] = $admin;
+    }
 }
