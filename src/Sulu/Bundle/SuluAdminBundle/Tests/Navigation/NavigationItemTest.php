@@ -69,4 +69,15 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('Settings', $mergedChildren[1]->getName());
         $this->assertEquals('Globals', $mergedChildren[2]->getName());
     }
+
+    public function testIterator() {
+        $array = array();
+        foreach ($this->item2 as $key => $value) {
+            $array[$key] = $value;
+        }
+
+        $this->assertEquals('Portals', $array[0]);
+        $this->assertEquals('Settings', $array[1]);
+        $this->assertEquals('Globals', $array[2]);
+    }
 }
