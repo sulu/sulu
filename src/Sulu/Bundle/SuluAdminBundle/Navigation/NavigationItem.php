@@ -23,9 +23,17 @@ class NavigationItem {
 
     protected $children = array();
 
-    function __construct($name)
+    /**
+     * @param $name The name of the item
+     * @param NavigationItem $parent The parent of the item
+     */
+    function __construct($name, $parent = null)
     {
         $this->name = $name;
+
+        if ($parent != null) {
+            $parent->addChild($this);
+        }
     }
 
     /**
