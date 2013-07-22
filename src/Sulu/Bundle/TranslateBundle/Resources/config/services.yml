@@ -1,7 +1,8 @@
 parameters:
-#    sulu_translate.example.class: Sulu\TranslateBundle\Example
+    sulu_translate.admin.class: Sulu\Bundle\TranslateBundle\Admin\TranslateAdmin
 
 services:
-#    sulu_translate.example:
-#        class: %sulu_translate.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    sulu_translate.admin:
+        class: %sulu_translate.admin.class%
+        tags:
+            - { name: sulu.admin }
