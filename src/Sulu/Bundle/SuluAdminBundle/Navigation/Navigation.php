@@ -10,7 +10,8 @@
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
 
-class Navigation {
+class Navigation
+{
     /**
      * @var NavigationItem
      */
