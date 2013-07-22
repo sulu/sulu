@@ -16,9 +16,25 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
      * @var NavigationItem
      */
     protected $navigationItem;
+    /**
+     * @var NavigationItem
+     */
+    protected $item1;
+    /**
+     * @var NavigationItem
+     */
+    protected $item2;
 
     public function setUp() {
         $this->navigationItem = new NavigationItem("NavigationItem");
+
+        $this->item1 = new NavigationItem('Root');
+        new NavigationItem('Portals', $this->item1);
+        new NavigationItem('Settings', $this->item1);
+        $this->item2 = new NavigationItem('Root');
+        new NavigationItem('Portals', $this->item2);
+        new NavigationItem('Settings', $this->item2);
+        new NavigationItem('Globals', $this->item2);
     }
 
     public function testConstructor() {
@@ -37,5 +53,20 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
         $child = new NavigationItem("Child");
         $this->navigationItem->addChild($child);
         $this->assertEquals($child, $this->navigationItem->getChildren()[0]);
+    }
+
+    public function testSearch() {
+        $this->assertEquals('Globals', $this->item2->find(new NavigationItem('Globals'))->getName());
+        $this->assertNull($this->item1->find(new NavigationItem('Nothing')));
+    }
+
+    public function testMerge() {
+        $merged = $this->item1->merge($this->item2);
+
+        $this->assertEquals('Root', $merged->getName());
+        $mergedChildren = $merged->getChildren();
+        $this->assertEquals('Portals', $mergedChildren[0]->getName());
+        $this->assertEquals('Settings', $mergedChildren[1]->getName());
+        $this->assertEquals('Globals', $mergedChildren[2]->getName());
     }
 }
