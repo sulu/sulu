@@ -33,10 +33,13 @@ class Navigation {
     }
 
     /**
-     * Merges the given navigation into this one
+     * Merges the given navigation with this one and returns the result.
+     * Works only if there are no duplicate of items in the same level.
      * @param Navigation $navigation
+     * @return Navigation
      */
     public function merge(Navigation $navigation)
     {
+        return new Navigation($this->getRoot()->merge($navigation->getRoot()));
     }
 }

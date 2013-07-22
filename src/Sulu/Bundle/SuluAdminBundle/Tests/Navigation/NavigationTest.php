@@ -62,9 +62,9 @@ class NavigationTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testMerge() {
-        $this->navigation1->merge($this->navigation2);
+        $merged = $this->navigation1->merge($this->navigation2);
 
-        $children1 = $this->navigation1->getRoot()->getChildren();
+        $children1 = $merged->getRoot()->getChildren();
         $this->assertEquals('Portals', $children1[0]->getName());
         $this->assertEquals('Settings', $children1[1]->getName());
         $this->assertEquals('Globals', $children1[2]->getName());
