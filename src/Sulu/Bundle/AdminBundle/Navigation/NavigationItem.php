@@ -14,14 +14,24 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
  * Contains the name and the coupled action for this specific NavigationItem.
  * @package Sulu\Bundle\AdminBundle\Navigation
  */
-class NavigationItem {
+class NavigationItem implements \Iterator {
     /**
      * The name being displayed in the navigation
      * @var string
      */
     protected $name;
 
+    /**
+     * Contains the children of this item, which are other NavigationItems.
+     * @var array
+     */
     protected $children = array();
+
+    /**
+     * The current position of the iterator
+     * @var integer
+     */
+    protected $position;
 
     /**
      * @param $name The name of the item
@@ -145,5 +155,56 @@ class NavigationItem {
         }
 
         return $new;
+    }
+
+    /**
+     * Return the current element
+     * @link http://php.net/manual/en/iterator.current.php
+     * @return mixed Can return any type.
+     */
+    public function current()
+    {
+        return $this->children[$this->position];
+    }
+
+    /**
+     * Move forward to next element
+     * @link http://php.net/manual/en/iterator.next.php
+     * @return void Any returned value is ignored.
+     */
+    public function next()
+    {
+        $this->position++;
+    }
+
+    /**
+     * Return the key of the current element
+     * @link http://php.net/manual/en/iterator.key.php
+     * @return mixed scalar on success, or null on failure.
+     */
+    public function key()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Checks if current position is valid
+     * @link http://php.net/manual/en/iterator.valid.php
+     * @return boolean The return value will be casted to boolean and then evaluated.
+     * Returns true on success or false on failure.
+     */
+    public function valid()
+    {
+        return $this->position < sizeof($this->children);
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     * @link http://php.net/manual/en/iterator.rewind.php
+     * @return void Any returned value is ignored.
+     */
+    public function rewind()
+    {
+        $this->position = 0;
     }
 }
