@@ -16,7 +16,7 @@ class Navigation {
      */
     protected $root;
 
-    function __construct($root = null)
+    function __construct(NavigationItem $root = null)
     {
         if ($root == null) {
             $root = new NavigationItem('');
@@ -38,6 +38,5 @@ class Navigation {
      */
     public function merge(Navigation $navigation)
     {
-        $this->root->addChild($navigation->getRoot());
     }
 }

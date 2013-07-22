@@ -23,6 +23,9 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
 
     public function testConstructor() {
         $this->assertEquals("NavigationItem", $this->navigationItem->getName());
+
+        $item = new NavigationItem('ChildItem', $this->navigationItem);
+        $this->assertEquals($item, $this->navigationItem->getChildren()[0]);
     }
 
     public function testName() {
