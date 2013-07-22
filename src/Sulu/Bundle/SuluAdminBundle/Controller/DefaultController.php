@@ -9,9 +9,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
         $pool = $this->get('sulu_admin.admin_pool');
-        foreach ($pool->getAdmins() as $admin) {
-            echo var_dump($this->get($admin));
-        }
+        echo var_dump($pool->getNavigation());
         return $this->render('SuluAdminBundle:Default:index.html.twig', array('name' => 'SULU'));
     }
 }

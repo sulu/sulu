@@ -31,7 +31,8 @@ class AddAdminPass implements CompilerPassInterface {
         $taggedServices = $container->findTaggedServiceIds(self::ADMIN_TAG);
 
         foreach ($taggedServices as $id => $attributes) {
-            $pool->addMethodCall('addAdmin', array($id));
+            $admin = $container->getDefinition($id);
+            $pool->addMethodCall('addAdmin', array($admin));
         }
     }
 }

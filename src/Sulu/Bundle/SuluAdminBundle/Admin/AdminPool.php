@@ -9,6 +9,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
+use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
 /**
  * The AdminPool is a container for all the registrated Admin-objects.
@@ -36,5 +37,13 @@ class AdminPool {
      */
     public function addAdmin($admin) {
         $this->pool[] = $admin;
+    }
+
+    public function getNavigation() {
+        $navigation = new Navigation();
+        foreach ($this->pool as $admin) {
+            $navigation->merge($admin->getNavigation());
+        }
+        return $navigation;
     }
 }
