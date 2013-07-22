@@ -12,7 +12,9 @@
         }
     ],
     "autoload": {
-        "psr-0": {"Sulu\\Bundle\\AdminBundle": ""}
+        "psr-0": {
+            "Sulu\\Bundle\\AdminBundle": ""
+        }
     },
     "target-dir": "Sulu/Bundle/AdminBundle"
 }

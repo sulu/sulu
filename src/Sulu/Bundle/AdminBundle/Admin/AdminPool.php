@@ -16,7 +16,8 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
  *
  * @package Sulu\Bundle\AdminBundle\Admin
  */
-class AdminPool {
+class AdminPool
+{
     /**
      * The array for all the admin-objects
      * @var array
@@ -27,7 +28,8 @@ class AdminPool {
      * Returns all the registered admins
      * @return array
      */
-    public function getAdmins() {
+    public function getAdmins()
+    {
         return $this->pool;
     }
 
@@ -35,15 +37,18 @@ class AdminPool {
      * Adds a new admin
      * @param $admin
      */
-    public function addAdmin($admin) {
+    public function addAdmin($admin)
+    {
         $this->pool[] = $admin;
     }
 
-    public function getNavigation() {
+    public function getNavigation()
+    {
         $navigation = new Navigation();
         foreach ($this->pool as $admin) {
             $navigation->merge($admin->getNavigation());
         }
+
         return $navigation;
     }
 }

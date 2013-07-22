@@ -17,7 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
  */
-class AddAdminPass implements CompilerPassInterface {
+class AddAdminPass implements CompilerPassInterface
+{
 
     const ADMIN_TAG = 'sulu.admin';
 

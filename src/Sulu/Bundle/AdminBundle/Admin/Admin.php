@@ -11,7 +11,8 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
-abstract class Admin {
+abstract class Admin
+{
     /**
      * @var Navigation
      */

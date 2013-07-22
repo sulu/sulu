@@ -14,7 +14,8 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
  * Contains the name and the coupled action for this specific NavigationItem.
  * @package Sulu\Bundle\AdminBundle\Navigation
  */
-class NavigationItem implements \Iterator {
+class NavigationItem implements \Iterator
+{
     /**
      * The name being displayed in the navigation
      * @var string
@@ -68,7 +69,8 @@ class NavigationItem implements \Iterator {
      * Adds a child to the navigation item
      * @param NavigationItem $child
      */
-    public function addChild(NavigationItem $child) {
+    public function addChild(NavigationItem $child)
+    {
         $this->children[] = $child;
     }
 
@@ -76,7 +78,8 @@ class NavigationItem implements \Iterator {
      * Returns all children from this navigation item
      * @return array
      */
-    public function getChildren() {
+    public function getChildren()
+    {
         return $this->children;
     }
 
@@ -84,8 +87,10 @@ class NavigationItem implements \Iterator {
      * Returns a copy of this navigation item without its children
      * @return NavigationItem
      */
-    public function copyChildless() {
+    public function copyChildless()
+    {
         $new = new NavigationItem($this->getName());
+
         return $new;
     }
 
@@ -94,7 +99,8 @@ class NavigationItem implements \Iterator {
      * @param NavigationItem $other The other NavigationItem of the comparison
      * @return bool True if the NavigationItems are equal, otherwise false
      */
-    public function equalsChildless(NavigationItem $other) {
+    public function equalsChildless(NavigationItem $other)
+    {
         return $this->getName() == $other->getName();
     }
 
@@ -103,9 +109,10 @@ class NavigationItem implements \Iterator {
      * @param $navigationItem The NavigationItem to look for
      * @return NavigationItem The item if it is found, otherwise false
      */
-    public function find($navigationItem) {
+    public function find($navigationItem)
+    {
         $stack = array($this);
-        while(!empty($stack)) {
+        while (!empty($stack)) {
             $item = array_pop($stack);
             if ($item->equalsChildless($navigationItem)) {
                 return $item;
@@ -114,6 +121,7 @@ class NavigationItem implements \Iterator {
                 $stack[] = $child;
             }
         }
+
         return null;
     }
 
@@ -122,12 +130,14 @@ class NavigationItem implements \Iterator {
      * @param $navigationItem The navigationItem we look for
      * @return Null if the NavigationItem is not found, otherwise the found NavigationItem.
      */
-    public function findChildren($navigationItem) {
+    public function findChildren($navigationItem)
+    {
         foreach ($this->getChildren() as $child) {
             if ($child->equalsChildless($navigationItem)) {
                 return $child;
             }
         }
+
         return null;
     }
 
@@ -136,7 +146,8 @@ class NavigationItem implements \Iterator {
      * Works only if there are no duplicate values on one level.
      * @param NavigationItem $other The navigation item this one should be merged with
      */
-    public function merge(NavigationItem $other = null) {
+    public function merge(NavigationItem $other = null)
+    {
         //Create new item
         $new = $this->copyChildless();
 

@@ -9,7 +9,8 @@ use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 
 class SuluAdminBundle extends Bundle
 {
-    public function build(ContainerBuilder $container) {
+    public function build(ContainerBuilder $container)
+    {
         parent::build($container);
 
         $container->addCompilerPass(new AddAdminPass);

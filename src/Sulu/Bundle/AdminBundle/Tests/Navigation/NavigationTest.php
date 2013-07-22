@@ -12,7 +12,8 @@ namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class NavigationTest extends \PHPUnit_Framework_TestCase {
+class NavigationTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @var Navigation
      */
@@ -30,7 +31,8 @@ class NavigationTest extends \PHPUnit_Framework_TestCase {
      */
     protected $root2;
 
-    public function setUp() {
+    public function setUp()
+    {
         //Setup first navigation
         $this->root1 = new NavigationItem('Root');
         $item1_1 = new NavigationItem('Portals', $this->root1);
@@ -57,11 +59,13 @@ class NavigationTest extends \PHPUnit_Framework_TestCase {
         $this->navigation2 = new Navigation($this->root2);
     }
 
-    public function testConstructor() {
+    public function testConstructor()
+    {
         $this->assertEquals($this->root1, $this->navigation1->getRoot());
     }
 
-    public function testMerge() {
+    public function testMerge()
+    {
         $merged = $this->navigation1->merge($this->navigation2);
 
         $children1 = $merged->getRoot()->getChildren();

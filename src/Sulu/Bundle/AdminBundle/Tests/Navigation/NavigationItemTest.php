@@ -11,7 +11,8 @@ namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class NavigationItemTest extends \PHPUnit_Framework_TestCase {
+class NavigationItemTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @var NavigationItem
      */
@@ -25,7 +26,8 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
      */
     protected $item2;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->navigationItem = new NavigationItem("NavigationItem");
 
         $this->item1 = new NavigationItem('Root');
@@ -37,30 +39,35 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
         new NavigationItem('Globals', $this->item2);
     }
 
-    public function testConstructor() {
+    public function testConstructor()
+    {
         $this->assertEquals("NavigationItem", $this->navigationItem->getName());
 
         $item = new NavigationItem('ChildItem', $this->navigationItem);
         $this->assertEquals($item, $this->navigationItem->getChildren()[0]);
     }
 
-    public function testName() {
+    public function testName()
+    {
         $this->navigationItem->setName("OtherNavigationItem");
         $this->assertEquals("OtherNavigationItem", $this->navigationItem->getName());
     }
 
-    public function testChildren() {
+    public function testChildren()
+    {
         $child = new NavigationItem("Child");
         $this->navigationItem->addChild($child);
         $this->assertEquals($child, $this->navigationItem->getChildren()[0]);
     }
 
-    public function testSearch() {
+    public function testSearch()
+    {
         $this->assertEquals('Globals', $this->item2->find(new NavigationItem('Globals'))->getName());
         $this->assertNull($this->item1->find(new NavigationItem('Nothing')));
     }
 
-    public function testMerge() {
+    public function testMerge()
+    {
         $merged = $this->item1->merge($this->item2);
 
         $this->assertEquals('Root', $merged->getName());
@@ -70,7 +77,8 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('Globals', $mergedChildren[2]->getName());
     }
 
-    public function testIterator() {
+    public function testIterator()
+    {
         $array = array();
         foreach ($this->item2 as $key => $value) {
             $array[$key] = $value;
