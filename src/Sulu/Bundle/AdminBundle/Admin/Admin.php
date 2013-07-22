@@ -1,12 +1,12 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: danielrotter
- * Date: 19.07.13
- * Time: 14:55
- * To change this template use File | Settings | File Templates.
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART Webservices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
-
 namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
