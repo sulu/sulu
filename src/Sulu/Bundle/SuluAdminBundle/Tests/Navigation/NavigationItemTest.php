@@ -76,8 +76,8 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase {
             $array[$key] = $value;
         }
 
-        $this->assertEquals('Portals', $array[0]);
-        $this->assertEquals('Settings', $array[1]);
-        $this->assertEquals('Globals', $array[2]);
+        $this->assertEquals('Portals', $array[0]->getName());
+        $this->assertEquals('Settings', $array[1]->getName());
+        $this->assertEquals('Globals', $array[2]->getName());
     }
 }
