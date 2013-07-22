@@ -53,4 +53,12 @@ class NavigationItem {
     public function addChild(NavigationItem $child) {
         $this->children[] = $child;
     }
+
+    /**
+     * Returns all children from this navigation item
+     * @return array
+     */
+    public function getChildren() {
+        return $this->children;
+    }
 }
