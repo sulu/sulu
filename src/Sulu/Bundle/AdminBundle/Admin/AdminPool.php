@@ -12,7 +12,7 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
 /**
- * The AdminPool is a container for all the registrated Admin-objects.
+ * The AdminPool is a container for all the registered admin-objects
  *
  * @package Sulu\Bundle\AdminBundle\Admin
  */
@@ -42,10 +42,15 @@ class AdminPool
         $this->pool[] = $admin;
     }
 
+    /**
+     * Returns the navigation combined from all admin-objects
+     * @return Navigation
+     */
     public function getNavigation()
     {
         $navigation = new Navigation();
         foreach ($this->pool as $admin) {
+            /** @var Admin $admin */
             $navigation->merge($admin->getNavigation());
         }
 

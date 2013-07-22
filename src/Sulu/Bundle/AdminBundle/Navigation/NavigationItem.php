@@ -35,7 +35,7 @@ class NavigationItem implements \Iterator
     protected $position;
 
     /**
-     * @param $name The name of the item
+     * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
      */
     function __construct($name, $parent = null)
@@ -113,11 +113,13 @@ class NavigationItem implements \Iterator
     {
         $stack = array($this);
         while (!empty($stack)) {
+            /** @var NavigationItem $item */
             $item = array_pop($stack);
             if ($item->equalsChildless($navigationItem)) {
                 return $item;
             }
             foreach ($item->getChildren() as $child) {
+                /** @var NavigationItem $child */
                 $stack[] = $child;
             }
         }
@@ -127,12 +129,13 @@ class NavigationItem implements \Iterator
 
     /**
      * Searches for a specific NavigationItem in the children of this NavigationItem.
-     * @param $navigationItem The navigationItem we look for
-     * @return Null if the NavigationItem is not found, otherwise the found NavigationItem.
+     * @param NavigationItem $navigationItem The navigationItem we look for
+     * @return NavigationItem|null Null if the NavigationItem is not found, otherwise the found NavigationItem.
      */
-    public function findChildren($navigationItem)
+    public function findChildren(NavigationItem $navigationItem)
     {
         foreach ($this->getChildren() as $child) {
+            /** @var NavigationItem $child */
             if ($child->equalsChildless($navigationItem)) {
                 return $child;
             }
@@ -145,20 +148,23 @@ class NavigationItem implements \Iterator
      * Merges this navigation item with the other parameter and returns a new NavigationItem.
      * Works only if there are no duplicate values on one level.
      * @param NavigationItem $other The navigation item this one should be merged with
+     * @return NavigationItem
      */
     public function merge(NavigationItem $other = null)
     {
-        //Create new item
+        // Create new item
         $new = $this->copyChildless();
 
-        //Add all childs from this item
+        // Add all children from this item
         foreach ($this->getChildren() as $child) {
+            /** @var NavigationItem $child */
             $new->addChild($child->merge(($other != null) ? $other->findChildren($child) : null));
         }
 
-        //Add all childs from the other item
+        // Add all children from the other item
         if ($other != null) {
             foreach ($other->getChildren() as $child) {
+                /** @var NavigationItem $child */
                 if (!$new->find($child)) {
                     $new->addChild($child->merge($this->copyChildless()));
                 }
