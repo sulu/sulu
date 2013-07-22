@@ -16,4 +16,12 @@ abstract class Admin {
      * @var Navigation
      */
     protected $navigation;
+
+    /**
+     * @return \Sulu\Bundle\AdminBundle\Navigation\Navigation
+     */
+    public function getNavigation()
+    {
+        return $this->navigation;
+    }
 }
