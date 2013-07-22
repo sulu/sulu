@@ -22,7 +22,19 @@ class AdminPool {
      */
     private $pool = array();
 
-    public function addAdmin($admin) { //TODO: force admin
+    /**
+     * Returns all the registered admins
+     * @return array
+     */
+    public function getAdmins() {
+        return $this->pool;
+    }
+
+    /**
+     * Adds a new admin
+     * @param $admin
+     */
+    public function addAdmin($admin) {
         $this->pool[] = $admin;
     }
 }
