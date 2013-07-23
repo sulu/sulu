@@ -29,7 +29,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->navigationItem = new NavigationItem("NavigationItem");
+        $this->navigationItem = new NavigationItem('NavigationItem');
 
         $this->item1 = new NavigationItem('Root');
         new NavigationItem('Portals', $this->item1);
@@ -42,7 +42,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructor()
     {
-        $this->assertEquals("NavigationItem", $this->navigationItem->getName());
+        $this->assertEquals('NavigationItem', $this->navigationItem->getName());
 
         $item = new NavigationItem('ChildItem', $this->navigationItem);
         $this->assertEquals($item, $this->navigationItem->getChildren()[0]);
@@ -50,13 +50,13 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
 
     public function testName()
     {
-        $this->navigationItem->setName("OtherNavigationItem");
+        $this->navigationItem->setName('OtherNavigationItem');
         $this->assertEquals("OtherNavigationItem", $this->navigationItem->getName());
     }
 
     public function testChildren()
     {
-        $child = new NavigationItem("Child");
+        $child = new NavigationItem('Child');
         $this->navigationItem->addChild($child);
         $this->assertEquals($child, $this->navigationItem->getChildren()[0]);
     }
