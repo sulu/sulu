@@ -15,7 +15,7 @@
         "psr-0": {"Sulu\\Bundle\\TranslateBundle": ""}
     },
     "require": {
-        "sulu/admin-bundle": "dev-develop",
+        "sulu/admin-bundle": "dev-feature/registration",
         "friendsofsymfony/rest-bundle": "0.12.*",
         "jms/serializer-bundle": "0.12.*@dev"
     },
