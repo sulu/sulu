@@ -18,6 +18,12 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 class NavigationItem implements \Iterator
 {
     /**
+     * The id of the NavigationItem
+     * @var string
+     */
+    protected $id;
+
+    /**
      * The name being displayed in the navigation
      * @var string
      */
@@ -53,6 +59,24 @@ class NavigationItem implements \Iterator
         if ($parent != null) {
             $parent->addChild($this);
         }
+    }
+
+    /**
+     * Sets the id of the NavigationItem
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * Returns the id of the NavigationItem
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -268,7 +292,8 @@ class NavigationItem implements \Iterator
         $array = array(
             'title' => $this->getName(),
             'action' => $this->getAction(),
-            'hasChildren' => $this->hasChildren()
+            'hasChildren' => $this->hasChildren(),
+            'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
         foreach ($this->getChildren() as $key => $child) {
