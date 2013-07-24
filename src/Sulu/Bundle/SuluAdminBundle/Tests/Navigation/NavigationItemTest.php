@@ -32,6 +32,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->navigationItem = new NavigationItem('NavigationItem');
 
         $this->item1 = new NavigationItem('Root');
+        $this->item1->setAction('action');
         new NavigationItem('Portals', $this->item1);
         new NavigationItem('Settings', $this->item1);
         $this->item2 = new NavigationItem('Root');
@@ -52,6 +53,12 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
     {
         $this->navigationItem->setName('OtherNavigationItem');
         $this->assertEquals("OtherNavigationItem", $this->navigationItem->getName());
+    }
+
+    public function testAction()
+    {
+        $this->navigationItem->setAction('/test/action');
+        $this->assertEquals('/test/action', $this->navigationItem->getAction());
     }
 
     public function testChildren()
@@ -78,6 +85,12 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Globals', $mergedChildren[2]->getName());
     }
 
+    public function testHasChildren()
+    {
+        $this->assertTrue($this->item1->hasChildren());
+        $this->assertFalse($this->navigationItem->hasChildren());
+    }
+
     public function testIterator()
     {
         $array = array();
@@ -88,5 +101,22 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Portals', $array[0]->getName());
         $this->assertEquals('Settings', $array[1]->getName());
         $this->assertEquals('Globals', $array[2]->getName());
+    }
+
+    public function testToArray()
+    {
+        $array = $this->item1->toArray();
+
+        $this->assertEquals('Root', $array['title']);
+        $this->assertTrue($array['hasChildren']);
+        $this->assertEquals('action', $array['action']);
+
+        $this->assertEquals('Portals', $array['sub']['entries'][0]['title']);
+        $this->assertFalse($array['sub']['entries'][0]['hasChildren']);
+        $this->assertEquals(null, $array['sub']['entries'][0]['action']);
+
+        $this->assertEquals('Settings', $array['sub']['entries'][1]['title']);
+        $this->assertFalse($array['sub']['entries'][1]['hasChildren']);
+        $this->assertEquals(null, $array['sub']['entries'][1]['action']);
     }
 }

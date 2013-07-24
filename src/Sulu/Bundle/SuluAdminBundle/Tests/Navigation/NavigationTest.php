@@ -92,4 +92,30 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         $children3_2 = $children2_2[1]->getChildren();
         $this->assertEquals('Shipping', $children3_2[0]->getName());
     }
+
+    public function testToArray()
+    {
+        $array = $this->navigation1->toArray();
+
+        $this->assertEquals('Root', $array['title']);
+        $this->assertTrue($array['hasChildren']);
+
+        $this->assertEquals('Portals', $array['sub']['entries'][0]['title']);
+        $this->assertTrue($array['sub']['entries'][0]['hasChildren']);
+
+        $this->assertEquals('DE', $array['sub']['entries'][0]['sub']['entries'][0]['title']);
+        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][0]['hasChildren']);
+
+        $this->assertEquals('AT', $array['sub']['entries'][0]['sub']['entries'][1]['title']);
+        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][1]['hasChildren']);
+
+        $this->assertEquals('COM', $array['sub']['entries'][0]['sub']['entries'][2]['title']);
+        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][2]['hasChildren']);
+
+        $this->assertEquals('Settings', $array['sub']['entries'][1]['title']);
+        $this->assertTrue($array['sub']['entries'][0]['hasChildren']);
+
+        $this->assertEquals('Translate', $array['sub']['entries'][1]['sub']['entries'][0]['title']);
+        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][0]['hasChildren']);
+    }
 }

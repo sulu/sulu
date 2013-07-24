@@ -44,4 +44,12 @@ class Navigation
     {
         return new Navigation($this->getRoot()->merge($navigation->getRoot()));
     }
+
+    /**
+     * Returns the navigation as array
+     * @return array
+     */
+    public function toArray() {
+        return $this->getRoot()->toArray();
+    }
 }
