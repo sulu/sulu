@@ -49,6 +49,12 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($item, $this->navigationItem->getChildren()[0]);
     }
 
+    public function testId()
+    {
+        $this->navigationItem->setId('test');
+        $this->assertEquals('test', $this->navigationItem->getId());
+    }
+
     public function testName()
     {
         $this->navigationItem->setName('OtherNavigationItem');
