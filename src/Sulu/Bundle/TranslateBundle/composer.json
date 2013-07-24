@@ -17,7 +17,7 @@
     "require": {
         "sulu/admin-bundle": "dev-develop",
         "friendsofsymfony/rest-bundle": "0.12.*",
-        "jms/serializer-bundle": "0.11.*"
+        "jms/serializer-bundle": "0.12.*@dev"
     },
     "target-dir": "Sulu/Bundle/TranslateBundle"
 }
