@@ -12,6 +12,11 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+/**
+ * This controller is responsible for the administration part of Sulu.
+ * Therefore it bootstraps a backbone-application.
+ * @package Sulu\Bundle\AdminBundle\Controller
+ */
 class AdminController extends Controller
 {
     public function indexAction()
