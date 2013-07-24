@@ -12,5 +12,13 @@
 
             </div>
         </div>
+        {% javascripts
+            '@SuluAdminBundle/Resources/public/js/bower_components/requirejs/require.js'
+            '@SuluAdminBundle/Resources/public/js/bower_components/jquery/jquery.js'
+            '@SuluAdminBundle/Resources/public/js/bower_components/underscore/underscore.js'
+            '@SuluAdminBundle/Resources/public/js/bower_components/backbone/backbone.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
     </body>
 </html>

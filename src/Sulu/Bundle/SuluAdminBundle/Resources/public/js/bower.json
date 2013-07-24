@@ -9,6 +9,7 @@
     "tests"
   ],
   "dependencies": {
+      "underscore": "1.5.*",
       "backbone": "1.0.*",
       "jquery": "2.0.*",
       "requirejs": "2.1.*"
