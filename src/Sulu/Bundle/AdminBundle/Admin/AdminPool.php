@@ -49,10 +49,15 @@ class AdminPool
      */
     public function getNavigation()
     {
-        $navigation = new Navigation();
+        /** @var Navigation $navigation */
+        $navigation = null;
         foreach ($this->pool as $admin) {
             /** @var Admin $admin */
-            $navigation->merge($admin->getNavigation());
+            if ($navigation == null) {
+                $navigation = $admin->getNavigation();
+            } else {
+                $navigation = $navigation->merge($admin->getNavigation());
+            }
         }
 
         return $navigation;
