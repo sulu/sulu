@@ -24,7 +24,13 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
-     * Contains the children of this item, which are other NavigationItems.
+     * The action which should be executed when clicking on this NavigationItem
+     * @var String
+     */
+    protected $action;
+
+    /**
+     * Contains the children of this item, which are other NavigationItems
      * @var array
      */
     protected $children = array();
@@ -34,6 +40,7 @@ class NavigationItem implements \Iterator
      * @var integer
      */
     protected $position;
+
 
     /**
      * @param string $name The name of the item
@@ -67,6 +74,24 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     * Sets the action of the NavigationItem
+     * @param String $action The action of the NavigationItem
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * Returns the action of the NavigationItem
+     * @return String
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
      * Adds a child to the navigation item
      * @param NavigationItem $child
      */
@@ -82,6 +107,15 @@ class NavigationItem implements \Iterator
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * Checks if the NavigationItem has some children
+     * @return bool True if the item has children, otherwise false
+     */
+    public function hasChildren()
+    {
+        return count($this->getChildren()) > 0;
     }
 
     /**
@@ -224,5 +258,24 @@ class NavigationItem implements \Iterator
     public function rewind()
     {
         $this->position = 0;
+    }
+
+    /**
+     * Returns the content of the NavigationItem as array
+     * @return array
+     */
+    public function toArray() {
+        $array = array(
+            'title' => $this->getName(),
+            'action' => $this->getAction(),
+            'hasChildren' => $this->hasChildren()
+        );
+
+        foreach ($this->getChildren() as $key => $child) {
+            /** @var NavigationItem $child */
+            $array['sub']['entries'][$key] = $child->toArray();
+        }
+
+        return $array;
     }
 }
