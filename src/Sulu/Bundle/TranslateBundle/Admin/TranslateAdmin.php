@@ -18,8 +18,9 @@ class TranslateAdmin extends Admin {
 
     function __construct()
     {
-        $rootNavigationItem = new NavigationItem('Settings');
-        $rootNavigationItem->addChild(new NavigationItem('Translate'));
+        $rootNavigationItem = new NavigationItem('Root');
+        $rootNavigationItem->addChild(new NavigationItem('Settings'));
+        $rootNavigationItem->getChildren()[0]->addChild(new NavigationItem('Translate'));
         $this->navigation = new Navigation($rootNavigationItem);
     }
 }
