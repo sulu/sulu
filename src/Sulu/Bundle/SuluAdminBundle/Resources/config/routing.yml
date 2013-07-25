@@ -1,7 +1,9 @@
 sulu_admin:
     path:  /
-    defaults: { _controller: SuluAdminBundle:Admin:index }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'SuluAdminBundle:Admin:index.html.twig'
 
 sulu_admin.navigation:
-  type: rest
-  resource: Sulu\Bundle\AdminBundle\Controller\NavigationController
+    type: rest
+    resource: Sulu\Bundle\AdminBundle\Controller\NavigationController
