@@ -1,9 +1,11 @@
-define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
+define(['jquery', 'underscore', 'backbone', 'husky'], function($, _, Backbone) {
     initialize = function() {
-        alert($('#navigation'));
+        $('#navigation').huskyNavigation({
+            url: 'navigation'
+        });
     };
 
     return {
         initialize: initialize
     }
-})
+});
