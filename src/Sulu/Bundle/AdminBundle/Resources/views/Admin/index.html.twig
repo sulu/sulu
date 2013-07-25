@@ -12,13 +12,6 @@
 
             </div>
         </div>
-        {% javascripts
-            '@SuluAdminBundle/Resources/public/js/bower_components/requirejs/require.js'
-            '@SuluAdminBundle/Resources/public/js/bower_components/jquery/jquery.js'
-            '@SuluAdminBundle/Resources/public/js/bower_components/underscore/underscore.js'
-            '@SuluAdminBundle/Resources/public/js/bower_components/backbone/backbone.js'
-        %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+        <script data-main="/bundles/suluadmin/js/main" src="/bundles/suluadmin/js/bower_components/requirejs/require.js"></script>
     </body>
 </html>
