@@ -319,7 +319,8 @@ if (typeof jQuery === "undefined" &&
         this.configs = {};
 
         this.$element = $(element);
-        this.$navigation = $('<ul/>', {
+
+        this.$navigation = $('<div/>', {
             class: 'navigation'
         });
 
@@ -358,8 +359,6 @@ if (typeof jQuery === "undefined" &&
         load: function(params) {
             Husky.DEBUG && console.log(this.name, 'load');
 
-            console.log(this.getUrl(params));
-
             Husky.Util.ajax({
                 url: this.getUrl(params),
                 success: function(data) {
@@ -379,7 +378,13 @@ if (typeof jQuery === "undefined" &&
         },
 
         prepareNavigation: function() {
-            this.$navigation.append(this.prepareNavigationColumn());
+            this.$navigationColumns = $('<ul/>', {
+                class: 'navigation-columns'
+            });
+
+            this.$navigationColumns.append(this.prepareNavigationColumn());
+            this.$navigation.append(this.$navigationColumns);
+
             return this;
         },
 
@@ -464,7 +469,7 @@ if (typeof jQuery === "undefined" &&
                 this.currentColumnIdx === this.lastColumnIdx) {
 
                 for (i = this.currentColumnIdx; i <= this.lastColumnIdx; i++) {
-                    $column = this.$navigation.find('#column-' + i);
+                    $column = this.$navigationColumns.find('#column-' + i);
 
                     if ($column.size()) {
                         $column.remove();
@@ -472,41 +477,46 @@ if (typeof jQuery === "undefined" &&
                 }
             }
 
-            this.$navigation.append(this.prepareNavigationColumn());
+            this.$navigationColumns.append(this.prepareNavigationColumn());
         },
 
         selectEntry: function(event) {
             Husky.DEBUG && console.log(this.name, 'selectEntry');
 
-            var $element, $elementColumn, $firstColumn;
+            var $element, $elementColumn, $firstColumn, 
+                $elementId, entryModel;
 
             $element = $(event.currentTarget);
+            $elementId = $element.attr('id');
             $elementColumn = $element.parent().parent();
             $firstColumn = $('#column-0');
+
+            entryModel = this.entriesCollection.get($elementId);
 
             this.lastColumnIdx = this.currentColumnIdx;
             this.currentColumnIdx = $elementColumn.data('column-id');
 
-            if (this.currentColumnIdx > 0) {
-                $firstColumn.addClass('collapsed');
-            } else {
-                $firstColumn.removeClass('collapsed');
-            }
-
-            if ($element.data('has-children')) {
-
+            if (!!entryModel && entryModel.get('hasChildren')) {
                 $elementColumn
                     .find('.selected')
                     .removeClass('selected');
 
                 $element.addClass('selected');
 
-                if (!this.entriesCollection.get($element.attr('id')).get('sub')) {
+                if (!entryModel.get('sub')) {
+                    this.addLoader($element);
                     this.load({
                         url: this.options.url,
                         uri: this.entriesCollection.get($element.attr('id')).get('action'),
                         success: function() {
                             this.addColumn();
+                            this.hideLoader($element);
+
+                            if (this.currentColumnIdx > 0) {
+                                $firstColumn.addClass('collapsed');
+                            } else {
+                                $firstColumn.removeClass('collapsed');
+                            }
                         }.bind(this)
                     });
                 } else {
@@ -527,6 +537,14 @@ if (typeof jQuery === "undefined" &&
             this.$element.html(this.$navigation);
 
             this.bindDOMEvents();
+        },
+
+        addLoader: function($elem) {
+            $elem.addClass('loading');
+        },
+
+        hideLoader: function($elem) {
+            $elem.removeClass('loading');
         },
 
         collections: {

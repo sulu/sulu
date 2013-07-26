@@ -4,6 +4,18 @@ require.config({
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
         husky: 'vendor/husky/husky'
+    },
+    shim: {
+        'underscore': {
+            exports: '_'
+        },
+        'backbone': {
+            deps: ['underscore', 'jquery'],
+            exports: 'Backbone'
+        },
+        'husky': {
+            'deps': ['jquery']
+        }
     }
 });
 
