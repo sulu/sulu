@@ -20,6 +20,7 @@ class TranslateAdmin extends Admin {
     {
         $rootNavigationItem = new NavigationItem('Root');
         $rootNavigationItem->addChild(new NavigationItem('Settings'));
+        $rootNavigationItem->getChildren()[0]->setIcon('settings');
         $rootNavigationItem->getChildren()[0]->addChild(new NavigationItem('Translate'));
         $this->navigation = new Navigation($rootNavigationItem);
     }
