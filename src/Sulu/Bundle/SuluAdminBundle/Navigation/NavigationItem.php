@@ -30,6 +30,12 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
+     * The icon of the navigationItem
+     * @var string
+     */
+    protected $icon;
+
+    /**
      * The action which should be executed when clicking on this NavigationItem
      * @var String
      */
@@ -96,6 +102,25 @@ class NavigationItem implements \Iterator
     {
         return $this->name;
     }
+
+    /**
+     * Set the icon of the NavigaitonItem
+     * @param string $icon The icon of the NavigationItem
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    /**
+     * Returns the action of the NavigationItem
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
 
     /**
      * Sets the action of the NavigationItem
@@ -291,6 +316,7 @@ class NavigationItem implements \Iterator
     public function toArray() {
         $array = array(
             'title' => $this->getName(),
+            'icon' => $this->getIcon(),
             'action' => $this->getAction(),
             'hasChildren' => $this->hasChildren(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
