@@ -2,7 +2,7 @@ sulu_admin:
     path:  /
     defaults:
         _controller: FrameworkBundle:Template:template
-        template: 'SuluAdminBundle:Dist:index.html.twig'
+        template: 'SuluAdminBundle:Admin:index.html.dist.twig'
 
 sulu_admin.navigation:
     type: rest
