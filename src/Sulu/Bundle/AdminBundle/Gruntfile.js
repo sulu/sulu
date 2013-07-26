@@ -123,6 +123,7 @@ module.exports = function (grunt) {
         'usemin',
         'copy:buildResult',
         'replace:buildResult',
-        'clean:build'
+        'clean:build',
+        'publish'
     ]);
 };
