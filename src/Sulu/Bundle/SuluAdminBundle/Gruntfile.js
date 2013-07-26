@@ -18,7 +18,7 @@ module.exports = function (grunt) {
             },
             buildResult: {
                 files: [
-                    {src: ['Resources/public/index.html.twig'], dest: 'Resources/views/Dist/index.html.twig'}
+                    {src: ['Resources/public/index.html.twig'], dest: 'Resources/views/Admin/index.html.dist.twig'}
                 ]
             }
         },
@@ -34,7 +34,6 @@ module.exports = function (grunt) {
             dist: {
                 files: [
                     {src: ['Resources/public/dist']},
-                    {src: ['Resources/views/Dist']}
                 ]
             },
             build: {
@@ -54,7 +53,7 @@ module.exports = function (grunt) {
                     prefix: ''
                 },
                 files: [
-                    {src: ['Resources/views/Dist/index.html.twig'], dest: 'Resources/views/Dist/index.html.twig'}
+                    {src: ['Resources/views/Admin/index.html.dist.twig'], dest: 'Resources/views/Admin/index.html.dist.twig'}
                 ]
             }
         },
