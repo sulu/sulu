@@ -21,7 +21,7 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
         });
 
         $nav.data('Husky.Ui.Navigation').on('navigation:item:content:show', function(item){
-           console.log(item, item.get('action'));
+            Router.navigate(item.get('action'));
         });
 
         window.App = App;

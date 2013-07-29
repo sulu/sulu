@@ -14,21 +14,37 @@ define(['backbone'], function (Backbone) {
     var router;
 
     var AppRouter = Backbone.Router.extend({
+        routes: {
+            // Default
+            '*actions': 'defaultAction'
+        },
 
+        defaultAction: function (action) {
+            // We have no matching route, lets just log what the URL was
+            console.log('No route: ', action);
+        }
     });
 
-    var initialize = function(App) {
+    var initialize = function (App) {
         router = new AppRouter();
-
-        //load bundle routes
-        require(['/app_dev.php/admin/routes']);
 
         App.Router = router;
 
-        Backbone.history.start();
+        //load bundle routes
+        require(['/app_dev.php/admin/routes']);
+    };
+
+    var navigate = function (action) {
+        router.navigate(action, {trigger: true});
+    };
+
+    var route = function (route, name, callback) {
+        router.route(route, name, callback);
     };
 
     return {
-        initialize: initialize
+        initialize: initialize,
+        navigate: navigate,
+        route: route
     };
 });
