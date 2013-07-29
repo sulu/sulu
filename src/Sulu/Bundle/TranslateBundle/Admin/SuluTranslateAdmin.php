@@ -14,14 +14,17 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class TranslateAdmin extends Admin {
+class SuluTranslateAdmin extends Admin {
 
     function __construct()
     {
         $rootNavigationItem = new NavigationItem('Root');
-        $rootNavigationItem->addChild(new NavigationItem('Settings'));
-        $rootNavigationItem->getChildren()[0]->setIcon('settings');
-        $rootNavigationItem->getChildren()[0]->addChild(new NavigationItem('Translate'));
+        $settings = new NavigationItem('Settings');
+        $settings->setIcon('settings');
+        $rootNavigationItem->addChild($settings);
+        $translate = new NavigationItem('Translate');
+        $translate->setAction('settings/translate');
+        $settings->addChild($translate);
         $this->navigation = new Navigation($rootNavigationItem);
     }
 }

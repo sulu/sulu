@@ -1,5 +1,5 @@
 parameters:
-    sulu_translate.admin.class: Sulu\Bundle\TranslateBundle\Admin\TranslateAdmin
+    sulu_translate.admin.class: Sulu\Bundle\TranslateBundle\Admin\SuluTranslateAdmin
 
 services:
     sulu_translate.admin:
