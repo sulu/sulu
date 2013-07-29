@@ -20,10 +20,8 @@ define(['backbone'], function (Backbone) {
     var initialize = function(App) {
         router = new AppRouter();
 
-        router.route('settings/translate', 'translateBundle');
-        router.on('route:translateBundle', function() {
-            console.log('Here starts the TranslateBundle');
-        });
+        //load bundle routes
+        require(['/app_dev.php/admin/routes']);
 
         App.Router = router;
 

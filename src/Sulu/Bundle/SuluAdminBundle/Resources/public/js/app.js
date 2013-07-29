@@ -16,8 +16,12 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
 
         Router.initialize(App);
 
-        $('#navigation').huskyNavigation({
+        var $nav = $('#navigation').huskyNavigation({
             url: 'navigation'
+        });
+
+        $nav.data('Husky.Ui.Navigation').on('navigation:item:content:show', function(item){
+           console.log(item, item.get('action'));
         });
 
         window.App = App;

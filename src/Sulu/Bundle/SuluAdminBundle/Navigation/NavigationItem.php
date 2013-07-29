@@ -318,13 +318,13 @@ class NavigationItem implements \Iterator
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
-            'hasChildren' => $this->hasChildren(),
+            'hasSub' => $this->hasChildren(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
         foreach ($this->getChildren() as $key => $child) {
             /** @var NavigationItem $child */
-            $array['sub']['entries'][$key] = $child->toArray();
+            $array['sub']['items'][$key] = $child->toArray();
         }
 
         return $array;

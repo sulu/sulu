@@ -11,14 +11,20 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
+/**
+ * Defines all the required information from a bundle's admin class.
+ * @package Sulu\Bundle\AdminBundle\Admin
+ */
 abstract class Admin
 {
     /**
+     * The navigation describes the position of the admin
      * @var Navigation
      */
     protected $navigation;
 
     /**
+     * Returns a navigation containing the position of the admin in the navigation
      * @return \Sulu\Bundle\AdminBundle\Navigation\Navigation
      */
     public function getNavigation()
