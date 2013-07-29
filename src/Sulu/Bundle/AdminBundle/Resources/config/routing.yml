@@ -7,3 +7,8 @@ sulu_admin:
 sulu_admin.navigation:
     type: rest
     resource: Sulu\Bundle\AdminBundle\Controller\NavigationController
+
+sulu_admin.routes:
+    path: /routes
+    defaults:
+        _controller: SuluAdminBundle:Admin:routes
