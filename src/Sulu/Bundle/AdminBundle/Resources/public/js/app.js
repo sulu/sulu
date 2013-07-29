@@ -1,8 +1,26 @@
-define(['jquery', 'underscore', 'backbone', 'husky'], function($, _, Backbone) {
-    initialize = function() {
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART Webservices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define(['jquery', 'husky', 'router'], function($, Husky, Router) {
+
+    'use strict';
+
+    var initialize = function() {
+        var App = window.App || {};
+
+        Router.initialize(App);
+
         $('#navigation').huskyNavigation({
             url: 'navigation'
         });
+
+        window.App = App;
     };
 
     return {
