@@ -23,14 +23,19 @@ class AdminController extends Controller
     public function routesAction()
     {
         $response = '';
+        $requires = array();
 
         $pool = $this->get('sulu_admin.admin_pool');
 
         foreach ($pool->getAdmins() as $admin) {
             $reflection = new \ReflectionClass($admin);
             $name = strtolower(str_replace('Admin', '', $reflection->getShortName()));
-            $response .= 'require([\'/bundles/' . $name . '/js/main.js\']);';
+            $requires[] = '\'/bundles/' . $name . '/js/main.js\'';
         }
+
+        $response = 'require(['.implode(', ', $requires).'], function() {
+            Backbone.history.start();
+        })';
 
         return new Response($response);
     }

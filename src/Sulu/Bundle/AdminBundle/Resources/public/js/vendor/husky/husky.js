@@ -354,8 +354,7 @@ if (typeof jQuery === "undefined" &&
             Husky.Util.ajax({
                 url: params.url,
                 success: function(data) {
-                    console.log(data);
-                    Husky.DEBUG && console.log(this.name, 'load', 'success');
+                    Husky.DEBUG && console.log(this.name, 'load', 'success', data);
 
                     this.data = data;
 
@@ -396,7 +395,7 @@ if (typeof jQuery === "undefined" &&
 
         prepareColumnItems: function() {
             var $columnItemsList, columnItems, columnItemClass, 
-                columnItemClasses, columnItemUri, columnItemHasChildren, 
+                columnItemClasses, columnItemUri, columnItemHasSub,
                 columnItemIcon, columnItemTitle, itemModel,
                 columnItemId;
 
@@ -427,7 +426,7 @@ if (typeof jQuery === "undefined" &&
                     columnItemClass = ' class="' + columnItemClasses.join(' ') + '"';
 
                     // prepare data-attributes
-                    columnItemHasChildren = (!!item.hasChildren) ? ' data-has-children="true"' : '';
+                    columnItemHasSub = (!!item.hasSub) ? ' data-has-sub="true"' : '';
 
                     // prepare title
                     columnItemTitle = 'title="' + item.title + '"';
@@ -439,7 +438,7 @@ if (typeof jQuery === "undefined" &&
                     columnItemId = 'id="' + itemModel.get('id') + '"';
 
                     columnItems.push(
-                        '<li ', columnItemId, columnItemTitle, columnItemClass, columnItemUri, columnItemHasChildren, '>',
+                        '<li ', columnItemId, columnItemTitle, columnItemClass, columnItemUri, columnItemHasSub, '>',
                             columnItemIcon,
                             item.title,
                         '</li>'
@@ -558,7 +557,7 @@ if (typeof jQuery === "undefined" &&
                 var defaults = {
                     // defaults
                     title: '',
-                    hasChildren: false
+                    hasSub: false
                 };
 
                 return $.extend({}, Husky.Model, defaults, data);  
