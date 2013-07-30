@@ -13,5 +13,5 @@ Sulu\Bundle\TranslateBundle\Entity\Package:
     oneToMany:
         codes:
             targetEntity: Code
-            mappedBy: tr_packages
+            mappedBy: package
     lifecycleCallbacks: {  }

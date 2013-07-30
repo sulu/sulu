@@ -16,5 +16,5 @@ Sulu\Bundle\TranslateBundle\Entity\Catalogue:
     oneToMany:
         translations:
             targetEntity: Translation
-            mappedBy: tr_catalogues
+            mappedBy: catalogue
     lifecycleCallbacks: {  }

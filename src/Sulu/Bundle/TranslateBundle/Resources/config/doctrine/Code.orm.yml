@@ -34,5 +34,5 @@ Sulu\Bundle\TranslateBundle\Entity\Code:
     oneToMany:
         translations:
             targetEntity: Translation
-            mappedBy: tr_codes
+            mappedBy: code
     lifecycleCallbacks: {  }

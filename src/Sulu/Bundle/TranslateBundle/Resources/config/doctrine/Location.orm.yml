@@ -13,5 +13,5 @@ Sulu\Bundle\TranslateBundle\Entity\Location:
     oneToMany:
         codes:
             targetEntity: Code
-            mappedBy: tr_locations
+            mappedBy: location
     lifecycleCallbacks: {  }
