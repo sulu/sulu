@@ -22,7 +22,6 @@ class AdminController extends Controller
      */
     public function routesAction()
     {
-        $response = '';
         $requires = array();
 
         $pool = $this->get('sulu_admin.admin_pool');
