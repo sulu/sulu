@@ -46,7 +46,7 @@ class PackagesControllerTest extends DatabaseTestCase
     public function testGetId()
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', 'translate/packages/1.xml');
+        $crawler = $client->request('GET', '/translate/packages/1.xml');
 
         $this->assertEquals(1, $crawler->filter('name:contains("Sulu")')->count());
     }

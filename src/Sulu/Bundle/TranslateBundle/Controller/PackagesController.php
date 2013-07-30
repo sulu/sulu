@@ -34,6 +34,11 @@ class PackagesController extends FOSRestController
         return $this->handleView($view);
     }
 
+    /**
+     * Shows the package with the given Id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getPackageAction($id)
     {
         $package = $this->getDoctrine()
