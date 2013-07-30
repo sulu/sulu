@@ -26,6 +26,11 @@ class Location
     private $name;
 
     /**
+     * @var \Sulu\Bundle\TranslateBundle\Entity\Package
+     */
+    private $package;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $codes;
@@ -69,6 +74,29 @@ class Location
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set package
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Package $package
+     * @return Location
+     */
+    public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package)
+    {
+        $this->package = $package;
+
+        return $this;
+    }
+
+    /**
+     * Get package
+     *
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Package
+     */
+    public function getPackage()
+    {
+        return $this->package;
     }
     
     /**

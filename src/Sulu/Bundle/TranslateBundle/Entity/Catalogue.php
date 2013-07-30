@@ -23,12 +23,12 @@ class Catalogue
     /**
      * @var string
      */
-    private $name;
+    private $code;
 
     /**
-     * @var string
+     * @var \Sulu\Bundle\TranslateBundle\Entity\Package
      */
-    private $code;
+    private $package;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -97,6 +97,29 @@ class Catalogue
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Set package
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Package $package
+     * @return Catalogue
+     */
+    public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package)
+    {
+        $this->package = $package;
+
+        return $this;
+    }
+
+    /**
+     * Get package
+     *
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Package
+     */
+    public function getPackage()
+    {
+        return $this->package;
     }
 
     /**

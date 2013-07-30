@@ -27,6 +27,16 @@ class Package {
     private $codes;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $locations;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $catalogues;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -98,5 +108,71 @@ class Package {
     public function getCodes()
     {
         return $this->codes;
+    }
+
+    /**
+     * Add locations
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Location $locations
+     * @return Package
+     */
+    public function addLocation(\Sulu\Bundle\TranslateBundle\Entity\Location $locations)
+    {
+        $this->locations[] = $locations;
+    
+        return $this;
+    }
+
+    /**
+     * Remove locations
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Location $locations
+     */
+    public function removeLocation(\Sulu\Bundle\TranslateBundle\Entity\Location $locations)
+    {
+        $this->locations->removeElement($locations);
+    }
+
+    /**
+     * Get locations
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    /**
+     * Add catalogues
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues
+     * @return Package
+     */
+    public function addCatalogue(\Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues)
+    {
+        $this->catalogues[] = $catalogues;
+    
+        return $this;
+    }
+
+    /**
+     * Remove catalogues
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues
+     */
+    public function removeCatalogue(\Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues)
+    {
+        $this->catalogues->removeElement($catalogues);
+    }
+
+    /**
+     * Get catalogues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCatalogues()
+    {
+        return $this->catalogues;
     }
 }

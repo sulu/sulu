@@ -14,4 +14,10 @@ Sulu\Bundle\TranslateBundle\Entity\Package:
         codes:
             targetEntity: Code
             mappedBy: package
+        locations:
+            targetEntity: Location
+            mappedBy: package
+        catalogues:
+            targetEntity: Catalogue
+            mappedBy: package
     lifecycleCallbacks: {  }
