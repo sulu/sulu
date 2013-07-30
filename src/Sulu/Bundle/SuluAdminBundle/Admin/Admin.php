@@ -24,6 +24,15 @@ abstract class Admin
     protected $navigation;
 
     /**
+     * Sets the navigation containing the position of the admin in the navigation
+     * @param \Sulu\Bundle\AdminBundle\Navigation\Navigation $navigation
+     */
+    public function setNavigation($navigation)
+    {
+        $this->navigation = $navigation;
+    }
+
+    /**
      * Returns a navigation containing the position of the admin in the navigation
      * @return \Sulu\Bundle\AdminBundle\Navigation\Navigation
      */
