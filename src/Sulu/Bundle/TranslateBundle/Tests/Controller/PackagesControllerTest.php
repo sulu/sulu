@@ -35,11 +35,18 @@ class PackagesControllerTest extends DatabaseTestCase
         );
     }
 
-    public function testGet()
+    public function testGetAll()
     {
         $client = static::createClient();
-
         $crawler = $client->request('GET', '/translate/packages.xml');
+
+        $this->assertEquals(1, $crawler->filter('name:contains("Sulu")')->count());
+    }
+
+    public function testGetId()
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', 'translate/packages/1.xml');
 
         $this->assertEquals(1, $crawler->filter('name:contains("Sulu")')->count());
     }

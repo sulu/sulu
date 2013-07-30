@@ -54,29 +54,6 @@ class Catalogue
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return Catalogue
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Set code
      *
      * @param string $code

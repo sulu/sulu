@@ -25,13 +25,22 @@ class PackagesController extends FOSRestController
      */
     public function getPackagesAction()
     {
-        $array = array();
-
         $packages = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Package')
             ->findAll();
 
         $view = $this->view($packages, 200);
+
+        return $this->handleView($view);
+    }
+
+    public function getPackageAction($id)
+    {
+        $package = $this->getDoctrine()
+            ->getRepository('SuluTranslateBundle:Package')
+            ->find($id);
+
+        $view = $this->view($package, 200);
 
         return $this->handleView($view);
     }
