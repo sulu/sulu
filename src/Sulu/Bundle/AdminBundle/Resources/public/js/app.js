@@ -11,12 +11,16 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
 
     'use strict';
 
+    var $nav = $('#navigation');
+
+    var $content = $('#content');
+
     var initialize = function() {
         var App = window.App || {};
 
         Router.initialize(App);
 
-        var $nav = $('#navigation').huskyNavigation({
+        $nav.huskyNavigation({
             url: 'navigation'
         });
 
@@ -28,6 +32,7 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
     };
 
     return {
-        initialize: initialize
+        initialize: initialize,
+        $content: $content
     }
 });
