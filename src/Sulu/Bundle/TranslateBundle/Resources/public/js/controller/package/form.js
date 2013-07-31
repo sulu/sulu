@@ -7,21 +7,32 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbone'], function (Backbone) {
+define(['jquery', 'backbone', 'sulutranslate/model/package'], function ($, Backbone, Package) {
 
     'use strict';
 
     return Backbone.View.extend({
+
+        events: {
+            'submit #catalogue-form': 'submitForm'
+        },
+
         initialize: function () {
             this.render();
         },
 
         render: function () {
-            $.ajax('/translate/package');
-            require(['text!/translate/template/catalogue/form'], function(Template) {
+            require(['text!/translate/template/catalogue/form'], function (Template) {
                 var template = _.template(Template, {});
                 this.$el.html(template);
             }.bind(this));
+        },
+
+        submitForm: function (event) {
+            event.preventDefault();
+
+            var translatePackage = new Package({name: $('#name').val()});
+            translatePackage.save();
         }
     });
 });

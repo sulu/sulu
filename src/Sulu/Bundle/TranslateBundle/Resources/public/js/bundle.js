@@ -13,16 +13,16 @@ define(['app', 'router'], function (App, Router) {
 
     var initialize = function () {
         //add routes
-        Router.route('settings/translate', 'translate:packages:list', function () {
-            require(['sulutranslate/controller/packages/list'], function (List) {
+        Router.route('settings/translate', 'translate:package:list', function () {
+            require(['sulutranslate/controller/package/list'], function (List) {
                 new List({
                     el: App.$content
                 });
             });
         });
 
-        Router.route('settings/translate/form', 'translate:packages:form', function () {
-            require(['sulutranslate/controller/packages/form'], function(Form) {
+        Router.route('settings/translate/form', 'translate:package:form', function () {
+            require(['sulutranslate/controller/package/form'], function(Form) {
                 new Form({
                     el: App.$content
                 });
