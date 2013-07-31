@@ -58,15 +58,19 @@ class PackagesController extends FOSRestController
     {
         $em = $this->getDoctrine()->getManager();
 
+        $languages = $this->getRequest()->get('languages');
+
         $package = new Package();
         $package->setName($this->getRequest()->get('name'));
 
-        foreach ($this->getRequest()->get('languages') as $language) {
-            $catalogue = new Catalogue();
-            $catalogue->setCode($language);
-            $catalogue->setPackage($package);
-            $package->addCatalogue($catalogue);
-            $em->persist($catalogue);
+        if ($languages != null) {
+            foreach ($languages as $language) {
+                $catalogue = new Catalogue();
+                $catalogue->setCode($language);
+                $catalogue->setPackage($package);
+                $package->addCatalogue($catalogue);
+                $em->persist($catalogue);
+            }
         }
 
         $em->persist($package);

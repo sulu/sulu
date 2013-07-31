@@ -65,12 +65,36 @@ class PackagesControllerTest extends DatabaseTestCase
             )
         );
 
-        $packageId = $crawler->filterXPath('//result/id')->text();
         $this->assertEquals(1, $crawler->filter('name:contains("Portal")')->count());
+        $packageId = $crawler->filterXPath('//result/id')->text();
 
         $crawler = $client->request('GET', '/translate/catalogues.xml?package='.$packageId);
         $this->assertEquals('EN', $crawler->filterXPath('//entry[1]/code')->text());
         $this->assertEquals('DE', $crawler->filterXPath('//entry[2]/code')->text());
         $this->assertEquals('ES', $crawler->filterXPath('//entry[3]/code')->text());
+    }
+
+    public function testPostWithoutLanguages()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request(
+            'POST',
+            '/translate/packages.xml',
+            array(
+                'name' => 'Portal'
+            )
+        );
+
+        $this->assertEquals('Portal', $crawler->filterXpath('//result/name')->text());
+
+        $packageId = $crawler->filterXPath('//result/id')->text();
+
+        $crawler = $client->request(
+            'GET',
+            '/translate/package/'.$packageId.'.xml'
+        );
+
+        $this->assertEquals('Portal', $crawler->filterXPath('//result/name')->text());
     }
 }
