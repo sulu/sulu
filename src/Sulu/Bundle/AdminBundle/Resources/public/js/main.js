@@ -9,6 +9,7 @@
 
 require.config({
     paths: {
+        text: 'vendor/requirejs/text',
         jquery: 'vendor/jquery/jquery',
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
