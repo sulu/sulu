@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 
 /**
@@ -55,11 +56,24 @@ class PackagesController extends FOSRestController
      */
     public function postPackagesAction()
     {
+        $em = $this->getDoctrine()->getManager();
+
         $package = new Package();
         $package->setName($this->getRequest()->get('name'));
 
-        $em = $this->getDoctrine()->getManager();
+        foreach ($this->getRequest()->get('languages') as $language) {
+            $catalogue = new Catalogue();
+            $catalogue->setCode($language);
+            $catalogue->setPackage($package);
+            $package->addCatalogue($catalogue);
+            $em->persist($catalogue);
+        }
+
         $em->persist($package);
         $em->flush();
+
+        $view = $this->view($package, 200);
+
+        return $this->handleView($view);
     }
 }

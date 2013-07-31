@@ -30,6 +30,7 @@ class PackagesControllerTest extends DatabaseTestCase
         self::$em->getConnection()->query(
             "START TRANSACTION; SET FOREIGN_KEY_CHECKS=0;
                         TRUNCATE TABLE tr_packages;
+                        TRUNCATE TABLE tr_catalogues;
                         SET FOREIGN_KEY_CHECKS=1;COMMIT;
                     "
         );
@@ -55,16 +56,21 @@ class PackagesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request(
+        $crawler = $client->request(
             'POST',
-            '/translate/packages',
+            '/translate/packages.xml',
             array(
                 'name' => 'Portal',
+                'languages' => array('EN', 'DE', 'ES')
             )
         );
 
-        $crawler = $client->request('GET', '/translate/packages.xml');
-
+        $packageId = $crawler->filterXPath('//result/id')->text();
         $this->assertEquals(1, $crawler->filter('name:contains("Portal")')->count());
+
+        $crawler = $client->request('GET', '/translate/catalogues.xml?package='.$packageId);
+        $this->assertEquals('EN', $crawler->filterXPath('//entry[1]/code')->text());
+        $this->assertEquals('DE', $crawler->filterXPath('//entry[2]/code')->text());
+        $this->assertEquals('ES', $crawler->filterXPath('//entry[3]/code')->text());
     }
 }
