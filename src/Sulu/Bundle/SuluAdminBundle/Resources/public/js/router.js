@@ -31,7 +31,7 @@ define(['backbone'], function (Backbone) {
         App.Router = router;
 
         //load bundle routes
-        require(['/app_dev.php/admin/routes']);
+        require(['/admin/routes']);
     };
 
     var navigate = function (action) {
