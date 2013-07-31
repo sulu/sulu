@@ -17,8 +17,10 @@ define(['backbone'], function (Backbone) {
         },
 
         render: function () {
-            var template = _.template('That is another small test', {});
-            this.$el.html(template);
+            require(['text!/app_dev.php/translate/template/catalogue/form'], function(Template) {
+                var template = _.template(Template, {});
+                this.$el.html(template);
+            }.bind(this));
         }
     });
 });

@@ -5,3 +5,8 @@ sulu_translate.packages:
 sulu_translate.catalogues:
     type: rest
     resource: Sulu\Bundle\TranslateBundle\Controller\CataloguesController
+
+sulu_translate.template.catalogue.form:
+    path: /template/catalogue/form
+    defaults:
+        _controller: SuluTranslateBundle:Template:catalogueform
