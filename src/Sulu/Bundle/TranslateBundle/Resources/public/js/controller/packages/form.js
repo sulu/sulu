@@ -17,7 +17,7 @@ define(['backbone'], function (Backbone) {
         },
 
         render: function () {
-            require(['text!/app_dev.php/translate/template/catalogue/form'], function(Template) {
+            require(['text!/translate/template/catalogue/form'], function(Template) {
                 var template = _.template(Template, {});
                 this.$el.html(template);
             }.bind(this));
