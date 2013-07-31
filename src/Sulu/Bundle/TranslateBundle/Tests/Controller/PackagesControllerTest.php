@@ -92,7 +92,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $crawler = $client->request(
             'GET',
-            '/translate/package/'.$packageId.'.xml'
+            '/translate/packages/'.$packageId.'.xml'
         );
 
         $this->assertEquals('Portal', $crawler->filterXPath('//result/name')->text());
