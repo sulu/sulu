@@ -11,6 +11,8 @@ define(['jquery', 'backbone', 'sulutranslate/model/package'], function ($, Backb
 
     'use strict';
 
+    var translatePackage;
+
     return Backbone.View.extend({
 
         events: {
@@ -23,15 +25,25 @@ define(['jquery', 'backbone', 'sulutranslate/model/package'], function ($, Backb
 
         render: function () {
             require(['text!/translate/template/catalogue/form'], function (Template) {
-                var template = _.template(Template, {});
-                this.$el.html(template);
+                var template;
+                if (!this.options.id) {
+                    template = _.template(Template, {});
+                    this.$el.html(template);
+                } else {
+                    translatePackage = new Package({id: this.options.id});
+                    translatePackage.fetch({
+                        success: function (translatePackage) {
+                            template = _.template(Template, {name: translatePackage.get('name')});
+                            this.$el.html(template);
+                        }.bind(this)
+                    });
+                }
             }.bind(this));
         },
 
         submitForm: function (event) {
             event.preventDefault();
-
-            var translatePackage = new Package({name: $('#name').val()});
+            translatePackage.set({name: $('#name').val()});
             translatePackage.save();
         }
     });

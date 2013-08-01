@@ -22,10 +22,19 @@ define(['app', 'router'], function (App, Router) {
         });
 
         Router.route('settings/translate/form', 'translate:package:form', function () {
-            require(['sulutranslate/controller/package/form'], function(Form) {
+            require(['sulutranslate/controller/package/form'], function (Form) {
                 new Form({
                     el: App.$content
                 });
+            });
+        });
+
+        Router.route('settings/translate/form/:id', 'translate:package:form:id', function (id) {
+            require(['sulutranslate/controller/package/form'], function (Form) {
+                new Form({
+                    el: App.$content,
+                    id: id
+                })
             });
         });
     };
