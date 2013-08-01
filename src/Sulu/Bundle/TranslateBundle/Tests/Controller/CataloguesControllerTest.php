@@ -47,23 +47,27 @@ class CataloguesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/translate/catalogues.xml');
-        $this->assertEquals(1, $crawler->filter('code:contains("EN")')->count());
+        $client->request('GET', '/translate/catalogues');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('EN', $response->items[0]->code);
     }
 
     public function testGetByPackage()
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/translate/catalogues.xml?package=1');
-        $this->assertEquals(1, $crawler->filter('code:contains("EN")')->count());
+        $client->request('GET', '/translate/catalogues?package=1');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('EN', $response->items[0]->code);
     }
 
     public function testGetById()
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/translate/catalogues/1.xml');
 
-        $this->assertEquals(1, $crawler->filter('name:contains("Sulu")')->count());
+        $client->request('GET', '/translate/catalogues/1');
+        $response = json_decode($client->getResponse()->getContent());
+        var_dump($response);
+        $this->assertEquals('EN', $response->code);
     }
 }

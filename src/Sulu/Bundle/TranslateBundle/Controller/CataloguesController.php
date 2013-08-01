@@ -20,6 +20,8 @@ class CataloguesController extends FOSRestController
 {
     public function getCataloguesAction()
     {
+        $response = array();
+
         $packageId = $this->getRequest()->get('package');
 
         $repository = $this->getDoctrine()
@@ -35,7 +37,10 @@ class CataloguesController extends FOSRestController
             $catalogues = $repository->findAll();
         }
 
-        $view = $this->view($catalogues, 200);
+        $response['total'] = count($catalogues);
+        $response['items'] = $catalogues;
+
+        $view = $this->view($response, 200);
 
         return $this->handleView($view);
     }
@@ -47,6 +52,8 @@ class CataloguesController extends FOSRestController
      */
     public function getCatalogueAction($id)
     {
+        $response = array();
+
         $catalogue = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Catalogue')
             ->find($id);

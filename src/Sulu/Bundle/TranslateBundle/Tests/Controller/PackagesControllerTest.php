@@ -18,9 +18,19 @@ class PackagesControllerTest extends DatabaseTestCase
     public function setUp()
     {
         $package = new Package();
-        $package->setName("Sulu");
+        $package->setName('Sulu');
 
         self::$em->persist($package);
+
+        $package = new Package();
+        $package->setName('Global');
+        self::$em->persist($package);
+
+        $package = new Package();
+        $package->setName('Portal');
+
+        self::$em->persist($package);
+
         self::$em->flush();
     }
 
@@ -39,62 +49,132 @@ class PackagesControllerTest extends DatabaseTestCase
     public function testGetAll()
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/translate/packages.xml');
+        $client->request('GET', '/translate/packages');
 
-        $this->assertEquals(1, $crawler->filter('name:contains("Sulu")')->count());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(3, $response->total);
+        $this->assertEquals('Sulu', $response->items[0]->name);
+        $this->assertEquals('Global', $response->items[1]->name);
+        $this->assertEquals('Portal', $response->items[2]->name);
     }
 
     public function testGetId()
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/translate/packages/1.xml');
+        $client->request('GET', '/translate/packages/1');
 
-        $this->assertEquals(1, $crawler->filter('name:contains("Sulu")')->count());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals('Sulu', $response->name);
     }
 
     public function testPost()
     {
         $client = static::createClient();
 
-        $crawler = $client->request(
+        $client->request(
             'POST',
-            '/translate/packages.xml',
+            '/translate/packages',
             array(
                 'name' => 'Portal',
                 'languages' => array('EN', 'DE', 'ES')
             )
         );
 
-        $this->assertEquals(1, $crawler->filter('name:contains("Portal")')->count());
-        $packageId = $crawler->filterXPath('//result/id')->text();
+        $response = json_decode($client->getResponse()->getContent());
 
-        $crawler = $client->request('GET', '/translate/catalogues.xml?package='.$packageId);
-        $this->assertEquals('EN', $crawler->filterXPath('//entry[1]/code')->text());
-        $this->assertEquals('DE', $crawler->filterXPath('//entry[2]/code')->text());
-        $this->assertEquals('ES', $crawler->filterXPath('//entry[3]/code')->text());
+        $this->assertEquals('Portal', $response->name);
+
+        $client->request('GET', '/translate/catalogues?package='.$response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('EN', $response->items[0]->code);
+        $this->assertEquals('DE', $response->items[1]->code);
+        $this->assertEquals('ES', $response->items[2]->code);
     }
 
     public function testPostWithoutLanguages()
     {
         $client = static::createClient();
 
-        $crawler = $client->request(
+        $client->request(
             'POST',
-            '/translate/packages.xml',
+            '/translate/packages',
             array(
                 'name' => 'Portal'
             )
         );
 
-        $this->assertEquals('Portal', $crawler->filterXpath('//result/name')->text());
+        $response = json_decode($client->getResponse()->getContent());
 
-        $packageId = $crawler->filterXPath('//result/id')->text();
+        $this->assertEquals('Portal', $response->name);
 
-        $crawler = $client->request(
+        $client->request(
             'GET',
-            '/translate/packages/'.$packageId.'.xml'
+            '/translate/packages/'.$response->id
         );
 
-        $this->assertEquals('Portal', $crawler->filterXPath('//result/name')->text());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Portal', $response->name);
+    }
+
+    public function testPut()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'PUT',
+            '/translate/packages/1',
+            array(
+                'name' => 'Portal',
+                'languages' => array('EN', 'DE', 'ES')
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Portal', $response->name);
+        $this->assertEquals(1, $response->id);
+
+        $client->request(
+            'GET',
+            '/translate/packages'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Portal', $response->items[0]->name);
+        $this->assertEquals(1, $response->items[0]->id);
+    }
+
+    public function testPutWithoutLanguages()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'PUT',
+            '/translate/packages/1',
+            array(
+                'name' => 'Portal'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Portal', $response->name);
+        $this->assertEquals(1, $response->id);
+
+        $client->request(
+            'GET',
+            '/translate/packages'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Portal', $response->items[0]->name);
+        $this->assertEquals(1, $response->items[0]->id);
     }
 }
