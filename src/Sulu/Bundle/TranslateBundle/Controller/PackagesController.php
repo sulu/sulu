@@ -21,7 +21,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
 class PackagesController extends FOSRestController
 {
     /**
-     * Lists all the catalogues
+     * Lists all the catalogues or filters the catalogues by parameters
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getPackagesAction()
@@ -30,14 +30,38 @@ class PackagesController extends FOSRestController
 
         $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
         $sortBy = $this->getRequest()->get('sortBy', 'id');
+        $page = $this->getRequest()->get('page', 1);
+        $pageSize = $this->getRequest()->get('pageSize');
+        $fields = $this->getRequest()->get('fields');
+        $fields = ($fields != null) ? explode(',', $fields) : null;
+
+        // Calculate limit and offset
+        $limit = $pageSize;
+        $offset = ($pageSize != null) ? $pageSize * ($page - 1) : null;
 
         /** @var array $packages */
         $packages = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Package')
-            ->findBy(array(), array($sortBy => $sortOrder)); //TODO findAll more performant?
+            ->findBy(array(), array($sortBy => $sortOrder), $limit, $offset); //TODO findAll more performant?
 
         $response['total'] = count($packages);
-        $response['items'] = $packages;
+        if ($fields != null) {
+            // Walk through all packages and only extract informations from given fields
+            foreach ($packages as $package) {
+                //TODO use reflections?
+                /** @var Package $package */
+                $item = array();
+                if (in_array('name', $fields)) {
+                    $item['name'] = $package->getName();
+                }
+                if (in_array('id', $fields)) {
+                    $item['id'] = $package->getId();
+                }
+                $response['items'][] = $item;
+            }
+        } else {
+            $response['items'] = $packages;
+        }
 
         $view = $this->view($response, 200);
 

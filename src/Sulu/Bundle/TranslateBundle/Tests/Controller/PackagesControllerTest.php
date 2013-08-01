@@ -92,6 +92,53 @@ class PackagesControllerTest extends DatabaseTestCase
         $this->assertEquals('Portal', $response->items[0]->name);
     }
 
+    public function testGetAllPageSize()
+    {
+        $pageSize = 2;
+
+        $client = static::createClient();
+        $client->request('GET', '/translate/packages?pageSize=' . $pageSize);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($pageSize, count($response->items));
+        $this->assertEquals($pageSize, $response->total);
+        $this->assertEquals('Sulu', $response->items[0]->name);
+        $this->assertEquals('Global', $response->items[1]->name);
+
+        $client->request('GET', '/translate/packages?pageSize=' . $pageSize . '&page=2');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, count($response->items)); // only 1 item remaining
+        $this->assertEquals(1, $response->total); // only 1 item remaining
+        $this->assertEquals('Portal', $response->items[0]->name);
+    }
+
+    public function testGetAllFields()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/translate/packages?fields=name');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Sulu', $response->items[0]->name);
+        $this->assertEquals('Global', $response->items[1]->name);
+        $this->assertEquals('Portal', $response->items[2]->name);
+
+        $this->assertFalse(isset($response->items[0]->id));
+        $this->assertFalse(isset($response->items[1]->id));
+        $this->assertFalse(isset($response->items[2]->id));
+
+        $client->request('GET', '/translate/packages?fields=name,id');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Sulu', $response->items[0]->name);
+        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals('Global', $response->items[1]->name);
+        $this->assertEquals(2, $response->items[1]->id);
+        $this->assertEquals('Portal', $response->items[2]->name);
+        $this->assertEquals(3, $response->items[2]->id);
+    }
+
     public function testGetId()
     {
         $client = static::createClient();
@@ -120,7 +167,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal', $response->name);
 
-        $client->request('GET', '/translate/catalogues?package='.$response->id);
+        $client->request('GET', '/translate/catalogues?package=' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('EN', $response->items[0]->code);
@@ -146,7 +193,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/translate/packages/'.$response->id
+            '/translate/packages/' . $response->id
         );
 
         $response = json_decode($client->getResponse()->getContent());
