@@ -25,6 +25,6 @@ class SuluTranslateAdmin extends Admin {
         $translate = new NavigationItem('Translate');
         $translate->setAction('settings/translate');
         $settings->addChild($translate);
-        $this->navigation = new Navigation($rootNavigationItem);
+        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 }
