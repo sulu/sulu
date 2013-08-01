@@ -27,6 +27,7 @@ define(['jquery', 'backbone', 'sulutranslate/model/package'], function ($, Backb
             require(['text!/translate/template/catalogue/form'], function (Template) {
                 var template;
                 if (!this.options.id) {
+                    translatePackage = new Package();
                     template = _.template(Template, {});
                     this.$el.html(template);
                 } else {
