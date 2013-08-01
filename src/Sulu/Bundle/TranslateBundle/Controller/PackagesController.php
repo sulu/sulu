@@ -18,7 +18,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
  * Makes the translation catalogues accessible trough an REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class PackagesController extends FOSRestController
+class PackagesController extends ListRestController
 {
     /**
      * Lists all the catalogues or filters the catalogues by parameters
@@ -28,23 +28,14 @@ class PackagesController extends FOSRestController
     {
         $response = array();
 
-        $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
-        $sortBy = $this->getRequest()->get('sortBy', 'id');
-        $page = $this->getRequest()->get('page', 1);
-        $pageSize = $this->getRequest()->get('pageSize');
-        $fields = $this->getRequest()->get('fields');
-        $fields = ($fields != null) ? explode(',', $fields) : null;
-
-        // Calculate limit and offset
-        $limit = $pageSize;
-        $offset = ($pageSize != null) ? $pageSize * ($page - 1) : null;
-
         /** @var array $packages */
         $packages = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Package')
-            ->findBy(array(), array($sortBy => $sortOrder), $limit, $offset); //TODO findAll more performant?
+            ->findBy(array(), $this->getSorting(), $this->getLimit(), $this->getOffset()); //TODO findAll more performant?
 
         $response['total'] = count($packages);
+
+        $fields = $this->getFields();
         if ($fields != null) {
             // Walk through all packages and only extract informations from given fields
             foreach ($packages as $package) {
