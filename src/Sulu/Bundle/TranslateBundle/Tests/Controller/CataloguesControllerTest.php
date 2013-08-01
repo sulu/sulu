@@ -67,7 +67,6 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/translate/catalogues/1');
         $response = json_decode($client->getResponse()->getContent());
-        var_dump($response);
         $this->assertEquals('EN', $response->code);
     }
 }
