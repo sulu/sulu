@@ -26,11 +26,20 @@ class PackagesController extends FOSRestController
      */
     public function getPackagesAction()
     {
+        $response = array();
+
+        $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
+        $sortBy = $this->getRequest()->get('sortBy', 'id');
+
+        /** @var array $packages */
         $packages = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Package')
-            ->findAll();
+            ->findBy(array(), array($sortBy => $sortOrder)); //TODO findAll more performant?
 
-        $view = $this->view($packages, 200);
+        $response['total'] = count($packages);
+        $response['items'] = $packages;
+
+        $view = $this->view($response, 200);
 
         return $this->handleView($view);
     }
@@ -78,6 +87,29 @@ class PackagesController extends FOSRestController
 
         $view = $this->view($package, 200);
 
+        return $this->handleView($view);
+    }
+
+    /**
+     * Update the existing package or create a new one with the given id,
+     * if the package with the given id is not yet existing.
+     * @param integer $id The id of the package to update
+     */
+    public function putPackagesAction($id)
+    {
+        $name = $this->getRequest()->get('name');
+        $languages = $this->getRequest()->get('languages');
+
+        /** @var Package $package */
+        $package = $this->getDoctrine()
+            ->getRepository('SuluTranslateBundle:Package')
+            ->find($id);
+
+        $package->setName($name);
+
+        $this->getDoctrine()->getManager()->flush();
+
+        $view = $this->view($package);
         return $this->handleView($view);
     }
 }

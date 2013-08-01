@@ -59,6 +59,39 @@ class PackagesControllerTest extends DatabaseTestCase
         $this->assertEquals('Portal', $response->items[2]->name);
     }
 
+    public function testGetAllSorted()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/translate/packages?sortBy=name&sortOrder=asc');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Global', $response->items[0]->name);
+        $this->assertEquals('Portal', $response->items[1]->name);
+        $this->assertEquals('Sulu', $response->items[2]->name);
+
+        $client->request('GET', '/translate/packages?sortBy=name&sortOrder=desc');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Global', $response->items[2]->name);
+        $this->assertEquals('Portal', $response->items[1]->name);
+        $this->assertEquals('Sulu', $response->items[0]->name);
+
+        $client->request('GET', '/translate/packages?sortBy=id&sortOrder=asc');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Sulu', $response->items[0]->name);
+        $this->assertEquals('Global', $response->items[1]->name);
+        $this->assertEquals('Portal', $response->items[2]->name);
+
+        $client->request('GET', '/translate/packages?sortBy=id&sortOrder=desc');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Sulu', $response->items[2]->name);
+        $this->assertEquals('Global', $response->items[1]->name);
+        $this->assertEquals('Portal', $response->items[0]->name);
+    }
+
     public function testGetId()
     {
         $client = static::createClient();
