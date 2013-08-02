@@ -114,15 +114,15 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $array = $this->item1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertTrue($array['hasChildren']);
+        $this->assertTrue($array['hasSub']);
         $this->assertEquals('action', $array['action']);
 
-        $this->assertEquals('Portals', $array['sub']['entries'][0]['title']);
-        $this->assertFalse($array['sub']['entries'][0]['hasChildren']);
-        $this->assertEquals(null, $array['sub']['entries'][0]['action']);
+        $this->assertEquals('Portals', $array['sub']['items'][0]['title']);
+        $this->assertFalse($array['sub']['items'][0]['hasSub']);
+        $this->assertEquals(null, $array['sub']['items'][0]['action']);
 
-        $this->assertEquals('Settings', $array['sub']['entries'][1]['title']);
-        $this->assertFalse($array['sub']['entries'][1]['hasChildren']);
-        $this->assertEquals(null, $array['sub']['entries'][1]['action']);
+        $this->assertEquals('Settings', $array['sub']['items'][1]['title']);
+        $this->assertFalse($array['sub']['items'][1]['hasSub']);
+        $this->assertEquals(null, $array['sub']['items'][1]['action']);
     }
 }
