@@ -98,24 +98,24 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         $array = $this->navigation1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertTrue($array['hasChildren']);
+        $this->assertTrue($array['hasSub']);
 
-        $this->assertEquals('Portals', $array['sub']['entries'][0]['title']);
-        $this->assertTrue($array['sub']['entries'][0]['hasChildren']);
+        $this->assertEquals('Portals', $array['sub']['items'][0]['title']);
+        $this->assertTrue($array['sub']['items'][0]['hasSub']);
 
-        $this->assertEquals('DE', $array['sub']['entries'][0]['sub']['entries'][0]['title']);
-        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][0]['hasChildren']);
+        $this->assertEquals('DE', $array['sub']['items'][0]['sub']['items'][0]['title']);
+        $this->assertFalse($array['sub']['items'][0]['sub']['items'][0]['hasSub']);
 
-        $this->assertEquals('AT', $array['sub']['entries'][0]['sub']['entries'][1]['title']);
-        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][1]['hasChildren']);
+        $this->assertEquals('AT', $array['sub']['items'][0]['sub']['items'][1]['title']);
+        $this->assertFalse($array['sub']['items'][0]['sub']['items'][1]['hasSub']);
 
-        $this->assertEquals('COM', $array['sub']['entries'][0]['sub']['entries'][2]['title']);
-        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][2]['hasChildren']);
+        $this->assertEquals('COM', $array['sub']['items'][0]['sub']['items'][2]['title']);
+        $this->assertFalse($array['sub']['items'][0]['sub']['items'][2]['hasSub']);
 
-        $this->assertEquals('Settings', $array['sub']['entries'][1]['title']);
-        $this->assertTrue($array['sub']['entries'][0]['hasChildren']);
+        $this->assertEquals('Settings', $array['sub']['items'][1]['title']);
+        $this->assertTrue($array['sub']['items'][0]['hasSub']);
 
-        $this->assertEquals('Translate', $array['sub']['entries'][1]['sub']['entries'][0]['title']);
-        $this->assertFalse($array['sub']['entries'][0]['sub']['entries'][0]['hasChildren']);
+        $this->assertEquals('Translate', $array['sub']['items'][1]['sub']['items'][0]['title']);
+        $this->assertFalse($array['sub']['items'][0]['sub']['items'][0]['hasSub']);
     }
 }
