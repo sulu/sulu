@@ -122,7 +122,7 @@ class PackagesController extends ListRestController
     public function putPackagesAction($id)
     {
         $name = $this->getRequest()->get('name');
-        $languages = $this->getRequest()->get('languages');
+        $codes = $this->getRequest()->get('codes');
 
         /** @var Package $package */
         $package = $this->getDoctrine()
