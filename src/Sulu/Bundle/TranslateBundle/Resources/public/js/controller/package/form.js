@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['jquery', 'backbone', 'sulutranslate/model/package'], function ($, Backbone, Package) {
+define(['jquery', 'backbone', 'router', 'sulutranslate/model/package'], function ($, Backbone, Router, Package) {
 
     'use strict';
 
@@ -44,8 +44,11 @@ define(['jquery', 'backbone', 'sulutranslate/model/package'], function ($, Backb
 
         submitForm: function (event) {
             event.preventDefault();
-            translatePackage.set({name: $('#name').val()});
-            translatePackage.save();
+            translatePackage.save({name: $('#name').val()}, {
+                success: function (translatePackage) {
+                    Router.navigate('settings/translate/form/' + translatePackage.get('id'));
+                }
+            });
         }
     });
 });
