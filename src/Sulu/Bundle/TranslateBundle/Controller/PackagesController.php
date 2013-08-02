@@ -82,15 +82,15 @@ class PackagesController extends ListRestController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $languages = $this->getRequest()->get('languages');
+        $codes = $this->getRequest()->get('codes');
 
         $package = new Package();
         $package->setName($this->getRequest()->get('name'));
 
-        if ($languages != null) {
-            foreach ($languages as $language) {
+        if ($codes != null) {
+            foreach ($codes as $code) {
                 $catalogue = new Catalogue();
-                $catalogue->setCode($language);
+                $catalogue->setCode($code);
                 $catalogue->setPackage($package);
                 $package->addCatalogue($catalogue);
                 $em->persist($catalogue);

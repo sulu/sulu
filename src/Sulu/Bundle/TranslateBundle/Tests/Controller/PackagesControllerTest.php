@@ -159,7 +159,7 @@ class PackagesControllerTest extends DatabaseTestCase
             '/translate/packages',
             array(
                 'name' => 'Portal',
-                'languages' => array('EN', 'DE', 'ES')
+                'codes' => array('EN', 'DE', 'ES')
             )
         );
 
