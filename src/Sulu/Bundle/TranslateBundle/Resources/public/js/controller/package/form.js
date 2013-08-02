@@ -7,7 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['jquery', 'backbone', 'router', 'sulutranslate/model/package'], function ($, Backbone, Router, Package) {
+define([
+    'jquery',
+    'backbone',
+    'router',
+    'sulutranslate/model/package'
+], function ($, Backbone, Router, Package) {
 
     'use strict';
 
@@ -28,13 +33,17 @@ define(['jquery', 'backbone', 'router', 'sulutranslate/model/package'], function
                 var template;
                 if (!this.options.id) {
                     translatePackage = new Package();
-                    template = _.template(Template, {});
+                    template = _.template(Template, {name: '', codes: []});
                     this.$el.html(template);
                 } else {
                     translatePackage = new Package({id: this.options.id});
                     translatePackage.fetch({
                         success: function (translatePackage) {
-                            template = _.template(Template, {name: translatePackage.get('name')});
+                            template = _.template(Template, {
+                                    name: translatePackage.get('name'),
+                                    codes: translatePackage.get('codes')
+                                }
+                            );
                             this.$el.html(template);
                         }.bind(this)
                     });
@@ -44,7 +53,13 @@ define(['jquery', 'backbone', 'router', 'sulutranslate/model/package'], function
 
         submitForm: function (event) {
             event.preventDefault();
-            translatePackage.save({name: $('#name').val()}, {
+            translatePackage.save({
+                name: $('#name').val(),
+                codes: [
+                    $('#code1').val(),
+                    $('#code2').val()
+                ]
+            }, {
                 success: function (translatePackage) {
                     Router.navigate('settings/translate/form/' + translatePackage.get('id'));
                 }

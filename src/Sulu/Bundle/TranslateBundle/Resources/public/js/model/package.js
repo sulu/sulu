@@ -13,7 +13,7 @@ define(function() {
         defaults: {
             id: null,
             name: '',
-            languages: []
+            codes: []
         }
     });
 });
