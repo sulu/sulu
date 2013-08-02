@@ -61,7 +61,8 @@ define([
                 ]
             }, {
                 success: function (translatePackage) {
-                    Router.navigate('settings/translate/form/' + translatePackage.get('id'));
+                    //Router.navigate('settings/translate/form/' + translatePackage.get('id'));
+                    Router.navigate('settings/translate');
                 }
             });
         }

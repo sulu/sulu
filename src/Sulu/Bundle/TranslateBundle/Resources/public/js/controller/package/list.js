@@ -17,8 +17,15 @@ define(['backbone'], function (Backbone) {
         },
 
         render: function () {
-            var template = _.template('That is a small test', {});
-            this.$el.html(template);
+            $.ajax('/translate/packages', {
+                type: 'GET',
+                success: function (data) {
+                    this.$el.html('');
+                    $.each(data.items, function (key, d) {
+                        $('#content').append('<p>' + d.name + '</p>');
+                    }.bind(this));
+                }.bind(this)
+            });
         }
     });
 });

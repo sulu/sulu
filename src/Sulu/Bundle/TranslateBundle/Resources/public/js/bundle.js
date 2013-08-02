@@ -15,7 +15,7 @@ define(['app', 'router'], function (App, Router) {
         //add routes
         Router.route('settings/translate', 'translate:package:list', function () {
             require(['sulutranslate/controller/package/list'], function (List) {
-                new List({
+                new List({ //TODO Instantiate only huskyList?
                     el: App.$content
                 });
             });
