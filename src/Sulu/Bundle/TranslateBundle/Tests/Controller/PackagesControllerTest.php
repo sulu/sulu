@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Controller;
 
+use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Tests\DatabaseTestCase;
 
@@ -19,7 +20,10 @@ class PackagesControllerTest extends DatabaseTestCase
     {
         $package = new Package();
         $package->setName('Sulu');
-
+        $catalogue = new Catalogue();
+        $catalogue->setPackage($package);
+        $catalogue->setCode('EN');
+        self::$em->persist($catalogue);
         self::$em->persist($package);
 
         $package = new Package();
@@ -148,6 +152,8 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
         $this->assertEquals('Sulu', $response->name);
+        $this->assertEquals(array('EN'), $response->codes);
+        $this->assertFalse(isset($response->catalogues));
     }
 
     public function testPost()

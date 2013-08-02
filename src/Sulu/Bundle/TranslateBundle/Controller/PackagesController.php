@@ -70,7 +70,16 @@ class PackagesController extends ListRestController
             ->getRepository('SuluTranslateBundle:Package')
             ->find($id);
 
-        $view = $this->view($package, 200);
+        $item = array();
+        $item['id'] = $package->getId();
+        $item['name'] = $package->getName();
+        $item['codes'] = array();
+        foreach ($package->getCatalogues() as $catalogue) {
+            /** @var Catalogue $catalogue */
+            $item['codes'][] = $catalogue->getCode();
+        }
+
+        $view = $this->view($item, 200);
 
         return $this->handleView($view);
     }
