@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TranslateBundle\Tests\Controller;
 
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
-use Sulu\Bundle\TranslateBundle\Tests\DatabaseTestCase;
+use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 
 class CataloguesControllerTest extends DatabaseTestCase
 {

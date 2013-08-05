@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use Sulu\Bundle\CoreBundle\Controller\ListRestController;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 
