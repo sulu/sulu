@@ -21,7 +21,7 @@ define(['app', 'router'], function (App, Router) {
             });
         });
 
-        Router.route('settings/translate/form', 'translate:package:form', function () {
+        Router.route('settings/translate/add', 'translate:package:form', function () {
             require(['sulutranslate/controller/package/form'], function (Form) {
                 new Form({
                     el: App.$content
@@ -29,7 +29,7 @@ define(['app', 'router'], function (App, Router) {
             });
         });
 
-        Router.route('settings/translate/form/:id', 'translate:package:form:id', function (id) {
+        Router.route('settings/translate/edit::id', 'translate:package:form:id', function (id) {
             require(['sulutranslate/controller/package/form'], function (Form) {
                 new Form({
                     el: App.$content,
