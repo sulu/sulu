@@ -79,7 +79,7 @@ class PackagesController extends ListRestController
             $item['codes'][] = $catalogue->getCode();
         }
 
-        $view = $this->view($item, 200);
+        $view = $this->view($package, 200);
 
         return $this->handleView($view);
     }
@@ -122,7 +122,7 @@ class PackagesController extends ListRestController
     public function putPackagesAction($id)
     {
         $name = $this->getRequest()->get('name');
-        $codes = $this->getRequest()->get('codes');
+        $languages = $this->getRequest()->get('languages');
 
         /** @var Package $package */
         $package = $this->getDoctrine()
