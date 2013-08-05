@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
-use Sulu\Bundle\CoreBundle\Controller\ListRestController;
+use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 
@@ -18,7 +18,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
  * Makes the translation catalogues accessible trough an REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class PackagesController extends ListRestController
+class PackagesController extends FOSRestController
 {
     /**
      * Lists all the catalogues or filters the catalogues by parameters
@@ -28,18 +28,23 @@ class PackagesController extends ListRestController
     {
         $response = array();
 
+        $listHelper = $this->get('sulu_core.list_rest_helper');
+
         /** @var array $packages */
         $packages = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Package')
-            ->findBy(array(), $this->getSorting(), $this->getLimit(), $this->getOffset()); //TODO findAll more performant?
+            ->findBy(array(),
+                $listHelper->getSorting(),
+                $listHelper->getLimit(),
+                $listHelper->getOffset()
+            ); //TODO findAll more performant?
 
         $response['total'] = count($packages);
 
-        $fields = $this->getFields();
+        $fields = $listHelper->getFields();
         if ($fields != null) {
             // Walk through all packages and only extract informations from given fields
             foreach ($packages as $package) {
-                //TODO use reflections?
                 /** @var Package $package */
                 $item = array();
                 if (in_array('name', $fields)) {
