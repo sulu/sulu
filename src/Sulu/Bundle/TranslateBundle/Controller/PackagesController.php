@@ -79,7 +79,7 @@ class PackagesController extends ListRestController
             $item['codes'][] = $catalogue->getCode();
         }
 
-        $view = $this->view($package, 200);
+        $view = $this->view($item, 200);
 
         return $this->handleView($view);
     }
