@@ -76,16 +76,7 @@ class PackagesController extends FOSRestController
             ->getRepository('SuluTranslateBundle:Package')
             ->find($id);
 
-        $item = array();
-        $item['id'] = $package->getId();
-        $item['name'] = $package->getName();
-        $item['codes'] = array();
-        foreach ($package->getCatalogues() as $catalogue) {
-            /** @var Catalogue $catalogue */
-            $item['codes'][] = $catalogue->getCode();
-        }
-
-        $view = $this->view($item, 200);
+        $view = $this->view($package, 200);
 
         return $this->handleView($view);
     }

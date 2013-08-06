@@ -12,6 +12,8 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Class Package
@@ -19,7 +21,8 @@ use JMS\Serializer\Annotation\Expose;
  *
  * @ExclusionPolicy("all")
  */
-class Package {
+class Package
+{
     /**
      * @var integer
      * @Expose
@@ -58,7 +61,7 @@ class Package {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -74,14 +77,14 @@ class Package {
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -97,7 +100,7 @@ class Package {
     public function addCode(\Sulu\Bundle\TranslateBundle\Entity\Code $codes)
     {
         $this->codes[] = $codes;
-    
+
         return $this;
     }
 
@@ -114,7 +117,7 @@ class Package {
     /**
      * Get codes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCodes()
     {
@@ -130,7 +133,7 @@ class Package {
     public function addLocation(\Sulu\Bundle\TranslateBundle\Entity\Location $locations)
     {
         $this->locations[] = $locations;
-    
+
         return $this;
     }
 
@@ -147,7 +150,7 @@ class Package {
     /**
      * Get locations
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLocations()
     {
@@ -163,7 +166,7 @@ class Package {
     public function addCatalogue(\Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogues)
     {
         $this->catalogues[] = $catalogues;
-    
+
         return $this;
     }
 
@@ -180,10 +183,32 @@ class Package {
     /**
      * Get catalogues
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCatalogues()
     {
         return $this->catalogues;
+    }
+
+    /**
+     * Returns the codes for the rest api
+     * @return array
+     *
+     * @VirtualProperty
+     * @SerializedName("codes")
+     */
+    public function getCodesForRest()
+    {
+        $codes = array();
+        $catalogues = $this->getCatalogues();
+
+        if ($catalogues != null) {
+            foreach ($catalogues as $catalogue) {
+                /** @var Catalogue $catalogue */
+                $codes[] = $catalogue->getCode();
+            }
+        }
+
+        return $codes;
     }
 }
