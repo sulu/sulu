@@ -135,11 +135,14 @@ class PackagesController extends FOSRestController
             ->getRepository('SuluTranslateBundle:Package')
             ->find($id);
 
-        $package->setName($name);
+        if (!$package) {
+            $view = $this->view(null, 400);
+        } else {
+            $package->setName($name);
+            $this->getDoctrine()->getManager()->flush();
+            $view = $this->view($package);
+        }
 
-        $this->getDoctrine()->getManager()->flush();
-
-        $view = $this->view($package);
         return $this->handleView($view);
     }
 }
