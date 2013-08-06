@@ -39,11 +39,7 @@ define([
                     translatePackage = new Package({id: this.options.id});
                     translatePackage.fetch({
                         success: function (translatePackage) {
-                            template = _.template(Template, {
-                                    name: translatePackage.get('name'),
-                                    codes: translatePackage.get('codes')
-                                }
-                            );
+                            template = _.template(Template, translatePackage.toJSON());
                             this.$el.html(template);
                         }.bind(this)
                     });
@@ -54,10 +50,10 @@ define([
         submitForm: function (event) {
             event.preventDefault();
             translatePackage.save({
-                name: $('#name').val(),
+                name: this.$('#name').val(),
                 codes: [
-                    $('#code1').val(),
-                    $('#code2').val()
+                    this.$('#code1').val(),
+                    this.$('#code2').val()
                 ]
             }, {
                 success: function (translatePackage) {
