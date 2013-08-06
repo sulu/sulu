@@ -10,14 +10,25 @@
 
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+
+/**
+ * Class Package
+ * @package Sulu\Bundle\TranslateBundle\Entity
+ *
+ * @ExclusionPolicy("all")
+ */
 class Package {
     /**
      * @var integer
+     * @Expose
      */
     private $id;
 
     /**
      * @var string
+     * @Expose
      */
     protected $name;
 

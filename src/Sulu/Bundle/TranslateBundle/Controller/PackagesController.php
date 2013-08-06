@@ -33,11 +33,12 @@ class PackagesController extends FOSRestController
         /** @var array $packages */
         $packages = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Package')
-            ->findBy(array(),
+            ->findBy(
+                array(),
                 $listHelper->getSorting(),
                 $listHelper->getLimit(),
                 $listHelper->getOffset()
-            ); //TODO findAll more performant?
+            );
 
         $response['total'] = count($packages);
 
