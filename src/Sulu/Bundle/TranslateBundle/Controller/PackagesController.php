@@ -95,27 +95,33 @@ class PackagesController extends FOSRestController
      */
     public function postPackagesAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $name = $this->getRequest()->get('name');
 
-        $codes = $this->getRequest()->get('codes');
+        if ($name != null) {
+            $em = $this->getDoctrine()->getManager();
 
-        $package = new Package();
-        $package->setName($this->getRequest()->get('name'));
+            $codes = $this->getRequest()->get('codes');
 
-        if ($codes != null) {
-            foreach ($codes as $code) {
-                $catalogue = new Catalogue();
-                $catalogue->setCode($code);
-                $catalogue->setPackage($package);
-                $package->addCatalogue($catalogue);
-                $em->persist($catalogue);
+            $package = new Package();
+            $package->setName($name);
+
+            if ($codes != null) {
+                foreach ($codes as $code) {
+                    $catalogue = new Catalogue();
+                    $catalogue->setCode($code);
+                    $catalogue->setPackage($package);
+                    $package->addCatalogue($catalogue);
+                    $em->persist($catalogue);
+                }
             }
+
+            $em->persist($package);
+            $em->flush();
+
+            $view = $this->view($package, 200);
+        } else {
+            $view = $this->view(null, 400);
         }
-
-        $em->persist($package);
-        $em->flush();
-
-        $view = $this->view($package, 200);
 
         return $this->handleView($view);
     }

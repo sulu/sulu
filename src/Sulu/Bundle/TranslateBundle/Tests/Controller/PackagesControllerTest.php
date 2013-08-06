@@ -207,6 +207,19 @@ class PackagesControllerTest extends DatabaseTestCase
         $this->assertEquals('Portal', $response->name);
     }
 
+    public function testPostWithoutName()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/translate/packages',
+            array()
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
     public function testPut()
     {
         $client = static::createClient();
