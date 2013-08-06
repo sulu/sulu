@@ -30,6 +30,12 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
+     * The type of the navigationItem
+     * @var string
+     */
+    protected $type;
+
+    /**
      * The icon of the navigationItem
      * @var string
      */
@@ -83,6 +89,24 @@ class NavigationItem implements \Iterator
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Sets the type of the navigationItem
+     * @param string $type The type of the navigationItem
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * Returns the type of the navigationItem
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
