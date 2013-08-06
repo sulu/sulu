@@ -343,6 +343,7 @@ class NavigationItem implements \Iterator
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
             'hasSub' => $this->hasChildren(),
+            'type' => $this->getType(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
