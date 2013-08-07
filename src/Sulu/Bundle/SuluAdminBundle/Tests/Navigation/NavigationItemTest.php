@@ -61,7 +61,8 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("OtherNavigationItem", $this->navigationItem->getName());
     }
 
-    public function testType() {
+    public function testType()
+    {
         $this->navigationItem->setType('content');
         $this->assertEquals('content', $this->navigationItem->getType());
     }
