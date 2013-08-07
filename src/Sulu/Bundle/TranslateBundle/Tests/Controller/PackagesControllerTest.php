@@ -152,8 +152,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
         $this->assertEquals('Sulu', $response->name);
-        $this->assertEquals(array('EN'), $response->codes);
-        $this->assertFalse(isset($response->catalogues));
+        $this->assertEquals('EN', $response->catalogues[0]->code);
     }
 
     public function testPost()
@@ -165,7 +164,11 @@ class PackagesControllerTest extends DatabaseTestCase
             '/translate/packages',
             array(
                 'name' => 'Portal',
-                'codes' => array('EN', 'DE', 'ES')
+                'codes' => array(
+                    array('code' => 'EN'),
+                    array('code' => 'DE'),
+                    array('code' => 'ES')
+                )
             )
         );
 
@@ -173,12 +176,12 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal', $response->name);
 
-        $client->request('GET', '/translate/catalogues?package=' . $response->id);
+        $client->request('GET', '/translate/packages/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('EN', $response->items[0]->code);
-        $this->assertEquals('DE', $response->items[1]->code);
-        $this->assertEquals('ES', $response->items[2]->code);
+        $this->assertEquals('EN', $response->catalogues[0]->code);
+        $this->assertEquals('DE', $response->catalogues[1]->code);
+        $this->assertEquals('ES', $response->catalogues[2]->code);
     }
 
     public function testPostWithoutLanguages()
@@ -229,7 +232,11 @@ class PackagesControllerTest extends DatabaseTestCase
             '/translate/packages/1',
             array(
                 'name' => 'Portal',
-                'languages' => array('EN', 'DE', 'ES')
+                'catalogues' => array(
+                    array('code' => 'EN'),
+                    array('code' => 'DE'),
+                    array('code' => 'ES')
+                )
             )
         );
 
@@ -237,6 +244,9 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal', $response->name);
         $this->assertEquals(1, $response->id);
+        $this->assertContains('EN', $response->catalogues[0]->code);
+        $this->assertContains('DE', $response->catalogues[1]->code);
+        $this->assertContains('ES', $response->catalogues[2]->code);
 
         $client->request(
             'GET',
