@@ -13,6 +13,7 @@ require.config({
         jquery: 'vendor/jquery/jquery',
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
+        backbonerelational: 'vendor/backbone/backbone-relational',
         husky: 'vendor/husky/husky'
     },
     shim: {
@@ -23,8 +24,11 @@ require.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
+        'backbonerelational': {
+            deps: ['backbone']
+        },
         'husky': {
-            'deps': ['jquery']
+            deps: ['jquery']
         }
     }
 });
