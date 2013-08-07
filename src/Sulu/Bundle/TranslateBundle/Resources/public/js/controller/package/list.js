@@ -28,6 +28,7 @@ define(['app', 'router', 'backbone', 'husky'], function (App, Router, Backbone, 
             });
 
             dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
+                dataGrid.removeData('Husky.Ui.DataGrid'); //FIXME Bug in Husky?
                 Router.navigate('settings/translate/edit:' + item);
             });
         }
