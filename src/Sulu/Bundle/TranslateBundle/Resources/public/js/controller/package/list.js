@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbone'], function (Backbone) {
+define(['app', 'router', 'backbone', 'husky'], function (App, Router, Backbone, Husky) {
 
     'use strict';
 
@@ -17,14 +17,18 @@ define(['backbone'], function (Backbone) {
         },
 
         render: function () {
-            $.ajax('/translate/packages', {
-                type: 'GET',
-                success: function (data) {
-                    this.$el.html('');
-                    $.each(data.items, function (key, d) {
-                        $('#content').append('<p>' + d.name + '</p>');
-                    }.bind(this));
-                }.bind(this)
+            var dataGrid = this.$el.huskyDataGrid({
+                url: '/translate/packages',
+                pagination: false,
+                showPages: 6,
+                pageSize: 4,
+                selectItems: {
+                    type: 'checkbox'
+                }
+            });
+
+            dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
+                Router.navigate('settings/translate/edit:' + item);
             });
         }
     });
