@@ -11,8 +11,9 @@ define([
     'jquery',
     'backbone',
     'router',
-    'sulutranslate/model/package'
-], function ($, Backbone, Router, Package) {
+    'sulutranslate/model/package',
+    'sulutranslate/model/catalogue'
+], function ($, Backbone, Router, Package, Catalogue) {
 
     'use strict';
 
@@ -34,7 +35,7 @@ define([
                 var template;
                 if (!this.options.id) {
                     translatePackage = new Package();
-                    template = _.template(Template, {name: '', codes: []});
+                    template = _.template(Template, {name: '', catalogues: []});
                     this.$el.html(template);
                 } else {
                     translatePackage = new Package({id: this.options.id});
@@ -53,7 +54,11 @@ define([
             translatePackage.set({name: this.$('#name').val()});
             for (var i = 1; i <= 2; i++) {
                 var catalogue = translatePackage.get('catalogues').at(i - 1);
+                if (!catalogue) {
+                    catalogue = new Catalogue();
+                }
                 catalogue.set({'code': $('#code' + i).val()});
+                translatePackage.get('catalogues').add(catalogue);
             }
 
             translatePackage.save(null, {

@@ -17,6 +17,7 @@ define(['app', 'router', 'backbone', 'husky'], function (App, Router, Backbone, 
         },
 
         render: function () {
+            this.$el.removeData('Husky.Ui.DataGrid');
             var dataGrid = this.$el.huskyDataGrid({
                 url: '/translate/packages',
                 pagination: false,
@@ -28,7 +29,6 @@ define(['app', 'router', 'backbone', 'husky'], function (App, Router, Backbone, 
             });
 
             dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
-                dataGrid.removeData('Husky.Ui.DataGrid'); //FIXME Bug in Husky?
                 Router.navigate('settings/translate/edit:' + item);
             });
         }
