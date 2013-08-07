@@ -9,7 +9,7 @@
 
 define(['backbonerelational'], function() {
     return Backbone.RelationalModel.extend({
-        urlRoot: '/translate/catalogues',
+        urlRoot: '/translate/api/catalogues',
         defaults: {
             id: null,
             code: '',

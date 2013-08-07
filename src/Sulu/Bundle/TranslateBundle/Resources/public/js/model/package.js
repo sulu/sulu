@@ -9,7 +9,7 @@
 
 define(['backbonerelational', 'sulutranslate/model/catalogue'], function(Backbonerelational, Catalogue) {
     return Backbone.RelationalModel.extend({
-        urlRoot: '/translate/packages',
+        urlRoot: '/translate/api/packages',
         defaults: {
             id: null,
             name: '',

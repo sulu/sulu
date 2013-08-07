@@ -47,7 +47,7 @@ class CataloguesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/translate/catalogues');
+        $client->request('GET', '/translate/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->items[0]->code);
     }
@@ -56,7 +56,7 @@ class CataloguesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/translate/catalogues?package=1');
+        $client->request('GET', '/translate/api/catalogues?package=1');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->items[0]->code);
     }
@@ -65,7 +65,7 @@ class CataloguesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/translate/catalogues/1');
+        $client->request('GET', '/translate/api/catalogues/1');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->code);
     }

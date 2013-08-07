@@ -19,7 +19,7 @@ define(['app', 'router', 'backbone', 'husky'], function (App, Router, Backbone, 
         render: function () {
             this.$el.removeData('Husky.Ui.DataGrid');
             var dataGrid = this.$el.huskyDataGrid({
-                url: '/translate/packages',
+                url: '/translate/api/packages',
                 pagination: false,
                 showPages: 6,
                 pageSize: 4,

@@ -1,10 +1,6 @@
-sulu_translate.packages:
-    type: rest
-    resource: Sulu\Bundle\TranslateBundle\Controller\PackagesController
-
-sulu_translate.catalogues:
-    type: rest
-    resource: Sulu\Bundle\TranslateBundle\Controller\CataloguesController
+sulu_translate:
+    resource: "@SuluTranslateBundle/Resources/config/routing_api.yml"
+    prefix: /api
 
 sulu_translate.template.catalogue.form:
     path: /template/catalogue/form
