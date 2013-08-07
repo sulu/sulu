@@ -12,6 +12,8 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * Class Package
@@ -45,7 +47,6 @@ class Package
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * @Expose
      */
     private $catalogues;
 
@@ -55,6 +56,8 @@ class Package
     public function __construct()
     {
         $this->codes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->locations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->catalogues = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -183,9 +186,11 @@ class Package
      * Get catalogues
      *
      * @return \Doctrine\Common\Collections\Collection
+     * @VirtualProperty
+     * @Type("array")
      */
     public function getCatalogues()
     {
-        return $this->catalogues;
+        return array_values($this->catalogues->toArray());
     }
 }

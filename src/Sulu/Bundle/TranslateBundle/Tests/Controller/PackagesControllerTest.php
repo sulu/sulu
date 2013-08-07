@@ -164,7 +164,7 @@ class PackagesControllerTest extends DatabaseTestCase
             '/translate/packages',
             array(
                 'name' => 'Portal',
-                'codes' => array(
+                'catalogues' => array(
                     array('code' => 'EN'),
                     array('code' => 'DE'),
                     array('code' => 'ES')
@@ -233,8 +233,8 @@ class PackagesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
+                    array('id' => 1, 'code' => 'DE'),
                     array('code' => 'EN'),
-                    array('code' => 'DE'),
                     array('code' => 'ES')
                 )
             )
@@ -244,19 +244,29 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal', $response->name);
         $this->assertEquals(1, $response->id);
-        $this->assertContains('EN', $response->catalogues[0]->code);
-        $this->assertContains('DE', $response->catalogues[1]->code);
+        $this->assertContains('DE', $response->catalogues[0]->code);
+        $this->assertContains('EN', $response->catalogues[1]->code);
         $this->assertContains('ES', $response->catalogues[2]->code);
 
         $client->request(
-            'GET',
-            '/translate/packages'
+            'PUT',
+            '/translate/packages/1',
+            array(
+                'name' => 'Portal',
+                'catalogues' => array(
+                    array('id' => 2, 'code' => 'ES'),
+                    array('id' => 3, 'code' => 'DE')
+                )
+            )
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('Portal', $response->items[0]->name);
-        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals('Portal', $response->name);
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals(2, count($response->catalogues));
+        $this->assertContains('ES', $response->catalogues[0]->code);
+        $this->assertContains('DE', $response->catalogues[1]->code);
     }
 
     public function testPutWithoutLanguages()

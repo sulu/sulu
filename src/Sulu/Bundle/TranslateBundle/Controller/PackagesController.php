@@ -91,15 +91,15 @@ class PackagesController extends FOSRestController
         if ($name != null) {
             $em = $this->getDoctrine()->getManager();
 
-            $codes = $this->getRequest()->get('codes');
+            $catalogues = $this->getRequest()->get('catalogues');
 
             $package = new Package();
             $package->setName($name);
 
-            if ($codes != null) {
-                foreach ($codes as $code) {
+            if ($catalogues != null) {
+                foreach ($catalogues as $c) {
                     $catalogue = new Catalogue();
-                    $catalogue->setCode($code);
+                    $catalogue->setCode($c['code']);
                     $catalogue->setPackage($package);
                     $package->addCatalogue($catalogue);
                     $em->persist($catalogue);
@@ -124,8 +124,13 @@ class PackagesController extends FOSRestController
      */
     public function putPackagesAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $error = false;
+
         $name = $this->getRequest()->get('name');
         $languages = $this->getRequest()->get('languages');
+        $catalogues = $this->getRequest()->get('catalogues');
 
         /** @var Package $package */
         $package = $this->getDoctrine()
@@ -136,7 +141,56 @@ class PackagesController extends FOSRestController
             $view = $this->view(null, 400);
         } else {
             $package->setName($name);
-            $this->getDoctrine()->getManager()->flush();
+            $packageCatalogues = $package->getCatalogues();
+
+            if ($catalogues != null) {
+                // Go through each existing catalogue and update/delete
+                foreach ($packageCatalogues as $packageCatalogue) {
+                    /** @var Catalogue $packageCatalogue */
+                    $packageCatalogueId = $packageCatalogue->getId();
+
+                    $matchedEntry = null;
+                    $matchedKey = null;
+                    foreach ($catalogues as $key => $catalogue) {
+                        if (isset($catalogue['id']) && $catalogue['id'] == $packageCatalogueId) {
+                            $matchedEntry = $catalogue;
+                            $matchedKey = $key;
+                        }
+                    }
+
+                    if ($matchedEntry == null) {
+                        // If entry is not listed anymore delete it
+                        $package->removeCatalogue($packageCatalogue);
+                    } else {
+                        // If entry matched a request parameter update catalogue
+                        $packageCatalogue->setCode($matchedEntry['code']);
+                        $packageCatalogue->setPackage($package);
+                    }
+
+                    // Remove done element from array
+                    if (!is_null($matchedKey)) {
+                        unset($catalogues[$matchedKey]);
+                    }
+                }
+                // Go through the rest of the catalogues, and add them
+                foreach ($catalogues as $catalogue) {
+                    /** @var Catalogue $catalogue */
+                    if (isset($catalogue['id'])) {
+                        // There should not be an ID
+                        $view = $this->view(null, 400);
+                        $error = true;
+                        break;
+                    }
+                    $packageCatalogue = new Catalogue();
+                    $packageCatalogue->setCode($catalogue['code']);
+                    $packageCatalogue->setPackage($package);
+                    $package->addCatalogue($packageCatalogue);
+                    $em->persist($packageCatalogue);
+                }
+            }
+            if (!$error) {
+                $em->flush();
+            }
             $view = $this->view($package);
         }
 
