@@ -29,6 +29,7 @@ define([
         },
 
         render: function () {
+            Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/translate/template/catalogue/form'], function (Template) {
                 var template;
                 if (!this.options.id) {
@@ -49,15 +50,14 @@ define([
 
         submitForm: function (event) {
             event.preventDefault();
-            translatePackage.save({
-                name: this.$('#name').val(),
-                codes: [
-                    this.$('#code1').val(),
-                    this.$('#code2').val()
-                ]
-            }, {
+            translatePackage.set({name: this.$('#name').val()});
+            for (var i = 1; i <= 2; i++) {
+                var catalogue = translatePackage.get('catalogues').at(i - 1);
+                catalogue.set({'code': $('#code' + i).val()});
+            }
+
+            translatePackage.save(null, {
                 success: function (translatePackage) {
-                    //Router.navigate('settings/translate/form/' + translatePackage.get('id'));
                     Router.navigate('settings/translate');
                 }
             });
