@@ -12,8 +12,6 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Class Package
@@ -47,6 +45,7 @@ class Package
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Expose
      */
     private $catalogues;
 
@@ -188,27 +187,5 @@ class Package
     public function getCatalogues()
     {
         return $this->catalogues;
-    }
-
-    /**
-     * Returns the codes for the rest api
-     * @return array
-     *
-     * @VirtualProperty
-     * @SerializedName("codes")
-     */
-    public function getCodesForRest()
-    {
-        $codes = array();
-        $catalogues = $this->getCatalogues();
-
-        if ($catalogues != null) {
-            foreach ($catalogues as $catalogue) {
-                /** @var Catalogue $catalogue */
-                $codes[] = $catalogue->getCode();
-            }
-        }
-
-        return $codes;
     }
 }
