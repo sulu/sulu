@@ -23,12 +23,12 @@ class Catalogue
     /**
      * @var string
      */
-    private $name;
+    private $code;
 
     /**
-     * @var string
+     * @var \Sulu\Bundle\TranslateBundle\Entity\Package
      */
-    private $code;
+    private $package;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -46,34 +46,11 @@ class Catalogue
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Catalogue
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -85,14 +62,14 @@ class Catalogue
     public function setCode($code)
     {
         $this->code = $code;
-    
+
         return $this;
     }
 
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -100,22 +77,45 @@ class Catalogue
     }
 
     /**
+     * Set package
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Package $package
+     * @return Catalogue
+     */
+    public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package)
+    {
+        $this->package = $package;
+
+        return $this;
+    }
+
+    /**
+     * Get package
+     *
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Package
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
+
+    /**
      * Add translations
      *
-     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translation
      * @return Catalogue
      */
     public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
     {
         $this->translations[] = $translation;
-    
+
         return $this;
     }
 
     /**
      * Remove translations
      *
-     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translation
      */
     public function removeTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
     {
@@ -125,7 +125,7 @@ class Catalogue
     /**
      * Get translations
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTranslations()
     {

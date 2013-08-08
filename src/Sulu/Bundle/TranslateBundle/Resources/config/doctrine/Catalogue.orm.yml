@@ -7,14 +7,19 @@ Sulu\Bundle\TranslateBundle\Entity\Catalogue:
             id: true
             generator:
                 strategy: AUTO
-        name:
-            type: string
-            length: '60'
         code:
             type: string
             length: '60'
     oneToMany:
         translations:
             targetEntity: Translation
-            mappedBy: tr_catalogues
+            mappedBy: catalogue
+    manyToOne:
+        package:
+            targetEntity: Package
+            inversedBy: tr_packages
+            joinColumn:
+                name: idPackages
+                referencedColumnName: id
+                nullable: false
     lifecycleCallbacks: {  }

@@ -14,7 +14,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class SuluTranslateAdmin extends Admin {
+class SuluTranslateAdmin extends Admin
+{
 
     function __construct()
     {
@@ -24,7 +25,8 @@ class SuluTranslateAdmin extends Admin {
         $rootNavigationItem->addChild($settings);
         $translate = new NavigationItem('Translate');
         $translate->setAction('settings/translate');
+        $translate->setType('content');
         $settings->addChild($translate);
-        $this->navigation = new Navigation($rootNavigationItem);
+        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 }

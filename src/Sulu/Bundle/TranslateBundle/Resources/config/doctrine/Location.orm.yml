@@ -13,5 +13,13 @@ Sulu\Bundle\TranslateBundle\Entity\Location:
     oneToMany:
         codes:
             targetEntity: Code
-            mappedBy: tr_locations
+            mappedBy: location
+    manyToOne:
+        package:
+            targetEntity: Package
+            inversedBy: tr_packages
+            joinColumn:
+                name: idPackages
+                referencedColumnName: id
+                nullable: false
     lifecycleCallbacks: {  }
