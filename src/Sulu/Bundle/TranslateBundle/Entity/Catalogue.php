@@ -102,7 +102,7 @@ class Catalogue
     /**
      * Add translations
      *
-     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translation
      * @return Catalogue
      */
     public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
@@ -115,7 +115,7 @@ class Catalogue
     /**
      * Remove translations
      *
-     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translations
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Translation $translation
      */
     public function removeTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
     {
