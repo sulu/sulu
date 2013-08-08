@@ -10,7 +10,7 @@ env:
 before_script:
   - composer self-update
   - composer install
-  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE `sulu_test`;"; fi
-  - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE `sulu_test`;" -U postgres; fi
+  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE sulu_test;"; fi
+  - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE sulu_test;" -U postgres; fi
 
 script: phpunit --coverage-text
