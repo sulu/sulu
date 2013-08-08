@@ -12,13 +12,22 @@
         }
     ],
     "autoload": {
-        "psr-0": {"Sulu\\Bundle\\TranslateBundle": ""}
+        "psr-0": {
+            "Sulu\\Bundle\\TranslateBundle": ""
+        }
     },
     "require": {
+        "php": ">=5.4",
+        "symfony/framework-bundle": "~2.2",
         "sulu/core-bundle": "dev-develop",
         "sulu/admin-bundle": "dev-feature/registration",
+        "doctrine/common": ">=2.2",
+        "doctrine/orm": ">=2.2",
         "friendsofsymfony/rest-bundle": "0.12.*",
-        "jms/serializer-bundle": "0.12.*@dev"
+        "jms/serializer-bundle": "@dev"
+    },
+    "require-dev": {
+        "symfony/finder": "~2.0"
     },
     "target-dir": "Sulu/Bundle/TranslateBundle"
 }
