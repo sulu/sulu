@@ -46,7 +46,7 @@ class Catalogue
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -62,14 +62,14 @@ class Catalogue
     public function setCode($code)
     {
         $this->code = $code;
-    
+
         return $this;
     }
 
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -108,7 +108,7 @@ class Catalogue
     public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translation)
     {
         $this->translations[] = $translation;
-    
+
         return $this;
     }
 
@@ -125,7 +125,7 @@ class Catalogue
     /**
      * Get translations
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTranslations()
     {

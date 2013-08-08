@@ -42,14 +42,14 @@ class Translation
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
@@ -65,14 +65,14 @@ class Translation
     public function setCode(\Sulu\Bundle\TranslateBundle\Entity\Code $code = null)
     {
         $this->code = $code;
-    
+
         return $this;
     }
 
     /**
      * Get code
      *
-     * @return \Sulu\Bundle\TranslateBundle\Entity\Code 
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Code
      */
     public function getCode()
     {
@@ -88,14 +88,14 @@ class Translation
     public function setCatalogue(\Sulu\Bundle\TranslateBundle\Entity\Catalogue $catalogue = null)
     {
         $this->catalogue = $catalogue;
-    
+
         return $this;
     }
 
     /**
      * Get catalogue
      *
-     * @return \Sulu\Bundle\TranslateBundle\Entity\Catalogue 
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Catalogue
      */
     public function getCatalogue()
     {

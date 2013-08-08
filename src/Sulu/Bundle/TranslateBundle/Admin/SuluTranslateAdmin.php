@@ -14,7 +14,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class SuluTranslateAdmin extends Admin {
+class SuluTranslateAdmin extends Admin
+{
 
     function __construct()
     {

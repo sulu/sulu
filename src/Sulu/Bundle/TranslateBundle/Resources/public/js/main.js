@@ -13,7 +13,7 @@ require.config({
     }
 });
 
-define(['sulutranslate/bundle'], function(Bundle) {
+define(['sulutranslate/bundle'], function (Bundle) {
 
     'use strict';
 

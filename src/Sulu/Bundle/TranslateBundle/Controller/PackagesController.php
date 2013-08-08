@@ -83,6 +83,7 @@ class PackagesController extends FOSRestController
 
     /**
      * Creates a new catalogue
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postPackagesAction()
     {
@@ -121,6 +122,7 @@ class PackagesController extends FOSRestController
      * Update the existing package or create a new one with the given id,
      * if the package with the given id is not yet existing.
      * @param integer $id The id of the package to update
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putPackagesAction($id)
     {
