@@ -67,7 +67,7 @@ class Code
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -83,14 +83,14 @@ class Code
     public function setCode($code)
     {
         $this->code = $code;
-    
+
         return $this;
     }
 
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -106,14 +106,14 @@ class Code
     public function setBackend($backend)
     {
         $this->backend = $backend;
-    
+
         return $this;
     }
 
     /**
      * Get backend
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getBackend()
     {
@@ -129,14 +129,14 @@ class Code
     public function setFrontend($frontend)
     {
         $this->frontend = $frontend;
-    
+
         return $this;
     }
 
     /**
      * Get frontend
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getFrontend()
     {
@@ -152,14 +152,14 @@ class Code
     public function setLength($length)
     {
         $this->length = $length;
-    
+
         return $this;
     }
 
     /**
      * Get length
      *
-     * @return integer 
+     * @return integer
      */
     public function getLength()
     {
@@ -175,14 +175,14 @@ class Code
     public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package = null)
     {
         $this->package = $package;
-    
+
         return $this;
     }
 
     /**
      * Get package
      *
-     * @return \Sulu\Bundle\TranslateBundle\Entity\Package 
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Package
      */
     public function getPackage()
     {
@@ -198,14 +198,14 @@ class Code
     public function setLocation(\Sulu\Bundle\TranslateBundle\Entity\Location $location = null)
     {
         $this->location = $location;
-    
+
         return $this;
     }
 
     /**
      * Get location
      *
-     * @return \Sulu\Bundle\TranslateBundle\Entity\Location 
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Location
      */
     public function getLocation()
     {
@@ -221,7 +221,7 @@ class Code
     public function addTranslation(\Sulu\Bundle\TranslateBundle\Entity\Translation $translations)
     {
         $this->translations[] = $translations;
-    
+
         return $this;
     }
 
@@ -238,7 +238,7 @@ class Code
     /**
      * Get translations
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTranslations()
     {

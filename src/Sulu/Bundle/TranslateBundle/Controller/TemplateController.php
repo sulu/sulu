@@ -10,12 +10,13 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class DefaultController extends Controller
+class TemplateController extends Controller
 {
-    public function indexAction($name)
+    public function catalogueformAction()
     {
-        return $this->render('SuluTranslateBundle:Default:index.html.twig', array('name' => $name));
+        return $this->render('SuluTranslateBundle:Template:catalogue.form.html.twig', array());
     }
 }

@@ -26,6 +26,11 @@ class Location
     private $name;
 
     /**
+     * @var \Sulu\Bundle\TranslateBundle\Entity\Package
+     */
+    private $package;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $codes;
@@ -41,7 +46,7 @@ class Location
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -57,20 +62,43 @@ class Location
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
-    
+
+    /**
+     * Set package
+     *
+     * @param \Sulu\Bundle\TranslateBundle\Entity\Package $package
+     * @return Location
+     */
+    public function setPackage(\Sulu\Bundle\TranslateBundle\Entity\Package $package)
+    {
+        $this->package = $package;
+
+        return $this;
+    }
+
+    /**
+     * Get package
+     *
+     * @return \Sulu\Bundle\TranslateBundle\Entity\Package
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
+
     /**
      * Add codes
      *
@@ -80,7 +108,7 @@ class Location
     public function addCode(\Sulu\Bundle\TranslateBundle\Entity\Code $codes)
     {
         $this->codes[] = $codes;
-    
+
         return $this;
     }
 
@@ -97,7 +125,7 @@ class Location
     /**
      * Get codes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCodes()
     {
