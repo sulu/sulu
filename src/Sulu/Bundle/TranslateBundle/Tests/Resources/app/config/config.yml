@@ -8,7 +8,6 @@ framework:
     profiler:
         enabled: false
 
-
 fos_rest:
     routing_loader:
         default_format: json

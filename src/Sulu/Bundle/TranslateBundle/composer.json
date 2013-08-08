@@ -15,15 +15,13 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "0.12.*",
         "jms/serializer-bundle": "@dev",
-        "jms/di-extra-bundle": "@dev",
         "sulu/core-bundle": "dev-develop",
         "sulu/admin-bundle": "dev-feature/registration"
     },
     "require-dev": {
-        "symfony/symfony": "~2.3",
-        "symfony/framework-bundle": "~2.3",
-        "symfony/monolog-bundle": "2.3.*",
-        "doctrine/doctrine-bundle": "1.2.*"
+        "symfony/symfony": "2.3.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.3.*"
     },
     "autoload": {
         "psr-0": {
