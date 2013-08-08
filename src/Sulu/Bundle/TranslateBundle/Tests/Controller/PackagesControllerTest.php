@@ -14,10 +14,26 @@ use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Tools\SchemaTool;
+
 class PackagesControllerTest extends DatabaseTestCase
 {
+    /**
+     * @var array
+     */
+    protected static $entities;
+
+    /**
+     * @var SchemaTool
+     */
+    protected static $tool;
+
     public function setUp()
     {
+
+        $this->setUpSchema();
+
         $package = new Package();
         $package->setName('Sulu');
         $catalogue = new Catalogue();
@@ -41,13 +57,21 @@ class PackagesControllerTest extends DatabaseTestCase
     public function tearDown()
     {
         parent::tearDown();
-        self::$em->getConnection()->query(
-            "START TRANSACTION; SET FOREIGN_KEY_CHECKS=0;
-                        TRUNCATE TABLE tr_packages;
-                        TRUNCATE TABLE tr_catalogues;
-                        SET FOREIGN_KEY_CHECKS=1;COMMIT;
-                    "
+        self::$tool->dropSchema(self::$entities);
+    }
+
+    public function setUpSchema() {
+        self::$tool = new SchemaTool(self::$em);
+
+        self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
         );
+
+        self::$tool->createSchema(self::$entities);
     }
 
     public function testGetAll()
