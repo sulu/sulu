@@ -57,7 +57,7 @@ define([
                 if (!catalogue) {
                     catalogue = new Catalogue();
                 }
-                catalogue.set({'code': $('#code' + i).val()});
+                catalogue.set({'locale': $('#locale' + i).val()});
                 translatePackage.get('catalogues').add(catalogue);
             }
 

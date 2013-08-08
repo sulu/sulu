@@ -21,11 +21,6 @@ class Catalogue
     private $id;
 
     /**
-     * @var string
-     */
-    private $code;
-
-    /**
      * @var \Sulu\Bundle\TranslateBundle\Entity\Package
      */
     private $package;
@@ -34,6 +29,11 @@ class Catalogue
      * @var \Doctrine\Common\Collections\Collection
      */
     private $translations;
+
+    /**
+     * @var string
+     */
+    private $locale;
 
     /**
      * Constructor
@@ -51,29 +51,6 @@ class Catalogue
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set code
-     *
-     * @param string $code
-     * @return Catalogue
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
     }
 
     /**
@@ -130,5 +107,28 @@ class Catalogue
     public function getTranslations()
     {
         return $this->translations;
+    }
+
+    /**
+     * Set locale
+     *
+     * @param string $locale
+     * @return Catalogue
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    
+        return $this;
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string 
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }

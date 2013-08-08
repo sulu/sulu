@@ -22,7 +22,7 @@ class PackagesControllerTest extends DatabaseTestCase
         $package->setName('Sulu');
         $catalogue = new Catalogue();
         $catalogue->setPackage($package);
-        $catalogue->setCode('EN');
+        $catalogue->setLocale('EN');
         self::$em->persist($catalogue);
         self::$em->persist($package);
 
@@ -152,7 +152,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
         $this->assertEquals('Sulu', $response->name);
-        $this->assertEquals('EN', $response->catalogues[0]->code);
+        $this->assertEquals('EN', $response->catalogues[0]->locale);
     }
 
     public function testPost()
@@ -165,9 +165,9 @@ class PackagesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
-                    array('code' => 'EN'),
-                    array('code' => 'DE'),
-                    array('code' => 'ES')
+                    array('locale' => 'EN'),
+                    array('locale' => 'DE'),
+                    array('locale' => 'ES')
                 )
             )
         );
@@ -179,9 +179,9 @@ class PackagesControllerTest extends DatabaseTestCase
         $client->request('GET', '/translate/api/packages/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('EN', $response->catalogues[0]->code);
-        $this->assertEquals('DE', $response->catalogues[1]->code);
-        $this->assertEquals('ES', $response->catalogues[2]->code);
+        $this->assertEquals('EN', $response->catalogues[0]->locale);
+        $this->assertEquals('DE', $response->catalogues[1]->locale);
+        $this->assertEquals('ES', $response->catalogues[2]->locale);
     }
 
     public function testPostWithoutLanguages()
@@ -233,9 +233,9 @@ class PackagesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
-                    array('id' => 1, 'code' => 'DE'),
-                    array('code' => 'EN'),
-                    array('code' => 'ES')
+                    array('id' => 1, 'locale' => 'DE'),
+                    array('locale' => 'EN'),
+                    array('locale' => 'ES')
                 )
             )
         );
@@ -244,9 +244,9 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal', $response->name);
         $this->assertEquals(1, $response->id);
-        $this->assertContains('DE', $response->catalogues[0]->code);
-        $this->assertContains('EN', $response->catalogues[1]->code);
-        $this->assertContains('ES', $response->catalogues[2]->code);
+        $this->assertContains('DE', $response->catalogues[0]->locale);
+        $this->assertContains('EN', $response->catalogues[1]->locale);
+        $this->assertContains('ES', $response->catalogues[2]->locale);
 
         $client->request(
             'PUT',
@@ -254,8 +254,8 @@ class PackagesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
-                    array('id' => 2, 'code' => 'ES'),
-                    array('id' => 3, 'code' => 'DE')
+                    array('id' => 2, 'locale' => 'ES'),
+                    array('id' => 3, 'locale' => 'DE')
                 )
             )
         );
@@ -265,8 +265,8 @@ class PackagesControllerTest extends DatabaseTestCase
         $this->assertEquals('Portal', $response->name);
         $this->assertEquals(1, $response->id);
         $this->assertEquals(2, count($response->catalogues));
-        $this->assertContains('ES', $response->catalogues[0]->code);
-        $this->assertContains('DE', $response->catalogues[1]->code);
+        $this->assertContains('ES', $response->catalogues[0]->locale);
+        $this->assertContains('DE', $response->catalogues[1]->locale);
     }
 
     public function testPutWithoutLanguages()
