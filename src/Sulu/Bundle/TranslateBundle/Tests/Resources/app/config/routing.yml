@@ -1,0 +1,3 @@
+sulu_translate:
+    resource: "@SuluTranslateBundle/Resources/config/routing.yml"
+    prefix: /translate
