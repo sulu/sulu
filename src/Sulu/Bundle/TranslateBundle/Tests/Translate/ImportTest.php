@@ -70,7 +70,17 @@ class ImportTest extends DatabaseTestCase
         $this->import->execute();
 
         $package = self::$em->getRepository('SuluTranslateBundle:Package')->find(1);
-
         $this->assertEquals('Import', $package->getName());
+
+        $catalogue = self::$em->getRepository('SuluTranslateBundle:Catalogue')->find(1);
+        $this->assertEquals('de', $catalogue->getLocale());
+
+        $codes = self::$em->getRepository('SuluTranslateBundle:Code')->findAll();
+        $this->assertEquals('sulu.great', $codes[0]->getCode());
+        $this->assertEquals('sulu.open', $codes[1]->getCode());
+
+        $translations = self::$em->getRepository('SuluTranslateBundle:Translation')->findAll();
+        $this->assertEquals('Sulu ist toll!', $translations[0]->getValue());
+        $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());
     }
 }
