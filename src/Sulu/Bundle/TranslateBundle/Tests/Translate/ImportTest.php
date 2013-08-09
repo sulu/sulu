@@ -13,30 +13,56 @@ namespace Sulu\Bundle\TranslateBundle\Tests\Translate;
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 use Sulu\Bundle\TranslateBundle\Translate\Import;
 
-class ImportTest extends DatabaseTestCase {
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Tools\SchemaTool;
+
+class ImportTest extends DatabaseTestCase
+{
     /**
      * @var Import
      */
     protected $import;
 
-    public function setUp() {
+    /**
+     * @var array
+     */
+    protected static $entities;
+
+    /**
+     * @var SchemaTool
+     */
+    protected static $tool;
+
+    public function setUp()
+    {
+        $this->setUpSchema();
+
         $this->import = new Import(self::$em);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
-        self::$em->getConnection()->query(
-            "START TRANSACTION; SET FOREIGN_KEY_CHECKS=0;
-                        TRUNCATE TABLE tr_packages;
-                        TRUNCATE TABLE tr_catalogues;
-                        TRUNCATE TABLE tr_codes;
-                        TRUNCATE TABLE tr_translations;
-                        SET FOREIGN_KEY_CHECKS=1;COMMIT;
-                    "
-        );
+        self::$tool->dropSchema(self::$entities);
     }
 
-    public function testXliff() {
+    public function setUpSchema()
+    {
+        self::$tool = new SchemaTool(self::$em);
+
+        self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
+        );
+
+        self::$tool->createSchema(self::$entities);
+    }
+
+    public function testXliff()
+    {
         $this->import->setFile(__DIR__ . '/import.xliff');
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
@@ -44,9 +70,7 @@ class ImportTest extends DatabaseTestCase {
         $this->import->execute();
 
         $package = self::$em->getRepository('SuluTranslateBundle:Package')->find(1);
-        $catalogue = $package->getCatalogues()[0];
 
         $this->assertEquals('Import', $package->getName());
-        $this->assertEquals('de', $catalogue->getLocale());
     }
 }
