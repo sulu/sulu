@@ -190,10 +190,11 @@ class PackagesController extends FOSRestController
                     $em->persist($packageCatalogue);
                 }
             }
+
             if (!$error) {
                 $em->flush();
+                $view = $this->view($package);
             }
-            $view = $this->view($package);
         }
 
         return $this->handleView($view);

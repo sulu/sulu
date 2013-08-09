@@ -333,4 +333,32 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
+
+    public function testPutNotExistingCatalogue()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'PUT',
+            '/translate/api/packages/1',
+            array(
+                'name' => 'Portal',
+                'catalogues' => array(
+                    array('id' => 2, 'locale' => 'DE')
+                )
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/translate/api/packages/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Sulu', $response->name);
+        $this->assertEquals('EN', $response->catalogues[0]->locale);
+    }
 }
