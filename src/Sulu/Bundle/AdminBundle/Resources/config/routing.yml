@@ -6,7 +6,7 @@ sulu_admin:
 
 sulu_admin.navigation:
     type: rest
-    resource: Sulu\Bundle\AdminBundle\Controller\NavigationController
+    resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController
 
 sulu_admin.routes:
     path: /routes
