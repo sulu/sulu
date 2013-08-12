@@ -40,4 +40,15 @@ abstract class Admin
     {
         return $this->navigation;
     }
+
+    /**
+     * Returns all the commands available in a concrete admin.
+     * Null is the default value (no commands available), and the concrete class
+     * can override this method, to add all the available commands.
+     * @return array|null
+     */
+    public function getCommands()
+    {
+        return null;
+    }
 }
