@@ -13,9 +13,6 @@ namespace Sulu\Bundle\TranslateBundle\Tests\Translate;
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 use Sulu\Bundle\TranslateBundle\Translate\Import;
 
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\Tools\SchemaTool;
-
 class ImportTest extends DatabaseTestCase
 {
     /**
@@ -27,11 +24,6 @@ class ImportTest extends DatabaseTestCase
      * @var array
      */
     protected static $entities;
-
-    /**
-     * @var SchemaTool
-     */
-    protected static $tool;
 
     public function setUp()
     {
@@ -48,8 +40,6 @@ class ImportTest extends DatabaseTestCase
 
     public function setUpSchema()
     {
-        self::$tool = new SchemaTool(self::$em);
-
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
             self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
