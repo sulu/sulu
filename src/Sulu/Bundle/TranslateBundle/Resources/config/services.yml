@@ -1,8 +1,12 @@
 parameters:
     sulu_translate.admin.class: Sulu\Bundle\TranslateBundle\Admin\SuluTranslateAdmin
+    sulu_translate.import.class: Sulu\Bundle\TranslateBundle\Translate\Import
 
 services:
     sulu_translate.admin:
         class: %sulu_translate.admin.class%
         tags:
             - { name: sulu.admin }
+    sulu_translate.import:
+        class: %sulu_translate.import.class%
+        arguments: ["@doctrine.orm.entity_manager"]

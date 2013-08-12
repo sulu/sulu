@@ -2,7 +2,7 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -100,7 +100,7 @@ class PackagesController extends FOSRestController
             if ($catalogues != null) {
                 foreach ($catalogues as $c) {
                     $catalogue = new Catalogue();
-                    $catalogue->setCode($c['code']);
+                    $catalogue->setLocale($c['locale']);
                     $catalogue->setPackage($package);
                     $package->addCatalogue($catalogue);
                     $em->persist($catalogue);
@@ -165,7 +165,7 @@ class PackagesController extends FOSRestController
                         $package->removeCatalogue($packageCatalogue);
                     } else {
                         // If entry matched a request parameter update catalogue
-                        $packageCatalogue->setCode($matchedEntry['code']);
+                        $packageCatalogue->setLocale($matchedEntry['locale']);
                         $packageCatalogue->setPackage($package);
                     }
 
@@ -184,16 +184,17 @@ class PackagesController extends FOSRestController
                         break;
                     }
                     $packageCatalogue = new Catalogue();
-                    $packageCatalogue->setCode($catalogue['code']);
+                    $packageCatalogue->setLocale($catalogue['locale']);
                     $packageCatalogue->setPackage($package);
                     $package->addCatalogue($packageCatalogue);
                     $em->persist($packageCatalogue);
                 }
             }
+
             if (!$error) {
                 $em->flush();
+                $view = $this->view($package);
             }
-            $view = $this->view($package);
         }
 
         return $this->handleView($view);

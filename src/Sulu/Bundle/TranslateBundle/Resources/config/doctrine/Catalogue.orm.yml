@@ -7,7 +7,7 @@ Sulu\Bundle\TranslateBundle\Entity\Catalogue:
             id: true
             generator:
                 strategy: AUTO
-        code:
+        locale:
             type: string
             length: '60'
     oneToMany:
