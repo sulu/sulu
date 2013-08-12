@@ -2,7 +2,7 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -20,7 +20,8 @@ use Sulu\Bundle\TranslateBundle\Translate\Import;
  * The command to execute an import on the console
  * @package Sulu\Bundle\TranslateBundle\Command
  */
-class ImportCommand extends ContainerAwareCommand {
+class ImportCommand extends ContainerAwareCommand
+{
     protected function configure()
     {
         $this->setName('sulu:translate:import')
