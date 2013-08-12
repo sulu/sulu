@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Symfony\Component\Console\Command\Command;
 
 class AdminPoolTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,11 +34,28 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
      */
     protected $admin2;
 
+    /**
+     * @var Command
+     */
+    protected $command;
+
     public function setUp()
     {
         $this->adminPool = new AdminPool();
-        $this->admin1 = $this->getMockForAbstractClass('Sulu\Bundle\AdminBundle\Admin\Admin');
+        $this->admin1 = $this->getMockForAbstractClass(
+            'Sulu\Bundle\AdminBundle\Admin\Admin',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getCommands')
+        );
         $this->admin2 = $this->getMockForAbstractClass('Sulu\Bundle\AdminBundle\Admin\Admin');
+        $this->command = $this->getMock('Command');
+        $this->admin1->expects($this->any())
+            ->method('getCommands')
+            ->will($this->returnValue(array(new $this->command)));
         $rootItem1 = new NavigationItem('Root');
         $rootItem1->addChild(new NavigationItem('Child1'));
         $this->admin1->setNavigation(new Navigation($rootItem1));
@@ -60,5 +78,10 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $navigation = $this->adminPool->getNavigation();
         $this->assertEquals('Child1', $navigation->getRoot()->getChildren()[0]->getName());
         $this->assertEquals('Child2', $navigation->getRoot()->getChildren()[1]->getName());
+    }
+
+    public function testCommands()
+    {
+        $this->assertEquals($this->command, $this->adminPool->getCommands()[0]);
     }
 }
