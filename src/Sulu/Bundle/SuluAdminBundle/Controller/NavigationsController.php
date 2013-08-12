@@ -17,7 +17,7 @@ use FOS\RestBundle\Controller\FOSRestController;
  * Therefore it uses the Navigation combined by the admin pool.
  * @package Sulu\Bundle\AdminBundle\Controller
  */
-class NavigationController extends FOSRestController
+class NavigationsController extends FOSRestController
 {
     public function getNavigationAction()
     {
