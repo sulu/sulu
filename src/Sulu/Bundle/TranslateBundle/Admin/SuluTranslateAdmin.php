@@ -13,11 +13,12 @@ namespace Sulu\Bundle\TranslateBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\TranslateBundle\Command\ImportCommand;
 
 class SuluTranslateAdmin extends Admin
 {
 
-    function __construct()
+    public function __construct()
     {
         $rootNavigationItem = new NavigationItem('Root');
         $settings = new NavigationItem('Settings');
@@ -28,5 +29,15 @@ class SuluTranslateAdmin extends Admin
         $translate->setType('content');
         $settings->addChild($translate);
         $this->setNavigation(new Navigation($rootNavigationItem));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCommands()
+    {
+        return array(
+            new ImportCommand()
+        );
     }
 }
