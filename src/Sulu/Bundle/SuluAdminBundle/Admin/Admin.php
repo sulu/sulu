@@ -49,6 +49,6 @@ abstract class Admin
      */
     public function getCommands()
     {
-        return null;
+        return array();
     }
 }
