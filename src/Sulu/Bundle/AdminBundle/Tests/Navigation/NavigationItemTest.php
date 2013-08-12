@@ -32,6 +32,8 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->navigationItem = new NavigationItem('NavigationItem');
 
         $this->item1 = new NavigationItem('Root');
+        $this->item1->setHeaderIcon('icon');
+        $this->item1->setHeaderTitle('title');
         $this->item1->setAction('action');
         new NavigationItem('Portals', $this->item1);
         new NavigationItem('Settings', $this->item1);
@@ -86,6 +88,14 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($child, $this->navigationItem->getChildren()[0]);
     }
 
+    public function testHeader()
+    {
+        $this->navigationItem->setHeaderIcon('icon');
+        $this->navigationItem->setHeaderTitle('title');
+        $this->assertEquals('icon', $this->navigationItem->getHeaderIcon());
+        $this->assertEquals('title', $this->navigationItem->getHeaderTitle());
+    }
+
     public function testSearch()
     {
         $this->assertEquals('Globals', $this->item2->find(new NavigationItem('Globals'))->getName());
@@ -128,6 +138,8 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Root', $array['title']);
         $this->assertTrue($array['hasSub']);
         $this->assertEquals('action', $array['action']);
+        $this->assertEquals('icon', $array['header']['icon']);
+        $this->assertEquals('title', $array['header']['title']);
 
         $this->assertEquals('Portals', $array['sub']['items'][0]['title']);
         $this->assertFalse($array['sub']['items'][0]['hasSub']);

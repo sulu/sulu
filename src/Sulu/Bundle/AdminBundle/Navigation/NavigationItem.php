@@ -43,7 +43,7 @@ class NavigationItem implements \Iterator
 
     /**
      * The action which should be executed when clicking on this NavigationItem
-     * @var String
+     * @var string
      */
     protected $action;
 
@@ -54,11 +54,22 @@ class NavigationItem implements \Iterator
     protected $children = array();
 
     /**
+     * The title of the head area of the NavigationItem
+     * @var string
+     */
+    protected $headerTitle;
+
+    /**
+     * The icon of the header are of the NavigationItem
+     * @var string
+     */
+    protected $headerIcon;
+
+    /**
      * The current position of the iterator
      * @var integer
      */
     protected $position;
-
 
     /**
      * @param string $name The name of the item
@@ -180,6 +191,42 @@ class NavigationItem implements \Iterator
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * Sets the icon of the header
+     * @param string $headerIcon
+     */
+    public function setHeaderIcon($headerIcon)
+    {
+        $this->headerIcon = $headerIcon;
+    }
+
+    /**
+     * Returns the icon of the header
+     * @return string
+     */
+    public function getHeaderIcon()
+    {
+        return $this->headerIcon;
+    }
+
+    /**
+     * Sets the title of the header
+     * @param string $headerTitle The title of the header
+     */
+    public function setHeaderTitle($headerTitle)
+    {
+        $this->headerTitle = $headerTitle;
+    }
+
+    /**
+     * Returns the title of the header
+     * @return string The title of the header
+     */
+    public function getHeaderTitle()
+    {
+        return $this->headerTitle;
     }
 
     /**
@@ -341,6 +388,10 @@ class NavigationItem implements \Iterator
         $array = array(
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
+            'header' => array(
+                'title' => $this->getHeaderTitle(),
+                'icon' => $this->getHeaderIcon()
+            ),
             'action' => $this->getAction(),
             'hasSub' => $this->hasChildren(),
             'type' => $this->getType(),
