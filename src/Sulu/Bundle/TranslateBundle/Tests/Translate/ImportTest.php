@@ -93,4 +93,22 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Sulu ist toll!', $translations[0]->getValue());
         $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());
     }
+
+    /**
+     * @expectedException Symfony\Component\Translation\Exception\NotFoundResourceException
+     */
+    public function testXliffNoFile()
+    {
+        $this->import->setFile('this-file-does-not-exist.xliff');
+        $this->import->execute();
+    }
+
+    /**
+     * @expectedException Symfony\Component\Translation\Exception\InvalidResourceException
+     */
+    public function testXliffFailFile()
+    {
+        $this->import->setFile(__DIR__ . '/import_fail.xliff');
+        $this->import->execute();
+    }
 }
