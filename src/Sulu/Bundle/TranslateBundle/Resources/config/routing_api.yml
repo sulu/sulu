@@ -5,7 +5,3 @@ sulu_translate.packages:
 sulu_translate.catalogues:
     type: rest
     resource: Sulu\Bundle\TranslateBundle\Controller\CataloguesController
-
-sulu_translate.navigations:
-    type: rest
-    resource: Sulu\Bundle\TranslateBundle\Controller\NavigationsController
