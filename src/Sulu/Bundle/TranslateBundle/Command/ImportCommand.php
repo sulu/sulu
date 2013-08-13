@@ -40,6 +40,11 @@ class ImportCommand extends ContainerAwareCommand
                 'locale',
                 InputArgument::REQUIRED,
                 'The locale of the first catalogue in the translate package'
+            )
+            ->addArgument(
+                'packageId',
+                InputArgument::OPTIONAL,
+                'The id of the package to import the values from the file'
             );
     }
 
@@ -48,6 +53,7 @@ class ImportCommand extends ContainerAwareCommand
         $file = $input->getArgument('file');
         $name = $input->getArgument('name');
         $locale = $input->getArgument('locale');
+        $packageId = $input->getArgument('packageId');
 
         $import = $this->getContainer()->get('sulu_translate.import');
 
@@ -55,6 +61,11 @@ class ImportCommand extends ContainerAwareCommand
         $import->setName($name);
         $import->setFormat(Import::XLIFF); //FIXME design configurable, if there will be more supported formats
         $import->setLocale($locale);
+
+        if ($packageId) {
+            $import->setPackageId($packageId);
+        }
+
         $import->execute();
         $output->writeln('Successfully imported file to Sulu Database!');
     }

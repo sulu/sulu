@@ -86,7 +86,7 @@ class ImportTest extends DatabaseTestCase
 
         // test new import
         $this->import->setFile(__DIR__ . '/../Fixtures/import_better.xliff');
-        $this->import->setName('Import');
+        $this->import->setName('Import Update');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('de');
         $this->import->setPackageId(1);
@@ -94,7 +94,7 @@ class ImportTest extends DatabaseTestCase
 
         $package = self::$em->getRepository('SuluTranslateBundle:Package')->find(1);
         $this->assertEquals(1, $package->getId());
-        $this->assertEquals('Import', $package->getName());
+        $this->assertEquals('Import Update', $package->getName());
 
         $catalogue = self::$em->getRepository('SuluTranslateBundle:Catalogue')->find(1);
         $this->assertEquals(1, $catalogue->getId());
@@ -125,6 +125,44 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());
         $this->assertEquals('Sulu ist sehr toll!', $translations[2]->getValue());
         $this->assertEquals('Sulu ist sogar OpenSource!', $translations[3]->getValue());
+
+        // test new import with new language code
+        $this->import->setFile(__DIR__ . '/../Fixtures/import.xliff');
+        $this->import->setName('Import');
+        $this->import->setFormat(Import::XLIFF);
+        $this->import->setLocale('en');
+        $this->import->execute();
+
+        $package = self::$em->getRepository('SuluTranslateBundle:Package')->find(1);
+        $this->assertEquals(1, $package->getId());
+        $this->assertEquals('Import', $package->getName());
+
+        $catalogue = self::$em->getRepository('SuluTranslateBundle:Catalogue')->find(2);
+        $this->assertEquals(2, $catalogue->getId());
+        $this->assertEquals('en', $catalogue->getLocale());
+
+        $codes = self::$em->getRepository('SuluTranslateBundle:Code')->findBy(array(
+                'package' => 2
+            )
+        );
+        $this->assertEquals(1, $codes[0]->getId());
+        $this->assertEquals('sulu.great', $codes[0]->getCode());
+        $this->assertEquals(true, $codes[0]->getBackend());
+        $this->assertEquals(true, $codes[0]->getFrontend());
+        $this->assertEquals(null, $codes[0]->getLength());
+        $this->assertEquals(2, $codes[1]->getId());
+        $this->assertEquals('sulu.open', $codes[1]->getCode());
+        $this->assertEquals(true, $codes[1]->getBackend());
+        $this->assertEquals(true, $codes[1]->getFrontend());
+        $this->assertEquals(null, $codes[1]->getLength());
+
+        $translations = self::$em->getRepository('SuluTranslateBundle:Translation')->findBy(
+            array(
+                'catalogue' => 2
+            )
+        );
+        $this->assertEquals('Sulu ist toll!', $translations[0]->getValue());
+        $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());
     }
 
     /**
