@@ -54,6 +54,13 @@ class Import
      */
     private $name;
 
+    /**
+     * The id of the package to override.
+     * null if a new package should be created.
+     * @var integer
+     */
+    private $packageId;
+
     function __construct(EntityManager $em)
     {
         $this->em = $em;
@@ -132,6 +139,24 @@ class Import
     }
 
     /**
+     * Sets the id of the package to override
+     * @param int $packageId
+     */
+    public function setPackageId($packageId)
+    {
+        $this->packageId = $packageId;
+    }
+
+    /**
+     * Returns the id of the package to override
+     * @return int
+     */
+    public function getPackageId()
+    {
+        return $this->packageId;
+    }
+
+    /**
      * Executes the import
      */
     public function execute()
@@ -144,33 +169,64 @@ class Import
                 break;
         }
 
-        // create a new package and catalogue for the import
-        $package = new Package();
-        $package->setName($this->getName());
-        $catalogue = new Catalogue();
-        $catalogue->setLocale($this->getLocale());
-        $catalogue->setPackage($package);
+        $newCatalogue = true;
+        if ($this->getPackageId() == null) {
+            // create a new package and catalogue for the import
+            $package = new Package();
+            $catalogue = new Catalogue();
+            $catalogue->setPackage($package);
+            $this->em->persist($package);
+            $this->em->persist($catalogue);
+        } else {
+            // load the given package and catalogue
+            $package = $this->em->getRepository('SuluTranslateBundle:Package')
+                ->find($this->getPackageId());
 
-        $this->em->persist($package);
-        $this->em->persist($catalogue);
+            // find the catalogue from this package matching the given locale
+            $catalogue = null;
+            foreach ($package->getCatalogues() as $packageCatalogue) {
+                /** @var $packageCatalogue Catalogue */
+                if ($packageCatalogue->getLocale() == $this->getLocale()) {
+                    $catalogue = $packageCatalogue;
+                    $newCatalogue = false;
+                }
+            }
+
+            // if no catalogue is found create a new one
+            if ($newCatalogue) {
+                $catalogue = new Catalogue();
+                $catalogue->setPackage($package);
+                $this->em->persist($catalogue);
+            }
+        }
+
+        $package->setName($this->getName());
+        $catalogue->setLocale($this->getLocale());
 
         // load the file, and create a new code/translation combination for every message
         $fileCatalogue = $loader->load($this->getFile(), $this->getLocale());
         foreach ($fileCatalogue->all()['messages'] as $key => $message) {
-            $code = new Code();
-            $code->setPackage($package);
-            $code->setCode($key);
-            $code->setBackend(true);
-            $code->setFrontend(true);
+            // Check if code is already existing in current catalogue
+            if (!$newCatalogue && ($translate = $catalogue->findTranslation($key))) {
+                // Update the old code and translate
+                $translate->setValue($message);
+            } else {
+                // Create new code and translate
+                $code = new Code();
+                $code->setPackage($package);
+                $code->setCode($key);
+                $code->setBackend(true);
+                $code->setFrontend(true);
 
-            $translate = new Translation();
-            $translate->setCode($code);
-            $translate->setValue($message);
-            $translate->setCatalogue($catalogue);
+                $translate = new Translation();
+                $translate->setCode($code);
+                $translate->setValue($message);
+                $translate->setCatalogue($catalogue);
 
-            $this->em->persist($code);
-            $this->em->flush(); //FIXME no flush in between, if possible
-            $this->em->persist($translate);
+                $this->em->persist($code);
+                $this->em->flush(); //FIXME no flush in between, if possible
+                $this->em->persist($translate);
+            }
         }
 
         // save all the changes to the database

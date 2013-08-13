@@ -100,6 +100,24 @@ class Catalogue
     }
 
     /**
+     * Returns the translation with the given key, or null, if there is no
+     * translation with the given key
+     * @param $key The key to search a translation for
+     * @return null|Translation
+     */
+    public function findTranslation($key)
+    {
+        foreach ($this->getTranslations() as $translation) {
+            /** @var $translation Translation */
+            if ($translation->getCode()->getCode() == $key) {
+                return $translation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get translations
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -118,14 +136,14 @@ class Catalogue
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
