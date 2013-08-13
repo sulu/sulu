@@ -388,15 +388,18 @@ class NavigationItem implements \Iterator
         $array = array(
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
-            'header' => array(
-                'title' => $this->getHeaderTitle(),
-                'icon' => $this->getHeaderIcon()
-            ),
             'action' => $this->getAction(),
             'hasSub' => $this->hasChildren(),
             'type' => $this->getType(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
+
+        if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {
+            $array['header'] = array(
+                'title' => $this->getHeaderTitle(),
+                'icon' => $this->getHeaderIcon()
+            );
+        }
 
         foreach ($this->getChildren() as $key => $child) {
             /** @var NavigationItem $child */
