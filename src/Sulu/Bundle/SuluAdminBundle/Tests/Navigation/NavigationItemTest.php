@@ -148,5 +148,9 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Settings', $array['sub']['items'][1]['title']);
         $this->assertFalse($array['sub']['items'][1]['hasSub']);
         $this->assertEquals(null, $array['sub']['items'][1]['action']);
+
+        $array = $this->item2->toArray();
+
+        $this->assertNotContains('header', array_keys($array));
     }
 }
