@@ -29,6 +29,36 @@ define([
             this.render();
         },
 
+        getTabs: function (id) {
+            //TODO Simplify this task for bundle developer?
+            return {
+                'title': 'Catalogue',
+                'header': {
+                    'title': 'Catalogue'
+                },
+                'hasSub': 'true',
+                //TODO id mandatory?
+                'sub': {
+                    'items': [
+                        {
+                            'title': 'Details',
+                            'action': 'settings/translate/details:translate-package-' + id,
+                            'hasSub': false,
+                            'type': 'content',
+                            'id': 'translate-package-' + id
+                        },
+                        {
+                            'title': 'Settings',
+                            'action': 'settings/translate/settings:translate-package-' + id,
+                            'hasSub': false,
+                            'type': 'content',
+                            'id': 'translate-package-' + id
+                        }
+                    ]
+                }
+            };
+        },
+
         render: function () {
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/translate/template/catalogue/form'], function (Template) {
@@ -46,6 +76,8 @@ define([
                         }.bind(this)
                     });
                 }
+
+                this.trigger('navigation:item:column:load', this.getTabs(translatePackage.get('id')));
             }.bind(this));
         },
 
