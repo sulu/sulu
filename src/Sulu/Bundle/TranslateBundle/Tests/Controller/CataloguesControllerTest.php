@@ -2,7 +2,7 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -42,7 +42,7 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $catalogue = new Catalogue();
         $catalogue->setPackage($package);
-        $catalogue->setCode('EN');
+        $catalogue->setLocale('EN');
         self::$em->persist($catalogue);
 
         self::$em->flush();
@@ -74,7 +74,7 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/translate/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('EN', $response->items[0]->code);
+        $this->assertEquals('EN', $response->items[0]->locale);
     }
 
     public function testGetByPackage()
@@ -83,7 +83,7 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/translate/api/catalogues?package=1');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('EN', $response->items[0]->code);
+        $this->assertEquals('EN', $response->items[0]->locale);
     }
 
     public function testGetById()
@@ -92,6 +92,6 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/translate/api/catalogues/1');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('EN', $response->code);
+        $this->assertEquals('EN', $response->locale);
     }
 }
