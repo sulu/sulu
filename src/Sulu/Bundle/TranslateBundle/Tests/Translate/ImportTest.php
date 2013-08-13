@@ -182,4 +182,15 @@ class ImportTest extends DatabaseTestCase
         $this->import->setFile(__DIR__ . '/../Fixtures/import_fail.xliff');
         $this->import->execute();
     }
+
+    /**
+     * @expectedException Sulu\Bundle\TranslateBundle\Translate\PackageNotFoundException
+     */
+    public function testPackageNotFound()
+    {
+        $this->import->setFile(__DIR__ . '/../Fixtures/import.xliff');
+        $this->import->setPackageId(10);
+        $this->import->setName('Fail');
+        $this->import->execute();
+    }
 }

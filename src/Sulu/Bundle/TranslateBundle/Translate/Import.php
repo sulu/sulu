@@ -182,6 +182,11 @@ class Import
             $package = $this->em->getRepository('SuluTranslateBundle:Package')
                 ->find($this->getPackageId());
 
+            if (!$package) {
+                // If the given package is not existing throw an exception
+                throw new PackageNotFoundException($this->getPackageId());
+            }
+
             // find the catalogue from this package matching the given locale
             $catalogue = null;
             foreach ($package->getCatalogues() as $packageCatalogue) {
