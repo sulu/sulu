@@ -107,6 +107,7 @@ class ExportTest extends DatabaseTestCase
     {
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
+        unlink(__DIR__ . '/export.xliff');
     }
 
     public function setUpSchema()
