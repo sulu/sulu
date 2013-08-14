@@ -107,11 +107,11 @@ class ExportTest extends DatabaseTestCase
     {
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
-        if (file_exists(__DIR__ . '/Export.en.xlf')) {
-            unlink(__DIR__ . '/Export.en.xlf');
-        }
         if (file_exists(__DIR__ . '/../Fixtures/Export.en.xlf')) {
             unlink(__DIR__ . '/../Fixtures/Export.en.xlf');
+        }
+        if (file_exists(__DIR__ . '/../Fixtures/Export.en.json')) {
+            unlink(__DIR__ . '/../Fixtures/Export.en.json');
         }
     }
 
@@ -133,10 +133,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
+        $this->export->setPath(__DIR__ . '/../Fixtures/');
         $this->export->execute();
 
         $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.xlf');
-        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
+        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -147,10 +148,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setLocation('Newsletter');
+        $this->export->setPath(__DIR__ . '/../Fixtures/');
         $this->export->execute();
 
         $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.newsletter.xlf');
-        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
+        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -158,10 +160,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setLocation('Portals');
+        $this->export->setPath(__DIR__ . '/../Fixtures/');
         $this->export->execute();
 
         $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.portals.xlf');
-        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
+        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -173,10 +176,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setFormat(Export::XLIFF);
         $this->export->setFrontend(null);
         $this->export->setBackend(true);
+        $this->export->setPath(__DIR__ . '/../Fixtures/');
         $this->export->execute();
 
         $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.backend.xlf');
-        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
+        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -185,23 +189,10 @@ class ExportTest extends DatabaseTestCase
         $this->export->setFormat(Export::XLIFF);
         $this->export->setFrontend(true);
         $this->export->setBackend(null);
-        $this->export->execute();
-
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.frontend.xlf');
-        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
-
-        $this->assertEquals($expectedHash, $actualHash);
-    }
-
-    public function testXliffExportPath()
-    {
-        $this->export->setPackageId(1);
-        $this->export->setLocale('en');
-        $this->export->setFormat(Export::XLIFF);
         $this->export->setPath(__DIR__ . '/../Fixtures/');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.xlf');
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.frontend.xlf');
         $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
@@ -212,10 +203,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
         $this->export->setFormat(Export::JSON);
+        $this->export->setPath(__DIR__ . '/../Fixtures/');
         $this->export->execute();
 
         $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.json');
-        $actualHash = md5_file(__DIR__ . '/Export.en.json');
+        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.json');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
