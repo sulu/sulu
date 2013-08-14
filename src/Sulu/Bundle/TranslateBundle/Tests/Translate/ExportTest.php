@@ -206,4 +206,17 @@ class ExportTest extends DatabaseTestCase
 
         $this->assertEquals($expectedHash, $actualHash);
     }
+
+    public function testJsonExport()
+    {
+        $this->export->setPackageId(1);
+        $this->export->setLocale('en');
+        $this->export->setFormat(Export::JSON);
+        $this->export->execute();
+
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.json');
+        $actualHash = md5_file(__DIR__ . '/Export.en.json');
+
+        $this->assertEquals($expectedHash, $actualHash);
+    }
 }
