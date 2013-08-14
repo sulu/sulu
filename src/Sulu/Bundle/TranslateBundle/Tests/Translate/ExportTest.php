@@ -107,7 +107,7 @@ class ExportTest extends DatabaseTestCase
     {
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
-        unlink(__DIR__ . '/export.xliff');
+        unlink(__DIR__ . '/Export.en.xlf');
     }
 
     public function setUpSchema()
@@ -130,8 +130,8 @@ class ExportTest extends DatabaseTestCase
         $this->export->setFormat(Export::XLIFF);
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/ ../Fixtures/export.xliff');
-        $actualHash = md5_file(__DIR__ . '/export.xliff');
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.xlf');
+        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -144,8 +144,8 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocation('Newsletter');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.newsletter.xliff');
-        $actualHash = md5_file(__DIR__ . '/export.xliff');
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.newsletter.xlf');
+        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -155,8 +155,8 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocation('Portals');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.portals.xliff');
-        $actualHash = md5_file(__DIR__ . '/export.xliff');
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.portals.xlf');
+        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -166,22 +166,24 @@ class ExportTest extends DatabaseTestCase
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
-        $this->export->setBackend(false);
+        $this->export->setFrontend(null);
+        $this->export->setBackend(true);
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.frontend.xliff');
-        $actualHash = md5_file(__DIR__ . '/export.xliff');
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.backend.xlf');
+        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
-        $this->export->setFrontend(false);
+        $this->export->setFrontend(true);
+        $this->export->setBackend(null);
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.backend.xliff');
-        $actualHash = md5_file(__DIR__ . '/export.xliff');
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.frontend.xlf');
+        $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
