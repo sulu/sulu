@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\TranslateBundle\Translate;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Translation\Dumper\XliffFileDumper;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Configures and starts an export of a translate catalogue
@@ -53,6 +55,12 @@ class Export {
      * @var boolean
      */
     private $backend;
+
+    /**
+     * The path, to which the file should exported (pointing to a directory)
+     * @var string
+     */
+    private $path;
 
     /**
      * Defines if the frontend translations should be included
@@ -171,9 +179,57 @@ class Export {
         return $this->frontend;
     }
 
+    /**
+     * Sets the path to the directory, in which the export should be located
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * Returns the path to the directory, in which the export should be located.
+     * If the path is not explicitly set, the current working directory will be returned
+     * @return string
+     */
+    public function getPath()
+    {
+        return ($this->path != null) ? $this->path : getcwd();
+    }
 
     public function execute()
     {
+        $package = $this->em->getRepository('SuluTranslateBundle:Package')
+            ->find($this->getPackageId());
+        $translations = $this->em->getRepository('SuluTranslateBundle:Translation')
+            ->findFiltered(
+                $this->getPackageId(),
+                $this->getLocale(),
+                $this->getBackend(),
+                $this->getFrontend(),
+                $this->getLocation()
+            );
 
+        // Convert translations to format suitable for Symfony's MessageCatalogue
+        $messages = array();
+        foreach($translations as $translation) {
+            /** @var $translation Translation */
+            $messages[$translation->getCode()->getCode()] = $translation->getValue();
+        }
+
+        $messageCatalogue = new MessageCatalogue(
+            $this->getLocale(),
+            array($package->getName() => $messages)
+        );
+
+        $dumper = null;
+        switch ($this->getFormat()) {
+            case self::XLIFF:
+                $dumper = new XliffFileDumper();
+                break;
+        }
+
+        $dumper->dump($messageCatalogue, array('path' => $this->getPath()));
     }
 }

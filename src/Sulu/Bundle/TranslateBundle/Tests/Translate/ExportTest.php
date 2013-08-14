@@ -107,7 +107,12 @@ class ExportTest extends DatabaseTestCase
     {
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
-        unlink(__DIR__ . '/Export.en.xlf');
+        if (file_exists(__DIR__ . '/Export.en.xlf')) {
+            unlink(__DIR__ . '/Export.en.xlf');
+        }
+        if (file_exists(__DIR__ . '/../Fixtures/Export.en.xlf')) {
+            unlink(__DIR__ . '/../Fixtures/Export.en.xlf');
+        }
     }
 
     public function setUpSchema()
@@ -184,6 +189,20 @@ class ExportTest extends DatabaseTestCase
 
         $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.frontend.xlf');
         $actualHash = md5_file(__DIR__ . '/Export.en.xlf');
+
+        $this->assertEquals($expectedHash, $actualHash);
+    }
+
+    public function testXliffExportPath()
+    {
+        $this->export->setPackageId(1);
+        $this->export->setLocale('en');
+        $this->export->setFormat(Export::XLIFF);
+        $this->export->setPath(__DIR__ . '/../Fixtures/');
+        $this->export->execute();
+
+        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.xlf');
+        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
