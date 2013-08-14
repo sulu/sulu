@@ -158,6 +158,13 @@ class Import
 
     /**
      * Executes the import
+     *
+     * @throws Symfony\Component\Translation\Exception\NotFoundResourceException if the
+     *      given file does not exist
+     * @throws Symfony\Component\Translation\Exception\InvalidResourceException if the
+     *      given file is not valid
+     * @throws Sulu\Bundle\TranslateBundle\Translate\PackageNotFoundException if the
+     *      given package cannot be found
      */
     public function execute()
     {
