@@ -18,7 +18,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 
 /**
- * Configures and starts an import from an translation package
+ * Configures and starts an import from an translation catalogue
  * @package Sulu\Bundle\TranslateBundle\Translate
  */
 class Import
