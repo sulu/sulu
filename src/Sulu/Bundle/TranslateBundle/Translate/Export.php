@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\TranslateBundle\Translate;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\TranslateBundle\Translate\Dumper\JsonFileDumper;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -20,6 +21,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class Export {
     const XLIFF = 0;
+    const JSON = 1;
 
     /**
      * @var EntityManager
@@ -198,6 +200,9 @@ class Export {
         return ($this->path != null) ? $this->path : getcwd();
     }
 
+    /**
+     *
+     */
     public function execute()
     {
         $package = $this->em->getRepository('SuluTranslateBundle:Package')
@@ -223,10 +228,14 @@ class Export {
             array($package->getName() => $messages)
         );
 
+        // Write the file
         $dumper = null;
         switch ($this->getFormat()) {
             case self::XLIFF:
                 $dumper = new XliffFileDumper();
+                break;
+            case self::JSON:
+                $dumper = new JsonFileDumper();
                 break;
         }
 
