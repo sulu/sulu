@@ -18,7 +18,7 @@ class TranslationRepository extends EntityRepository
                 JOIN t.catalogue ca
                 JOIN ca.package p
                 JOIN t.code co
-                JOIN co.location l
+                LEFT JOIN co.location l
                 WHERE ca.locale = :locale
                     AND p.id = :packageId
             ';
