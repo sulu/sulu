@@ -1038,26 +1038,26 @@ function typeOf(value) {
             }
         },
 
-        loadColumn: function(params) {
-            Husky.DEBUG && console.log(this.name, 'loadContentColumn');
+        showColumn: function(params) {
+            Husky.DEBUG && console.log(this.name, 'showColumn');
 
             params = params || {};
 
-            if (!!params.url) {
-                this.load({
-                    url: params.url,
-                    success: function() {
-                        this.addColumn();
-                    }.bind(this)
-                });
+            if (!!params.data) {
+                this.columnHeader = params.data.header || null;
+                this.columnItems = params.data.sub.items || null;
+
+                this.setConfigs(params.data);
+
+                this.addColumn();
             } else {
-                Husky.DEBUG && console.error(this.name, 'loadColumn', 'No url was defined!');
+                Husky.DEBUG && console.error(this.name, 'showColumn', 'No data was defined!');
             }
         },
 
         bindEvents: function() {
             // external events
-            this.on('navigation:item:column:load', this.loadColumn.bind(this));
+            this.on('navigation:item:column:show', this.showColumn.bind(this));
 
             // internal events
         },
