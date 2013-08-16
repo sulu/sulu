@@ -11,7 +11,7 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
 
     'use strict';
 
-    var $nav = $('#navigation');
+    var $navigation = $('#navigation');
 
     var $content = $('#content');
 
@@ -20,19 +20,22 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
 
         Router.initialize(App);
 
-        $nav.huskyNavigation({
+        $navigation.huskyNavigation({
             url: 'navigation'
         });
 
-        $nav.data('Husky.Ui.Navigation').on('navigation:item:content:show', function(item){
+        $navigation.data('Husky.Ui.Navigation').on('navigation:item:content:show', function(item){
             Router.navigate(item.get('action'));
         });
+
+        // Make some Shortcuts globally available
+        App.$content = $content;
+        App.$navigation = $navigation.data('Husky.Ui.Navigation');
 
         window.App = App;
     };
 
     return {
-        initialize: initialize,
-        $content: $content
+        initialize: initialize
     }
 });
