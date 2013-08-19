@@ -19,7 +19,8 @@ use Symfony\Component\Translation\MessageCatalogue;
  * Configures and starts an export of a translate catalogue
  * @package Sulu\Bundle\TranslateBundle\Translate
  */
-class Export {
+class Export
+{
     const XLIFF = 0;
     const JSON = 1;
 
@@ -218,7 +219,7 @@ class Export {
 
         // Convert translations to format suitable for Symfony's MessageCatalogue
         $messages = array();
-        foreach($translations as $translation) {
+        foreach ($translations as $translation) {
             /** @var $translation Translation */
             $messages[$translation->getCode()->getCode()] = $translation->getValue();
         }

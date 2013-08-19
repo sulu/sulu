@@ -1,4 +1,12 @@
 <?php
+/*
+* This file is part of the Sulu CMS.
+*
+* (c) MASSIVE ART WebServices GmbH
+*
+* This source file is subject to the MIT license that is bundled
+* with this source code in the file LICENSE.
+*/
 
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
@@ -12,39 +20,35 @@ class TranslationRepository extends EntityRepository
 {
     public function findFiltered($packageId, $locale, $backend = null, $frontend = null, $location = null)
     {
-        $dql = '
-                SELECT t
-                FROM SuluTranslateBundle:Translation t
-                JOIN t.catalogue ca
-                JOIN ca.package p
-                JOIN t.code co
-                LEFT JOIN co.location l
-                WHERE ca.locale = :locale
-                    AND p.id = :packageId
-            ';
+        $dql = 'SELECT tr
+                    FROM SuluTranslateBundle:Translation tr
+                        JOIN tr.catalogue ca
+                        JOIN ca.package pa
+                        JOIN tr.code co
+                        LEFT JOIN co.location lo
+                    WHERE ca.locale = :locale
+                      AND pa.id = :packageId';
 
-        // add additional conditions if backend or frontend is set
+        // add additional conditions, if they are set
         if ($backend != null) {
             $dql .= '
-                AND co.backend = :backend
-            ';
+                      AND co.backend = :backend';
         }
 
-        if( $frontend != null) {
+        if ($frontend != null) {
             $dql .= '
-                AND co.frontend = :frontend
-            ';
+                      AND co.frontend = :frontend';
         }
 
         if ($location != null) {
             $dql .= '
-                AND l.name = :location
-            ';
+                      AND lo.name = :location';
         }
 
         $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setParameters(array(
+            ->setParameters(
+                array(
                     'packageId' => $packageId,
                     'locale' => $locale
                 )

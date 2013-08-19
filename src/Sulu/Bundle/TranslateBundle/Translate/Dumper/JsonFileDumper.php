@@ -13,7 +13,8 @@ namespace Sulu\Bundle\TranslateBundle\Translate\Dumper;
 use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class JsonFileDumper extends FileDumper {
+class JsonFileDumper extends FileDumper
+{
 
     /**
      * Transforms a domain of a message catalogue to its string representation.
