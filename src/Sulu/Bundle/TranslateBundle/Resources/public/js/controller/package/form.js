@@ -31,7 +31,9 @@ define([
 
         getTabs: function (id) {
             //TODO Simplify this task for bundle developer?
-            return {
+            var cssId = id || 'new';
+
+            var navigation = {
                 'title': 'Catalogue',
                 'header': {
                     'title': 'Catalogue'
@@ -39,24 +41,29 @@ define([
                 'hasSub': 'true',
                 //TODO id mandatory?
                 'sub': {
-                    'items': [
-                        {
-                            'title': 'Details',
-                            'action': 'settings/translate/details:translate-package-' + id,
-                            'hasSub': false,
-                            'type': 'content',
-                            'id': 'translate-package-' + id
-                        },
-                        {
-                            'title': 'Settings',
-                            'action': 'settings/translate/settings:translate-package-' + id,
-                            'hasSub': false,
-                            'type': 'content',
-                            'id': 'translate-package-' + id
-                        }
-                    ]
+                    'items': []
                 }
             };
+
+            if (!!id) {
+                navigation.sub.items.push({
+                    'title': 'Details',
+                    'action': 'settings/translate/details:translate-package-' + cssId,
+                    'hasSub': false,
+                    'type': 'content',
+                    'id': 'translate-package-details-' + cssId
+                });
+            }
+
+            navigation.sub.items.push({
+                'title': 'Settings',
+                'action': 'settings/translate/settings:translate-package-' + cssId,
+                'hasSub': false,
+                'type': 'content',
+                'id': 'translate-package-settings-' + cssId
+            });
+
+            return navigation;
         },
 
         render: function () {
@@ -77,7 +84,9 @@ define([
                     });
                 }
 
-                this.trigger('navigation:item:column:load', this.getTabs(translatePackage.get('id')));
+                App.$navigation.trigger('navigation:item:column:show', {
+                    data: this.getTabs(translatePackage.get('id'))
+                });
             }.bind(this));
         },
 
