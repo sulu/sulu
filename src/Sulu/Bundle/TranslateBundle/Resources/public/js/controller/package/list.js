@@ -7,16 +7,16 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app', 'router', 'backbone', 'husky'], function (App, Router, Backbone, Husky) {
+define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, Husky) {
 
     'use strict';
 
     return Backbone.View.extend({
-        initialize: function () {
+        initialize: function() {
             this.render();
         },
 
-        render: function () {
+        render: function() {
             this.$el.removeData('Husky.Ui.DataGrid');
             var dataGrid = this.$el.huskyDataGrid({
                 url: '/translate/api/packages',
@@ -28,7 +28,7 @@ define(['app', 'router', 'backbone', 'husky'], function (App, Router, Backbone, 
                 }
             });
 
-            dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
+            dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function(item) {
                 Router.navigate('settings/translate/edit:' + item);
             });
         }

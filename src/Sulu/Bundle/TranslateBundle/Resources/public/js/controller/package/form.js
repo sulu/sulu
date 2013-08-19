@@ -13,7 +13,7 @@ define([
     'router',
     'sulutranslate/model/package',
     'sulutranslate/model/catalogue'
-], function ($, Backbone, Router, Package, Catalogue) {
+], function($, Backbone, Router, Package, Catalogue) {
 
     'use strict';
 
@@ -25,14 +25,15 @@ define([
             'submit #catalogue-form': 'submitForm'
         },
 
-        initialize: function () {
+        initialize: function() {
             this.render();
         },
 
-        getTabs: function (id) {
+        getTabs: function(id) {
             //TODO Simplify this task for bundle developer?
             var cssId = id || 'new';
 
+            // TODO translate
             var navigation = {
                 'title': 'Catalogue',
                 'header': {
@@ -66,9 +67,9 @@ define([
             return navigation;
         },
 
-        render: function () {
+        render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
-            require(['text!/translate/template/catalogue/form'], function (Template) {
+            require(['text!/translate/template/catalogue/form'], function(Template) {
                 var template;
                 if (!this.options.id) {
                     translatePackage = new Package();
@@ -77,7 +78,7 @@ define([
                 } else {
                     translatePackage = new Package({id: this.options.id});
                     translatePackage.fetch({
-                        success: function (translatePackage) {
+                        success: function(translatePackage) {
                             template = _.template(Template, translatePackage.toJSON());
                             this.$el.html(template);
                         }.bind(this)
@@ -90,7 +91,7 @@ define([
             }.bind(this));
         },
 
-        submitForm: function (event) {
+        submitForm: function(event) {
             event.preventDefault();
             translatePackage.set({name: this.$('#name').val()});
             for (var i = 1; i <= 2; i++) {
@@ -103,7 +104,7 @@ define([
             }
 
             translatePackage.save(null, {
-                success: function (translatePackage) {
+                success: function(translatePackage) {
                     Router.navigate('settings/translate');
                 }
             });
