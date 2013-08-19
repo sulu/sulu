@@ -53,7 +53,7 @@ class ImportTest extends DatabaseTestCase
 
     public function testXliff()
     {
-        $this->import->setFile(__DIR__ . '/../Fixtures/import.xliff');
+        $this->import->setFile(__DIR__ . '/../Fixtures/import.xlf');
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('de');
@@ -98,7 +98,7 @@ class ImportTest extends DatabaseTestCase
      */
     public function testXliffFailFile()
     {
-        $this->import->setFile(__DIR__ . '/../Fixtures/import_fail.xliff');
+        $this->import->setFile(__DIR__ . '/../Fixtures/import_fail.xlf');
         $this->import->execute();
     }
 }
