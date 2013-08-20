@@ -220,16 +220,20 @@ class Import
         foreach ($fileCatalogue->all()['messages'] as $key => $message) {
             // Check if code is already existing in current catalogue
             if (!$newCatalogue && ($translate = $catalogue->findTranslation($key))) {
-                // Update the old code and translate
+                // Update the old translate
                 $translate->setValue($message);
             } else {
-                // Create new code and translate
-                $code = new Code();
-                $code->setPackage($package);
-                $code->setCode($key);
-                $code->setBackend(true);
-                $code->setFrontend(true);
+                // Create new code, if not already existing
+                $code = $package->findCode($key);
+                if (!$code) {
+                    $code = new Code();
+                    $code->setPackage($package);
+                    $code->setCode($key);
+                    $code->setBackend(true);
+                    $code->setFrontend(true);
+                }
 
+                // Create new translate
                 $translate = new Translation();
                 $translate->setCode($code);
                 $translate->setValue($message);
