@@ -53,8 +53,7 @@ class ImportTest extends DatabaseTestCase
 
     public function testXliff()
     {
-        // test usual import
-        $this->import->setFile(__DIR__ . '/../Fixtures/import.xliff');
+        $this->import->setFile(__DIR__ . '/../Fixtures/import.xlf');
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('de');
@@ -89,7 +88,7 @@ class ImportTest extends DatabaseTestCase
         self::$em->clear();
 
         // test new import
-        $this->import->setFile(__DIR__ . '/../Fixtures/import_better.xliff');
+        $this->import->setFile(__DIR__ . '/../Fixtures/import_better.xlf');
         $this->import->setName('Import Update');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('de');
@@ -135,7 +134,7 @@ class ImportTest extends DatabaseTestCase
         self::$em->clear();
 
         // test new import with new language code
-        $this->import->setFile(__DIR__ . '/../Fixtures/import.xliff');
+        $this->import->setFile(__DIR__ . '/../Fixtures/import.xlf');
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('en');
@@ -189,7 +188,7 @@ class ImportTest extends DatabaseTestCase
      */
     public function testXliffFailFile()
     {
-        $this->import->setFile(__DIR__ . '/../Fixtures/import_fail.xliff');
+        $this->import->setFile(__DIR__ . '/../Fixtures/import_fail.xlf');
         $this->import->execute();
     }
 

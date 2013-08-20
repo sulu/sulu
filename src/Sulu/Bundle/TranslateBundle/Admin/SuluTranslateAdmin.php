@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TranslateBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\TranslateBundle\Command\ExportCommand;
 use Sulu\Bundle\TranslateBundle\Command\ImportCommand;
 
 class SuluTranslateAdmin extends Admin
@@ -37,7 +38,8 @@ class SuluTranslateAdmin extends Admin
     public function getCommands()
     {
         return array(
-            new ImportCommand()
+            new ImportCommand(),
+            new ExportCommand()
         );
     }
 }
