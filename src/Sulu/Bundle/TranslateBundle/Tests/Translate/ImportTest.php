@@ -84,6 +84,10 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Sulu ist toll!', $translations[0]->getValue());
         $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());
 
+        // FIXME needed because of wrong doctrine behaviour
+        // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
+        self::$em->clear();
+
         // test new import
         $this->import->setFile(__DIR__ . '/../Fixtures/import_better.xliff');
         $this->import->setName('Import Update');
@@ -126,11 +130,16 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Sulu ist sehr toll!', $translations[2]->getValue());
         $this->assertEquals('Sulu ist sogar OpenSource!', $translations[3]->getValue());
 
+        // FIXME needed because of wrong doctrine behaviour
+        // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
+        self::$em->clear();
+
         // test new import with new language code
         $this->import->setFile(__DIR__ . '/../Fixtures/import.xliff');
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('en');
+        $this->import->setPackageId(1);
         $this->import->execute();
 
         $package = self::$em->getRepository('SuluTranslateBundle:Package')->find(1);
@@ -142,9 +151,10 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('en', $catalogue->getLocale());
 
         $codes = self::$em->getRepository('SuluTranslateBundle:Code')->findBy(array(
-                'package' => 2
+                'package' => 1
             )
         );
+        $this->assertEquals(4, count($codes));
         $this->assertEquals(1, $codes[0]->getId());
         $this->assertEquals('sulu.great', $codes[0]->getCode());
         $this->assertEquals(true, $codes[0]->getBackend());
