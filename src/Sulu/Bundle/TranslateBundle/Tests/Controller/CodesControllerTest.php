@@ -19,7 +19,6 @@ class CodesControllerTest extends DatabaseTestCase
      * @var array
      */
     protected static $entities;
-
     /**
      * @var SchemaTool
      */
@@ -34,13 +33,8 @@ class CodesControllerTest extends DatabaseTestCase
         self::$em->flush();
     }
 
-    public function tearDown()
+    public function setUpSchema()
     {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema() {
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
@@ -53,4 +47,58 @@ class CodesControllerTest extends DatabaseTestCase
 
         self::$tool->createSchema(self::$entities);
     }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        self::$tool->dropSchema(self::$entities);
+    }
+
+    public function testGetAll()
+    {
+        $client = static::createClient();
+    }
+
+    public function testGetAllSorted()
+    {
+        $client = static::createClient();
+    }
+
+    public function testGetAllPageSize()
+    {
+        $pageSize = 2;
+        $client = static::createClient();
+    }
+
+    public function testGetAllFields()
+    {
+        $client = static::createClient();
+    }
+
+    public function testGetId()
+    {
+        $client = static::createClient();
+    }
+
+    public function testPost()
+    {
+        $client = static::createClient();
+    }
+
+    public function testPostWithoutName()
+    {
+        $client = static::createClient();
+    }
+
+    public function testPut()
+    {
+        $client = static::createClient();
+    }
+
+    public function testPutNotExisting()
+    {
+        $client = static::createClient();
+    }
+
+    // TODO test a few bad requests
 }
