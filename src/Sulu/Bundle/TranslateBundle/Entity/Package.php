@@ -117,6 +117,24 @@ class Package
     }
 
     /**
+     * Returns the code with the given key, or null, if there is no
+     * code with the given key
+     * @param $key The key to search a code for
+     * @return null|Code
+     */
+    public function findCode($key)
+    {
+        foreach ($this->getCodes() as $code) {
+            /** @var $code Translation */
+            if ($code->getCode() == $key) {
+                return $code;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get codes
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -185,7 +203,7 @@ class Package
     /**
      * Get catalogues
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      * @VirtualProperty
      * @Type("array")
      */
