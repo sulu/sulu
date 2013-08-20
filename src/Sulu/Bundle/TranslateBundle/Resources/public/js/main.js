@@ -18,4 +18,5 @@ define(['sulutranslate/bundle'], function(Bundle) {
     'use strict';
 
     Bundle.initialize();
+
 });

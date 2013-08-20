@@ -85,7 +85,7 @@ define([
                     });
                 }
 
-                App.$navigation.trigger('navigation:item:column:show', {
+                App.Navigation.trigger('navigation:item:column:show', {
                     data: this.getTabs(translatePackage.get('id'))
                 });
             }.bind(this));
@@ -104,7 +104,7 @@ define([
             }
 
             translatePackage.save(null, {
-                success: function(translatePackage) {
+                success: function() {
                     Router.navigate('settings/translate');
                 }
             });
