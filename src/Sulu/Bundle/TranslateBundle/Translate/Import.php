@@ -15,6 +15,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
+use Sulu\Bundle\TranslateBundle\Translate\Exception\PackageNotFoundException;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 
 /**
@@ -159,12 +160,9 @@ class Import
     /**
      * Executes the import
      *
-     * @throws Symfony\Component\Translation\Exception\NotFoundResourceException if the
-     *      given file does not exist
-     * @throws Symfony\Component\Translation\Exception\InvalidResourceException if the
-     *      given file is not valid
-     * @throws Sulu\Bundle\TranslateBundle\Translate\PackageNotFoundException if the
-     *      given package cannot be found
+     * @throws \Symfony\Component\Translation\Exception\NotFoundResourceException if the given file does not exist
+     * @throws \Symfony\Component\Translation\Exception\InvalidResourceException if the given file is not valid
+     * @throws \Sulu\Bundle\TranslateBundle\Translate\Exception\PackageNotFoundException if the given package cannot be found
      */
     public function execute()
     {

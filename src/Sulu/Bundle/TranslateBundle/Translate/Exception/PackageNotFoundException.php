@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TranslateBundle\Translate;
+namespace Sulu\Bundle\TranslateBundle\Translate\Exception;
 
 use Exception;
 

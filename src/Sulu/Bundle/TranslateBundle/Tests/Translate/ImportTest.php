@@ -83,7 +83,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Sulu ist toll!', $translations[0]->getValue());
         $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());
 
-        // FIXME needed because of wrong doctrine behaviour
+        // FIXME needed because of strange doctrine behaviour
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
         self::$em->clear();
 
@@ -129,7 +129,7 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals('Sulu ist sehr toll!', $translations[2]->getValue());
         $this->assertEquals('Sulu ist sogar OpenSource!', $translations[3]->getValue());
 
-        // FIXME needed because of wrong doctrine behaviour
+        // FIXME needed because of strange doctrine behaviour
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
         self::$em->clear();
 
@@ -149,7 +149,8 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals(2, $catalogue->getId());
         $this->assertEquals('en', $catalogue->getLocale());
 
-        $codes = self::$em->getRepository('SuluTranslateBundle:Code')->findBy(array(
+        $codes = self::$em->getRepository('SuluTranslateBundle:Code')->findBy(
+            array(
                 'package' => 1
             )
         );
@@ -175,7 +176,7 @@ class ImportTest extends DatabaseTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\Translation\Exception\NotFoundResourceException
+     * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
      */
     public function testXliffNoFile()
     {
@@ -184,7 +185,7 @@ class ImportTest extends DatabaseTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\Translation\Exception\InvalidResourceException
+     * @expectedException \Symfony\Component\Translation\Exception\InvalidResourceException
      */
     public function testXliffFailFile()
     {
@@ -193,7 +194,7 @@ class ImportTest extends DatabaseTestCase
     }
 
     /**
-     * @expectedException Sulu\Bundle\TranslateBundle\Translate\PackageNotFoundException
+     * @expectedException \Sulu\Bundle\TranslateBundle\Translate\Exception\PackageNotFoundException
      */
     public function testPackageNotFound()
     {
