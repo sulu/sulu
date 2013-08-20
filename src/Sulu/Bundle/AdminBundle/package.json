@@ -11,6 +11,7 @@
     "grunt-contrib-cssmin": "~0.6.1",
     "grunt-rev": "~0.1.0",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-replace": "~0.4.4"
+    "grunt-replace": "~0.4.4",
+    "grunt-contrib-requirejs": "~0.4.1"
   }
 }
