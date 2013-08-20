@@ -1,13 +1,13 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
 
-define(['backbone'], function (Backbone) {
+define(['backbone'], function(Backbone) {
 
     'use strict';
 
@@ -19,13 +19,13 @@ define(['backbone'], function (Backbone) {
             '*actions': 'defaultAction'
         },
 
-        defaultAction: function (action) {
+        defaultAction: function(action) {
             // We have no matching route, lets just log what the URL was
             console.log('No route: ', action);
         }
     });
 
-    var initialize = function (App) {
+    var initialize = function(App) {
         router = new AppRouter();
 
         App.Router = router;
@@ -34,11 +34,11 @@ define(['backbone'], function (Backbone) {
         require(['/admin/routes']);
     };
 
-    var navigate = function (action) {
+    var navigate = function(action) {
         router.navigate(action, {trigger: true});
     };
 
-    var route = function (route, name, callback) {
+    var route = function(route, name, callback) {
         router.route(route, name, callback);
     };
 
