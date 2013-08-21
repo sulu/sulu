@@ -32,11 +32,19 @@ class CodesControllerTest extends DatabaseTestCase
     /**
      * @var Package
      */
-    private $package;
+    private $package1;
+    /**
+     * @var Package
+     */
+    private $package2;
     /**
      * @var Location
      */
-    private $location;
+    private $location1;
+    /**
+     * @var Location
+     */
+    private $location2;
     /**
      * @var Catalogue
      */
@@ -70,18 +78,27 @@ class CodesControllerTest extends DatabaseTestCase
 
         $this->setUpSchema();
 
-        $this->package = new Package();
-        $this->package->setName('Package1');
-        self::$em->persist($this->package);
+        $this->package1 = new Package();
+        $this->package1->setName('Package1');
+        self::$em->persist($this->package1);
 
-        $this->location = new Location();
-        $this->location->setName('Location1')
-            ->setPackage($this->package);
-        self::$em->persist($this->location);
+        $this->package2 = new Package();
+        $this->package2->setName('Package2');
+        self::$em->persist($this->package2);
+
+        $this->location1 = new Location();
+        $this->location1->setName('Location1')
+            ->setPackage($this->package1);
+        self::$em->persist($this->location1);
+
+        $this->location2 = new Location();
+        $this->location2->setName('Location2')
+            ->setPackage($this->package2);
+        self::$em->persist($this->location2);
 
         $this->catalogue = new Catalogue();
         $this->catalogue->setLocale('EN')
-            ->setPackage($this->package);
+            ->setPackage($this->package1);
         self::$em->persist($this->catalogue);
 
         $this->code1 = new Code();
@@ -89,8 +106,8 @@ class CodesControllerTest extends DatabaseTestCase
             ->setFrontend(0)
             ->setBackend(1)
             ->setLength(9)
-            ->setPackage($this->package)
-            ->setLocation($this->location);
+            ->setPackage($this->package1)
+            ->setLocation($this->location1);
         self::$em->persist($this->code1);
 
         self::$em->flush();
@@ -106,8 +123,8 @@ class CodesControllerTest extends DatabaseTestCase
             ->setFrontend(1)
             ->setBackend(0)
             ->setLength(10)
-            ->setPackage($this->package)
-            ->setLocation($this->location);
+            ->setPackage($this->package1)
+            ->setLocation($this->location1);
         self::$em->persist($this->code2);
 
         self::$em->flush();
@@ -123,8 +140,8 @@ class CodesControllerTest extends DatabaseTestCase
             ->setFrontend(1)
             ->setBackend(1)
             ->setLength(11)
-            ->setPackage($this->package)
-            ->setLocation($this->location);
+            ->setPackage($this->package1)
+            ->setLocation($this->location1);
         self::$em->persist($this->code3);
 
         self::$em->flush();
@@ -279,8 +296,8 @@ class CodesControllerTest extends DatabaseTestCase
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'package' => $this->package->getId(),
-            'location' => $this->location->getId()
+            'package' => $this->package1->getId(),
+            'location' => $this->location1->getId()
         );
         $this->client->request(
             'POST',
@@ -308,8 +325,8 @@ class CodesControllerTest extends DatabaseTestCase
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'package' => $this->package->getId(),
-            'location' => $this->location->getId()
+            'package' => $this->package1->getId(),
+            'location' => $this->location1->getId()
         );
         $this->client->request(
             'POST',
@@ -322,8 +339,8 @@ class CodesControllerTest extends DatabaseTestCase
             'code' => 'test.code.5',
             'backend' => '0',
             'length' => '12',
-            'package' => $this->package->getId(),
-            'location' => $this->location->getId()
+            'package' => $this->package1->getId(),
+            'location' => $this->location1->getId()
         );
         $this->client->request(
             'POST',
@@ -336,8 +353,8 @@ class CodesControllerTest extends DatabaseTestCase
             'code' => 'test.code.6',
             'frontend' => '0',
             'length' => '12',
-            'package' => $this->package->getId(),
-            'location' => $this->location->getId()
+            'package' => $this->package1->getId(),
+            'location' => $this->location1->getId()
         );
         $this->client->request(
             'POST',
@@ -351,7 +368,7 @@ class CodesControllerTest extends DatabaseTestCase
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'location' => $this->location->getId()
+            'location' => $this->location1->getId()
         );
         $this->client->request(
             'POST',
@@ -364,7 +381,7 @@ class CodesControllerTest extends DatabaseTestCase
             'code' => 'test.code.8',
             'frontend' => '0',
             'backend' => '0',
-            'package' => $this->package->getId()
+            'package' => $this->package1->getId()
         );
         $this->client->request(
             'POST',
@@ -376,7 +393,29 @@ class CodesControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
+        $request = array(
+            'code' => 'test.code.4',
+            'frontend' => '1',
+            'backend' => '0',
+            'length' => '20',
+            'package' => $this->package2->getId(),
+            'location' => $this->location2->getId()
+        );
+        $this->client->request(
+            'PUT',
+            '/translate/api/packages/1',
+            $request
+        );
 
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->id);
+        $this->assertEquals($request['code'], $response->code);
+        $this->assertEquals($request['frontend'], $response->frontend);
+        $this->assertEquals($request['backend'], $response->backend);
+        $this->assertEquals($request['length'], $response->length);
+        $this->assertEquals($request['package'], $response->package->id);
+        $this->assertEquals($request['location'], $response->location->id);
     }
 
     public function testPutNotExisting()
