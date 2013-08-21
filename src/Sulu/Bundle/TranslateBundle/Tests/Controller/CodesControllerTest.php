@@ -236,7 +236,25 @@ class CodesControllerTest extends DatabaseTestCase
 
     public function testGetAllFields()
     {
+        $this->client->request('GET', '/translate/api/codes?fields=code');
+        $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertFalse(isset($response->items[0]->id));
+        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+        $this->assertFalse(isset($response->items[1]->id));
+        $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertFalse(isset($response->items[2]->id));
+
+        $this->client->request('GET', '/translate/api/codes?fields=code,id');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals($this->code1->getCode(), $response->items[1]->code);
+        $this->assertEquals(2, $response->items[1]->id);
+        $this->assertEquals($this->code1->getCode(), $response->items[2]->code);
+        $this->assertEquals(3, $response->items[2]->id);
     }
 
     public function testGetId()
