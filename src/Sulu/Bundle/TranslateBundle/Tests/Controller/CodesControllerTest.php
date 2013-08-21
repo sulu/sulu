@@ -200,9 +200,9 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes?sortBy=id&sortOrder=desc');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
-        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code1->getCode(), $response->items[2]->code);
 
         $this->client->request('GET', '/translate/api/codes?sortBy=code&sortOrder=asc');
         $response = json_decode($this->client->getResponse()->getContent());
@@ -214,9 +214,9 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes?sortBy=code&sortOrder=desc');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
-        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code1->getCode(), $response->items[2]->code);
 
         $this->client->request('GET', '/translate/api/codes?sortBy=length&sortOrder=asc');
         $response = json_decode($this->client->getResponse()->getContent());
