@@ -1,5 +1,6 @@
 Sulu\Bundle\TranslateBundle\Entity\Code:
     type: entity
+    repositoryClass: Sulu\Bundle\TranslateBundle\Entity\CodeRepository
     table: tr_codes
     fields:
         id:
