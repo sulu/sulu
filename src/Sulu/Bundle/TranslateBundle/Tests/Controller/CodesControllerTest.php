@@ -248,7 +248,7 @@ class CodesControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, count($response->items)); // only 1 item remaining
         $this->assertEquals(1, $response->total); // only 1 item remaining
-        $this->assertEquals($this->code3->getCode(), $response->items[0]->name);
+        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
     }
 
     public function testGetAllFields()
