@@ -259,7 +259,17 @@ class CodesControllerTest extends DatabaseTestCase
 
     public function testGetId()
     {
+        $this->client->request('GET', '/translate/api/codes/' . $this->code1->getId());
 
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($this->code1->getId(), $response->id);
+        $this->assertEquals($this->code1->getCode(), $response->code);
+        $this->assertEquals($this->code1->getBackend(), $response->backend);
+        $this->assertEquals($this->code1->getFrontend(), $response->frontend);
+        $this->assertEquals($this->code1->getLength(), $response->length);
+        $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
+        $this->assertEquals($this->code1->getTranslations()->first()->getId(), $response->translations[0]->id);
     }
 
     public function testPost()
