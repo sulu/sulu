@@ -260,7 +260,6 @@ class CodesControllerTest extends DatabaseTestCase
     public function testGetId()
     {
         $this->client->request('GET', '/translate/api/codes/' . $this->code1->getId());
-
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($this->code1->getId(), $response->id);
@@ -269,12 +268,38 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($this->code1->getFrontend(), $response->frontend);
         $this->assertEquals($this->code1->getLength(), $response->length);
         $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
+        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
         $this->assertEquals($this->code1->getTranslations()->first()->getId(), $response->translations[0]->id);
     }
 
     public function testPost()
     {
+        $request = array(
+            'code' => 'test.code.4',
+            'frontend' => '0',
+            'backend' => '0',
+            'length' => '12',
+            'package' => $this->package->getId(),
+            'location' => $this->location->getId()
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $request
+        );
+        $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->assertEquals('test.code.4', $response->name);
+
+        $this->client->request('GET', '/translate/api/codes/' . $response->id);
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($request['code'], $response->code);
+        $this->assertEquals($request['backend'], $response->backend);
+        $this->assertEquals($request['frontend'], $response->frontend);
+        $this->assertEquals($request['length'], $response->length);
+        $this->assertEquals($request['location']['id'], $response->location->id);
+        $this->assertEquals($request['package']['id'], $response->package->id);
     }
 
     public function testPostWithoutName()
