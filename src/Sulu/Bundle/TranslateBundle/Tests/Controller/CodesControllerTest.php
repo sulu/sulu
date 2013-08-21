@@ -263,15 +263,20 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
         $this->assertFalse(isset($response->items[2]->id));
 
-        $this->client->request('GET', '/translate/api/codes?fields=code,id');
+        $this->client->request('GET', '/translate/api/codes?fields=id,code,location_name');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals(1, $response->items[0]->id);
-        $this->assertEquals($this->code1->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code1->getLocation()->getName(), $response->items[0]->location_name);
+
         $this->assertEquals(2, $response->items[1]->id);
-        $this->assertEquals($this->code1->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code2->getLocation()->getName(), $response->items[0]->location_name);
+
         $this->assertEquals(3, $response->items[2]->id);
+        $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code3->getLocation()->getName(), $response->items[0]->location_name);
     }
 
     public function testGetId()
