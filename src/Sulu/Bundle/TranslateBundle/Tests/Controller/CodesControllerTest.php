@@ -17,6 +17,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Location;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
+use Symfony\Component\HttpKernel\Client;
 
 class CodesControllerTest extends DatabaseTestCase
 {
@@ -52,12 +53,23 @@ class CodesControllerTest extends DatabaseTestCase
      * @var Code
      */
     private $code3;
+    /**
+     * @var Client
+     */
+    private $client;
+    /**
+     * @var integer
+     */
+    private $pageSize;
 
     public function setUp()
     {
+        // config section
+        $this->client = static::createClient();
+        $this->pageSize = 2;
+
         $this->setUpSchema();
 
-        // TODO create entities
         $this->package = new Package();
         $this->package->setName('Package1');
         self::$em->persist($this->package);
@@ -76,7 +88,7 @@ class CodesControllerTest extends DatabaseTestCase
         $this->code1->setCode('test.code.1')
             ->setFrontend(0)
             ->setBackend(1)
-            ->setLength(11)
+            ->setLength(9)
             ->setPackage($this->package)
             ->setLocation($this->location);
         self::$em->persist($this->code1);
@@ -93,7 +105,7 @@ class CodesControllerTest extends DatabaseTestCase
         $this->code2->setCode('test.code.2')
             ->setFrontend(1)
             ->setBackend(0)
-            ->setLength(11)
+            ->setLength(10)
             ->setPackage($this->package)
             ->setLocation($this->location);
         self::$em->persist($this->code2);
@@ -150,48 +162,53 @@ class CodesControllerTest extends DatabaseTestCase
 
     public function testGetAll()
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/translate/api/codes');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(3, $response->total);
+        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
     }
 
     public function testGetAllSorted()
     {
-        $client = static::createClient();
+
     }
 
     public function testGetAllPageSize()
     {
-        $pageSize = 2;
-        $client = static::createClient();
+
     }
 
     public function testGetAllFields()
     {
-        $client = static::createClient();
+
     }
 
     public function testGetId()
     {
-        $client = static::createClient();
+
     }
 
     public function testPost()
     {
-        $client = static::createClient();
+
     }
 
     public function testPostWithoutName()
     {
-        $client = static::createClient();
+
     }
 
     public function testPut()
     {
-        $client = static::createClient();
+        
     }
 
     public function testPutNotExisting()
     {
-        $client = static::createClient();
+
     }
 
     // TODO test a few bad requests
