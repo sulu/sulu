@@ -218,7 +218,20 @@ class CodesControllerTest extends DatabaseTestCase
 
     public function testGetAllPageSize()
     {
+        $this->client->request('GET', '/translate/api/codes?pageSize=' . $this->pageSize);
+        $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->assertEquals($this->pageSize, count($response->items));
+        $this->assertEquals($this->pageSize, $response->total);
+        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+
+        $this->client->request('GET', '/translate/api/codes?pageSize=' . $this->pageSize . '&page=2');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(1, count($response->items)); // only 1 item remaining
+        $this->assertEquals(1, $response->total); // only 1 item remaining
+        $this->assertEquals($this->code3->getCode(), $response->items[0]->name);
     }
 
     public function testGetAllFields()
