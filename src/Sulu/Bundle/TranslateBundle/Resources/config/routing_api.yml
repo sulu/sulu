@@ -5,3 +5,7 @@ sulu_translate.packages:
 sulu_translate.catalogues:
     type: rest
     resource: Sulu\Bundle\TranslateBundle\Controller\CataloguesController
+
+sulu_translate.codes:
+    type: rest
+    resource: Sulu\Bundle\TranslateBundle\Controller\CodesController
