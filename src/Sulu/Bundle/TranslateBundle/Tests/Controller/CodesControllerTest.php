@@ -302,9 +302,76 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($request['package']['id'], $response->package->id);
     }
 
-    public function testPostWithoutName()
+    public function testPostNullValues()
     {
+        $r1 = array(
+            'frontend' => '0',
+            'backend' => '0',
+            'length' => '12',
+            'package' => $this->package->getId(),
+            'location' => $this->location->getId()
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $r1
+        );
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
+        $r2 = array(
+            'code' => 'test.code.5',
+            'backend' => '0',
+            'length' => '12',
+            'package' => $this->package->getId(),
+            'location' => $this->location->getId()
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $r2
+        );
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $r3 = array(
+            'code' => 'test.code.6',
+            'frontend' => '0',
+            'length' => '12',
+            'package' => $this->package->getId(),
+            'location' => $this->location->getId()
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $r3
+        );
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $r4 = array(
+            'code' => 'test.code.7',
+            'frontend' => '0',
+            'backend' => '0',
+            'length' => '12',
+            'location' => $this->location->getId()
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $r4
+        );
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $r5 = array(
+            'code' => 'test.code.8',
+            'frontend' => '0',
+            'backend' => '0',
+            'package' => $this->package->getId()
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $r5
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPut()
