@@ -1,10 +1,14 @@
 module.exports = function (grunt) {
+
+    // load all grunt tasks
+    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
             public: {
                 files: [
-                    {expand: true, cwd: 'Resources/public', src: ['**'], dest: '../../../../../../web/bundles/suluadmin/'}
+                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../web/bundles/suluadmin/'}
                 ]
             },
             build: {
@@ -23,6 +27,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
+            options: { force: true },
             public: {
                 files: [
                     {
@@ -33,7 +38,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: [
-                    {src: ['Resources/public/dist']},
+                    {src: ['Resources/public/dist']}
                 ]
             },
             build: {
@@ -89,22 +94,42 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            scripts: {
+            /*scripts: {
                 files: ['Resources/public/**'],
                 tasks: ['publish']
+            },*/
+            options: {
+                nospawn: true
+            },
+            compass: {
+                files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
+                tasks: ['compass:dev']
+            }
+        },
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            }
+        },
+        cssmin: {
+            // TODO: options: { banner: '<%= meta.banner %>' },
+            compress: {
+                files: {
+                    'dist/main.min.css': ['Resources/public/css/']
+                }
+            }
+        },
+        compass: {
+            dev: {
+                options: {
+                    sassDir: 'Resources/public/scss/',
+                    specify: ['Resources/public/scss/main.scss'],
+                    cssDir: 'Resources/public/css/',
+                    relativeAssets: false
+                }
             }
         }
     });
-
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-usemin');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-rev');
-    grunt.loadNpmTasks('grunt-replace');
 
     grunt.registerTask('publish', [
         'clean:public',
@@ -124,5 +149,9 @@ module.exports = function (grunt) {
         'replace:buildResult',
         'clean:build',
         'publish'
+    ]);
+
+    grunt.registerTask('default', [
+        'watch'
     ]);
 };

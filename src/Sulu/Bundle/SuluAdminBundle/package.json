@@ -12,6 +12,9 @@
     "grunt-rev": "~0.1.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-replace": "~0.4.4",
-    "grunt-contrib-requirejs": "~0.4.1"
-  }
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-compass": "~0.2.0",
+    "matchdep": "~0.1.1"
+    }
 }
