@@ -296,8 +296,12 @@ class CodesControllerTest extends DatabaseTestCase
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'package' => $this->package1->getId(),
-            'location' => $this->location1->getId()
+            'package' => array(
+                'id' => $this->package2->getId()
+            ),
+            'location' => array(
+                'id' => $this->location2->getId()
+            )
         );
         $this->client->request(
             'POST',
@@ -325,8 +329,12 @@ class CodesControllerTest extends DatabaseTestCase
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'package' => $this->package1->getId(),
-            'location' => $this->location1->getId()
+            'package' => array(
+                'id' => $this->package2->getId()
+            ),
+            'location' => array(
+                'id' => $this->location2->getId()
+            )
         );
         $this->client->request(
             'POST',
@@ -339,8 +347,12 @@ class CodesControllerTest extends DatabaseTestCase
             'code' => 'test.code.5',
             'backend' => '0',
             'length' => '12',
-            'package' => $this->package1->getId(),
-            'location' => $this->location1->getId()
+            'package' => array(
+                'id' => $this->package2->getId()
+            ),
+            'location' => array(
+                'id' => $this->location2->getId()
+            )
         );
         $this->client->request(
             'POST',
@@ -353,8 +365,12 @@ class CodesControllerTest extends DatabaseTestCase
             'code' => 'test.code.6',
             'frontend' => '0',
             'length' => '12',
-            'package' => $this->package1->getId(),
-            'location' => $this->location1->getId()
+            'package' => array(
+                'id' => $this->package2->getId()
+            ),
+            'location' => array(
+                'id' => $this->location2->getId()
+            )
         );
         $this->client->request(
             'POST',
@@ -368,7 +384,9 @@ class CodesControllerTest extends DatabaseTestCase
             'frontend' => '0',
             'backend' => '0',
             'length' => '12',
-            'location' => $this->location1->getId()
+            'location' => array(
+                'id' => $this->location2->getId()
+            )
         );
         $this->client->request(
             'POST',
@@ -381,7 +399,9 @@ class CodesControllerTest extends DatabaseTestCase
             'code' => 'test.code.8',
             'frontend' => '0',
             'backend' => '0',
-            'package' => $this->package1->getId()
+            'package' => array(
+                'id' => $this->package2->getId()
+            )
         );
         $this->client->request(
             'POST',
@@ -399,10 +419,10 @@ class CodesControllerTest extends DatabaseTestCase
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                array('id' => $this->package2->getId())
+                'id' => $this->package2->getId()
             ),
             'location' => array(
-                array('id' => $this->location2->getId())
+                'id' => $this->location2->getId()
             )
         );
         $this->client->request(
@@ -430,10 +450,10 @@ class CodesControllerTest extends DatabaseTestCase
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                array('id' => $this->package2->getId())
+                'id' => $this->package2->getId()
             ),
             'location' => array(
-                array('id' => $this->location2->getId())
+                'id' => $this->location2->getId()
             )
         );
         $this->client->request(
@@ -447,15 +467,15 @@ class CodesControllerTest extends DatabaseTestCase
     public function testPutNotExistingPackage()
     {
         $request = array(
-            'code' => 'test.code.4',
+            'code' => 'test.code.1',
             'frontend' => '1',
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                array('id' => 5)
+                'id' => 5
             ),
             'location' => array(
-                array('id' => $this->location2->getId())
+                'id' => $this->location2->getId()
             )
         );
         $this->client->request(
@@ -474,6 +494,38 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
         $this->assertEquals($this->package1->getId(), $response->package->id);
+    }
+
+    public function testPutNotExistingLocation()
+    {
+        $request = array(
+            'code' => 'test.code.4',
+            'frontend' => '1',
+            'backend' => '0',
+            'length' => '20',
+            'package' => array(
+                'id' => $this->package2->getId()
+            ),
+            'location' => array(
+                'id' => 5
+            )
+        );
+        $this->client->request(
+            'PUT',
+            '/translate/api/packages/1',
+            $request
+        );
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/translate/api/codes/1');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($request['code'], $response->code);
+        $this->assertEquals($request['backend'], $response->backend);
+        $this->assertEquals($request['frontend'], $response->frontend);
+        $this->assertEquals($request['length'], $response->length);
+        $this->assertEquals($this->location1->getId(), $response->location->id);
+        $this->assertEquals($request['package']['id'], $response->package->id);
     }
 
 }
