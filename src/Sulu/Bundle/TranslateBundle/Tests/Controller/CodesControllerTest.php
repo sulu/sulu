@@ -444,4 +444,36 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testPutNotExistingPackage()
+    {
+        $request = array(
+            'code' => 'test.code.4',
+            'frontend' => '1',
+            'backend' => '0',
+            'length' => '20',
+            'package' => array(
+                array('id' => 5)
+            ),
+            'location' => array(
+                array('id' => $this->location2->getId())
+            )
+        );
+        $this->client->request(
+            'PUT',
+            '/translate/api/packages/1',
+            $request
+        );
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/translate/api/codes/1');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($request['code'], $response->code);
+        $this->assertEquals($request['backend'], $response->backend);
+        $this->assertEquals($request['frontend'], $response->frontend);
+        $this->assertEquals($request['length'], $response->length);
+        $this->assertEquals($request['location']['id'], $response->location->id);
+        $this->assertEquals($this->package1->getId(), $response->package->id);
+    }
+
 }
