@@ -398,8 +398,12 @@ class CodesControllerTest extends DatabaseTestCase
             'frontend' => '1',
             'backend' => '0',
             'length' => '20',
-            'package' => $this->package2->getId(),
-            'location' => $this->location2->getId()
+            'package' => array(
+                array('id' => $this->package2->getId())
+            ),
+            'location' => array(
+                array('id' => $this->location2->getId())
+            )
         );
         $this->client->request(
             'PUT',
@@ -414,14 +418,30 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($request['frontend'], $response->frontend);
         $this->assertEquals($request['backend'], $response->backend);
         $this->assertEquals($request['length'], $response->length);
-        $this->assertEquals($request['package'], $response->package->id);
-        $this->assertEquals($request['location'], $response->location->id);
+        $this->assertEquals($request['package']['id'], $response->package->id);
+        $this->assertEquals($request['location']['id'], $response->location->id);
     }
 
     public function testPutNotExisting()
     {
-
+        $request = array(
+            'code' => 'test.code.4',
+            'frontend' => '1',
+            'backend' => '0',
+            'length' => '20',
+            'package' => array(
+                array('id' => $this->package2->getId())
+            ),
+            'location' => array(
+                array('id' => $this->location2->getId())
+            )
+        );
+        $this->client->request(
+            'PUT',
+            '/translate/api/packages/125',
+            $request
+        );
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
-    // TODO test a few bad requests
 }
