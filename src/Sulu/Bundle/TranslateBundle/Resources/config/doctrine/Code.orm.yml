@@ -20,14 +20,14 @@ Sulu\Bundle\TranslateBundle\Entity\Code:
     manyToOne:
         package:
             targetEntity: Package
-            inversedBy: tr_packages
+            inversedBy: codes
             joinColumn:
                 name: idPackages
                 referencedColumnName: id
                 nullable: false
         location:
             targetEntity: Location
-            inversedBy: tr_locations
+            inversedBy: codes
             joinColumn:
                 name: idLocations
                 referencedColumnName: id
