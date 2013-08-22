@@ -32,14 +32,24 @@
 
 
 $background-darkgrey: #333333;
+$background-lightgrey: #f1f1f1;
 
 $border-grey: #959595;
 $border-white: #fff;
 
 
 /* Content */
-$margin-left-div-content: 280px;
+$div-content-margin-left: 650px;
 
+
+/* -----------------------------------------------------*/
+/* Body                                            */
+/* -----------------------------------------------------*/
+
+body {
+  background:$background-lightgrey;
+
+}
 
 /* -----------------------------------------------------*/
 /* Container                                            */
@@ -65,7 +75,7 @@ $margin-left-div-content: 280px;
 
   #content {
     float:left;
-    margin-left: $margin-left-div-content;
+    margin-left: $div-content-margin-left;
     width:822px;
     min-height:300px;
   }
