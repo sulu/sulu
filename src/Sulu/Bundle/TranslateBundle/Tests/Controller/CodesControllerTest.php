@@ -628,20 +628,20 @@ class CodesControllerTest extends DatabaseTestCase
         );
         $this->client->request(
             'PUT',
-            '/translate/api/packages/1',
+            '/translate/api/codes/1',
             $request
         );
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('GET', '/translate/api/codes/1');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($request['code'], $response->code);
-        $this->assertEquals(($request['backend'] == "0") ? false : true, $response->backend);
-        $this->assertEquals(($request['frontend'] == "0") ? false : true, $response->frontend);
-        $this->assertEquals($request['length'], $response->length);
-        $this->assertEquals($request['location']['id'], $response->location->id);
-        $this->assertEquals($this->package1->getId(), $response->package->id);
+        $this->assertEquals($this->code1->getCode(), $response->code);
+        $this->assertEquals($this->code1->getBackend(), $response->backend);
+        $this->assertEquals($this->code1->getFrontend(), $response->frontend);
+        $this->assertEquals($this->code1->getLength(), $response->length);
+        $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
+        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
     }
 
     public function testPutNotExistingLocation()
@@ -660,20 +660,20 @@ class CodesControllerTest extends DatabaseTestCase
         );
         $this->client->request(
             'PUT',
-            '/translate/api/packages/1',
+            '/translate/api/codes/1',
             $request
         );
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('GET', '/translate/api/codes/1');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($request['code'], $response->code);
-        $this->assertEquals(($request['backend'] == "0") ? false : true, $response->backend);
-        $this->assertEquals(($request['frontend'] == "0") ? false : true, $response->frontend);
-        $this->assertEquals($request['length'], $response->length);
-        $this->assertEquals($request['location']['id'], $response->location->id);
-        $this->assertEquals($request['package']['id'], $response->package->id);
+        $this->assertEquals($this->code1->getCode(), $response->code);
+        $this->assertEquals($this->code1->getBackend(), $response->backend);
+        $this->assertEquals($this->code1->getFrontend(), $response->frontend);
+        $this->assertEquals($this->code1->getLength(), $response->length);
+        $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
+        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
     }
 
 }
