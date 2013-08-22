@@ -4,7 +4,7 @@
 /vendor/
 /composer.phar
 /composer.lock
-.sass-cache/
+/.sass-cache/
 *~
 
 # IDEs
