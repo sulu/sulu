@@ -1,5 +1,5 @@
 {
-    "name": "sensio/generator-bundle",
+    "name": "sulu/generator-bundle",
     "description": "This bundle generates sulu code for you",
     "keywords": [],
     "type": "sulu-bundle",
