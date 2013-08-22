@@ -28,9 +28,10 @@ class CodesController extends FOSRestController
 
     /**
      * Lists all the codes or filters the codes by parameters
+     * route /codes/list
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getCodesAction()
+    public function listCodesAction()
     {
         $listHelper = $this->get('sulu_core.list_rest_helper');
         $fields = $listHelper->getFields();
