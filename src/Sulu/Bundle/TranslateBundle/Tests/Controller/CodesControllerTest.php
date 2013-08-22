@@ -367,17 +367,27 @@ class CodesControllerTest extends DatabaseTestCase
 
     public function testGetId()
     {
-        $this->client->request('GET', '/translate/api/codes/' . $this->code1->getId());
+        $this->client->request('GET', '/translate/api/codes/' . $this->code3->getId());
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($this->code1->getId(), $response->id);
-        $this->assertEquals($this->code1->getCode(), $response->code);
-        $this->assertEquals($this->code1->getBackend(), $response->backend);
-        $this->assertEquals($this->code1->getFrontend(), $response->frontend);
-        $this->assertEquals($this->code1->getLength(), $response->length);
-        $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
-        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
-        $this->assertEquals($this->code1->getTranslations()->first()->getId(), $response->translations[0]->id);
+        $this->assertEquals($this->code3->getId(), $response->id);
+        $this->assertEquals($this->code3->getCode(), $response->code);
+        $this->assertEquals($this->code3->getBackend(), $response->backend);
+        $this->assertEquals($this->code3->getFrontend(), $response->frontend);
+        $this->assertEquals($this->code3->getLength(), $response->length);
+        $this->assertEquals($this->code3->getLocation()->getId(), $response->location->id);
+        $this->assertEquals($this->code3->getPackage()->getId(), $response->package->id);
+
+        $this->assertEquals($this->code3_t1->getValue(), $response->translations[0]->value);
+        $this->assertEquals($this->code3_t2->getValue(), $response->translations[1]->value);
+    }
+
+    public function testGetIdNotExisting()
+    {
+        $this->client->request('GET', '/translate/api/codes/5');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost()
@@ -392,6 +402,10 @@ class CodesControllerTest extends DatabaseTestCase
             ),
             'location' => array(
                 'id' => $this->location2->getId()
+            ),
+            'translations' => array(
+                array('value' => 'Translation 1', 'catalogue' => array('id' => 1)),
+                array('value' => 'Translation 2', 'catalogue' => array('id' => 2))
             )
         );
         $this->client->request(
@@ -401,17 +415,25 @@ class CodesControllerTest extends DatabaseTestCase
         );
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals('test.code.4', $response->name);
+        $this->assertEquals('test.code.4', $response->code);
 
         $this->client->request('GET', '/translate/api/codes/' . $response->id);
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($request['code'], $response->code);
-        $this->assertEquals($request['backend'], $response->backend);
-        $this->assertEquals($request['frontend'], $response->frontend);
+        $this->assertEquals(($request['backend'] == "0") ? false : true, $response->backend);
+        $this->assertEquals(($request['frontend'] == "0") ? false : true, $response->frontend);
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
         $this->assertEquals($request['package']['id'], $response->package->id);
+
+        $this->assertEquals(2, sizeof($response->translations));
+
+        $this->assertEquals($request['translations'][0]['value'], $response->translations[0]->value);
+        $this->assertEquals($request['translations'][0]['catalogue']['id'], $response->translations[0]->catalogue->id);
+
+        $this->assertEquals($request['translations'][1]['value'], $response->translations[1]->value);
+        $this->assertEquals($request['translations'][1]['catalogue']['id'], $response->translations[1]->catalogue->id);
     }
 
     public function testPostNullValues()
@@ -436,7 +458,7 @@ class CodesControllerTest extends DatabaseTestCase
 
         $r2 = array(
             'code' => 'test.code.5',
-            'backend' => '0',
+            'frontend' => '0',
             'length' => '12',
             'package' => array(
                 'id' => $this->package2->getId()
@@ -450,12 +472,47 @@ class CodesControllerTest extends DatabaseTestCase
             '/translate/api/codes',
             $r2
         );
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
         $r3 = array(
             'code' => 'test.code.6',
+            'backend' => '0',
             'frontend' => '0',
             'length' => '12',
+            'location' => array(
+                'id' => $this->location2->getId()
+            )
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $r3
+        );
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $r4 = array(
+            'code' => 'test.code.7',
+            'frontend' => '0',
+            'backend' => '0',
+            'length' => '12',
+            'package' => array(
+                'id' => $this->package2->getId()
+            )
+        );
+        $this->client->request(
+            'POST',
+            '/translate/api/codes',
+            $r4
+        );
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $r5 = array(
+            'code' => 'test.code.8',
+            'frontend' => '0',
+            'backend' => '0',
             'package' => array(
                 'id' => $this->package2->getId()
             ),
@@ -466,39 +523,9 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request(
             'POST',
             '/translate/api/codes',
-            $r3
-        );
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
-
-        $r4 = array(
-            'code' => 'test.code.7',
-            'frontend' => '0',
-            'backend' => '0',
-            'length' => '12',
-            'location' => array(
-                'id' => $this->location2->getId()
-            )
-        );
-        $this->client->request(
-            'POST',
-            '/translate/api/codes',
-            $r4
-        );
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
-
-        $r5 = array(
-            'code' => 'test.code.8',
-            'frontend' => '0',
-            'backend' => '0',
-            'package' => array(
-                'id' => $this->package2->getId()
-            )
-        );
-        $this->client->request(
-            'POST',
-            '/translate/api/codes',
             $r5
         );
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
