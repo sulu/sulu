@@ -25,7 +25,7 @@ abstract class BundleGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate($namespace, $bundle, $dir, $format, $structure)
+    public function generate($namespace, $bundle, $dir, $structure)
     {
         $dir .= '/' . strtr($namespace, '\\', '/');
         if (file_exists($dir)) {
@@ -45,12 +45,12 @@ abstract class BundleGenerator extends Generator
         $parameters = array(
             'namespace' => $namespace,
             'bundle' => $bundle,
-            'format' => $format,
+            'format' => 'yml',
             'bundle_basename' => $basename,
             'extension_alias' => Container::underscore($basename),
         );
 
-        $this->generateBundle();
+        $this->generateBundle($dir, $bundle, $basename, $structure,$parameters);
 
 //        $this->renderFile('bundle/Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
 //        $this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
@@ -81,5 +81,10 @@ abstract class BundleGenerator extends Generator
 //        }
     }
 
-    public abstract function generateBundle();
+    public abstract function generateBundle($dir, $bundle, $basename, $structure, $parameters);
+
+    protected function getFileSystem()
+    {
+        return $this->filesystem;
+    }
 }
