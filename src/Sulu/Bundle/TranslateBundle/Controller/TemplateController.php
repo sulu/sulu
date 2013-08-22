@@ -19,4 +19,9 @@ class TemplateController extends Controller
     {
         return $this->render('SuluTranslateBundle:Template:catalogue.form.html.twig', array());
     }
+
+    public function codeformAction()
+    {
+        return $this->render('SuluTranslateBundle:Template:codes.form.html.twig', array());
+    }
 }
