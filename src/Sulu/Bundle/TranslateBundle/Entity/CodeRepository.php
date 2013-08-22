@@ -138,7 +138,7 @@ class CodeRepository extends EntityRepository
             $orderBy = "";
             // TODO OrderBy relations translations_value
             foreach ($sorting as $col => $dir) {
-                if (strlen($orderBy) > 0) $dql .= ", ";
+                if (strlen($orderBy) > 0) $orderBy .= ", ";
                 $orderBy .= "$prefix.$col $dir";
             }
             $dql .= "

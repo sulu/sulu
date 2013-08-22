@@ -36,7 +36,7 @@ class CodesController extends FOSRestController
         if ($this->getRequest()->get('packageId') != null) {
             $where['package_id'] = $this->getRequest()->get('packageId');
         }
-        if ($this->getRequest()->get('packageId') != null) {
+        if ($this->getRequest()->get('catalogueId') != null) {
             $where['translations_catalogue_id'] = $this->getRequest()->get('catalogueId');
         }
 

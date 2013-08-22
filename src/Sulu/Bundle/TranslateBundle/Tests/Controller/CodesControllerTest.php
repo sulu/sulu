@@ -58,13 +58,29 @@ class CodesControllerTest extends DatabaseTestCase
      */
     private $code1;
     /**
+     * @var Translation
+     */
+    private $code1_t1;
+    /**
      * @var Code
      */
     private $code2;
     /**
+     * @var Translation
+     */
+    private $code2_t1;
+    /**
      * @var Code
      */
     private $code3;
+    /**
+     * @var Translation
+     */
+    private $code3_t1;
+    /**
+     * @var Translation
+     */
+    private $code3_t2;
     /**
      * @var Client
      */
@@ -121,11 +137,11 @@ class CodesControllerTest extends DatabaseTestCase
 
         self::$em->flush();
 
-        $t1 = new Translation();
-        $t1->setValue('Test Code 1')
+        $this->code1_t1 = new Translation();
+        $this->code1_t1->setValue('Test Code 1')
             ->setCatalogue($this->catalogue1)
             ->setCode($this->code1);
-        self::$em->persist($t1);
+        self::$em->persist($this->code1_t1);
 
         $this->code2 = new Code();
         $this->code2->setCode('test.code.2')
@@ -138,11 +154,11 @@ class CodesControllerTest extends DatabaseTestCase
 
         self::$em->flush();
 
-        $t2 = new Translation();
-        $t2->setValue('Test Code 2')
+        $this->code2_t1 = new Translation();
+        $this->code2_t1->setValue('Test Code 2')
             ->setCatalogue($this->catalogue1)
             ->setCode($this->code2);
-        self::$em->persist($t2);
+        self::$em->persist($this->code2_t1);
 
         $this->code3 = new Code();
         $this->code3->setCode('test.code.3')
@@ -155,17 +171,17 @@ class CodesControllerTest extends DatabaseTestCase
 
         self::$em->flush();
 
-        $t3 = new Translation();
-        $t3->setValue('Test Code 3')
+        $this->code3_t1 = new Translation();
+        $this->code3_t1->setValue('Test Code 3')
             ->setCatalogue($this->catalogue1)
             ->setCode($this->code3);
-        self::$em->persist($t3);
+        self::$em->persist($this->code3_t1);
 
-        $t4 = new Translation();
-        $t4->setValue('Test Code 3.1')
+        $this->code3_t2 = new Translation();
+        $this->code3_t2->setValue('Test Code 3.1')
             ->setCatalogue($this->catalogue2)
             ->setCode($this->code3);
-        self::$em->persist($t4);
+        self::$em->persist($this->code3_t2);
 
         self::$em->flush();
     }
@@ -312,6 +328,41 @@ class CodesControllerTest extends DatabaseTestCase
 
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+
+        $this->client->request('GET', '/translate/api/codes?packageId=2');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(1, sizeof($response->items));
+        $this->assertEquals(1, $response->total);
+
+        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
+
+        $this->client->request('GET', '/translate/api/codes?locationId=1');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(3, sizeof($response->items));
+        $this->assertEquals(3, $response->total);
+
+        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+    }
+
+    public function testGetAllCombination()
+    {
+        $this->client->request('GET', '/translate/api/codes?fields=id,code,translations_value,translations_catalogue_locale&packageId=1&catalogueId=1&pageSize=' . $this->pageSize . '&page=1&sortBy=code&sortOrder=desc');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(2, sizeof($response->items));
+        $this->assertEquals(2, $response->total);
+
+        $this->assertEquals($this->code2->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->catalogue1->getLocale(), $response->items[0]->translations_catalogue_locale);
+        $this->assertEquals($this->code2_t1->getValue(), $response->items[0]->translations_value);
+
+        $this->assertEquals($this->code1->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->catalogue1->getLocale(), $response->items[1]->translations_catalogue_locale);
+        $this->assertEquals($this->code1_t1->getValue(), $response->items[1]->translations_value);
     }
 
     public function testGetId()
