@@ -2,6 +2,7 @@
 /vendor/
 /composer.phar
 /composer.lock
+.sass-cache/
 
 # IDEs
 .idea/*
