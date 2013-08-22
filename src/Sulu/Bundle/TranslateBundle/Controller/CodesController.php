@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use Sulu\Bundle\TranslateBundle\Entity\Code;
+use Sulu\Bundle\TranslateBundle\Entity\Translation;
 
 /**
  * Makes the translation codes accessible trough an REST-API
@@ -18,13 +20,51 @@ use FOS\RestBundle\Controller\FOSRestController;
  */
 class CodesController extends FOSRestController
 {
-    private $entityName = 'SuluTranslateBundle:Code';
+    private $codeEntity = 'SuluTranslateBundle:Code';
+    private $catalogueEntity = 'SuluTranslateBundle:Catalogue';
+    private $packageEntity = 'SuluTranslateBundle:Package';
+    private $locationEntity = 'SuluTranslateBundle:Location';
+    private $translationEntity = 'SuluTranslateBundle:Translation';
 
     /**
      * Lists all the codes or filters the codes by parameters
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getCodesAction()
+    {
+        $listHelper = $this->get('sulu_core.list_rest_helper');
+        $limit = $listHelper->getLimit();
+        $offset = $listHelper->getOffset();
+        $sorting = $listHelper->getSorting();
+
+        $where = array();
+        if ($this->getRequest()->get('packageId') != null) {
+            $where['p.id'] = $this->getRequest()->get('packageId');
+        }
+        if ($this->getRequest()->get('catalogueId') != null) {
+            $where['c.id'] = $this->getRequest()->get('catalogueId');
+        }
+
+        /** @var array $codes */
+        $codes = $this->getDoctrine()
+            ->getRepository($this->codeEntity)
+            ->findGetAll($limit, $offset, $sorting, $where);
+
+        $response = array(
+            'total' => count($codes),
+            'items' => $codes
+        );
+        $view = $this->view($response, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * Lists all the codes or filters the codes by parameters
+     * Special function for lists
+     * route /codes/list
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listCodesAction()
     {
         $listHelper = $this->get('sulu_core.list_rest_helper');
         $fields = $listHelper->getFields();
@@ -36,19 +76,161 @@ class CodesController extends FOSRestController
         if ($this->getRequest()->get('packageId') != null) {
             $where['package_id'] = $this->getRequest()->get('packageId');
         }
-        if ($this->getRequest()->get('packageId') != null) {
+        if ($this->getRequest()->get('catalogueId') != null) {
             $where['translations_catalogue_id'] = $this->getRequest()->get('catalogueId');
         }
 
         $codes = $this->getDoctrine()
-            ->getRepository($this->entityName)
-            ->findFiltered($fields, $limit, $offset, $sorting, $where);
+            ->getRepository($this->codeEntity)
+            ->findList($fields, $limit, $offset, $sorting, $where);
 
         $response = array(
             'total' => sizeof($codes),
             'items' => $codes
         );
         $view = $this->view($response, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * Shows the code with the given Id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getCodeAction($id)
+    {
+        // TODO Complete or filter for Fields?
+        $code = $this->getDoctrine()
+            ->getRepository($this->codeEntity)
+            ->find($id);
+
+        if ($code != null) {
+            $view = $this->view($code, 200);
+        } else {
+            $view = $this->view(null, 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Creates a new code
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postCodesAction()
+    {
+        $c = $this->getRequest()->get('code');
+        $backend = $this->getRequest()->get('backend');
+        $frontend = $this->getRequest()->get('frontend');
+        $length = $this->getRequest()->get('length');
+        $package = $this->getRequest()->get('package');
+        $location = $this->getRequest()->get('location');
+        $translations = $this->getRequest()->get('translations');
+
+        if ($c != null && $backend != null && $frontend != null && $location != null && $package != null) {
+            $em = $this->getDoctrine()->getManager();
+
+            $code = new Code();
+            $code->setCode($c);
+            $code->setBackend($backend);
+            $code->setFrontend($frontend);
+            $code->setLength($length);
+            $code->setCode($c);
+            $code->setPackage($em->getReference($this->packageEntity, $package['id']));
+            $code->setLocation($em->getReference($this->locationEntity, $location['id']));
+
+            $em->persist($code);
+            $em->flush();
+
+            if ($translations != null) {
+                foreach ($translations as $translation) {
+                    $t = new Translation();
+                    $t->setValue($translation['value']);
+
+                    $t->setCode($code);
+                    $code->addTranslation($t);
+
+                    // TODO Catalogue: which format?
+                    $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
+                    $em->persist($t);
+                }
+            }
+
+            $em->flush();
+
+            $view = $this->view($code, 200);
+        } else {
+            $view = $this->view(null, 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * TODO Comment
+     * @param integer $id The id of the package to update
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putCodesAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var Code $code */
+        $code = $this->getDoctrine()
+            ->getRepository($this->codeEntity)
+            ->find($id);
+
+        $c = $this->getRequest()->get('code');
+        $backend = $this->getRequest()->get('backend');
+        $frontend = $this->getRequest()->get('frontend');
+        $length = $this->getRequest()->get('length');
+        $package = $this->getRequest()->get('package');
+        $location = $this->getRequest()->get('location');
+        $translations = $this->getRequest()->get('translations');
+
+        $translationRepository = $this->getDoctrine()
+            ->getRepository($this->translationEntity);
+
+        if (!$code) {
+            // No Code exists
+            $view = $this->view(null, 400);
+        } else {
+            $code->setCode($c);
+            $code->setBackend($backend);
+            $code->setFrontend($frontend);
+            $code->setLength($length);
+            $code->setPackage($em->getReference($this->packageEntity, $package['id']));
+            $code->setLocation($em->getReference($this->locationEntity, $location['id']));
+
+            if ($translations != null && sizeof($translations) > 0) {
+                foreach ($translations as $translation) {
+                    /** @var Translation $t */
+                    $t = $translationRepository->findOneBy(
+                        array(
+                            'code' => $code->getId(),
+                            'catalogue' => $translation['catalogue']['id']
+                        ));
+
+                    if ($t != null) {
+                        $t->setValue($translation['value']);
+                        $t->setCode($code);
+                        $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
+                    } else {
+                        // Create a new Translation
+                        $t = new Translation();
+                        $t->setValue($translation['value']);
+                        $t->setCode($code);
+                        $code->addTranslation($t);
+                        $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
+                        $em->persist($t);
+                    }
+                }
+            }
+
+            $em->flush();
+            $view = $this->view($code, 200);
+        }
+
         return $this->handleView($view);
     }
 }
