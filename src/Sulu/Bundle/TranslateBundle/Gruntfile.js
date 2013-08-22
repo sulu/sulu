@@ -30,6 +30,10 @@ module.exports = function (grunt) {
             compass: {
                 files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
                 tasks: ['compass:dev']
+            },
+            scripts: {
+                files: ['Resources/public/**'],
+                tasks: ['publish']
             }
         },
         jshint: {
