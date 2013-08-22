@@ -1,7 +1,7 @@
 /* -----------------------------------------------------*/
 /* Clearfix                                             */
 /* -----------------------------------------------------*/
-/* line 5, ../scss/modules/base.scss */
+
 .clear {
   clear: both;
   display: block;
@@ -10,8 +10,6 @@
   width: 0;
   height: 0;
 }
-
-/* line 14, ../scss/modules/base.scss */
 .clearfix:before,
 .clearfix:after {
   content: '\0020';
@@ -21,45 +19,55 @@
   width: 0;
   height: 0;
 }
-
-/* line 22, ../scss/modules/base.scss */
 .clearfix:after {
   clear: both;
 }
-
-/* line 25, ../scss/modules/base.scss */
 .clearfix {
-  zoom: 1;
+  zoom:1;
 }
 
 /* -----------------------------------------------------*/
 /* Variablen                                            */
 /* -----------------------------------------------------*/
+
+
+$background-darkgrey: #333333;
+
+$border-grey: #959595;
+$border-white: #fff;
+
+
 /* Content */
+$margin-left-div-content: 280px;
+
+
 /* -----------------------------------------------------*/
 /* Container                                            */
 /* -----------------------------------------------------*/
-/* line 48, ../scss/modules/base.scss */
+
 #container {
+
   /* -----------------------------------------------------*/
   /* Top                                                  */
   /* -----------------------------------------------------*/
+
+  #top {
+    width:100%;
+    height:50px;
+    border-bottom:5px solid $border-grey;
+    margin-bottom:45px;
+    background: $background-darkgrey;
+  }
+
   /* -----------------------------------------------------*/
   /* Content                                              */
   /* -----------------------------------------------------*/
-}
-/* line 54, ../scss/modules/base.scss */
-#container #top {
-  width: 100%;
-  height: 50px;
-  border-bottom: 5px solid #959595;
-  margin-bottom: 45px;
-  background: #333333;
-}
-/* line 66, ../scss/modules/base.scss */
-#container #content {
-  float: left;
-  margin-left: 280px;
-  width: 822px;
-  min-height: 300px;
+
+  #content {
+    float:left;
+    margin-left: $margin-left-div-content;
+    width:822px;
+    min-height:300px;
+  }
+
 }
