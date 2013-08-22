@@ -28,6 +28,7 @@ class CodesController extends FOSRestController
 
     /**
      * Lists all the codes or filters the codes by parameters
+     * Special function for lists
      * route /codes/list
      * @return \Symfony\Component\HttpFoundation\Response
      */
