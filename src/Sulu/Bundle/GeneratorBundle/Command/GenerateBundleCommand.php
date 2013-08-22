@@ -15,10 +15,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
-use Sensio\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
-use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
+use Sulu\Bundle\GeneratorBundle\Generator\BundleGenerator;
+use Sulu\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
+use Sulu\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
+use Sulu\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 
 /**
  * Generates sulu bundles.
@@ -47,19 +47,19 @@ Any passed option will be used as a default value for the interaction
 (<comment>--namespace</comment> is the only one needed if you follow the
 conventions):
 
-<info>php app/console generate:bundle --namespace=Acme/BlogBundle</info>
+<info>php app/console generate:sulu:bundle --namespace=Acme/BlogBundle</info>
 
 Note that you can use <comment>/</comment> instead of <comment>\\ </comment>for the namespace delimiter to avoid any
 problem.
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
 
-<info>php app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
+<info>php app/console generate:sulu:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
 
 Note that the bundle namespace must end with "Bundle".
 EOT
             )
-            ->setName('generate:bundle')
+            ->setName('generate:sulu:bundle')
         ;
     }
 
@@ -128,7 +128,7 @@ EOT
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getDialogHelper();
-        $dialog->writeSection($output, 'Welcome to the Symfony2 bundle generator');
+        $dialog->writeSection($output, 'Welcome to the Sulu bundle generator');
 
         // namespace
         $namespace = null;
@@ -232,7 +232,7 @@ EOT
         ));
 
         $structure = $input->getOption('structure');
-        if (!$structure && $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the whole directory structure', 'no', '?'), false)) {
+        if (!$structure && $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the whole directory structure', 'yes', '?'), true)) {
             $structure = true;
         }
         $input->setOption('structure', $structure);

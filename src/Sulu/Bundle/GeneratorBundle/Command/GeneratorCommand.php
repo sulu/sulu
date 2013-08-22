@@ -12,8 +12,8 @@ namespace Sulu\Bundle\GeneratorBundle\Command;
 
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
-use Sensio\Bundle\GeneratorBundle\Generator\Generator;
+use Sulu\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
+use Sulu\Bundle\GeneratorBundle\Generator\Generator;
 
 /**
  * Base class for generator commands.
