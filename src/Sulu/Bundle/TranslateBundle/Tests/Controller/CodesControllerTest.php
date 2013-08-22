@@ -286,6 +286,34 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->total);
     }
 
+    public function testGetAllPagination()
+    {
+        $this->client->request('GET', '/translate/api/codes?pageSize=2&page=1');
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertEquals(2, sizeof($response->items));
+        $this->assertEquals(2, $response->total);
+
+        $this->client->request('GET', '/translate/api/codes?pageSize=2&page=2');
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertEquals(1, sizeof($response->items));
+        $this->assertEquals(1, $response->total);
+    }
+
+    public function testGetAllOrder()
+    {
+        $this->client->request('GET', '/translate/api/codes?sortBy=id&sortOrder=desc');
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertEquals(3, $response->items[0]->id);
+        $this->assertEquals(2, $response->items[1]->id);
+        $this->assertEquals(1, $response->items[2]->id);
+    }
+
     public function testGetList()
     {
         $this->client->request('GET', '/translate/api/codes/list');

@@ -34,11 +34,13 @@ class CodeRepository extends EntityRepository
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);
 
-        $and = $qb->expr()->andX();
-        foreach ($where as $k => $v) {
-            $and->add($qb->expr()->eq($k, $v));
+        if (sizeof($where) > 0) {
+            $and = $qb->expr()->andX();
+            foreach ($where as $k => $v) {
+                $and->add($qb->expr()->eq($k, $v));
+            }
+            $qb->where($and);
         }
-        $qb->where($and);
 
         $query = $qb->getQuery();
         return $query->getArrayResult();
