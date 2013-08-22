@@ -18,6 +18,32 @@ use Doctrine\ORM\EntityRepository;
  */
 class CodeRepository extends EntityRepository
 {
+    public function findGetAll($limit = null, $offset = null, $sorting = null, $where = array())
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->join('u.package', 'p')
+            ->join('u.translations', 't')
+            ->join('t.catalogue', 'c')
+            ->addSelect('u')
+            ->addSelect('p')
+            ->addSelect('t')
+            ->addSelect('c');
+        foreach ($sorting as $k => $d) {
+            $qb->addOrderBy('u.' . $k, $d);
+        }
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($limit);
+
+        $and = $qb->expr()->andX();
+        foreach ($where as $k => $v) {
+            $and->add($qb->expr()->eq($k, $v));
+        }
+        $qb->where($and);
+
+        $query = $qb->getQuery();
+        return $query->getArrayResult();
+    }
+
     /**
      * Searches Entity by filter for fields, pagination and sorted by a column
      * @param array $fields Fields to filter
@@ -28,7 +54,7 @@ class CodeRepository extends EntityRepository
      * @param string $prefix Prefix for starting Table
      * @return array Results
      */
-    public function findFiltered($fields = null, $limit = null, $offset = null, $sorting = null, $where = array(), $prefix = 'u')
+    public function findList($fields = null, $limit = null, $offset = null, $sorting = null, $where = array(), $prefix = 'u')
     {
         $dql = $this->getSelectFrom($fields, $where, $prefix);
         $dql = $this->getWhere($where, $prefix, $dql);

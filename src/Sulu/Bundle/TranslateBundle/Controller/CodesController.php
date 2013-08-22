@@ -28,6 +28,38 @@ class CodesController extends FOSRestController
 
     /**
      * Lists all the codes or filters the codes by parameters
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getCodesAction()
+    {
+        $listHelper = $this->get('sulu_core.list_rest_helper');
+        $limit = $listHelper->getLimit();
+        $offset = $listHelper->getOffset();
+        $sorting = $listHelper->getSorting();
+
+        $where = array();
+        if ($this->getRequest()->get('packageId') != null) {
+            $where['p.id'] = $this->getRequest()->get('packageId');
+        }
+        if ($this->getRequest()->get('catalogueId') != null) {
+            $where['c.id'] = $this->getRequest()->get('catalogueId');
+        }
+
+        /** @var array $codes */
+        $codes = $this->getDoctrine()
+            ->getRepository($this->codeEntity)
+            ->findGetAll($limit, $offset, $sorting, $where);
+
+        $response = array(
+            'total' => count($codes),
+            'items' => $codes
+        );
+        $view = $this->view($response, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * Lists all the codes or filters the codes by parameters
      * Special function for lists
      * route /codes/list
      * @return \Symfony\Component\HttpFoundation\Response
@@ -50,7 +82,7 @@ class CodesController extends FOSRestController
 
         $codes = $this->getDoctrine()
             ->getRepository($this->codeEntity)
-            ->findFiltered($fields, $limit, $offset, $sorting, $where);
+            ->findList($fields, $limit, $offset, $sorting, $where);
 
         $response = array(
             'total' => sizeof($codes),
