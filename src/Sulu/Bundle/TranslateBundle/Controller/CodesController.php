@@ -24,6 +24,7 @@ class CodesController extends FOSRestController
     private $catalogueEntity = 'SuluTranslateBundle:Catalogue';
     private $packageEntity = 'SuluTranslateBundle:Package';
     private $locationEntity = 'SuluTranslateBundle:Location';
+    private $translationEntity = 'SuluTranslateBundle:Translation';
 
     /**
      * Lists all the codes or filters the codes by parameters
@@ -90,11 +91,10 @@ class CodesController extends FOSRestController
         $length = $this->getRequest()->get('length');
         $package = $this->getRequest()->get('package');
         $location = $this->getRequest()->get('location');
+        $translations = $this->getRequest()->get('translations');
 
         if ($c != null && $backend != null && $frontend != null && $location != null && $package != null) {
             $em = $this->getDoctrine()->getManager();
-
-            $translations = $this->getRequest()->get('translations');
 
             $code = new Code();
             $code->setCode($c);
@@ -127,6 +127,74 @@ class CodesController extends FOSRestController
             $view = $this->view($code, 200);
         } else {
             $view = $this->view(null, 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * TODO Comment
+     * @param integer $id The id of the package to update
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putCodesAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var Code $code */
+        $code = $this->getDoctrine()
+            ->getRepository($this->codeEntity)
+            ->find($id);
+
+        $c = $this->getRequest()->get('code');
+        $backend = $this->getRequest()->get('backend');
+        $frontend = $this->getRequest()->get('frontend');
+        $length = $this->getRequest()->get('length');
+        $package = $this->getRequest()->get('package');
+        $location = $this->getRequest()->get('location');
+        $translations = $this->getRequest()->get('translations');
+
+        $translationRepository = $this->getDoctrine()
+            ->getRepository($this->translationEntity);
+
+        if (!$code) {
+            // No Code exists
+            $view = $this->view(null, 400);
+        } else {
+            $code->setCode($c);
+            $code->setBackend($backend);
+            $code->setFrontend($frontend);
+            $code->setLength($length);
+            $code->setPackage($em->getReference($this->packageEntity, $package['id']));
+            $code->setLocation($em->getReference($this->locationEntity, $location['id']));
+
+            if ($translations != null && sizeof($translations) > 0) {
+                foreach ($translations as $translation) {
+                    /** @var Translation $t */
+                    $t = $translationRepository->findOneBy(
+                        array(
+                            'code' => $code->getId(),
+                            'catalogue' => $translation['catalogue']['id']
+                        ));
+
+                    if ($t != null) {
+                        $t->setValue($translation['value']);
+                        $t->setCode($code);
+                        $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
+                    } else {
+                        // Create a new Translation
+                        $t = new Translation();
+                        $t->setValue($translation['value']);
+                        $t->setCode($code);
+                        $code->addTranslation($t);
+                        $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
+                        $em->persist($t);
+                    }
+                }
+            }
+
+            $em->flush();
+            $view = $this->view($code, 200);
         }
 
         return $this->handleView($view);
