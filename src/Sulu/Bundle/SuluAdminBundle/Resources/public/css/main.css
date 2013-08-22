@@ -37,9 +37,17 @@
 /* -----------------------------------------------------*/
 /* Content */
 /* -----------------------------------------------------*/
+/* Body                                            */
+/* -----------------------------------------------------*/
+/* line 49, ../scss/modules/base.scss */
+body {
+  background: #f1f1f1;
+}
+
+/* -----------------------------------------------------*/
 /* Container                                            */
 /* -----------------------------------------------------*/
-/* line 48, ../scss/modules/base.scss */
+/* line 58, ../scss/modules/base.scss */
 #container {
   /* -----------------------------------------------------*/
   /* Top                                                  */
@@ -48,7 +56,7 @@
   /* Content                                              */
   /* -----------------------------------------------------*/
 }
-/* line 54, ../scss/modules/base.scss */
+/* line 64, ../scss/modules/base.scss */
 #container #top {
   width: 100%;
   height: 50px;
@@ -56,10 +64,10 @@
   margin-bottom: 45px;
   background: #333333;
 }
-/* line 66, ../scss/modules/base.scss */
+/* line 76, ../scss/modules/base.scss */
 #container #content {
   float: left;
-  margin-left: 280px;
+  margin-left: 650px;
   width: 822px;
   min-height: 300px;
 }
