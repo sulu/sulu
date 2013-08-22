@@ -14,6 +14,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 /**
  * SuluGeneratorBundle.
  */
-class SensioGeneratorBundle extends Bundle
+class SuluGeneratorBundle extends Bundle
 {
 }
