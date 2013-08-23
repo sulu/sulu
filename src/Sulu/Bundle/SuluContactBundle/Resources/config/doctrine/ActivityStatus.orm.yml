@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\ActivityStatus:
     type: entity
-    table: null
+    table: co_activity_statuses
     fields:
         id:
             type: integer
@@ -10,4 +10,8 @@ Sulu\Bundle\ContactBundle\Entity\ActivityStatus:
         name:
             type: string
             length: '60'
+    oneToMany:
+        activities:
+            targetEntity: Activity
+            mappedBy: activityStatus
     lifecycleCallbacks: {  }

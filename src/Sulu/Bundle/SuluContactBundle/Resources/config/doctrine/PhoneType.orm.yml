@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\PhoneType:
     type: entity
-    table: null
+    table: co_phone_types
     fields:
         id:
             type: integer

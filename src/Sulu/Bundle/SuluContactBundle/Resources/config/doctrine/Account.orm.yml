@@ -35,11 +35,13 @@ Sulu\Bundle\ContactBundle\Entity\Account:
             joinColumn:
                 name: idContactsCreator
                 referencedColumnName: id
+                nullable: false
         changer:
             targetEntity: Contact
             joinColumn:
                 name: idContactsChanger
                 referencedColumnName: id
+                nullable: false
     manyToMany:
         phones:
             targetEntity: Phone
@@ -94,6 +96,6 @@ Sulu\Bundle\ContactBundle\Entity\Account:
                     idAccounts:
                         referencedColumnName: id
                 inverseJoinColumns:
-                    idAddresses:
+                    idUrls:
                         referencedColumnName: id
     lifecycleCallbacks: {  }

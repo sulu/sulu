@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\Address:
     type: entity
-    table: null
+    table: co_addresses
     fields:
         id:
             type: integer
@@ -16,6 +16,7 @@ Sulu\Bundle\ContactBundle\Entity\Address:
         addition:
             type: string
             length: '60'
+            nullable: true
         zip:
             type: string
             length: '60'
@@ -32,14 +33,19 @@ Sulu\Bundle\ContactBundle\Entity\Address:
             joinColumn:
                 name: idAdressTypes
                 referencedColumnName: id
+                nullable: false
         country:
             targetEntity: Country
             inversedBy: addresses
             joinColumn:
                 name: idCountries
                 referencedColumnName: id
+                nullable: false
     manyToMany:
         accounts:
             targetEntity: Account
+            mappedBy: addresses
+        contacts:
+            targetEntity: Contact
             mappedBy: addresses
     lifecycleCallbacks: {  }

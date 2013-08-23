@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\EmailType:
     type: entity
-    table: null
+    table: co_email_types
     fields:
         id:
             type: integer

@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\Contact:
     type: entity
-    table: null
+    table: co_contacts
     fields:
         id:
             type: integer
@@ -36,6 +36,13 @@ Sulu\Bundle\ContactBundle\Entity\Contact:
             type: datetime
         changed:
             type: datetime
+    oneToMany:
+        locales:
+            targetEntity: ContactLocale
+            mappedBy: contact
+        activities:
+            targetEntity: Activity
+            mappedBy: contact
     manyToOne:
         account:
             targetEntity: Account
@@ -48,9 +55,45 @@ Sulu\Bundle\ContactBundle\Entity\Contact:
             joinColumn:
                 name: idContactsCreator
                 referencedColumnName: id
+                nullable: false
         changer:
             targetEntity: Contact
             joinColumn:
                 name: idContactsChanger
                 referencedColumnName: id
+                nullable: false
+    manyToMany:
+        phones:
+            targetEntity: Phone
+            inversedBy: contacts
+            joinTable:
+                name: co_contact_phones
+                joinColumns:
+                    idContacts:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    idPhones:
+                        referencedColumnName: id
+        addresses:
+            targetEntity: Address
+            inversedBy: contacts
+            joinTable:
+                name: co_contact_addresses
+                joinColumns:
+                    idContacts:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    idAddresses:
+                        referencedColumnName: id
+        notes:
+            targetEntity: Note
+            inversedBy: contacts
+            joinTable:
+                name: co_contact_notes
+                joinColumns:
+                    idContacts:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    idNotes:
+                        referencedColumnName: id
     lifecycleCallbacks: {  }

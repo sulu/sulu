@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\Email:
     type: entity
-    table: null
+    table: co_emails
     fields:
         id:
             type: integer
@@ -17,6 +17,7 @@ Sulu\Bundle\ContactBundle\Entity\Email:
             joinColumn:
                 name: idEmailTypes
                 referencedColumnName: id
+                nullable: false
     manyToMany:
         accounts:
             targetEntity: Account
