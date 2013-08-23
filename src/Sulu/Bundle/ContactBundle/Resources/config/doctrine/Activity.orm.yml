@@ -1,0 +1,25 @@
+Sulu\Bundle\ContactBundle\Entity\Activity:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: '60'
+        due:
+            type: datetime
+        priority:
+            type: integer
+        reminder:
+            type: datetime
+        notification:
+            type: boolean
+        created:
+            type: datetime
+        changed:
+            type: datetime
+    lifecycleCallbacks: {  }

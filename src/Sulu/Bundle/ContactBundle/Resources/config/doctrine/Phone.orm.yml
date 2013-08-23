@@ -1,0 +1,24 @@
+Sulu\Bundle\ContactBundle\Entity\Phone:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        phone:
+            type: string
+            length: '60'
+    manyToOne:
+        phoneType:
+            targetEntity: PhoneType
+            inversedBy: phones
+            joinColumn:
+                name: idPhoneTypes
+                referencedColumnName: id
+    manyToMany:
+        accounts:
+            targetEntity: Account
+            mappedBy: phones
+    lifecycleCallbacks: {  }

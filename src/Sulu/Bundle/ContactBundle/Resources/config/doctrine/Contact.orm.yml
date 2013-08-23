@@ -1,0 +1,56 @@
+Sulu\Bundle\ContactBundle\Entity\Contact:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        fname:
+            type: string
+            length: '60'
+        lname:
+            type: string
+            length: '60'
+        title:
+            type: string
+            length: '60'
+            nullable: true
+        position:
+            type: string
+            length: '60'
+            nullable: true
+        localeSystem:
+            type: string
+            length: '2'
+        username:
+            type: string
+            length: '60'
+            nullable: true
+        password:
+            type: string
+            length: '60'
+            nullable: true
+        created:
+            type: datetime
+        changed:
+            type: datetime
+    manyToOne:
+        account:
+            targetEntity: Account
+            inversedBy: contacts
+            joinColumn:
+                name: idAccounts
+                referencedColumnName: id
+        creator:
+            targetEntity: Contact
+            joinColumn:
+                name: idContactsCreator
+                referencedColumnName: id
+        changer:
+            targetEntity: Contact
+            joinColumn:
+                name: idContactsChanger
+                referencedColumnName: id
+    lifecycleCallbacks: {  }

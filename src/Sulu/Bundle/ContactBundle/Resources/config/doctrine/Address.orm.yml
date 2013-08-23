@@ -1,0 +1,45 @@
+Sulu\Bundle\ContactBundle\Entity\Address:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        street:
+            type: string
+            length: '60'
+        number:
+            type: string
+            length: '60'
+        addition:
+            type: string
+            length: '60'
+        zip:
+            type: string
+            length: '60'
+        city:
+            type: string
+            length: '60'
+        state:
+            type: string
+            length: '60'
+    manyToOne:
+        addressType:
+            targetEntity: AddressType
+            inversedBy: addresses
+            joinColumn:
+                name: idAdressTypes
+                referencedColumnName: id
+        country:
+            targetEntity: Country
+            inversedBy: addresses
+            joinColumn:
+                name: idCountries
+                referencedColumnName: id
+    manyToMany:
+        accounts:
+            targetEntity: Account
+            mappedBy: addresses
+    lifecycleCallbacks: {  }

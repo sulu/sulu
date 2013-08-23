@@ -1,0 +1,13 @@
+Sulu\Bundle\ContactBundle\Entity\UrlType:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: '60'
+    lifecycleCallbacks: {  }

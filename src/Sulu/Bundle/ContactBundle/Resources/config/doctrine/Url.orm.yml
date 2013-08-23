@@ -1,0 +1,23 @@
+Sulu\Bundle\ContactBundle\Entity\Url:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        url:
+            type: string
+            length: 255
+    manyToOne:
+        urlType:
+            targetEntity: UrlType
+            joinColumn:
+                name: idUrlTypes
+                referencedColumnName: id
+    manyToMany:
+        accounts:
+            targetEntity: Account
+            mappedBy: urls
+    lifecycleCallbacks: {  }
