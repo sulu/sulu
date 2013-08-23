@@ -1,0 +1,3 @@
+sulu_contact:
+    resource: "@SuluContactBundle/Resources/config/routing_api.yml"
+    prefix: /api
