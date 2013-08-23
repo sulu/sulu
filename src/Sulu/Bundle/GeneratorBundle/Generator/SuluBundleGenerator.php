@@ -54,19 +54,26 @@ class SuluBundleGenerator extends BundleGenerator
 
         // Root files
         // Composer: /composer.json
-        $this->renderFile('sulu/other/composer.json.twig', $dir.'/composer.json', $parameters);
+        $this->renderFile('sulu/other/composer.json.twig', $dir . '/composer.json', $parameters);
         // Git: /.gitignore
-        $this->renderFile('sulu/other/gitignore.twig', $dir.'/.gitignore', $parameters);
+        $this->renderFile('sulu/other/gitignore.twig', $dir . '/.gitignore', $parameters);
         // Grunt: /Gruntfile.js
-        $this->renderFile('sulu/other/Gruntfile.js.twig', $dir.'/Gruntfile.js', $parameters);
+        $this->renderFile('sulu/other/Gruntfile.js.twig', $dir . '/Gruntfile.js', $parameters);
         // Grunt: /LICENSE
-        $this->renderFile('sulu/other/LICENSE.twig', $dir.'/LICENSE', $parameters);
+        $this->renderFile('sulu/other/LICENSE.twig', $dir . '/LICENSE', $parameters);
         // NPM: /package.json
-        $this->renderFile('sulu/other/package.json.twig', $dir.'/package.json', $parameters);
+        $this->renderFile('sulu/other/package.json.twig', $dir . '/package.json', $parameters);
         // PHPUNIT: /phpunit.xml.dist
-        $this->renderFile('sulu/other/phpunit.xml.dist.twig', $dir.'/phpunit.xml.dist', $parameters);
+        $this->renderFile('sulu/other/phpunit.xml.dist.twig', $dir . '/phpunit.xml.dist', $parameters);
         // Github: /README.md
-        $this->renderFile('sulu/other/README.md.twig', $dir.'/README', $parameters);
+        $this->renderFile('sulu/other/README.md.twig', $dir . '/README', $parameters);
+
+        // Public Files
+        // Main: /Resources/public/js/main.js
+        $this->renderFile('sulu/public/main.js.twig', $dir . '/Resources/public/js/main.js', $parameters);
+        // Main: /Resources/public/js/bundle.js
+        $this->renderFile('sulu/public/bundle.js.twig', $dir . '/Resources/public/js/bundle.js', $parameters);
+
 
         // Basic Structure
         if ($structure) {
@@ -82,6 +89,10 @@ class SuluBundleGenerator extends BundleGenerator
             $this->getFileSystem()->mkdir($dir . '/Resources/translations');
             $this->getFileSystem()->mkdir($dir . '/Resources/views');
             $this->getFileSystem()->touch($dir . '/Resources/views/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Resources/public/js/controller');
+            $this->getFileSystem()->touch($dir . '/Resources/public/js/controller/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Resources/public/js/model');
+            $this->getFileSystem()->touch($dir . '/Resources/public/js/model/.empty');
             $this->renderFile('bundle/messages.fr.xlf', $dir . '/Resources/translations/messages.fr.xlf', $parameters);
         }
     }
