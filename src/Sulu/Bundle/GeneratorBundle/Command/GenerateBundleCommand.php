@@ -59,7 +59,7 @@ If you want to disable any user interaction, use <comment>--no-interaction</comm
 Note that the bundle namespace must end with "Bundle".
 EOT
             )
-            ->setName('generate:sulu:bundle');
+            ->setName('sulu:generate:bundle');
     }
 
     /**
@@ -113,6 +113,9 @@ EOT
 
         // routing
         $runner($this->updateRouting($dialog, $input, $output, $bundle));
+
+        // check that the namespace is already autoloaded
+        $runner($this->checkAutoloader($output, $namespace, $bundle, $dir));
 
         $dialog->writeGeneratorSummary($output, $errors);
     }
@@ -185,7 +188,11 @@ EOT
         }
 
         if (null === $dir) {
-            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')) . '/src';
+            $d = strtolower($namespace);
+            $d = str_replace('\\', '/', $d);
+            $d = str_replace('/bundle/', '/', $d);
+            $d = str_replace('bundle', '', $d);
+            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')) . '/vendor/' . $d . '-bundle/';
 
             $output->writeln(array(
                 '',
@@ -273,8 +280,10 @@ EOT
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
             if ($auto) {
-                $route = $dialog->askAndValidate($output, "Route: ", function ($x) {
-                    return true;
+                $route = $dialog->askAndValidate($output, "Route [length > 3]: ", function ($x) {
+                    if (strlen($x) < 3) return false;
+                    if ($x[0] != '/') $x = $x = '/' . $x;
+                    return $x;
                 });
             }
         }

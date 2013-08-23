@@ -15,15 +15,6 @@ namespace Sulu\Bundle\GeneratorBundle\Generator;
  */
 class SuluBundleGenerator extends BundleGenerator
 {
-//
-//        $this->renderFile('bundle/DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
-//        $this->renderFile('bundle/DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
-//        $this->renderFile('bundle/index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
-
-
-//
-
-
     public function generateBundle($dir, $bundle, $basename, $structure, $parameters)
     {
         // Basic things
@@ -74,7 +65,6 @@ class SuluBundleGenerator extends BundleGenerator
         // Main: /Resources/public/js/bundle.js
         $this->renderFile('sulu/public/bundle.js.twig', $dir . '/Resources/public/js/bundle.js', $parameters);
 
-
         // Basic Structure
         if ($structure) {
             $this->getFileSystem()->mkdir($dir . '/Controller');
@@ -86,7 +76,6 @@ class SuluBundleGenerator extends BundleGenerator
             $this->getFileSystem()->touch($dir . '/Test/Controller/.empty');
             $this->getFileSystem()->mkdir($dir . '/Resources/doc');
             $this->getFileSystem()->touch($dir . '/Resources/doc/index.rst');
-            $this->getFileSystem()->mkdir($dir . '/Resources/translations');
             $this->getFileSystem()->mkdir($dir . '/Resources/views');
             $this->getFileSystem()->touch($dir . '/Resources/views/.empty');
             $this->getFileSystem()->mkdir($dir . '/Resources/public/js/controller');
