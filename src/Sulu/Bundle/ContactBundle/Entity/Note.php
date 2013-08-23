@@ -1,0 +1,139 @@
+<?php
+
+namespace Sulu\Bundle\ContactBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Note
+ */
+class Note
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $value;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $accounts;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return Note
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Add accounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @return Note
+     */
+    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    {
+        $this->accounts[] = $accounts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove accounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     */
+    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    {
+        $this->accounts->removeElement($accounts);
+    }
+
+    /**
+     * Get accounts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
+    }
+
+    /**
+     * Add contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @return Note
+     */
+    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts[] = $contacts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     */
+    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts->removeElement($contacts);
+    }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
+    }
+}
