@@ -66,7 +66,7 @@ class SuluBundleGenerator extends BundleGenerator
         // PHPUNIT: /phpunit.xml.dist
         $this->renderFile('sulu/other/phpunit.xml.dist.twig', $dir.'/phpunit.xml.dist', $parameters);
         // Github: /README.md
-        $this->renderFile('sulu/other/README.md.twig', $dir.'/README', $parameters);
+        //$this->renderFile('sulu/other/README.md.twig', $dir.'/README.md', $parameters);
 
         // Basic Structure
         if ($structure) {
@@ -79,10 +79,8 @@ class SuluBundleGenerator extends BundleGenerator
             $this->getFileSystem()->touch($dir . '/Test/Controller/.empty');
             $this->getFileSystem()->mkdir($dir . '/Resources/doc');
             $this->getFileSystem()->touch($dir . '/Resources/doc/index.rst');
-            $this->getFileSystem()->mkdir($dir . '/Resources/translations');
             $this->getFileSystem()->mkdir($dir . '/Resources/views');
             $this->getFileSystem()->touch($dir . '/Resources/views/.empty');
-            $this->renderFile('bundle/messages.fr.xlf', $dir . '/Resources/translations/messages.fr.xlf', $parameters);
         }
     }
 }

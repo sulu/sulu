@@ -1,14 +1,14 @@
 {
-    "name": "TODO",
-    "type": "library",
+    "name": "{{ namespace|lower|resplace({'\\':'/'})|replace({'/bundle/':'/'})|replace({'bundle':''}) }}-bundle",
+    "type": "sulu-bundle",
     "description": "TODO",
     "license": "MIT",
     "keywords": ["TODO"],
     "authors": [
-    {
-        "name": "Sulu Community",
-        "homepage": "https://github.com/massiveart/{{ bundle }}/contributors"
-    }
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/{{ bundle }}/contributors"
+        }
     ],
     "require": {
         "php": ">=5.4",
@@ -21,11 +21,12 @@
     "require-dev": {
         "symfony/symfony": "2.3.*",
         "doctrine/doctrine-bundle": "1.2.*",
-        "symfony/monolog-bundle": "2.3.*"
+        "symfony/monolog-bundle": "2.3.*",
+        "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
         "psr-0": {
-            "{{ namespace }}": ""
+            "{{ namespace|replace({'\\': '\\\\'}) }}": ""
         }
     },
     "target-dir": "{{ namespace|replace({'\\':  '/'}) }}"
