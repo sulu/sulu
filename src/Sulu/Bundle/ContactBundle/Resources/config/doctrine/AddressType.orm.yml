@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\AddressType:
     type: entity
-    table: null
+    table: co_address_types
     fields:
         id:
             type: integer

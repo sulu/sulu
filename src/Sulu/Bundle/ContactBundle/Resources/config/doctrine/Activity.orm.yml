@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\Activity:
     type: entity
-    table: null
+    table: co_activities
     fields:
         id:
             type: integer
@@ -12,14 +12,44 @@ Sulu\Bundle\ContactBundle\Entity\Activity:
             length: '60'
         due:
             type: datetime
+            nullable: tru
         priority:
             type: integer
+            nullable: true
         reminder:
             type: datetime
+            nullable: true
         notification:
             type: boolean
         created:
             type: datetime
         changed:
             type: datetime
+    manyToOne:
+        contact:
+            targetEntity: Contact
+            inversedBy: activities
+            joinColumn:
+                name: idContacts
+                referencedColumnName: id
+                nullable: false
+        activityStatus:
+            targetEntity: ActivityStatus
+            inversedBy: activities
+            joinColumn:
+                name: idActivityStatuses
+                referencedColumnName: id
+                nullable: false
+        creator:
+            targetEntity: Contact
+            joinColumn:
+                name: idContactsCreator
+                referencedColumnName: id
+                nullable: false
+        changer:
+            targetEntity: Contact
+            joinColumn:
+                name: idContactsChanger
+                referencedColumnName: id
+                nullable: false
     lifecycleCallbacks: {  }

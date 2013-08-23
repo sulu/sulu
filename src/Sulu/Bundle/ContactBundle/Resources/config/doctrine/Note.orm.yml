@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\Note:
     type: entity
-    table: null
+    table: co_notes
     fields:
         id:
             type: integer
@@ -12,5 +12,8 @@ Sulu\Bundle\ContactBundle\Entity\Note:
     manyToMany:
         accounts:
             targetEntity: Account
+            mappedBy: notes
+        contacts:
+            targetEntity: Contact
             mappedBy: notes
     lifecycleCallbacks: {  }

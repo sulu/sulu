@@ -1,6 +1,6 @@
 Sulu\Bundle\ContactBundle\Entity\Country:
     type: entity
-    table: null
+    table: co_countries
     fields:
         id:
             type: integer

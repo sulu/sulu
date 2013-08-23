@@ -1,25 +1,21 @@
-Sulu\Bundle\ContactBundle\Entity\Url:
+Sulu\Bundle\ContactBundle\Entity\ContactLocale:
     type: entity
-    table: co_urls
+    table: co_contact_locales
     fields:
         id:
             type: integer
             id: true
             generator:
                 strategy: AUTO
-        url:
+        locale:
             type: string
-            length: 255
+            length: '60'
     manyToOne:
-        urlType:
-            targetEntity: UrlType
-            inversedBy: urls
+        contact:
+            targetEntity: Contact
+            inversedBy: locales
             joinColumn:
-                name: idUrlTypes
+                name: idContacts
                 referencedColumnName: id
                 nullable: false
-    manyToMany:
-        accounts:
-            targetEntity: Account
-            mappedBy: urls
     lifecycleCallbacks: {  }
