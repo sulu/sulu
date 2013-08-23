@@ -12,6 +12,7 @@ namespace {{ namespace }}\Admin;
 
 {% block use_statements %}
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 {% endblock use_statements %}
 
@@ -24,6 +25,7 @@ class {{ basename }}Admin extends Admin
     public function __construct()
     {
         $rootNavigationItem = new NavigationItem('Root');
+        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
     /**
