@@ -1,0 +1,8 @@
+parameters:
+    {{ extension_alias }}.admin.class: {{ namespace }}\Admin\{{ basename }}Admin
+
+services:
+    {{ extension_alias }}.admin:
+        class: %{{ extension_alias }}.admin.class%
+        tags:
+        - { name: sulu.admin }

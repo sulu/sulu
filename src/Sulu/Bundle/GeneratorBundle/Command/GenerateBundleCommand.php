@@ -108,9 +108,6 @@ EOT
         $errors = array();
         $runner = $dialog->getRunner($output, $errors);
 
-        // check that the namespace is already autoloaded
-        $runner($this->checkAutoloader($output, $namespace, $bundle, $dir));
-
         // register the bundle in the Kernel class
         $runner($this->updateKernel($dialog, $input, $output, $this->getContainer()->get('kernel'), $namespace, $bundle));
 
@@ -221,7 +218,7 @@ EOT
             '',
             $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
             '',
-            sprintf("You are going to generate a \"<info>%s\\%s</info>\" bundle\nin \"<info>%s</info>\" using the \"<info>%s</info>\" format.", $namespace, $bundle, $dir),
+            sprintf("You are going to generate a \"<info>%s\\%s</info>\" bundle\nin \"<info>%s</info>\" using the \"<info>%s</info>\" format.", $namespace, $bundle, $dir, 'yml'),
             '',
         ));
     }
@@ -272,14 +269,20 @@ EOT
     protected function updateRouting(DialogHelper $dialog, InputInterface $input, OutputInterface $output, $bundle, $format = 'yml')
     {
         $auto = true;
+        $route = '/';
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
+            if ($auto) {
+                $route = $dialog->askAndValidate($output, "Route: ", function ($x) {
+                    return true;
+                });
+            }
         }
 
         $output->write('Importing the bundle routing resource: ');
         $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir') . '/config/routing.yml');
         try {
-            $ret = $auto ? $routing->addResource($bundle, $format) : false;
+            $ret = $auto ? $routing->addResource($bundle, $format, $route) : false;
             if (!$ret) {
                 if ('annotation' === $format) {
                     $help = sprintf("        <comment>resource: \"@%s/Controller/\"</comment>\n        <comment>type:     annotation</comment>\n", $bundle);

@@ -54,7 +54,7 @@ class SuluBundleGenerator extends BundleGenerator
 
         // Root files
         // Composer: /composer.json
-        $this->renderFile('sulu/other/composer.json', $dir.'/composer.json', $parameters);
+        $this->renderFile('sulu/other/composer.json.twig', $dir.'/composer.json', $parameters);
         // Git: /.gitignore
         $this->renderFile('sulu/other/gitignore.twig', $dir.'/.gitignore', $parameters);
         // Grunt: /Gruntfile.js
@@ -64,15 +64,24 @@ class SuluBundleGenerator extends BundleGenerator
         // NPM: /package.json
         $this->renderFile('sulu/other/package.json.twig', $dir.'/package.json', $parameters);
         // PHPUNIT: /phpunit.xml.dist
-        $this->renderFile('sulu/other/phpunit.xml.dist.twig.twig', $dir.'/phpunit.xml.dist', $parameters);
+        $this->renderFile('sulu/other/phpunit.xml.dist.twig', $dir.'/phpunit.xml.dist', $parameters);
         // Github: /README.md
         $this->renderFile('sulu/other/README.md.twig', $dir.'/README', $parameters);
 
         // Basic Structure
         if ($structure) {
+            $this->getFileSystem()->mkdir($dir . '/Controller');
+            $this->getFileSystem()->touch($dir . '/Controller/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Entity');
+            $this->getFileSystem()->touch($dir . '/Entity/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Test');
+            $this->getFileSystem()->mkdir($dir . '/Test/Controller');
+            $this->getFileSystem()->touch($dir . '/Test/Controller/.empty');
             $this->getFileSystem()->mkdir($dir . '/Resources/doc');
             $this->getFileSystem()->touch($dir . '/Resources/doc/index.rst');
             $this->getFileSystem()->mkdir($dir . '/Resources/translations');
+            $this->getFileSystem()->mkdir($dir . '/Resources/views');
+            $this->getFileSystem()->touch($dir . '/Resources/views/.empty');
             $this->renderFile('bundle/messages.fr.xlf', $dir . '/Resources/translations/messages.fr.xlf', $parameters);
         }
     }

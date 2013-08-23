@@ -47,10 +47,12 @@ abstract class BundleGenerator extends Generator
             'bundle' => $bundle,
             'format' => 'yml',
             'bundle_basename' => $basename,
+            'basename' => $basename,
             'extension_alias' => Container::underscore($basename),
+            'extensionalias' => str_replace("_", "",Container::underscore($basename))
         );
 
-        $this->generateBundle($dir, $bundle, $basename, $structure,$parameters);
+        $this->generateBundle($dir, $bundle, $basename, $structure, $parameters);
 
 //        $this->renderFile('bundle/Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
 //        $this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
