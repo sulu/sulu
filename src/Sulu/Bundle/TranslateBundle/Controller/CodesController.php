@@ -67,22 +67,18 @@ class CodesController extends FOSRestController
     public function listCodesAction()
     {
         $listHelper = $this->get('sulu_core.list_rest_helper');
-        $fields = $listHelper->getFields();
-        $limit = $listHelper->getLimit();
-        $offset = $listHelper->getOffset();
-        $sorting = $listHelper->getSorting();
 
         $where = array();
-        if ($this->getRequest()->get('packageId') != null) {
-            $where['package_id'] = $this->getRequest()->get('packageId');
+        $packageId = $this->getRequest()->get('packageId');
+        if ($packageId != null) {
+            $where['package_id'] = $packageId;
         }
-        if ($this->getRequest()->get('catalogueId') != null) {
-            $where['translations_catalogue_id'] = $this->getRequest()->get('catalogueId');
+        $catalogueId = $this->getRequest()->get('catalogueId');
+        if ($catalogueId != null) {
+            $where['translations_catalogue_id'] = $catalogueId;
         }
 
-        $codes = $this->getDoctrine()
-            ->getRepository($this->codeEntity)
-            ->findList($fields, $limit, $offset, $sorting, $where);
+        $codes = $listHelper->find($this->codeEntity, $where);
 
         $response = array(
             'total' => sizeof($codes),
