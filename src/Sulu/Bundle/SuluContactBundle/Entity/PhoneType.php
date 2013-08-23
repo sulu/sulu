@@ -1,4 +1,12 @@
 <?php
+/*
+* This file is part of the Sulu CMS.
+*
+* (c) MASSIVE ART WebServices GmbH
+*
+* This source file is subject to the MIT license that is bundled
+* with this source code in the file LICENSE.
+*/
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -31,11 +39,11 @@ class PhoneType
     {
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,14 +59,14 @@ class PhoneType
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -74,7 +82,7 @@ class PhoneType
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
     {
         $this->phones[] = $phones;
-    
+
         return $this;
     }
 
@@ -91,7 +99,7 @@ class PhoneType
     /**
      * Get phones
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPhones()
     {
