@@ -1,0 +1,36 @@
+<div class="address-item mt30">
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <label>Street</label>
+            <input class="form-element" type="text" id="street" value="<%= street %>"/>
+        </div>
+        <div class="grid-col-2">
+            <label>Number</label>
+            <input class="form-element" type="text" id="number" value="<%= number %>"/>
+        </div>
+        <div class="grid-col-4">
+            <label>House, Floor, etc.</label>
+            <input class="form-element" type="text" id="etc" value="<%= etc %>"/>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="grid-col-2">
+            <label>Zip</label>
+            <input class="form-element" type="text" id="zip" value="<%= zip %>"/>
+        </div>
+        <div class="grid-col-4">
+            <label>City</label>
+            <input class="form-element" type="text" id="city" value="<%= city %>"/>
+        </div>
+        <div class="grid-col-2">
+            <label>State</label>
+            <input class="form-element" type="text" id="state" value="<%= state %>"/>
+        </div>
+        <div class="grid-col-4">
+            <label>Country</label>
+            <select class="form-element input-large" id="country">
+                <option value="asdf">asdf</option>
+            </select>
+        </div>
+    </div>
+</div>

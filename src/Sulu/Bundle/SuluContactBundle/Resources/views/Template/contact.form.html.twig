@@ -1,0 +1,193 @@
+{# TODO to by deleted #}
+<style type="text/css">
+    .grid-row img {
+        max-width: 100%;
+    }
+
+    img.logo {
+        padding-top: 30px;
+        padding-bottom: 10px;
+        max-height: 140px;
+    }
+
+    h2.bold,
+    label.bold {
+        font-weight: bolder;
+    }
+
+    .two-cols div.grid-col-6:nth-child(2n+1) {
+        padding-left: 0;
+    }
+
+    .icon-add {
+        cursor: pointer;
+    }
+
+    .icon-add:after {
+        content: "\E191";
+        display: inline-block;
+    }
+
+    .icon-settings:after {
+        content: "\E281";
+        display: inline-block;
+    }
+
+    .control-label {
+        padding-left: 5px;
+        padding-right: 10px;
+        cursor: pointer;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .mt10 {
+        margin-top: 10px;
+    }
+
+    .mt30 {
+        margin-top: 30px;
+    }
+</style>
+
+<form id="contact-form">
+
+    <div class="grid">
+
+        <h2 class="bold">Name and Company</h2>
+
+        <div class="grid-row">
+            <div class="grid-col-2">
+                <img class="avatar logo" src="http://placehold.it/500" alt=""/>
+            </div>
+            <div class="grid-col-10">
+                <div class="grid-row">
+                    <div class="grid-col-6">
+                        <label class="bold">First name*</label>
+                        <input class="form-element" type="text" id="firstname" value="<%= firstname %>"/>
+                    </div>
+                    <div class="grid-col-6">
+                        <label class="bold">Last name*</label>
+                        <input class="form-element" type="text" id="lastname" value="<%= lastname %>"/>
+                    </div>
+                </div>
+                <div class="grid-row">
+                    <div class="grid-col-2">
+                        <label>Title</label>
+                        <input class="form-element" type="text" id="title" value="<%= title %>"/>
+                    </div>
+                    <div class="grid-col-5">
+                        <label>Position</label>
+                        <input class="form-element" type="text" id="position" value="<%= position %>"/>
+                    </div>
+                    <div class="grid-col-5">
+                        <label>Company</label>
+                        <input class="form-element" type="text" id="company" value="<%= company %>"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="divider"/>
+
+        <h2>Email</h2>
+
+        <div class="grid-row two-cols" id="email">
+            <div class="grid-col-6">
+                <label class="bold">Primary email address*</label>
+                <input class="form-element" type="text" id="firstname" value="<%= primary_email %>"/>
+            </div>
+            <div class="grid-col-6">
+                <label>Additional email address</label>
+                <input class="form-element" type="text" id="lastname" value="<%= additional_email %>"/>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div id="addEmail" data-target-id="email">
+                <span class="icon-add"></span><span class="control-label">Add email</span>
+            </div>
+        </div>
+        <hr class="divider"/>
+
+        <h2>Phone</h2>
+
+        <div class="grid-row two-cols" id="phone">
+            <div class="grid-col-6">
+                <label class="bold">Land line</label>
+                <input class="form-element" type="text" id="phone_land" value="<%= phone_land %>"/>
+            </div>
+            <div class="grid-col-6">
+                <label class="bold">Mobile</label>
+                <input class="form-element" type="text" id="phone_mobile" value="<%= phone_mobile %>"/>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div id="addPhone" data-target-id="phone">
+                <span class="icon-add"></span><span class="control-label">Add phone number</span>
+            </div>
+        </div>
+        <hr class="divider"/>
+        <div class="grid-row">
+            <div class="grid-col-10">
+                <h2>Address</h2>
+            </div>
+            <div class="grid-col-2 text-right mt10">
+                <div id="addAddress" data-target-id="address">
+                    <span class="icon-add"></span><span class="control-label">Add address</span>
+                </div>
+            </div>
+        </div>
+        <div id="address">
+            <div class="address-item">
+                <div class="grid-row">
+                    <div class="grid-col-6">
+                        <label>Street</label>
+                        <input class="form-element" type="text" id="street" value="<%= street %>"/>
+                    </div>
+                    <div class="grid-col-2">
+                        <label>Number</label>
+                        <input class="form-element" type="text" id="number" value="<%= number %>"/>
+                    </div>
+                    <div class="grid-col-4">
+                        <label>House, Floor, etc.</label>
+                        <input class="form-element" type="text" id="etc" value="<%= etc %>"/>
+                    </div>
+                </div>
+                <div class="grid-row">
+                    <div class="grid-col-2">
+                        <label>Zip</label>
+                        <input class="form-element" type="text" id="street" value="<%= street %>"/>
+                    </div>
+                    <div class="grid-col-4">
+                        <label>City</label>
+                        <input class="form-element" type="text" id="street" value="<%= street %>"/>
+                    </div>
+                    <div class="grid-col-2">
+                        <label>State</label>
+                        <input class="form-element" type="text" id="number" value="<%= number %>"/>
+                    </div>
+                    <div class="grid-col-4">
+                        <label>Country</label>
+                        <select class="form-element input-large" id="etc">
+                            <option value="asdf">asdf</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        <hr class="divider"/>
+        <div class="grid-row">
+            <div class="grid-col-9">
+                <h2>Attachments</h2>
+            </div>
+            <div class="grid-col-3 text-right mt-10">
+                <span class="icon-add addEmail"></span><span class="control-label">Add attachment</span>
+                <span class="icon-settings addEmail"></span><span class="control-label">Edit</span>
+            </div>
+        </div>
+        -->
+    </div>
+
+</form>
