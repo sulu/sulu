@@ -41,7 +41,7 @@ class ExportCommand extends ContainerAwareCommand
                 'format',
                 InputArgument::OPTIONAL,
                 'The format of the export',
-                Export::XLIFF
+                'xliff'
             )
             ->addOption(
                 'backend',
@@ -83,7 +83,19 @@ class ExportCommand extends ContainerAwareCommand
 
         $export->setPackageId($packageId);
         $export->setLocale($locale);
-        $export->setFormat($format);
+
+        // Parse format
+        switch ($format) {
+            case 'xliff':
+            case 'xlf':
+                $export->setFormat(Export::XLIFF);
+                break;
+            case 'json':
+                $export->setFormat(Export::JSON);
+                break;
+            default:
+                $export->setFormat(Export::XLIFF);
+        }
         if ($backend) {
             $export->setBackend($backend);
         }
