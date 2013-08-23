@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 class SuluContactAdmin extends Admin
@@ -19,6 +20,7 @@ class SuluContactAdmin extends Admin
     public function __construct()
     {
         $rootNavigationItem = new NavigationItem('Root');
+        $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
     /**
