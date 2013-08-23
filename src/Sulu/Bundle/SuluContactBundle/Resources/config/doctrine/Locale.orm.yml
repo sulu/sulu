@@ -1,0 +1,13 @@
+Sulu\Bundle\ContactBundle\Entity\Locale:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        locale:
+            type: string
+            length: '60'
+    lifecycleCallbacks: {  }

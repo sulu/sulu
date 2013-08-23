@@ -1,0 +1,17 @@
+Sulu\Bundle\ContactBundle\Entity\AddressType:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            length: '60'
+    oneToMany:
+        addresses:
+            targetEntity: Address
+            mappedBy: addressType
+    lifecycleCallbacks: {  }
