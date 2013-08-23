@@ -1,0 +1,33 @@
+{
+    "name": "sulu/contact-bundle",
+    "type": "sulu-bundle",
+    "description": "The sulu bundle for managing contacts",
+    "license": "MIT",
+    "keywords": ["contact", "crm"],
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluContactBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "friendsofsymfony/rest-bundle": "0.12.*",
+        "jms/serializer-bundle": "@dev",
+        "sulu/core-bundle": "dev-develop",
+        "sulu/admin-bundle": "dev-feature/registration"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.3.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.3.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\ContactBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/ContactBundle"
+}

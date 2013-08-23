@@ -1,0 +1,8 @@
+parameters:
+    sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
+
+services:
+    sulu_contact.admin:
+        class: %sulu_contact.admin.class%
+        tags:
+        - { name: sulu.admin }
