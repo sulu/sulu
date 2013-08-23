@@ -59,7 +59,7 @@ If you want to disable any user interaction, use <comment>--no-interaction</comm
 Note that the bundle namespace must end with "Bundle".
 EOT
             )
-            ->setName('generate:sulu:bundle');
+            ->setName('sulu:generate:bundle');
     }
 
     /**
@@ -273,8 +273,10 @@ EOT
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
             if ($auto) {
-                $route = $dialog->askAndValidate($output, "Route: ", function ($x) {
-                    return true;
+                $route = $dialog->askAndValidate($output, "Route [length > 3]: ", function ($x) {
+                    if (strlen($x) < 3) return false;
+                    if ($x[0] != '/') $x = $x = '/' . $x;
+                    return $x;
                 });
             }
         }
