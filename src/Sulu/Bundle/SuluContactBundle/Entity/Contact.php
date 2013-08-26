@@ -118,6 +118,11 @@ class Contact
     private $notes;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $emails;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -127,6 +132,7 @@ class Contact
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -625,11 +631,6 @@ class Contact
     {
         return $this->notes;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $emails;
-
 
     /**
      * Add emails
