@@ -71,9 +71,9 @@ class SuluBundleGenerator extends BundleGenerator
             $this->getFileSystem()->touch($dir . '/Controller/.empty');
             $this->getFileSystem()->mkdir($dir . '/Entity');
             $this->getFileSystem()->touch($dir . '/Entity/.empty');
-            $this->getFileSystem()->mkdir($dir . '/Test');
-            $this->getFileSystem()->mkdir($dir . '/Test/Controller');
-            $this->getFileSystem()->touch($dir . '/Test/Controller/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Tests');
+            $this->getFileSystem()->mkdir($dir . '/Tests/Controller');
+            $this->getFileSystem()->touch($dir . '/Tests/Controller/.empty');
             $this->getFileSystem()->mkdir($dir . '/Resources/doc');
             $this->getFileSystem()->touch($dir . '/Resources/doc/index.rst');
             $this->getFileSystem()->mkdir($dir . '/Resources/views');
