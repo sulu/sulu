@@ -22,7 +22,9 @@ define([
     return Backbone.View.extend({
 
         events: {
-            'submit #catalogue-form': 'submitForm'
+            'submit #catalogue-form': 'submitForm',
+            'click .icon-remove': 'deleteRow',
+            'click .addRow' : 'addRow'
         },
 
         initialize: function() {
@@ -68,19 +70,24 @@ define([
         },
 
         render: function() {
+
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/translate/template/catalogue/form'], function(Template) {
                 var template;
+
                 if (!this.options.id) {
                     translatePackage = new Package();
-                    template = _.template(Template, {name: '', catalogues: []});
+                    template = _.template(Template, {name: '', locale:'', catalogues: []});
                     this.$el.html(template);
                 } else {
                     translatePackage = new Package({id: this.options.id});
                     translatePackage.fetch({
                         success: function(translatePackage) {
                             template = _.template(Template, translatePackage.toJSON());
+                            var catalogues = this.getArrayFromCatalogues(translatePackage.get('catalogues').models);
+                            this.initializeCatalogueList(catalogues);
                             this.$el.html(template);
+
                         }.bind(this)
                     });
                 }
@@ -91,16 +98,54 @@ define([
             }.bind(this));
         },
 
+        getArrayFromCatalogues: function(models){
+
+            var data = new Array();
+
+            $.each(models, function(model){
+                data.push(models[model].attributes);
+            });
+
+            return data;
+        },
+
+
         submitForm: function(event) {
+
             event.preventDefault();
+
             translatePackage.set({name: this.$('#name').val()});
-            for (var i = 1; i <= 2; i++) {
+            var $rows = $('#catalogues tbody tr');
+
+            for (var i = 1; i <= $rows.length; i++) {
                 var catalogue = translatePackage.get('catalogues').at(i - 1);
                 if (!catalogue) {
                     catalogue = new Catalogue();
                 }
-                catalogue.set({'locale': $('#locale' + i).val()});
+
+                var locale = $('#catalogues tbody tr:nth-child('+i+') td:nth-child(2) input').val();
+
+                console.log();
+
+                catalogue.set({'locale':locale});
                 translatePackage.get('catalogues').add(catalogue);
+            }
+
+            if($rows.length < translatePackage.get('catalogues').length) {
+
+                for(var i = $rows.length-1; i < translatePackage.get('catalogues').length; i++) {
+
+                    console.log(translatePackage.get('catalogues').at(i));
+
+                    var model = translatePackage.get('catalogues').at(i);
+                    translatePackage.get('catalogues').remove(model);
+                    model.destroy({
+                        success: function() {
+                            console.log("deleted");
+                        }
+                    });
+
+                }
             }
 
             translatePackage.save(null, {
@@ -108,6 +153,38 @@ define([
                     Router.navigate('settings/translate');
                 }
             });
+        },
+
+        initializeCatalogueList: function(data) {
+            var dataGrid;
+
+
+            require(['text!sulutranslate/templates/package/table-row.html'], function(RowTemplate) {
+                dataGrid = $('#catalogues').huskyDataGrid({
+                    pagination: false,
+                    showPages: 6,
+                    pageSize: 4,
+                    template: {
+                        row: RowTemplate
+                    },
+                    data: {
+                        items: data
+                    }
+                });
+
+                //this.templateCatalogueTableRow = RowTemplate;
+                //this.catalogueTable = dataGrid.data('Husky.Ui.DataGrid');
+
+                $('#addCatalogueRow').on('click', function() {
+                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '' , translations: [] });
+                });
+
+                $('#catalogues').on('click', '.remove-row > span', function(event) {
+                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+                });
+
+            }.bind(this));
         }
+
     });
 });

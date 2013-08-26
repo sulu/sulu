@@ -12,7 +12,7 @@
             <label>[Type*]</label>
 
             <div class="dropdown">
-                <span class="dropdown-toggle">Dropdown</span>
+                <span class="dropdown-toggle">[Dropdown]</span>
 
 
             </div>
@@ -24,41 +24,13 @@
     <div class="grid-row">
         <div class="grid-row">
             <div class="grid-col-10"><h3>[Language catalogues]</h3></div>
-            <div class="grid-col-2 align-right m-top-15"><span class="icon-new addLanguage"></span><span>[Add language]</span></div>
+            <div class="grid-col-2 align-right m-top-15 addRow" data-table-id="catalogueTable" id="addCatalogueRow"><span class="icon-add"></span><span class="control-label">[Add language]</span></a></div>
         </div>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>[Default language]</th>
-                <th>[Language]</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr data-id="<%= catalogues[0].id %>">
-                <td>
-                    <label>
-                        <input type="radio" class="custom-radio"/>
-                        <span class="custom-radio-icon"></span>
-                    </label>
-                </td>
-                <td><input class="form-element" type="text" id="locale1"
-                           value="<%= (!!catalogues[0]) ? catalogues[0].locale : '' %>"/></td>
-                <td class="remove-row"><span class="icon-remove"></span></td>
-            </tr>
-            <tr data-id="<%= catalogues[0].id %>">
-                <td>
-                    <label>
-                        <input type="radio" class="custom-radio"/>
-                        <span class="custom-radio-icon"></span>
-                    </label>
-                </td>
-                <td><input type="text" class="form-element" id="locale2"
-                           value="<%= (!!catalogues[1]) ? catalogues[1].locale : '' %>"/></td>
-                <td class="remove-row"><span class="icon-remove"></span></td>
-            </tr>
-            </tbody>
-        </table>
+
+        <div class="grid-row" id="catalogues">
+
+        </div>
+
     </div>
 
     <hr class="divider"/>
@@ -77,12 +49,12 @@
             </thead>
             <tbody>
             <tr>
-                <td  class="grid-col-6"><input class="form-element" type="text" id="locale1"
+                <td  class="grid-col-6"><input class="form-element" type="text" id=""
                                                value="[This is the title]"/></td>
                 <td></td>
             </tr>
             <tr>
-                <td  class="grid-col-6"><input class="form-element" type="text" id="locale1"
+                <td  class="grid-col-6"><input class="form-element" type="text" id=""
                                                value="[This is the title]"/></td>
                 <td></td>
             </tr>

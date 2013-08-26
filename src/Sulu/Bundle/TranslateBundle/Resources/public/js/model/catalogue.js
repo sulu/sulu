@@ -12,7 +12,6 @@ define(['backbonerelational'], function() {
         urlRoot: '/translate/api/catalogues',
         defaults: {
             id: null,
-            locale: '',
             translations: []
         }
     });
