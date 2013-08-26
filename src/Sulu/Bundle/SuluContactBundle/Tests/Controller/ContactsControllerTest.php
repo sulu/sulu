@@ -139,8 +139,6 @@ class ContactsControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        var_dump($response);
-
         $this->assertEquals('Max', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('Dr', $response->title);
@@ -227,8 +225,6 @@ class ContactsControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-
-        var_dump($client->getResponse()->getContent());
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
