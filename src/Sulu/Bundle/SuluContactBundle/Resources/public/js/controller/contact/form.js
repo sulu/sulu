@@ -45,22 +45,69 @@ define([
                 if (!this.options.id) {
                     contact = new Contact();
                     template = _.template(Template, {
-                        firstname: '',
-                        lastname: '',
+                        firstName: '',
+                        lastName: '',
                         title: '',
                         position: '',
-                        company: '',
-                        emails: [],
-                        phones: [],
-                        street: '',
-                        number: '',
-                        addition: '',
-                        zip: '',
-                        city: '',
-                        state: ''
+                        account: null,
+                        emails: [
+                            {
+                                id: null,
+                                email: ''
+                            },
+                            {
+                                id: null,
+                                email: ''
+                            }
+                        ],
+                        phones: [
+                            {
+                                id: null,
+                                phone: ''
+                            },
+                            {
+                                id: null,
+                                phone: ''
+                            }
+                        ],
+                        addresses: [
+                            {
+                                street: '',
+                                number: '',
+                                additional: '',
+                                zip: '',
+                                city: '',
+                                state: ''
+                            }
+                        ]
                     });
                     this.$el.html(template);
                 } else {
+                    contact = new Contact({id: this.options.id});
+                    contact.fetch({
+                        success: function (contact) {
+                            var contactJson = contact.toJSON();
+                            while (contactJson.emails.length < 2) {
+                                contactJson.emails.push({id: null, email: ''});
+                            }
+                            while (contactJson.phones.length < 2) {
+                                contactJson.phones.push({id: null, phone: ''});
+                            }
+                            while (contactJson.addresses.length < 1) {
+                                contactJson.addresses.push({
+                                    id: null,
+                                    street: '',
+                                    number: '',
+                                    additional: '',
+                                    zip: '',
+                                    city: '',
+                                    state: ''
+                                });
+                            }
+                            template = _.template(Template, contactJson);
+                            this.$el.html(template);
+                        }.bind(this)
+                    });
                 }
             }.bind(this));
         },
@@ -68,42 +115,42 @@ define([
         submitForm: function (event) {
             event.preventDefault();
             contact.set({
-                firstname: this.$('#firstname').val(),
-                lastname: this.$('#lastname').val(),
+                firstName: this.$('#firstName').val(),
+                lastName: this.$('#lastName').val(),
                 title: this.$('#title').val(),
                 position: this.$('#position').val()
             });
 
             $('#emails .email-item').each(function () {
-                var email = contact.get('emails').at($(this).data('id'));
+                var email = contact.get('emails').get($(this).data('id'));
                 if (!email) {
                     email = new Email();
                 }
-                var email = $(this).find('.emailValue').val();
-                email.set({
-                    email: email
-                });
-                if (email.attributes.email) {
+                var emailValue = $(this).find('.emailValue').val();
+                if (emailValue) {
+                    email.set({
+                        email: emailValue
+                    });
                     contact.get('emails').add(email);
                 }
             });
 
             $('#phones .phone-item').each(function () {
-                var phone = contact.get('phones').at($(this).data('id'));
+                var phone = contact.get('phones').get($(this).data('id'));
                 if (!phone) {
                     phone = new Phone();
                 }
-                var phone = $(this).find('.phoneValue').val();
-                phone.set({
-                    phone: phone
-                });
-                if (phone.attributes.phone) {
+                var phoneValue = $(this).find('.phoneValue').val();
+                if (phoneValue) {
+                    phone.set({
+                        phone: phoneValue
+                    });
                     contact.get('phones').add(phone);
                 }
             });
 
             $('#addresses .address-item').each(function () {
-                var address = contact.get('addresses').at($(this).data('id'));
+                var address = contact.get('addresses').get($(this).data('id'));
                 if (!address) {
                     address = new Address();
                 }
@@ -157,23 +204,23 @@ define([
             var $div = $('#' + id);
 
             require(['text!sulucontact/templates/address.template'], function (Template) {
-                $div.append(_.template(Template, {street: '', number: '', addition: '', zip: '', city: '', state: '', country: ''}));
+                $div.append(_.template(Template, {id: null, street: '', number: '', additional: '', zip: '', city: '', state: '', country: ''}));
             });
         },
 
         staticTemplates: {
             emailRow: function () {
                 return [
-                    '<div class="grid-col-6">',
-                    '<label>Additional email address</label>',
+                    '<div class="grid-col-6 email-item">',
+                    '<label>[Email Type]</label>',
                     '<input class="form-element emailValue" type="text" value="<%= email %>"/>',
                     '</div>'
                 ].join('')
             },
             phoneRow: function () {
                 return [
-                    '<div class="grid-col-6">',
-                    '<label>Additional phone number</label>',
+                    '<div class="grid-col-6 phone-item">',
+                    '<label>[Phone Type]</label>',
                     '<input class="form-element phoneValue" type="text" value="<%= phone %>"/>',
                     '</div>'
                 ].join('')
