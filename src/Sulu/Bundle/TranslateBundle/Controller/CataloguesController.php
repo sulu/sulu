@@ -76,10 +76,10 @@ class CataloguesController extends FOSRestController
             $em->remove($catalogue);
             $em->flush();
 
-            $view = $this->view(null, 200);
+            $view = $this->view(null, 204);
 
         } else {
-            $view = $this->view(null, 400);
+            $view = $this->view(null, 404);
 
         }
 
