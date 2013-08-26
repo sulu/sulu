@@ -245,6 +245,12 @@ class NavigationItem implements \Iterator
     public function copyChildless()
     {
         $new = new NavigationItem($this->getName());
+        $new->setAction($this->getAction());
+        $new->setType($this->getType());
+        $new->setIcon($this->getIcon());
+        $new->setHeaderIcon($this->getHeaderIcon());
+        $new->setHeaderTitle($this->getHeaderTitle());
+        $new->setId($this->getId());
 
         return $new;
     }
@@ -384,7 +390,8 @@ class NavigationItem implements \Iterator
      * Returns the content of the NavigationItem as array
      * @return array
      */
-    public function toArray() {
+    public function toArray()
+    {
         $array = array(
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
