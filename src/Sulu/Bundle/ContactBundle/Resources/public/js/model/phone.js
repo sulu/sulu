@@ -9,7 +9,8 @@
 
 define([
     'backbonerelational',
-    'sulucontact/model/phoneType'], function (BackboneRelational, PhoneType) {
+    'sulucontact/model/phoneType'
+], function (BackboneRelational, PhoneType) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/phones',
         defaults: {
@@ -20,7 +21,7 @@ define([
             {
                 type: Backbone.HasOne,
                 key: 'phoneType',
-                relatedModel: 'PhoneType'
+                relatedModel: PhoneType
             }
         ]
     });

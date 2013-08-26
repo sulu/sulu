@@ -10,12 +10,16 @@
 define([
     'jquery',
     'backbone',
-    'router'
-], function ($, Backbone, Router) {
+    'router',
+    'sulucontact/model/contact',
+    'sulucontact/model/email',
+    'sulucontact/model/phone',
+    'sulucontact/model/address'
+], function ($, Backbone, Router, Contact, Email, Phone, Address) {
 
     'use strict';
 
-    var translatePackage;
+    var contact;
 
     return Backbone.View.extend({
 
@@ -31,6 +35,7 @@ define([
         },
 
         getTabs: function (id) {
+            // TODO Tabs contact form
             return null;
         },
 
@@ -38,7 +43,22 @@ define([
             require(['text!/contact/template/contact/form'], function (Template) {
                 var template;
                 if (!this.options.id) {
-                    template = _.template(Template, {firstname: '', lastname: '', title: '', position: '', company: '', primary_email: '', additional_email: '', phone_land: '', phone_mobile: '', street: '', number: '', etc: ''});
+                    contact = new Contact();
+                    template = _.template(Template, {
+                        firstname: '',
+                        lastname: '',
+                        title: '',
+                        position: '',
+                        company: '',
+                        emails: [],
+                        phones: [],
+                        street: '',
+                        number: '',
+                        addition: '',
+                        zip: '',
+                        city: '',
+                        state: ''
+                    });
                     this.$el.html(template);
                 } else {
                 }
@@ -46,6 +66,73 @@ define([
         },
 
         submitForm: function (event) {
+            event.preventDefault();
+            contact.set({
+                firstname: this.$('#firstname').val(),
+                lastname: this.$('#lastname').val(),
+                title: this.$('#title').val(),
+                position: this.$('#position').val()
+            });
+
+            $('#emails .email-item').each(function () {
+                var email = contact.get('emails').at($(this).data('id'));
+                if (!email) {
+                    email = new Email();
+                }
+                var email = $(this).find('.emailValue').val();
+                email.set({
+                    email: email
+                });
+                if (email.attributes.email) {
+                    contact.get('emails').add(email);
+                }
+            });
+
+            $('#phones .phone-item').each(function () {
+                var phone = contact.get('phones').at($(this).data('id'));
+                if (!phone) {
+                    phone = new Phone();
+                }
+                var phone = $(this).find('.phoneValue').val();
+                phone.set({
+                    phone: phone
+                });
+                if (phone.attributes.phone) {
+                    contact.get('phones').add(phone);
+                }
+            });
+
+            $('#addresses .address-item').each(function () {
+                var address = contact.get('addresses').at($(this).data('id'));
+                if (!address) {
+                    address = new Address();
+                }
+                var street = $(this).find('.streetValue').val();
+                var number = $(this).find('.numberValue').val();
+                var addition = $(this).find('.additionValue').val();
+                var zip = $(this).find('.zipValue').val();
+                var city = $(this).find('.cityValue').val();
+                var state = $(this).find('.stateValue').val();
+
+                address.set({
+                    street: street,
+                    number: number,
+                    addition: addition,
+                    zip: zip,
+                    city: city,
+                    state: state
+                });
+
+                if (street && number && zip && city && state) {
+                    contact.get('addresses').add(address);
+                }
+            });
+
+            contact.save(null, {
+                success: function () {
+                    Router.navigate('contacts/people');
+                }
+            });
         },
 
         addEmail: function (event) {
@@ -70,7 +157,7 @@ define([
             var $div = $('#' + id);
 
             require(['text!sulucontact/templates/address.template'], function (Template) {
-                $div.append(_.template(Template, {street: '', number: '', etc: '', zip: '', city: '', state: '', country: ''}));
+                $div.append(_.template(Template, {street: '', number: '', addition: '', zip: '', city: '', state: '', country: ''}));
             });
         },
 
@@ -79,7 +166,7 @@ define([
                 return [
                     '<div class="grid-col-6">',
                     '<label>Additional email address</label>',
-                    '<input class="form-element" type="text" id="lastname" value="<%= email %>"/>',
+                    '<input class="form-element emailValue" type="text" value="<%= email %>"/>',
                     '</div>'
                 ].join('')
             },
@@ -87,7 +174,7 @@ define([
                 return [
                     '<div class="grid-col-6">',
                     '<label>Additional phone number</label>',
-                    '<input class="form-element" type="text" id="phone_mobile" value="<%= phone %>"/>',
+                    '<input class="form-element phoneValue" type="text" value="<%= phone %>"/>',
                     '</div>'
                 ].join('')
             }
