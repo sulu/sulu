@@ -13,11 +13,21 @@ define(['router'], function (Router) {
 
     var initialize = function () {
         // show form for new translation package
-        Router.route('contacts/people/add', 'contact:form', function() {
+        Router.route('contacts/people/add', 'contacts:people:form', function() {
             require(['sulucontact/controller/contact/form'], function(Form) {
                 new Form({
                     el: App.$content
                 });
+            });
+        });
+
+        // show form for editing a contact
+        Router.route('contacts/people/edit::id', 'contacts:people:form:id', function(id) {
+            require(['sulucontact/controller/contact/form'], function(Form) {
+                new Form({
+                    el: App.$content,
+                    id: id
+                })
             });
         });
     };

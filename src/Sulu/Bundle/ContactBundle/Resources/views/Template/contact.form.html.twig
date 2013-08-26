@@ -58,11 +58,11 @@
                 <div class="grid-row">
                     <div class="grid-col-6">
                         <label class="bold">First name*</label>
-                        <input class="form-element" type="text" id="firstname" value="<%= firstname %>"/>
+                        <input class="form-element" type="text" id="firstName" value="<%= firstName %>"/>
                     </div>
                     <div class="grid-col-6">
                         <label class="bold">Last name*</label>
-                        <input class="form-element" type="text" id="lastname" value="<%= lastname %>"/>
+                        <input class="form-element" type="text" id="lastName" value="<%= lastName %>"/>
                     </div>
                 </div>
                 <div class="grid-row">
@@ -77,7 +77,8 @@
                     <div class="grid-col-5">
                         <label>Company</label>
                         {# TODO Company #}
-                        <input class="form-element" type="text" id="company" value="<%= company %>"/>
+                        <input class="form-element" type="text" id="account"
+                               value="<%= (!!account) ? account.name : '' %>"/>
                     </div>
                 </div>
             </div>
@@ -87,14 +88,12 @@
         <h2>Email</h2>
 
         <div class="grid-row two-cols" id="emails">
-            <div class="grid-col-6 email-item" data-id="<%= (!!emails[0]) ? emails[0].id : '' %>">
-                <label class="bold">Primary email address*</label>
-                <input class="form-element emailValue" type="text" value="<%= (!!emails[0]) ? emails[0].email : '' %>"/>
+            <% _.each(emails, function(email) { %>
+            <div class="grid-col-6 email-item" data-id="<%= email.id %>">
+                <label class="bold"><%= (!!email.emailType)?email.emailType.name :'[Email Type]' %>*</label>
+                <input class="form-element emailValue" type="text" value="<%= email.email %>"/>
             </div>
-            <div class="grid-col-6 email-item" data-id="<%= (!!emails[0]) ? emails[0].id : '' %>">
-                <label>Additional email address</label>
-                <input class="form-element emailValue" type="text" value="<%= (!!emails[1]) ? emails[1].email : '' %>"/>
-            </div>
+            <% }); %>
         </div>
         <div class="grid-row">
             <div id="addEmail" data-target-id="emails">
@@ -106,15 +105,12 @@
         <h2>Phone</h2>
 
         <div class="grid-row two-cols" id="phones">
-            <div class="grid-col-6 phone-item" data-id="<%= (!!phones[0]) ? phones[0].id : '' %>">
-                <label class="bold">Land line</label>
-                <input class="form-element phoneValue" type="text" id="phone_land"
-                       value="<%= (!!phones[0]) ? phones[0].phone : '' %>"/>
+            <% _.each(phones, function(phone) { %>
+            <div class="grid-col-6 phone-item" data-id="<%= phone.id %>">
+                <label class="bold"><%= (!!phone.phoneType)? phone.phoneType.name:'[Phone Type]' %></label>
+                <input class="form-element phoneValue" type="text" value="<%= phone.phone %>"/>
             </div>
-            <div class="grid-col-6 phone-item" data-id="<%= (!!phones[0]) ? phones[0].id : '' %>">
-                <label class="bold">Mobile</label>
-                <input class="form-element phoneValue" type="text" value="<%= (!!phones[1]) ? phones[1].phone : '' %>"/>
-            </div>
+            <% }); %>
         </div>
         <div class="grid-row">
             <div id="addPhone" data-target-id="phones">
@@ -135,33 +131,34 @@
         </div>
 
         <div id="addresses">
-            <div class="address-item">
+            <% _.each(addresses, function(address) { %>
+            <div class="address-item" data-id="<%= address.id %>">
                 <div class="grid-row">
                     <div class="grid-col-6">
                         <label>Street</label>
-                        <input class="form-element streetValue" type="text" value="<%= street %>"/>
+                        <input class="form-element streetValue" type="text" value="<%= address.street %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>Number</label>
-                        <input class="form-element numberValue" type="text" value="<%= number %>"/>
+                        <input class="form-element numberValue" type="text" value="<%= address.number %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>House, Floor, etc.</label>
-                        <input class="form-element additionValue" type="text" value="<%= addition %>"/>
+                        <input class="form-element additionValue" type="text" value="<%= address.additional %>"/>
                     </div>
                 </div>
                 <div class="grid-row">
                     <div class="grid-col-2">
                         <label>Zip</label>
-                        <input class="form-element zipValue" type="text" value="<%= zip %>"/>
+                        <input class="form-element zipValue" type="text" value="<%= address.zip %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>City</label>
-                        <input class="form-element cityValue" type="text" value="<%= city %>"/>
+                        <input class="form-element cityValue" type="text" value="<%= address.city %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>State</label>
-                        <input class="form-element stateValue" type="text" value="<%= state %>"/>
+                        <input class="form-element stateValue" type="text" value="<%= address.state %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>Country</label>
@@ -172,6 +169,7 @@
                     </div>
                 </div>
             </div>
+            <% }); %>
         </div>
         <div class="grid-row">
             <input type="submit" value="[SAVE]" class="m-bottom-10"/>
