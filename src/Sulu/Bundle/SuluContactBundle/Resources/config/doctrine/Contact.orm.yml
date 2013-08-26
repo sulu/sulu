@@ -7,10 +7,14 @@ Sulu\Bundle\ContactBundle\Entity\Contact:
             id: true
             generator:
                 strategy: AUTO
-        fname:
+        firstName:
             type: string
             length: '60'
-        lname:
+        middleName:
+            type: string
+            length: '60'
+            nullable: true
+        lastName:
             type: string
             length: '60'
         title:
@@ -20,6 +24,9 @@ Sulu\Bundle\ContactBundle\Entity\Contact:
         position:
             type: string
             length: '60'
+            nullable: true
+        birthday:
+            type: date
             nullable: true
         localeSystem:
             type: string
@@ -55,13 +62,11 @@ Sulu\Bundle\ContactBundle\Entity\Contact:
             joinColumn:
                 name: idContactsCreator
                 referencedColumnName: id
-                nullable: false
         changer:
             targetEntity: Contact
             joinColumn:
                 name: idContactsChanger
                 referencedColumnName: id
-                nullable: false
     manyToMany:
         phones:
             targetEntity: Phone
