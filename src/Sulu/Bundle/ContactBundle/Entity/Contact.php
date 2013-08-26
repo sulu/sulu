@@ -25,12 +25,22 @@ class Contact
     /**
      * @var string
      */
-    private $fname;
+    private $firstName;
 
     /**
      * @var string
      */
-    private $lname;
+    private $middleName;
+
+    /**
+     * @var string
+     */
+    private $lastName;
+
+    /**
+     * @var \DateTime
+     */
+    private $birthday;
 
     /**
      * @var string
@@ -130,49 +140,95 @@ class Contact
     }
 
     /**
-     * Set fname
+     * Set firstName
      *
-     * @param string $fname
+     * @param string $firstName
      * @return Contact
      */
-    public function setFname($fname)
+    public function setFirstName($firstName)
     {
-        $this->fname = $fname;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     /**
-     * Get fname
+     * Get firstName
      *
      * @return string
      */
-    public function getFname()
+    public function getFirstName()
     {
-        return $this->fname;
+        return $this->firstName;
     }
 
     /**
-     * Set lname
+     * Set middleName
      *
-     * @param string $lname
+     * @param string $middleName
      * @return Contact
      */
-    public function setLname($lname)
+    public function setMiddleName($middleName)
     {
-        $this->lname = $lname;
+        $this->middleName = $middleName;
 
         return $this;
     }
 
     /**
-     * Get lname
+     * Get middleName
      *
      * @return string
      */
-    public function getLname()
+    public function getMiddleName()
     {
-        return $this->lname;
+        return $this->middleName;
+    }
+
+    /**
+     * Set lastName
+     *
+     * @param string $lastName
+     * @return Contact
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get lastName
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Set birthday
+     *
+     * @param \DateTime $birthday
+     * @return Contact
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    /**
+     * Get birthday
+     *
+     * @return \DateTime
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
     }
 
     /**
