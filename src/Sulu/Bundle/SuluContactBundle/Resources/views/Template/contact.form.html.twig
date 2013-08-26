@@ -38,16 +38,8 @@
         padding-right: 10px;
         cursor: pointer;
     }
-/* align-right */
-    .text-right {
-        text-align: right;
-    }
-/*m-top-10*/
-    .mt10 {
-        margin-top: 10px;
-    }
 
-    .mt30 {
+    .m-top-30 {
         margin-top: 30px;
     }
 </style>
@@ -84,6 +76,7 @@
                     </div>
                     <div class="grid-col-5">
                         <label>Company</label>
+                        {# TODO Company #}
                         <input class="form-element" type="text" id="company" value="<%= company %>"/>
                     </div>
                 </div>
@@ -93,18 +86,18 @@
 
         <h2>Email</h2>
 
-        <div class="grid-row two-cols" id="email">
-            <div class="grid-col-6">
+        <div class="grid-row two-cols" id="emails">
+            <div class="grid-col-6 email-item" data-id="<%= (!!emails[0]) ? emails[0].id : '' %>">
                 <label class="bold">Primary email address*</label>
-                <input class="form-element" type="text" id="firstname" value="<%= primary_email %>"/>
+                <input class="form-element emailValue" type="text" value="<%= (!!emails[0]) ? emails[0].email : '' %>"/>
             </div>
-            <div class="grid-col-6">
+            <div class="grid-col-6 email-item" data-id="<%= (!!emails[0]) ? emails[0].id : '' %>">
                 <label>Additional email address</label>
-                <input class="form-element" type="text" id="lastname" value="<%= additional_email %>"/>
+                <input class="form-element emailValue" type="text" value="<%= (!!emails[1]) ? emails[1].email : '' %>"/>
             </div>
         </div>
         <div class="grid-row">
-            <div id="addEmail" data-target-id="email">
+            <div id="addEmail" data-target-id="emails">
                 <span class="icon-add"></span><span class="control-label">Add email</span>
             </div>
         </div>
@@ -112,69 +105,76 @@
 
         <h2>Phone</h2>
 
-        <div class="grid-row two-cols" id="phone">
-            <div class="grid-col-6">
+        <div class="grid-row two-cols" id="phones">
+            <div class="grid-col-6 phone-item" data-id="<%= (!!phones[0]) ? phones[0].id : '' %>">
                 <label class="bold">Land line</label>
-                <input class="form-element" type="text" id="phone_land" value="<%= phone_land %>"/>
+                <input class="form-element phoneValue" type="text" id="phone_land"
+                       value="<%= (!!phones[0]) ? phones[0].phone : '' %>"/>
             </div>
-            <div class="grid-col-6">
+            <div class="grid-col-6 phone-item" data-id="<%= (!!phones[0]) ? phones[0].id : '' %>">
                 <label class="bold">Mobile</label>
-                <input class="form-element" type="text" id="phone_mobile" value="<%= phone_mobile %>"/>
+                <input class="form-element phoneValue" type="text" value="<%= (!!phones[1]) ? phones[1].phone : '' %>"/>
             </div>
         </div>
         <div class="grid-row">
-            <div id="addPhone" data-target-id="phone">
+            <div id="addPhone" data-target-id="phones">
                 <span class="icon-add"></span><span class="control-label">Add phone number</span>
             </div>
         </div>
+
         <hr class="divider"/>
         <div class="grid-row">
             <div class="grid-col-10">
                 <h2>Address</h2>
             </div>
-            <div class="grid-col-2 text-right mt10">
-                <div id="addAddress" data-target-id="address">
+            <div class="grid-col-2 align-right m-top-10">
+                <div id="addAddress" data-target-id="addresses">
                     <span class="icon-add"></span><span class="control-label">Add address</span>
                 </div>
             </div>
         </div>
-        <div id="address">
+
+        <div id="addresses">
             <div class="address-item">
                 <div class="grid-row">
                     <div class="grid-col-6">
                         <label>Street</label>
-                        <input class="form-element" type="text" id="street" value="<%= street %>"/>
+                        <input class="form-element streetValue" type="text" value="<%= street %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>Number</label>
-                        <input class="form-element" type="text" id="number" value="<%= number %>"/>
+                        <input class="form-element numberValue" type="text" value="<%= number %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>House, Floor, etc.</label>
-                        <input class="form-element" type="text" id="etc" value="<%= etc %>"/>
+                        <input class="form-element additionValue" type="text" value="<%= addition %>"/>
                     </div>
                 </div>
                 <div class="grid-row">
                     <div class="grid-col-2">
                         <label>Zip</label>
-                        <input class="form-element" type="text" id="street" value="<%= street %>"/>
+                        <input class="form-element zipValue" type="text" value="<%= zip %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>City</label>
-                        <input class="form-element" type="text" id="street" value="<%= street %>"/>
+                        <input class="form-element cityValue" type="text" value="<%= city %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>State</label>
-                        <input class="form-element" type="text" id="number" value="<%= number %>"/>
+                        <input class="form-element stateValue" type="text" value="<%= state %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>Country</label>
-                        <select class="form-element" id="etc">
+                        {# TODO Country #}
+                        <select class="form-element countryValue">
                             <option value="asdf">asdf</option>
                         </select>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="grid-row">
+            <input type="submit" value="[SAVE]" class="m-bottom-10"/>
         </div>
         <!--
         <hr class="divider"/>
