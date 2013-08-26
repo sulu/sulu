@@ -9,7 +9,8 @@
 
 define([
     'backbonerelational',
-    'sulucontact/model/emailType'], function (BackboneRelational, EmailType) {
+    'sulucontact/model/emailType'
+], function (BackboneRelational, EmailType) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/emails',
         defaults: {
@@ -20,7 +21,7 @@ define([
             {
                 type: Backbone.HasOne,
                 key: 'emailType',
-                relatedModel: 'EmailType'
+                relatedModel: EmailType
             }
         ]
     });

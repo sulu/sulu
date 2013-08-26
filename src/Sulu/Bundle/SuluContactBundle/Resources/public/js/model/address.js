@@ -10,7 +10,8 @@
 define([
     'backbonerelational',
     'sulucontact/model/country',
-    'sulucontact/model/addressType'], function (BackboneRelational, Country, AddressType) {
+    'sulucontact/model/addressType'
+], function (BackboneRelational, Country, AddressType) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/addresses',
         defaults: {
@@ -27,12 +28,12 @@ define([
             {
                 type: Backbone.HasOne,
                 key: 'country',
-                relatedModel: 'Country'
+                relatedModel: Country
             },
             {
                 type: Backbone.HasOne,
                 key: 'addressType',
-                relatedModel: 'AddressType'
+                relatedModel: AddressType
             }
         ]
     });
