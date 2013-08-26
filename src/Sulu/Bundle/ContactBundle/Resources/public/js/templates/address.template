@@ -1,34 +1,34 @@
-<div class="address-item mt30">
+<div class="address-item m-top-30">
     <div class="grid-row">
         <div class="grid-col-6">
             <label>Street</label>
-            <input class="form-element" type="text" id="street" value="<%= street %>"/>
+            <input class="form-element streetValue" type="text" value="<%= street %>"/>
         </div>
         <div class="grid-col-2">
             <label>Number</label>
-            <input class="form-element" type="text" id="number" value="<%= number %>"/>
+            <input class="form-element numberValue" type="text" value="<%= number %>"/>
         </div>
         <div class="grid-col-4">
             <label>House, Floor, etc.</label>
-            <input class="form-element" type="text" id="etc" value="<%= etc %>"/>
+            <input class="form-element additionValue" type="text" value="<%= addition %>"/>
         </div>
     </div>
     <div class="grid-row">
         <div class="grid-col-2">
             <label>Zip</label>
-            <input class="form-element" type="text" id="zip" value="<%= zip %>"/>
+            <input class="form-element zipValue" type="text" value="<%= zip %>"/>
         </div>
         <div class="grid-col-4">
             <label>City</label>
-            <input class="form-element" type="text" id="city" value="<%= city %>"/>
+            <input class="form-element cityValue" type="text" value="<%= city %>"/>
         </div>
         <div class="grid-col-2">
             <label>State</label>
-            <input class="form-element" type="text" id="state" value="<%= state %>"/>
+            <input class="form-element stateValue" type="text" value="<%= state %>"/>
         </div>
         <div class="grid-col-4">
             <label>Country</label>
-            <select class="form-element input-large" id="country">
+            <select class="form-element countryValue">
                 <option value="asdf">asdf</option>
             </select>
         </div>
