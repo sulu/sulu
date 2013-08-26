@@ -13,7 +13,7 @@ define(['router'], function (Router) {
 
     var initialize = function () {
         // show form for new translation package
-        Router.route('contact/add', 'contact:form', function() {
+        Router.route('contacts/people/add', 'contact:form', function() {
             require(['sulucontact/controller/contact/form'], function(Form) {
                 new Form({
                     el: App.$content

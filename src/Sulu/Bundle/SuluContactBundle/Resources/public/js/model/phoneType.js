@@ -9,7 +9,7 @@
 
 define(['backbonerelational'], function() {
     return Backbone.RelationalModel.extend({
-        urlRoot: '/contact/api/accounts',
+        urlRoot: '/contact/api/phoneTypes',
         defaults: {
             id: null,
             name: ''

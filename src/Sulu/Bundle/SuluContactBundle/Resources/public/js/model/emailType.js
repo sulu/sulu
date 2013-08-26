@@ -7,9 +7,9 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbonerelational'], function() {
+define(['backbonerelational'], function () {
     return Backbone.RelationalModel.extend({
-        urlRoot: '/contact/api/accounts',
+        urlRoot: '/contact/api/emailTypes',
         defaults: {
             id: null,
             name: ''
