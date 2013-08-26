@@ -1,4 +1,4 @@
-<div class="address-item m-top-30">
+<div class="address-item m-top-30" data-id="<%= id %>">
     <div class="grid-row">
         <div class="grid-col-6">
             <label>Street</label>
@@ -10,7 +10,7 @@
         </div>
         <div class="grid-col-4">
             <label>House, Floor, etc.</label>
-            <input class="form-element additionValue" type="text" value="<%= addition %>"/>
+            <input class="form-element additionValue" type="text" value="<%= additional %>"/>
         </div>
     </div>
     <div class="grid-row">
