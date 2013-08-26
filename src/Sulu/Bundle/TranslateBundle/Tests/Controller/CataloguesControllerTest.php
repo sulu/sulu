@@ -94,4 +94,30 @@ class CataloguesControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->locale);
     }
+
+    public function testDeleteById(){
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/catalogues/1');
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+
+
+        $client->request('GET', '/translate/api/catalogues/1');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('400', $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteByIdNotExisting(){
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/catalogues/4711');
+        $this->assertEquals('400', $client->getResponse()->getStatusCode());
+
+
+        $client->request('GET', '/translate/api/catalogues');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->total);
+    }
 }

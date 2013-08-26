@@ -62,4 +62,27 @@ class CataloguesController extends FOSRestController
 
         return $this->handleView($view);
     }
+
+    public function deleteCatalogueAction($id) {
+
+        $response = array();
+
+        $catalogue = $this->getDoctrine()
+            ->getRepository('SuluTranslateBundle:Catalogue')
+            ->find($id);
+
+        if($catalogue != null) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($catalogue);
+            $em->flush();
+
+            $view = $this->view(null, 200);
+
+        } else {
+            $view = $this->view(null, 400);
+
+        }
+
+        return $this->handleView($view);
+    }
 }
