@@ -22,4 +22,7 @@ Sulu\Bundle\ContactBundle\Entity\Email:
         accounts:
             targetEntity: Account
             mappedBy: emails
+        contacts:
+            targetEntity: Contact
+            mappedBy: emails
     lifecycleCallbacks: {  }

@@ -85,6 +85,17 @@ Sulu\Bundle\ContactBundle\Entity\Contact:
                 inverseJoinColumns:
                     idAddresses:
                         referencedColumnName: id
+        emails:
+            targetEntity: Email
+            inversedBy: contacts
+            joinTable:
+                name: co_contact_emails
+                joinColumns:
+                    idContacts:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    idAEmails:
+                        referencedColumnName: id
         notes:
             targetEntity: Note
             inversedBy: contacts

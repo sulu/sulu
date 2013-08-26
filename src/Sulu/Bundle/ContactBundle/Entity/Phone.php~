@@ -1,21 +1,21 @@
 <?php
 /*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
+* This file is part of the Sulu CMS.
+*
+* (c) MASSIVE ART WebServices GmbH
+*
+* This source file is subject to the MIT license that is bundled
+* with this source code in the file LICENSE.
+*/
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Email
+ * Phone
  */
-class Email
+class Phone
 {
     /**
      * @var integer
@@ -25,12 +25,12 @@ class Email
     /**
      * @var string
      */
-    private $email;
+    private $phone;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\EmailType
+     * @var \Sulu\Bundle\ContactBundle\Entity\PhoneType
      */
-    private $emailType;
+    private $phoneType;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -38,17 +38,23 @@ class Email
     private $accounts;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,61 +62,61 @@ class Email
     }
 
     /**
-     * Set email
+     * Set phone
      *
-     * @param string $email
-     * @return Email
+     * @param string $phone
+     * @return Phone
      */
-    public function setEmail($email)
+    public function setPhone($phone)
     {
-        $this->email = $email;
-    
+        $this->phone = $phone;
+
         return $this;
     }
 
     /**
-     * Get email
+     * Get phone
      *
-     * @return string 
+     * @return string
      */
-    public function getEmail()
+    public function getPhone()
     {
-        return $this->email;
+        return $this->phone;
     }
 
     /**
-     * Set emailType
+     * Set phoneType
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\EmailType $emailType
-     * @return Email
+     * @param \Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType
+     * @return Phone
      */
-    public function setEmailType(\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType)
+    public function setPhoneType(\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType)
     {
-        $this->emailType = $emailType;
-    
+        $this->phoneType = $phoneType;
+
         return $this;
     }
 
     /**
-     * Get emailType
+     * Get phoneType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\EmailType 
+     * @return \Sulu\Bundle\ContactBundle\Entity\PhoneType
      */
-    public function getEmailType()
+    public function getPhoneType()
     {
-        return $this->emailType;
+        return $this->phoneType;
     }
 
     /**
      * Add accounts
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     * @return Email
+     * @return Phone
      */
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
         $this->accounts[] = $accounts;
-    
+
         return $this;
     }
 
@@ -127,28 +133,23 @@ class Email
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccounts()
     {
         return $this->accounts;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
 
     /**
      * Add contacts
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     * @return Email
+     * @return Phone
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -165,7 +166,7 @@ class Email
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
