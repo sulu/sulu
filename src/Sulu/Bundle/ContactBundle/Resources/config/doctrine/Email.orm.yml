@@ -1,0 +1,25 @@
+Sulu\Bundle\ContactBundle\Entity\Email:
+    type: entity
+    table: co_emails
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        email:
+            type: string
+            length: '60'
+    manyToOne:
+        emailType:
+            targetEntity: EmailType
+            inversedBy: emails
+            joinColumn:
+                name: idEmailTypes
+                referencedColumnName: id
+                nullable: false
+    manyToMany:
+        accounts:
+            targetEntity: Account
+            mappedBy: emails
+    lifecycleCallbacks: {  }
