@@ -1,0 +1,3 @@
+sulu_contact.contacts:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactsController
