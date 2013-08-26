@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AddressType
+ * PhoneType
  */
-class AddressType
+class PhoneType
 {
     /**
      * @var integer
@@ -30,14 +30,14 @@ class AddressType
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $addresses;
+    private $phones;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -54,7 +54,7 @@ class AddressType
      * Set name
      *
      * @param string $name
-     * @return AddressType
+     * @return PhoneType
      */
     public function setName($name)
     {
@@ -74,35 +74,35 @@ class AddressType
     }
 
     /**
-     * Add addresses
+     * Add phones
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     * @return AddressType
+     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     * @return PhoneType
      */
-    public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
     {
-        $this->addresses[] = $addresses;
+        $this->phones[] = $phones;
 
         return $this;
     }
 
     /**
-     * Remove addresses
+     * Remove phones
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
      */
-    public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
     {
-        $this->addresses->removeElement($addresses);
+        $this->phones->removeElement($phones);
     }
 
     /**
-     * Get addresses
+     * Get phones
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAddresses()
+    public function getPhones()
     {
-        return $this->addresses;
+        return $this->phones;
     }
 }

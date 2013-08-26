@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AddressType
+ * EmailType
  */
-class AddressType
+class EmailType
 {
     /**
      * @var integer
@@ -30,14 +30,14 @@ class AddressType
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $addresses;
+    private $emails;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -54,7 +54,7 @@ class AddressType
      * Set name
      *
      * @param string $name
-     * @return AddressType
+     * @return EmailType
      */
     public function setName($name)
     {
@@ -74,35 +74,35 @@ class AddressType
     }
 
     /**
-     * Add addresses
+     * Add emails
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     * @return AddressType
+     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     * @return EmailType
      */
-    public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
     {
-        $this->addresses[] = $addresses;
+        $this->emails[] = $emails;
 
         return $this;
     }
 
     /**
-     * Remove addresses
+     * Remove emails
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
      */
-    public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
     {
-        $this->addresses->removeElement($addresses);
+        $this->emails->removeElement($emails);
     }
 
     /**
-     * Get addresses
+     * Get emails
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAddresses()
+    public function getEmails()
     {
-        return $this->addresses;
+        return $this->emails;
     }
 }

@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Email
+ * Note
  */
-class Email
+class Note
 {
     /**
      * @var integer
@@ -25,12 +25,7 @@ class Email
     /**
      * @var string
      */
-    private $email;
-
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\EmailType
-     */
-    private $emailType;
+    private $value;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -38,11 +33,17 @@ class Email
     private $accounts;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -56,56 +57,33 @@ class Email
     }
 
     /**
-     * Set email
+     * Set value
      *
-     * @param string $email
-     * @return Email
+     * @param string $value
+     * @return Note
      */
-    public function setEmail($email)
+    public function setValue($value)
     {
-        $this->email = $email;
+        $this->value = $value;
     
         return $this;
     }
 
     /**
-     * Get email
+     * Get value
      *
      * @return string 
      */
-    public function getEmail()
+    public function getValue()
     {
-        return $this->email;
-    }
-
-    /**
-     * Set emailType
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\EmailType $emailType
-     * @return Email
-     */
-    public function setEmailType(\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType)
-    {
-        $this->emailType = $emailType;
-    
-        return $this;
-    }
-
-    /**
-     * Get emailType
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\EmailType 
-     */
-    public function getEmailType()
-    {
-        return $this->emailType;
+        return $this->value;
     }
 
     /**
      * Add accounts
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     * @return Email
+     * @return Note
      */
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
@@ -133,17 +111,12 @@ class Email
     {
         return $this->accounts;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
 
     /**
      * Add contacts
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     * @return Email
+     * @return Note
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {

@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AddressType
+ * Country
  */
-class AddressType
+class Country
 {
     /**
      * @var integer
@@ -26,6 +26,11 @@ class AddressType
      * @var string
      */
     private $name;
+
+    /**
+     * @var string
+     */
+    private $code;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -39,11 +44,11 @@ class AddressType
     {
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -54,19 +59,19 @@ class AddressType
      * Set name
      *
      * @param string $name
-     * @return AddressType
+     * @return Country
      */
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -74,15 +79,38 @@ class AddressType
     }
 
     /**
+     * Set code
+     *
+     * @param string $code
+     * @return Country
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
      * Add addresses
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     * @return AddressType
+     * @return Country
      */
     public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
     {
         $this->addresses[] = $addresses;
-
+    
         return $this;
     }
 
@@ -99,7 +127,7 @@ class AddressType
     /**
      * Get addresses
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getAddresses()
     {

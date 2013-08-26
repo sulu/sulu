@@ -569,42 +569,4 @@ class Contact
     {
         return $this->notes;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $emails;
-
-
-    /**
-     * Add emails
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
-     * @return Contact
-     */
-    public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
-    {
-        $this->emails[] = $emails;
-    
-        return $this;
-    }
-
-    /**
-     * Remove emails
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
-     */
-    public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
-    {
-        $this->emails->removeElement($emails);
-    }
-
-    /**
-     * Get emails
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getEmails()
-    {
-        return $this->emails;
-    }
 }
