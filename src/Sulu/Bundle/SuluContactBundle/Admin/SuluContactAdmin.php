@@ -20,6 +20,14 @@ class SuluContactAdmin extends Admin
     public function __construct()
     {
         $rootNavigationItem = new NavigationItem('Root');
+        $contacts = new NavigationItem('Contacts');
+        $contacts->setIcon('contacts');
+        $rootNavigationItem->addChild($contacts);
+        $people = new NavigationItem('People');
+        $people->setIcon('people');
+        $people->setType('content');
+        $people->setAction('contacts/people');
+        $contacts->addChild($people);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
