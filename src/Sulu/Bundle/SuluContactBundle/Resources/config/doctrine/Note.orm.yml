@@ -1,0 +1,19 @@
+Sulu\Bundle\ContactBundle\Entity\Note:
+    type: entity
+    table: co_notes
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        value:
+            type: text
+    manyToMany:
+        accounts:
+            targetEntity: Account
+            mappedBy: notes
+        contacts:
+            targetEntity: Contact
+            mappedBy: notes
+    lifecycleCallbacks: {  }

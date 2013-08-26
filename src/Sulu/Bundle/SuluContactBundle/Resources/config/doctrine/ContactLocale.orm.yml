@@ -1,0 +1,21 @@
+Sulu\Bundle\ContactBundle\Entity\ContactLocale:
+    type: entity
+    table: co_contact_locales
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        locale:
+            type: string
+            length: '60'
+    manyToOne:
+        contact:
+            targetEntity: Contact
+            inversedBy: locales
+            joinColumn:
+                name: idContacts
+                referencedColumnName: id
+                nullable: false
+    lifecycleCallbacks: {  }
