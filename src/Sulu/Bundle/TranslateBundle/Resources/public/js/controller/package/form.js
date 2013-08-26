@@ -143,12 +143,10 @@ define([
             console.log(cataloguesToDelete, "these will be deleted");
 
             cataloguesToDelete.forEach(function (id) {
-                console.log(id, 'id of catalogue?')
                 var model = translatePackage.get('catalogues').get(id);
-                console.log(id, 'model to destroy');
                 model.destroy({
                     success: function () {
-                        console.log("deleted");
+                        console.log("deleted model");
                     }
                 });
             });
