@@ -13,25 +13,26 @@ define([
     'router',
     'sulutranslate/model/package',
     'sulutranslate/model/catalogue'
-], function($, Backbone, Router, Package, Catalogue) {
+], function ($, Backbone, Router, Package, Catalogue) {
 
     'use strict';
 
     var translatePackage;
+    var cataloguesToDelete;
 
     return Backbone.View.extend({
 
         events: {
             'submit #catalogue-form': 'submitForm',
             'click .icon-remove': 'deleteRow',
-            'click .addRow' : 'addRow'
+            'click .addRow': 'addRow'
         },
 
-        initialize: function() {
+        initialize: function () {
             this.render();
         },
 
-        getTabs: function(id) {
+        getTabs: function (id) {
             //TODO Simplify this task for bundle developer?
             var cssId = id || 'new';
 
@@ -69,20 +70,22 @@ define([
             return navigation;
         },
 
-        render: function() {
+        render: function () {
 
             Backbone.Relational.store.reset(); //FIXME really necessary?
-            require(['text!/translate/template/catalogue/form'], function(Template) {
+            require(['text!/translate/template/catalogue/form'], function (Template) {
                 var template;
+
+                cataloguesToDelete = new Array();
 
                 if (!this.options.id) {
                     translatePackage = new Package();
-                    template = _.template(Template, {name: '', locale:'', catalogues: []});
+                    template = _.template(Template, {name: '', locale: '', catalogues: []});
                     this.$el.html(template);
                 } else {
                     translatePackage = new Package({id: this.options.id});
                     translatePackage.fetch({
-                        success: function(translatePackage) {
+                        success: function (translatePackage) {
                             template = _.template(Template, translatePackage.toJSON());
                             var catalogues = this.getArrayFromCatalogues(translatePackage.get('catalogues').models);
                             this.initializeCatalogueList(catalogues);
@@ -98,11 +101,11 @@ define([
             }.bind(this));
         },
 
-        getArrayFromCatalogues: function(models){
+        getArrayFromCatalogues: function (models) {
 
             var data = new Array();
 
-            $.each(models, function(model){
+            $.each(models, function (model) {
                 data.push(models[model].attributes);
             });
 
@@ -110,12 +113,18 @@ define([
         },
 
 
-        submitForm: function(event) {
+        submitForm: function (event) {
+
+            var that = this;
 
             event.preventDefault();
 
             translatePackage.set({name: this.$('#name').val()});
+
             var $rows = $('#catalogues tbody tr');
+
+
+            // create catalogues if necessary and add them
 
             for (var i = 1; i <= $rows.length; i++) {
                 var catalogue = translatePackage.get('catalogues').at(i - 1);
@@ -123,43 +132,41 @@ define([
                     catalogue = new Catalogue();
                 }
 
-                var locale = $('#catalogues tbody tr:nth-child('+i+') td:nth-child(2) input').val();
+                var locale = $('#catalogues tbody tr:nth-child(' + i + ') td:nth-child(2) input').val();
 
-                console.log();
-
-                catalogue.set({'locale':locale});
+                catalogue.set({'locale': locale});
                 translatePackage.get('catalogues').add(catalogue);
             }
 
-            if($rows.length < translatePackage.get('catalogues').length) {
+            // send delete request for models which should be deleted
 
-                for(var i = $rows.length-1; i < translatePackage.get('catalogues').length; i++) {
+            console.log(cataloguesToDelete, "these will be deleted");
 
-                    console.log(translatePackage.get('catalogues').at(i));
+            cataloguesToDelete.forEach(function (id) {
+                console.log(id, 'id of catalogue?')
+                var model = translatePackage.get('catalogues').get(id);
+                console.log(id, 'model to destroy');
+                model.destroy({
+                    success: function () {
+                        console.log("deleted");
+                    }
+                });
+            });
 
-                    var model = translatePackage.get('catalogues').at(i);
-                    translatePackage.get('catalogues').remove(model);
-                    model.destroy({
-                        success: function() {
-                            console.log("deleted");
-                        }
-                    });
-
-                }
-            }
 
             translatePackage.save(null, {
-                success: function() {
-                    Router.navigate('settings/translate');
+                success: function () {
+                    that.undelegateEvents();
+                    console.log("save translatepackage");
+                    //Router.navigate('settings/translate');
                 }
             });
         },
 
-        initializeCatalogueList: function(data) {
+        initializeCatalogueList: function (data) {
             var dataGrid;
 
-
-            require(['text!sulutranslate/templates/package/table-row.html'], function(RowTemplate) {
+            require(['text!sulutranslate/templates/package/table-row.html'], function (RowTemplate) {
                 dataGrid = $('#catalogues').huskyDataGrid({
                     pagination: false,
                     showPages: 6,
@@ -172,15 +179,17 @@ define([
                     }
                 });
 
-                //this.templateCatalogueTableRow = RowTemplate;
-                //this.catalogueTable = dataGrid.data('Husky.Ui.DataGrid');
 
-                $('#addCatalogueRow').on('click', function() {
-                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '' , translations: [] });
+                $('#addCatalogueRow').on('click', function () {
+                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
                 });
 
-                $('#catalogues').on('click', '.remove-row > span', function(event) {
+                $('#catalogues').on('click', '.remove-row > span', function (event) {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+
+                    var id = $(event.currentTarget).parent().parent().data('id');
+                    console.log(id, 'id');
+                    cataloguesToDelete.push(id);
                 });
 
             }.bind(this));
