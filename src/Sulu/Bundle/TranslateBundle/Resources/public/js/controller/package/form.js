@@ -172,6 +172,7 @@ define([
                     pagination: false,
                     showPages: 6,
                     pageSize: 4,
+                    selectItemType: 'radio',
                     template: {
                         row: RowTemplate
                     },
