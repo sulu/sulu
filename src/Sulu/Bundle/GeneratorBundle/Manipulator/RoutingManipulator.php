@@ -55,7 +55,11 @@ class RoutingManipulator extends Manipulator
             mkdir($dir, 0777, true);
         }
 
-        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
+        $bundleName = substr($bundle, 0, -6);
+        $prefixName = ('/' !== $prefix ? '_' . str_replace('/', '_', substr($prefix, 1)) : '');
+        $prefixName = (strpos($bundleName, $prefixName) !== false) ? $prefixName : '';
+
+        $code = sprintf("%s:\n", Container::underscore($bundleName) . $prefixName);
         if ('annotation' == $format) {
             $code .= sprintf("    resource: \"@%s/Controller/\"\n    type:     annotation\n", $bundle);
         } else {

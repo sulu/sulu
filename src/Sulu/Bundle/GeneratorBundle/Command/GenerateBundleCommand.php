@@ -26,6 +26,8 @@ use Sulu\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
  */
 class GenerateBundleCommand extends GeneratorCommand
 {
+    public $route;
+
     /**
      * @see Command
      */
@@ -100,11 +102,6 @@ EOT
             $dir = getcwd() . '/' . $dir;
         }
 
-        $generator = $this->getGenerator();
-        $generator->generate($namespace, $bundle, $dir, $structure);
-
-        $output->writeln('Generating the bundle code: <info>OK</info>');
-
         $errors = array();
         $runner = $dialog->getRunner($output, $errors);
 
@@ -113,6 +110,11 @@ EOT
 
         // routing
         $runner($this->updateRouting($dialog, $input, $output, $bundle));
+
+        $generator = $this->getGenerator();
+        $generator->generate($namespace, $bundle, $dir, $structure, $this->route);
+
+        $output->writeln('Generating the bundle code: <info>OK</info>');
 
         // check that the namespace is already autoloaded
         $runner($this->checkAutoloader($output, $namespace, $bundle, $dir));
@@ -276,11 +278,11 @@ EOT
     protected function updateRouting(DialogHelper $dialog, InputInterface $input, OutputInterface $output, $bundle, $format = 'yml')
     {
         $auto = true;
-        $route = '/';
+        $this->route = '/';
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
             if ($auto) {
-                $route = $dialog->askAndValidate($output, "Route [length > 3]: ", function ($x) {
+                $this->route = $dialog->askAndValidate($output, "Route [length > 3]: ", function ($x) {
                     if (strlen($x) < 3) return false;
                     if ($x[0] != '/') $x = $x = '/' . $x;
                     return $x;
@@ -291,7 +293,7 @@ EOT
         $output->write('Importing the bundle routing resource: ');
         $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir') . '/config/routing.yml');
         try {
-            $ret = $auto ? $routing->addResource($bundle, $format, $route) : false;
+            $ret = $auto ? $routing->addResource($bundle, $format, $this->route) : false;
             if (!$ret) {
                 if ('annotation' === $format) {
                     $help = sprintf("        <comment>resource: \"@%s/Controller/\"</comment>\n        <comment>type:     annotation</comment>\n", $bundle);

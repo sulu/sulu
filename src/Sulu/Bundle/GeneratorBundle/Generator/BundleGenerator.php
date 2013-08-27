@@ -25,7 +25,7 @@ abstract class BundleGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate($namespace, $bundle, $dir, $structure)
+    public function generate($namespace, $bundle, $dir, $structure, $route)
     {
         $dir .= '/' . strtr($namespace, '\\', '/');
         if (file_exists($dir)) {
@@ -49,7 +49,8 @@ abstract class BundleGenerator extends Generator
             'bundle_basename' => $basename,
             'basename' => $basename,
             'extension_alias' => Container::underscore($basename),
-            'extensionalias' => str_replace("_", "",Container::underscore($basename))
+            'extensionalias' => str_replace("_", "", Container::underscore($basename)),
+            'route' => $route
         );
 
         $this->generateBundle($dir, $bundle, $basename, $structure, $parameters);

@@ -65,6 +65,18 @@ class SuluBundleGenerator extends BundleGenerator
         // Main: /Resources/public/js/bundle.js
         $this->renderFile('sulu/public/bundle.js.twig', $dir . '/Resources/public/js/bundle.js', $parameters);
 
+        // Travis Files
+        // /.travis.yml
+        $this->renderFile('sulu/travis/.travis.yml.twig', $dir . '/.travis.yml', $parameters);
+        // /Tests/bootstrap.php
+        $this->renderFile('sulu/travis/Tests/bootstrap.php.twig', $dir . '/Tests/bootstrap.php', $parameters);
+        // /Tests/Resources/app/AppKernel.php
+        $this->renderFile('sulu/travis/Tests/Resources/app/AppKernel.php.twig', $dir . '/Tests/Resources/app/AppKernel.php', $parameters);
+        // /Tests/Resources/app/config/config.yml
+        $this->renderFile('sulu/travis/Tests/Resources/app/config/config.yml.twig', $dir . '/Tests/Resources/app/config/config.yml', $parameters);
+        // /Tests/Resources/app/config/routing.yml
+        $this->renderFile('sulu/travis/Tests/Resources/app/config/routing.yml.twig', $dir . '/Tests/Resources/app/config/routing.yml', $parameters);
+
         // Basic Structure
         if ($structure) {
             $this->getFileSystem()->mkdir($dir . '/Controller');
