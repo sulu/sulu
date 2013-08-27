@@ -1,7 +1,7 @@
 /* 
  * husky v0.1.0
  *  
- * (c) MASSIVE ART WebServices GmbH
+ * (c) MASSIVE ART Webservices GmbH
  * 
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -246,9 +246,7 @@ function typeOf(value) {
         this.configs = {};
 
         this.$element = $(element);
-        this.$dataGrid = $('<div/>', {
-            class: 'inline-block'
-        });
+        this.$dataGrid = $('<div/>');
 
         this.allItemIds = [];
         this.selectedItemIds = [];
@@ -260,6 +258,19 @@ function typeOf(value) {
             this.load({
                 url: this.options.url
             });
+        } else if (!!this.options.data.items) {
+
+            this.data = this.options.data;
+
+            Husky.DEBUG && console.log(this.data, 'this.data set');
+            
+            this.setConfigs();
+
+            this.prepare()
+                .appendPagination()
+                .render();
+
+            Husky.DEBUG && console.log("data.items found");
         }
     };
 
@@ -304,7 +315,7 @@ function typeOf(value) {
         setConfigs: function() {
             this.configs = {};
             this.configs.total = this.data.total;
-            this.configs.pagesSize = this.data.pagesSize;
+            this.configs.pageSize = this.data.pageSize;
             this.configs.page = this.data.page;
         },
 
@@ -343,7 +354,7 @@ function typeOf(value) {
 
             // set html classes
             tblClasses = [];
-            tblClasses.push((!!this.options.class && this.options.class !== 'table') ? 'table ' + this.options.class : 'table');
+            tblClasses.push((!!this.options.className && this.options.className !== 'table') ? 'table ' + this.options.className : 'table');
             tblClasses.push((this.options.selectItemType && this.options.selectItemType === 'checkbox') ? 'is-selectable' : '');
 
             $table.addClass(tblClasses.join(' '));
@@ -379,54 +390,63 @@ function typeOf(value) {
             var tblRows;
 
             tblRows = [];
-            this.allItemIds = [];
+            this.allItemIds = [];      
 
             this.data.items.forEach(function(row) {
                 tblRows.push(this.prepareTableRow(row));
             }.bind(this));
+            
 
             return tblRows.join('');
         },
 
         prepareTableRow: function(row) {
-            var tblRowId, tblCellContent, tblCellClass,
-                tblColumns, tblCellClasses;
 
-            tblColumns = [];
-            tblRowId = ((!!row.id) ? ' data-id="' + row.id + '"' : '');
+            if(!!(this.options.template && this.options.template.row)) {
+                
+                return _.template(this.options.template.row, row);
 
-            // add row id to itemIds collection (~~ === shorthand for parse int)
-            !!row.id && this.allItemIds.push(~~row.id);
+            } else {
 
-            if (!!this.options.selectItemType && this.options.selectItemType === 'checkbox') {
-                // add a checkbox to each row
-                tblColumns.push('<td>', this.templates.checkbox(), '</td>');
-            } else if (!!this.options.selectItemType && this.options.selectItemType === 'radio') {
-                // add a radio to each row
-                tblColumns.push('<td>', this.templates.radio({
-                    name: 'husky-radio' // TODO
-                }), '</td>');
+                var tblRowId, tblCellContent, tblCellClass,
+                    tblColumns, tblCellClasses;
+
+                tblColumns = [];
+                tblRowId = ((!!row.id) ? ' data-id="' + row.id + '"' : '');
+
+                // add row id to itemIds collection (~~ === shorthand for parse int)
+                !!row.id && this.allItemIds.push(~~row.id);
+
+                if (!!this.options.selectItemType && this.options.selectItemType === 'checkbox') {
+                    // add a checkbox to each row
+                    tblColumns.push('<td>', this.templates.checkbox(), '</td>');
+                } else if (!!this.options.selectItemType && this.options.selectItemType === 'radio') {
+                    // add a radio to each row
+                    tblColumns.push('<td>', this.templates.radio({
+                        name: 'husky-radio' // TODO
+                    }), '</td>');
+                }
+
+                for (var key in row) {
+                    var column = row[key];
+                    tblCellClasses = [];
+                    tblCellContent = (!!column.thumb) ? '<img alt="' + (column.alt || '') + '" src="' + column.thumb + '"/>' : column;
+
+                    // prepare table cell classes
+                    !!column.class && tblCellClasses.push(column.class);
+                    !!column.thumb && tblCellClasses.push('thumb');
+
+                    tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
+
+                    tblColumns.push('<td ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                }
+
+                if (!!this.options.removeRow) {
+                    tblColumns.push('<td class="remove-row">', this.templates.removeRow(), '</td>');
+                }
+
+                return '<tr' + tblRowId + '>' + tblColumns.join('') + '</tr>';
             }
-
-            for (var key in row) {
-                var column = row[key];
-                tblCellClasses = [];
-                tblCellContent = (!!column.thumb) ? '<img alt="' + (column.alt || '') + '" src="' + column.thumb + '"/>' : column;
-
-                // prepare table cell classes
-                !!column.class && tblCellClasses.push(column.class);
-                !!column.thumb && tblCellClasses.push('thumb');
-
-                tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
-
-                tblColumns.push('<td ' + tblCellClass + ' >' + tblCellContent + '</td>');
-            }
-
-            if (!!this.options.removeRow) {
-                tblColumns.push('<td class="remove-row">', this.templates.removeRow(), '</td>');
-            }
-
-            return '<tr' + tblRowId + '>' + tblColumns.join('') + '</tr>';
         },
 
         resetItemSelection: function() {
@@ -614,6 +634,8 @@ function typeOf(value) {
 
             // listen for public events
             this.on('data-grid:row:add', this.addRow.bind(this));
+
+            this.on('data-grid:row:remove', this.removeRow.bind(this));
         },
 
         updateHandler: function() {
@@ -810,19 +832,11 @@ function typeOf(value) {
                     this.columnHeader = this.data.header || null;
                     this.columnItems = this.data.sub.items || null;
 
-                    this.setConfigs(data);
-
                     if (typeof params.success === 'function') {
                         params.success(this.data);
                     }
                 }.bind(this)
             });
-        },
-
-        setConfigs: function(params) {
-            this.configs = {
-                displayOption: params.displayOption || null
-            };
         },
 
         prepareNavigation: function() {
@@ -836,75 +850,18 @@ function typeOf(value) {
             return this;
         },
 
-        setNavigationSize: function() {
-            var $window = $(window),
-                $navigationSubColumns = $('.navigation-sub-columns'),
-                paddingRight = 100;
-
-            $navigationSubColumns.css({
-                width: 'auto',
-                height: this.$navigation.height() + 5
-            });
-
-            if ($window.width() < this.$navigation.width()) {
-                $navigationSubColumns.css({
-                    width: ($window.width() - paddingRight) - (this.$navigation.width() - $navigationSubColumns.width())
-                });
-            }
-        },
-
         prepareNavigationColumn: function() {
-            var $column, columnClasses;
-
-            columnClasses = [' '];
-
-            this.$navigationColumns.removeClass('show-content');
-
-            if (this.configs.displayOption === 'content') {
-                // if the column is a content column
-                columnClasses.push('content-column');
-                this.$navigationColumns.addClass('show-content');
-            } else if (this.currentColumnIdx === 1) {
-                // if the column is the second column
-                columnClasses.push('second-column');
-            }  
+            var $column;
 
             $column = $('<li/>', {
                 'id': 'column-' + this.currentColumnIdx,
                 'data-column-id': this.currentColumnIdx,
-                'class': 'navigation-column' + ((columnClasses.length > 1) ? columnClasses.join(' ') : '')
+                'class': 'navigation-column'
             });
-
-            if (!!this.columnHeader) {
-                $column.append(this.prepareColumnHeader());
-            }
 
             $column.append(this.prepareColumnItems());
 
             return $column;
-        },
-
-        prepareNavigationSubColumn: function() {
-            this.$navigationSubColumns = $('<ul/>', {
-                'class': 'navigation-sub-columns'
-            });
-
-            return this.$navigationSubColumns;
-        },
-
-        prepareColumnHeader: function() {
-            var $columnHeader;
-
-            $columnHeader = $('<div/>', {
-                'class': 'navigation-column-header'
-            });
-
-            $columnHeader.html(this.template.columnHeader({
-                title: this.columnHeader.title,
-                logo: this.columnHeader.logo
-            }));
-
-            return $columnHeader;
         },
 
         prepareColumnItems: function() {
@@ -966,67 +923,35 @@ function typeOf(value) {
         },
 
         addColumn: function() {
-            var $subColumns, i;
+            var $column, i;
 
             this.currentColumnIdx++;
 
-            if (this.currentColumnIdx === 2) {
-                $subColumns = $('<li/>', {
-                    'class': 'navigation-sub-columns-container'
-                });
+            if (this.currentColumnIdx < this.lastColumnIdx ||
+                this.currentColumnIdx === this.lastColumnIdx) {
 
-                $subColumns.append(this.prepareNavigationSubColumn());
-                this.$navigationColumns.append($subColumns);
+                for (i = this.currentColumnIdx; i <= this.lastColumnIdx; i++) {
+                    $column = this.$navigationColumns.find('#column-' + i);
+
+                    if (!!$column.size()) {
+                        $column.remove();
+                    }
+                }
             }
 
-            if (!!$('.navigation-sub-columns-container').size()) {
-                this.$navigationSubColumns.append(this.prepareNavigationColumn());
-            } else {
-                this.$navigationColumns.append(this.prepareNavigationColumn());
-            }
-
-            this.setNavigationSize();
+            this.$navigationColumns.append(this.prepareNavigationColumn());
         },
-
-        collapseFirstColumn: function() {
-            var $firstColumn;
-
-            $firstColumn = $('#column-0');
-            $firstColumn.addClass('collapsed');
-        },
-
-        showNavigationColumns: function() {
-            var $firstColumn, $secondColumn;
-
-            $firstColumn = $('#column-0');
-            $secondColumn = $('#column-1');
-
-            $firstColumn.removeClass('hide');
-            $secondColumn.removeClass('collapsed');
-
-            this.$navigationColumns.removeClass('show-content');
-
-            
-
-            this.hideColumn();
-        },
-
-        // lock selection during column loading
-        selectionLocked: true,
-
-        showContent: false,
 
         // TODO: cleanup and simplify selectItem function
         selectItem: function(event) {
             Husky.DEBUG && console.log(this.name, 'selectItem');
 
-            var $element, $elementColumn, elementId, 
-                itemModel;
-
-            this.showContent = false;
+            var $element, $elementColumn, $firstColumn, 
+                elementId, itemModel;
 
             $element = $(event.currentTarget);
             $elementColumn = $element.parent().parent();
+            $firstColumn = $('#column-0');
 
             elementId = $element.attr('id');
 
@@ -1034,9 +959,9 @@ function typeOf(value) {
 
             this.lastColumnIdx = this.currentColumnIdx;
             this.currentColumnIdx = $elementColumn.data('column-id');
-            this.currentColumnIdx = $elementColumn.data('column-id');
 
-            if (!!itemModel && this.selectionLocked) {
+            if (!!itemModel) {
+
                 // reset all navigation items...
                 $elementColumn
                     .find('.selected')
@@ -1050,135 +975,43 @@ function typeOf(value) {
                 if (!!itemModel.get('hasSub')) {
 
                     if (!itemModel.get('sub')) {
-                        this.selectionLocked = false;
-
                         this.addLoader($element);
-                        $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
-
                         this.load({
                             url: itemModel.get('action'),
                             success: function() {
-                                this.selectionLocked = true;
-
                                 this.addColumn();
                                 this.hideLoader($element);
 
-                                if (this.currentColumnIdx > 1) {    
-                                    this.collapseFirstColumn();
+                                if (this.currentColumnIdx > 1) {
+                                    $firstColumn.addClass('collapsed');
+                                } else {
+                                    $firstColumn.removeClass('collapsed');
                                 }
 
                                 this.trigger('navigation:item:sub:loaded', itemModel);
                             }.bind(this)
                         });
                     } else {
-                        this.columnHeader = itemModel.get('header') || null;
+                        // this.columnHeader = this.data.header || null;
                         this.columnItems = itemModel.get('sub').items;
-                        $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
                         this.addColumn();
-
-                        if (this.currentColumnIdx > 1) {   
-                            this.collapseFirstColumn();
-                        }
                     }
 
                 } else if (itemModel.get('type') == 'content') {
                     this.trigger('navigation:item:content:show', itemModel);
-
-                    this.showContent = true;
-
-                    $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
-                    this.collapseFirstColumn();
                 }
             }
-        },
-
-        showFirstNavigationColumn: function(event) {
-            var $element = $(event.target);
-
-            $('#column-0')
-                .removeClass('hide')
-                .removeClass('collapsed');
-
-            if (!$element.hasClass('navigation-column-item') && !$element.is('span')) {
-                this.currentColumnIdx = 1;
-                $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
-                $('#column-1')
-                    .find('.selected')
-                    .removeClass('selected');
-            }
-        },
-
-        // TODO
-        showColumn: function(params) {
-            Husky.DEBUG && console.log(this.name, 'showColumn');
-
-            var $showedColumn;
-
-            params = params || {};
-
-            if (!!params.data) {
-                this.columnHeader = params.data.header || null;
-                this.columnItems = params.data.sub.items || null;
-
-                this.setConfigs(params.data);
-
-                $showedColumn = $('#column-' + this.addedColumn);
-
-                $('#column-0').addClass('hide');
-                $('#column-1').addClass('collapsed');
-
-                if (!!$showedColumn.size()) {
-                    this.currentColumnIdx--;
-                    $showedColumn.remove();
-                }
-
-                this.showContent = true;
-
-                this.addColumn();
-
-                this.addedColumn = this.currentColumnIdx;
-            } else {
-                Husky.DEBUG && console.error(this.name, 'showColumn', 'No data was defined!');
-            }
-        },
-
-        // TODO
-        hideColumn: function() {
-            var $showedColumn;
-
-            $showedColumn = $('#column-' + this.addedColumn);
-
-            if (!!$showedColumn.size()) {
-                this.currentColumnIdx--;
-                $showedColumn.remove();
-
-                $('#column-0').removeClass('hide');
-                $('#column-1').removeClass('collapsed');;
-            }
-            this.addedColumn = null;
-        },
-
-        bindEvents: function() {
-            // external events
-            this.on('navigation:item:column:show', this.showColumn.bind(this));
-
-            // internal events
         },
 
         bindDOMEvents: function() {
             this.$element.off();
 
-            $(window).on('resize load', this.setNavigationSize.bind(this));
-
             this.$element.on('click', '.navigation-column-item:not(.selected)', this.selectItem.bind(this));
-            this.$element.on('click', '.navigation-column:eq(1)', this.showNavigationColumns.bind(this));
-            this.$element.on('click', '.navigation-column:eq(0).collapsed', this.showFirstNavigationColumn.bind(this));
         },
 
         render: function() {
             this.$element.html(this.$navigation);
 
-            this.bindEvents();
             this.bindDOMEvents();
         },
 
@@ -1209,25 +1042,6 @@ function typeOf(value) {
         },
 
         template: {
-            columnHeader: function(data) {
-                var titleTemplate = null;;
-
-                data = data || {};
-
-                data.title = data.title || '';
-                data.logo = data.logo || '';
-
-                if (!!data.logo) {
-                    titleTemplate = '<span class="navigation-column-logo"><img alt="' + data.title + '" src="' + data.logo + '"/></span>';
-                }
-
-                return [
-                    titleTemplate,
-                    '<h2 class="navigation-column-title">', data.title, '</h2>'
-                ].join('');
-            },
-
-            // TODO: Remove search
             search: function(data) {
                 data = data || {};
 
@@ -1235,8 +1049,8 @@ function typeOf(value) {
                 data.icon = data.icon || '';
 
                 return [
-                    '<input type="text" class="search" autofill="false" data-action="', data.action, '" placeholder="Search ..."/>' // TODO Translate
-                ].join('');
+                    '<input type="text" class="search" autofill="false" data-action="', data.action, '" placeholder="Search ..."/>', // TODO Translate
+                ].join();
             }
         }
     });
