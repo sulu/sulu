@@ -68,9 +68,13 @@ class ContactsControllerTest extends DatabaseTestCase
         $phone->setPhoneType($phoneType);
         $contact->addPhone($phone);
 
-        $country = new Country();
-        $country->setName('Musterland');
-        $country->setCode('ML');
+        $country1 = new Country();
+        $country1->setName('Musterland');
+        $country1->setCode('ML');
+
+        $country2 = new Country();
+        $country2->setName('United States');
+        $country2->setCode('US');
 
         $addressType = new AddressType();
         $addressType->setName('Private');
@@ -81,7 +85,7 @@ class ContactsControllerTest extends DatabaseTestCase
         $address->setZip('0000');
         $address->setCity('Musterstadt');
         $address->setState('Musterland');
-        $address->setCountry($country);
+        $address->setCountry($country1);
         $address->setAddressType($addressType);
         $contact->addAddresse($address);
 
@@ -93,7 +97,8 @@ class ContactsControllerTest extends DatabaseTestCase
         self::$em->persist($account);
         self::$em->persist($phoneType);
         self::$em->persist($phone);
-        self::$em->persist($country);
+        self::$em->persist($country1);
+        self::$em->persist($country2);
         self::$em->persist($addressType);
         self::$em->persist($address);
         self::$em->persist($note);
@@ -263,5 +268,161 @@ class ContactsControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
+    }
+
+    public function testPostWithoutAdditionalData()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/contact/api/contacts',
+            array(
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'title' => 'MSc',
+                'position' => 'Manager',
+                'localeSystem' => 'de'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Erika', $response->firstName);
+        $this->assertEquals('Mustermann', $response->lastName);
+        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('de', $response->localeSystem);
+
+        $client->request('GET', '/contact/api/contacts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->id);
+        $this->assertEquals('Erika', $response->firstName);
+        $this->assertEquals('Mustermann', $response->lastName);
+        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('de', $response->localeSystem);
+    }
+
+    public function testPut()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'PUT',
+            '/contact/api/contacts/1',
+            array(
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'title' => 'MBA',
+                'position' => 'Manager',
+                'localeSystem' => 'en',
+                'emails' => array(
+                    array(
+                        'id' => 1,
+                        'email' => 'john.doe@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'id' => 2,
+                        'email' => 'john.doe@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'phones' => array(
+                    array(
+                        'id' => 1,
+                        'phone' => '321654987',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'id' => 2,
+                        'phone' => '789456123',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'id' => 1,
+                        'street' => 'Street',
+                        'number' => '2',
+                        'zip' => '9999',
+                        'city' => 'Springfield',
+                        'state' => 'Colorado',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'notes' => array(
+                    array(
+                        'id' => 1,
+                        'value' => 'Note 1_1'
+                    ),
+                    array(
+                        'id' => 2,
+                        'value' => 'Note 2_1'
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('John', $response->firstName);
+        $this->assertEquals('Doe', $response->lastName);
+        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('en', $response->localeSystem);
+        $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
+        $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
+        $this->assertEquals('321654987', $response->phones[0]->phone);
+        $this->assertEquals('789456123', $response->phones[1]->phone);
+        $this->assertEquals('Street', $response->addresses[0]->street);
+        $this->assertEquals('2', $response->addresses[0]->number);
+        $this->assertEquals('9999', $response->addresses[0]->zip);
+        $this->assertEquals('Springfield', $response->addresses[0]->city);
+        $this->assertEquals('Colorado', $response->addresses[0]->state);
+        $this->assertEquals('Note 1_1', $response->notes[0]->value);
+        $this->assertEquals('Note 2_1', $response->notes[1]->value);
+
+        $client->request('GET', '/contact/api/contacts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('John', $response->firstName);
+        $this->assertEquals('Doe', $response->lastName);
+        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('en', $response->localeSystem);
+        $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
+        $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
+        $this->assertEquals('321654987', $response->phones[0]->phone);
+        $this->assertEquals('789456123', $response->phones[1]->phone);
+        $this->assertEquals('Street', $response->addresses[0]->street);
+        $this->assertEquals('2', $response->addresses[0]->number);
+        $this->assertEquals('9999', $response->addresses[0]->zip);
+        $this->assertEquals('Springfield', $response->addresses[0]->city);
+        $this->assertEquals('Colorado', $response->addresses[0]->state);
+        $this->assertEquals('Note 1_1', $response->notes[0]->value);
+        $this->assertEquals('Note 2_1', $response->notes[1]->value);
     }
 }

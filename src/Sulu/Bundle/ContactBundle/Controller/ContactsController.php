@@ -64,8 +64,9 @@ class ContactsController extends FOSRestController
             $contact->setChanged(new DateTime());
 
             // Add email addresses, if no error has occured yet
-            if (!$error) {
-                foreach ($this->getRequest()->get('emails') as $emailData) {
+            $emails = $this->getRequest()->get('emails');
+            if (!$error && $emails != null) {
+                foreach ($emails as $emailData) {
                     $emailType = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:EmailType')
                         ->find($emailData['emailType']['id']);
@@ -75,18 +76,19 @@ class ContactsController extends FOSRestController
                         $this->view(null, 400);
                         break;
                     } else {
-                        $phone = new Email();
-                        $phone->setEmail($emailData['email']);
-                        $phone->setEmailType($emailType);
-                        $em->persist($phone);
-                        $contact->addEmail($phone);
+                        $email = new Email();
+                        $email->setEmail($emailData['email']);
+                        $email->setEmailType($emailType);
+                        $em->persist($email);
+                        $contact->addEmail($email);
                     }
                 }
             }
 
             // Add phones, if no error has occured yet
-            if (!$error) {
-                foreach ($this->getRequest()->get('phones') as $phoneData) {
+            $phones = $this->getRequest()->get('phones');
+            if (!$error && $phones != null) {
+                foreach ($phones as $phoneData) {
                     $phoneType = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:PhoneType')
                         ->find($phoneData['phoneType']['id']);
@@ -106,8 +108,9 @@ class ContactsController extends FOSRestController
             }
 
             // Add addresses, if no error has occured yet
-            if (!$error) {
-                foreach ($this->getRequest()->get('addresses') as $addressData) {
+            $addresses = $this->getRequest()->get('addresses');
+            if (!$error && $addresses != null) {
+                foreach ($addresses as $addressData) {
                     $addressType = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:AddressType')
                         ->find($addressData['addressType']['id']);
@@ -142,8 +145,9 @@ class ContactsController extends FOSRestController
             }
 
             // Add notes, if no error has occured yet
-            if (!$error) {
-                foreach ($this->getRequest()->get('notes') as $noteData) {
+            $notes = $this->getRequest()->get('notes');
+            if (!$error && $notes != null) {
+                foreach ($notes as $noteData) {
                     $note = new Note();
                     $note->setValue($noteData['value']);
 
