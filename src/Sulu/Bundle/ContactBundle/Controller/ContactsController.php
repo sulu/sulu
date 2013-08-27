@@ -22,6 +22,29 @@ use Sulu\Bundle\CoreBundle\Controller\AbstractRestController;
 class ContactsController extends AbstractRestController
 {
     /**
+     * Lists all the contacts or filters the contacts by parameters
+     * Special function for lists
+     * route /contacts/list
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listContactsAction()
+    {
+        $listHelper = $this->get('sulu_core.list_rest_helper');
+
+        $where = array();
+
+        $codes = $listHelper->find('SuluContactBundle:Contact', $where);
+
+        $response = array(
+            'total' => sizeof($codes),
+            'items' => $codes
+        );
+        $view = $this->view($response, 200);
+
+        return $this->handleView($view);
+    }
+
+    /**
      * Shows the contact with the given Id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
