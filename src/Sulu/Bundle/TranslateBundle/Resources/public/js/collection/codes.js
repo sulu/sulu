@@ -23,6 +23,10 @@ define([
             return url;
         },
 
+        parse: function(resp) {
+            return resp.items;
+        },
+
         initialize: function(models, options) {
             this.translatePackageId = options.translatePackageId;
             this.translateCatalogueId = options.translateCatalogueId;
