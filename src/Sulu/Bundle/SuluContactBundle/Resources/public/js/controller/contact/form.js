@@ -11,11 +11,16 @@ define([
     'jquery',
     'backbone',
     'router',
+    'sulucontact/model/account',
     'sulucontact/model/contact',
+    'sulucontact/model/country',
     'sulucontact/model/email',
+    'sulucontact/model/emailType',
     'sulucontact/model/phone',
-    'sulucontact/model/address'
-], function ($, Backbone, Router, Contact, Email, Phone, Address) {
+    'sulucontact/model/phoneType',
+    'sulucontact/model/address',
+    'sulucontact/model/addressType'
+], function ($, Backbone, Router, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType) {
 
     'use strict';
 
@@ -160,6 +165,11 @@ define([
                 var zip = $(this).find('.zipValue').val();
                 var city = $(this).find('.cityValue').val();
                 var state = $(this).find('.stateValue').val();
+                var countryId = $(this).find('.countryValue').val();
+                var country = new Country();
+                country.set({
+                    id: countryId
+                });
 
                 address.set({
                     street: street,
@@ -167,12 +177,27 @@ define([
                     addition: addition,
                     zip: zip,
                     city: city,
-                    state: state
+                    state: state,
+                    country: country
                 });
 
                 if (street && number && zip && city && state) {
                     contact.get('addresses').add(address);
                 }
+            });
+
+            // FIXME remove
+            var emailType = new EmailType();
+            emailType.set({
+                id: 1
+            });
+            var phoneType = new PhoneType();
+            phoneType.set({
+                id: 1
+            });
+            var addressType = new AddressType();
+            addressType.set({
+                id: 1
             });
 
             contact.save(null, {
