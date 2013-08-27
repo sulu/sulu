@@ -31,7 +31,7 @@ define([
             require(['text!sulucontact/templates/contact/table-row.html'], function (RowTemplate) {
                 var dataGrid = this.$el.huskyDataGrid({
                     url: '/contact/api/contacts/list?field=id,fistName,lastName',
-                    pagination: false,
+                    pagination: true,
                     showPages: 6,
                     pageSize: 4,
                     template: {
@@ -43,7 +43,7 @@ define([
                 });
 
                 dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
-                    Router.navigate('settings/translate/edit:' + item);
+                    Router.navigate('contacts/people/edit:' + item);
                 });
             }.bind(this));
         },
