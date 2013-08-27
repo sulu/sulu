@@ -118,12 +118,19 @@ define([
         },
 
         submitForm: function (event) {
+            Backbone.Relational.store.reset(); //FIXME really necessary?
             event.preventDefault();
             contact.set({
                 firstName: this.$('#firstName').val(),
                 lastName: this.$('#lastName').val(),
                 title: this.$('#title').val(),
                 position: this.$('#position').val()
+            });
+
+            // FIXME remove
+            var emailType = new EmailType();
+            emailType.set({
+                id: 1
             });
 
             $('#emails .email-item').each(function () {
@@ -133,17 +140,18 @@ define([
                 }
                 var emailValue = $(this).find('.emailValue').val();
                 if (emailValue) {
-                    // FIXME remove
-                    var emailType = new EmailType();
-                    emailType.set({
-                        id: 1
-                    });
                     email.set({
                         email: emailValue,
                         emailType: emailType
                     });
                     contact.get('emails').add(email);
                 }
+            });
+
+            // FIXME remove
+            var phoneType = new PhoneType();
+            phoneType.set({
+                id: 1
             });
 
             $('#phones .phone-item').each(function () {
@@ -153,11 +161,6 @@ define([
                 }
                 var phoneValue = $(this).find('.phoneValue').val();
                 if (phoneValue) {
-                    // FIXME remove
-                    var phoneType = new PhoneType();
-                    phoneType.set({
-                        id: 1
-                    });
                     phone.set({
                         phone: phoneValue,
                         phoneType: phoneType
@@ -165,6 +168,12 @@ define([
 
                     contact.get('phones').add(phone);
                 }
+            });
+
+            // FIXME remove
+            var addressType = new AddressType();
+            addressType.set({
+                id: 1
             });
 
             $('#addresses .address-item').each(function () {
@@ -185,11 +194,6 @@ define([
                 });
 
                 if (street && number && zip && city && state) {
-                    // FIXME remove
-                    var addressType = new AddressType();
-                    addressType.set({
-                        id: 1
-                    });
                     address.set({
                         street: street,
                         number: number,
