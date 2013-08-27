@@ -245,7 +245,7 @@ function typeOf(value) {
 
         this.configs = {};
 
-        this.$element = $(element);
+        this.$element = $(element).append('<div/>');
         this.$dataGrid = $('<div/>');
 
         this.allItemIds = [];
