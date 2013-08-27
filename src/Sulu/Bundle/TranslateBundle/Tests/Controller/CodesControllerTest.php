@@ -773,4 +773,27 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
     }
 
+
+    public function testDeleteById(){
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/codes/1');
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+    }
+
+    public function testDeleteByIdNotExisting(){
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/codes/4711');
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+
+        $client->request('GET', '/translate/api/codes');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(3, $response->total);
+    }
+
 }

@@ -36,4 +36,5 @@ Sulu\Bundle\TranslateBundle\Entity\Code:
         translations:
             targetEntity: Translation
             mappedBy: code
+            cascade: [remove]
     lifecycleCallbacks: {  }

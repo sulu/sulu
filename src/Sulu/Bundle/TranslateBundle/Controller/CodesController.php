@@ -229,4 +229,27 @@ class CodesController extends FOSRestController
 
         return $this->handleView($view);
     }
+
+    public function deleteCodeAction($id) {
+
+        $response = array();
+
+        $code = $this->getDoctrine()
+            ->getRepository($this->codeEntity)
+            ->find($id);
+
+        if($code != null) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($code);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+
+        } else {
+            $view = $this->view(null, 404);
+
+        }
+
+        return $this->handleView($view);
+    }
 }
