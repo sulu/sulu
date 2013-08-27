@@ -17,11 +17,13 @@ define([
     'use strict';
 
     return Backbone.View.extend({
+
         initialize: function () {
             this.render();
         },
 
         render: function () {
+            Backbone.Relational.store.reset(); //FIXME really necessary?
             this.$el.removeData('Husky.Ui.DataGrid');
 
             require(['text!sulucontact/templates/contact/table-row.html'], function (RowTemplate) {
@@ -38,24 +40,22 @@ define([
                     }
                 });
 
+                // FIXME Husky click auf radiobutton
                 dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
                     Router.navigate('contacts/people/edit:' + item);
                 });
 
-                $('.remove-row').on('click', function () {
+                // FIXME when husky has an own div: this.$el
+                this.$el.on('click', '.remove-row > span', function (event) {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
                     var $element = $(event.currentTarget);
-                    var $parent = $element.parent();
+                    var $parent = $element.parent().parent();
                     var id = $parent.data('id');
 
                     var contact = new Contact({id: id});
-                    contact.fetch({
+                    contact.destroy({
                         success: function () {
-                            contact.destroy({
-                                success: function () {
-                                    console.log('deleted model');
-                                }
-                            });
+                            console.log('deleted model');
                         }
                     });
                 });
