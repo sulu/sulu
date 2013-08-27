@@ -35,13 +35,15 @@ Sulu\Bundle\ContactBundle\Entity\Account:
             joinColumn:
                 name: idContactsCreator
                 referencedColumnName: id
-                nullable: false
+                nullable: true
+                onDelete: "set null"
         changer:
             targetEntity: Contact
             joinColumn:
                 name: idContactsChanger
                 referencedColumnName: id
-                nullable: false
+                nullable: true
+                onDelete: "set null"
     manyToMany:
         phones:
             targetEntity: Phone
