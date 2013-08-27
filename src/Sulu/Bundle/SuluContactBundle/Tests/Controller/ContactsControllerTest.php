@@ -18,6 +18,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Country;
+use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
@@ -34,10 +35,6 @@ class ContactsControllerTest extends DatabaseTestCase
     public function setUp()
     {
         $this->setUpSchema();
-
-        $emailType = new EmailType();
-        $emailType->setName('Private');
-        self::$em->persist($emailType);
 
         $contact = new Contact();
         $contact->setFirstName('Max');
@@ -68,6 +65,14 @@ class ContactsControllerTest extends DatabaseTestCase
         $phone->setPhoneType($phoneType);
         $contact->addPhone($phone);
 
+        $emailType = new EmailType();
+        $emailType->setName('Private');
+
+        $email = new Email();
+        $email->setEmail('max.mustermann@muster.at');
+        $email->setEmailType($emailType);
+        $contact->addEmail($email);
+
         $country1 = new Country();
         $country1->setName('Musterland');
         $country1->setCode('ML');
@@ -97,6 +102,8 @@ class ContactsControllerTest extends DatabaseTestCase
         self::$em->persist($account);
         self::$em->persist($phoneType);
         self::$em->persist($phone);
+        self::$em->persist($emailType);
+        self::$em->persist($email);
         self::$em->persist($country1);
         self::$em->persist($country2);
         self::$em->persist($addressType);
@@ -152,6 +159,8 @@ class ContactsControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->localeSystem);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
+        $this->assertEquals('max.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('Private', $response->emails[0]->emailType->name);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);
         $this->assertEquals('1', $response->addresses[0]->number);
         $this->assertEquals('0000', $response->addresses[0]->zip);
@@ -329,7 +338,6 @@ class ContactsControllerTest extends DatabaseTestCase
                         )
                     ),
                     array(
-                        'id' => 2,
                         'email' => 'john.doe@muster.de',
                         'emailType' => array(
                             'id' => 1,
@@ -347,8 +355,14 @@ class ContactsControllerTest extends DatabaseTestCase
                         )
                     ),
                     array(
-                        'id' => 2,
                         'phone' => '789456123',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'phone' => '147258369',
                         'phoneType' => array(
                             'id' => 1,
                             'name' => 'Private'
@@ -378,10 +392,6 @@ class ContactsControllerTest extends DatabaseTestCase
                     array(
                         'id' => 1,
                         'value' => 'Note 1_1'
-                    ),
-                    array(
-                        'id' => 2,
-                        'value' => 'Note 2_1'
                     )
                 )
             )
@@ -398,13 +408,14 @@ class ContactsControllerTest extends DatabaseTestCase
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
         $this->assertEquals('789456123', $response->phones[1]->phone);
+        $this->assertEquals('147258369', $response->phones[2]->phone);
         $this->assertEquals('Street', $response->addresses[0]->street);
         $this->assertEquals('2', $response->addresses[0]->number);
         $this->assertEquals('9999', $response->addresses[0]->zip);
         $this->assertEquals('Springfield', $response->addresses[0]->city);
         $this->assertEquals('Colorado', $response->addresses[0]->state);
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
-        $this->assertEquals('Note 2_1', $response->notes[1]->value);
+        $this->assertEquals(1, count($response->notes));
 
         $client->request('GET', '/contact/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -418,13 +429,29 @@ class ContactsControllerTest extends DatabaseTestCase
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
         $this->assertEquals('789456123', $response->phones[1]->phone);
+        $this->assertEquals('147258369', $response->phones[2]->phone);
         $this->assertEquals('Street', $response->addresses[0]->street);
         $this->assertEquals('2', $response->addresses[0]->number);
         $this->assertEquals('9999', $response->addresses[0]->zip);
         $this->assertEquals('Springfield', $response->addresses[0]->city);
         $this->assertEquals('Colorado', $response->addresses[0]->state);
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
-        $this->assertEquals('Note 2_1', $response->notes[1]->value);
+        $this->assertEquals(1, count($response->notes));
+    }
+
+    public function testPutNotExisting()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'PUT',
+            '/contact/api/contacts/10',
+            array(
+                'firstName' => 'John'
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
     public function testGetList()
