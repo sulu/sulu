@@ -237,7 +237,7 @@ define([
             var id = $element.data("target-id");
             var $div = $('#' + id);
 
-            require(['text!sulucontact/templates/address.template'], function (Template) {
+            require(['text!sulucontact/templates/contact/address.html'], function (Template) {
                 $div.append(_.template(Template, {id: null, street: '', number: '', additional: '', zip: '', city: '', state: '', country: ''}));
             });
         },
