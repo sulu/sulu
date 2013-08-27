@@ -17,9 +17,9 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\CoreBundle\Controller\AbstractRestController;
+use Sulu\Bundle\CoreBundle\Controller\RestController;
 
-class ContactsController extends AbstractRestController
+class ContactsController extends RestController
 {
     /**
      * Lists all the contacts or filters the contacts by parameters
