@@ -119,6 +119,18 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->navigationItem->hasChildren());
     }
 
+    public function testCopyChildless()
+    {
+        $copy = $this->item1->copyChildless();
+
+        $this->assertEquals($this->item1->getAction(), $copy->getAction());
+        $this->assertEquals($this->item1->getType(), $copy->getType());
+        $this->assertEquals($this->item1->getIcon(), $copy->getIcon());
+        $this->assertEquals($this->item1->getHeaderIcon(), $copy->getHeaderIcon());
+        $this->assertEquals($this->item1->getHeaderTitle(), $copy->getHeaderTitle());
+        $this->assertEquals($this->item1->getId(), $copy->getId());
+    }
+
     public function testIterator()
     {
         $array = array();
