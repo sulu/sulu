@@ -133,8 +133,14 @@ define([
                 }
                 var emailValue = $(this).find('.emailValue').val();
                 if (emailValue) {
+                    // FIXME remove
+                    var emailType = new EmailType();
+                    emailType.set({
+                        id: 1
+                    });
                     email.set({
-                        email: emailValue
+                        email: emailValue,
+                        emailType: emailType
                     });
                     contact.get('emails').add(email);
                 }
@@ -147,9 +153,16 @@ define([
                 }
                 var phoneValue = $(this).find('.phoneValue').val();
                 if (phoneValue) {
-                    phone.set({
-                        phone: phoneValue
+                    // FIXME remove
+                    var phoneType = new PhoneType();
+                    phoneType.set({
+                        id: 1
                     });
+                    phone.set({
+                        phone: phoneValue,
+                        phoneType: phoneType
+                    });
+
                     contact.get('phones').add(phone);
                 }
             });
@@ -165,39 +178,31 @@ define([
                 var zip = $(this).find('.zipValue').val();
                 var city = $(this).find('.cityValue').val();
                 var state = $(this).find('.stateValue').val();
-                var countryId = $(this).find('.countryValue').val();
+                var countryId = parseInt($(this).find('.countryValue').val());
                 var country = new Country();
                 country.set({
                     id: countryId
                 });
 
-                address.set({
-                    street: street,
-                    number: number,
-                    addition: addition,
-                    zip: zip,
-                    city: city,
-                    state: state,
-                    country: country
-                });
-
                 if (street && number && zip && city && state) {
+                    // FIXME remove
+                    var addressType = new AddressType();
+                    addressType.set({
+                        id: 1
+                    });
+                    address.set({
+                        street: street,
+                        number: number,
+                        addition: addition,
+                        zip: zip,
+                        city: city,
+                        state: state,
+                        country: country,
+                        addressType: addressType
+                    });
+
                     contact.get('addresses').add(address);
                 }
-            });
-
-            // FIXME remove
-            var emailType = new EmailType();
-            emailType.set({
-                id: 1
-            });
-            var phoneType = new PhoneType();
-            phoneType.set({
-                id: 1
-            });
-            var addressType = new AddressType();
-            addressType.set({
-                id: 1
             });
 
             contact.save(null, {
