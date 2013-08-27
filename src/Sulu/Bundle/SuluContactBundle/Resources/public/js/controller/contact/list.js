@@ -54,7 +54,11 @@ define([
             var id = $parent.data('id');
 
             var contact = new Contact({id: id});
-            contact.clear();
+            contact.destroy({
+                success: function () {
+                    console.log("deleted model");
+                }
+            });
         }
     });
 });
