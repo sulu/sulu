@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TranslateBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Bundle\TranslateBundle\Translate\Import;
 
@@ -41,9 +42,10 @@ class ImportCommand extends ContainerAwareCommand
                 InputArgument::REQUIRED,
                 'The locale of the first catalogue in the translate package'
             )
-            ->addArgument(
+            ->addOption(
                 'packageId',
-                InputArgument::OPTIONAL,
+                'p',
+                InputOption::VALUE_REQUIRED,
                 'The id of the package to import the values from the file'
             );
     }
@@ -53,7 +55,7 @@ class ImportCommand extends ContainerAwareCommand
         $file = $input->getArgument('file');
         $name = $input->getArgument('name');
         $locale = $input->getArgument('locale');
-        $packageId = $input->getArgument('packageId');
+        $packageId = $input->getOption('packageId');
 
         $import = $this->getContainer()->get('sulu_translate.import');
 
