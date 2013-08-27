@@ -19,6 +19,7 @@ define([
 
     var translatePackage;
     var cataloguesToDelete;
+    var dataGrid;
 
     return Backbone.View.extend({
 
@@ -121,26 +122,29 @@ define([
 
             translatePackage.set({name: this.$('#name').val()});
 
-            var $rows = $('#catalogues tbody tr');
+            var rows = $('#catalogues tbody tr');
 
 
             // create catalogues if necessary and add them
 
-            for (var i = 1; i <= $rows.length; i++) {
-                var catalogue = translatePackage.get('catalogues').at(i - 1);
-                if (!catalogue) {
-                    catalogue = new Catalogue();
-                }
+            for (var i = 1; i <= rows.length; i++) {
 
+                var id = $(rows[i-1]).data('id');
                 var locale = $('#catalogues tbody tr:nth-child(' + i + ') td:nth-child(2) input').val();
+                var catalogue;
 
+                if(id) {
+                    catalogue = translatePackage.get('catalogues').get(id);
+                } else {
+                    catalogue = new Catalogue();
+                    translatePackage.get('catalogues').add(catalogue);
+                }
                 catalogue.set({'locale': locale});
-                translatePackage.get('catalogues').add(catalogue);
             }
 
-            // send delete request for models which should be deleted
 
-            console.log(cataloguesToDelete, "these will be deleted");
+
+            // send delete request for models which should be deleted
 
             cataloguesToDelete.forEach(function (id) {
                 var model = translatePackage.get('catalogues').get(id);
@@ -155,14 +159,13 @@ define([
             translatePackage.save(null, {
                 success: function () {
                     that.undelegateEvents();
-                    console.log("save translatepackage");
-                    //Router.navigate('settings/translate');
+                    dataGrid.data('Husky.Ui.DataGrid').off();
+                    Router.navigate('settings/translate');
                 }
             });
         },
 
         initializeCatalogueList: function (data) {
-            var dataGrid;
 
             require(['text!sulutranslate/templates/package/table-row.html'], function (RowTemplate) {
                 dataGrid = $('#catalogues').huskyDataGrid({
@@ -184,10 +187,11 @@ define([
 
                 $('#catalogues').on('click', '.remove-row > span', function (event) {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
-
                     var id = $(event.currentTarget).parent().parent().data('id');
-                    console.log(id, 'id');
-                    cataloguesToDelete.push(id);
+
+                    if(id) {
+                        cataloguesToDelete.push(id);
+                    }
                 });
 
             }.bind(this));
