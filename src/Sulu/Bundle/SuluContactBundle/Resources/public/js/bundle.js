@@ -12,6 +12,15 @@ define(['router'], function (Router) {
     'use strict';
 
     var initialize = function () {
+        // list all contacts
+        Router.route('contacts/people', 'contacts:people:list', function() {
+            require(['sulucontact/controller/contact/list'], function(List) {
+                new List({
+                    el: App.$content
+                });
+            });
+        });
+
         // show form for new translation package
         Router.route('contacts/people/add', 'contacts:people:form', function() {
             require(['sulucontact/controller/contact/form'], function(Form) {

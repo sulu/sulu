@@ -452,4 +452,40 @@ class ContactsControllerTest extends DatabaseTestCase
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
+
+    public function testGetList()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/contact/api/contacts/list');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+
+        $this->assertEquals('Max', $response->items[0]->firstName);
+        $this->assertEquals('Mustermann', $response->items[0]->lastName);
+        $this->assertEquals('Dr', $response->items[0]->title);
+        $this->assertEquals('CEO', $response->items[0]->position);
+        $this->assertEquals('en', $response->items[0]->localeSystem);
+    }
+
+    public function testGetListFields()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/contact/api/contacts/list?fields=id,firstName,lastName');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals('Max', $response->items[0]->firstName);
+        $this->assertEquals('Mustermann', $response->items[0]->lastName);
+
+        $client = static::createClient();
+        $client->request('GET', '/contact/api/contacts/list?fields=id,firstName');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals('Max', $response->items[0]->firstName);
+        $this->assertFalse(isset($response->items[0]->lastName));
+    }
 }
