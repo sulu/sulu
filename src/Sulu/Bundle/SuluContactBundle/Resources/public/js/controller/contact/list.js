@@ -17,10 +17,6 @@ define([
     'use strict';
 
     return Backbone.View.extend({
-        events: {
-            'click .remove-row': 'removeContact'
-        },
-
         initialize: function () {
             this.render();
         },
@@ -45,20 +41,25 @@ define([
                 dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
                     Router.navigate('contacts/people/edit:' + item);
                 });
+
+                $('.remove-row').on('click', function () {
+                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+                    var $element = $(event.currentTarget);
+                    var $parent = $element.parent();
+                    var id = $parent.data('id');
+
+                    var contact = new Contact({id: id});
+                    contact.fetch({
+                        success: function () {
+                            contact.destroy({
+                                success: function () {
+                                    console.log('deleted model');
+                                }
+                            });
+                        }
+                    });
+                });
             }.bind(this));
-        },
-
-        removeContact: function (event) {
-            var $element = $(event.currentTarget);
-            var $parent = $element.parent();
-            var id = $parent.data('id');
-
-            var contact = new Contact({id: id});
-            contact.destroy({
-                success: function () {
-                    console.log("deleted model");
-                }
-            });
         }
     });
 });
