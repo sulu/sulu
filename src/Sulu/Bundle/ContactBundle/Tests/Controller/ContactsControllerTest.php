@@ -337,7 +337,6 @@ class ContactsControllerTest extends DatabaseTestCase
                         )
                     ),
                     array(
-                        'id' => 2,
                         'email' => 'john.doe@muster.de',
                         'emailType' => array(
                             'id' => 1,
@@ -355,7 +354,6 @@ class ContactsControllerTest extends DatabaseTestCase
                         )
                     ),
                     array(
-                        'id' => 2,
                         'phone' => '789456123',
                         'phoneType' => array(
                             'id' => 1,
