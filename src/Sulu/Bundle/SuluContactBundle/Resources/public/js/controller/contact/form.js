@@ -45,6 +45,7 @@ define([
         },
 
         render: function () {
+            Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/contact/template/contact/form'], function (Template) {
                 var template;
                 if (!this.options.id) {
