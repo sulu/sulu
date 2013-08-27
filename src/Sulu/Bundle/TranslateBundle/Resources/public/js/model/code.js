@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbonerelational', 'sulutranslate/model/code'], function(BackboneRelational, Translation) {
+define([
+    'backbonerelational',
+    'sulutranslate/model/translation'
+], function(BackboneRelational, Translation) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/translate/api/codes',
         defaults: {
