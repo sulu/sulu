@@ -32,13 +32,61 @@ class ContactsController extends FOSRestController
 
         $where = array();
 
-        $codes = $listHelper->find('SuluContactBundle:Contact', $where);
+        $contacts = $listHelper->find('SuluContactBundle:Contact', $where);
 
         $response = array(
-            'total' => sizeof($codes),
-            'items' => $codes
+            'total' => sizeof($contacts),
+            'items' => $contacts
         );
         $view = $this->view($response, 200);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Deletes a Contact with the given ID from database
+     * @param int $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteContactAction($id)
+    {
+        /** @var Contact $contact */
+        $contact = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:Contact')
+            ->find($id);
+
+        if ($contact != null) {
+            $em = $this->getDoctrine()->getManager();
+            $addresses = $contact->getAddresses()->toArray();
+            /** @var Address $address */
+            foreach ($addresses as $address) {
+                if ($address->getAccounts()->count() == 0 && $address->getContacts()->count() == 1) {
+                    $em->remove($address);
+                }
+            }
+            $phones = $contact->getPhones()->toArray();
+            /** @var Phone $phone */
+            foreach ($phones as $phone) {
+                if ($phone->getAccounts()->count() == 0 && $phone->getContacts()->count() == 1) {
+                    $em->remove($phone);
+                }
+            }
+            $emails = $contact->getEmails()->toArray();
+            /** @var Email $email */
+            foreach ($emails as $email) {
+                if ($email->getAccounts()->count() == 0 && $email->getContacts()->count() == 1) {
+                    $em->remove($email);
+                }
+            }
+
+            $em->remove($contact);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+
+        } else {
+            $view = $this->view(null, 404);
+        }
 
         return $this->handleView($view);
     }

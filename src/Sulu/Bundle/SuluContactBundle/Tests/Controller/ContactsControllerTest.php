@@ -134,6 +134,7 @@ class ContactsControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
         );
 
+        self::$tool->dropSchema(self::$entities);
         self::$tool->createSchema(self::$entities);
     }
 
@@ -460,5 +461,32 @@ class ContactsControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->items[0]->id);
         $this->assertEquals('Max', $response->items[0]->firstName);
         $this->assertFalse(isset($response->items[0]->lastName));
+    }
+
+    public function testDelete()
+    {
+        $client = static::createClient();
+        $client->request('DELETE', '/contact/api/contacts/1');
+
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client = static::createClient();
+        $client->request('GET', '/contact/api/contacts/1');
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteNotExisting()
+    {
+        $client = static::createClient();
+        $client->request('DELETE', '/contact/api/contacts/4711');
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/contact/api/contacts/list');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
     }
 }
