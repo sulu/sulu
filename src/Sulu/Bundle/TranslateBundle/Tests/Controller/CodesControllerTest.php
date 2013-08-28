@@ -86,6 +86,10 @@ class CodesControllerTest extends DatabaseTestCase
      */
     private $code3_t2;
     /**
+     * @var Code
+     */
+    private $code4;
+    /**
      * @var Client
      */
     private $client;
@@ -98,7 +102,7 @@ class CodesControllerTest extends DatabaseTestCase
     {
         // config section
         $this->client = static::createClient();
-        $this->pageSize = 2;
+        $this->pageSize = 3;
 
         $this->setUpSchema();
 
@@ -148,7 +152,7 @@ class CodesControllerTest extends DatabaseTestCase
 
         $this->code1_t1 = new Translation();
         $this->code1_t1->setValue('Test Code 1')
-            ->setCatalogue($this->catalogue1)
+            ->setCatalogue($this->catalogue2)
             ->setCode($this->code1);
         self::$em->persist($this->code1_t1);
 
@@ -192,6 +196,15 @@ class CodesControllerTest extends DatabaseTestCase
             ->setCode($this->code3);
         self::$em->persist($this->code3_t2);
 
+        $this->code4 = new Code();
+        $this->code4->setCode('test.code.4')
+            ->setFrontend(1)
+            ->setBackend(1)
+            ->setLength(12)
+            ->setPackage($this->package1)
+            ->setLocation($this->location1);
+        self::$em->persist($this->code4);
+
         self::$em->flush();
     }
 
@@ -223,6 +236,9 @@ class CodesControllerTest extends DatabaseTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
+        $this->assertEquals(4, $response->total);
+        $this->assertEquals(4, sizeof($response->items));
+
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals(1, sizeof($response->items[0]->translations));
 
@@ -231,6 +247,9 @@ class CodesControllerTest extends DatabaseTestCase
 
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
         $this->assertEquals(2, sizeof($response->items[2]->translations));
+
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
+        $this->assertEquals(0, sizeof($response->items[3]->translations));
     }
 
     public function testGetAllFiltered()
@@ -239,31 +258,31 @@ class CodesControllerTest extends DatabaseTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(2, sizeof($response->items));
-        foreach ($response->items as $item) {
-            $this->assertEquals(1, $item->package->id);
-        }
+        $this->assertEquals(3, sizeof($response->items));
+
+        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals(1, sizeof($response->items[0]->translations));
+
+        $this->assertEquals(2, $response->items[1]->id);
+        $this->assertEquals(1, sizeof($response->items[1]->translations));
+
+        $this->assertEquals(4, $response->items[2]->id);
+        $this->assertEquals(0, sizeof($response->items[2]->translations));
 
         $this->client->request('GET', '/translate/api/codes?catalogueId=2');
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, sizeof($response->items));
-        foreach ($response->items as $item) {
-            $this->assertEquals(1, sizeof($item->translations));
-            $this->assertEquals(2, $item->translations[0]->catalogue->id);
-        }
+        $this->assertEquals(3, sizeof($response->items));
 
-        $this->client->request('GET', '/translate/api/codes?packageId=1&catalogueId=1');
-        $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, sizeof($response->items[0]->translations));
+        $this->assertEquals(1, $response->items[0]->id);
 
-        $this->assertEquals(2, sizeof($response->items));
-        foreach ($response->items as $item) {
-            $this->assertEquals(1, $item->package->id);
-            $this->assertEquals(1, sizeof($item->translations));
-            $this->assertEquals(1, $item->translations[0]->catalogue->id);
-        }
+        $this->assertEquals(0, sizeof($response->items[1]->translations));
+        $this->assertEquals(2, $response->items[1]->id);
+
+        $this->assertEquals(0, sizeof($response->items[2]->translations));
+        $this->assertEquals(4, $response->items[2]->id);
     }
 
     public function testGetAllFilteredNonExistingPackage()
@@ -309,9 +328,10 @@ class CodesControllerTest extends DatabaseTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, $response->items[0]->id);
-        $this->assertEquals(2, $response->items[1]->id);
-        $this->assertEquals(1, $response->items[2]->id);
+        $this->assertEquals(4, $response->items[0]->id);
+        $this->assertEquals(3, $response->items[1]->id);
+        $this->assertEquals(2, $response->items[2]->id);
+        $this->assertEquals(1, $response->items[3]->id);
     }
 
     public function testGetList()
@@ -319,10 +339,11 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes/list');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(3, $response->total);
+        $this->assertEquals(4, $response->total);
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
     }
 
     public function testGetListSorted()
@@ -330,44 +351,56 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes/list?sortBy=id&sortOrder=asc');
         $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->assertEquals(4, $response->total);
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
 
         $this->client->request('GET', '/translate/api/codes/list?sortBy=id&sortOrder=desc');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
-        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
-        $this->assertEquals($this->code1->getCode(), $response->items[2]->code);
+        $this->assertEquals(4, $response->total);
+        $this->assertEquals($this->code4->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code1->getCode(), $response->items[3]->code);
 
         $this->client->request('GET', '/translate/api/codes/list?sortBy=code&sortOrder=asc');
         $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->assertEquals(4, $response->total);
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
 
         $this->client->request('GET', '/translate/api/codes/list?sortBy=code&sortOrder=desc');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
-        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
-        $this->assertEquals($this->code1->getCode(), $response->items[2]->code);
+        $this->assertEquals(4, $response->total);
+        $this->assertEquals($this->code4->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code1->getCode(), $response->items[3]->code);
 
         $this->client->request('GET', '/translate/api/codes/list?sortBy=length&sortOrder=asc');
         $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->assertEquals(4, $response->total);
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
 
         $this->client->request('GET', '/translate/api/codes/list?sortBy=length&sortOrder=desc');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
-        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
-        $this->assertEquals($this->code1->getCode(), $response->items[2]->code);
+        $this->assertEquals(4, $response->total);
+        $this->assertEquals($this->code4->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code1->getCode(), $response->items[3]->code);
     }
 
     public function testGetListPageSize()
@@ -379,13 +412,14 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($this->pageSize, $response->total);
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
 
         $this->client->request('GET', '/translate/api/codes/list?pageSize=' . $this->pageSize . '&page=2');
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, count($response->items)); // only 1 item remaining
         $this->assertEquals(1, $response->total); // only 1 item remaining
-        $this->assertEquals($this->code3->getCode(), $response->items[0]->code);
+        $this->assertEquals($this->code4->getCode(), $response->items[0]->code);
     }
 
     public function testGetListFields()
@@ -393,30 +427,35 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes/list?fields=code');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(3, $response->total);
+        $this->assertEquals(4, $response->total);
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertFalse(isset($response->items[0]->id));
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
         $this->assertFalse(isset($response->items[1]->id));
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
         $this->assertFalse(isset($response->items[2]->id));
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
+        $this->assertFalse(isset($response->items[3]->id));
 
         $this->client->request('GET', '/translate/api/codes/list?fields=id,code,location_name');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(3, $response->total);
-
+        $this->assertEquals(4, $response->total);
         $this->assertEquals(1, $response->items[0]->id);
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code1->getLocation()->getName(), $response->items[0]->location_name);
 
         $this->assertEquals(2, $response->items[1]->id);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
-        $this->assertEquals($this->code2->getLocation()->getName(), $response->items[0]->location_name);
+        $this->assertEquals($this->code2->getLocation()->getName(), $response->items[1]->location_name);
 
         $this->assertEquals(3, $response->items[2]->id);
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
-        $this->assertEquals($this->code3->getLocation()->getName(), $response->items[0]->location_name);
+        $this->assertEquals($this->code3->getLocation()->getName(), $response->items[2]->location_name);
+
+        $this->assertEquals(4, $response->items[3]->id);
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
+        $this->assertEquals($this->code4->getLocation()->getName(), $response->items[3]->location_name);
 
         $this->client->request('GET', '/translate/api/codes/list?fields=id,code,translations_value,translations_catalogue_locale');
         $response = json_decode($this->client->getResponse()->getContent());
@@ -429,11 +468,10 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes/list?packageId=1&catalogueId=1');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(2, sizeof($response->items));
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(1, sizeof($response->items));
+        $this->assertEquals(1, $response->total);
 
-        $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
-        $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
+        $this->assertEquals($this->code2->getCode(), $response->items[0]->code);
 
         $this->client->request('GET', '/translate/api/codes/list?packageId=2');
         $response = json_decode($this->client->getResponse()->getContent());
@@ -446,12 +484,13 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes/list?locationId=1');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(3, sizeof($response->items));
-        $this->assertEquals(3, $response->total);
+        $this->assertEquals(4, sizeof($response->items));
+        $this->assertEquals(4, $response->total);
 
         $this->assertEquals($this->code1->getCode(), $response->items[0]->code);
         $this->assertEquals($this->code2->getCode(), $response->items[1]->code);
         $this->assertEquals($this->code3->getCode(), $response->items[2]->code);
+        $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
     }
 
     public function testGetListCombination()
@@ -459,16 +498,12 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes/list?fields=id,code,translations_value,translations_catalogue_locale&packageId=1&catalogueId=1&pageSize=' . $this->pageSize . '&page=1&sortBy=code&sortOrder=desc');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(2, sizeof($response->items));
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(1, sizeof($response->items));
+        $this->assertEquals(1, $response->total);
 
         $this->assertEquals($this->code2->getCode(), $response->items[0]->code);
         $this->assertEquals($this->catalogue1->getLocale(), $response->items[0]->translations_catalogue_locale);
         $this->assertEquals($this->code2_t1->getValue(), $response->items[0]->translations_value);
-
-        $this->assertEquals($this->code1->getCode(), $response->items[1]->code);
-        $this->assertEquals($this->catalogue1->getLocale(), $response->items[1]->translations_catalogue_locale);
-        $this->assertEquals($this->code1_t1->getValue(), $response->items[1]->translations_value);
     }
 
     public function testGetId()
@@ -790,10 +825,9 @@ class CodesControllerTest extends DatabaseTestCase
         $client->request('DELETE', '/translate/api/codes/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-
         $client->request('GET', '/translate/api/codes');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(3, $response->total);
+        $this->assertEquals(4, $response->total);
     }
 
 }
