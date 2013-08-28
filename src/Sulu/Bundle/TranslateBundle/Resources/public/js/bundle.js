@@ -39,6 +39,16 @@ define(['router'], function(Router) {
                 })
             });
         });
+
+        // show form for editing codes
+        Router.route('settings/translate/edit::id/details', 'translate:package:form:id:details', function(id) {
+            require(['sulutranslate/controller/code/form'], function(Form) {
+                new Form({
+                    el: App.$content,
+                    id: id
+                })
+            });
+        });
     };
 
     return {

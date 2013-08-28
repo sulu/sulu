@@ -11,13 +11,14 @@ define([
     'jquery',
     'backbone',
     'router',
-    'sulutranslate/model/package',
-    'sulutranslate/model/catalogue'
-], function($, Backbone, Router, Package, Catalogue) {
+    'sulutranslate/model/code',
+    'sulutranslate/collection/codes',
+    'sulutranslate/model/translation'
+], function ($, Backbone, Router, Code, Codes, Translation) {
 
     'use strict';
 
-    var translatePackage;
+    var codes;
 
     return Backbone.View.extend({
 
@@ -25,39 +26,30 @@ define([
 
         },
 
-        initialize: function() {
+        initialize: function () {
             this.render();
         },
 
-        getTabs: function(id) {
+        render: function () {
 
-        },
-
-        render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
-            require(['text!/translate/template/catalogue/form'], function(Template) {
-                var template;
-                if (!this.options.id) {
-                    translatePackage = new Package();
-                    template = _.template(Template, {name: '', catalogues: []});
-                    this.$el.html(template);
-                } else {
-                    translatePackage = new Package({id: this.options.id});
-                    translatePackage.fetch({
-                        success: function(translatePackage) {
-                            template = _.template(Template, translatePackage.toJSON());
-                            this.$el.html(template);
-                        }.bind(this)
-                    });
-                }
+            require(['text!/translate/template/code/form'], function (Template) {
 
-                App.Navigation.trigger('navigation:item:column:show', {
-                    data: this.getTabs(translatePackage.get('id'))
-                });
+                var template;
+
+                var translatePackageId =  this.options.id;
+                var translateCatalogueId = 96; // TODO catalogue id
+
+                // collection
+                codes = new Codes([], {translatePackageId: translatePackageId,translateCatalogueId: translateCatalogueId});
+                codes.fetch();
+
+                //console.log(codes);
+
             }.bind(this));
         },
 
-        submitForm: function(event) {
+        submitForm: function (event) {
 
         }
     });
