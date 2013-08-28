@@ -1,4 +1,4 @@
-<h1>[.DE-English]</h1>
+<h1><%= catalogue.locale %></h1>
 
 <form id="codes-form">
 
@@ -19,8 +19,8 @@
                 <tr data-id="<%= item.id %>">
                     <td class="grid-col-4"><p><%= item.code %><span class="icon-remove m-left-5"></span><p></td>
                     <td class="grid-col-4">
-                        <input class="form-element" value="<%= (!!item.translations[0]) ? item.translations[0].value : '' %>"/>
-                        <small>[Max. 128 chars]</small>
+                        <textarea rows="1" class="form-element vertical"><%= (!!item.translations[0]) ? item.translations[0].value : '' %></textarea>
+                        <small>[Max. <%= item.length %> chars]</small>
                     </td>
                     <td class="grid-col-4"><p>[Lorem Ipsum dolor set]</p></td>
                 </tr>
