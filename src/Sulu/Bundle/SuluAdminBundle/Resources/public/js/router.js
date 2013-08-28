@@ -35,6 +35,7 @@ define(['backbone'], function(Backbone) {
     };
 
     var navigate = function(action) {
+        App.$content.off();
         router.navigate(action, {trigger: true});
     };
 
