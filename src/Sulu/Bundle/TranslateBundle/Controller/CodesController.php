@@ -12,6 +12,7 @@ namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
+use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 
 /**
@@ -37,24 +38,26 @@ class CodesController extends FOSRestController
         $offset = $listHelper->getOffset();
         $sorting = $listHelper->getSorting();
 
-        $where = array();
-        if ($this->getRequest()->get('packageId') != null) {
-            $where['p.id'] = $this->getRequest()->get('packageId');
-        }
-        if ($this->getRequest()->get('catalogueId') != null) {
-            $where['c.id'] = $this->getRequest()->get('catalogueId');
-        }
+        /** @var CodeRepository $repository */
+        $repository = $this->getDoctrine()
+            ->getRepository($this->codeEntity);
 
-        /** @var array $codes */
-        $codes = $this->getDoctrine()
-            ->getRepository($this->codeEntity)
-            ->findGetAll($limit, $offset, $sorting, $where);
+        $catalogueId = $this->getRequest()->get('catalogueId');
+        $packageId = $this->getRequest()->get('packageId');
+        if ($catalogueId != null) {
+            $codes = $repository->findByCatalogue($catalogueId);
+        } else if ($packageId != null) {
+            $codes = $repository->findByPackage($packageId);
+        } else {
+            $codes = $repository->findGetAll($limit, $offset, $sorting);
+        }
 
         $response = array(
             'total' => count($codes),
             'items' => $codes
         );
         $view = $this->view($response, 200);
+
         return $this->handleView($view);
     }
 
@@ -85,6 +88,7 @@ class CodesController extends FOSRestController
             'items' => $codes
         );
         $view = $this->view($response, 200);
+
         return $this->handleView($view);
     }
 
@@ -230,7 +234,8 @@ class CodesController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function deleteCodeAction($id) {
+    public function deleteCodeAction($id)
+    {
 
         $response = array();
 
@@ -238,7 +243,7 @@ class CodesController extends FOSRestController
             ->getRepository($this->codeEntity)
             ->find($id);
 
-        if($code != null) {
+        if ($code != null) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($code);
             $em->flush();
