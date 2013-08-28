@@ -137,7 +137,7 @@ class ContactsController extends RestController
 
             // Add email addresses, if no error has occured yet
             $emails = $this->getRequest()->get('emails');
-            if (!$error && $emails != null) {
+            if (!$error && !empty($emails)) {
                 foreach ($emails as $emailData) {
                     $error = !$this->addEmail($contact, $emailData, $em);
                     if ($error) {
@@ -148,7 +148,7 @@ class ContactsController extends RestController
 
             // Add phones, if no error has occured yet
             $phones = $this->getRequest()->get('phones');
-            if (!$error && $phones != null) {
+            if (!$error && !empty($phones)) {
                 foreach ($phones as $phoneData) {
                     $error = !$this->addPhone($contact, $phoneData, $em);
                     if ($error) {
@@ -159,7 +159,7 @@ class ContactsController extends RestController
 
             // Add addresses, if no error has occured yet
             $addresses = $this->getRequest()->get('addresses');
-            if (!$error && $addresses != null) {
+            if (!$error && !empty($addresses)) {
                 foreach ($addresses as $addressData) {
                     $error = !$this->addAddress($contact, $addressData, $em);
                     if ($error) {
@@ -170,7 +170,7 @@ class ContactsController extends RestController
 
             // Add notes, if no error has occured yet
             $notes = $this->getRequest()->get('notes');
-            if (!$error && $notes != null) {
+            if (!$error && !empty($notes)) {
                 foreach ($notes as $noteData) {
                     $error = !$this->addNote($contact, $noteData, $em);
                     if ($error) {
