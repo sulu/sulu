@@ -461,7 +461,7 @@ function typeOf(value) {
             var $element, itemId;
 
             $element = $(event.currentTarget);
-            itemId = $element.data('id');
+            itemId = $element.parents('tr').data('id');
 
             if (this.selectedItemIds.indexOf(itemId) > -1) {
                 $element
