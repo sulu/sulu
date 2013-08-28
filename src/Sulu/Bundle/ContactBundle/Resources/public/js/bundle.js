@@ -39,6 +39,11 @@ define(['router'], function (Router) {
                 })
             });
         });
+
+        // list all accounts
+        Router.route('contacts/accounts', 'contacts:accounts:list', function() {
+            console.log('list all accounts message');
+        });
     };
 
     return {
