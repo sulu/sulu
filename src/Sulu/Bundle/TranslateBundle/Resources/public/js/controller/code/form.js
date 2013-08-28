@@ -18,7 +18,7 @@ define([
 
     'use strict';
 
-    var codes;
+    var codeModels;
 
     return Backbone.View.extend({
 
@@ -36,15 +36,18 @@ define([
             require(['text!/translate/template/code/form'], function (Template) {
 
                 var template;
-
                 var translatePackageId =  this.options.id;
                 var translateCatalogueId = 96; // TODO catalogue id
 
                 // collection
-                codes = new Codes([], {translatePackageId: translatePackageId,translateCatalogueId: translateCatalogueId});
-                codes.fetch();
+                var codes = new Codes([], {translatePackageId: translatePackageId,translateCatalogueId: translateCatalogueId});
+                codes.fetch({
+                    success: function() {
+                        template = _.template(Template, {codes: codes.toJSON()});
+                        this.$el.html(template);
 
-                //console.log(codes);
+                    }.bind(this)
+                });
 
             }.bind(this));
         },

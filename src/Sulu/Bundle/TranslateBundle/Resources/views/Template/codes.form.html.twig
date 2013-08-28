@@ -4,7 +4,7 @@
 
     <div class="grid-row">
         <h3 class="collapsable">[Section1]</h3>
-        <table class="table">
+        <table class="table codes">
 
             <thead>
                 <tr>
@@ -15,39 +15,34 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>[Registration_for_Downloads]</td>
+                <% _.each(codes, function(item) { %>
+                <tr data-id="<%= item.id %>">
+                    <td><p><%= item.code %><span class="icon-remove m-left-5"></span><p></span></td>
                     <td>
-                        <input value="[Registierung für Downloads]"/>
-                        <span>[Max. 128 chars]</span>
+                        <input class="form-element" value="<%= item.translations[0].value %>"/>
+                        <small>[Max. 128 chars]</small>
                     </td>
-                    <td>[Lorem Ipsum dolor set]</td>
+                    <td><p>[Lorem Ipsum dolor set]</p></td>
                 </tr>
-                <tr>
-                    <td>[Registration_for_Downloads]</td>
-                    <td>
-                        <input value="[Registierung für Downloads]"/>
-                        <span>[Max. 128 chars]</span>
-                    </td>
-                    <td>[Lorem Ipsum dolor set]</td>
-                </tr>
-                <tr>
-                    <td>[Registration_for_Downloads]</td>
-                    <td>
-                        <input value="[Registierung für Downloads]"/>
-                        <span>[Max. 128 chars]</span>
-                    </td>
-                    <td>[Lorem Ipsum dolor set]</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                <% }); %>
             </tbody>
 
         </table>
-        <span>[Add element]</span>
+
+
+        <div class="grid-row m-top-15 m-bottom-10" data-table-id="catalogueTable" id="addCodeRow">
+            <div class="grid-col-2">
+                <span class="icon-add"></span><span class="control-label">[Add element]</span>
+            </div>
+            <div class="grid-col-2">
+                <input type="submit" value="[Speichern]"/>
+            </div>
+        </div>
+
     </div>
+
+    <hr/>
+
+
 
 </form>
