@@ -94,10 +94,10 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            /*scripts: {
+            scripts: {
                 files: ['Resources/public/**'],
                 tasks: ['publish']
-            },*/
+            },
             options: {
                 nospawn: true
             },
