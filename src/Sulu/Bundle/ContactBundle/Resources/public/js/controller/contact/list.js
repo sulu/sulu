@@ -35,17 +35,13 @@ define([
                     template: {
                         row: RowTemplate
                     },
-                    selectItems: {
-                        type: 'checkbox'
-                    }
+                    selectItemType: 'radio'
                 });
 
-                // FIXME Husky click auf radiobutton
                 dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
                     Router.navigate('contacts/people/edit:' + item);
                 });
 
-                // FIXME when husky has an own div: this.$el
                 this.$el.on('click', '.remove-row > span', function (event) {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
                     var $element = $(event.currentTarget);
