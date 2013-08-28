@@ -18,7 +18,7 @@ define([
         model: Code,
 
         url: function () {
-            var url = '/translate/api/codes?packageId='+this.translatePackageId+'&catalogueId='+this.translateCatalogueId;
+            var url = '/translate/api/codes?catalogueId='+this.translateCatalogueId;
             console.log(url, 'url');
             return url;
         },
