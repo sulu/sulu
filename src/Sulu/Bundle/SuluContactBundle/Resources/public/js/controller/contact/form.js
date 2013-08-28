@@ -50,6 +50,7 @@ define([
                 var template;
                 if (!this.options.id) {
                     contact = new Contact();
+                    //FIXME use better method for creating template values
                     template = _.template(Template, {
                         firstName: '',
                         lastName: '',
@@ -129,8 +130,7 @@ define([
             });
 
             // FIXME remove
-            var emailType = new EmailType();
-            emailType.set({
+            var emailType = new EmailType({
                 id: 1
             });
 
@@ -150,8 +150,7 @@ define([
             });
 
             // FIXME remove
-            var phoneType = new PhoneType();
-            phoneType.set({
+            var phoneType = new PhoneType({
                 id: 1
             });
 
@@ -172,8 +171,10 @@ define([
             });
 
             // FIXME remove
-            var addressType = new AddressType();
-            addressType.set({
+            var addressType = new AddressType({
+                id: 1
+            });
+            var country = new Country({
                 id: 1
             });
 
@@ -188,11 +189,6 @@ define([
                 var zip = $(this).find('.zipValue').val();
                 var city = $(this).find('.cityValue').val();
                 var state = $(this).find('.stateValue').val();
-                var countryId = parseInt($(this).find('.countryValue').val());
-                var country = new Country();
-                country.set({
-                    id: countryId
-                });
 
                 if (street && number && zip && city && state) {
                     address.set({

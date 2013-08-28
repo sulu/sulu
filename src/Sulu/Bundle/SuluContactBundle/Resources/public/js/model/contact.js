@@ -18,9 +18,9 @@ define([
         urlRoot: '/contact/api/contacts',
         defaults: {
             id: null,
-            firstname: '',
-            middlename:'',
-            lastname: '',
+            firstName: '',
+            middleName:'',
+            lastName: '',
             birthday:'',
             localeSystem: '',
             title: '',
