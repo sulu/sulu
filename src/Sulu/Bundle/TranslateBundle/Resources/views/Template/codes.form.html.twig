@@ -4,25 +4,25 @@
 
     <div class="grid-row">
         <h3 class="collapsable">[Section1]</h3>
-        <table class="table codes">
+        <table class="table codes" id="section1">
 
             <thead>
                 <tr>
-                    <th>[Key]</th>
-                    <th>[Translation]</th>
-                    <th>[Suggestion (EN)]</th>
+                    <th class="grid-col-4">[Key]</th>
+                    <th class="grid-col-4">[Translation]</th>
+                    <th class="grid-col-4">[Suggestion (EN)]</th>
                 </tr>
             </thead>
 
             <tbody>
                 <% _.each(codes, function(item) { %>
                 <tr data-id="<%= item.id %>">
-                    <td><p><%= item.code %><span class="icon-remove m-left-5"></span><p></span></td>
-                    <td>
-                        <input class="form-element" value="<%= item.translations[0].value %>"/>
+                    <td class="grid-col-4"><p><%= item.code %><span class="icon-remove m-left-5"></span><p></td>
+                    <td class="grid-col-4">
+                        <input class="form-element" value="<%= (!!item.translations[0]) ? item.translations[0].value : '' %>"/>
                         <small>[Max. 128 chars]</small>
                     </td>
-                    <td><p>[Lorem Ipsum dolor set]</p></td>
+                    <td class="grid-col-4"><p>[Lorem Ipsum dolor set]</p></td>
                 </tr>
                 <% }); %>
             </tbody>
@@ -30,8 +30,8 @@
         </table>
 
 
-        <div class="grid-row m-top-15 m-bottom-10" data-table-id="catalogueTable" id="addCodeRow">
-            <div class="grid-col-2">
+        <div class="grid-row m-top-15 m-bottom-10">
+            <div class="grid-col-2 addCode" data-target-element="section1">
                 <span class="icon-add"></span><span class="control-label">[Add element]</span>
             </div>
             <div class="grid-col-2">
