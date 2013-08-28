@@ -48,69 +48,31 @@ define([
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/contact/template/contact/form'], function (Template) {
                 var template;
+
+                var contactJson = _.clone(Contact.prototype.defaults);
+                var emailJson = _.clone(Email.prototype.defaults);
+                var phoneJson = _.clone(Phone.prototype.defaults);
+                var addressJson = _.clone(Address.prototype.defaults);
+
                 if (!this.options.id) {
                     contact = new Contact();
-                    //FIXME use better method for creating template values
-                    template = _.template(Template, {
-                        firstName: '',
-                        lastName: '',
-                        title: '',
-                        position: '',
-                        account: null,
-                        emails: [
-                            {
-                                id: null,
-                                email: ''
-                            },
-                            {
-                                id: null,
-                                email: ''
-                            }
-                        ],
-                        phones: [
-                            {
-                                id: null,
-                                phone: ''
-                            },
-                            {
-                                id: null,
-                                phone: ''
-                            }
-                        ],
-                        addresses: [
-                            {
-                                street: '',
-                                number: '',
-                                additional: '',
-                                zip: '',
-                                city: '',
-                                state: ''
-                            }
-                        ]
-                    });
+
+                    this.fillFields(contactJson.emails, 2, emailJson);
+                    this.fillFields(contactJson.phones, 2, phoneJson);
+                    this.fillFields(contactJson.addresses, 1, addressJson);
+
+                    template = _.template(Template, contactJson);
                     this.$el.html(template);
                 } else {
                     contact = new Contact({id: this.options.id});
                     contact.fetch({
                         success: function (contact) {
                             var contactJson = contact.toJSON();
-                            while (contactJson.emails.length < 2) {
-                                contactJson.emails.push({id: null, email: ''});
-                            }
-                            while (contactJson.phones.length < 2) {
-                                contactJson.phones.push({id: null, phone: ''});
-                            }
-                            while (contactJson.addresses.length < 1) {
-                                contactJson.addresses.push({
-                                    id: null,
-                                    street: '',
-                                    number: '',
-                                    additional: '',
-                                    zip: '',
-                                    city: '',
-                                    state: ''
-                                });
-                            }
+
+                            this.fillFields(contactJson.emails, 2, emailJson);
+                            this.fillFields(contactJson.phones, 2, phoneJson);
+                            this.fillFields(contactJson.addresses, 1, addressJson);
+
                             template = _.template(Template, contactJson);
                             this.$el.html(template);
                         }.bind(this)
@@ -237,6 +199,12 @@ define([
             require(['text!sulucontact/templates/contact/address.html'], function (Template) {
                 $div.append(_.template(Template, {id: null, street: '', number: '', additional: '', zip: '', city: '', state: '', country: ''}));
             });
+        },
+
+        fillFields: function(field, minAmount, value) {
+            while (field.length < minAmount) {
+                field.push(value);
+            }
         },
 
         staticTemplates: {
