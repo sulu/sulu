@@ -315,6 +315,45 @@ class ContactsControllerTest extends DatabaseTestCase
         $this->assertEquals('de', $response->localeSystem);
     }
 
+    public function testPostWithEmptyAdditionalData()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/contact/api/contacts',
+            array(
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'title' => 'MSc',
+                'position' => 'Manager',
+                'localeSystem' => 'de',
+                'emails' => array(),
+                'phones' => array(),
+                'notes' => array(),
+                'addresses' => array()
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Erika', $response->firstName);
+        $this->assertEquals('Mustermann', $response->lastName);
+        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('de', $response->localeSystem);
+
+        $client->request('GET', '/contact/api/contacts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->id);
+        $this->assertEquals('Erika', $response->firstName);
+        $this->assertEquals('Mustermann', $response->lastName);
+        $this->assertEquals('MSc', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('de', $response->localeSystem);
+    }
+
     public function testPut()
     {
         $client = static::createClient();
