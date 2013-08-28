@@ -17,9 +17,9 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\CoreBundle\Controller\AbstractRestController;
+use Sulu\Bundle\CoreBundle\Controller\RestController;
 
-class ContactsController extends AbstractRestController
+class ContactsController extends RestController
 {
     /**
      * Lists all the contacts or filters the contacts by parameters
@@ -200,6 +200,8 @@ class ContactsController extends AbstractRestController
      */
     public function putContactsAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $contact = $this->getDoctrine()
             ->getRepository('SuluContactBundle:Contact')
             ->find($id);
@@ -221,8 +223,10 @@ class ContactsController extends AbstractRestController
             $contact->setChanged(new DateTime());
 
             // process emails
-            $success = $this->processEmail($contact)
-                && $this->processPhone($contact);
+            $success = $this->processEmails($contact)
+                && $this->processPhones($contact)
+                && $this->processAddresses($contact)
+                && $this->processNotes($contact);
 
             if ($success) {
                 $em->flush();
@@ -240,44 +244,23 @@ class ContactsController extends AbstractRestController
      * @param Contact $contact The contact on which is worked
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processEmail(Contact $contact)
+    protected function processEmails(Contact $contact)
     {
-        $success = true;
-        $em = $this->getDoctrine()->getManager();
-
         $emails = $this->getRequest()->get('emails');
-        if ($emails != null) {
-            foreach ($contact->getEmails() as $contactEmail) {
-                /** @var Email $contactEmail */
-                $this->findMatch($emails, $contactEmail->getId(), $matchedEntry, $matchedKey);
 
-                if ($matchedEntry == null) {
-                    // delete email if it is not listed anymore
-                    $contact->removeEmail($contactEmail);
-                } else {
-                    // update email if it is matched
-                    $success = $this->updateEmail($contactEmail, $matchedEntry);
-                    if (!$success) {
-                        break;
-                    }
-                }
+        $delete = function ($email) use ($contact) {
+            return $contact->removeEmail($email);
+        };
 
-                // Remove done element from array
-                if (!is_null($matchedKey)) {
-                    unset($emails[$matchedKey]);
-                }
-            }
+        $update = function ($email, $matchedEntry) {
+            return $this->updateEmail($email, $matchedEntry);
+        };
 
-            // The emails which have not been delete or updated have to be added
-            foreach ($emails as $email) {
-                if (!$success) {
-                    break;
-                }
-                $success = $this->addEmail($contact, $email, $em);
-            }
-        }
+        $add = function ($email) use ($contact) {
+            return $this->addEmail($contact, $email);
+        };
 
-        return $success;
+        return $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
     }
 
     /**
@@ -311,11 +294,11 @@ class ContactsController extends AbstractRestController
 
     /**
      * Updates the given email address
-     * @param $email The email object to update
+     * @param Email $email The email object to update
      * @param $entry The entry with the new data
      * @return bool True if successful, otherwise false
      */
-    protected function updateEmail($email, $entry)
+    protected function updateEmail(Email $email, $entry)
     {
         $success = true;
 
@@ -338,28 +321,23 @@ class ContactsController extends AbstractRestController
      * @param Contact $contact The contact on which is worked
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processPhone(Contact $contact)
+    protected function processPhones(Contact $contact)
     {
-        $success = true;
-
         $phones = $this->getRequest()->get('phones');
 
-        $delete = function ($phone) use ($contact)
-        {
+        $delete = function ($phone) use ($contact) {
             return $contact->removePhone($phone);
         };
 
-        $update = function ($phone)
-        {
+        $update = function ($phone, $matchedEntry) {
             return $this->updatePhone($phone, $matchedEntry);
         };
 
-        $add = function ($phone) use ($contact)
-        {
+        $add = function ($phone) use ($contact) {
             return $this->addPhone($contact, $phone);
         };
 
-        return $this->processPut($contact->getPhones(), $phones, $delete, $update);
+        return $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
     }
 
     /**
@@ -394,11 +372,11 @@ class ContactsController extends AbstractRestController
 
     /**
      * Updates the given phone
-     * @param $phone The phone object to update
+     * @param Phone $phone The phone object to update
      * @param $entry The entry with the new data
      * @return bool True if successful, otherwise false
      */
-    protected function updatePhone($phone, $entry)
+    protected function updatePhone(Phone $phone, $entry)
     {
         $success = true;
 
@@ -417,15 +395,39 @@ class ContactsController extends AbstractRestController
     }
 
     /**
+     * Process all addresses from request
+     * @param Contact $contact The contact on which is worked
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processAddresses(Contact $contact)
+    {
+        $addresses = $this->getRequest()->get('addresses');
+
+        $delete = function ($address) use ($contact) {
+            return $contact->removeAddresse($address);
+        };
+
+        $update = function ($address, $matchedEntry) {
+            return $this->updateAddress($address, $matchedEntry);
+        };
+
+        $add = function ($address) use ($contact) {
+            return $this->addAddress($contact, $address);
+        };
+
+        return $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add);
+    }
+
+    /**
      * Add a new address to the given contact and persist it with the given object manager
      * @param Contact $contact
      * @param $addressData
-     * @param ObjectManager $em
      * @return bool True if there was no error, otherwise false
      */
-    protected function addAddress(Contact $contact, $addressData, ObjectManager $em)
+    protected function addAddress(Contact $contact, $addressData)
     {
         $success = true;
+        $em = $this->getDoctrine()->getManager();
 
         $addressType = $this->getDoctrine()
             ->getRepository('SuluContactBundle:AddressType')
@@ -460,21 +462,98 @@ class ContactsController extends AbstractRestController
     }
 
     /**
+     * Updates the given address
+     * @param Address $address The phone object to update
+     * @param $entry The entry with the new data
+     * @return bool True if successful, otherwise false
+     */
+    protected function updateAddress(Address $address, $entry)
+    {
+        $success = true;
+
+        $addressType = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:AddressType')
+            ->find($entry['addressType']['id']);
+
+        $country = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:Country')
+            ->find($entry['addressType']['id']);
+
+        if (!$addressType || !$country) {
+            $success = false;
+        } else {
+            $address->setStreet($entry['street']);
+            $address->setNumber($entry['number']);
+            $address->setZip($entry['zip']);
+            $address->setCity($entry['city']);
+            $address->setState($entry['state']);
+            $address->setCountry($country);
+            $address->setAddressType($addressType);
+
+            if (isset($entry['addition'])) {
+                $address->setAddition($entry['addition']);
+            }
+        }
+
+        return $success;
+    }
+
+    /**
+     * Process all notes from request
+     * @param Contact $contact The contact on which is worked
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processNotes(Contact $contact)
+    {
+        $notes = $this->getRequest()->get('notes');
+
+        $delete = function ($note) use ($contact) {
+            return $contact->removeNote($note);
+        };
+
+        $update = function ($note, $matchedEntry) {
+            return $this->updateNote($note, $matchedEntry);
+        };
+
+        $add = function ($note) use ($contact) {
+            return $this->addNote($contact, $note);
+        };
+
+        return $this->processPut($contact->getNotes(), $notes, $delete, $update, $add);
+    }
+
+    /**
      * Add a new note to the given contact and persist it with the given object manager
      * @param Contact $contact
      * @param $noteData
      * @param ObjectManager $em
      * @return bool True if there was no error, otherwise false
      */
-    protected function addNote(Contact $contact, $noteData, ObjectManager $em)
+    protected function addNote(Contact $contact, $noteData)
     {
         $success = true;
+        $em = $this->getDoctrine()->getManager();
 
         $note = new Note();
         $note->setValue($noteData['value']);
 
         $em->persist($note);
         $contact->addNote($note);
+
+        return $success;
+    }
+
+    /**
+     * Updates the given note
+     * @param Address $address The phone object to update
+     * @param $entry The entry with the new data
+     * @return bool True if successful, otherwise false
+     */
+    protected function updateNote(Note $note, $entry)
+    {
+        $success = true;
+
+        $note->setValue($entry['value']);
 
         return $success;
     }
