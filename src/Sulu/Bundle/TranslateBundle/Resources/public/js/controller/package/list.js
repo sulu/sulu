@@ -28,7 +28,7 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
 
             dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function(item) {
                 dataGrid.data('Husky.Ui.DataGrid').off();
-                Router.navigate('settings/translate/edit:' + item);
+                Router.navigate('settings/translate/edit:' + item+'/settings');
             });
         }
     });

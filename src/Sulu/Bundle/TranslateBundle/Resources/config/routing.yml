@@ -8,6 +8,6 @@ sulu_translate.template.catalogue.form:
         _controller: SuluTranslateBundle:Template:catalogueform
 
 sulu_translate.template.code.form:
-     path: /template/code/form
+     path: /template/translation/form
      defaults:
-         _controller: SuluTranslateBundle:Template:codeform
+         _controller: SuluTranslateBundle:Template:translationform

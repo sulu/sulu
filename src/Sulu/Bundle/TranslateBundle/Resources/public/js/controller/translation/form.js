@@ -41,16 +41,17 @@ define([
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/translate/template/translation/form'], function (Template) {
 
-                var translateCatalogueId = 86; // TODO catalogue id
+                var translateCatalogueId = this.options.id;
 
                 catalogue = new Catalogue({id: translateCatalogueId});
 
-                console.log(this.options, 'render: options view');
+                console.log(translateCatalogueId, 'render: options view');
 
                 // load translations only with a valid catalogue
                 catalogue.fetch({
                     success: function(){
-                        this.loadTranslations(Template, translateCatalogueId);
+                        //this.loadTranslations(Template, translateCatalogueId);
+                        console.log(catalogue.toJSON(), 'render: catalogue loaded');
                     }.bind(this)
                 });
 

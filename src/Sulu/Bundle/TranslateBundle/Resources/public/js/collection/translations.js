@@ -36,7 +36,7 @@ define([
                 url: this.url(),
                 data: translations
             }).done(function( msg ) {
-                    alert( "Data Saved: " + msg );
+                    alert( "save: " + msg );
                 });
 
         }
