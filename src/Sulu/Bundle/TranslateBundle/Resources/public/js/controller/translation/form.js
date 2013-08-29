@@ -44,14 +44,17 @@ define([
                 var translateCatalogueId = this.options.id;
 
                 catalogue = new Catalogue({id: translateCatalogueId});
-
-                console.log(translateCatalogueId, 'render: options view');
+//                console.log(translateCatalogueId, 'render: options id 1');
 
                 // load translations only with a valid catalogue
                 catalogue.fetch({
                     success: function(){
-                        //this.loadTranslations(Template, translateCatalogueId);
-                        console.log(catalogue.toJSON(), 'render: catalogue loaded');
+//                        console.log(translateCatalogueId, 'render: options id 2');
+
+                        this.loadTranslations(Template, translateCatalogueId);
+
+
+//                        console.log(catalogue.toJSON(), 'render: catalogue loaded');
                     }.bind(this)
                 });
 
@@ -60,12 +63,15 @@ define([
 
         loadTranslations: function(Template, translateCatalogueId){
 
-            translations = new Translations([], {translateCatalogueId: translateCatalogueId});
+            translations = new Translations({translateCatalogueId: translateCatalogueId});
+
+            //console.log(translateCatalogueId, 'load translations: options id 3');
+
             translations.fetch({
                 success:function(){
                     var template = _.template(Template, {translations: translations.toJSON(),catalogue: catalogue.toJSON()});
                     this.$el.html(template);
-                    console.log('load translations: template filled');
+//                    console.log('load translations: template filled');
                 }.bind(this)
             });
         },
@@ -77,8 +83,14 @@ define([
         },
 
         removeRowAndModel: function (event) {
+
+            // TODO - API methode gibts noch nicht
+
             var $tableRow = $(event.currentTarget).parent().parent().parent();
             var translationId = $tableRow.data('id');
+
+            console.log(translationId,'translation id');
+
             $tableRow.remove();
 
             if(!!translationId) {
@@ -101,6 +113,7 @@ define([
         submitForm: function (event) {
 
             event.preventDefault();
+            updatedTranslations = new Array();
 
             var formId = $(event.currentTarget).attr('id');
             var $rows = $('#' + formId + ' table tbody tr');
@@ -113,24 +126,17 @@ define([
                 var code;
                 var translation;
 
-                console.log(id, 'submit: translation id');
-
-                updatedTranslations = new Array();
-
                 if(!!id) {
                     translation = translations.get(id);
                     var currentValue = translation.get('value');
 
                     // did the value change
-                    if(!_.isEqual(currentValue, values[0].value)) {
+                    if(currentValue != values[0].value) {
                         translation.set('value',values[0].value);
                         updatedTranslations.push(translation);
                         console.log(updatedTranslations, 'submit: updated array of changed elements');
 
                     }
-
-                    console.log(translation.toJSON(), 'submit: existing translation');
-                    console.log(code.toJSON(), 'submit: existing code');
 
                 } else {
 
@@ -142,20 +148,16 @@ define([
                     translation.set('value',values[1].value);
 
                     translation.set('code', code);
-
-                    console.log(translation.toJSON(), 'submit: new translation');
-                    console.log(code.toJSON(), 'submit: new code');
-
                     updatedTranslations.push(translation);
-
-                    console.log(updatedTranslations, 'submit: updated array of changed elements');
 
                 }
 
             });
 
-            translations.save(updatedTranslations);
-
+            if(updatedTranslations.length > 0 ) {
+                console.log(updatedTranslations, 'items to update');
+                translations.save(updatedTranslations);
+            }
         },
 
         templates: {

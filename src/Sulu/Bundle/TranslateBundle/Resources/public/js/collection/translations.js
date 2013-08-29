@@ -18,11 +18,12 @@ define([
         model: Translation,
 
         url: function() {
-            return '/catalogues/'+this.catalogueId+'/translations'
+            return '/translate/api/catalogues/'+this.catalogueId+'/translations'
         },
 
-        initialize: function(catalogueId) {
-            this.catalogueId = catalogueId;
+        initialize: function(options) {
+            this.catalogueId = options.translateCatalogueId;
+            console.log(this.url(), 'translations collection url');
         },
 
         parse: function(resp) {
@@ -32,12 +33,29 @@ define([
         save: function(translations){
 
             $.ajax({
+
+                headers : {
+                    'Accept' : 'application/json',
+                    'Content-Type' : 'application/json'
+                },
+
                 type: "PATCH",
                 url: this.url(),
-                data: translations
-            }).done(function( msg ) {
-                    alert( "save: " + msg );
-                });
+                data:  JSON.stringify(translations),
+
+                success : function(response, textStatus, jqXhr) {
+                    console.log("patch successful");
+                },
+                error : function(jqXHR, textStatus, errorThrown) {
+                    // log the error to the console
+                    console.log("error during patch: " + textStatus, errorThrown);
+                },
+                complete : function() {
+                    console.log("completed patch");
+                }
+
+
+            });
 
         }
 

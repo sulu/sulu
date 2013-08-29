@@ -16,16 +16,10 @@ define([
         defaults: {
             id: null,
             code:'',
-            package:null,
-            translations: []
-
-        },
-        relations: [
-            {
-                type: Backbone.HasMany,
-                key: 'translations',
-                relatedModel: Translation
-            }
-        ]
+            backend: false,
+            frontend: false,
+            length:50,
+            package:null
+        }
     });
 });
