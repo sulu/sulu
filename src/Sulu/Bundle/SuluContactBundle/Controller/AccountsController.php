@@ -29,7 +29,7 @@ use \DateTime;
  */
 class AccountsController extends RestController implements ClassResourceInterface
 {
-    protected $entity = 'SuluContactBundle:Account';
+    protected $entityName = 'SuluContactBundle:Account';
 
     /**
      * Shows a single account with the given id
@@ -42,7 +42,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             $id,
             function ($id) {
                 return $this->getDoctrine()
-                    ->getRepository($this->entity)
+                    ->getRepository($this->entityName)
                     ->find($id);
             }
         );
