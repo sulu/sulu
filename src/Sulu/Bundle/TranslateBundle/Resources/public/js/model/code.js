@@ -15,8 +15,10 @@ define([
         urlRoot: '/translate/api/codes',
         defaults: {
             id: null,
-            name: '',
+            code:'',
+            package:null,
             translations: []
+
         },
         relations: [
             {
