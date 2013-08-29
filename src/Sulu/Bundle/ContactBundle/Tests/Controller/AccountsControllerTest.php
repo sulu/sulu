@@ -182,4 +182,411 @@ class AccountsControllerTest extends DatabaseTestCase
         $this->assertEquals(0, $response->code);
         $this->assertTrue(isset($response->message));
     }
+
+    public function testPost()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'phones' => array(
+                    array(
+                        'phone' => '123456789',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'phone' => '987654321',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'notes' => array(
+                    array('value' => 'Note 1'),
+                    array('value' => 'Note 2')
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+
+        $client->request('GET', '/contact/api/accounts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+    }
+
+    public function testPostWithIds()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'urls' => array(
+                    array(
+                        'id' => 15,
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertContains('15', $response->message);
+
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'emails' => array(
+                    array(
+                        'id' => 16,
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Work'
+                        )
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertContains('16', $response->message);
+
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'phones' => array(
+                    array(
+                        'id' => 17,
+                        'phone' => '123456789',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'phone' => '987654321',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertContains('17', $response->message);
+
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'addresses' => array(
+                    array(
+                        'id' => 18,
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertContains('18', $response->message);
+
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'notes' => array(
+                    array(
+                        'id' => 19,
+                        'value' => 'Note'
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertContains('19', $response->message);
+    }
+
+    public function testPostWithNotExistingUrlType()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '2',
+                            'name' => 'Work'
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertTrue(isset($response->message));
+    }
+
+    public function testPostWithNotExistingEmailType()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 2,
+                            'name' => 'Work'
+                        )
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertTrue(isset($response->message));
+    }
+
+    public function testPostWithNotExistingPhoneType()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'phones' => array(
+                    array(
+                        'phone' => '123456789',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'phone' => '987654321',
+                        'phoneType' => array(
+                            'id' => 2,
+                            'name' => 'Work'
+                        )
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertTrue(isset($response->message));
+    }
+
+    public function testPostWithNotExistingAddressType()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 2,
+                            'name' => 'Work'
+                        )
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertTrue(isset($response->message));
+    }
+
+    public function testPostWithNotExistingCountry()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/contact/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 2,
+                            'name' => 'Österreich',
+                            'code' => 'AT'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertTrue(isset($response->message));
+    }
+
+    public function testGetList()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/contact/api/accounts/list');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+
+        $this->assertEquals('Company', $response->items[0]->name);
+    }
 }
