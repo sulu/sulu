@@ -9,3 +9,8 @@ sulu_translate.catalogues:
 sulu_translate.codes:
     type: rest
     resource: Sulu\Bundle\TranslateBundle\Controller\CodesController
+
+sulu_translate.translations:
+    type: rest
+    parent: sulu_translate.catalogues
+    resource: Sulu\Bundle\TranslateBundle\Controller\TranslationsController
