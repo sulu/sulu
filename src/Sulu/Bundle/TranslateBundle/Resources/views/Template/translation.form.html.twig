@@ -15,12 +15,12 @@
             </thead>
 
             <tbody>
-                <% _.each(codes, function(item) { %>
+                <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
-                    <td class="grid-col-4"><p><%= item.code %><span class="icon-remove m-left-5"></span><p></td>
+                    <td class="grid-col-4"><p><%= item.code.code %><span class="icon-remove m-left-5"></span><p></td>
                     <td class="grid-col-4">
-                        <textarea rows="1" class="form-element vertical"><%= (!!item.translations[0]) ? item.translations[0].value : '' %></textarea>
-                        <small>[Max. <%= item.length %> chars]</small>
+                        <textarea rows="1" class="form-element vertical"><%= (!!item.value]) ? item.value : '' %></textarea>
+                        <small>[Max. <%= item.code.length %> chars]</small>
                     </td>
                     <td class="grid-col-4"><p>[Lorem Ipsum dolor set]</p></td>
                 </tr>

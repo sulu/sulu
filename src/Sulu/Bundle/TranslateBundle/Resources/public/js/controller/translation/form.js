@@ -12,15 +12,16 @@ define([
     'backbone',
     'router',
     'sulutranslate/model/code',
-    'sulutranslate/collection/codes',
+    'sulutranslate/collection/translations',
     'sulutranslate/model/translation',
     'sulutranslate/model/catalogue'
-], function ($, Backbone, Router, Code, Codes, Translation, Catalogue) {
+], function ($, Backbone, Router, Code, Translations, Translation, Catalogue) {
 
     'use strict';
 
-    var codes;
+    var translations;
     var catalogue;
+    var updatedTranslations;
 
     return Backbone.View.extend({
 
@@ -38,34 +39,32 @@ define([
         render: function () {
 
             Backbone.Relational.store.reset(); //FIXME really necessary?
-            require(['text!/translate/template/code/form'], function (Template) {
+            require(['text!/translate/template/translation/form'], function (Template) {
 
-
-                var translatePackageId = this.options.id;
-                var translateCatalogueId = 96; // TODO catalogue id
+                var translateCatalogueId = 86; // TODO catalogue id
 
                 catalogue = new Catalogue({id: translateCatalogueId});
+
+                console.log(this.options, 'render: options view');
+
+                // load translations only with a valid catalogue
                 catalogue.fetch({
                     success: function(){
-                        console.log(catalogue.toJSON(), 'catalogue loaded');
-                        this.loadCodes(Template, translateCatalogueId);
+                        this.loadTranslations(Template, translateCatalogueId);
                     }.bind(this)
                 });
-
-
 
             }.bind(this));
         },
 
-        loadCodes: function(Template, translateCatalogueId){
+        loadTranslations: function(Template, translateCatalogueId){
 
-            // collection
-            codes = new Codes([], {translateCatalogueId: translateCatalogueId});
-            codes.fetch({
-                success: function () {
-                    console.log(codes, 'codes loaded');
-                    var template = _.template(Template, {codes: codes.toJSON(),catalogue: catalogue.toJSON()});
+            translations = new Translations([], {translateCatalogueId: translateCatalogueId});
+            translations.fetch({
+                success:function(){
+                    var template = _.template(Template, {translations: translations.toJSON(),catalogue: catalogue.toJSON()});
                     this.$el.html(template);
+                    console.log('load translations: template filled');
                 }.bind(this)
             });
         },
@@ -78,19 +77,20 @@ define([
 
         removeRowAndModel: function (event) {
             var $tableRow = $(event.currentTarget).parent().parent().parent();
-            var codeId = $tableRow.data('id');
+            var translationId = $tableRow.data('id');
             $tableRow.remove();
 
-            if(!!codeId) {
-                var model = codes.get(codeId);
-                model.destroy({
+            if(!!translationId) {
+                var translation = translations.get(translationId);
+                translation.destroy({
                     success: function () {
-                        console.log("deleted model");
+                        console.log("remove: deleted translation");
                     }
                 });
             }
         },
 
+        // TODO fields by default editable?
         unlockFormElement: function(event){
             var $element = $(event.currentTarget);
             $($element).prop('readonly', false);
@@ -109,30 +109,51 @@ define([
                 var id = $($row).data('id');
                 var values = $($row).find('textarea');
 
-                var model;
+                var code;
                 var translation;
 
+                console.log(id, 'submit: translation id');
+
+                updatedTranslations = new Array();
+
                 if(!!id) {
-                    model = codes.get(id);
-//                    console.log(values[0].value);
+                    translation = translations.get(id);
+                    var currentValue = translation.get('value');
+
+                    // did the value change
+                    if(!_.isEqual(currentValue, values[0].value)) {
+                        translation.set('value',values[0].value);
+                        updatedTranslations.push(translation);
+                        console.log(updatedTranslations, 'submit: updated array of changed elements');
+
+                    }
+
+                    console.log(translation.toJSON(), 'submit: existing translation');
+                    console.log(code.toJSON(), 'submit: existing code');
 
                 } else {
-                    model = new Code();
-                    model.set('code',values[0].value);
-                    // "backend":true,"frontend":true,"length":25,
-                    console.log(values[1].value);
+
+                    // new translation and new code
+                    code = new Code();
+                    code.set('code',values[0].value);
+
                     translation = new Translation();
                     translation.set('value',values[1].value);
-                    translation.set('')
 
-                    console.log(model.get('translations').add());
+                    translation.set('code', code);
+
+                    console.log(translation.toJSON(), 'submit: new translation');
+                    console.log(code.toJSON(), 'submit: new code');
+
+                    updatedTranslations.push(translation);
+
+                    console.log(updatedTranslations, 'submit: updated array of changed elements');
 
                 }
 
-                //console.log(model);
-
-
             });
+
+            translations.save(updatedTranslations);
 
         },
 

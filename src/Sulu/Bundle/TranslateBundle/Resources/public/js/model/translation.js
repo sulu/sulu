@@ -14,6 +14,7 @@ define([
     return Backbone.RelationalModel.extend({
         urlRoot: '/translate/api/translation',
         defaults: {
+            id: null,
             value: '',
             code: null,
             catalogue: null
