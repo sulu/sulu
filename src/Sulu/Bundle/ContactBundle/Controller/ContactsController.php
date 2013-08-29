@@ -19,6 +19,10 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
 
+/**
+ * Makes contacts available through a REST API
+ * @package Sulu\Bundle\ContactBundle\Controller
+ */
 class ContactsController extends RestController
 {
     /**
