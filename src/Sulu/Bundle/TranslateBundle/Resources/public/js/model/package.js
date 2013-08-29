@@ -14,8 +14,8 @@ define(['backbonerelational', 'sulutranslate/model/catalogue'], function(Backbon
         defaults: {
             id: null,
             name: '',
-            locale: '',
-            catalogues: []
+            catalogues: [],
+            codes: []
         },
         relations: [
             {

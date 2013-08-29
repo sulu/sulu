@@ -13,6 +13,8 @@ define(['backbonerelational'], function() {
         idAttribute: 'id',
         defaults: {
             id: null,
+            locale:'',
+            package:null,
             translations: []
         }
     });
