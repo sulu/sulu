@@ -139,6 +139,47 @@ class AccountsControllerTest extends DatabaseTestCase
 
     public function testGetById()
     {
-        
+        $client = self::createClient();
+
+        $client->request(
+            'GET',
+            '/contact/api/accounts/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('Company', $response->name);
+        $this->assertEquals('http://www.company.example', $response->urls[0]->url);
+        $this->assertEquals('Private', $response->urls[0]->urlType->name);
+        $this->assertEquals('office@company.example', $response->emails[0]->email);
+        $this->assertEquals('Private', $response->emails[0]->emailType->name);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('Private', $response->phones[0]->phoneType->name);
+        $this->assertEquals('Note', $response->notes[0]->value);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterland', $response->addresses[0]->state);
+        $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+        $this->assertEquals('ML', $response->addresses[0]->country->code);
+        $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+    }
+
+    public function testGetByIdNotExisting()
+    {
+        $client = self::createClient();
+        $client->request(
+            'GET',
+            '/contact/api/accounts/10'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->code);
+        $this->assertTrue(isset($response->message));
     }
 }
