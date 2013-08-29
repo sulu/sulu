@@ -17,7 +17,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
  * Make the catalogues available through a REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class CataloguesController extends FOSRestController implements ClassResourceInterface
+class CataloguesController extends FOSRestController
 {
 
 	/**
@@ -25,7 +25,7 @@ class CataloguesController extends FOSRestController implements ClassResourceInt
 	 * @param $id
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function getAction($id)
+	public function getCatalogueAction($id)
 	{
 		$response = array();
 
@@ -38,7 +38,7 @@ class CataloguesController extends FOSRestController implements ClassResourceInt
 		return $this->handleView($view);
 	}
 
-	public function cgetAction()
+	public function getCataloguesAction()
 	{
 		$response = array();
 
@@ -65,7 +65,7 @@ class CataloguesController extends FOSRestController implements ClassResourceInt
 		return $this->handleView($view);
 	}
 
-	public function deleteAction($id)
+	public function deleteCatalogueAction($id)
 	{
 
 		$response = array();
