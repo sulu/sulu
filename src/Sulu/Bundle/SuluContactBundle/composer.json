@@ -15,6 +15,7 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "0.12.*",
         "jms/serializer-bundle": "@dev",
+        "stof/doctrine-extensions-bundle": "1.1.*@dev",
         "sulu/core-bundle": "dev-develop",
         "sulu/admin-bundle": "dev-feature/registration"
     },
