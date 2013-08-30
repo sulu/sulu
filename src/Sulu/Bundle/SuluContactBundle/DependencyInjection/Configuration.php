@@ -20,18 +20,27 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_contact');
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getConfigTreeBuilder()
+	{
+		$treeBuilder = new TreeBuilder();
+		$rootNode = $treeBuilder->root('sulu_contact');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+		$rootNode
+			->children()
+			->arrayNode('defaults')
+			->children()
+			->scalarNode('phoneType')->defaultValue('1')->end()
+			->scalarNode('emailType')->defaultValue('1')->end()
+			->scalarNode('addressType')->defaultValue('1')->end()
+			->end();
 
-        return $treeBuilder;
-    }
+		// Here you should define the parameters that are allowed to
+		// configure your bundle. See the documentation linked above for
+		// more information on that topic.
+
+		return $treeBuilder;
+	}
 }
