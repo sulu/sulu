@@ -271,12 +271,24 @@ define([
             $element.remove();
         },
 
-        removePhone: function($element) {
-
+        removePhone: function(event) {
+            var $element = $(event.currentTarget).parent();
+            var id = $element.data('id');
+            if (id != null && id != '') {
+                var phone = contact.get('phones').get(id);
+                contact.get('phones').remove(phone);
+            }
+            $element.remove();
         },
 
-        removeAddress: function($element) {
-
+        removeAddress: function(event) {
+            var $element = $(event.currentTarget).parent();
+            var id = $element.data('id');
+            if (id != null && id != '') {
+                var address = contact.get('addresses').get(id);
+                contact.get('addresses').remove(address);
+            }
+            $element.remove();
         },
 
         fillFields: function(field, minAmount, value) {
