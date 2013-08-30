@@ -19,7 +19,9 @@
         <field name="name" type="string" column="name" length="60"/>
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
+
         <one-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="account"/>
+
         <many-to-one field="changer" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
             <join-columns>
                 <join-column name="idContactsChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
@@ -39,9 +41,11 @@
         </many-to-one>
         <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account">
             <join-columns>
-                <join-column name="idAccountsParent" referenced-column-name="id"/>
+                <join-column name="idAccountsParent" referenced-column-name="id" />
             </join-columns>
+            <gedmo:tree-parent/>
         </many-to-one>
+
         <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="accounts">
             <join-table name="co_account_urls">
                 <join-columns>
@@ -92,5 +96,7 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+
+        <gedmo:tree type="nested"/>
     </entity>
 </doctrine-mapping>

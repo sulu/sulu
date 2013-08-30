@@ -33,17 +33,19 @@ class AccountsControllerTest extends DatabaseTestCase
      */
     protected static $entities;
 
+    /**
+     * @var Account
+     */
+    protected static $account;
+
     public function setUp()
     {
         $this->setUpSchema();
 
-        $account = new Account();
-        $account->setLft(0);
-        $account->setRgt(0);
-        $account->setDepth(0);
-        $account->setName('Company');
-        $account->setCreated(new DateTime());
-        $account->setChanged(new DateTime());
+        self::$account = new Account();
+        self::$account->setName('Company');
+        self::$account->setCreated(new DateTime());
+        self::$account->setChanged(new DateTime());
 
         $urlType = new UrlType();
         $urlType->setName('Private');
@@ -51,7 +53,7 @@ class AccountsControllerTest extends DatabaseTestCase
         $url = new Url();
         $url->setUrl('http://www.company.example');
         $url->setUrlType($urlType);
-        $account->addUrl($url);
+        self::$account->addUrl($url);
 
         $emailType = new EmailType();
         $emailType->setName('Private');
@@ -59,7 +61,7 @@ class AccountsControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('office@company.example');
         $email->setEmailType($emailType);
-        $account->addEmail($email);
+        self::$account->addEmail($email);
 
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
@@ -67,7 +69,7 @@ class AccountsControllerTest extends DatabaseTestCase
         $phone = new Phone();
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
-        $account->addPhone($phone);
+        self::$account->addPhone($phone);
 
         $country = new Country();
         $country->setName('Musterland');
@@ -84,13 +86,13 @@ class AccountsControllerTest extends DatabaseTestCase
         $address->setState('Musterland');
         $address->setCountry($country);
         $address->setAddressType($addressType);
-        $account->addAddresse($address);
+        self::$account->addAddresse($address);
 
         $note = new Note();
         $note->setValue('Note');
-        $account->addNote($note);
+        self::$account->addNote($note);
 
-        self::$em->persist($account);
+        self::$em->persist(self::$account);
         self::$em->persist($urlType);
         self::$em->persist($url);
         self::$em->persist($emailType);
@@ -191,6 +193,7 @@ class AccountsControllerTest extends DatabaseTestCase
             '/contact/api/accounts',
             array(
                 'name' => 'ExampleCompany',
+                'idParent' => self::$account->getId(),
                 'urls' => array(
                     array(
                         'url' => 'http://example.company.com',
@@ -260,6 +263,10 @@ class AccountsControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(2, $response->lft);
+        $this->assertEquals(3, $response->rgt);
+        $this->assertEquals(1, $response->depth);
+        $this->assertEquals(self::$account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -276,6 +283,10 @@ class AccountsControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(2, $response->lft);
+        $this->assertEquals(3, $response->rgt);
+        $this->assertEquals(1, $response->depth);
+        $this->assertEquals(self::$account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
