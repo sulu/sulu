@@ -23,8 +23,7 @@ class TranslationRepository extends EntityRepository
 		$dql = 'SELECT tr
 				FROM SuluTranslateBundle:Translation tr
 					JOIN tr.catalogue ca
-					JOIN ca.package pa
-					JOIN pa.codes co
+					JOIN tr.code co
 				WHERE co.id = :codeId AND
 					  ca.id = :catalogueId';
 
@@ -49,7 +48,7 @@ class TranslationRepository extends EntityRepository
                         JOIN tr.code co
                         LEFT JOIN co.location lo
                     WHERE ca.locale = :locale
-                      AND pa.id = :packageId';
+                      	AND pa.id = :packageId';
 
 		// add additional conditions, if they are set
 		if ($backend != null) {
@@ -92,3 +91,4 @@ class TranslationRepository extends EntityRepository
 		return $query->getResult();
 	}
 }
+

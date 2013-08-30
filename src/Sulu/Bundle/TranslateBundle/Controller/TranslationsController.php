@@ -76,7 +76,7 @@ class TranslationsController extends RestController implements ClassResourceInte
 		$repository = $this->getDoctrine()
 			->getRepository($this->entityName);
 
-		if (isset($item['id'])) {
+		if (isset($item['id']) && $item['id'] != null) {
 			// code exists
 			/** @var Translation $translation */
 			$translation = $repository->getTranslation($item['id'], $catalogueId);
