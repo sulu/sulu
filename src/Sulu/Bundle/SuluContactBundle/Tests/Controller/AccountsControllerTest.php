@@ -600,4 +600,21 @@ class AccountsControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Company', $response->items[0]->name);
     }
+
+    public function testGetListSearch()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/contact/api/accounts/list?search=Nothing&searchFields=name,emails_emailType_name');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(0, $response->total);
+        $this->assertEquals(0, count($response->items));
+
+        $client->request('GET', '/contact/api/accounts/list?search=Comp&searchFields=name,emails_emailType_name');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->items));
+        $this->assertEquals('Company', $response->items[0]->name);
+    }
 }
