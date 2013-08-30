@@ -74,10 +74,18 @@ class AccountsController extends RestController implements ClassResourceInterfac
                 $account = new Account();
 
                 $account->setName($this->getRequest()->get('name'));
-                //FIXME set correct values
-                $account->setLft(0);
-                $account->setRgt(0);
-                $account->setDepth(0);
+
+                $idParent = $this->getRequest()->get('idParent');
+                if ($idParent != null) {
+                    $parent = $this->getDoctrine()
+                        ->getRepository($this->entityName)
+                        ->find($idParent);
+
+                    if (!$parent) {
+                        throw new EntityNotFoundException($this->entityName, $idParent);
+                    }
+                    $account->setParent($parent);
+                }
 
                 $account->setCreated(new DateTime());
                 $account->setChanged(new DateTime());
