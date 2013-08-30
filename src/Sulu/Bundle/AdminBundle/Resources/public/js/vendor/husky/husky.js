@@ -270,7 +270,7 @@ function typeOf(value) {
             Husky.DEBUG && console.log(this.name, 'init');
 
             // init form-element and dropdown menu
-            this.$valueField = $('<input type="text" autofill="false" class="name-value input-element" data-id=""/>');
+            this.$valueField = $('<input type="text" autofill="false" class="name-value form-element" data-id=""/>');
             this.$dropDown = $('<div class="dropdown-menu" />');
             this.$dropDownList = $('<ul/>');
             this.$element.append(this.$valueField);
