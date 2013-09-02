@@ -1,5 +1,0 @@
-sulu_admin:
-    path:  /
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'SuluAdminBundle:Admin:index.html.twig'
