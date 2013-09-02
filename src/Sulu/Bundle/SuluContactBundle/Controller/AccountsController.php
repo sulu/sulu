@@ -205,9 +205,6 @@ class AccountsController extends RestController implements ClassResourceInterfac
 	 */
 	public function deleteAction($id)
 	{
-
-		$response = array();
-
 		$account = $this->getDoctrine()
 			->getRepository('SuluContactBundle:Account')
 			->find($id);
@@ -664,5 +661,4 @@ class AccountsController extends RestController implements ClassResourceInterfac
 
 		return $success;
 	}
-
 }
