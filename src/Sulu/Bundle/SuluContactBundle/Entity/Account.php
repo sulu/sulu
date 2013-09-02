@@ -60,11 +60,6 @@ class Account
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Account
      */
-    private $idAccountsRoot;
-
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Account
-     */
     private $parent;
 
     /**
@@ -294,29 +289,6 @@ class Account
     public function getContacts()
     {
         return $this->contacts;
-    }
-
-    /**
-     * Set idAccountsRoot
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $idAccountsRoot
-     * @return Account
-     */
-    public function setIdAccountsRoot(\Sulu\Bundle\ContactBundle\Entity\Account $idAccountsRoot = null)
-    {
-        $this->idAccountsRoot = $idAccountsRoot;
-
-        return $this;
-    }
-
-    /**
-     * Get idAccountsRoot
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account
-     */
-    public function getIdAccountsRoot()
-    {
-        return $this->idAccountsRoot;
     }
 
     /**

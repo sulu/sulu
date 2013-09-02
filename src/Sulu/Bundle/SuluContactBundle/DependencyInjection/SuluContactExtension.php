@@ -32,5 +32,10 @@ class SuluContactExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
+
+		$container->setParameter(
+			'sulu_contact.defaults',
+			$config['defaults']
+		);
     }
 }

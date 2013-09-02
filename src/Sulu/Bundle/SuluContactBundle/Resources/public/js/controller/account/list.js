@@ -141,7 +141,7 @@ define([
             $operationsRight.empty();
             $operationsRight.append(this.template.button('#contacts/companies/add','Add...'));
         },
-        
+
         template: {
             button: function(url, name){
                 return '<a class="btn" href="'+url+'" target="_top" title="Add">'+name+'</a>';
