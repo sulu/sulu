@@ -1,7 +1,7 @@
 parameters:
-#    sulu_admin.example.class: Sulu\Bundle\AdminBundle\Example
+    sulu_admin.admin_pool.class: Sulu\Bundle\AdminBundle\Admin\AdminPool
+    sulu_admin.name:
 
 services:
-#    sulu_admin.example:
-#        class: %sulu_admin.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    sulu_admin.admin_pool:
+        class: %sulu_admin.admin_pool.class%

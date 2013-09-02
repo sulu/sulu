@@ -1,0 +1,48 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{ name }}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- build:css app.min.css -->
+    <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css" />
+    <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/bundles/sulutranslate/css/main.css" />
+    <!-- endbuild -->
+    <style>
+        .demo-container {
+            width: 800px;
+            margin-left: 300px;
+            margin-top: 100px;
+            min-height: 300px;
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <header class="headerbar headerbar-fixed-top">
+        <span class="headerbar-logo">{{ name }}</span>
+    </header>
+
+    <div id="navigation" class="demo-navigation"></div>
+
+    <main class="demo-container">
+        <div class="grid"  id="content">
+
+        </div>
+    </main>
+</div>
+        <!-- build:js app.min.js -->
+        <script data-main="/bundles/suluadmin/js/main" src="/bundles/suluadmin/js/vendor/requirejs/require.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
+
