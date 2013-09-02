@@ -199,6 +199,35 @@ class AccountsController extends RestController implements ClassResourceInterfac
 	}
 
 	/**
+	 * Delete an account with the given id
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function deleteAction($id)
+	{
+
+		$response = array();
+
+		$account = $this->getDoctrine()
+			->getRepository('SuluContactBundle:Account')
+			->find($id);
+
+		if ($account != null) {
+			$em = $this->getDoctrine()->getManager();
+			$em->remove($account);
+			$em->flush();
+
+			$view = $this->view(null, 204);
+
+		} else {
+			$view = $this->view(null, 404);
+
+		}
+
+		return $this->handleView($view);
+	}
+
+	/**
 	 * Process all urls from request
 	 * @param Account $account The contact on which is worked
 	 * @return bool True if the processing was sucessful, otherwise false
@@ -635,4 +664,5 @@ class AccountsController extends RestController implements ClassResourceInterfac
 
 		return $success;
 	}
+
 }
