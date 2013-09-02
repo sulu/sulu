@@ -80,11 +80,11 @@
                 <div class="grid-row">
                     <div class="grid-col-6">
                         <label class="bold">First name*</label>
-                        <input class="form-element" type="text" id="firstName" value="<%= firstName %>"/>
+                        <input class="form-element" type="text" id="first-name" value="<%= firstName %>"/>
                     </div>
                     <div class="grid-col-6">
                         <label class="bold">Last name*</label>
-                        <input class="form-element" type="text" id="lastName" value="<%= lastName %>"/>
+                        <input class="form-element" type="text" id="last-name" value="<%= lastName %>"/>
                     </div>
                 </div>
                 <div class="grid-row">
@@ -119,7 +119,7 @@
 
                 <div class="remove-email"><span class="icon-remove pull-right"></span></div>
 
-                <input class="form-element emailValue" type="text" value="<%= email.email %>"/>
+                <input class="form-element email-value" type="text" value="<%= email.email %>"/>
             </div>
             <% }); %>
         </div>
@@ -142,7 +142,7 @@
                 </label>
                 <div class="remove-phone"><span class="icon-remove pull-right"></span></div>
 
-                <input class="form-element phoneValue" type="text" value="<%= phone.phone %>"/>
+                <input class="form-element phone-value" type="text" value="<%= phone.phone %>"/>
             </div>
             <% }); %>
         </div>
@@ -180,34 +180,34 @@
                 <div class="grid-row">
                     <div class="grid-col-6">
                         <label>Street</label>
-                        <input class="form-element streetValue" type="text" value="<%= address.street %>"/>
+                        <input class="form-element street-value" type="text" value="<%= address.street %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>Number</label>
-                        <input class="form-element numberValue" type="text" value="<%= address.number %>"/>
+                        <input class="form-element number-value" type="text" value="<%= address.number %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>House, Floor, etc.</label>
-                        <input class="form-element additionValue" type="text" value="<%= address.addition %>"/>
+                        <input class="form-element addition-value" type="text" value="<%= address.addition %>"/>
                     </div>
                 </div>
                 <div class="grid-row">
                     <div class="grid-col-2">
                         <label>Zip</label>
-                        <input class="form-element zipValue" type="text" value="<%= address.zip %>"/>
+                        <input class="form-element zip-value" type="text" value="<%= address.zip %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>City</label>
-                        <input class="form-element cityValue" type="text" value="<%= address.city %>"/>
+                        <input class="form-element city-value" type="text" value="<%= address.city %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>State</label>
-                        <input class="form-element stateValue" type="text" value="<%= address.state %>"/>
+                        <input class="form-element state-value" type="text" value="<%= address.state %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>Country</label>
                         {# TODO Country #}
-                        <select class="form-element countryValue">
+                        <select class="form-element country-value">
                             <option value="1">Österreich</option>
                             <option value="2">Deutschland</option>
                             <option value="3">Schweiz</option>

@@ -91,6 +91,9 @@ define([
             this.$('#company').huskyAutoComplete({
                 url: '/contacts/api/accounts'
             });
+            this.$('#company').huskyAutoComplete({
+                url: '/contacts/api/accounts'
+            });
 
             var that = this;
             this.$('.type-value').each(function(event) {
@@ -123,8 +126,8 @@ define([
             Backbone.Relational.store.reset(); //FIXME really necessary?
             event.preventDefault();
             contact.set({
-                firstName: this.$('#firstName').val(),
-                lastName: this.$('#lastName').val(),
+                firstName: this.$('#first-name').val(),
+                lastName: this.$('#last-name').val(),
                 title: this.$('#title').val(),
                 position: this.$('#position').val(),
                 account: new Account({id: this.$('#company').data('id')})
@@ -140,7 +143,7 @@ define([
                 if (!email) {
                     email = new Email();
                 }
-                var emailValue = $(this).find('.emailValue').val();
+                var emailValue = $(this).find('.email-value').val();
                 if (emailValue) {
                     email.set({
                         email: emailValue,
@@ -160,7 +163,7 @@ define([
                 if (!phone) {
                     phone = new Phone();
                 }
-                var phoneValue = $(this).find('.phoneValue').val();
+                var phoneValue = $(this).find('.phone-value').val();
                 if (phoneValue) {
                     phone.set({
                         phone: phoneValue,
@@ -184,12 +187,12 @@ define([
                 if (!address) {
                     address = new Address();
                 }
-                var street = $(this).find('.streetValue').val();
-                var number = $(this).find('.numberValue').val();
-                var addition = $(this).find('.additionValue').val();
-                var zip = $(this).find('.zipValue').val();
-                var city = $(this).find('.cityValue').val();
-                var state = $(this).find('.stateValue').val();
+                var street = $(this).find('.street-value').val();
+                var number = $(this).find('.number-value').val();
+                var addition = $(this).find('.addition-value').val();
+                var zip = $(this).find('.zip-value').val();
+                var city = $(this).find('.city-value').val();
+                var state = $(this).find('.state-value').val();
 
                 if (street && number && zip && city && state) {
                     address.set({
@@ -282,7 +285,7 @@ define([
         },
 
         removeAddress: function(event) {
-            var $element = $(event.currentTarget).parent();
+            var $element = $(event.currentTarget).parent().parent();
             var id = $element.data('id');
             if (id != null && id != '') {
                 var address = contact.get('addresses').get(id);
