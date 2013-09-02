@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
-
 class Navigation
 {
     /**
@@ -49,7 +48,8 @@ class Navigation
      * Returns the navigation as array
      * @return array
      */
-    public function toArray() {
+    public function toArray()
+    {
         return $this->getRoot()->toArray();
     }
 }
