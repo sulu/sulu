@@ -32,7 +32,7 @@
         </many-to-one>
         <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="contacts">
             <join-columns>
-                <join-column name="idAccounts" referenced-column-name="id"/>
+                <join-column name="idAccounts" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
         <many-to-many field="notes" target-entity="Sulu\Bundle\ContactBundle\Entity\Note" inversed-by="contacts">
