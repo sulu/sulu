@@ -34,9 +34,13 @@ class TemplateController extends Controller
 			->getRepository($addressTypeEntity)
 			->find($defaults['addressType']);
 
+		$countryEntity = 'SuluContactBundle:Country';
 		$countries = $this->getDoctrine()
-			->getRepository('SuluContactBundle:Country')
+			->getRepository($countryEntity)
 			->findAll();
+		$defaultCountry = $this->getDoctrine()
+			->getRepository($countryEntity)
+			->find($defaults['country']);
 
 		return $this->render('SuluContactBundle:Template:contact.form.html.twig', array(
 			'addressTypes' => $addressTypes,
@@ -45,7 +49,8 @@ class TemplateController extends Controller
 			'countries' => $countries,
 			'defaultPhoneType' => $defaultPhoneType,
 			'defaultEmailType' => $defaultEmailType,
-			'defaultAddressType' => $defaultAddressType
+			'defaultAddressType' => $defaultAddressType,
+			'defaultCountry' => $defaultCountry
 		));
 	}
 
