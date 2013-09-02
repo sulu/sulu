@@ -30,12 +30,13 @@ class Configuration implements ConfigurationInterface
 
 		$rootNode
 			->children()
-			->arrayNode('defaults')
-			->children()
-			->scalarNode('phoneType')->defaultValue('1')->end()
-			->scalarNode('emailType')->defaultValue('1')->end()
-			->scalarNode('addressType')->defaultValue('1')->end()
-			->end();
+				->arrayNode('defaults')
+					->addDefaultsIfNotSet()
+					->children()
+					->scalarNode('phoneType')->defaultValue('1')->end()
+					->scalarNode('emailType')->defaultValue('1')->end()
+					->scalarNode('addressType')->defaultValue('1')->end()
+				->end();
 
 		// Here you should define the parameters that are allowed to
 		// configure your bundle. See the documentation linked above for

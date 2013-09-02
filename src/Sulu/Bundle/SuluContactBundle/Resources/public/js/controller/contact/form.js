@@ -16,14 +16,11 @@ define([
     'sulucontact/model/country',
     'sulucontact/model/email',
     'sulucontact/model/emailType',
-    'sulucontact/collections/emailTypes',
     'sulucontact/model/phone',
     'sulucontact/model/phoneType',
-    'sulucontact/collections/phoneTypes',
     'sulucontact/model/address',
-    'sulucontact/model/addressType',
-    'sulucontact/collections/addressTypes'
-], function($, Backbone, Router, Account, Contact, Country, Email, EmailType, EmailTypes, Phone, PhoneType, PhoneTypes, Address, AddressType, AddressTypes) {
+    'sulucontact/model/addressType'
+], function($, Backbone, Router, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType) {
 
     'use strict';
 
@@ -304,8 +301,8 @@ define([
             emailRow: function() {
                 return [
                     '<div class="grid-col-6 email-item" data-id="<%= email.id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!email.emailType)?email.emailType.id :\'[Email Type ID]\' %>">',
-                    '<span class="type-name"><%= (!!email.emailType)?email.emailType.name :\'[Email Type]\' %></span>',
+                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!email.emailType)?email.emailType.id :defaults.emailType.id %>">',
+                    '<span class="type-name"><%= (!!email.emailType)?email.emailType.name : defaults.emailType.name %></span>',
                     '<span class="dropdown-toggle inline"></span>',
                     '</label>',
                     '<div class="remove-email"><span class="icon-remove pull-right"></span></div>',
@@ -316,8 +313,8 @@ define([
             phoneRow: function() {
                 return [
                     '<div class="grid-col-6 phone-item" data-id="<%= phone.id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phone.phoneType)? phone.phoneType.id:\'[Phone Type ID]\' %>">',
-                    '<span class="type-name"><%= (!!phone.phoneType)? phone.phoneType.name:\'[Phone Type]\' %></span>',
+                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phone.phoneType)? phone.phoneType.id : defaults.phoneType.id %>">',
+                    '<span class="type-name"><%= (!!phone.phoneType)? phone.phoneType.name : defaults.phoneType.name %></span>',
                     '<span class="dropdown-toggle inline"></span>',
                     '</label>',
                     '<div class="remove-phone"><span class="icon-remove pull-right"></span></div>',

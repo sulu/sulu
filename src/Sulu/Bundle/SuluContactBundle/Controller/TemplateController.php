@@ -8,17 +8,31 @@ class TemplateController extends Controller
 {
 	public function contactFormAction()
 	{
-		$emailTypes = $this->getDoctrine()
-			->getRepository('SuluContactBundle:EmailType')
-			->findAll();
+		$defaults = $this->container->getParameter('sulu_contact.defaults');
 
+		$emailTypeEntity = 'SuluContactBundle:EmailType';
+		$emailTypes = $this->getDoctrine($emailTypeEntity)
+			->getRepository($emailTypeEntity)
+			->findAll();
+		$defaultEmailType = $this->getDoctrine($emailTypeEntity)
+			->getRepository($emailTypeEntity)
+			->find($defaults['emailType']);
+
+		$phoneTypeEntity = 'SuluContactBundle:PhoneType';
 		$phoneTypes = $this->getDoctrine()
-			->getRepository('SuluContactBundle:PhoneType')
+			->getRepository($phoneTypeEntity)
 			->findAll();
+		$defaultPhoneType = $this->getDoctrine()
+			->getRepository($phoneTypeEntity)
+			->find($defaults['phoneType']);
 
+		$addressTypeEntity = 'SuluContactBundle:AddressType';
 		$addressTypes = $this->getDoctrine()
-			->getRepository('SuluContactBundle:AddressType')
+			->getRepository($addressTypeEntity)
 			->findAll();
+		$defaultAddressType = $this->getDoctrine()
+			->getRepository($addressTypeEntity)
+			->find($defaults['addressType']);
 
 		$countries = $this->getDoctrine()
 			->getRepository('SuluContactBundle:Country')
@@ -28,7 +42,10 @@ class TemplateController extends Controller
 			'addressTypes' => $addressTypes,
 			'phoneTypes' => $phoneTypes,
 			'emailTypes' => $emailTypes,
-			'countries' => $countries
+			'countries' => $countries,
+			'defaultPhoneType' => $defaultPhoneType,
+			'defaultEmailType' => $defaultEmailType,
+			'defaultAddressType' => $defaultAddressType
 		));
 	}
 
