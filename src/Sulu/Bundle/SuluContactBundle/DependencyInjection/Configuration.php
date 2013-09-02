@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
 					->scalarNode('phoneType')->defaultValue('1')->end()
 					->scalarNode('emailType')->defaultValue('1')->end()
 					->scalarNode('addressType')->defaultValue('1')->end()
+					->scalarNode('country')->defaultValue('1')->end()
 				->end();
 
 		// Here you should define the parameters that are allowed to
