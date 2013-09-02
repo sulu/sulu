@@ -19,8 +19,10 @@ define([
     'sulucontact/model/phone',
     'sulucontact/model/phoneType',
     'sulucontact/model/address',
-    'sulucontact/model/addressType'
-], function ($, Backbone, Router, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType) {
+    'sulucontact/model/addressType',
+    'sulucontact/model/url',
+    'sulucontact/model/urlType'
+], function ($, Backbone, Router, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType, Url, UrlType) {
 
     'use strict';
 
@@ -87,6 +89,24 @@ define([
             account.set({
                 name: this.$('#name').val()
             });
+
+            // Add single website
+            // FIXME remove
+            var urlType = new UrlType({
+                id: 1
+            });
+            var url = account.get($(this).data('id'));
+            if(!url) {
+                url = new Url();
+            }
+            var urlValue = $('#url').val()
+            if (urlValue) {
+                url.set({
+                    url: urlValue,
+                    urlType: urlType
+                });
+                account.get('urls').add(url);
+            }
 
             // FIXME remove
             var emailType = new EmailType({
