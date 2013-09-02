@@ -1,7 +1,7 @@
 /* 
  * husky v0.1.0
  *  
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  * 
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -234,6 +234,307 @@ function typeOf(value) {
 (function($, window, document, undefined) {
     'use strict';
 
+    var moduleName = 'Husky.Ui.AutoComplete';
+
+    Husky.Ui.AutoComplete = function(element, options) {
+        this.name = moduleName;
+
+        Husky.DEBUG && console.log(this.name, 'create instance');
+
+        this.options = options;
+
+        this.configs = {};
+
+        this.$originalElement = $(element);
+        this.$element = $('<div class="husky-auto-complete dropdown"/>');
+        $(element).append(this.$element);
+
+        this.init();
+    };
+
+    $.extend(Husky.Ui.AutoComplete.prototype, Husky.Events, {
+        // private event dispatcher
+        vent: (function() {
+            return $.extend({}, Husky.Events);
+        })(),
+
+        // get url for pattern
+        getUrl: function(pattern) {
+            var delimiter = '?';
+            if (this.options.url.indexOf('?') != -1) delimiter = '&';
+
+            return this.options.url + delimiter + 'search=' + pattern;
+        },
+
+        init: function() {
+            Husky.DEBUG && console.log(this.name, 'init');
+
+            // init form-element and dropdown menu
+            this.$valueField = $('<input type="text" autofill="false" class="name-value form-element" data-id=""/>');
+            this.$dropDown = $('<div class="dropdown-menu" />');
+            this.$dropDownList = $('<ul/>');
+            this.$element.append(this.$valueField);
+            this.$element.append(this.$dropDown);
+            this.$dropDown.append(this.$dropDownList);
+            this.hideDropDown();
+
+            // bind dom elements
+            this.bindDOMEvents();
+        },
+
+        // bind dom elements
+        bindDOMEvents: function() {
+            // turn off all events
+            this.$element.off();
+
+            // input value changed
+            this.$valueField.on('input', this.inputChanged.bind(this));
+
+            // mouse control
+            this.$dropDownList.on('click', 'li', function(event) {
+                var $element = $(event.currentTarget);
+                var id = $element.data('id');
+
+                var item = {id: id};
+                item[this.options.valueName] = $element.text();
+                this.selectItem(item);
+            }.bind(this));
+
+            // focus in
+            this.$valueField.on('focusin', function() {
+                this.$valueField.trigger('input');
+            }.bind(this));
+
+            // focus out
+            this.$valueField.on('focusout', function() {
+                // FIXME may there is a better solution ???
+                setTimeout(function() {
+                    this.hideDropDown()
+                }.bind(this), 250);
+            }.bind(this));
+
+            // key control
+            if (this.options.keyControl) {
+                this.$valueField.on('keydown', function(event) {
+                    // key 40 = down, key 38 = up, key 13 = enter
+                    if ([40, 38, 13].indexOf(event.which) == -1) return;
+
+                    event.preventDefault();
+                    if (this.$dropDown.is(':visible')) {
+
+                        if (event.which == 40)      this.pressKeyDown();
+                        else if (event.which == 38) this.pressKeyUp();
+                        else if (event.which == 13) this.pressKeyEnter();
+
+                    } else {
+                        // If dropdown not visible => search for given pattern
+                        this.noStateField();
+                        this.loadData(this.$valueField.val());
+                    }
+                }.bind(this));
+
+                // remove hover class by mouseover
+                this.$dropDownList.on('mouseover', 'li', function() {
+                    this.$dropDownList.children().removeClass('hover');
+                }.bind(this));
+            }
+        },
+
+        // value of input changed
+        inputChanged: function() {
+            Husky.DEBUG && console.log(this.name, 'inputChanged');
+
+            // value is not success
+            this.noStateField();
+
+            var val = this.$valueField.val();
+            if (val.length >= this.options.minLength) {
+                this.loadData(val);
+            }
+        },
+
+        // load data from server
+        loadData: function(pattern) {
+            var url = this.getUrl(pattern);
+            Husky.DEBUG && console.log(this.name, 'load: ' + url);
+
+            Husky.Util.ajax({
+                url: url,
+                success: function(response) {
+                    Husky.DEBUG && console.log(this.name, 'load', 'success');
+
+                    // if only one result this is it, if no result hideDropDown, else generateDropDown
+                    if (response.total > 1) {
+                        this.generateDropDown(response.items);
+                    } else if (response.total == 1) {
+                        this.selectItem(response.items[0]);
+                    } else {
+                        this.hideDropDown();
+                    }
+                }.bind(this),
+                error: function() {
+                    Husky.DEBUG && console.log(this.name, 'load', 'error');
+
+                    this.failField();
+                    this.hideDropDown();
+                }.bind(this)
+            });
+
+            this.trigger('auto-complete:loadData', null);
+        },
+
+        // generate dropDown with given items
+        generateDropDown: function(items) {
+            this.clearDropDown();
+            items.forEach(function(item) {
+                this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
+            }.bind(this));
+            this.showDropDown();
+        },
+
+        // clear childs of list
+        clearDropDown: function() {
+            // FIXME make it easier
+            this.$dropDown.children('ul').children('li').remove();
+        },
+
+        // make dropDown visible
+        showDropDown: function() {
+            Husky.DEBUG && console.log(this.name, 'show dropdown');
+            this.$dropDown.show();
+        },
+
+        // hide dropDown
+        hideDropDown: function() {
+            Husky.DEBUG && console.log(this.name, 'hide dropdown');
+            this.clearDropDown();
+            this.$dropDown.hide();
+        },
+
+        // set class success to field
+        successField: function() {
+            Husky.DEBUG && console.log(this.name, 'set success');
+            this.clearDropDown();
+            this.$valueField.removeClass('fail');
+            this.$valueField.addClass('success');
+        },
+
+        // remove class success and fail of field
+        noStateField: function() {
+            Husky.DEBUG && console.log(this.name, 'remove success and fail');
+            this.$valueField.data('');
+            this.$valueField.removeClass('success');
+            this.$valueField.removeClass('fail');
+        },
+
+        // add class fail to field
+        failField: function() {
+            Husky.DEBUG && console.log(this.name, 'set fail');
+            this.$valueField.removeClass('success');
+            this.$valueField.addClass('fail');
+        },
+
+        // handle key down
+        pressKeyDown: function() {
+            Husky.DEBUG && console.log(this.name, 'key down');
+
+            // get actual and next element
+            var $actual = this.$dropDownList.children('.hover');
+            var $next = $actual.next();
+            // no element selected
+            if ($next.length == 0) {
+                $next = this.$dropDownList.children().first();
+            }
+
+            $actual.removeClass('hover');
+            $next.addClass('hover');
+        },
+
+        // handle key up
+        pressKeyUp: function() {
+            Husky.DEBUG && console.log(this.name, 'key up');
+
+            // get actual and next element
+            var $actual = this.$dropDownList.children('.hover');
+            var $next = $actual.prev();
+            // no element selected
+            if ($next.length == 0) {
+                $next = this.$dropDownList.children().last();
+            }
+
+            $actual.removeClass('hover');
+            $next.addClass('hover');
+        },
+
+        // handle key enter
+        pressKeyEnter: function() {
+            Husky.DEBUG && console.log(this.name, 'key enter');
+
+            // if one element selected
+            var $actual = this.$dropDownList.children('.hover');
+            if ($actual.length == 1) {
+                var item = {id: $actual.data('id')};
+                item[this.options.valueName] = $actual.text();
+                this.selectItem(item);
+            } else {
+                // if it is one of the list
+                var value = this.$valueField.val();
+
+                var childs = this.$dropDownList.children();
+                var that = this;
+                $(childs).each(function() {
+                    if ($(this).text() == value) {
+                        // found an item select it
+                        var item = {id: $(this).data('id')};
+                        item[that.options.valueName] = $(this).text();
+                        that.selectItem(item);
+                        return false;
+                    }
+                });
+            }
+        },
+
+        // select an item
+        selectItem: function(item) {
+            Husky.DEBUG && console.log(this.name, 'select item: ' + item.id);
+            // set id to data-id
+            this.$valueField.data('id', item.id);
+            // set value to value
+            this.$valueField.val(item[this.options.valueName]);
+
+            this.hideDropDown();
+            this.successField();
+        }
+    });
+
+    $.fn.huskyAutoComplete = function(options) {
+        var $element = $(this);
+
+        options = $.extend({}, $.fn.huskyAutoComplete.defaults, typeof options == 'object' && options);
+
+        // return if this plugin has a module instance
+        if (!!$element.data(moduleName)) {
+            return this;
+        }
+
+        // store the module instance into the jQuery data property
+        $element.data(moduleName, new Husky.Ui.AutoComplete(this, options));
+
+        return this;
+    };
+
+    $.fn.huskyAutoComplete.defaults = {
+        url: '',
+        valueName: 'name',
+        minLength: 3,
+        keyControl: true
+    };
+
+})(Husky.$, this, this.document);
+
+(function($, window, document, undefined) {
+    'use strict';
+
     var moduleName = 'Husky.Ui.DataGrid';
 
     Husky.Ui.DataGrid = function(element, options) {
@@ -264,7 +565,7 @@ function typeOf(value) {
             this.data = this.options.data;
 
             Husky.DEBUG && console.log(this.data, 'this.data set');
-            
+
             this.setConfigs();
 
             this.prepare()
@@ -282,7 +583,9 @@ function typeOf(value) {
         })(),
 
         getUrl: function(params) {
-            var url = params.url + '?pageSize=' + this.options.paginationOptions.pageSize
+            var delimiter = '?';
+            if (params.url.indexOf('?') != -1) delimiter = '&';
+            var url = params.url + delimiter + 'pageSize=' + this.options.paginationOptions.pageSize;
 
             if (params.page > 1) {
                 url += '&page=' + params.page;
@@ -373,7 +676,7 @@ function typeOf(value) {
             if (!!this.options.selectItemType && this.options.selectItemType === 'checkbox') {
                 tblColumns.push(
                     '<th class="select-all">',
-                        this.templates.checkbox({ id: 'select-all' }),
+                    this.templates.checkbox({ id: 'select-all' }),
                     '</th>');
             }
 
@@ -391,20 +694,20 @@ function typeOf(value) {
             var tblRows;
 
             tblRows = [];
-            this.allItemIds = [];      
+            this.allItemIds = [];
 
             this.data.items.forEach(function(row) {
                 tblRows.push(this.prepareTableRow(row));
             }.bind(this));
-            
+
 
             return tblRows.join('');
         },
 
         prepareTableRow: function(row) {
 
-            if(!!(this.options.template && this.options.template.row)) {
-                
+            if (!!(this.options.template && this.options.template.row)) {
+
                 return _.template(this.options.template.row, row);
 
             } else {
@@ -705,8 +1008,8 @@ function typeOf(value) {
 
                 return [
                     '<ul>',
-                        '<li class="pagination-first page" data-page="1"></li>',
-                        '<li class="pagination-prev page" data-page="', selectedPage - 1, '">', 'Previous', '</li>',
+                    '<li class="pagination-first page" data-page="1"></li>',
+                    '<li class="pagination-prev page" data-page="', selectedPage - 1, '">', 'Previous', '</li>',
                     '</ul>'
                 ].join('')
             },
@@ -722,8 +1025,8 @@ function typeOf(value) {
 
                 return [
                     '<ul>',
-                        '<li class="pagination-next page" data-page="', selectedPage + 1, '">', next, '</li>',
-                        '<li class="pagination-last page" data-page="', pageSize, '"></li>',
+                    '<li class="pagination-next page" data-page="', selectedPage + 1, '">', next, '</li>',
+                    '<li class="pagination-last page" data-page="', pageSize, '"></li>',
                     '</ul>'
                 ].join('')
             },
@@ -777,6 +1080,227 @@ function typeOf(value) {
 
 })(Husky.$, this, this.document);
 
+/*****************************************************************************
+ *
+ *  DropDown
+ *  [Short description]
+ *
+ *  Sections
+ *      - initialization
+ *      - DOM events
+ *      - custom events
+ *      - default values
+ *
+ *
+ *****************************************************************************/
+
+(function($, window, document, undefined) {
+    'use strict';
+
+    var moduleName = 'Husky.Ui.DropDown';
+
+    Husky.Ui.DropDown = function(element, options) {
+        this.name = moduleName;
+
+        Husky.DEBUG && console.log(this.name, 'create instance');
+
+        this.options = options;
+
+        this.configs = {};
+
+        this.$originalElement = $(element);
+        this.$element = $('<div class="husky-drop-down"/>');
+        $(element).append(this.$element);
+
+        this.init();
+    };
+
+    $.extend(Husky.Ui.DropDown.prototype, Husky.Events, {
+        // private event dispatcher
+        vent: (function() {
+            return $.extend({}, Husky.Events);
+        })(),
+
+        // get url for pattern
+        getUrl: function() {
+            return this.options.url;
+        },
+
+        init: function() {
+            Husky.DEBUG && console.log(this.name, 'init');
+
+            // ------------------------------------------------------------
+            // initialization
+            // ------------------------------------------------------------
+            this.$dropDown = $('<div class="dropdown-menu" />');
+            this.$dropDownList = $('<ul/>');
+            this.$element.append(this.$dropDown);
+            this.$dropDown.append(this.$dropDownList);
+            this.hideDropDown();
+
+            if (this.options.setParentDropDown) {
+                // add class dropdown to parent
+                this.$element.parent().addClass('dropdown');
+            }
+
+            // bind dom elements
+            this.bindDOMEvents();
+
+            // load data
+            this.prepareData();
+        },
+
+        // bind dom elements
+        bindDOMEvents: function() {
+
+            // turn off all events
+            this.$element.off();
+
+            // ------------------------------------------------------------
+            // DOM events
+            // ------------------------------------------------------------
+
+            // init drop-down
+            if (this.options.trigger != '') {
+                this.$originalElement.on('click', this.options.trigger, this.triggerClick.bind(this));
+            } else {
+                this.$originalElement.on('click', this.triggerClick.bind(this));
+            }
+
+            // mouse control
+            this.$dropDownList.on('click', 'li', function(event) {
+                var $element = $(event.currentTarget);
+                var id = $element.data('id');
+                this.clickItem(id);
+            }.bind(this));
+
+        },
+
+        // trigger event with clicked item
+        clickItem: function(id) {
+            this.options.data.forEach(function(item) {
+                if (item.id == id) {
+                    Husky.DEBUG && console.log(this.name, 'click-item: ' + id, 'success');
+                    this.trigger('drop-down:click-item', item);
+
+                    return false;
+                }
+            }.bind(this));
+            this.hideDropDown();
+        },
+
+        // trigger click event handler toggles the dropDown
+        triggerClick: function() {
+            this.toggleDropDown();
+        },
+
+        // prepares data for dropDown, if options.data not set load with ajax
+        prepareData: function() {
+            if (this.options.data.length > 0) {
+                this.generateDropDown(this.options.data);
+            } else {
+                this.loadData();
+            }
+        },
+
+        // load data with ajax
+        loadData: function() {
+            var url = this.getUrl();
+            Husky.DEBUG && console.log(this.name, 'load: ' + url);
+
+            Husky.Util.ajax({
+                url: url,
+                success: function(response) {
+                    Husky.DEBUG && console.log(this.name, 'load', 'success');
+
+                    if (response.total > 0 && response.items.length == response.total) {
+                        this.options.data = response.items;
+                    } else {
+                        this.options.data = [];
+                    }
+                    this.generateDropDown(this.options.data);
+                }.bind(this),
+                error: function() {
+                    Husky.DEBUG && console.log(this.name, 'load', 'error');
+
+                    this.options.data = [];
+                    this.generateDropDown(this.options.data);
+                }.bind(this)
+            });
+
+            // FIXME event will be binded later
+            setTimeout(function() {
+                this.trigger('drop-down:loadData', null);
+            }.bind(this), 200);
+        },
+
+        // generate dropDown with given items
+        generateDropDown: function(items) {
+            this.clearDropDown();
+            if (items.length > 0) {
+                items.forEach(function(item) {
+                    this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
+                }.bind(this));
+            } else {
+                this.$dropDownList.append('<li>No data received</li>');
+            }
+        },
+
+        // clear childs of list
+        clearDropDown: function() {
+            // FIXME make it easier
+            this.$dropDown.children('ul').children('li').remove();
+        },
+
+        // toggle dropDown visible
+        toggleDropDown: function() {
+            Husky.DEBUG && console.log(this.name, 'toggle dropdown');
+            this.$dropDown.toggle();
+        },
+
+        // make dropDown visible
+        showDropDown: function() {
+            Husky.DEBUG && console.log(this.name, 'show dropdown');
+            this.$dropDown.show();
+        },
+
+        // hide dropDown
+        hideDropDown: function() {
+            Husky.DEBUG && console.log(this.name, 'hide dropdown');
+            this.$dropDown.hide();
+        }
+
+    });
+
+    $.fn.huskyDropDown = function(options) {
+        var $element = $(this);
+
+        options = $.extend({}, $.fn.huskyDropDown.defaults, typeof options == 'object' && options);
+
+        // return if this plugin has a module instance
+        if (!!$element.data(moduleName)) {
+            return this;
+        }
+
+        // store the module instance into the jQuery data property
+        $element.data(moduleName, new Husky.Ui.DropDown(this, options));
+
+        return this;
+    };
+
+    // ------------------------------------------------------------
+    // default values
+    // ------------------------------------------------------------
+    $.fn.huskyDropDown.defaults = {
+        url: '',     // url for lazy loading
+        data: [],    // data array
+        trigger: '',  // trigger for click event
+        valueName: 'name', // name of text property
+        setParentDropDown: false // set class dropdown for parent dom object
+    };
+
+})(Husky.$, this, this.document);
+
 (function($, window, document, undefined) {
     'use strict';
 
@@ -798,7 +1322,6 @@ function typeOf(value) {
         });
 
         this.currentColumnIdx = 0;
-        this.lastColumnIdx = 0;
 
         this.data = null;
 
@@ -819,7 +1342,7 @@ function typeOf(value) {
     $.extend(Husky.Ui.Navigation.prototype, Husky.Events, {
 
         vent: (function() {
-            return $.extend({}, Husky.Events); 
+            return $.extend({}, Husky.Events);
         })(),
 
         load: function(params) {
@@ -835,11 +1358,19 @@ function typeOf(value) {
                     this.columnHeader = this.data.header || null;
                     this.columnItems = this.data.sub.items || null;
 
+                    this.setConfigs(data);
+
                     if (typeof params.success === 'function') {
                         params.success(this.data);
                     }
                 }.bind(this)
             });
+        },
+
+        setConfigs: function(params) {
+            this.configs = {
+                displayOption: params.displayOption || null
+            };
         },
 
         prepareNavigation: function() {
@@ -853,22 +1384,89 @@ function typeOf(value) {
             return this;
         },
 
+        setNavigationSize: function() {
+            var $window = $(window),
+                $navigationSubColumnsCont = $('.navigation-sub-columns-container'),
+                $navigationSubColumns = $('.navigation-sub-columns'),
+                paddingRight = 100;
+
+            setTimeout(function() {
+                $navigationSubColumns.css({
+                    width: 'auto'
+                });
+
+                $navigationSubColumnsCont.removeClass('scrolling');
+
+                if ($window.width() < this.$navigation.width() + paddingRight) {
+                    $navigationSubColumns.css({
+                        width: ($window.width() - paddingRight) - (this.$navigation.width() - $navigationSubColumns.width()),
+                        height: this.$navigation.height()
+                    });
+                    $navigationSubColumnsCont.addClass('scrolling');
+                } else {
+                    $navigationSubColumns.css({
+                        height: this.$navigation.height() + 5
+                    });
+                }
+            }.bind(this), 250);
+        },
+
         prepareNavigationColumn: function() {
-            var $column;
+            var $column, columnClasses;
+
+            columnClasses = [' '];
+
+            this.$navigationColumns.removeClass('show-content');
+
+            if (this.configs.displayOption === 'content') {
+                // if the column is a content column
+                columnClasses.push('content-column');
+                this.$navigationColumns.addClass('show-content');
+            } else if (this.currentColumnIdx === 1) {
+                // if the column is the second column
+                columnClasses.push('second-column');
+            }
 
             $column = $('<li/>', {
                 'id': 'column-' + this.currentColumnIdx,
                 'data-column-id': this.currentColumnIdx,
-                'class': 'navigation-column'
+                'class': 'navigation-column' + ((columnClasses.length > 1) ? columnClasses.join(' ') : '')
             });
+
+            if (!!this.columnHeader) {
+                $column.append(this.prepareColumnHeader());
+            }
 
             $column.append(this.prepareColumnItems());
 
             return $column;
         },
 
+        prepareNavigationSubColumn: function() {
+            this.$navigationSubColumns = $('<ul/>', {
+                'class': 'navigation-sub-columns'
+            });
+
+            return this.$navigationSubColumns;
+        },
+
+        prepareColumnHeader: function() {
+            var $columnHeader;
+
+            $columnHeader = $('<div/>', {
+                'class': 'navigation-column-header'
+            });
+
+            $columnHeader.html(this.template.columnHeader({
+                title: this.columnHeader.title,
+                logo: this.columnHeader.logo
+            }));
+
+            return $columnHeader;
+        },
+
         prepareColumnItems: function() {
-            var $columnItemsList, columnItems, columnItemClass, 
+            var $columnItemsList, columnItems, columnItemClass,
                 columnItemClasses, columnItemUri, columnItemHasSub,
                 columnItemIcon, columnItemTitle, itemModel,
                 columnItemId;
@@ -887,7 +1485,7 @@ function typeOf(value) {
                 this.itemsCollection = new this.collections.items();
 
                 this.columnItems.forEach(function(item) {
-                    
+
                     itemModel = this.models.item(item);
                     this.itemsCollection.add(itemModel);
 
@@ -913,8 +1511,8 @@ function typeOf(value) {
 
                     columnItems.push(
                         '<li ', columnItemId, columnItemTitle, columnItemClass, columnItemUri, columnItemHasSub, '>',
-                            columnItemIcon,
-                            itemModel.get('title'),
+                        columnItemIcon,
+                        itemModel.get('title'),
                         '</li>'
                     );
                 }.bind(this));
@@ -926,45 +1524,88 @@ function typeOf(value) {
         },
 
         addColumn: function() {
-            var $column, i;
+            var $subColumns;
 
             this.currentColumnIdx++;
 
-            if (this.currentColumnIdx < this.lastColumnIdx ||
-                this.currentColumnIdx === this.lastColumnIdx) {
+            if (this.currentColumnIdx === 2) {
+                $subColumns = $('<li/>', {
+                    'class': 'navigation-sub-columns-container'
+                });
 
-                for (i = this.currentColumnIdx; i <= this.lastColumnIdx; i++) {
-                    $column = this.$navigationColumns.find('#column-' + i);
-
-                    if (!!$column.size()) {
-                        $column.remove();
-                    }
-                }
+                $subColumns.append(this.prepareNavigationSubColumn());
+                this.$navigationColumns.append($subColumns);
             }
 
-            this.$navigationColumns.append(this.prepareNavigationColumn());
+            if (!!$('.navigation-sub-columns-container').size()) {
+                this.$navigationSubColumns.append(this.prepareNavigationColumn());
+                this.scrollToLastSubColumn();
+            } else {
+                this.$navigationColumns.append(this.prepareNavigationColumn());
+            }
+
+            this.setNavigationSize();
         },
+
+        collapseFirstColumn: function() {
+            Husky.DEBUG && console.log(this.name, 'collapseFirstColumn');
+            var $firstColumn;
+
+            $firstColumn = $('#column-0');
+            $firstColumn.addClass('collapsed');
+            console.log($firstColumn.hasClass('collapsed'));
+        },
+
+        showNavigationColumns: function(event) {
+            var $firstColumn, $secondColumn, $element;
+
+            $element = $(event.target);
+            $firstColumn = $('#column-0');
+            $secondColumn = $('#column-1');
+
+            this.$navigationColumns.removeClass('show-content');
+
+            this.currentColumnIdx = 1;
+            this.showContent = false;
+
+            if (!$element.hasClass('navigation-column-item') && !$element.is('span')) {
+                $firstColumn.removeClass('hide');
+                $secondColumn.removeClass('collapsed');
+
+                this.hideColumn();
+            } else {
+                $firstColumn.removeClass('hide');
+                $secondColumn.removeClass('collapsed');
+            }
+
+            this.setNavigationSize();
+        },
+
+        // lock selection during column loading
+        selectionLocked: true,
+
+        showContent: false,
 
         // TODO: cleanup and simplify selectItem function
         selectItem: function(event) {
             Husky.DEBUG && console.log(this.name, 'selectItem');
 
-            var $element, $elementColumn, $firstColumn, 
-                elementId, itemModel;
+            var $element, $elementColumn, elementId,
+                itemModel;
+
+            this.showContent = false;
 
             $element = $(event.currentTarget);
             $elementColumn = $element.parent().parent();
-            $firstColumn = $('#column-0');
 
             elementId = $element.attr('id');
 
             itemModel = this.itemsCollection.get(elementId);
 
-            this.lastColumnIdx = this.currentColumnIdx;
+            this.currentColumnIdx = $elementColumn.data('column-id');
             this.currentColumnIdx = $elementColumn.data('column-id');
 
-            if (!!itemModel) {
-
+            if (!!itemModel && this.selectionLocked) {
                 // reset all navigation items...
                 $elementColumn
                     .find('.selected')
@@ -978,43 +1619,177 @@ function typeOf(value) {
                 if (!!itemModel.get('hasSub')) {
 
                     if (!itemModel.get('sub')) {
+                        this.selectionLocked = false;
+
                         this.addLoader($element);
+                        $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
+
                         this.load({
                             url: itemModel.get('action'),
                             success: function() {
+                                this.selectionLocked = true;
+
                                 this.addColumn();
                                 this.hideLoader($element);
 
                                 if (this.currentColumnIdx > 1) {
-                                    $firstColumn.addClass('collapsed');
-                                } else {
-                                    $firstColumn.removeClass('collapsed');
+                                    this.collapseFirstColumn();
                                 }
 
                                 this.trigger('navigation:item:sub:loaded', itemModel);
                             }.bind(this)
                         });
                     } else {
-                        // this.columnHeader = this.data.header || null;
+                        this.setConfigs({});
+
+                        this.columnHeader = itemModel.get('header') || null;
                         this.columnItems = itemModel.get('sub').items;
+                        $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
                         this.addColumn();
+
+                        if (this.currentColumnIdx > 1) {
+                            this.collapseFirstColumn();
+                        }
                     }
 
                 } else if (itemModel.get('type') == 'content') {
                     this.trigger('navigation:item:content:show', itemModel);
+
+                    this.showContent = true;
+
+                    $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
+                    this.collapseFirstColumn();
                 }
             }
         },
 
+        showFirstNavigationColumn: function(event) {
+            Husky.DEBUG && console.log(this.name, 'showFirstNavigationColumn');
+
+            var $element = $(event.target);
+
+            $('#column-0')
+                .removeClass('hide')
+                .removeClass('collapsed');
+
+            if (!$element.hasClass('navigation-column-item') && !$element.is('span')) {
+                this.currentColumnIdx = 1;
+                $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
+                $('#column-1')
+                    .find('.selected')
+                    .removeClass('selected');
+            }
+        },
+
+        // TODO
+        showColumn: function(params) {
+            Husky.DEBUG && console.log(this.name, 'showColumn');
+
+            var $showedColumn;
+
+            params = params || {};
+
+            if (!!params.data) {
+                this.columnHeader = params.data.header || null;
+                this.columnItems = params.data.sub.items || null;
+
+                this.setConfigs(params.data);
+
+                $showedColumn = $('#column-' + this.addedColumn);
+
+                $('#column-0').addClass('hide');
+                $('#column-1').addClass('collapsed');
+
+                if (!!$showedColumn.size()) {
+                    this.currentColumnIdx--;
+                    $showedColumn.remove();
+                }
+
+                this.showContent = true;
+
+                this.addColumn();
+
+                this.addedColumn = this.currentColumnIdx;
+            } else {
+                Husky.DEBUG && console.error(this.name, 'showColumn', 'No data was defined!');
+            }
+        },
+
+        // TODO
+        hideColumn: function() {
+            var $showedColumn;
+            $showedColumn = $('#column-' + this.addedColumn);
+
+            if (!!$showedColumn.size()) {
+                $showedColumn.remove();
+
+                $('#column-0').removeClass('hide');
+                $('#column-1').removeClass('collapsed');
+            }
+
+            this.addedColumn = null;
+        },
+
+        // for normalized scrolling
+        scrollLocked: true,
+
+        scrollSubColumns: function(event) {
+            var direction = event.originalEvent.detail < 0 || event.originalEvent.wheelDelta > 0 ? 1 : -1,
+                scrollSpeed = 25,
+                scrollLeft = 0;
+
+            event.preventDefault();
+
+            if (this.scrollLocked) {
+                this.scrollLocked = false;
+
+                // normalize scrolling
+                setTimeout(function() {
+                    this.scrollLocked = true;
+
+                    if (direction < 0) {
+                        // left scroll
+                        scrollLeft = this.$navigationSubColumns.scrollLeft() + scrollSpeed;
+                        this.$navigationSubColumns.scrollLeft(scrollLeft);
+                    } else {
+                        // right scroll
+                        scrollLeft = this.$navigationSubColumns.scrollLeft() - scrollSpeed;
+                        this.$navigationSubColumns.scrollLeft(scrollLeft);
+                    }
+                }.bind(this), 25);
+            }
+        },
+
+        scrollToLastSubColumn: function() {
+            this.$navigationSubColumns.delay(250).animate({
+                'scrollLeft': 1000
+            }, 500);
+        },
+
+        bindEvents: function() {
+            // external events
+            this.on('navigation:item:column:show', this.showColumn.bind(this));
+
+            // internal events
+        },
+
         bindDOMEvents: function() {
+            Husky.DEBUG && console.log(this.name, 'bindDOMEvents');
+
             this.$element.off();
 
+            $(window).on('resize load', this.setNavigationSize.bind(this));
+
             this.$element.on('click', '.navigation-column-item:not(.selected)', this.selectItem.bind(this));
+            this.$element.on('click', '.navigation-column:eq(1)', this.showNavigationColumns.bind(this));
+            this.$element.on('click', '.navigation-column:eq(0).collapsed', this.showFirstNavigationColumn.bind(this));
+            this.$element.on('mousewheel DOMMouseScroll', '.navigation-sub-columns-container', this.scrollSubColumns.bind(this));
         },
 
         render: function() {
             this.$element.html(this.$navigation);
 
+            this.bindEvents();
             this.bindDOMEvents();
         },
 
@@ -1028,7 +1803,7 @@ function typeOf(value) {
 
         collections: {
             items: function() {
-                return $.extend({}, Husky.Collection);    
+                return $.extend({}, Husky.Collection);
             }
         },
 
@@ -1040,11 +1815,30 @@ function typeOf(value) {
                     hasSub: false
                 };
 
-                return $.extend({}, Husky.Model, defaults, data);  
+                return $.extend({}, Husky.Model, defaults, data);
             }
         },
 
         template: {
+            columnHeader: function(data) {
+                var titleTemplate = null;
+
+                data = data || {};
+
+                data.title = data.title || '';
+                data.logo = data.logo || '';
+
+                if (!!data.logo) {
+                    titleTemplate = '<span class="navigation-column-logo"><img alt="' + data.title + '" src="' + data.logo + '"/></span>';
+                }
+
+                return [
+                    titleTemplate,
+                    '<h2 class="navigation-column-title">', data.title, '</h2>'
+                ].join('');
+            },
+
+            // TODO: Remove search
             search: function(data) {
                 data = data || {};
 
@@ -1052,8 +1846,8 @@ function typeOf(value) {
                 data.icon = data.icon || '';
 
                 return [
-                    '<input type="text" class="search" autofill="false" data-action="', data.action, '" placeholder="Search ..."/>', // TODO Translate
-                ].join();
+                    '<input type="text" class="search" autofill="false" data-action="', data.action, '" placeholder="Search ..."/>' // TODO Translate
+                ].join('');
             }
         }
     });
@@ -1076,7 +1870,7 @@ function typeOf(value) {
 
     $.fn.huskyNavigation.defaults = {
         url: '',
-        collapse: false 
+        collapse: false
     };
 
 })(Husky.$, this, this.document);
