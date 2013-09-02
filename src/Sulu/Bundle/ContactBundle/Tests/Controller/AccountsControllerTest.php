@@ -622,14 +622,21 @@ class AccountsControllerTest extends DatabaseTestCase
 	{
 		$client = static::createClient();
 		$client->request(
-			'POST',
-			'/contact/api/accounts',
+			'PUT',
+			'/contact/api/accounts/1',
 			array(
 				'name' => 'ExampleCompany',
-				'idParent' => self::$account->getId(),
 				'urls' => array(
 					array(
+						'id' => 1,
 						'url' => 'http://example.company.com',
+						'urlType' => array(
+							'id' => '1',
+							'name' => 'Private'
+						)
+					),
+					array(
+						'url' => 'http://test.company.com',
 						'urlType' => array(
 							'id' => '1',
 							'name' => 'Private'
@@ -638,14 +645,14 @@ class AccountsControllerTest extends DatabaseTestCase
 				),
 				'emails' => array(
 					array(
-						'email' => 'erika.mustermann@muster.at',
+						'email' => 'office@company.com',
 						'emailType' => array(
 							'id' => 1,
 							'name' => 'Private'
 						)
 					),
 					array(
-						'email' => 'erika.mustermann@muster.de',
+						'email' => 'erika.mustermann@company.com',
 						'emailType' => array(
 							'id' => 1,
 							'name' => 'Private'
@@ -654,14 +661,14 @@ class AccountsControllerTest extends DatabaseTestCase
 				),
 				'phones' => array(
 					array(
-						'phone' => '123456789',
+						'phone' => '4567890',
 						'phoneType' => array(
 							'id' => 1,
 							'name' => 'Private'
 						)
 					),
 					array(
-						'phone' => '987654321',
+						'phone' => '789456123',
 						'phoneType' => array(
 							'id' => 1,
 							'name' => 'Private'
@@ -670,11 +677,27 @@ class AccountsControllerTest extends DatabaseTestCase
 				),
 				'addresses' => array(
 					array(
-						'street' => 'Musterstraße',
-						'number' => '1',
-						'zip' => '0000',
-						'city' => 'Musterstadt',
-						'state' => 'Musterstate',
+						'street' => 'Bahnhofstraße',
+						'number' => '2',
+						'zip' => '0022',
+						'city' => 'Dornbirn',
+						'state' => 'state1',
+						'country' => array(
+							'id' => 1,
+							'name' => 'Musterland',
+							'code' => 'ML'
+						),
+						'addressType' => array(
+							'id' => 1,
+							'name' => 'Private'
+						)
+					),
+					array(
+						'street' => 'Rathausgasse',
+						'number' => '3',
+						'zip' => '2222',
+						'city' => 'Dornbirn',
+						'state' => 'state1',
 						'country' => array(
 							'id' => 1,
 							'name' => 'Musterland',
@@ -687,13 +710,113 @@ class AccountsControllerTest extends DatabaseTestCase
 					)
 				),
 				'notes' => array(
-					array('value' => 'Note 1'),
-					array('value' => 'Note 2')
+					array('value' => 'Note1'),
+					array('value' => 'Note2')
 				)
 			)
 		);
 
 		$response = json_decode($client->getResponse()->getContent());
+		$this->assertEquals(200, $client->getResponse()->getStatusCode());
 
+		$client->request(
+			'GET',
+			'/contact/api/accounts/1'
+		);
+		$response = json_decode($client->getResponse()->getContent());
+		$this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+		$this->assertEquals('ExampleCompany', $response->name);
+
+		$this->assertEquals(2, sizeof($response->urls));
+		$this->assertEquals('http://example.company.com', $response->urls[0]->url);
+		$this->assertEquals('Private', $response->urls[0]->urlType->name);
+		$this->assertEquals('http://test.company.com', $response->urls[1]->url);
+		$this->assertEquals('Private', $response->urls[1]->urlType->name);
+
+		$this->assertEquals(2, sizeof($response->emails));
+		$this->assertEquals('office@company.com', $response->emails[0]->email);
+		$this->assertEquals('Private', $response->emails[0]->emailType->name);
+		$this->assertEquals('erika.mustermann@company.com', $response->emails[1]->email);
+		$this->assertEquals('Private', $response->emails[1]->emailType->name);
+
+		$this->assertEquals(2, sizeof($response->phones));
+		$this->assertEquals('4567890', $response->phones[0]->phone);
+		$this->assertEquals('Private', $response->phones[0]->phoneType->name);
+		$this->assertEquals('789456123', $response->phones[1]->phone);
+		$this->assertEquals('Private', $response->phones[1]->phoneType->name);
+
+		$this->assertEquals(2, sizeof($response->notes));
+		$this->assertEquals('Note1', $response->notes[0]->value);
+		$this->assertEquals('Note2', $response->notes[1]->value);
+
+		$this->assertEquals(2, sizeof($response->addresses));
+		$this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
+		$this->assertEquals('2', $response->addresses[0]->number);
+		$this->assertEquals('0022', $response->addresses[0]->zip);
+		$this->assertEquals('Dornbirn', $response->addresses[0]->city);
+		$this->assertEquals('state1', $response->addresses[0]->state);
+		$this->assertEquals('Musterland', $response->addresses[0]->country->name);
+		$this->assertEquals('ML', $response->addresses[0]->country->code);
+		$this->assertEquals('Private', $response->addresses[0]->addressType->name);
+
+		$this->assertEquals('Rathausgasse', $response->addresses[1]->street);
+		$this->assertEquals('3', $response->addresses[1]->number);
+		$this->assertEquals('2222', $response->addresses[1]->zip);
+		$this->assertEquals('Dornbirn', $response->addresses[1]->city);
+		$this->assertEquals('state1', $response->addresses[1]->state);
+		$this->assertEquals('Musterland', $response->addresses[1]->country->name);
+		$this->assertEquals('ML', $response->addresses[1]->country->code);
+		$this->assertEquals('Private', $response->addresses[1]->addressType->name);
+	}
+
+	public function testPutNoDetails()
+	{
+		$client = static::createClient();
+		$client->request(
+			'PUT',
+			'/contact/api/accounts/1',
+			array(
+				'name' => 'ExampleCompany',
+				'urls' => array(),
+				'emails' => array(),
+				'phones' => array(),
+				'addresses' => array(),
+				'notes' => array()
+			)
+		);
+
+		$response = json_decode($client->getResponse()->getContent());
+		$this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+		$client->request(
+			'GET',
+			'/contact/api/accounts/1'
+		);
+		$response = json_decode($client->getResponse()->getContent());
+		$this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+		$this->assertEquals('ExampleCompany', $response->name);
+
+		$this->assertEquals(0, sizeof($response->urls));
+		$this->assertEquals(0, sizeof($response->emails));
+		$this->assertEquals(0, sizeof($response->phones));
+		$this->assertEquals(0, sizeof($response->notes));
+		$this->assertEquals(0, sizeof($response->addresses));
+	}
+
+	public function testPutNotExisting()
+	{
+		$client = static::createClient();
+
+		$client->request(
+			'PUT',
+			'/contact/api/accounts/4711',
+			array(
+				'name' => 'TestCompany'
+			)
+		);
+
+		$this->assertEquals(400, $client->getResponse()->getStatusCode());
 	}
 }
