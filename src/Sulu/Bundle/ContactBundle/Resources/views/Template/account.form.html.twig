@@ -48,7 +48,7 @@
 
     <div class="grid">
 
-        <h2 class="bold">Name and Company</h2>
+        <h2 class="bold">Company</h2>
 
         <div class="grid-row">
             <div class="grid-col-2">
@@ -56,9 +56,13 @@
             </div>
             <div class="grid-col-10">
                 <div class="grid-row">
-                    <div class="grid-row">
-                        <label class="bold">Title*</label>
-                        <input class="form-element" type="text" id="name" value="<%= name %>"/>
+                    <label class="bold">Title*</label>
+                    <input class="form-element" type="text" id="name" value="<%= name %>"/>
+                </div>
+                <div class="grid-row">
+                    <div class="grid-col-8">
+                        <label>Website</label>
+                        <input class="form-element" type="text" id="url" value="<%= (!!urls[0]) ? urls[0].url : '' %>" />
                     </div>
                 </div>
             </div>
