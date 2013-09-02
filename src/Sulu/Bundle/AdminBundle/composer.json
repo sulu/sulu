@@ -11,8 +11,13 @@
             "role": "developer"
         }
     ],
+    "require": {
+        "sulu/core-bundle": "dev-develop"
+    },
     "autoload": {
-        "psr-0": {"Sulu\\Bundle\\AdminBundle": ""}
+        "psr-0": {
+            "Sulu\\Bundle\\AdminBundle": ""
+        }
     },
     "target-dir": "Sulu/Bundle/AdminBundle"
 }

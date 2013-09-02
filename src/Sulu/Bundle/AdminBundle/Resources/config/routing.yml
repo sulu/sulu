@@ -1,3 +1,13 @@
-sulu_admin_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: SuluAdminBundle:Default:index }
+sulu_admin:
+    path:  /
+    defaults:
+        _controller: SuluAdminBundle:Admin:index
+
+sulu_admin.navigation:
+    type: rest
+    resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController
+
+sulu_admin.routes:
+    path: /routes
+    defaults:
+        _controller: SuluAdminBundle:Admin:routes
