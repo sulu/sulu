@@ -555,6 +555,85 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals(0, count($response->emails));
 	}
 
+
+	public function testPutNewCountryOnlyId()
+	{
+		$client = static::createClient();
+
+		$client->request(
+			'PUT',
+			'/contact/api/contacts/1',
+			array(
+				'firstName' => 'John',
+				'lastName' => 'Doe',
+				'title' => 'MBA',
+				'position' => 'Manager',
+				'localeSystem' => 'en',
+				'emails' => array(
+				),
+				'phones' => array(
+					array(
+						'id' => 1,
+						'phone' => '321654987',
+						'phoneType' => array(
+							'id' => 1,
+							'name' => 'Private'
+						)
+					),
+					array(
+						'phone' => '789456123',
+						'phoneType' => array(
+							'id' => 1,
+							'name' => 'Private'
+						)
+					),
+					array(
+						'phone' => '147258369',
+						'phoneType' => array(
+							'id' => 1,
+							'name' => 'Private'
+						)
+					)
+				),
+				'addresses' => array(
+					array(
+						'id' => 1,
+						'street' => 'Street',
+						'number' => '2',
+						'zip' => '9999',
+						'city' => 'Springfield',
+						'state' => 'Colorado',
+						'country' => array(
+							'id' => 2,
+							'name' => '',
+						),
+						'addressType' => array(
+							'id' => 1,
+							'name' => 'Private'
+						)
+					)
+				),
+				'notes' => array(
+					array(
+						'id' => 1,
+						'value' => 'Note 1_1'
+					)
+				)
+			)
+		);
+
+		$response = json_decode($client->getResponse()->getContent());
+
+		$this->assertEquals('John', $response->firstName);
+		$this->assertEquals('Doe', $response->lastName);
+		$this->assertEquals('MBA', $response->title);
+		$this->assertEquals('Manager', $response->position);
+		$this->assertEquals('en', $response->localeSystem);
+		$this->assertEquals(0, count($response->emails));
+
+		$this->assertEquals(2, $response->addresses[0]->country->id);
+	}
+
     public function testPutNotExisting()
     {
         $client = static::createClient();
