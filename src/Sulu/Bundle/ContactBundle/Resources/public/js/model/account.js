@@ -12,8 +12,9 @@ define([
     'sulucontact/model/account',
     'sulucontact/model/email',
     'sulucontact/model/phone',
-    'sulucontact/model/address'
-], function (BackboneRelational, Account, Email, Phone, Address) {
+    'sulucontact/model/address',
+    'sulucontact/model/url'
+], function (BackboneRelational, Account, Email, Phone, Address, Url) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/accounts',
         defaults: {
@@ -21,7 +22,8 @@ define([
             name: '',
             emails: [],
             phones: [],
-            addresses: []
+            addresses: [],
+            urls: []
         }, relations: [
             {
                 type: Backbone.HasMany,
@@ -37,6 +39,11 @@ define([
                 type: Backbone.HasMany,
                 key: 'addresses',
                 relatedModel: Address
+            },
+            {
+                type: Backbone.HasMany,
+                key: 'urls',
+                relatedModel: Url
             }
         ]
     });
