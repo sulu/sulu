@@ -7,12 +7,37 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbonerelational'], function() {
+define([
+    'backbonerelational',
+    'sulucontact/model/account',
+    'sulucontact/model/email',
+    'sulucontact/model/phone',
+    'sulucontact/model/address'
+], function (BackboneRelational, Account, Email, Phone, Address) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/accounts',
         defaults: {
             id: null,
-            name: ''
-        }
+            name: '',
+            emails: [],
+            phones: [],
+            addresses: []
+        }, relations: [
+            {
+                type: Backbone.HasMany,
+                key: 'emails',
+                relatedModel: Email
+            },
+            {
+                type: Backbone.HasMany,
+                key: 'phones',
+                relatedModel: Phone
+            },
+            {
+                type: Backbone.HasMany,
+                key: 'addresses',
+                relatedModel: Address
+            }
+        ]
     });
 });
