@@ -66,6 +66,7 @@ define([
             }.bind(this));
         },
 
+        // fetches additional needed information needed for the dialogbox
         fetchDeleteInfo: function(id,event){
 
             var url = '/contact/api/accounts/'+id+'/deleteinfo';
@@ -93,12 +94,13 @@ define([
             });
         },
 
+        // initializes the dialogbox and displays existing references
         initDialogBox: function(values, id, event){
 
-            console.log(values['contacts'],'contacts in dialog box');
-
-            var dependencies = this.template.dependencyListContacts(values['contacts']);
-
+            var dependencies;
+            if(values['contacts'].length > 0) {
+                dependencies= this.template.dependencyListContacts(values['contacts']);
+            }
 
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
                 template: {
@@ -108,8 +110,8 @@ define([
                 },
                 data: {
                     content: {
-                        title: "Warning!",
-                        content: '<p>Existing references found:</p><ul>'+dependencies+'</ul>'
+                        title: dependencies != undefined ?  "Warning!" : 'Info!',
+                        content: dependencies != undefined ? '<p>Existing references found:</p><ul>'+dependencies+'</ul>' : 'No dependencies found!'
                     },
                     footer: {
                         buttonCancelText: "Abort",
@@ -119,41 +121,32 @@ define([
             });
 
             $dialog.on('click', '.closeButton', function() {
-                //console.log("closeButton");
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             });
 
 
             $dialog.on('click', '.deleteButton', function() {
-                console.log("deleteButton");
-                console.log(dataGrid.data('Husky.Ui.DataGrid'), "datagrid");
-                console.log( $dialog.data('Husky.Ui.Dialog'), 'dialog');
 
                 dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
-
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-
                 var account = new Account({id: id});
                 account.destroy();
             });
         },
 
+        // displays the add button on the top
         initOperationsRight: function(){
 
             var $operationsRight = $('#headerbar-mid-right');
             $operationsRight.empty();
             $operationsRight.append(this.template.button('#contacts/companies/add','Add...'));
         },
-
+        
         template: {
             button: function(url, name){
-
                 return '<a class="btn" href="'+url+'" target="_top" title="Add">'+name+'</a>';
             },
             dependencyListContacts: function(contacts) {
-
-                //console.log(contacts, "dependencylist");
-
                 var list = "<% _.each(contacts, function(contact) { %> <li><%= contact.firstName %> <%= contact.lastName %></li> <% }); %>";
                 return _.template(list,{contacts:contacts});
             }
