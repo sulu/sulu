@@ -50,10 +50,20 @@ define(['router'], function (Router) {
         });
 
         //show for a new account
-        Router.route('contacts/companies/add', 'contacts:companies:list', function() {
+        Router.route('contacts/companies/add', 'contacts:companies:form', function() {
             require(['sulucontact/controller/account/form'], function(Form) {
                 new Form({
                     el: App.$content
+                });
+            });
+        });
+
+        //show for for editing an account
+        Router.route('contacts/companies/edit::id', 'contacts:companies:form:id', function(id) {
+            require(['sulucontact/controller/account/form'], function(Form) {
+                new Form({
+                    el: App.$content,
+                    id: id
                 });
             });
         });

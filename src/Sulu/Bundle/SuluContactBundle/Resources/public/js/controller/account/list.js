@@ -39,7 +39,7 @@ define([
                 });
 
                 dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
-                    Router.navigate('contacts/accounts/edit:' + item);
+                    Router.navigate('contacts/companies/edit:' + item);
                 });
 
                 this.$el.on('click', '.remove-row > span', function (event) {

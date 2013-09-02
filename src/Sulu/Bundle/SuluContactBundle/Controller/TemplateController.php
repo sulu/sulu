@@ -11,4 +11,8 @@ class TemplateController extends Controller
         return $this->render('SuluContactBundle:Template:contact.form.html.twig', array());
     }
 
+    public function accountFormAction()
+    {
+        return $this->render('SuluContactBundle:Template:account.form.html.twig', array());
+    }
 }
