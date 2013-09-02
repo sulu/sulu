@@ -298,4 +298,33 @@ class AccountsController extends RestController implements ClassResourceInterfac
             $account->addNote($note);
         }
     }
+
+    /**
+     * Delete an account with the given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($id)
+    {
+
+        $response = array();
+
+        $account = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:Account')
+            ->find($id);
+
+        if ($account != null) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($account);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+
+        } else {
+            $view = $this->view(null, 404);
+
+        }
+
+        return $this->handleView($view);
+    }
 }

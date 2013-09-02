@@ -617,4 +617,25 @@ class AccountsControllerTest extends DatabaseTestCase
         $this->assertEquals(1, count($response->items));
         $this->assertEquals('Company', $response->items[0]->name);
     }
+
+    public function testDeleteById(){
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/contact/api/accounts/1');
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteByIdNotExisting(){
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/contact/api/accounts/4711');
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+
+        $client->request('GET', '/contact/api/accounts/list');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->total);
+    }
 }
