@@ -32,13 +32,6 @@
                 <join-column name="idContactsCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one target-entity="Sulu\Bundle\ContactBundle\Entity\Account" field="idAccountsRoot">
-            <join-columns>
-                <join-column name="idAccountsRoot" referenced-column-name="id">
-                    <gedmo:tree-root/>
-                </join-column>
-            </join-columns>
-        </many-to-one>
         <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account">
             <join-columns>
                 <join-column name="idAccountsParent" referenced-column-name="id" />
