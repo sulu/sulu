@@ -51,7 +51,24 @@ define([
                     var account = new Account({id: id});
                     account.destroy();
                 });
+
+                this.initOperationsRight();
+
             }.bind(this));
+        },
+
+        initOperationsRight: function(){
+
+            var $operationsRight = $('#headerbar-mid-right');
+            $operationsRight.empty();
+            $operationsRight.append(this.template.button('#contacts/companies/add','Add...'));
+        },
+
+        template: {
+            button: function(url, name){
+
+                return '<a class="btn" href="'+url+'" target="_top" title="Add">'+name+'</a>';
+            }
         }
     });
 });
