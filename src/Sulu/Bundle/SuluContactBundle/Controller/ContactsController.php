@@ -481,7 +481,7 @@ class ContactsController extends RestController
 
         $country = $this->getDoctrine()
             ->getRepository('SuluContactBundle:Country')
-            ->find($entry['addressType']['id']);
+            ->find($entry['country']['id']);
 
         if (!$addressType || !$country) {
             $success = false;
