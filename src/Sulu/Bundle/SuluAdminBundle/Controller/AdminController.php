@@ -16,6 +16,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
+    public function indexAction()
+    {
+        return $this->render(
+            'SuluAdminBundle:Admin:index.html.twig',
+            array(
+                'name' => $this->container->getParameter('name')
+            )
+        );
+    }
+
     /**
      * Create the javascript which sets the routes for each bundle
      * @return Response

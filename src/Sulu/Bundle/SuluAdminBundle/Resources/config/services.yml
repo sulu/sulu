@@ -1,5 +1,6 @@
 parameters:
     sulu_admin.admin_pool.class: Sulu\Bundle\AdminBundle\Admin\AdminPool
+    sulu_admin.name:
 
 services:
     sulu_admin.admin_pool:
