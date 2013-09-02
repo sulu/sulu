@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
@@ -18,12 +26,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_admin');
 
-        $rootNode
+        $treeBuilder->root('sulu_admin')
             ->children()
-            ->scalarNode('name')->end()
-            ->end();
+                ->scalarNode('name')->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

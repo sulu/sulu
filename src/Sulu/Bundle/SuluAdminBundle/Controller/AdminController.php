@@ -42,7 +42,7 @@ class AdminController extends Controller
             $requires[] = '\'/bundles/' . $name . '/js/main.js\'';
         }
 
-        $response = 'require(['.implode(', ', $requires).'], function() {
+        $response = 'require([' . implode(', ', $requires) . '], function() {
             Backbone.history.start();
         })';
 

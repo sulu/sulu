@@ -267,7 +267,7 @@ class NavigationItem implements \Iterator
 
     /**
      * Searches for the equivalent of a specific NavigationItem
-     * @param $navigationItem The NavigationItem to look for
+     * @param NavigationItem $navigationItem The NavigationItem to look for
      * @return NavigationItem The item if it is found, otherwise false
      */
     public function find($navigationItem)
