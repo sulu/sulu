@@ -1,4 +1,5 @@
 {# TODO to by deleted #}
+{# TODO default types #}
 <style type="text/css">
     .grid-row img {
         max-width: 100%;
@@ -17,6 +18,11 @@
 
     .two-cols div.grid-col-6:nth-child(2n+1) {
         padding-left: 0;
+        padding-right: 10px;
+    }
+
+    .two-cols div.grid-col-6:nth-child(2n) {
+        padding-right: 0;
     }
 
     .icon-add {
@@ -39,8 +45,24 @@
         cursor: pointer;
     }
 
+    .inline {
+        display: inline-block;
+    }
+
     .m-top-30 {
         margin-top: 30px;
+    }
+
+    div.remove-email,
+    div.remove-phone,
+    div.remove-address {
+        display: none;
+    }
+
+    #phones div:hover > div.remove-phone,
+    #addresses div:hover > div.remove-address,
+    #emails div:hover > div.remove-email {
+        display: block;
     }
 </style>
 
@@ -48,7 +70,7 @@
 
     <div class="grid">
 
-        <h2 class="bold">Company</h2>
+        <h2 class="bold">Name and Company</h2>
 
         <div class="grid-row">
             <div class="grid-col-2">
@@ -74,8 +96,15 @@
         <div class="grid-row two-cols" id="emails">
             <% _.each(emails, function(email) { %>
             <div class="grid-col-6 email-item" data-id="<%= email.id %>">
-                <label class="bold"><%= (!!email.emailType)?email.emailType.name :'[Email Type]' %>*</label>
-                <input class="form-element emailValue" type="text" value="<%= email.email %>"/>
+                <label class="bold drop-down-trigger type-value pull-left"
+                       data-id="<%= (!!email.emailType)?email.emailType.id :'{{ defaultEmailType.id }}' %>">
+                    <span class="type-name"><%= (!!email.emailType)?email.emailType.name :'{{ defaultEmailType.name }}' %></span>
+                    <span class="dropdown-toggle inline"></span>
+                </label>
+
+                <div class="remove-email"><span class="icon-remove pull-right"></span></div>
+
+                <input class="form-element email-value" type="text" value="<%= email.email %>"/>
             </div>
             <% }); %>
         </div>
@@ -91,8 +120,15 @@
         <div class="grid-row two-cols" id="phones">
             <% _.each(phones, function(phone) { %>
             <div class="grid-col-6 phone-item" data-id="<%= phone.id %>">
-                <label class="bold"><%= (!!phone.phoneType)? phone.phoneType.name:'[Phone Type]' %></label>
-                <input class="form-element phoneValue" type="text" value="<%= phone.phone %>"/>
+                <label class="bold drop-down-trigger type-value pull-left"
+                       data-id="<%= (!!phone.phoneType)? phone.phoneType.id:'{{ defaultPhoneType.id }}' %>">
+                    <span class="type-name"><%= (!!phone.phoneType)? phone.phoneType.name:'{{ defaultPhoneType.name }}' %></span>
+                    <span class="dropdown-toggle inline"></span>
+                </label>
+
+                <div class="remove-phone"><span class="icon-remove pull-right"></span></div>
+
+                <input class="form-element phone-value" type="text" value="<%= phone.phone %>"/>
             </div>
             <% }); %>
         </div>
@@ -116,38 +152,48 @@
 
         <div id="addresses">
             <% _.each(addresses, function(address) { %>
-            <div class="address-item" data-id="<%= address.id %>">
+            <div class="address-item m-bottom-10" data-id="<%= address.id %>">
+                <div class="grid-row">
+                    <div class="m-bottom-10 pull-left">
+                        <label class="bold drop-down-trigger type-value"
+                               data-id="<%= (!!address.addressType)?address.addressType.id : '{{ defaultAddressType.id }}' %>">
+                            <span class="type-name"><%= (!!address.addressType)?address.addressType.name : '{{ defaultAddressType.name }}' %></span>
+                            <span class="dropdown-toggle inline"></span>
+                        </label>
+                    </div>
+                    <div class="remove-address"><span class="icon-remove pull-right"></span></div>
+                </div>
                 <div class="grid-row">
                     <div class="grid-col-6">
                         <label>Street</label>
-                        <input class="form-element streetValue" type="text" value="<%= address.street %>"/>
+                        <input class="form-element street-value" type="text" value="<%= address.street %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>Number</label>
-                        <input class="form-element numberValue" type="text" value="<%= address.number %>"/>
+                        <input class="form-element number-value" type="text" value="<%= address.number %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>House, Floor, etc.</label>
-                        <input class="form-element additionValue" type="text" value="<%= address.addition %>"/>
+                        <input class="form-element addition-value" type="text" value="<%= address.addition %>"/>
                     </div>
                 </div>
                 <div class="grid-row">
                     <div class="grid-col-2">
                         <label>Zip</label>
-                        <input class="form-element zipValue" type="text" value="<%= address.zip %>"/>
+                        <input class="form-element zip-value" type="text" value="<%= address.zip %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>City</label>
-                        <input class="form-element cityValue" type="text" value="<%= address.city %>"/>
+                        <input class="form-element city-value" type="text" value="<%= address.city %>"/>
                     </div>
                     <div class="grid-col-2">
                         <label>State</label>
-                        <input class="form-element stateValue" type="text" value="<%= address.state %>"/>
+                        <input class="form-element state-value" type="text" value="<%= address.state %>"/>
                     </div>
                     <div class="grid-col-4">
                         <label>Country</label>
                         {# TODO Country #}
-                        <select class="form-element countryValue">
+                        <select class="form-element country-value">
                             <option value="1">Österreich</option>
                             <option value="2">Deutschland</option>
                             <option value="3">Schweiz</option>
@@ -175,3 +221,52 @@
     </div>
 
 </form>
+
+<script type="text/javascript">
+    var addressTypes = [
+        {% for type in addressTypes %}
+        {
+            'id':{{ type.id }},
+            'name': '{{ type.name }}'
+        },
+        {% endfor %}
+    ];
+    var phoneTypes = [
+        {% for type in phoneTypes %}
+        {
+            'id':{{ type.id }},
+            'name': '{{ type.name }}'
+        },
+        {% endfor %}
+    ];
+    var emailTypes = [
+        {% for type in emailTypes %}
+        {
+            'id':{{ type.id }},
+            'name': '{{ type.name }}'
+        },
+        {% endfor %}
+    ];
+    var countries = [
+        {% for country in countries %}
+        {
+            'id':{{ country.id }},
+            'name': '{{ country.name }}'
+        },
+        {% endfor %}
+    ];
+    var defaults = {
+        emailType: {
+            'id': {{ defaultEmailType.id }},
+            'name': '{{ defaultEmailType.name }}'
+        },
+        phoneType: {
+            'id': {{ defaultPhoneType.id }},
+            'name': '{{ defaultPhoneType.name }}'
+        },
+        addressType: {
+            'id': {{ defaultAddressType.id }},
+            'name': '{{ defaultAddressType.name }}'
+        }
+    }
+</script>
