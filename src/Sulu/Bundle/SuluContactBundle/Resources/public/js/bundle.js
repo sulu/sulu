@@ -21,7 +21,7 @@ define(['router'], function (Router) {
             });
         });
 
-        // show form for new translation package
+        // show form for new contacts
         Router.route('contacts/people/add', 'contacts:people:form', function() {
             require(['sulucontact/controller/contact/form'], function(Form) {
                 new Form({
@@ -42,7 +42,30 @@ define(['router'], function (Router) {
 
         // list all accounts
         Router.route('contacts/companies', 'contacts:companies:list', function() {
-            console.log('list all companies');
+            require(['sulucontact/controller/account/list'], function(List) {
+                new List({
+                    el: App.$content
+                });
+            });
+        });
+
+        //show for a new account
+        Router.route('contacts/companies/add', 'contacts:companies:form', function() {
+            require(['sulucontact/controller/account/form'], function(Form) {
+                new Form({
+                    el: App.$content
+                });
+            });
+        });
+
+        //show for for editing an account
+        Router.route('contacts/companies/edit::id', 'contacts:companies:form:id', function(id) {
+            require(['sulucontact/controller/account/form'], function(Form) {
+                new Form({
+                    el: App.$content,
+                    id: id
+                });
+            });
         });
     };
 
