@@ -185,7 +185,6 @@ define([
 
 
                 $('#addCatalogueRow').on('click', function () {
-                    console.log("clicked");
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
                 });
 
