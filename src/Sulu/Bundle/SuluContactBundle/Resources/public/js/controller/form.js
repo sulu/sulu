@@ -86,7 +86,7 @@ define([
         initFields: function(json) {
             this.$('#company').huskyAutoComplete({
                 url: '/contact/api/accounts/list?searchFields=id,name',
-                value: json.account
+                value: (!!json.account) ? json.account : json.parent
             });
         },
 
