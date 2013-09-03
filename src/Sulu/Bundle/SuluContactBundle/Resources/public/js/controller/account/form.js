@@ -63,7 +63,7 @@ define([
             if (urlValue) {
                 url.set({
                     url: urlValue,
-                    urlType: {id: 1} //FIXME Read correct value
+                    urlType: {id: defaults.urlType.id} //FIXME Read correct value
                 });
 
                 this.getModel().get('urls').add(url);
