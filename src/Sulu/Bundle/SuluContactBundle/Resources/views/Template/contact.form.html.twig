@@ -108,21 +108,8 @@
 
         <h2>Email</h2>
 
-        <div class="grid-row two-cols" id="emails">
-            <% _.each(emails, function(email) { %>
-            <div class="grid-col-6 email-item" data-id="<%= email.id %>">
-                <label class="bold drop-down-trigger type-value pull-left"
-                       data-id="<%= (!!email.emailType)?email.emailType.id :'{{ defaultEmailType.id }}' %>">
-                    <span class="type-name"><%= (!!email.emailType)?email.emailType.name :'{{ defaultEmailType.name }}' %></span>
-                    <span class="dropdown-toggle inline"></span>
-                </label>
+        <div class="grid-row two-cols" id="emails"></div>
 
-                <div class="remove-email"><span class="icon-remove pull-right"></span></div>
-
-                <input class="form-element email-value" type="text" value="<%= email.email %>"/>
-            </div>
-            <% }); %>
-        </div>
         <div class="grid-row">
             <div id="addEmail" data-target-id="emails">
                 <span class="icon-add"></span><span class="control-label">Add email</span>
@@ -132,21 +119,8 @@
 
         <h2>Phone</h2>
 
-        <div class="grid-row two-cols" id="phones">
-            <% _.each(phones, function(phone) { %>
-            <div class="grid-col-6 phone-item" data-id="<%= phone.id %>">
-                <label class="bold drop-down-trigger type-value pull-left"
-                       data-id="<%= (!!phone.phoneType)? phone.phoneType.id:'{{ defaultPhoneType.id }}' %>">
-                    <span class="type-name"><%= (!!phone.phoneType)? phone.phoneType.name:'{{ defaultPhoneType.name }}' %></span>
-                    <span class="dropdown-toggle inline"></span>
-                </label>
+        <div class="grid-row two-cols" id="phones"></div>
 
-                <div class="remove-phone"><span class="icon-remove pull-right"></span></div>
-
-                <input class="form-element phone-value" type="text" value="<%= phone.phone %>"/>
-            </div>
-            <% }); %>
-        </div>
         <div class="grid-row">
             <div id="addPhone" data-target-id="phones">
                 <span class="icon-add"></span><span class="control-label">Add phone number</span>
@@ -165,55 +139,8 @@
             </div>
         </div>
 
-        <div id="addresses">
-            <% _.each(addresses, function(address) { %>
-            <div class="address-item m-bottom-10" data-id="<%= address.id %>">
-                <div class="grid-row">
-                    <div class="m-bottom-10 pull-left">
-                        <label class="bold drop-down-trigger type-value"
-                               data-id="<%= (!!address.addressType)?address.addressType.id : '{{ defaultAddressType.id }}' %>">
-                            <span class="type-name"><%= (!!address.addressType)?address.addressType.name : '{{ defaultAddressType.name }}' %></span>
-                            <span class="dropdown-toggle inline"></span>
-                        </label>
-                    </div>
-                    <div class="remove-address"><span class="icon-remove pull-right"></span></div>
-                </div>
-                <div class="grid-row">
-                    <div class="grid-col-6">
-                        <label>Street</label>
-                        <input class="form-element street-value" type="text" value="<%= address.street %>"/>
-                    </div>
-                    <div class="grid-col-2">
-                        <label>Number</label>
-                        <input class="form-element number-value" type="text" value="<%= address.number %>"/>
-                    </div>
-                    <div class="grid-col-4">
-                        <label>House, Floor, etc.</label>
-                        <input class="form-element addition-value" type="text" value="<%= address.addition %>"/>
-                    </div>
-                </div>
-                <div class="grid-row">
-                    <div class="grid-col-2">
-                        <label>Zip</label>
-                        <input class="form-element zip-value" type="text" value="<%= address.zip %>"/>
-                    </div>
-                    <div class="grid-col-4">
-                        <label>City</label>
-                        <input class="form-element city-value" type="text" value="<%= address.city %>"/>
-                    </div>
-                    <div class="grid-col-2">
-                        <label>State</label>
-                        <input class="form-element state-value" type="text" value="<%= address.state %>"/>
-                    </div>
-                    <div class="grid-col-4">
-                        <label>Country</label>
-                        <select class="form-element country-value">
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <% }); %>
-        </div>
+        <div id="addresses"></div>
+
         <div class="grid-row">
             <input type="submit" value="[SAVE]" class="m-bottom-10"/>
         </div>

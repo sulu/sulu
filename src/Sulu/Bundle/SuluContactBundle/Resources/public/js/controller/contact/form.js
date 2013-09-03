@@ -61,7 +61,7 @@ define([
                 lastName: this.$('#last-name').val(),
                 title: this.$('#title').val(),
                 position: this.$('#position').val(),
-                account: new Account({id: this.$('#company').data('id')})
+                account: {id: this.$('#company .name-value').data('id')}
             });
         }
     });
