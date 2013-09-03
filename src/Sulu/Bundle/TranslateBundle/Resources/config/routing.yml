@@ -1,4 +1,5 @@
 sulu_translate:
+    type: rest
     resource: "@SuluTranslateBundle/Resources/config/routing_api.yml"
     prefix: /api
 
@@ -6,3 +7,8 @@ sulu_translate.template.catalogue.form:
     path: /template/catalogue/form
     defaults:
         _controller: SuluTranslateBundle:Template:catalogueform
+
+sulu_translate.template.code.form:
+     path: /template/translation/form
+     defaults:
+         _controller: SuluTranslateBundle:Template:translationform

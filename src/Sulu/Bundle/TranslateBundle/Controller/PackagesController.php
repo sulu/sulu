@@ -44,7 +44,7 @@ class PackagesController extends FOSRestController
 
         $fields = $listHelper->getFields();
         if ($fields != null) {
-            // Walk through all packages and only extract informations from given fields
+            // Walk through all packages and only extract information from given fields
             foreach ($packages as $package) {
                 /** @var Package $package */
                 $item = array();

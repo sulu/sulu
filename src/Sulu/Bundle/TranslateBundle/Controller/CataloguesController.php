@@ -18,6 +18,27 @@ use FOS\RestBundle\Controller\FOSRestController;
  */
 class CataloguesController extends FOSRestController
 {
+
+    /**
+     * Returns the catalogue with the given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getCatalogueAction($id)
+    {
+        $catalogue = $this->getDoctrine()
+            ->getRepository('SuluTranslateBundle:Catalogue')
+            ->find($id);
+
+        $view = $this->view($catalogue, 200);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Return all catalogues
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getCataloguesAction()
     {
         $response = array();
@@ -46,19 +67,27 @@ class CataloguesController extends FOSRestController
     }
 
     /**
-     * Shows the catalogue with the given id
+     * Deletes the catalogue with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getCatalogueAction($id)
+    public function deleteCatalogueAction($id)
     {
-        $response = array();
-
         $catalogue = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Catalogue')
             ->find($id);
 
-        $view = $this->view($catalogue, 200);
+        if ($catalogue != null) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($catalogue);
+            $em->flush();
+
+            $view = $this->view(null, 204);
+
+        } else {
+            $view = $this->view(null, 404);
+
+        }
 
         return $this->handleView($view);
     }

@@ -17,7 +17,7 @@ Sulu\Bundle\TranslateBundle\Entity\Location:
     manyToOne:
         package:
             targetEntity: Package
-            inversedBy: tr_packages
+            inversedBy: locations
             joinColumn:
                 name: idPackages
                 referencedColumnName: id

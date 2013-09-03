@@ -23,13 +23,12 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
                 pagination: false,
                 showPages: 6,
                 pageSize: 4,
-                selectItems: {
-                    type: 'checkbox'
-                }
+                selectItemType: 'checkbox'
             });
 
             dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function(item) {
-                Router.navigate('settings/translate/edit:' + item);
+                dataGrid.data('Husky.Ui.DataGrid').off();
+                Router.navigate('settings/translate/edit:' + item+'/settings');
             });
         }
     });

@@ -1,0 +1,12 @@
+/* line 3, ../scss/modules/codes.scss */
+table.codes thead tr {
+  border: 0;
+}
+/* line 7, ../scss/modules/codes.scss */
+table.codes tbody tr {
+  border-color: #fff;
+}
+/* line 11, ../scss/modules/codes.scss */
+table.codes td {
+  vertical-align: top;
+}

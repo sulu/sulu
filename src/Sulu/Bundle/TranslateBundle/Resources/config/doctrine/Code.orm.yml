@@ -1,5 +1,6 @@
 Sulu\Bundle\TranslateBundle\Entity\Code:
     type: entity
+    repositoryClass: Sulu\Bundle\TranslateBundle\Entity\CodeRepository
     table: tr_codes
     fields:
         id:
@@ -20,14 +21,14 @@ Sulu\Bundle\TranslateBundle\Entity\Code:
     manyToOne:
         package:
             targetEntity: Package
-            inversedBy: tr_packages
+            inversedBy: codes
             joinColumn:
                 name: idPackages
                 referencedColumnName: id
                 nullable: false
         location:
             targetEntity: Location
-            inversedBy: tr_locations
+            inversedBy: codes
             joinColumn:
                 name: idLocations
                 referencedColumnName: id
@@ -35,4 +36,5 @@ Sulu\Bundle\TranslateBundle\Entity\Code:
         translations:
             targetEntity: Translation
             mappedBy: code
+            cascade: [remove]
     lifecycleCallbacks: {  }

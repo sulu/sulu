@@ -14,10 +14,11 @@ Sulu\Bundle\TranslateBundle\Entity\Catalogue:
         translations:
             targetEntity: Translation
             mappedBy: catalogue
+            cascade: [remove]
     manyToOne:
         package:
             targetEntity: Package
-            inversedBy: tr_packages
+            inversedBy: catalogues
             joinColumn:
                 name: idPackages
                 referencedColumnName: id

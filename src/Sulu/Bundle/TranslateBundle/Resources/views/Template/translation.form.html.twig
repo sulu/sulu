@@ -1,0 +1,46 @@
+<h1><%= catalogue.locale %></h1>
+
+<form id="codes-form">
+
+    <div class="grid-row">
+        <h3 class="collapsable">[Section1]</h3>
+        <table class="table codes" id="section1">
+
+            <thead>
+                <tr>
+                    <th class="grid-col-4">[Key]</th>
+                    <th class="grid-col-4">[Translation]</th>
+                    <th class="grid-col-4">[Suggestion (EN)]</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% _.each(translations, function(item) { %>
+                <tr data-id="<%= item.id %>">
+                    <td class="grid-col-4"><p><%= item.code.code %><span class="icon-remove m-left-5"></span><p></td>
+                    <td class="grid-col-4">
+                        <textarea rows="1" class="form-element vertical"><%= (!!item.value) ? item.value : '' %></textarea>
+                        <small>[Max. <%= item.code.length %> chars]</small>
+                    </td>
+                    <td class="grid-col-4"><p>[Lorem Ipsum dolor set]</p></td>
+                </tr>
+                <% }); %>
+            </tbody>
+
+        </table>
+
+
+        <div class="grid-row m-top-15 m-bottom-10">
+            <div class="grid-col-2 addCode" data-target-element="section1">
+                <span class="icon-add"></span><span class="control-label">[Add element]</span>
+            </div>
+            <div class="grid-col-2">
+                <input type="submit" value="[Speichern]"/>
+            </div>
+        </div>
+
+    </div>
+
+    <hr/>
+
+</form>

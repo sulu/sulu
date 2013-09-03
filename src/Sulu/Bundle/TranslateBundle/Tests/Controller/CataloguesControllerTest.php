@@ -54,7 +54,8 @@ class CataloguesControllerTest extends DatabaseTestCase
         self::$tool->dropSchema(self::$entities);
     }
 
-    public function setUpSchema() {
+    public function setUpSchema()
+    {
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
@@ -93,5 +94,33 @@ class CataloguesControllerTest extends DatabaseTestCase
         $client->request('GET', '/translate/api/catalogues/1');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->locale);
+    }
+
+    public function testDeleteById()
+    {
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/catalogues/1');
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+
+        //$client->request('GET', '/translate/api/catalogues/1');
+        //$response = json_decode($client->getResponse()->getContent());
+        //$this->assertEquals('404', $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteByIdNotExisting()
+    {
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/catalogues/4711');
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+
+        $client->request('GET', '/translate/api/catalogues');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->total);
     }
 }

@@ -7,15 +7,19 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbonerelational'], function() {
+define([
+    'backbonerelational',
+    'sulutranslate/model/translation'
+], function(BackboneRelational, Translation) {
     return Backbone.RelationalModel.extend({
-        urlRoot: '/translate/api/catalogues',
-        idAttribute: 'id',
+        urlRoot: '/translate/api/codes',
         defaults: {
             id: null,
-            locale:'',
-            package:null,
-            translations: []
+            code:'',
+            backend: false,
+            frontend: false,
+            length:50,
+            package:null
         }
     });
 });
