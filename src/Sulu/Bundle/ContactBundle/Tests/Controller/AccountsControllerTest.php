@@ -88,19 +88,19 @@ class AccountsControllerTest extends DatabaseTestCase
 		$address->setCountry($country);
 		$address->setAddressType($addressType);
 		self::$account->addAddresse($address);
-        
-        
-        $contact = new Contact();
-        $contact->setFirstName("Vorname");
-        $contact->setLastName("Nachname");
-        $contact->setMiddleName("Mittelname");
-        $contact->setUsername("Benutzername");
-        $contact->setPassword("Passwort");
-        $contact->setLocaleSystem("DE");
-        $contact->setCreated(new \DateTime());
-        $contact->setChanged(new \DateTime());
-        $contact->setAccount(self::$account);
-        self::$account->addContact($contact);
+
+
+		$contact = new Contact();
+		$contact->setFirstName("Vorname");
+		$contact->setLastName("Nachname");
+		$contact->setMiddleName("Mittelname");
+		$contact->setUsername("Benutzername");
+		$contact->setPassword("Passwort");
+		$contact->setLocaleSystem("DE");
+		$contact->setCreated(new \DateTime());
+		$contact->setChanged(new \DateTime());
+		$contact->setAccount(self::$account);
+		self::$account->addContact($contact);
 
 		$note = new Note();
 		$note->setValue('Note');
@@ -117,7 +117,7 @@ class AccountsControllerTest extends DatabaseTestCase
 		self::$em->persist($addressType);
 		self::$em->persist($address);
 		self::$em->persist($note);
-        self::$em->persist($contact);
+		self::$em->persist($contact);
 
 		self::$em->flush();
 	}
@@ -208,7 +208,7 @@ class AccountsControllerTest extends DatabaseTestCase
 			'/contact/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
-				'idParent' => self::$account->getId(),
+				'parent' => array('id' => self::$account->getId()),
 				'urls' => array(
 					array(
 						'url' => 'http://example.company.com',
@@ -858,22 +858,22 @@ class AccountsControllerTest extends DatabaseTestCase
 		$this->assertEquals(1, $response->total);
 	}
 
-    public function testGetDeleteInfoById()
-    {
+	public function testGetDeleteInfoById()
+	{
 
-        $client = static::createClient();
-        $client->request('GET', '/contact/api/accounts/1/deleteinfo');
-        $this->assertEquals('200', $client->getResponse()->getStatusCode());
-    }
+		$client = static::createClient();
+		$client->request('GET', '/contact/api/accounts/1/deleteinfo');
+		$this->assertEquals('200', $client->getResponse()->getStatusCode());
+	}
 
-    public function testGetDeleteInfoByIdNotExisting()
-    {
+	public function testGetDeleteInfoByIdNotExisting()
+	{
 
-        $client = static::createClient();
-        $client->request('GET', '/contact/api/accounts/4711/deleteinfo');
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+		$client = static::createClient();
+		$client->request('GET', '/contact/api/accounts/4711/deleteinfo');
+		$this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/contact/api/accounts/1/deleteinfo');
-        $this->assertEquals('200', $client->getResponse()->getStatusCode());
-    }
+		$client->request('GET', '/contact/api/accounts/1/deleteinfo');
+		$this->assertEquals('200', $client->getResponse()->getStatusCode());
+	}
 }
