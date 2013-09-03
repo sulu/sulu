@@ -77,14 +77,14 @@ class AccountsController extends RestController implements ClassResourceInterfac
 
 				$account->setName($this->getRequest()->get('name'));
 
-				$idParent = $this->getRequest()->get('idParent');
-				if ($idParent != null) {
+				$parentData = $this->getRequest()->get('parent');
+				if ($parentData != null && isset($parentData['id'])) {
 					$parent = $this->getDoctrine()
 						->getRepository($this->entityName)
-						->find($idParent);
+						->find($parentData['id']);
 
 					if (!$parent) {
-						throw new EntityNotFoundException($this->entityName, $idParent);
+						throw new EntityNotFoundException($this->entityName, $parentData['id']);
 					}
 					$account->setParent($parent);
 				}
@@ -164,14 +164,14 @@ class AccountsController extends RestController implements ClassResourceInterfac
 
 				$account->setName($this->getRequest()->get('name'));
 
-				$idParent = $this->getRequest()->get('idParent');
-				if ($idParent != null) {
+				$parentData = $this->getRequest()->get('parent');
+				if ($parentData != null && isset($parentData['id'])) {
 					$parent = $this->getDoctrine()
 						->getRepository($this->entityName)
-						->find($idParent);
+						->find($parentData['id']);
 
 					if (!$parent) {
-						throw new EntityNotFoundException($this->entityName, $idParent);
+						throw new EntityNotFoundException($this->entityName, $parentData['id']);
 					}
 					$account->setParent($parent);
 				}
