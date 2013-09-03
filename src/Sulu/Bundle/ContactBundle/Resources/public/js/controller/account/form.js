@@ -48,7 +48,8 @@ define([
 
         setStatic: function() {
             this.getModel().set({
-                name: this.$('#name').val()
+                name: this.$('#name').val(),
+                parent: {id: this.$('#company .name-value').data('id')}
             });
 
             var url = this.getModel().get('urls').at(0);
