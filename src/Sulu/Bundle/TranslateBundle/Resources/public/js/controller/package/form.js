@@ -82,6 +82,8 @@ define([
                 if (!this.options.id) {
                     translatePackage = new Package();
                     template = _.template(Template, {name: '', locale: '', catalogues: []});
+                    var catalogues = this.getArrayFromCatalogues(translatePackage.get('catalogues').models);
+                    this.initializeCatalogueList(catalogues);
                     this.$el.html(template);
                 } else {
                     translatePackage = new Package({id: this.options.id});
@@ -183,6 +185,7 @@ define([
 
 
                 $('#addCatalogueRow').on('click', function () {
+                    console.log("clicked");
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
                 });
 
