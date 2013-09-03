@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller

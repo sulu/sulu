@@ -54,7 +54,8 @@ class CataloguesControllerTest extends DatabaseTestCase
         self::$tool->dropSchema(self::$entities);
     }
 
-    public function setUpSchema() {
+    public function setUpSchema()
+    {
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
@@ -95,7 +96,8 @@ class CataloguesControllerTest extends DatabaseTestCase
         $this->assertEquals('EN', $response->locale);
     }
 
-    public function testDeleteById(){
+    public function testDeleteById()
+    {
 
         $client = static::createClient();
 
@@ -108,7 +110,8 @@ class CataloguesControllerTest extends DatabaseTestCase
         //$this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
 
-    public function testDeleteByIdNotExisting(){
+    public function testDeleteByIdNotExisting()
+    {
 
         $client = static::createClient();
 

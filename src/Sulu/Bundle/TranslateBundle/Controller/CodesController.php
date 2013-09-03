@@ -46,10 +46,12 @@ class CodesController extends FOSRestController
         $packageId = $this->getRequest()->get('packageId');
         if ($catalogueId != null) {
             $codes = $repository->findByCatalogue($catalogueId);
-        } else if ($packageId != null) {
-            $codes = $repository->findByPackage($packageId);
         } else {
-            $codes = $repository->findGetAll($limit, $offset, $sorting);
+            if ($packageId != null) {
+                $codes = $repository->findByPackage($packageId);
+            } else {
+                $codes = $repository->findGetAll($limit, $offset, $sorting);
+            }
         }
 
         $response = array(
@@ -93,7 +95,7 @@ class CodesController extends FOSRestController
     }
 
     /**
-     * Shows the code with the given Id
+     * Shows the code with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -167,7 +169,7 @@ class CodesController extends FOSRestController
     }
 
     /**
-     * TODO Comment
+     * Updates the code for the given id
      * @param integer $id The id of the package to update
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -209,7 +211,8 @@ class CodesController extends FOSRestController
                         array(
                             'code' => $code->getId(),
                             'catalogue' => $translation['catalogue']['id']
-                        ));
+                        )
+                    );
 
                     if ($t != null) {
                         $t->setValue($translation['value']);
@@ -234,11 +237,13 @@ class CodesController extends FOSRestController
         return $this->handleView($view);
     }
 
+    /**
+     * Deletes the code with the given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteCodeAction($id)
     {
-
-        $response = array();
-
         $code = $this->getDoctrine()
             ->getRepository($this->codeEntity)
             ->find($id);

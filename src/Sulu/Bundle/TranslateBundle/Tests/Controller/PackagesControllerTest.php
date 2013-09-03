@@ -60,7 +60,8 @@ class PackagesControllerTest extends DatabaseTestCase
         self::$tool->dropSchema(self::$entities);
     }
 
-    public function setUpSchema() {
+    public function setUpSchema()
+    {
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(

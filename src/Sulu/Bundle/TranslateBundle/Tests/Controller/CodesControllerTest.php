@@ -25,74 +25,92 @@ class CodesControllerTest extends DatabaseTestCase
      * @var array
      */
     protected static $entities;
+
     /**
      * @var SchemaTool
      */
     protected static $tool;
+
     /**
      * @var Package
      */
     private $package1;
+
     /**
      * @var Package
      */
     private $package2;
+
     /**
      * @var Location
      */
     private $location1;
+
     /**
      * @var Location
      */
     private $location2;
+
     /**
      * @var Catalogue
      */
     private $catalogue1;
+
     /**
      * @var Catalogue
      */
     private $catalogue2;
+
     /**
      * @var Catalogue
      */
     private $catalogue3;
+
     /**
      * @var Code
      */
     private $code1;
+
     /**
      * @var Translation
      */
     private $code1_t1;
+
     /**
      * @var Code
      */
     private $code2;
+
     /**
      * @var Translation
      */
     private $code2_t1;
+
     /**
      * @var Code
      */
     private $code3;
+
     /**
      * @var Translation
      */
     private $code3_t1;
+
     /**
      * @var Translation
      */
     private $code3_t2;
+
     /**
      * @var Code
      */
     private $code4;
+
     /**
      * @var Client
      */
     private $client;
+
     /**
      * @var integer
      */
@@ -457,7 +475,10 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($this->code4->getCode(), $response->items[3]->code);
         $this->assertEquals($this->code4->getLocation()->getName(), $response->items[3]->location_name);
 
-        $this->client->request('GET', '/translate/api/codes/list?fields=id,code,translations_value,translations_catalogue_locale');
+        $this->client->request(
+            'GET',
+            '/translate/api/codes/list?fields=id,code,translations_value,translations_catalogue_locale'
+        );
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(4, $response->total);
@@ -495,7 +516,10 @@ class CodesControllerTest extends DatabaseTestCase
 
     public function testGetListCombination()
     {
-        $this->client->request('GET', '/translate/api/codes/list?fields=id,code,translations_value,translations_catalogue_locale&packageId=1&catalogueId=1&pageSize=' . $this->pageSize . '&page=1&sortBy=code&sortOrder=desc');
+        $this->client->request(
+            'GET',
+            '/translate/api/codes/list?fields=id,code,translations_value,translations_catalogue_locale&packageId=1&catalogueId=1&pageSize=' . $this->pageSize . '&page=1&sortBy=code&sortOrder=desc'
+        );
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, sizeof($response->items));
@@ -809,7 +833,8 @@ class CodesControllerTest extends DatabaseTestCase
     }
 
 
-    public function testDeleteById(){
+    public function testDeleteById()
+    {
 
         $client = static::createClient();
 
@@ -818,7 +843,8 @@ class CodesControllerTest extends DatabaseTestCase
 
     }
 
-    public function testDeleteByIdNotExisting(){
+    public function testDeleteByIdNotExisting()
+    {
 
         $client = static::createClient();
 

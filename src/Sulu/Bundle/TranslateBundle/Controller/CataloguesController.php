@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 
 /**
  * Make the catalogues available through a REST-API
@@ -20,72 +19,76 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 class CataloguesController extends FOSRestController
 {
 
-	/**
-	 * Shows the catalogue with the given id
-	 * @param $id
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function getCatalogueAction($id)
-	{
-		$response = array();
+    /**
+     * Returns the catalogue with the given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getCatalogueAction($id)
+    {
+        $catalogue = $this->getDoctrine()
+            ->getRepository('SuluTranslateBundle:Catalogue')
+            ->find($id);
 
-		$catalogue = $this->getDoctrine()
-			->getRepository('SuluTranslateBundle:Catalogue')
-			->find($id);
+        $view = $this->view($catalogue, 200);
 
-		$view = $this->view($catalogue, 200);
+        return $this->handleView($view);
+    }
 
-		return $this->handleView($view);
-	}
+    /**
+     * Return all catalogues
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getCataloguesAction()
+    {
+        $response = array();
 
-	public function getCataloguesAction()
-	{
-		$response = array();
+        $packageId = $this->getRequest()->get('package');
 
-		$packageId = $this->getRequest()->get('package');
+        $repository = $this->getDoctrine()
+            ->getRepository('SuluTranslateBundle:Catalogue');
 
-		$repository = $this->getDoctrine()
-			->getRepository('SuluTranslateBundle:Catalogue');
+        if ($packageId != null) {
+            $catalogues = $repository->findBy(
+                array(
+                    'package' => $packageId
+                )
+            );
+        } else {
+            $catalogues = $repository->findAll();
+        }
 
-		if ($packageId != null) {
-			$catalogues = $repository->findBy(
-				array(
-					'package' => $packageId
-				)
-			);
-		} else {
-			$catalogues = $repository->findAll();
-		}
+        $response['total'] = count($catalogues);
+        $response['items'] = $catalogues;
 
-		$response['total'] = count($catalogues);
-		$response['items'] = $catalogues;
+        $view = $this->view($response, 200);
 
-		$view = $this->view($response, 200);
+        return $this->handleView($view);
+    }
 
-		return $this->handleView($view);
-	}
+    /**
+     * Deletes the catalogue with the given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteCatalogueAction($id)
+    {
+        $catalogue = $this->getDoctrine()
+            ->getRepository('SuluTranslateBundle:Catalogue')
+            ->find($id);
 
-	public function deleteCatalogueAction($id)
-	{
+        if ($catalogue != null) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($catalogue);
+            $em->flush();
 
-		$response = array();
+            $view = $this->view(null, 204);
 
-		$catalogue = $this->getDoctrine()
-			->getRepository('SuluTranslateBundle:Catalogue')
-			->find($id);
+        } else {
+            $view = $this->view(null, 404);
 
-		if ($catalogue != null) {
-			$em = $this->getDoctrine()->getManager();
-			$em->remove($catalogue);
-			$em->flush();
+        }
 
-			$view = $this->view(null, 204);
-
-		} else {
-			$view = $this->view(null, 404);
-
-		}
-
-		return $this->handleView($view);
-	}
+        return $this->handleView($view);
+    }
 }

@@ -12,180 +12,180 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
 class TranslationsControllerTest extends DatabaseTestCase
 {
 
-	/**
-	 * @var array
-	 */
-	static $entities;
+    /**
+     * @var array
+     */
+    static $entities;
 
-	public function setUp()
-	{
-		$this->setUpSchema();
+    public function setUp()
+    {
+        $this->setUpSchema();
 
-		$package1 = new Package();
-		$package1->setName('Package1');
-		self::$em->persist($package1);
+        $package1 = new Package();
+        $package1->setName('Package1');
+        self::$em->persist($package1);
 
-		$package2 = new Package();
-		$package2->setName('Package2');
-		self::$em->persist($package2);
+        $package2 = new Package();
+        $package2->setName('Package2');
+        self::$em->persist($package2);
 
-		$catalogue1 = new Catalogue();
-		$catalogue1->setLocale('de');
-		$catalogue1->setPackage($package1);
-		self::$em->persist($catalogue1);
+        $catalogue1 = new Catalogue();
+        $catalogue1->setLocale('de');
+        $catalogue1->setPackage($package1);
+        self::$em->persist($catalogue1);
 
-		$catalogue2 = new Catalogue();
-		$catalogue2->setLocale('fr');
-		$catalogue2->setPackage($package1);
-		self::$em->persist($catalogue2);
+        $catalogue2 = new Catalogue();
+        $catalogue2->setLocale('fr');
+        $catalogue2->setPackage($package1);
+        self::$em->persist($catalogue2);
 
-		$catalogue3 = new Catalogue();
-		$catalogue3->setLocale('fr');
-		$catalogue3->setPackage($package2);
-		self::$em->persist($catalogue3);
+        $catalogue3 = new Catalogue();
+        $catalogue3->setLocale('fr');
+        $catalogue3->setPackage($package2);
+        self::$em->persist($catalogue3);
 
-		$code1 = new Code();
-		$code1->setCode('code.1');
-		$code1->setLength(100);
-		$code1->setBackend(1);
-		$code1->setFrontend(1);
-		$code1->setPackage($package1);
-		self::$em->persist($code1);
+        $code1 = new Code();
+        $code1->setCode('code.1');
+        $code1->setLength(100);
+        $code1->setBackend(1);
+        $code1->setFrontend(1);
+        $code1->setPackage($package1);
+        self::$em->persist($code1);
 
-		$code2 = new Code();
-		$code2->setCode('code.2');
-		$code2->setLength(100);
-		$code2->setBackend(1);
-		$code2->setFrontend(1);
-		$code2->setPackage($package1);
-		self::$em->persist($code2);
+        $code2 = new Code();
+        $code2->setCode('code.2');
+        $code2->setLength(100);
+        $code2->setBackend(1);
+        $code2->setFrontend(1);
+        $code2->setPackage($package1);
+        self::$em->persist($code2);
 
-		$code3 = new Code();
-		$code3->setCode('code.3');
-		$code3->setLength(100);
-		$code3->setBackend(1);
-		$code3->setFrontend(1);
-		$code3->setPackage($package2);
-		self::$em->persist($code3);
+        $code3 = new Code();
+        $code3->setCode('code.3');
+        $code3->setLength(100);
+        $code3->setBackend(1);
+        $code3->setFrontend(1);
+        $code3->setPackage($package2);
+        self::$em->persist($code3);
 
-		self::$em->flush();
+        self::$em->flush();
 
-		$t1_1 = new Translation();
-		$t1_1->setValue('Code 1.1');
-		$t1_1->setCatalogue($catalogue1);
-		$t1_1->setCode($code1);
-		self::$em->persist($t1_1);
+        $t1_1 = new Translation();
+        $t1_1->setValue('Code 1.1');
+        $t1_1->setCatalogue($catalogue1);
+        $t1_1->setCode($code1);
+        self::$em->persist($t1_1);
 
-		$t1_2 = new Translation();
-		$t1_2->setValue('Code 1.2');
-		$t1_2->setCatalogue($catalogue2);
-		$t1_2->setCode($code1);
-		self::$em->persist($t1_2);
+        $t1_2 = new Translation();
+        $t1_2->setValue('Code 1.2');
+        $t1_2->setCatalogue($catalogue2);
+        $t1_2->setCode($code1);
+        self::$em->persist($t1_2);
 
-		$t2_2 = new Translation();
-		$t2_2->setValue('Code 2.2');
-		$t2_2->setCatalogue($catalogue2);
-		$t2_2->setCode($code2);
-		self::$em->persist($t2_2);
+        $t2_2 = new Translation();
+        $t2_2->setValue('Code 2.2');
+        $t2_2->setCatalogue($catalogue2);
+        $t2_2->setCode($code2);
+        self::$em->persist($t2_2);
 
-		self::$em->flush();
-	}
+        self::$em->flush();
+    }
 
-	public function setUpSchema()
-	{
-		self::$tool = new SchemaTool(self::$em);
+    public function setUpSchema()
+    {
+        self::$tool = new SchemaTool(self::$em);
 
-		self::$entities = array(
-			self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
-			self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
-			self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
-			self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
-			self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
-		);
+        self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
+        );
 
-		self::$tool->dropSchema(self::$entities);
-		self::$tool->createSchema(self::$entities);
-	}
+        self::$tool->dropSchema(self::$entities);
+        self::$tool->createSchema(self::$entities);
+    }
 
-	public function tearDown()
-	{
-		parent::tearDown();
-		self::$tool->dropSchema(self::$entities);
-	}
+    public function tearDown()
+    {
+        parent::tearDown();
+        self::$tool->dropSchema(self::$entities);
+    }
 
-	public function testGetAll()
-	{
-		$client = static::createClient();
-		$client->request('GET', '/translate/api/catalogues/1/translations');
-		$response = json_decode($client->getResponse()->getContent());
-		$this->assertEquals(200, $client->getResponse()->getStatusCode());
+    public function testGetAll()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/translate/api/catalogues/1/translations');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-		$this->assertEquals(2, $response->total);
-		$this->assertEquals(2, sizeof($response->items));
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, sizeof($response->items));
 
-		$this->assertEquals(1, $response->items[0]->id);
-		$this->assertEquals('Code 1.1', $response->items[0]->value);
-		$this->assertEquals(1, $response->items[0]->code->id);
-		$this->assertEquals('code.1', $response->items[0]->code->code);
+        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals('Code 1.1', $response->items[0]->value);
+        $this->assertEquals(1, $response->items[0]->code->id);
+        $this->assertEquals('code.1', $response->items[0]->code->code);
 
-		$this->assertEquals(2, $response->items[1]->id);
-		$this->assertEquals('', $response->items[1]->value);
-		$this->assertEquals(2, $response->items[1]->code->id);
-		$this->assertEquals('code.2', $response->items[1]->code->code);
-	}
+        $this->assertEquals(2, $response->items[1]->id);
+        $this->assertEquals('', $response->items[1]->value);
+        $this->assertEquals(2, $response->items[1]->code->id);
+        $this->assertEquals('code.2', $response->items[1]->code->code);
+    }
 
-	public function testPatch()
-	{
-		$request = array(
-			array(
-				'id' => 1,
-				'value' => 'new code value 1.1',
-				'code' => array(
-					'id' => 1,
-					'code' => 'code.1',
-					'frontend' => false,
-					'backend' => false,
-					'length' => 100
-				)
-			),
-			array(
-				'id' => null,
-				'value' => 'realy new Code',
-				'code' => array(
-					'code' => 'new.code',
-					'frontend' => false,
-					'backend' => false,
-					'length' => 101
-				)
-			)
-		);
-		$client = static::createClient();
-		$client->request('PATCH', '/translate/api/catalogues/1/translations', $request);
-		$response = json_decode($client->getResponse()->getContent());
-		$this->assertEquals(204, $client->getResponse()->getStatusCode());
+    public function testPatch()
+    {
+        $request = array(
+            array(
+                'id' => 1,
+                'value' => 'new code value 1.1',
+                'code' => array(
+                    'id' => 1,
+                    'code' => 'code.1',
+                    'frontend' => false,
+                    'backend' => false,
+                    'length' => 100
+                )
+            ),
+            array(
+                'id' => null,
+                'value' => 'realy new Code',
+                'code' => array(
+                    'code' => 'new.code',
+                    'frontend' => false,
+                    'backend' => false,
+                    'length' => 101
+                )
+            )
+        );
+        $client = static::createClient();
+        $client->request('PATCH', '/translate/api/catalogues/1/translations', $request);
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
-		$client = static::createClient();
-		$client->request('GET', '/translate/api/catalogues/1/translations');
-		$response = json_decode($client->getResponse()->getContent());
-		$this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $client = static::createClient();
+        $client->request('GET', '/translate/api/catalogues/1/translations');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-		$this->assertEquals(3, $response->total);
-		$this->assertEquals(3, sizeof($response->items));
+        $this->assertEquals(3, $response->total);
+        $this->assertEquals(3, sizeof($response->items));
 
-		$this->assertEquals(1, $response->items[0]->id);
-		$this->assertEquals('new code value 1.1', $response->items[0]->value);
-		$this->assertEquals(1, $response->items[0]->code->id);
-		$this->assertEquals('code.1', $response->items[0]->code->code);
+        $this->assertEquals(1, $response->items[0]->id);
+        $this->assertEquals('new code value 1.1', $response->items[0]->value);
+        $this->assertEquals(1, $response->items[0]->code->id);
+        $this->assertEquals('code.1', $response->items[0]->code->code);
 
-		$this->assertEquals(2, $response->items[1]->id);
-		$this->assertEquals('', $response->items[1]->value);
-		$this->assertEquals(2, $response->items[1]->code->id);
-		$this->assertEquals('code.2', $response->items[1]->code->code);
+        $this->assertEquals(2, $response->items[1]->id);
+        $this->assertEquals('', $response->items[1]->value);
+        $this->assertEquals(2, $response->items[1]->code->id);
+        $this->assertEquals('code.2', $response->items[1]->code->code);
 
-		$this->assertEquals(4, $response->items[2]->id);
-		$this->assertEquals('realy new Code', $response->items[2]->value);
-		$this->assertEquals(4, $response->items[2]->code->id);
-		$this->assertEquals('new.code', $response->items[2]->code->code);
-	}
+        $this->assertEquals(4, $response->items[2]->id);
+        $this->assertEquals('realy new Code', $response->items[2]->value);
+        $this->assertEquals(4, $response->items[2]->code->id);
+        $this->assertEquals('new.code', $response->items[2]->code->code);
+    }
 
 }
