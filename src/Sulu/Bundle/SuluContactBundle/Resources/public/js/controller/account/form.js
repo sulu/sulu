@@ -19,9 +19,12 @@ define([
     'use strict';
 
     return Form.extend({
-        initialize: function () {
+        initialize: function() {
             this.setListUrl('contacts/companies');
             this.render();
+            if (!!options.id) {
+                this.setExcludeItem({id: this.options.id});
+            }
         },
 
         render: function() {

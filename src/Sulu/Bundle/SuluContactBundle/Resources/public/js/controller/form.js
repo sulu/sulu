@@ -28,6 +28,8 @@ define([
 
     var listUrl;
 
+    var excludeItem = null;
+
     return Backbone.View.extend({
 
         events: {
@@ -50,6 +52,15 @@ define([
 
         setListUrl: function(value) {
             listUrl = value;
+        },
+
+        setExcludeItem: function(item) {
+            excludeItem = item;
+        },
+
+        getExcludeItems: function() {
+            if (excludeItem != null) return [excludeItem];
+            return [];
         },
 
         getTabs: function(id) {
@@ -84,9 +95,16 @@ define([
         },
 
         initFields: function(json) {
+            var excludeItems = [];
+            if (!!this.options.id) {
+                excludeItems = [
+                    {id: this.options.id}
+                ];
+            }
             this.$('#company').huskyAutoComplete({
                 url: '/contact/api/accounts/list?searchFields=id,name',
-                value: (!!json.account) ? json.account : json.parent
+                value: (!!json.account) ? json.account : json.parent,
+                excludeItems: this.getExcludeItems()
             });
         },
 
