@@ -266,11 +266,28 @@ function typeOf(value) {
             return this.options.url + delimiter + 'search=' + pattern;
         },
 
+        getValueID: function() {
+            if (this.options.value != null) {
+                return this.options.value.id;
+            } else {
+                return null;
+            }
+        },
+
+        getValueName: function() {
+            if (this.options.value != null) {
+                return this.options.value[this.options.valueName];
+            } else {
+                return '';
+            }
+        },
+
         init: function() {
             Husky.DEBUG && console.log(this.name, 'init');
 
             // init form-element and dropdown menu
-            this.$valueField = $('<input type="text" autofill="false" class="name-value form-element" data-id=""/>');
+            this.$valueField = $('<input type="text" autofill="false" class="name-value form-element" data-id="' + this.getValueID() +
+                '" value="' + this.getValueName() + '"/>');
             this.$dropDown = $('<div class="dropdown-menu" />');
             this.$dropDownList = $('<ul/>');
             this.$element.append(this.$valueField);
@@ -280,6 +297,10 @@ function typeOf(value) {
 
             // bind dom elements
             this.bindDOMEvents();
+
+            if (this.options.value != null) {
+                this.successField();
+            }
         },
 
         // bind dom elements
@@ -527,7 +548,8 @@ function typeOf(value) {
         url: '',
         valueName: 'name',
         minLength: 3,
-        keyControl: true
+        keyControl: true,
+        value: null
     };
 
 })(Husky.$, this, this.document);
@@ -1076,6 +1098,153 @@ function typeOf(value) {
             pageSize: 10,
             showPages: 5
         }
+    };
+
+})(Husky.$, this, this.document);
+
+/*****************************************************************************
+ *
+ *  Husky.Ui.Dialog
+ *
+ *  Shows a dialog and displays the given data and template.
+ *  The show function accepts different template parts (dialog header, content,
+ *  footer) and data as parameters
+ *
+ *
+ *****************************************************************************/
+
+(function($, window, document, undefined) {
+
+    'use strict';
+
+    var moduleName = 'Husky.Ui.Dialog';
+
+    Husky.Ui.Dialog = function(element, options) {
+
+        this.name = moduleName;
+        this.options = options;
+        this.configs = {};
+
+        this.$element = $('<div class="husky-dialog hidden fade"/>');
+        $(element).append(this.$element);
+
+        this.init();
+    };
+
+    $.extend(Husky.Ui.Dialog.prototype, Husky.Events, {
+
+        // private event dispatcher
+        vent: (function() {
+            return $.extend({}, Husky.Events);
+        })(),
+
+        init: function() {
+
+            Husky.DEBUG && console.log(this.name, 'init');
+
+            this.prepare();
+
+            this.bindDOMEvents();
+            this.bindCustomEvents();
+        },
+
+        // prepares the dialog structure
+        prepare: function() {
+
+            this.$header = $('<div class="husky-dialog-header align-right"/>');
+            this.$content = $('<div class="husky-dialog-body" />');
+            this.$footer = $('<div class="husky-dialog-footer" />');
+
+            this.$element.append(this.$header);
+            this.$element.append(this.$content);
+            this.$element.append(this.$footer);
+
+            var width = this.options.width;
+            var marginLeft = parseInt(this.options.width) / 2;
+
+            this.$element.css({
+                'width': width,
+                'margin-left': '-' + marginLeft + 'px'
+            });
+
+        },
+
+        // bind dom elements
+        bindDOMEvents: function() {
+
+            // turn off all events
+            this.$element.off();
+
+            this.$element.on('click', '.close', this.hide.bind(this));
+        },
+
+        // listen for private events
+        bindCustomEvents: function() {
+
+            this.vent.off();
+
+            // listen for public events
+            this.on('dialog:show', this.show.bind(this));
+            this.on('dialog:hide', this.hide.bind(this));
+
+        },
+
+        // Shows the dialog and compiles the different dialog template parts 
+        show: function(params) {
+
+            this.template = params.template;
+            this.data = params.data;
+
+            this.$header.append(_.template(this.template.header, this.data.header));
+            this.$content.append(_.template(this.template.content, this.data.content));
+            this.$footer.append(_.template(this.template.footer, this.data.footer));
+
+            this.$element.show();
+
+            if (this.options.backdrop) {
+                $('body').append('<div id="husky-dialog-backdrop" class="husky-dialog-backdrop fade in"></div>');
+            }
+        },
+
+        // Hides the dialog and empties the contents of the different template parts
+        hide: function() {
+
+            this.$element.hide();
+
+            if (this.options.backdrop) {
+                $('#husky-dialog-backdrop ').remove();
+            }
+
+            this.template = null;
+            this.data = null;
+            this.$header.empty();
+            this.$content.empty();
+            this.$footer.empty();
+        }
+
+    });
+
+    $.fn.huskyDialog = function(options) {
+        var $element = $(this);
+
+        options = $.extend({}, $.fn.huskyDialog.defaults, typeof options == 'object' && options);
+
+        // return if this plugin has a module instance
+        if (!!$element.data(moduleName)) {
+            return this;
+        }
+
+        // store the module instance into the jQuery data property
+        $element.data(moduleName, new Husky.Ui.Dialog(this, options));
+
+        return this;
+    };
+
+    $.fn.huskyDialog.defaults = {
+        data: null,
+        template: null,
+        backdrop: true,
+        width: '560px'
     };
 
 })(Husky.$, this, this.document);
@@ -1871,6 +2040,163 @@ function typeOf(value) {
     $.fn.huskyNavigation.defaults = {
         url: '',
         collapse: false
+    };
+
+})(Husky.$, this, this.document);
+
+/*****************************************************************************
+ *
+ *  Select
+ *  [Short description]
+ *
+ *  Sections
+ *      - initialization
+ *      - DOM events
+ *      - custom events
+ *      - default values
+ *
+ *
+ *****************************************************************************/
+
+(function($, window, document, undefined) {
+    'use strict';
+
+    var moduleName = 'Husky.Ui.Select';
+
+    Husky.Ui.Select = function(element, options) {
+        this.name = moduleName;
+
+        Husky.DEBUG && console.log(this.name, 'create instance');
+
+        this.options = options;
+
+        this.configs = {};
+
+        this.$originalElement = $(element);
+        this.$element = $('<div class="husky-ui-select"/>');
+        this.$originalElement.append(this.$element);
+
+        this.init();
+    };
+
+    $.extend(Husky.Ui.Select.prototype, Husky.Events, {
+        // private event dispatcher
+        vent: (function() {
+            return $.extend({}, Husky.Events);
+        })(),
+
+        getUrl: function() {
+            return this.options.url;
+        },
+
+        init: function() {
+            Husky.DEBUG && console.log(this.name, 'init');
+
+            // ------------------------------------------------------------
+            // initialization
+            // ------------------------------------------------------------
+            this.$select = $('<select class="select-value form-element"/>');
+            this.$element.append(this.$select);
+            this.prepareData();
+
+            // bind dom elements
+            this.bindDOMEvents();
+        },
+
+        // bind dom elements
+        bindDOMEvents: function() {
+
+            // turn off all events
+            this.$element.off();
+
+            // ------------------------------------------------------------
+            // DOM events
+            // ------------------------------------------------------------
+
+        },
+
+        // prepares data for dropDown, if options.data not set load with ajax
+        prepareData: function() {
+            if (this.options.data.length > 0) {
+                this.generateOptions(this.options.data);
+            } else {
+                this.loadData();
+            }
+        },
+
+        // load data with ajax
+        loadData: function() {
+            var url = this.getUrl();
+            Husky.DEBUG && console.log(this.name, 'load: ' + url);
+
+            Husky.Util.ajax({
+                url: url,
+                success: function(response) {
+                    Husky.DEBUG && console.log(this.name, 'load', 'success');
+
+                    if (response.total > 0 && response.items.length == response.total) {
+                        this.options.data = response.items;
+                    } else {
+                        this.options.data = [];
+                    }
+                    this.generateOptions(this.options.data);
+                }.bind(this),
+                error: function() {
+                    Husky.DEBUG && console.log(this.name, 'load', 'error');
+
+                    this.options.data = [];
+                    this.generateOptions(this.options.data);
+                }.bind(this)
+            });
+
+            // FIXME event will be binded later
+            setTimeout(function() {
+                this.trigger('select:loadData', null);
+            }.bind(this), 200);
+        },
+
+        generateOptions: function(items) {
+            this.clearOptions();
+            items.forEach(this.generateOption.bind(this));
+        },
+
+        generateOption: function(item) {
+            var $option = $('<option value="' + item.id + '">' + item[this.options.valueName] + '</option>');
+            if ((this.options.selected != null && this.options.selected.id == item.id) ||
+                (this.options.selected == null && this.options.defaultItem.id == item.id)) {
+                $option.attr("selected", true);
+            }
+            this.$select.append($option);
+        },
+
+        clearOptions: function() {
+            this.$select.find('option').remove();
+        }
+
+    });
+
+    $.fn.huskySelect = function(options) {
+        var $element = $(this);
+
+        options = $.extend({}, $.fn.huskySelect.defaults, typeof options == 'object' && options);
+
+        // return if this plugin has a module instance
+        if (!!$element.data(moduleName)) {
+            return this;
+        }
+
+        // store the module instance into the jQuery data property
+        $element.data(moduleName, new Husky.Ui.Select(this, options));
+
+        return this;
+    };
+
+    $.fn.huskySelect.defaults = {
+        url: '',
+        data: [],
+        valueName: 'name',
+        selected: null,
+        defaultItem: { id: 1 }
     };
 
 })(Husky.$, this, this.document);
