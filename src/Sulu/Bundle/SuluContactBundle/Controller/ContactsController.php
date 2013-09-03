@@ -140,6 +140,19 @@ class ContactsController extends RestController
 			$contact->setCreated(new DateTime());
 			$contact->setChanged(new DateTime());
 
+			$parentData = $this->getRequest()->get('account');
+			if ($parentData != null && isset($parentData['id'])) {
+				/** @var Account $parent */
+				$parent = $this->getDoctrine()
+					->getRepository('SuluContactBundle:Account')
+					->find($parentData['id']);
+
+				if (!$parent) {
+					$error = true;
+				}
+				$contact->setAccount($parent);
+			}
+
 			// Add email addresses, if no error has occured yet
 			$emails = $this->getRequest()->get('emails');
 			if (!$error && !empty($emails)) {
