@@ -82,6 +82,8 @@ define([
                 if (!this.options.id) {
                     translatePackage = new Package();
                     template = _.template(Template, {name: '', locale: '', catalogues: []});
+                    var catalogues = this.getArrayFromCatalogues(translatePackage.get('catalogues').models);
+                    this.initializeCatalogueList(catalogues);
                     this.$el.html(template);
                 } else {
                     translatePackage = new Package({id: this.options.id});
