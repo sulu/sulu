@@ -1,18 +1,58 @@
 <!doctype html>
-<html>
-    <head>
-        <title>Sulu</title>
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.css">
-    </head>
-    <body>
-        <div id="container">
-            <div id="navigation">
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{ name }}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-            </div>
-            <div id="content">
-
+    <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.css">
+    <style>
+        .demo-container {
+            width: 800px;
+            margin-left: 300px;
+            margin-top: 100px;
+            min-height: 300px;
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <header class="headerbar headerbar-fixed-top">
+        <div class="grid">
+            <div class="grid-row">
+                <div id="headerbar-left" class="pull-left grid-col-3 headerbar-left">
+                    <div id="headerbar-account-icon" class="pull-left account-icon"><img src="http://placehold.it/20x30"></div>
+                    <div id="headerbar-account-text" class="pull-left account-text m-left-10 m-top-10">[John Doe]</div>
+                    <div id="headerbar-account-logout" class="pull-left account-logout m-left-5 m-top-10">[Log out]</div>
+                </div>
+                <div id="headerbar-mid" class="pull-left grid-col-7 headerbar-mid">
+                    <div id="headerbar-mid-left" class="grid-col-6 pull-left">[Operations Left]</div>
+                    <div id="headerbar-mid-right" class=" grid-col-6 pull-right">[Operations Right]</div>
+                </div>
+                <div id="headerbar-right" class="pull-right  grid-col-2 m-top-10">
+                    <span class="icon-search pull-left m-left-30"></span>
+                </div>
             </div>
         </div>
+    </header>
+
+    <div id="navigation" class="demo-navigation"></div>
+
+    <main class="demo-container">
+        <div class="grid"  id="content">
+
+        </div>
+    </main>
+</div>
+        <div id="dialog"></div>
         <script data-main="/bundles/suluadmin/dist/app.min" src="/bundles/suluadmin/js/vendor/requirejs/require.js"></script>
-    </body>
+</body>
 </html>
+

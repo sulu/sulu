@@ -115,7 +115,7 @@ module.exports = function (grunt) {
             // TODO: options: { banner: '<%= meta.banner %>' },
             compress: {
                 files: {
-                    'dist/main.min.css': ['Resources/public/css/main.css']
+                    'Resources/public/dist/main.min.css': ['Resources/public/css/main.css']
                 }
             }
         },
