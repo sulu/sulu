@@ -32,9 +32,9 @@ define([
 
         events: {
             'submit #contact-form': 'submitForm',
-            'click #addEmail': 'addEmail',
-            'click #addPhone': 'addPhone',
-            'click #addAddress': 'addAddress',
+            'click #addEmail': 'addEmailEvent',
+            'click #addPhone': 'addPhoneEvent',
+            'click #addAddress': 'addAddressEvent',
             'click .remove-email': 'removeEmail',
             'click .remove-phone': 'removePhone',
             'click .remove-address': 'removeAddress'
@@ -58,18 +58,14 @@ define([
         },
 
         initTemplate: function(json, template, Template) {
-            var emailJson = _.clone(Email.prototype.defaults);
-            var phoneJson = _.clone(Phone.prototype.defaults);
-            var addressJson = _.clone(Address.prototype.defaults);
-
-            this.fillFields(json.emails, 2, emailJson);
-            this.fillFields(json.phones, 2, phoneJson);
-            this.fillFields(json.addresses, 1, addressJson);
-
             template = _.template(Template, json);
             this.$el.html(template);
 
-            this.initFields();
+            this.initEmails(json);
+            this.initPhones(json);
+            this.initAddresses(json);
+
+            this.initFields(json);
         },
 
         initDropDown: function(that, types) {
@@ -87,23 +83,10 @@ define([
             }.bind(this));
         },
 
-        initFields: function() {
+        initFields: function(json) {
             this.$('#company').huskyAutoComplete({
-                url: '/contacts/api/accounts'
-            });
-            this.$('#company').huskyAutoComplete({
-                url: '/contacts/api/accounts'
-            });
-
-            var that = this;
-            this.$('.type-value').each(function(event) {
-                if ($(this).parent().hasClass('email-item')) {
-                    that.initDropDown($(this).parent(), emailTypes);
-                } else if ($(this).parent().hasClass('phone-item')) {
-                    that.initDropDown($(this).parent(), phoneTypes);
-                } else if ($(this).parent().parent().parent().hasClass('address-item')) {
-                    that.initDropDown($(this).parent(), addressTypes);
-                }
+                url: '/contact/api/accounts/list?searchFields=id,name',
+                value: json.account
             });
         },
 
@@ -162,7 +145,7 @@ define([
                         zip: zip,
                         city: city,
                         state: state,
-                        country: {id: $(this).find('.country-value').val()},
+                        country: {id: parseInt($(this).find('.country .select-value').val())},
                         addressType: {id: $(this).find('.type-value').data('id')}
                     });
 
@@ -177,50 +160,90 @@ define([
             });
         },
 
-        addEmail: function(event) {
+        initEmails: function(json) {
+            var emailJson = _.clone(Email.prototype.defaults);
+            this.fillFields(json.emails, 2, emailJson);
+
+            json.emails.forEach(function(item) {
+                this.addEmail(this.$('#emails'), item);
+            }.bind(this));
+        },
+
+        addEmailEvent: function(event) {
             var $element = $(event.currentTarget);
             var id = $element.data("target-id");
             var $div = $('#' + id);
 
-            var $email = $(_.template(this.staticTemplates.emailRow(), {email: ''}));
+            var phoneJson = _.clone(Email.prototype.defaults);
+            var $email = this.addEmail($div, phoneJson);
+        },
+
+        addEmail: function($div, json) {
+            var $email = $(_.template(this.staticTemplates.emailRow(), json));
             $div.append($email);
             //$(window).scrollTop($email.offset().top);
 
             this.initDropDown($email.find('.type-value').parent(), emailTypes);
         },
 
-        addPhone: function(event) {
+        initPhones: function(json) {
+            var phoneJson = _.clone(Phone.prototype.defaults);
+            this.fillFields(json.phones, 2, phoneJson);
+
+            json.phones.forEach(function(item) {
+                this.addPhone(this.$('#phones'), item);
+            }.bind(this));
+        },
+
+        addPhoneEvent: function(event) {
             var $element = $(event.currentTarget);
             var id = $element.data("target-id");
             var $div = $('#' + id);
 
-            var $phone = $(_.template(this.staticTemplates.phoneRow(), {phone: ''}));
+            var phoneJson = _.clone(Phone.prototype.defaults);
+            var $phone = this.addPhone($div, phoneJson);
+        },
+
+        addPhone: function($div, json) {
+            var $phone = $(_.template(this.staticTemplates.phoneRow(), json));
             $div.append($phone);
             //$(window).scrollTop($phone.offset().top);
 
             this.initDropDown($phone.find('.type-value').parent(), phoneTypes);
         },
 
-        addAddress: function(event) {
+        initAddresses: function(json) {
+            var addressJson = _.clone(Address.prototype.defaults);
+            this.fillFields(json.addresses, 1, addressJson);
+
+            json.addresses.forEach(function(item) {
+                this.addAddress(this.$('#addresses'), item, false);
+            }.bind(this));
+        },
+
+        addAddressEvent: function(event) {
             var $element = $(event.currentTarget);
             var id = $element.data("target-id");
             var $div = $('#' + id);
 
-            require(['text!sulucontact/templates/contact/address.html'], function(Template) {
-                var $address = $(_.template(Template, {address: {
-                    id: null,
-                    street: '',
-                    number: '',
-                    additional: '',
-                    zip: '',
-                    city: '',
-                    state: '',
-                    country: ''
-                }}));
-                $div.append($address);
-                $(window).scrollTop($address.offset().top);
+            var addressJson = _.clone(Address.prototype.defaults);
+            var $address = this.addAddress($div, addressJson, true);
+        },
 
+        addAddress: function($div, json, scroll) {
+            require(['text!sulucontact/templates/contact/address.html'], function(Template) {
+                var $address = $(_.template(Template, json));
+                $div.append($address);
+
+                if (scroll == true) {
+                    $(window).scrollTop($address.offset().top);
+                }
                 this.initDropDown($address.find('.type-value').parent(), addressTypes);
+                $address.find('.country').huskySelect({
+                    data: countries,
+                    selected: json.country,
+                    defaultItem: defaults.country
+                });
             }.bind(this));
         },
 
@@ -263,25 +286,25 @@ define([
         staticTemplates: {
             emailRow: function() {
                 return [
-                    '<div class="grid-col-6 email-item" data-id="<%= email.id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!email.emailType)?email.emailType.id :defaults.emailType.id %>">',
-                    '<span class="type-name"><%= (!!email.emailType)?email.emailType.name : defaults.emailType.name %></span>',
+                    '<div class="grid-col-6 email-item" data-id="<%= id %>">',
+                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!emailType)?emailType.id :defaults.emailType.id %>">',
+                    '<span class="type-name"><%= (!!emailType)?emailType.name : defaults.emailType.name %></span>',
                     '<span class="dropdown-toggle inline"></span>',
                     '</label>',
                     '<div class="remove-email"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element emailValue" type="text" value="<%= email.email %>"/>',
+                    '<input class="form-element email-value" type="text" value="<%= email %>"/>',
                     '</div>'
                 ].join('')
             },
             phoneRow: function() {
                 return [
-                    '<div class="grid-col-6 phone-item" data-id="<%= phone.id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phone.phoneType)? phone.phoneType.id : defaults.phoneType.id %>">',
-                    '<span class="type-name"><%= (!!phone.phoneType)? phone.phoneType.name : defaults.phoneType.name %></span>',
+                    '<div class="grid-col-6 phone-item" data-id="<%= id %>">',
+                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phoneType)? phoneType.id : defaults.phoneType.id %>">',
+                    '<span class="type-name"><%= (!!phoneType)? phoneType.name : defaults.phoneType.name %></span>',
                     '<span class="dropdown-toggle inline"></span>',
                     '</label>',
                     '<div class="remove-phone"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element phoneValue" type="text" value="<%= phone.phone %>"/>',
+                    '<input class="form-element phone-value" type="text" value="<%= phone %>"/>',
                     '</div>'
                 ].join('')
             }
