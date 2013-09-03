@@ -193,6 +193,9 @@ class ContactsControllerTest extends DatabaseTestCase
 				'title' => 'MSc',
 				'position' => 'Manager',
 				'localeSystem' => 'de',
+				'account' => array(
+					'id' => 2
+				),
 				'emails' => array(
 					array(
 						'email' => 'erika.mustermann@muster.at',
@@ -448,6 +451,8 @@ class ContactsControllerTest extends DatabaseTestCase
 		);
 
 		$response = json_decode($client->getResponse()->getContent());
+
+		$this->assertEquals(2, $response->account->id);
 
 		$this->assertEquals('John', $response->firstName);
 		$this->assertEquals('Doe', $response->lastName);
