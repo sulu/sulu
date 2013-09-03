@@ -1,0 +1,191 @@
+{# TODO to by deleted #}
+<style type="text/css">
+    .grid-row img {
+        max-width: 100%;
+    }
+
+    img.logo {
+        padding-top: 30px;
+        padding-bottom: 10px;
+        max-height: 140px;
+    }
+
+    h2.bold,
+    label.bold {
+        font-weight: bolder;
+    }
+
+    .two-cols div.grid-col-6:nth-child(2n+1) {
+        padding-left: 0;
+        padding-right: 10px;
+    }
+
+    .two-cols div.grid-col-6:nth-child(2n) {
+        padding-right: 0;
+    }
+
+    .icon-add {
+        cursor: pointer;
+    }
+
+    .icon-add:after {
+        content: "\E191";
+        display: inline-block;
+    }
+
+    .icon-settings:after {
+        content: "\E281";
+        display: inline-block;
+    }
+
+    .control-label {
+        padding-left: 5px;
+        padding-right: 10px;
+        cursor: pointer;
+    }
+
+    .inline {
+        display: inline-block;
+    }
+
+    .m-top-30 {
+        margin-top: 30px;
+    }
+
+    div.remove-email,
+    div.remove-phone,
+    div.remove-address {
+        display: none;
+    }
+
+    #phones div:hover > div.remove-phone,
+    #addresses div:hover > div.remove-address,
+    #emails div:hover > div.remove-email {
+        display: block;
+    }
+</style>
+
+
+<form id="contact-form">
+
+    <div class="grid">
+
+        {% block static %}
+
+        {% endblock %}
+        <hr class="divider"/>
+
+        {% block emails %}
+            <h2>Email</h2>
+
+            <div class="grid-row two-cols" id="emails"></div>
+
+            <div class="grid-row">
+                <div id="addEmail" data-target-id="emails">
+                    <span class="icon-add"></span><span class="control-label">Add email</span>
+                </div>
+            </div>
+        {% endblock %}
+        <hr class="divider"/>
+
+        {% block phones %}
+            <h2>Phone</h2>
+
+            <div class="grid-row two-cols" id="phones"></div>
+
+            <div class="grid-row">
+                <div id="addPhone" data-target-id="phones">
+                    <span class="icon-add"></span><span class="control-label">Add phone number</span>
+                </div>
+            </div>
+        {% endblock %}
+        <hr class="divider"/>
+
+        {% block addresses %}
+            <div class="grid-row">
+                <div class="grid-col-10">
+                    <h2>Address</h2>
+                </div>
+                <div class="grid-col-2 align-right m-top-10">
+                    <div id="addAddress" data-target-id="addresses">
+                        <span class="icon-add"></span><span class="control-label">Add address</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="addresses"></div>
+        {% endblock %}
+
+        <div class="grid-row">
+            <input type="submit" value="[SAVE]" class="m-bottom-10"/>
+        </div>
+    </div>
+
+</form>
+
+{% block data %}
+    <script type="text/javascript">
+        var addressTypes = [
+            {% for type in addressTypes %}
+            {
+                'id':{{ type.id }},
+                'name': '{{ type.name }}'
+            },
+            {% endfor %}
+        ];
+        var phoneTypes = [
+            {% for type in phoneTypes %}
+            {
+                'id':{{ type.id }},
+                'name': '{{ type.name }}'
+            },
+            {% endfor %}
+        ];
+        var emailTypes = [
+            {% for type in emailTypes %}
+            {
+                'id':{{ type.id }},
+                'name': '{{ type.name }}'
+            },
+            {% endfor %}
+        ];
+        var urlTypes = [
+            {% for type in urlTypes %}
+            {
+                'id':{{ type.id }},
+                'name': '{{ type.name }}'
+            },
+            {% endfor %}
+        ];
+        var countries = [
+            {% for country in countries %}
+            {
+                'id':{{ country.id }},
+                'name': '{{ country.name }}'
+            },
+            {% endfor %}
+        ];
+        var defaults = {
+            emailType: {
+                'id': {{ defaultEmailType.id }},
+                'name': '{{ defaultEmailType.name }}'
+            },
+            phoneType: {
+                'id': {{ defaultPhoneType.id }},
+                'name': '{{ defaultPhoneType.name }}'
+            },
+            addressType: {
+                'id': {{ defaultAddressType.id }},
+                'name': '{{ defaultAddressType.name }}'
+            },
+            urlType: {
+                'id': {{ defaultUrlType.id }},
+                'name': '{{ defaultUrlType.name }}'
+            },
+            country: {
+                'id': {{ defaultCountry.id }},
+                'name': '{{ defaultCountry.name }}'
+            }
+        }
+    </script>
+{% endblock %}

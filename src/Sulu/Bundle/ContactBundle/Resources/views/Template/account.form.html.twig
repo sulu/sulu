@@ -1,200 +1,28 @@
-{# TODO to by deleted #}
-{# TODO default types #}
-<style type="text/css">
-    .grid-row img {
-        max-width: 100%;
-    }
+{% extends "SuluContactBundle:Template:base.form.html.twig" %}
 
-    img.logo {
-        padding-top: 30px;
-        padding-bottom: 10px;
-        max-height: 140px;
-    }
+{% block static %}
+    <h2 class="bold">Name and Company</h2>
 
-    h2.bold,
-    label.bold {
-        font-weight: bolder;
-    }
-
-    .two-cols div.grid-col-6:nth-child(2n+1) {
-        padding-left: 0;
-        padding-right: 10px;
-    }
-
-    .two-cols div.grid-col-6:nth-child(2n) {
-        padding-right: 0;
-    }
-
-    .icon-add {
-        cursor: pointer;
-    }
-
-    .icon-add:after {
-        content: "\E191";
-        display: inline-block;
-    }
-
-    .icon-settings:after {
-        content: "\E281";
-        display: inline-block;
-    }
-
-    .control-label {
-        padding-left: 5px;
-        padding-right: 10px;
-        cursor: pointer;
-    }
-
-    .inline {
-        display: inline-block;
-    }
-
-    .m-top-30 {
-        margin-top: 30px;
-    }
-
-    div.remove-email,
-    div.remove-phone,
-    div.remove-address {
-        display: none;
-    }
-
-    #phones div:hover > div.remove-phone,
-    #addresses div:hover > div.remove-address,
-    #emails div:hover > div.remove-email {
-        display: block;
-    }
-</style>
-
-<form id="contact-form">
-
-    <div class="grid">
-
-        <h2 class="bold">Name and Company</h2>
-
-        <div class="grid-row">
-            <div class="grid-col-2">
-                <img class="avatar logo" src="http://placehold.it/500" alt=""/>
+    <div class="grid-row">
+        <div class="grid-col-2">
+            <img class="avatar logo" src="http://placehold.it/500" alt=""/>
+        </div>
+        <div class="grid-col-10">
+            <div class="grid-row">
+                <label class="bold">Title*</label>
+                <input class="form-element" type="text" id="name" value="<%= name %>"/>
             </div>
-            <div class="grid-col-10">
-                <div class="grid-row">
-                    <label class="bold">Title*</label>
-                    <input class="form-element" type="text" id="name" value="<%= name %>"/>
+            <div class="grid-row">
+                <div class="grid-col-7">
+                    <label>Website</label>
+                    <input class="form-element" type="text" id="url" value="<%= (!!urls[0]) ? urls[0].url : '' %>"/>
                 </div>
-                <div class="grid-row">
-                    <div class="grid-col-7">
-                        <label>Website</label>
-                        <input class="form-element" type="text" id="url" value="<%= (!!urls[0]) ? urls[0].url : '' %>"/>
-                    </div>
-                    <div class="grid-col-5">
-                        <label>Company</label>
+                <div class="grid-col-5">
+                    <label>Company</label>
 
-                        <div id="company"></div>
-                    </div>
+                    <div id="company"></div>
                 </div>
             </div>
         </div>
-        <hr class="divider"/>
-
-        <h2>Email</h2>
-
-        <div class="grid-row two-cols" id="emails"></div>
-
-        <div class="grid-row">
-            <div id="addEmail" data-target-id="emails">
-                <span class="icon-add"></span><span class="control-label">Add email</span>
-            </div>
-        </div>
-        <hr class="divider"/>
-
-        <h2>Phone</h2>
-
-        <div class="grid-row two-cols" id="phones"></div>
-
-        <div class="grid-row">
-            <div id="addPhone" data-target-id="phones">
-                <span class="icon-add"></span><span class="control-label">Add phone number</span>
-            </div>
-        </div>
-
-        <hr class="divider"/>
-        <div class="grid-row">
-            <div class="grid-col-10">
-                <h2>Address</h2>
-            </div>
-            <div class="grid-col-2 align-right m-top-10">
-                <div id="addAddress" data-target-id="addresses">
-                    <span class="icon-add"></span><span class="control-label">Add address</span>
-                </div>
-            </div>
-        </div>
-
-        <div id="addresses"></div>
-
-        <div class="grid-row">
-            <input type="submit" value="[SAVE]" class="m-bottom-10"/>
-        </div>
-        <!--
-        <hr class="divider"/>
-        <div class="grid-row">
-            <div class="grid-col-9">
-                <h2>Attachments</h2>
-            </div>
-            <div class="grid-col-3 text-right mt-10">
-                <span class="icon-add addEmail"></span><span class="control-label">Add attachment</span>
-                <span class="icon-settings addEmail"></span><span class="control-label">Edit</span>
-            </div>
-        </div>
-        -->
     </div>
-
-</form>
-
-<script type="text/javascript">
-    var addressTypes = [
-        {% for type in addressTypes %}
-        {
-            'id':{{ type.id }},
-            'name': '{{ type.name }}'
-        },
-        {% endfor %}
-    ];
-    var phoneTypes = [
-        {% for type in phoneTypes %}
-        {
-            'id':{{ type.id }},
-            'name': '{{ type.name }}'
-        },
-        {% endfor %}
-    ];
-    var emailTypes = [
-        {% for type in emailTypes %}
-        {
-            'id':{{ type.id }},
-            'name': '{{ type.name }}'
-        },
-        {% endfor %}
-    ];
-    var countries = [
-        {% for country in countries %}
-        {
-            'id':{{ country.id }},
-            'name': '{{ country.name }}'
-        },
-        {% endfor %}
-    ];
-    var defaults = {
-        emailType: {
-            'id': {{ defaultEmailType.id }},
-            'name': '{{ defaultEmailType.name }}'
-        },
-        phoneType: {
-            'id': {{ defaultPhoneType.id }},
-            'name': '{{ defaultPhoneType.name }}'
-        },
-        addressType: {
-            'id': {{ defaultAddressType.id }},
-            'name': '{{ defaultAddressType.name }}'
-        }
-    }
-</script>
+{% endblock %}
