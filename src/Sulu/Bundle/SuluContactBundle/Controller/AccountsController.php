@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Note;
@@ -661,4 +662,44 @@ class AccountsController extends RestController implements ClassResourceInterfac
 
 		return $success;
 	}
+
+    /**
+     * Returns information about referenced data which will be deleted also
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getDeleteinfoAction($id)
+    {
+        $response = array();
+        $response['contacts'] = array();
+
+        /** @var Account $account */
+        $account = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:Account')
+            ->find($id);
+
+        if ($account != null) {
+
+            $completeContacts = $account->getContacts();
+
+            foreach($completeContacts as $c) {
+                $contact = array();
+                $contact['id'] = $c->getId();
+                $contact['firstName'] = $c->getFirstName();
+                $contact['middleName'] = $c->getMiddleName();
+                $contact['lastName'] = $c->getLastName();
+
+                $response['contacts'][] = $contact;
+            }
+
+            $view = $this->view($response, 200);
+
+        } else {
+
+            $view = $this->view(null, 404);
+
+        }
+        return $this->handleView($view);
+    }
+
 }
