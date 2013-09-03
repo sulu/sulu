@@ -22,7 +22,7 @@ define([
         initialize: function() {
             this.setListUrl('contacts/companies');
             this.render();
-            if (!!options.id) {
+            if (!!this.options.id) {
                 this.setExcludeItem({id: this.options.id});
             }
         },
