@@ -408,9 +408,20 @@ function typeOf(value) {
         generateDropDown: function(items) {
             this.clearDropDown();
             items.forEach(function(item) {
-                this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
+                if (this.isVisible(item)) {
+                    this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
+                }
             }.bind(this));
             this.showDropDown();
+        },
+
+        // is item visible (filter)
+        isVisible: function(item) {
+            var result = true;
+            this.options.excludeItems.forEach(function(testItem) {
+                if (item.id == testItem.id) result = false;
+            }.bind(this));
+            return result;
         },
 
         // clear childs of list
@@ -545,11 +556,12 @@ function typeOf(value) {
     };
 
     $.fn.huskyAutoComplete.defaults = {
-        url: '',
-        valueName: 'name',
-        minLength: 3,
-        keyControl: true,
-        value: null
+        url: '', // url to load data
+        valueName: 'name', // propertyName for value
+        minLength: 3, // min length for request
+        keyControl: true, // control with up/down key
+        value: null, // value to display at start
+        excludeItems: [] // items to filter
     };
 
 })(Husky.$, this, this.document);
@@ -1408,11 +1420,22 @@ function typeOf(value) {
             this.clearDropDown();
             if (items.length > 0) {
                 items.forEach(function(item) {
-                    this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
+                    if (this.isVisible(item)) {
+                        this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
+                    }
                 }.bind(this));
             } else {
                 this.$dropDownList.append('<li>No data received</li>');
             }
+        },
+
+        // is item visible (filter)
+        isVisible: function(item) {
+            var result = true;
+            this.options.excludeItems.forEach(function(testItem) {
+                if (item.id == testItem.id) result = false;
+            }.bind(this));
+            return result;
         },
 
         // clear childs of list
@@ -1465,7 +1488,8 @@ function typeOf(value) {
         data: [],    // data array
         trigger: '',  // trigger for click event
         valueName: 'name', // name of text property
-        setParentDropDown: false // set class dropdown for parent dom object
+        setParentDropDown: false, // set class dropdown for parent dom object
+        excludeItems: [] // items to filter
     };
 
 })(Husky.$, this, this.document);
