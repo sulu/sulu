@@ -9,12 +9,12 @@
 
 require.config({
     paths: {
-        text: 'vendor/requirejs/text',
+        text: 'vendor/requirejs-text/text',
         jquery: 'vendor/jquery/jquery',
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
-        backbonerelational: 'vendor/backbone/backbone-relational',
-        husky: 'vendor/husky/husky'
+        backbonerelational: 'vendor/backbone-relational/backbone-relational',
+        husky: 'vendor/husky/dist/husky'
     },
     shim: {
         'underscore': {
