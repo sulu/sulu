@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Bundle\ContactBundle\Tests\Controller;
+namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
