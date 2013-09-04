@@ -791,7 +791,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		$client->request('GET', '/contact/api/contacts/1');
 
 		$response = json_decode($client->getResponse()->getContent());
-		$this->assertEquals(204, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 	}
 
 	public function testDeleteNotExisting()
