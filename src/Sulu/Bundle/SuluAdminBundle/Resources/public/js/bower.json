@@ -12,6 +12,9 @@
         "tests"
     ],
     "dependencies": {
-        "husky": "#develop"
+        "husky": "#develop",
+        "backbone": "1.0.*",
+        "backbone-relational": "0.8.*",
+        "requirejs": "2.1.*"
     }
 }
