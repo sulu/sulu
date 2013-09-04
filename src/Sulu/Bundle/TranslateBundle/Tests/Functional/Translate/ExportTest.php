@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TranslateBundle\Tests\Translate;
+namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Translate;
 
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
@@ -20,6 +20,8 @@ use Sulu\Bundle\TranslateBundle\Translate\Export;
 
 class ExportTest extends DatabaseTestCase
 {
+    private static $fixturePath;
+
     /**
      * @var Export
      */
@@ -29,6 +31,12 @@ class ExportTest extends DatabaseTestCase
      * @var array
      */
     protected static $entities;
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$fixturePath = __DIR__ . '/../../Resources/DataFixtures/Files';
+    }
 
     public function setUp()
     {
@@ -107,11 +115,11 @@ class ExportTest extends DatabaseTestCase
     {
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
-        if (file_exists(__DIR__ . '/../Fixtures/Export.en.xlf')) {
-            unlink(__DIR__ . '/../Fixtures/Export.en.xlf');
+        if (file_exists(self::$fixturePath . '/Export.en.xlf')) {
+            unlink(self::$fixturePath . '/Export.en.xlf');
         }
-        if (file_exists(__DIR__ . '/../Fixtures/Export.en.json')) {
-            unlink(__DIR__ . '/../Fixtures/Export.en.json');
+        if (file_exists(self::$fixturePath . '/Export.en.json')) {
+            unlink(self::$fixturePath . '/Export.en.json');
         }
     }
 
@@ -133,11 +141,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
-        $this->export->setPath(__DIR__ . '/../Fixtures/');
+        $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.xlf');
-        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/export.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -148,11 +156,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setLocation('Newsletter');
-        $this->export->setPath(__DIR__ . '/../Fixtures/');
+        $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.newsletter.xlf');
-        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/export.newsletter.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -160,11 +168,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setLocation('Portals');
-        $this->export->setPath(__DIR__ . '/../Fixtures/');
+        $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.portals.xlf');
-        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/export.portals.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -176,11 +184,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setFormat(Export::XLIFF);
         $this->export->setFrontend(null);
         $this->export->setBackend(true);
-        $this->export->setPath(__DIR__ . '/../Fixtures/');
+        $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.backend.xlf');
-        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/export.backend.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -189,11 +197,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setFormat(Export::XLIFF);
         $this->export->setFrontend(true);
         $this->export->setBackend(null);
-        $this->export->setPath(__DIR__ . '/../Fixtures/');
+        $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.frontend.xlf');
-        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.xlf');
+        $expectedHash = md5_file(self::$fixturePath . '/export.frontend.xlf');
+        $actualHash = md5_file(self::$fixturePath . '/Export.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -203,11 +211,11 @@ class ExportTest extends DatabaseTestCase
         $this->export->setPackageId(1);
         $this->export->setLocale('en');
         $this->export->setFormat(Export::JSON);
-        $this->export->setPath(__DIR__ . '/../Fixtures/');
+        $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(__DIR__ . '/../Fixtures/export.json');
-        $actualHash = md5_file(__DIR__ . '/../Fixtures/Export.en.json');
+        $expectedHash = md5_file(self::$fixturePath . '/export.json');
+        $actualHash = md5_file(self::$fixturePath . '/Export.en.json');
 
         $this->assertEquals($expectedHash, $actualHash);
     }

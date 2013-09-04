@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TranslateBundle\Tests\Controller;
+namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;

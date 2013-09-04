@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TranslateBundle\Tests\Controller;
+namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
 
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
