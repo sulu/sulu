@@ -12,3 +12,8 @@ sulu_translate.template.code.form:
      path: /template/translation/form
      defaults:
          _controller: SuluTranslateBundle:Template:translationform
+
+sulu_translate.template.package.list:
+     path: /template/package/list
+     defaults:
+         _controller: SuluTranslateBundle:Template:packagelist

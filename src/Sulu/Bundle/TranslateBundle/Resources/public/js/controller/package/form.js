@@ -31,6 +31,7 @@ define([
         },
 
         initialize: function () {
+            this.initOperationsRight();
             this.render();
         },
 
@@ -115,7 +116,6 @@ define([
 
             return data;
         },
-
 
         submitForm: function (event) {
 
@@ -239,14 +239,28 @@ define([
             }.bind(this));
         },
 
-       initializeDialog: function(){
+        initializeDialog: function(){
 
            $dialog = $('#dialog').huskyDialog({
                backdrop: true,
                width: '800px'
            });
 
-       }
+        },
+
+        initOperationsRight:function(){
+
+            var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.empty();
+            $optionsRight.append(this.template.button('Save', ''));
+
+        },
+
+        template: {
+            button: function(text, route) {
+                return '<a class="btn" href="'+route+'">'+text+'</a>';
+            }
+        }
 
     });
 });

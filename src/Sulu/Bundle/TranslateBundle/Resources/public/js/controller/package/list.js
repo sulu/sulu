@@ -18,20 +18,54 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
 
         render: function() {
 
-            this.$el.removeData('Husky.Ui.DataGrid');
-            var dataGrid = this.$el.huskyDataGrid({
+            require(['text!/translate/template/package/list'], function (Template) {
+                var template;
+                template = _.template(Template);
+                this.$el.html(template);
+                this.initPackageList();
+            }.bind(this));
+
+            this.initOperationsRight();
+        },
+
+        initPackageList: function() {
+
+            //this.$el.removeData('Husky.Ui.DataGrid');
+            var packages = $('#packageList').huskyDataGrid({
+                // TODO fields
                 url: '/translate/api/packages',
                 pagination: false,
                 showPages: 6,
                 pageSize: 4,
                 selectItemType: 'checkbox',
-                removeRow: true
+                removeRow: true,
+                tableHead: [
+                    {content: 'Title'},
+                    {content: 'Type'}, // TODO
+                    {content: 'Last edited'},
+                    {content: ''}
+                ],
+                excludeFields: ['id']
             });
 
-            dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function(item) {
-                dataGrid.data('Husky.Ui.DataGrid').off();
+            packages.data('Husky.Ui.DataGrid').on('data-grid:item:select', function(item) {
+                packages.data('Husky.Ui.DataGrid').off();
                 Router.navigate('settings/translate/edit:' + item+'/settings');
             });
+        },
+
+        initOperationsRight:function(){
+
+            var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.empty();
+            $optionsRight.append(this.template.button('Add', '#settings/translate/add'));
+
+        },
+
+        template: {
+            button: function(text, route) {
+                return '<a class="btn" href="'+route+'">'+text+'</a>';
+            }
         }
     });
 });

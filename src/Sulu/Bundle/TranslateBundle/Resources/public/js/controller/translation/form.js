@@ -33,10 +33,13 @@ define([
         },
 
         initialize: function () {
+
             this.render();
         },
 
         render: function () {
+
+
 
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/translate/template/translation/form'], function (Template) {
@@ -94,12 +97,24 @@ define([
             $tableRow.remove();
 
             if(!!translationId) {
-                var translation = translations.get(translationId);
-                translation.destroy({
+//                var translation = translations.get(translationId);
+                var codeId = translations.get(translationId).get('code')['id'];
+                var code = new Code({id: codeId});
+                console.log(code);
+
+                code.destroy({
                     success: function () {
-                        console.log("remove: deleted translation");
+                        console.log("remove: deleted code and translation");
                     }
                 });
+
+                // TODO delete codes -> patch?
+
+//                translation.destroy({
+//                    success: function () {
+//                        console.log("remove: deleted translation");
+//                    }
+//                });
             }
         },
 
