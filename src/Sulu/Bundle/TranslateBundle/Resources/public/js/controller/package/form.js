@@ -20,6 +20,7 @@ define([
     var translatePackage;
     var cataloguesToDelete;
     var dataGrid;
+    var $dialog;
 
     return Backbone.View.extend({
 
@@ -169,12 +170,15 @@ define([
 
         initializeCatalogueList: function (data) {
 
+            this.initializeDialog();
+
             require(['text!sulutranslate/templates/package/table-row.html'], function (RowTemplate) {
                 dataGrid = $('#catalogues').huskyDataGrid({
                     pagination: false,
                     showPages: 6,
                     pageSize: 4,
                     selectItemType: 'radio',
+                    removeRow: true,
                     template: {
                         row: RowTemplate
                     },
@@ -189,16 +193,60 @@ define([
                 });
 
                 $('#catalogues').on('click', '.remove-row > span', function (event) {
-                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
-                    var id = $(event.currentTarget).parent().parent().data('id');
 
-                    if(id) {
-                        cataloguesToDelete.push(id);
-                    }
+                    $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                        template: {
+                            content: '<h3><%= title %></h3><p><%= content %></p>',
+                            footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black agreeButton"><%= buttonSaveText %></button>',
+                            header: '<button type="button" class="close">×</button>'
+                        },
+                        data: {
+                            content: {
+                                title: "Warning",
+                                content: "Do you really want to delete this entry?"
+                            },
+                            footer: {
+                                buttonCancelText: "No",
+                                buttonSaveText: "Yes"
+                            }
+                        }
+                    });
+
+                    // TODO 
+                    $dialog.off();
+
+                    $dialog.on('click', '.closeButton', function() {
+                        console.log("disagreed");
+                        $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+                    });
+
+
+                    $dialog.on('click', '.agreeButton', function() {
+                        console.log("agreed");
+
+                        $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+                        dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+                        var id = $(event.currentTarget).parent().parent().data('id');
+
+                        if(id) {
+                            console.log(id);
+                            cataloguesToDelete.push(id);
+                        }
+                    });
+
                 });
 
             }.bind(this));
-        }
+        },
+
+       initializeDialog: function(){
+
+           $dialog = $('#dialog').huskyDialog({
+               backdrop: true,
+               width: '800px'
+           });
+
+       }
 
     });
 });
