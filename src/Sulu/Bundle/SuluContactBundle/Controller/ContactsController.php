@@ -19,6 +19,7 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
+use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
 
 /**
@@ -49,12 +50,17 @@ class ContactsController extends RestController implements ClassResourceInterfac
      */
     public function deleteAction($id)
     {
-        /** @var Contact $contact */
-        $contact = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:Contact')
-            ->find($id);
+        $delete = function ($id) {
+            /** @var Contact $contact */
+            $entityName = 'SuluContactBundle:Contact';
+            $contact = $this->getDoctrine()
+                ->getRepository($entityName)
+                ->find($id);
 
-        if ($contact != null) {
+            if (!$contact) {
+                throw new EntityNotFoundException($entityName, $id);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $addresses = $contact->getAddresses()->toArray();
             /** @var Address $address */
@@ -80,12 +86,9 @@ class ContactsController extends RestController implements ClassResourceInterfac
 
             $em->remove($contact);
             $em->flush();
+        };
 
-            $view = $this->view(null, 204);
-
-        } else {
-            $view = $this->view(null, 404);
-        }
+        $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
     }

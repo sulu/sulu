@@ -210,21 +210,22 @@ class AccountsController extends RestController implements ClassResourceInterfac
 	 */
 	public function deleteAction($id)
 	{
-		$account = $this->getDoctrine()
-			->getRepository('SuluContactBundle:Account')
-			->find($id);
+        $delete = function($id) {
+            $entityName = 'SuluContactBundle:Account';
+            $account = $this->getDoctrine()
+                ->getRepository($entityName)
+                ->find($id);
 
-		if ($account != null) {
-			$em = $this->getDoctrine()->getManager();
-			$em->remove($account);
-			$em->flush();
+            if(!$account) {
+                throw new EntityNotFoundException($entityName, $id);
+            }
 
-			$view = $this->view(null, 204);
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($account);
+            $em->flush();
+        };
 
-		} else {
-			$view = $this->view(null, 404);
-
-		}
+        $view = $this->responseDelete($id, $delete);
 
 		return $this->handleView($view);
 	}
