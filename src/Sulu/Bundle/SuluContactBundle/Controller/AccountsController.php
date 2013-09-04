@@ -40,7 +40,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
 	 */
 	public function getAction($id)
 	{
-		return $this->responseGetById(
+		$view = $this->responseGetById(
 			$id,
 			function ($id) {
 				return $this->getDoctrine()
@@ -48,6 +48,8 @@ class AccountsController extends RestController implements ClassResourceInterfac
 					->find($id);
 			}
 		);
+
+        return $this->handleView($view);
 	}
 
 	/**
@@ -58,7 +60,9 @@ class AccountsController extends RestController implements ClassResourceInterfac
 	 */
 	public function listAction()
 	{
-		return $this->responseList();
+		$view = $this->responseList();
+
+        return $this->handleView($view);
 	}
 
 	/**
