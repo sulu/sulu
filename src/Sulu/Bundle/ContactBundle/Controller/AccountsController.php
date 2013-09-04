@@ -436,13 +436,14 @@ class AccountsController extends RestController implements ClassResourceInterfac
 	{
 		$em = $this->getDoctrine()->getManager();
 		$phoneTypeEntity = 'SuluContactBundle:PhoneType';
+		$phoneEntity = 'SuluContactBundle:Phone';
 
 		$phoneType = $this->getDoctrine()
 			->getRepository($phoneTypeEntity)
 			->find($phoneData['phoneType']['id']);
 
 		if (isset($phoneData['id'])) {
-			throw new EntityIdAlreadySetException($phoneTypeEntity, $phoneData['id']);
+			throw new EntityIdAlreadySetException($phoneType, $phoneData['id']);
 		} elseif (!$phoneType) {
 			throw new EntityNotFoundException($phoneTypeEntity, $phoneData['phoneType']['id']);
 		} else {
