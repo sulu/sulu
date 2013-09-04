@@ -1,6 +1,5 @@
 /node_modules/
 /vendor/
-/Resource/public/js/vendor/
 /composer.phar
 /composer.lock
 /.sass-cache/

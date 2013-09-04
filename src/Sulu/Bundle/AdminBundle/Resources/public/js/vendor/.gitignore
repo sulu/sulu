@@ -1,0 +1,32 @@
+# Ignore everything in this directory
+*
+
+# Except this files
+!.gitignore
+
+# Backbone
+!backbone/backbone.js
+!backbone/backbone.min.js
+!backbone/backbone.min.map
+
+# Backbone Relational
+!backbone-relational/backbone-relational.js
+
+# Husky
+!husky/dist/*
+
+# JQuery
+!jquery/jquery.js
+!jquery/jquery.min.js
+!jquery/jquery.min.map
+
+# RequireJS
+!requirejs/require.js
+
+# RequireJS-Text
+!requirejs-text/text.js
+
+# Underscore
+!underscore/underscore.js
+!underscore/underscore.min.js
+!underscore/underscore-min.map
