@@ -54,7 +54,7 @@ define([
             if (!!id) {
                 navigation.sub.items.push({
                     'title': 'Details',
-                    'action': 'settings/translate/details:translate-package-' + cssId,
+                    'action': 'settings/translate/edit:' + cssId + '/details',
                     'hasSub': false,
                     'type': 'content',
                     'id': 'translate-package-details-' + cssId
@@ -63,7 +63,7 @@ define([
 
             navigation.sub.items.push({
                 'title': 'Settings',
-                'action': 'settings/translate/settings:translate-package-' + cssId,
+                'action': 'settings/translate/edit:' + cssId + '/settings',
                 'hasSub': false,
                 'type': 'content',
                 'id': 'translate-package-settings-' + cssId
