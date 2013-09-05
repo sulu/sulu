@@ -88,6 +88,9 @@ define([
                 }
             });
 
+            // TODO
+            $dialog.off();
+
             $dialog.on('click', '.closeButton', function() {
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             });
