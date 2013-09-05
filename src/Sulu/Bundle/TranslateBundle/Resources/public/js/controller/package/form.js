@@ -41,9 +41,9 @@ define([
 
             // TODO translate
             var navigation = {
-                'title': 'Catalogue',
+                'title': 'Package',
                 'header': {
-                    'title': 'Catalogue'
+                    'title': 'Package'
                 },
                 'hasSub': 'true',
                 //TODO id mandatory?
@@ -99,6 +99,8 @@ define([
                         }.bind(this)
                     });
                 }
+
+
 
                 App.Navigation.trigger('navigation:item:column:show', {
                     data: this.getTabs(translatePackage.get('id'))
@@ -178,7 +180,6 @@ define([
                     showPages: 6,
                     pageSize: 4,
                     selectItemType: 'radio',
-                    removeRow: true,
                     template: {
                         row: RowTemplate
                     },
@@ -186,7 +187,6 @@ define([
                         items: data
                     }
                 });
-
 
                 $('#addCatalogueRow').on('click', function () {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
@@ -210,42 +210,42 @@ define([
                                 buttonSaveText: "Yes"
                             }
                         }
+
                     });
 
-                    // TODO 
+                    // TODO - Event Problem
                     $dialog.off();
 
                     $dialog.on('click', '.closeButton', function() {
-                        console.log("disagreed");
                         $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                     });
 
 
                     $dialog.on('click', '.agreeButton', function() {
-                        console.log("agreed");
-
                         $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                         dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
                         var id = $(event.currentTarget).parent().parent().data('id');
 
                         if(id) {
-                            console.log(id);
+                            console.log(id, "element id to delete");
                             cataloguesToDelete.push(id);
                         }
                     });
 
                 });
 
+
+
             }.bind(this));
         },
 
         initializeDialog: function(){
-
            $dialog = $('#dialog').huskyDialog({
                backdrop: true,
                width: '800px'
            });
 
+            console.log("dialog init!");
         },
 
         initOperationsRight:function(){
