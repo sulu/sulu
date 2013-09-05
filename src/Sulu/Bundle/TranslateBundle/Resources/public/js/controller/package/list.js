@@ -7,9 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, Husky) {
+define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], function(App, Router, Backbone, Husky, Package) {
 
     'use strict';
+
+    var $dialog, packages;
 
     return Backbone.View.extend({
         initialize: function() {
@@ -23,6 +25,12 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
                 template = _.template(Template);
                 this.$el.html(template);
                 this.initPackageList();
+
+                $dialog = $('#dialog').huskyDialog({
+                    backdrop: true,
+                    width: '650px'
+                });
+
             }.bind(this));
 
             this.initOperationsRight();
@@ -48,6 +56,11 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
                 packages.data('Husky.Ui.DataGrid').off();
                 Router.navigate('settings/translate/edit:' + item+'/settings');
             });
+
+            // show dialogbox for removing data
+            packages.data('Husky.Ui.DataGrid').on('data-grid:row:removed', function(id,event) {
+               this.initDialogBox(id);
+            });
         },
 
         initOperationsRight:function(){
@@ -56,6 +69,44 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
             $optionsRight.empty();
             $optionsRight.append(this.template.button('Add', '#settings/translate/add'));
 
+        },
+
+        // fills dialogbox and displays existing references
+        initDialogBox: function(id){
+
+            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                template: {
+                    content: '<h3><%= title %></h3><p><%= content %></p>',
+                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
+                    header: '<button type="button" class="close">×</button>'
+                },
+                data: {
+                    content: {
+                        title:  "Warning" ,
+                        content: "Do you really want to delete the package? All data is going to be lost."
+                    },
+                    footer: {
+                        buttonCancelText: "Abort",
+                        buttonSaveText: "Delete"
+                    }
+                }
+            });
+
+            $dialog.on('click', '.closeButton', function() {
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
+
+            $dialog.on('click', '.deleteButton', function() {
+                // remove package
+                var pkg = new Package({id: id});
+                pkg.destroy({
+                    success: function () {
+                        console.log('deleted model');
+                    }
+                });
+
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
         },
 
         template: {
