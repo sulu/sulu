@@ -16,7 +16,7 @@ class TemplateController extends Controller
 {
     public function catalogueformAction()
     {
-        return $this->render('SuluTranslateBundle:Template:catalogue.form.html.twig', array());
+        return $this->render('SuluTranslateBundle:Template:package.form.html.twig', array());
     }
 
     public function translationformAction()
