@@ -552,7 +552,7 @@ class CodesControllerTest extends DatabaseTestCase
         $this->client->request('GET', '/translate/api/codes/5');
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost()
@@ -765,7 +765,7 @@ class CodesControllerTest extends DatabaseTestCase
             '/translate/api/codes/125',
             $request
         );
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPutNotExistingPackage()
