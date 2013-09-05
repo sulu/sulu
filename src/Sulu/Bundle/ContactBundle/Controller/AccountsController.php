@@ -73,73 +73,76 @@ class AccountsController extends RestController implements ClassResourceInterfac
     {
         $name = $this->getRequest()->get('name');
 
-        if ($name != null) {
+        try {
+            if ($name == null) {
+                throw new RestException('There is no name for the accoutn given');
+            }
+
             $em = $this->getDoctrine()->getManager();
 
-            try {
-                $account = new Account();
+            $account = new Account();
 
-                $account->setName($this->getRequest()->get('name'));
+            $account->setName($this->getRequest()->get('name'));
 
-                $parentData = $this->getRequest()->get('parent');
-                if ($parentData != null && isset($parentData['id'])) {
-                    $parent = $this->getDoctrine()
-                        ->getRepository($this->entityName)
-                        ->find($parentData['id']);
+            $parentData = $this->getRequest()->get('parent');
+            if ($parentData != null && isset($parentData['id'])) {
+                $parent = $this->getDoctrine()
+                    ->getRepository($this->entityName)
+                    ->find($parentData['id']);
 
-                    if (!$parent) {
-                        throw new EntityNotFoundException($this->entityName, $parentData['id']);
-                    }
-                    $account->setParent($parent);
+                if (!$parent) {
+                    throw new EntityNotFoundException($this->entityName, $parentData['id']);
                 }
-
-                $account->setCreated(new DateTime());
-                $account->setChanged(new DateTime());
-
-                $urls = $this->getRequest()->get('urls');
-                if (!empty($urls)) {
-                    foreach ($urls as $urlData) {
-                        $this->addUrl($account, $urlData);
-                    }
-                }
-
-                $emails = $this->getRequest()->get('emails');
-                if (!empty($emails)) {
-                    foreach ($emails as $emailData) {
-                        $this->addEmail($account, $emailData);
-                    }
-                }
-
-                $phones = $this->getRequest()->get('phones');
-                if (!empty($phones)) {
-                    foreach ($phones as $phoneData) {
-                        $this->addPhone($account, $phoneData);
-                    }
-                }
-
-                $addresses = $this->getRequest()->get('addresses');
-                if (!empty($addresses)) {
-                    foreach ($addresses as $addressData) {
-                        $this->addAddress($account, $addressData);
-                    }
-                }
-
-                $notes = $this->getRequest()->get('notes');
-                if (!empty($notes)) {
-                    foreach ($notes as $noteData) {
-                        $this->addNote($account, $noteData);
-                    }
-                }
-
-                $em->persist($account);
-
-                $em->flush();
-                $view = $this->view($account, 200);
-            } catch (RestException $exc) {
-                $view = $this->view($exc->toArray(), 400);
+                $account->setParent($parent);
             }
-        } else {
-            $view = $this->view(null, 400);
+
+            $account->setCreated(new DateTime());
+            $account->setChanged(new DateTime());
+
+            $urls = $this->getRequest()->get('urls');
+            if (!empty($urls)) {
+                foreach ($urls as $urlData) {
+                    $this->addUrl($account, $urlData);
+                }
+            }
+
+            $emails = $this->getRequest()->get('emails');
+            if (!empty($emails)) {
+                foreach ($emails as $emailData) {
+                    $this->addEmail($account, $emailData);
+                }
+            }
+
+            $phones = $this->getRequest()->get('phones');
+            if (!empty($phones)) {
+                foreach ($phones as $phoneData) {
+                    $this->addPhone($account, $phoneData);
+                }
+            }
+
+            $addresses = $this->getRequest()->get('addresses');
+            if (!empty($addresses)) {
+                foreach ($addresses as $addressData) {
+                    $this->addAddress($account, $addressData);
+                }
+            }
+
+            $notes = $this->getRequest()->get('notes');
+            if (!empty($notes)) {
+                foreach ($notes as $noteData) {
+                    $this->addNote($account, $noteData);
+                }
+            }
+
+            $em->persist($account);
+
+            $em->flush();
+
+            $view = $this->view($account, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $re) {
+            $view = $this->view($re->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -154,15 +157,17 @@ class AccountsController extends RestController implements ClassResourceInterfac
     public function putAction($id)
     {
         $accountEntity = 'SuluContactBundle:Account';
-        /** @var Account $account */
-        $account = $this->getDoctrine()
-            ->getRepository($accountEntity)
-            ->find($id);
 
-        if (!$account) {
-            throw new EntityNotFoundException($accountEntity, $id);
-        } else {
-            try {
+        try {
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository($accountEntity)
+                ->find($id);
+
+            if (!$account) {
+                throw new EntityNotFoundException($accountEntity, $id);
+            } else {
+
                 $em = $this->getDoctrine()->getManager();
 
                 $account->setName($this->getRequest()->get('name'));
@@ -193,11 +198,11 @@ class AccountsController extends RestController implements ClassResourceInterfac
 
                 $em->flush();
                 $view = $this->view($account, 200);
-            } catch (EntityNotFoundException $enfe) {
-                $view = $this->view($enfe->toArray(), 404);
-            } catch (RestException $exc) {
-                $view = $this->view($exc->toArray(), 400);
             }
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -443,7 +448,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             ->find($phoneData['phoneType']['id']);
 
         if (isset($phoneData['id'])) {
-            throw new EntityIdAlreadySetException($phoneType, $phoneData['id']);
+            throw new EntityIdAlreadySetException($phoneEntity, $phoneData['id']);
         } elseif (!$phoneType) {
             throw new EntityNotFoundException($phoneTypeEntity, $phoneData['phoneType']['id']);
         } else {

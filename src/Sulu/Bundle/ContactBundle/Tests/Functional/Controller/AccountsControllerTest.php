@@ -468,7 +468,7 @@ class AccountsControllerTest extends DatabaseTestCase
 			)
 		);
 
-		$this->assertEquals(400, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertTrue(isset($response->message));
 	}
@@ -500,7 +500,7 @@ class AccountsControllerTest extends DatabaseTestCase
 			)
 		);
 
-		$this->assertEquals(400, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertTrue(isset($response->message));
 	}
@@ -532,7 +532,7 @@ class AccountsControllerTest extends DatabaseTestCase
 			)
 		);
 
-		$this->assertEquals(400, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertTrue(isset($response->message));
 	}
@@ -566,7 +566,7 @@ class AccountsControllerTest extends DatabaseTestCase
 			)
 		);
 
-		$this->assertEquals(400, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertTrue(isset($response->message));
 	}
@@ -600,7 +600,7 @@ class AccountsControllerTest extends DatabaseTestCase
 			)
 		);
 
-		$this->assertEquals(400, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertTrue(isset($response->message));
 	}
@@ -832,7 +832,7 @@ class AccountsControllerTest extends DatabaseTestCase
 			)
 		);
 
-		$this->assertEquals(400, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 	}
 
 	public function testDeleteById()
