@@ -4,6 +4,23 @@
   cursor: pointer;
 }
 
+/*----------------------------------------*/
+/* line 10, ../scss/modules/base.scss */
+.pointer {
+  cursor: pointer;
+}
+
+/* line 14, ../scss/modules/base.scss */
+.block {
+  display: block;
+}
+
+/*----------------------------------------*/
+/* line 22, ../scss/modules/base.scss */
+.m-top-1 {
+  margin-top: 1px !important;
+}
+
 /* line 1, ../scss/modules/headerbar.scss */
 .headerbar-left {
   width: 250px;
