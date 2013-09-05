@@ -37,7 +37,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
         },
 
         initPackageList: function() {
-            
+
             var packages = $('#packageList').huskyDataGrid({
                 url: '/translate/api/packages?fields=id,name',
                 pagination: false,
