@@ -29,11 +29,9 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
         },
 
         initPackageList: function() {
-
-            //this.$el.removeData('Husky.Ui.DataGrid');
+            
             var packages = $('#packageList').huskyDataGrid({
-                // TODO fields
-                url: '/translate/api/packages',
+                url: '/translate/api/packages?fields=id,name',
                 pagination: false,
                 showPages: 6,
                 pageSize: 4,
@@ -41,8 +39,6 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
                 removeRow: true,
                 tableHead: [
                     {content: 'Title'},
-                    {content: 'Type'}, // TODO
-                    {content: 'Last edited'},
                     {content: ''}
                 ],
                 excludeFields: ['id']
