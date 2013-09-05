@@ -115,7 +115,7 @@ module.exports = function (grunt) {
             // TODO: options: { banner: '<%= meta.banner %>' },
             compress: {
                 files: {
-                    'dist/main.min.css': ['Resources/public/css/']
+                    'Resources/public/dist/main.min.css': ['Resources/public/css/main.css']
                 }
             }
         },
@@ -142,6 +142,7 @@ module.exports = function (grunt) {
         'useminPrepare',
         'requirejs',
         'concat',
+        'compass:dev',
         'cssmin',
         //'rev',    FIXME: use rev as soon as usemin can handle it correctly
         'usemin',
