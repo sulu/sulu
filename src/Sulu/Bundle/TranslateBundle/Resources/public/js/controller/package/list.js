@@ -37,7 +37,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
         },
 
         initPackageList: function() {
-
+            
             var packages = $('#packageList').huskyDataGrid({
                 url: '/translate/api/packages?fields=id,name',
                 pagination: false,
@@ -60,7 +60,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
             // show dialogbox for removing data
             packages.data('Husky.Ui.DataGrid').on('data-grid:row:removed', function(id,event) {
                this.initDialogBox(id);
-            });
+            }.bind(this));
         },
 
         initOperationsRight:function(){
@@ -83,7 +83,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 data: {
                     content: {
                         title:  "Warning" ,
-                        content: "Do you really want to delete the package? All data is going to be lost."
+                        content: "Do you really want to delete the package?<br/>All data and corresponding language catalogues as well as corresponding translations are going to be lost."
                     },
                     footer: {
                         buttonCancelText: "Abort",
@@ -91,6 +91,9 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                     }
                 }
             });
+
+            // TODO
+            $dialog.off();
 
             $dialog.on('click', '.closeButton', function() {
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');

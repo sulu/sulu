@@ -175,4 +175,31 @@ class PackagesController extends RestController
 
         return true;
     }
+
+    /**
+     * Deletes the package with the given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deletePackageAction($id)
+    {
+        $delete = function ($id) {
+            $entityName = 'SuluTranslateBundle:Package';
+            $pkg = $this->getDoctrine()
+                ->getRepository($entityName)
+                ->find($id);
+
+            if (!$pkg) {
+                throw new EntityNotFoundException($entityName, $id);
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($pkg);
+            $em->flush();
+        };
+
+        $view = $this->responseDelete($id, $delete);
+
+        return $this->handleView($view);
+    }
 }
