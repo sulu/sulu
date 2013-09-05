@@ -22,6 +22,7 @@ define([
     var translations;
     var catalogue;
     var updatedTranslations;
+    var codesToDelete;
 
     return Backbone.View.extend({
 
@@ -33,31 +34,20 @@ define([
         },
 
         initialize: function () {
-
+            codesToDelete = new Array();
             this.render();
         },
 
         render: function () {
 
-
-
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/translate/template/translation/form'], function (Template) {
 
                 var translateCatalogueId = this.options.id;
-
                 catalogue = new Catalogue({id: translateCatalogueId});
-//                console.log(translateCatalogueId, 'render: options id 1');
-
-                // load translations only with a valid catalogue
                 catalogue.fetch({
                     success: function(){
-//                        console.log(translateCatalogueId, 'render: options id 2');
-
                         this.loadTranslations(Template, translateCatalogueId);
-
-
-//                        console.log(catalogue.toJSON(), 'render: catalogue loaded');
                     }.bind(this)
                 });
 
@@ -68,13 +58,10 @@ define([
 
             translations = new Translations({translateCatalogueId: translateCatalogueId});
 
-            //console.log(translateCatalogueId, 'load translations: options id 3');
-
             translations.fetch({
                 success:function(){
                     var template = _.template(Template, {translations: translations.toJSON(),catalogue: catalogue.toJSON()});
                     this.$el.html(template);
-//                    console.log('load translations: template filled');
                 }.bind(this)
             });
         },
@@ -87,8 +74,6 @@ define([
 
         removeRowAndModel: function (event) {
 
-            // TODO - API methode gibts noch nicht
-
             var $tableRow = $(event.currentTarget).parent().parent().parent();
             var translationId = $tableRow.data('id');
 
@@ -97,24 +82,9 @@ define([
             $tableRow.remove();
 
             if(!!translationId) {
-//                var translation = translations.get(translationId);
                 var codeId = translations.get(translationId).get('code')['id'];
                 var code = new Code({id: codeId});
-                console.log(code);
-
-                code.destroy({
-                    success: function () {
-                        console.log("remove: deleted code and translation");
-                    }
-                });
-
-                // TODO delete codes -> patch?
-
-//                translation.destroy({
-//                    success: function () {
-//                        console.log("remove: deleted translation");
-//                    }
-//                });
+                codesToDelete.push(code);
             }
         },
 
@@ -173,6 +143,18 @@ define([
                 console.log(updatedTranslations, 'items to update');
                 translations.save(updatedTranslations);
             }
+
+            if(codesToDelete.length > 0) {
+                codesToDelete.forEach(function(code) {
+                    code.destroy({
+                        success: function () {
+                        console.log("remove: deleted translation");
+                         }
+                    });
+                });
+            }
+
+            Router.navigate('settings/translate');
         },
 
         templates: {
