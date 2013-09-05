@@ -445,7 +445,11 @@ function typeOf(value) {
         isVisible: function(item) {
             var result = true;
             this.options.excludeItems.forEach(function(testItem) {
+<<<<<<< HEAD:Resources/public/js/vendor/husky/dist/husky.js
                 if (parseInt(item.id) === parseInt(testItem.id)) result = false;
+=======
+                if (item.id == testItem.id) result = false;
+>>>>>>> f61ae726fa55ff9ef52b2931321deacdd8f1581f:Resources/public/js/vendor/husky/husky.js
             }.bind(this));
             return result;
         },
