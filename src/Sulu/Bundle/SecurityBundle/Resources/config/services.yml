@@ -1,0 +1,8 @@
+parameters:
+    sulu_security.admin.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin
+
+services:
+    sulu_security.admin:
+        class: %sulu_security.admin.class%
+        tags:
+        - { name: sulu.admin }
