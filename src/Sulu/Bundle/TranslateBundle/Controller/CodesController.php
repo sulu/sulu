@@ -237,7 +237,7 @@ class CodesController extends RestController
      */
     public function deleteCodeAction($id)
     {
-        $delete = function () {
+        $delete = function ($id) {
             $code = $this->getDoctrine()
                 ->getRepository($this->codeEntity)
                 ->find($id);
