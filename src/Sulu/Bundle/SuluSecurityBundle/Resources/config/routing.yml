@@ -1,0 +1,3 @@
+sulu_security:
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
+    prefix: /api
