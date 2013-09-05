@@ -152,6 +152,7 @@ class TranslationsControllerTest extends DatabaseTestCase
                 'id' => null,
                 'value' => 'realy new Code',
                 'code' => array(
+					'id' => null,
                     'code' => 'new.code',
                     'frontend' => false,
                     'backend' => false,
