@@ -23,4 +23,9 @@ class TemplateController extends Controller
     {
         return $this->render('SuluTranslateBundle:Template:translation.form.html.twig', array());
     }
+
+    public function packagelistAction()
+    {
+        return $this->render('SuluTranslateBundle:Template:package.list.html.twig', array());
+    }
 }
