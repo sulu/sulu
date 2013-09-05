@@ -29,7 +29,7 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
         },
 
         initPackageList: function() {
-            
+
             var packages = $('#packageList').huskyDataGrid({
                 url: '/translate/api/packages?fields=id,name',
                 pagination: false,
