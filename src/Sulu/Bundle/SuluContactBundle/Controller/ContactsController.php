@@ -19,7 +19,9 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
+use Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
+use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
 
 /**
@@ -121,10 +123,15 @@ class ContactsController extends RestController implements ClassResourceInterfac
         $firstName = $this->getRequest()->get('firstName');
         $lastName = $this->getRequest()->get('lastName');
 
-        if ($firstName != null && $lastName != null) {
-            $em = $this->getDoctrine()->getManager();
+        try {
+            if ($firstName == null) {
+                throw new RestException('There is no first name for the contact');
+            }
+            if ($lastName == null) {
+                throw new RestException('There is no last name for the contact');
+            }
 
-            $error = false;
+            $em = $this->getDoctrine()->getManager();
 
             // Standard contact fields
             $contact = new Contact();
@@ -136,138 +143,120 @@ class ContactsController extends RestController implements ClassResourceInterfac
 
             $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
 
-            $contact->setCreated(new DateTime());
-            $contact->setChanged(new DateTime());
-
             $parentData = $this->getRequest()->get('account');
-            if ($parentData != null && isset($parentData['id'])) {
+            if ($parentData != null) {
                 /** @var Account $parent */
                 $parent = $this->getDoctrine()
                     ->getRepository('SuluContactBundle:Account')
                     ->find($parentData['id']);
 
                 if (!$parent) {
-                    $error = true;
+                    throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                 }
                 $contact->setAccount($parent);
             }
 
-            // Add email addresses, if no error has occured yet
+            $contact->setCreated(new DateTime());
+            $contact->setChanged(new DateTime());
+
             $emails = $this->getRequest()->get('emails');
-            if (!$error && !empty($emails)) {
+            if (!empty($emails)) {
                 foreach ($emails as $emailData) {
-                    $error = !$this->addEmail($contact, $emailData, $em);
-                    if ($error) {
-                        break;
-                    }
+                    $this->addEmail($contact, $emailData);
                 }
             }
 
-            // Add phones, if no error has occured yet
             $phones = $this->getRequest()->get('phones');
-            if (!$error && !empty($phones)) {
+            if (!empty($phones)) {
                 foreach ($phones as $phoneData) {
-                    $error = !$this->addPhone($contact, $phoneData, $em);
-                    if ($error) {
-                        break;
-                    }
+                    $this->addPhone($contact, $phoneData);
                 }
             }
 
-            // Add addresses, if no error has occured yet
             $addresses = $this->getRequest()->get('addresses');
-            if (!$error && !empty($addresses)) {
+            if (!empty($addresses)) {
                 foreach ($addresses as $addressData) {
-                    $error = !$this->addAddress($contact, $addressData, $em);
-                    if ($error) {
-                        break;
-                    }
+                    $this->addAddress($contact, $addressData);
                 }
             }
 
-            // Add notes, if no error has occured yet
             $notes = $this->getRequest()->get('notes');
-            if (!$error && !empty($notes)) {
+            if (!empty($notes)) {
                 foreach ($notes as $noteData) {
-                    $error = !$this->addNote($contact, $noteData, $em);
-                    if ($error) {
-                        break;
-                    }
+                    $this->addNote($contact, $noteData);
                 }
             }
 
             $em->persist($contact);
 
-            if (!$error) {
-                $em->flush();
-                $view = $this->view($contact, 200);
-            } else {
-                $view = $this->view(null, 400);
-            }
-        } else {
-            $view = $this->view(null, 400);
+            $em->flush();
+
+            $view = $this->view($contact, 200);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $re) {
+            $view = $this->view($re->toArray(), 400);
         }
 
         return $this->handleView($view);
     }
 
-    /**
-     * Edits the existing contact with the given id
-     * @param integer $id The id of the contact to update
-     */
     public function putAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $contactEntity = 'SuluContactBundle:Contact';
 
-        /** @var Contact $contact */
-        $contact = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:Contact')
-            ->find($id);
+        try {
+            /** @var Contact $contact */
+            $contact = $this->getDoctrine()
+                ->getRepository($contactEntity)
+                ->find($id);
 
-        if (!$contact) {
-            $view = $this->view(null, 400);
-        } else {
-            $error = false;
+            if (!$contact) {
+                throw new EntityNotFoundException($contactEntity, $id);
+            } else {
 
-            // Standard contact fields
-            $contact->setFirstName($this->getRequest()->get('firstName'));
-            $contact->setLastName($this->getRequest()->get('lastName'));
+                $em = $this->getDoctrine()->getManager();
 
-            $contact->setTitle($this->getRequest()->get('title'));
-            $contact->setPosition($this->getRequest()->get('position'));
+                // Standard contact fields
+                $contact->setFirstName($this->getRequest()->get('firstName'));
+                $contact->setLastName($this->getRequest()->get('lastName'));
 
-            $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
+                $contact->setTitle($this->getRequest()->get('title'));
+                $contact->setPosition($this->getRequest()->get('position'));
 
-            $contact->setChanged(new DateTime());
+                $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
 
-            $parentData = $this->getRequest()->get('account');
-            if ($parentData != null && isset($parentData['id'])) {
-                /** @var Account $parent */
-                $parent = $this->getDoctrine()
-                    ->getRepository('SuluContactBundle:Account')
-                    ->find($parentData['id']);
+                $parentData = $this->getRequest()->get('account');
+                if ($parentData != null) {
+                    /** @var Account $parent */
+                    $parent = $this->getDoctrine()
+                        ->getRepository('SuluContactBundle:Account')
+                        ->find($parentData['id']);
 
-                if (!$parent) {
-                    $error = true;
+                    if (!$parent) {
+                        throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
+                    }
+                    $contact->setAccount($parent);
                 }
-                $contact->setAccount($parent);
-            }
-            if (!$error) {
-                // process emails
-                $success = $this->processEmails($contact)
+
+                $contact->setChanged(new DateTime());
+
+                // process details
+                if (!( $this->processEmails($contact)
                     && $this->processPhones($contact)
                     && $this->processAddresses($contact)
-                    && $this->processNotes($contact);
-            } else {
-                $success = $error;
-            }
+                    && $this->processNotes($contact))
+                ) {
+                    throw new RestException('Updating dependencies is not possible', 0);
+                }
 
-            if ($success) {
                 $em->flush();
                 $view = $this->view($contact, 200);
-            } else {
-                $view = $this->view(null, 400);
             }
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
         }
 
         return $this->handleView($view);

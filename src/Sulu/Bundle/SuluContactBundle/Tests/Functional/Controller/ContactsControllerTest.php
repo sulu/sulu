@@ -741,7 +741,7 @@ class ContactsControllerTest extends DatabaseTestCase
 			)
 		);
 
-		$this->assertEquals(400, $client->getResponse()->getStatusCode());
+		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 	}
 
 	public function testGetList()
