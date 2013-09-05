@@ -16,6 +16,8 @@ define([
 
     'use strict';
 
+    var $dialog, dataGrid;
+
     return Backbone.View.extend({
 
         initialize: function () {
@@ -26,8 +28,9 @@ define([
             Backbone.Relational.store.reset(); //FIXME really necessary?
             this.$el.removeData('Husky.Ui.DataGrid');
 
+
             require(['text!sulucontact/templates/contact/table-row.html'], function (RowTemplate) {
-                var dataGrid = this.$el.huskyDataGrid({
+                dataGrid = this.$el.huskyDataGrid({
                     url: '/contact/api/contacts/list?field=id,fistName,lastName',
                     pagination: true,
                     showPages: 6,
@@ -43,19 +46,65 @@ define([
                 });
 
                 this.$el.on('click', '.remove-row > span', function (event) {
-                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+
                     var $element = $(event.currentTarget);
                     var $parent = $element.parent().parent();
                     var id = $parent.data('id');
 
-                    var contact = new Contact({id: id});
-                    contact.destroy({
-                        success: function () {
-                            console.log('deleted model');
-                        }
-                    });
+                    // check if delation should be performed
+                    this.initDialogBox(id,event);
+
+                }.bind(this));
+
+                // create dialog box
+                $dialog = $('#dialog').huskyDialog({
+                    backdrop: true,
+                    width: '650px'
                 });
+
             }.bind(this));
+
+
+        },
+
+        // fills dialogbox and displays existing references
+        initDialogBox: function(id, event){
+
+            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                template: {
+                    content: '<h3><%= title %></h3><p><%= content %></p>',
+                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
+                    header: '<button type="button" class="close">×</button>'
+                },
+                data: {
+                    content: {
+                        title:  "Warning" ,
+                        content: "Do you really want to delete the contact? All data is going to be lost."
+                    },
+                    footer: {
+                        buttonCancelText: "Abort",
+                        buttonSaveText: "Delete"
+                    }
+                }
+            });
+
+            $dialog.on('click', '.closeButton', function() {
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
+
+            $dialog.on('click', '.deleteButton', function() {
+
+                dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+
+                var contact = new Contact({id: id});
+                contact.destroy({
+                    success: function () {
+                        console.log('deleted model');
+                    }
+                });
+
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
         }
     });
 });
