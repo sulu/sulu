@@ -31,7 +31,8 @@ define(['app', 'router', 'backbone', 'husky'], function(App, Router, Backbone, H
         initPackageList: function() {
 
             var packages = $('#packageList').huskyDataGrid({
-                url: '/translate/api/packages?fields=id,name',
+                // FIXME use list function with fields
+                url: '/translate/api/packages',
                 pagination: false,
                 showPages: 6,
                 pageSize: 4,
