@@ -362,4 +362,27 @@ class PackagesControllerTest extends DatabaseTestCase
         $this->assertEquals('Sulu', $response->name);
         $this->assertEquals('EN', $response->catalogues[0]->locale);
     }
+
+    public function testDeleteById()
+    {
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/packages/1');
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+    }
+
+    public function testDeleteByIdNotExisting()
+    {
+
+        $client = static::createClient();
+
+        $client->request('DELETE', '/translate/api/packages/4711');
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+        // there still have to be 3 packages
+        $client->request('GET', '/translate/api/packages');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(3, $response->total);
+    }
 }
