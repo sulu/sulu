@@ -844,6 +844,12 @@ class AccountsControllerTest extends DatabaseTestCase
 		$this->assertEquals('204', $client->getResponse()->getStatusCode());
 	}
 
+
+    // test delete when superaccount is set: not allowed
+    public function testDeleteByIdWithSuperAccount() {
+
+    }
+
 	public function testDeleteByIdNotExisting()
 	{
 
@@ -858,13 +864,79 @@ class AccountsControllerTest extends DatabaseTestCase
 		$this->assertEquals(1, $response->total);
 	}
 
+    /*
+     * test if deleteinfo returns correct data
+     */
 	public function testGetDeleteInfoById()
 	{
+        // modify test data
+
+        for ($i = 0; $i<5; $i++) {
+            $contact = new Contact();
+            $contact->setFirstName("Vorname ".$i);
+            $contact->setLastName("Nachname ".$i);
+            $contact->setMiddleName("Mittelname ".$i);
+            $contact->setUsername("Benutzername ".$i);
+            $contact->setPassword("Passwort ".$i);
+            $contact->setLocaleSystem("DE");
+            $contact->setCreated(new \DateTime());
+            $contact->setChanged(new \DateTime());
+            $contact->setAccount(self::$account);
+            self::$account->addContact($contact);
+
+            self::$em->persist($contact);
+        }
+
+        self::$em->flush();
+
+        $numContacts = self::$account->getContacts()->count();
 
 		$client = static::createClient();
 		$client->request('GET', '/contact/api/accounts/1/deleteinfo');
 		$this->assertEquals('200', $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        // number of returned contacts has to be less or equal 3
+        $this->assertLessThanOrEqual(3, sizeof($response->contacts));
+
+        // return full number of contacts related to account
+        $this->assertEquals($numContacts, $response->numContacts);
+
+        // allowed if no subaccount exists
+        $this->assertEquals(0, $response->numChildren);
+
 	}
+
+    /*
+     * test if delete info returns right isAllowed, when there is a superaccount
+     */
+    public function testGetDeletInfoByIdWithSuperAccount() {
+
+        // changing test data: adding child accounts
+        for ($i=0;$i<5;$i++) {
+            $childAccount = new Account();
+            $childAccount->setName("child num#".$i);
+            $childAccount->setChanged(new \DateTime());
+            $childAccount->setCreated(new \DateTime());
+            $childAccount->setParent(self::$account);
+
+            self::$em->persist($childAccount);
+        }
+        self::$em->flush();
+
+        $client = static::createClient();
+        $client->request('GET', '/contact/api/accounts/1/deleteinfo');
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        // deletion not allowed if children existent
+        $this->assertGreaterThan(0, $response->numChildren);
+
+        // number of returned contacts has to be less or equal 3
+        $this->assertLessThanOrEqual(3, sizeof($response->children));
+
+    }
 
 	public function testGetDeleteInfoByIdNotExisting()
 	{
