@@ -25,9 +25,13 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
 
             $navigation.data('Husky.Ui.Navigation').on('navigation:item:content:show', function(event) {
                 // FIXME abstract?
+                // 45px margin to navigation at start
                 $('.demo-container').css('margin-left', (event.data.navWidth + 45) + "px");
+                // mid div has margin-left 25px at start
                 $('#headerbar-mid').css('margin-left', (event.data.navWidth - 275 + 45) + "px");
-                
+                // navigation width is 300px at start
+                $('#headerbar-right').css('width', (220 - (event.data.navWidth - 300 + 45)) + "px");
+
                 Router.navigate(event.item.get('action'));
             });
 
