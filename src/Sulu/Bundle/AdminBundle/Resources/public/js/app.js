@@ -24,7 +24,10 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
             });
 
             $navigation.data('Husky.Ui.Navigation').on('navigation:item:content:show', function(event) {
-                $('.demo-container').css('margin-left', (event.data.navWidth + 15) + "px");
+                // FIXME abstract?
+                $('.demo-container').css('margin-left', (event.data.navWidth + 45) + "px");
+                $('#headerbar-mid').css('margin-left', (event.data.navWidth - 275 + 45) + "px");
+                
                 Router.navigate(event.item.get('action'));
             });
 
