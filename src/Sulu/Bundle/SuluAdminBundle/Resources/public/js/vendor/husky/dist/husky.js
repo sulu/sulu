@@ -55,6 +55,13 @@ function typeOf(value) {
         };
     }
 
+    if (!Array.prototype.inArray) {
+        Array.prototype.inArray = function(needle) {
+            for (var i = 0; i < this.length; i++) if (this[ i] === needle) return true;
+            return false;
+        }
+    }
+
     if (!Function.prototype.bind) {
         //
         // @link https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
@@ -99,7 +106,7 @@ function typeOf(value) {
 
     // Debug configuration
     Husky.DEBUG = false;
-    
+
 
 
     // Backbone Events
@@ -234,7 +241,11 @@ function typeOf(value) {
 (function($, window, document, undefined) {
     'use strict';
 
-    var moduleName = 'Husky.Ui.AutoComplete';
+    var moduleName = 'Husky.Ui.AutoComplete',
+        data = [],
+        successClass = 'husky-auto-complete-success',
+        failClass = 'husky-auto-complete-fail',
+        loadingClass = 'husky-auto-complete-loading';
 
     Husky.Ui.AutoComplete = function(element, options) {
         this.name = moduleName;
@@ -299,7 +310,7 @@ function typeOf(value) {
             this.bindDOMEvents();
 
             if (this.options.value != null) {
-                this.successField();
+                this.successState();
             }
         },
 
@@ -349,7 +360,7 @@ function typeOf(value) {
 
                     } else {
                         // If dropdown not visible => search for given pattern
-                        this.noStateField();
+                        this.noState();
                         this.loadData(this.$valueField.val());
                     }
                 }.bind(this));
@@ -366,7 +377,7 @@ function typeOf(value) {
             Husky.DEBUG && console.log(this.name, 'inputChanged');
 
             // value is not success
-            this.noStateField();
+            this.noState();
 
             var val = this.$valueField.val();
             if (val.length >= this.options.minLength) {
@@ -378,30 +389,45 @@ function typeOf(value) {
         loadData: function(pattern) {
             var url = this.getUrl(pattern);
             Husky.DEBUG && console.log(this.name, 'load: ' + url);
+            this.loadingState();
 
             Husky.Util.ajax({
                 url: url,
                 success: function(response) {
                     Husky.DEBUG && console.log(this.name, 'load', 'success');
 
+                    this.noState();
+
                     // if only one result this is it, if no result hideDropDown, else generateDropDown
-                    if (response.total > 1) {
-                        this.generateDropDown(response.items);
-                    } else if (response.total == 1) {
-                        this.selectItem(response.items[0]);
+                    this.updateData(response.items);
+                    if (data.length > 1) {
+                        this.generateDropDown(data);
+                    } else if (data.length == 1) {
+                        this.selectItem(data[0]);
                     } else {
+                        this.failState();
                         this.hideDropDown();
                     }
                 }.bind(this),
                 error: function() {
                     Husky.DEBUG && console.log(this.name, 'load', 'error');
 
-                    this.failField();
+                    this.failState();
                     this.hideDropDown();
                 }.bind(this)
             });
 
             this.trigger('auto-complete:loadData', null);
+        },
+
+        // update global data array
+        updateData: function(newData) {
+            data = [];
+            newData.forEach(function(item) {
+                if (this.isVisible(item)) {
+                    data.push(item);
+                }
+            }.bind(this));
         },
 
         // generate dropDown with given items
@@ -419,7 +445,7 @@ function typeOf(value) {
         isVisible: function(item) {
             var result = true;
             this.options.excludeItems.forEach(function(testItem) {
-                if (item.id == testItem.id) result = false;
+                if (parseInt(item.id) === parseInt(testItem.id)) result = false;
             }.bind(this));
             return result;
         },
@@ -443,27 +469,38 @@ function typeOf(value) {
             this.$dropDown.hide();
         },
 
-        // set class success to field
-        successField: function() {
+        // set class success to container
+        successState: function() {
             Husky.DEBUG && console.log(this.name, 'set success');
             this.clearDropDown();
-            this.$valueField.removeClass('fail');
-            this.$valueField.addClass('success');
+            this.$originalElement.removeClass(failClass);
+            this.$originalElement.removeClass(loadingClass);
+            this.$originalElement.addClass(successClass);
         },
 
-        // remove class success and fail of field
-        noStateField: function() {
+        // remove class success, fail and loading of container
+        noState: function() {
             Husky.DEBUG && console.log(this.name, 'remove success and fail');
             this.$valueField.data('');
-            this.$valueField.removeClass('success');
-            this.$valueField.removeClass('fail');
+            this.$originalElement.removeClass(failClass);
+            this.$originalElement.removeClass(loadingClass);
+            this.$originalElement.removeClass(successClass);
         },
 
-        // add class fail to field
-        failField: function() {
+        // add class fail to container
+        failState: function() {
             Husky.DEBUG && console.log(this.name, 'set fail');
-            this.$valueField.removeClass('success');
-            this.$valueField.addClass('fail');
+            this.$originalElement.addClass(failClass);
+            this.$originalElement.removeClass(loadingClass);
+            this.$originalElement.removeClass(successClass);
+        },
+
+        // add class loading to container
+        loadingState: function() {
+            Husky.DEBUG && console.log(this.name, 'set loading');
+            this.$originalElement.removeClass(failClass);
+            this.$originalElement.addClass(loadingClass);
+            this.$originalElement.removeClass(successClass);
         },
 
         // handle key down
@@ -535,7 +572,7 @@ function typeOf(value) {
             this.$valueField.val(item[this.options.valueName]);
 
             this.hideDropDown();
-            this.successField();
+            this.successState();
         }
     });
 
@@ -746,11 +783,11 @@ function typeOf(value) {
 
             } else {
 
-                var tblRowId, tblCellContent, tblCellClass,
+                var tblRowAttributes, tblCellContent, tblCellClass,
                     tblColumns, tblCellClasses;
 
                 tblColumns = [];
-                tblRowId = ((!!row.id) ? ' data-id="' + row.id + '"' : '');
+                tblRowAttributes = '';
 
                 // add row id to itemIds collection (~~ === shorthand for parse int)
                 !!row.id && this.allItemIds.push(~~row.id);
@@ -767,23 +804,27 @@ function typeOf(value) {
 
                 for (var key in row) {
                     var column = row[key];
-                    tblCellClasses = [];
-                    tblCellContent = (!!column.thumb) ? '<img alt="' + (column.alt || '') + '" src="' + column.thumb + '"/>' : column;
+                    if (!this.options.excludeFields.inArray(key)) {
+                        tblCellClasses = [];
+                        tblCellContent = (!!column.thumb) ? '<img alt="' + (column.alt || '') + '" src="' + column.thumb + '"/>' : column;
 
-                    // prepare table cell classes
-                    !!column.class && tblCellClasses.push(column.class);
-                    !!column.thumb && tblCellClasses.push('thumb');
+                        // prepare table cell classes
+                        !!column.class && tblCellClasses.push(column.class);
+                        !!column.thumb && tblCellClasses.push('thumb');
 
-                    tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
+                        tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
 
-                    tblColumns.push('<td ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                        tblColumns.push('<td ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                    } else {
+                        tblRowAttributes += ' data-' + key + '="' + column + '"';
+                    }
                 }
 
                 if (!!this.options.removeRow) {
                     tblColumns.push('<td class="remove-row">', this.templates.removeRow(), '</td>');
                 }
 
-                return '<tr' + tblRowId + '>' + tblColumns.join('') + '</tr>';
+                return '<tr' + tblRowAttributes + '>' + tblColumns.join('') + '</tr>';
             }
         },
 
@@ -1109,7 +1150,8 @@ function typeOf(value) {
         paginationOptions: {
             pageSize: 10,
             showPages: 5
-        }
+        },
+        excludeFields: ['id']
     };
 
 })(Husky.$, this, this.document);
@@ -1130,6 +1172,7 @@ function typeOf(value) {
     'use strict';
 
     var moduleName = 'Husky.Ui.Dialog';
+    var $backdrop;
 
     Husky.Ui.Dialog = function(element, options) {
 
@@ -1190,6 +1233,7 @@ function typeOf(value) {
             this.$element.on('click', '.close', this.hide.bind(this));
         },
 
+
         // listen for private events
         bindCustomEvents: function() {
 
@@ -1204,17 +1248,27 @@ function typeOf(value) {
         // Shows the dialog and compiles the different dialog template parts 
         show: function(params) {
 
-            this.template = params.template;
-            this.data = params.data;
+
+
+            var optionslocal = $.extend({}, $.fn.huskyDialog.defaults, typeof params == 'object' && params);
+
+            this.template = optionslocal.template;
+            this.data = optionslocal.data;
 
             this.$header.append(_.template(this.template.header, this.data.header));
             this.$content.append(_.template(this.template.content, this.data.content));
             this.$footer.append(_.template(this.template.footer, this.data.footer));
 
+            this.$element.off(); 
             this.$element.show();
 
             if (this.options.backdrop) {
-                $('body').append('<div id="husky-dialog-backdrop" class="husky-dialog-backdrop fade in"></div>');
+                $backdrop = $('<div id="husky-dialog-backdrop" class="husky-dialog-backdrop fade in"></div>');
+                $('body').append($backdrop);
+
+                $backdrop.click(function(){
+                    this.hide();
+                }.bind(this));
             }
         },
 
@@ -1254,9 +1308,13 @@ function typeOf(value) {
 
     $.fn.huskyDialog.defaults = {
         data: null,
-        template: null,
         backdrop: true,
-        width: '560px'
+        width: '560px',
+        template: {
+            content: '<h3><%= title %></h3><p><%= content %></p>',
+            footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black saveButton"><%= buttonSaveText %></button>',
+            header: '<button type="button" class="close">×</button>'
+        }
     };
 
 })(Husky.$, this, this.document);
