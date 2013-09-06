@@ -53,7 +53,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 excludeFields: ['id']
             });
 
-            packages.data('Husky.Ui.DataGrid').on('data-grid:item:select', function(item) {
+            packages.data('Husky.Ui.DataGrid').on('data-grid:item:click', function(item) {
                 packages.data('Husky.Ui.DataGrid').off();
                 Router.navigate('settings/translate/edit:' + item+'/settings');
             });
