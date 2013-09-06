@@ -1,6 +1,6 @@
 <style type="text/css">
 
-    /* TODO */
+    /* TODO put css in husky / translate-css-file*/
 
     textarea[readonly] {
         padding: 10px 0;
@@ -50,24 +50,25 @@
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
                     <td class="grid-col-3">
-                        <input class="form-element grey" readonly value="<%= item.code.code %>"/>
+                        <input class="form-element grey inputCode" readonly value="<%= item.code.code %>"/>
+                        <span class="showOptions">ShowOptions</span>
                     </td>
                     <td class="grid-col-4">
-                        <textarea class="form-element vertical" readonly><%= (!!item.value) ? item.value : '' %></textarea>
+                        <textarea class="form-element vertical textareaTranslation" readonly><%= (!!item.value) ? item.value : '' %></textarea>
                         <small class="grey">[Max. <%= item.code.length %> chars]</small>
                     </td>
-                    <td class="grid-col-4"><p class="grey">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p></td>
+                    <td class="grid-col-4"><p class="grey">Lorem ipsum dolor asit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p></td>
                     <td class="grid-col-1"><p class="icon-remove m-left-5"></p></td>
                 </tr>
-                <tr class="additionalOptions">
+                <tr class="additionalOptions hidden">
                     <td>
                         <div class="grid-row">
                             <div class="grid-col-3">
                                 <span>Length</span>
-                                <input class="form-element" value=""/>
+                                <input class="form-element inputLength" value="<%= item.code.length %>"/>
                             </div>
-                            <div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
-                            <div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
+                            <div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
+                            <div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
                         </div>
                     </td>
                 </tr>
