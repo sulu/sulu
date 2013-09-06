@@ -11,9 +11,10 @@ define([
     'jquery',
     'backbone',
     'router',
+    'parsley',
     'sulutranslate/model/package',
     'sulutranslate/model/catalogue'
-], function ($, Backbone, Router, Package, Catalogue) {
+], function ($, Backbone, Router, Parsley, Package, Catalogue) {
 
     'use strict';
 
@@ -85,17 +86,16 @@ define([
                     translatePackage = new Package();
                     template = _.template(Template, {name: '', locale: '', catalogues: []});
                     var catalogues = this.getArrayFromCatalogues(translatePackage.get('catalogues').models);
-                    this.initializeCatalogueList(catalogues);
                     this.$el.html(template);
+                    this.initializeCatalogueList(catalogues);
                 } else {
                     translatePackage = new Package({id: this.options.id});
                     translatePackage.fetch({
                         success: function (translatePackage) {
                             template = _.template(Template, translatePackage.toJSON());
                             var catalogues = this.getArrayFromCatalogues(translatePackage.get('catalogues').models);
-                            this.initializeCatalogueList(catalogues);
                             this.$el.html(template);
-
+                            this.initializeCatalogueList(catalogues);
                         }.bind(this)
                     });
                 }
@@ -106,6 +106,15 @@ define([
                     data: this.getTabs(translatePackage.get('id'))
                 });
             }.bind(this));
+        },
+
+        initValidation: function() {
+            this.$form = this.$('form[data-validate="parsley"]');
+            this.initParsley();
+        },
+
+        initParsley: function() {
+            this.$form.parsley({validationMinlength: 0});
         },
 
         getArrayFromCatalogues: function (models) {
@@ -161,13 +170,15 @@ define([
             });
 
 
-            translatePackage.save(null, {
-                success: function () {
-                    that.undelegateEvents();
-                    dataGrid.data('Husky.Ui.DataGrid').off();
-                    Router.navigate('settings/translate');
-                }
-            });
+            if (this.$form.parsley('validate')) {
+                translatePackage.save(null, {
+                    success: function() {
+                        that.undelegateEvents();
+                        dataGrid.data('Husky.Ui.DataGrid').off();
+                        Router.navigate('settings/translate');
+                    }
+                });
+            }
         },
 
         initializeCatalogueList: function (data) {
@@ -190,7 +201,8 @@ define([
 
                 $('#addCatalogueRow').on('click', function () {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
-                });
+                    this.$form.parsley('addItem', '#catalogues table tr:last input[type="text"]');
+                }.bind(this));
 
                 $('#catalogues').on('click', '.remove-row > span', function (event) {
 
@@ -234,6 +246,7 @@ define([
 
                 });
 
+                this.initValidation();
 
 
             }.bind(this));
