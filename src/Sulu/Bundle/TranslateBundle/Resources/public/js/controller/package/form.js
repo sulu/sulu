@@ -143,17 +143,19 @@ define([
 
             for (var i = 1; i <= rows.length; i++) {
 
-                var id = $(rows[i-1]).data('id');
+                var id = $(rows[i - 1]).data('id');
                 var locale = $('#catalogues tbody tr:nth-child(' + i + ') td:nth-child(2) input').val();
-                var catalogue;
+                if (locale != "") {
+                    var catalogue;
 
-                if(id) {
-                    catalogue = translatePackage.get('catalogues').get(id);
-                } else {
-                    catalogue = new Catalogue();
-                    translatePackage.get('catalogues').add(catalogue);
+                    if (id) {
+                        catalogue = translatePackage.get('catalogues').get(id);
+                    } else {
+                        catalogue = new Catalogue();
+                        translatePackage.get('catalogues').add(catalogue);
+                    }
+                    catalogue.set({'locale': locale});
                 }
-                catalogue.set({'locale': locale});
             }
 
 
