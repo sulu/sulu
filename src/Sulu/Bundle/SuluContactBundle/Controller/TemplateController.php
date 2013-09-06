@@ -6,6 +6,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller
 {
+
+	/**
+	 * Returns Template for contact list
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function contactListAction()
+	{
+		return $this->render('SuluContactBundle:Template:contact.list.html.twig');
+	}
+
+	/**
+	 * Returns Template for account list
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function accountListAction()
+	{
+		return $this->render('SuluContactBundle:Template:account.list.html.twig');
+	}
+
 	/**
 	 * Returns the form for contacts
 	 * @return \Symfony\Component\HttpFoundation\Response

@@ -83,7 +83,7 @@ define([
 
                     success : function(response, textStatus, jqXhr) {
                         console.log("get request successful");
-                        this.initDialogBox(response, id,event);
+                        this.initDialogBoxRemoveOne(response, id,event);
                     },
                     error : function(jqXHR, textStatus, errorThrown) {
                         console.log("error during get request: " + textStatus, errorThrown);
@@ -95,7 +95,7 @@ define([
         },
 
         // initializes the dialogbox and displays existing references
-        initDialogBox: function(values, id, event){
+        initDialogBoxRemoveOne: function(values, id, event){
 
             var dependencies;
             if(values['contacts'].length > 0) {
