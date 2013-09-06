@@ -14,7 +14,7 @@ require.config({
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
         backbonerelational: 'vendor/backbone-relational/backbone-relational',
-        husky: 'vendor/husky/dist/husky',
+        husky: 'vendor/husky/husky',
         parsley: 'vendor/parsleyjs/parsley'
     },
     shim: {
