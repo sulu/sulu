@@ -7,6 +7,3 @@
 # IDEs
 .idea/*
 *.iml
-
-# Ignore everything in this directory
-Resources/public/js/vendor/*
