@@ -63,6 +63,11 @@ class Account
     private $parent;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $children;
+
+    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     private $creator;
@@ -523,5 +528,39 @@ class Account
     public function getUrls()
     {
         return $this->urls;
+    }
+
+
+    /**
+     * Add children
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     * @return Account
+     */
+    public function addChildren(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    {
+        $this->children[] = $children;
+    
+        return $this;
+    }
+
+    /**
+     * Remove children
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     */
+    public function removeChildren(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 }
