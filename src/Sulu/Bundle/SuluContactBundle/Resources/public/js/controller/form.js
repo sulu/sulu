@@ -11,6 +11,7 @@ define([
     'jquery',
     'backbone',
     'router',
+    'parsley',
     'sulucontact/model/account',
     'sulucontact/model/contact',
     'sulucontact/model/country',
@@ -20,7 +21,7 @@ define([
     'sulucontact/model/phoneType',
     'sulucontact/model/address',
     'sulucontact/model/addressType'
-], function($, Backbone, Router, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType) {
+], function($, Backbone, Router, Parsley, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType) {
 
     'use strict';
 
@@ -77,6 +78,9 @@ define([
             this.initAddresses(json);
 
             this.initFields(json);
+
+            this.$form = this.$('form[data-validate="parsley"]');
+            this.$form.parsley({validationMinlength: 0});
         },
 
         initDropDown: function(that, types) {
@@ -171,19 +175,23 @@ define([
                 }
             });
 
-            model.save(null, {
-                success: function() {
-                    Router.navigate(listUrl);
-                }
-            });
+            if (this.$form.parsley('validate')) {
+                model.save(null, {
+                    success: function() {
+                        Router.navigate(listUrl);
+                    }
+                });
+            }
         },
 
         initEmails: function(json) {
             var emailJson = _.clone(Email.prototype.defaults);
             this.fillFields(json.emails, 2, emailJson);
 
+            var first = true;
             json.emails.forEach(function(item) {
-                this.addEmail(this.$('#emails'), item);
+                this.addEmail(this.$('#emails'), item, first);
+                first = false;
             }.bind(this));
         },
 
@@ -196,8 +204,8 @@ define([
             var $email = this.addEmail($div, phoneJson);
         },
 
-        addEmail: function($div, json) {
-            var $email = $(_.template(this.staticTemplates.emailRow(), json));
+        addEmail: function($div, json, first) {
+            var $email = $(_.template(this.staticTemplates.emailRow(first), json));
             $div.append($email);
             //$(window).scrollTop($email.offset().top);
 
@@ -302,15 +310,15 @@ define([
         },
 
         staticTemplates: {
-            emailRow: function() {
+            emailRow: function(first) {
                 return [
                     '<div class="grid-col-6 email-item" data-id="<%= id %>">',
                     '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!emailType)?emailType.id :defaults.emailType.id %>">',
-                    '<span class="type-name"><%= (!!emailType)?emailType.name : defaults.emailType.name %></span>',
+                    '<span class="type-name"><%= (!!emailType)?emailType.name : defaults.emailType.name %></span><span>' + (!!first ? '&nbsp;*' : '') + '</span>',
                     '<span class="dropdown-toggle inline-block"></span>',
                     '</label>',
                     '<div class="remove-email"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element email-value" type="text" value="<%= email %>"/>',
+                    '<input class="form-element email-value" type="text" value="<%= email %>" data-type="email" ' + (!!first ? 'data-required="true"' : '') + ' data-trigger="focusout" />',
                     '</div>'
                 ].join('')
             },
@@ -322,7 +330,7 @@ define([
                     '<span class="dropdown-toggle inline-block"></span>',
                     '</label>',
                     '<div class="remove-phone"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element phone-value" type="text" value="<%= phone %>"/>',
+                    '<input class="form-element phone-value" type="text" value="<%= phone %>" data-trigger="focusout" data-minlength="3" />',
                     '</div>'
                 ].join('')
             }
