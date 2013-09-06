@@ -11,11 +11,5 @@ input.parsley-error, textarea.parsley-error {
 }
 
 ul.parsley-error-list {
-	font-size: 11px;
-	margin: 2px;
-	list-style-type: none;
-}
-
-ul.parsley-error-list li {
-	line-height: 11px;
+	display: none !important;
 }
