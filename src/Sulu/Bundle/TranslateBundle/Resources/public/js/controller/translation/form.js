@@ -107,9 +107,18 @@ define([
 
                     }.bind(this));
 
+                    this.initVisibilityOptions();
 
                 }.bind(this)
             });
+        },
+
+        initVisibilityOptions: function(){
+
+            $('.showOptions').on('click', function(){
+                $(this).parent().parent().next('.additionalOptions').toggleClass('hidden');
+            });
+
         },
 
         // removes a row
@@ -291,7 +300,7 @@ define([
                             '<p class="icon-remove m-left-5"></p>',
                         '</td>',
                     '</tr>',
-                    '<tr class="additionalOptions">',
+                    '<tr class="additionalOptions hidden">',
                         '<td>',
                             '<div class="grid-row">',
                                 '<div class="grid-col-3">',

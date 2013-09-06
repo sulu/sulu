@@ -51,6 +51,7 @@
                 <tr data-id="<%= item.id %>">
                     <td class="grid-col-3">
                         <input class="form-element grey inputCode" readonly value="<%= item.code.code %>"/>
+                        <span class="showOptions">ShowOptions</span>
                     </td>
                     <td class="grid-col-4">
                         <textarea class="form-element vertical textareaTranslation" readonly><%= (!!item.value) ? item.value : '' %></textarea>
@@ -59,7 +60,7 @@
                     <td class="grid-col-4"><p class="grey">Lorem ipsum dolor asit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p></td>
                     <td class="grid-col-1"><p class="icon-remove m-left-5"></p></td>
                 </tr>
-                <tr class="additionalOptions">
+                <tr class="additionalOptions hidden">
                     <td>
                         <div class="grid-row">
                             <div class="grid-col-3">
