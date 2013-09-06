@@ -123,6 +123,7 @@ define([
 
             console.log(translationId,'translation id');
 
+            $tableRow.next('.additionalOptions').remove();
             $tableRow.remove();
 
             if(!!translationId) {
@@ -145,52 +146,76 @@ define([
 
         },
 
-        submitForm: function (event) {
-
-            // TODO fettes TODO
-            console.log("save");
+        submitForm: function () {
 
             event.preventDefault();
             updatedTranslations = new Array();
+            var $rows = $('#codes-form table tbody tr');
 
-            var formId = $(event.currentTarget).attr('id');
-            var $rows = $('#' + formId + ' table tbody tr');
+            for(var i = 0; i < $rows.length; ){
 
-            _.each($rows, function($row){
+                var $translation = $rows[i];
+                var $options = $rows[i+1];
+                var id = $($rows[i]).data('id');
 
-                var id = $($row).data('id');
-                var values = $($row).find('textarea');
+                var newCode = $($translation).find('.inputCode').val();
+                var newTranslation = $($translation).find('.textareaTranslation').val();
 
-                var code;
-                var translation;
+                var newLength  = $($options).find('.inputLength').val();
+                var newFrontend  = $($options).find('.checkboxFrontend').is(':checked');
+                var newBackend  = $($options).find('.checkboxBackend').is(':checked');
+
+                var translationModel = null;
 
                 if(!!id) {
-                    translation = translations.get(id);
-                    var currentValue = translation.get('value');
 
-                    // did the value change
-                    if(currentValue != values[0].value) {
-                        translation.set('value',values[0].value);
-                        updatedTranslations.push(translation);
-                        console.log(updatedTranslations, 'submit: updated array of changed elements');
+                    translationModel = translations.get(id);
 
+                    var currentCode = translationModel.get('code').code;
+                    var currentTranslation = translationModel.get('value');
+                    var currentLength  = translationModel.get('code').length;
+                    var currentFrontend  = translationModel.get('code').frontend;
+                    var currentBackend  = translationModel.get('code').backend;
+
+
+                    if(newCode != currentCode ||
+                        newTranslation != currentTranslation ||
+                        newLength != currentLength ||
+                        newFrontend != currentFrontend ||
+                        newBackend != currentBackend) {
+
+                        translationModel.get('code').code = newCode;
+                        translationModel.set('value', newTranslation);
+                        translationModel.get('code').length = newLength;
+                        translationModel.get('code').frontend = newFrontend;
+                        translationModel.get('code').backend = newBackend;
+
+                        updatedTranslations.push(translationModel);
                     }
 
                 } else {
 
                     // new translation and new code
-                    code = new Code();
-                    code.set('code',values[0].value);
+                    if(newCode != undefined && newCode != "") {
 
-                    translation = new Translation();
-                    translation.set('value',values[1].value);
+                        var codeModel = new Code();
+                        codeModel.set('code',newCode);
+                        codeModel.set('length',newLength);
+                        codeModel.set('frontend',newFrontend);
+                        codeModel.set('backend',newBackend);
 
-                    translation.set('code', code);
-                    updatedTranslations.push(translation);
+                        translationModel = new Translation();
+                        translationModel.set('value',newTranslation);
 
+                        translationModel.set('code', codeModel);
+                        updatedTranslations.push(translationModel);
+                    } else {
+                        console.log("code missing");
+                    }
                 }
+               i= i+2;
 
-            });
+            };
 
             if(updatedTranslations.length > 0 ) {
                 console.log(updatedTranslations, 'items to update');
@@ -254,10 +279,10 @@ define([
                 return [
                     '<tr>',
                         '<td class="grid-col-3">',
-                            '<input class="form-element"/>',
+                            '<input class="form-element inputCode" value=""/>',
                         '</td>',
                         '<td class="grid-col-4">',
-                            '<textarea class="form-element vertical"></textarea>',
+                            '<textarea class="form-element vertical textareaTranslation"></textarea>',
                         '</td>',
                         '<td class="grid-col-4">',
                             '<p class="grey"></p>',
@@ -271,10 +296,10 @@ define([
                             '<div class="grid-row">',
                                 '<div class="grid-col-3">',
                                     '<span>Length</span>',
-                                    '<input class="form-element" value=""/>',
+                                    '<input class="form-element inputLength" value=""/>',
                                 '</div>',
-                                '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
-                                '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                                '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                                '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
                             '</div>',
                         '</td>',
                     '</tr>'].join('')
