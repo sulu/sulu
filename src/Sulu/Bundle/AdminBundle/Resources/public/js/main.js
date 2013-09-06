@@ -13,8 +13,8 @@ require.config({
         jquery: 'vendor/jquery/jquery',
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
-        backbonerelational: 'vendor/backbone/backbone-relational',
-        husky: 'vendor/husky/husky',
+        backbonerelational: 'vendor/backbone-relational/backbone-relational',
+        husky: 'vendor/husky/dist/husky',
         parsley: 'vendor/parsleyjs/parsley'
     },
     shim: {
