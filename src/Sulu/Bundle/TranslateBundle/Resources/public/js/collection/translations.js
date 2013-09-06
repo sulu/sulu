@@ -23,7 +23,6 @@ define([
 
         initialize: function(options) {
             this.catalogueId = options.translateCatalogueId;
-            console.log(this.url(), 'translations collection url');
         },
 
         parse: function(resp) {

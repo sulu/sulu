@@ -14,15 +14,22 @@ define([
     'sulutranslate/model/code',
     'sulutranslate/collection/translations',
     'sulutranslate/model/translation',
-    'sulutranslate/model/catalogue'
-], function ($, Backbone, Router, Code, Translations, Translation, Catalogue) {
+    'sulutranslate/model/catalogue',
+    'sulutranslate/collection/catalogues'
+], function ($, Backbone, Router, Code, Translations, Translation, Catalogue, Catalogues) {
 
     'use strict';
 
     var translations;
-    var catalogue;
+
     var updatedTranslations;
     var codesToDelete;
+
+    var selectedCatalogue;
+    var catalogues;
+
+    var $operationsLeft;
+    var $operationsRight;
 
     return Backbone.View.extend({
 
@@ -35,46 +42,83 @@ define([
 
         initialize: function () {
             codesToDelete = new Array();
+
+            this.initOperations();
             this.render();
         },
 
+        // gets a list of catalogues to the package
         render: function () {
-
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/translate/template/translation/form'], function (Template) {
 
-                var translateCatalogueId = this.options.id;
-                catalogue = new Catalogue({id: translateCatalogueId});
-                catalogue.fetch({
+                var packageId = this.options.id;
+
+                catalogues = new Catalogues({
+                    packageId: packageId,
+                    fields: 'id,locale'
+                })
+
+                catalogues.fetch({
                     success: function(){
-                        this.loadTranslations(Template, translateCatalogueId);
+                       selectedCatalogue = catalogues.toJSON()[0];
+                       this.loadTranslations(Template);
+
                     }.bind(this)
                 });
 
             }.bind(this));
         },
 
-        loadTranslations: function(Template, translateCatalogueId){
+        // loads translations and inits the selectbox with the change event
+        loadTranslations: function(Template){
 
-            translations = new Translations({translateCatalogueId: translateCatalogueId});
-
+            translations = new Translations({translateCatalogueId: selectedCatalogue.id});
             translations.fetch({
                 success:function(){
-                    var template = _.template(Template, {translations: translations.toJSON(),catalogue: catalogue.toJSON()});
+
+                    var template = _.template(Template, {translations: translations.toJSON(),catalogue: selectedCatalogue});
                     this.$el.html(template);
+
+                    var $selectCatalogue = $('#languageCatalogue').huskySelect({
+                        selected: {id: selectedCatalogue.id},
+                        data: catalogues.toJSON(),
+                        valueName: 'locale'
+                    });
+
+                    // TODO event of huky when implemented
+                    $selectCatalogue.change(function(){
+
+                        selectedCatalogue = null;
+
+                        var selectedId = $selectCatalogue.find(":selected").val();
+
+                        _.each(catalogues.toJSON(), function(cat){
+                            if(parseInt(cat.id) === parseInt(selectedId)) {
+                                selectedCatalogue = cat;
+                            }
+                        });
+
+                        if(selectedCatalogue === null ) {
+                            console.log("selected catalogue not found!");
+                        } else {
+                            this.loadTranslations(Template);
+                        }
+
+                    }.bind(this));
+
+
                 }.bind(this)
             });
         },
 
-        addRowForNewCode: function(event) {
-            var sectionId = $(event.currentTarget).data('target-element');
-            var $lastTableRow = $('#' + sectionId + ' tbody:last-child');
-            $lastTableRow.append(this.templates.rowTemplate());
-        },
-
+        // removes a row
         removeRowAndModel: function (event) {
 
-            var $tableRow = $(event.currentTarget).parent().parent().parent();
+            var $tableRow = $(event.currentTarget).parent().parent();
+
+            console.log($(event.currentTarget).parent().parent(), "tablerow");
+
             var translationId = $tableRow.data('id');
 
             console.log(translationId,'translation id');
@@ -88,7 +132,13 @@ define([
             }
         },
 
-        // TODO fields by default editable?
+        // appends a new row to the table
+        addRowForNewCode: function(event) {
+            var sectionId = $(event.currentTarget).data('target-element');
+            var $lastTableRow = $('#' + sectionId + ' tbody:last-child');
+            $lastTableRow.append(this.templates.rowTemplate());
+        },
+
         unlockFormElement: function(event){
             var $element = $(event.currentTarget);
             $($element).prop('readonly', false);
@@ -96,6 +146,9 @@ define([
         },
 
         submitForm: function (event) {
+
+            // TODO fettes TODO
+            console.log("save");
 
             event.preventDefault();
             updatedTranslations = new Array();
@@ -154,23 +207,75 @@ define([
                 });
             }
 
-            Router.navigate('settings/translate');
+            //Router.navigate('settings/translate');
+
         },
 
+        // TODO abstract ---------------------------------------
+
+        // Initialize operations in headerbar
+        initOperations: function(){
+            this.initOperationsLeft();
+            this.initOperationsRight();
+        },
+
+        // Initializes the operations on the top (save)
+        initOperationsRight:function(){
+            $operationsRight = $('#headerbar-mid-right');
+            $operationsRight.empty();
+        },
+
+        // Initializes the operations on the top (save)
+        initOperationsLeft:function(){
+
+            $operationsLeft = $('#headerbar-mid-left');
+            $operationsLeft.empty();
+
+            var $saveButton = this.templates.saveButton('Save', '');
+            $operationsLeft.append($saveButton);
+
+
+            // TODO leaving view scope?
+            $('#headerbar-mid-left').on('click', '#saveButton', function(){
+                this.submitForm(event);
+            }.bind(this));
+        },
+
+        // TODO abstract end ---------------------------------------
+
+        // Template for smaller components (button, ...)
         templates: {
+
+            saveButton: function(text, route){
+                return '<div id="saveButton" class="pull-left pointer"><span class="icon-circle-ok pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
+            },
 
             rowTemplate: function () {
                 return [
                     '<tr>',
-                        '<td class="grid-col-4">',
-                            '<textarea class="form-element"></textarea>',
+                        '<td class="grid-col-3">',
+                            '<input class="form-element"/>',
                         '</td>',
                         '<td class="grid-col-4">',
                             '<textarea class="form-element vertical"></textarea>',
-                            '<small>[Max. 128 chars]</small>',
                         '</td>',
                         '<td class="grid-col-4">',
-                            '<p>[Lorem Ipsum dolor set]</p>',
+                            '<p class="grey"></p>',
+                        '</td>',
+                        '<td class="grid-col-1">',
+                            '<p class="icon-remove m-left-5"></p>',
+                        '</td>',
+                    '</tr>',
+                    '<tr class="additionalOptions">',
+                        '<td>',
+                            '<div class="grid-row">',
+                                '<div class="grid-col-3">',
+                                    '<span>Length</span>',
+                                    '<input class="form-element" value=""/>',
+                                '</div>',
+                                '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                                '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                            '</div>',
                         '</td>',
                     '</tr>'].join('')
             }
