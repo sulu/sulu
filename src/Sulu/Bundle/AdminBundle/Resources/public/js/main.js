@@ -9,7 +9,7 @@
 
 require.config({
     paths: {
-        text: 'vendor/requirejs/text',
+        text: 'vendor/requirejs-text/text',
         jquery: 'vendor/jquery/jquery',
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
@@ -31,7 +31,7 @@ require.config({
         'husky': {
             deps: ['jquery']
         },
-        'parsley':{
+        'parsley': {
             deps: ['jquery']
         }
     }
