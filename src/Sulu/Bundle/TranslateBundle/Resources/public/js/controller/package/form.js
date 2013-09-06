@@ -22,6 +22,9 @@ define([
     var dataGrid;
     var $dialog;
 
+    var $operationsLeft;
+    var $operationsRight;
+
     return Backbone.View.extend({
 
         events: {
@@ -31,10 +34,11 @@ define([
         },
 
         initialize: function () {
-            this.initOperationsRight();
+            this.initOperations();
             this.render();
         },
 
+        // Navigation
         getTabs: function (id) {
             //TODO Simplify this task for bundle developer?
             var cssId = id || 'new';
@@ -73,6 +77,7 @@ define([
             return navigation;
         },
 
+        // Renders the form with all its components
         render: function () {
 
             Backbone.Relational.store.reset(); //FIXME really necessary?
@@ -100,18 +105,15 @@ define([
                     });
                 }
 
-
-
                 App.Navigation.trigger('navigation:item:column:show', {
                     data: this.getTabs(translatePackage.get('id'))
                 });
             }.bind(this));
         },
 
-        getArrayFromCatalogues: function (models) {
+       getArrayFromCatalogues: function (models) {
 
             var data = new Array();
-
             $.each(models, function (model) {
                 data.push(models[model].attributes);
             });
@@ -119,6 +121,7 @@ define([
             return data;
         },
 
+        // Submits the form (includes deletes of catalogues and save of the package)
         submitForm: function (event) {
 
             var that = this;
@@ -160,7 +163,6 @@ define([
                 });
             });
 
-
             translatePackage.save(null, {
                 success: function () {
                     that.undelegateEvents();
@@ -170,6 +172,7 @@ define([
             });
         },
 
+        // Initializes the catalogue list
         initializeCatalogueList: function (data) {
 
             this.initializeDialog();
@@ -180,6 +183,12 @@ define([
                     showPages: 6,
                     pageSize: 4,
                     selectItemType: 'radio',
+                    tableHead: [
+                        {content: 'Default Language'},
+                        {content: 'Language'},
+                        {content: ''}
+                    ],
+                    //excludeFields: ['id'],
                     template: {
                         row: RowTemplate
                     },
@@ -195,11 +204,6 @@ define([
                 $('#catalogues').on('click', '.remove-row > span', function (event) {
 
                     $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                        template: {
-                            content: '<h3><%= title %></h3><p><%= content %></p>',
-                            footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black agreeButton"><%= buttonSaveText %></button>',
-                            header: '<button type="button" class="close">×</button>'
-                        },
                         data: {
                             content: {
                                 title: "Warning",
@@ -239,28 +243,53 @@ define([
             }.bind(this));
         },
 
+        // Initializes the dialog
         initializeDialog: function(){
            $dialog = $('#dialog').huskyDialog({
                backdrop: true,
                width: '800px'
            });
-
-            console.log("dialog init!");
         },
 
+        // TODO abstract ---------------------------------------
+
+        // Initialize operations in headerbar
+        initOperations: function(){
+            this.initOperationsLeft();
+            this.initOperationsRight();
+        },
+
+        // Initializes the operations on the top (save)
         initOperationsRight:function(){
-
-            var $optionsRight = $('#headerbar-mid-right');
-            $optionsRight.empty();
-            $optionsRight.append(this.template.button('Save', ''));
-
+            $operationsRight = $('#headerbar-mid-right');
+            $operationsRight.empty();
         },
 
-        template: {
-            button: function(text, route) {
-                return '<a class="btn" href="'+route+'">'+text+'</a>';
+        // Initializes the operations on the top (save)
+        initOperationsLeft:function(){
+
+            $operationsLeft = $('#headerbar-mid-left');
+            $operationsLeft.empty();
+
+            var $saveButton = this.templates.saveButton('Save', '');
+            $operationsLeft.append($saveButton);
+
+
+            // TODO leaving view scope?
+            $('#headerbar-mid-left').on('click', '#saveButton', function(){
+               this.submitForm(event);
+            }.bind(this));
+        },
+
+        // Template for smaller components (button, ...)
+        templates: {
+
+            saveButton: function(text, route){
+                return '<div id="saveButton" class="pull-left pointer"><span class="icon-circle-ok pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
             }
         }
+
+        // TODO abstract end ---------------------------------------
 
     });
 });
