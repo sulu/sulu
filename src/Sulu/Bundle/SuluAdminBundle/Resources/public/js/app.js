@@ -24,7 +24,7 @@ define(['jquery', 'husky', 'router'], function($, Husky, Router) {
             });
 
             $navigation.data('Husky.Ui.Navigation').on('navigation:item:content:show', function(item) {
-                Router.navigate(item.get('action'));
+                Router.navigate(item.item.get('action'));
             });
 
             // Make some Shortcuts globally available
