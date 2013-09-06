@@ -1,28 +1,75 @@
-<h1><%= catalogue.locale %></h1>
+<style type="text/css">
+
+    /* TODO */
+
+    textarea[readonly] {
+        padding: 10px 0;
+        overflow:hidden;
+    }
+
+    .grey {
+        color:grey;
+    }
+
+    .m-top-35 {
+        margin-top:35px !important;
+    }
+
+    .additionalOptions {
+        background: #f8f8f8;
+    }
+
+</style>
+
+<div class="grid-row m-bottom-20">
+    <div class="grid-col-6 pull-left">
+        <h1><%= catalogue.locale %></h1>
+    </div>
+    <div class="grid-col-6 pull-right">
+        <p class="grid-col-5 align-right m-right-10 bold grey">Language catalogue:</p>
+        <div id="languageCatalogue" class="grid-col-6"></div>
+    </div>
+</div>
+
 
 <form id="codes-form">
 
     <div class="grid-row">
-        <h3 class="collapsable">[Section1]</h3>
-        <table class="table codes" id="section1">
+        <table class="table" id="section1">
 
             <thead>
                 <tr>
-                    <th class="grid-col-4">[Key]</th>
-                    <th class="grid-col-4">[Translation]</th>
-                    <th class="grid-col-4">[Suggestion (EN)]</th>
+                    <th class="grid-col-3">Key</th>
+                    <th class="grid-col-4">Translation</th>
+                    <th class="grid-col-4">Suggestion (EN)</th>
+                    <th class="grid-col-1"></th>
                 </tr>
             </thead>
 
             <tbody>
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
-                    <td class="grid-col-4"><p><%= item.code.code %><span class="icon-remove m-left-5"></span><p></td>
-                    <td class="grid-col-4">
-                        <textarea rows="1" class="form-element vertical"><%= (!!item.value) ? item.value : '' %></textarea>
-                        <small>[Max. <%= item.code.length %> chars]</small>
+                    <td class="grid-col-3">
+                        <input class="form-element grey" readonly value="<%= item.code.code %>"/>
                     </td>
-                    <td class="grid-col-4"><p>[Lorem Ipsum dolor set]</p></td>
+                    <td class="grid-col-4">
+                        <textarea class="form-element vertical" readonly><%= (!!item.value) ? item.value : '' %></textarea>
+                        <small class="grey">[Max. <%= item.code.length %> chars]</small>
+                    </td>
+                    <td class="grid-col-4"><p class="grey">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p></td>
+                    <td class="grid-col-1"><p class="icon-remove m-left-5"></p></td>
+                </tr>
+                <tr class="additionalOptions">
+                    <td>
+                        <div class="grid-row">
+                            <div class="grid-col-3">
+                                <span>Length</span>
+                                <input class="form-element" value=""/>
+                            </div>
+                            <div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
+                            <div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
+                        </div>
+                    </td>
                 </tr>
                 <% }); %>
             </tbody>
@@ -34,13 +81,10 @@
             <div class="grid-col-2 addCode" data-target-element="section1">
                 <span class="icon-add"></span><span class="control-label">[Add element]</span>
             </div>
-            <div class="grid-col-2">
-                <input type="submit" value="[Speichern]"/>
-            </div>
         </div>
 
     </div>
 
-    <hr/>
+    <hr class="divider"/>
 
 </form>
