@@ -10,36 +10,3 @@
 
 # Ignore everything in this directory
 Resources/public/js/vendor/*
-
-# Except this files
-!Resources/public/js/vendor/.gitignore
-
-# Backbone
-!Resources/public/js/vendor/backbone/backbone.js
-!Resources/public/js/vendor/backbone/backbone-min.js
-!Resources/public/js/vendor/backbone/backbone-min.map
-
-# Backbone Relational
-!Resources/public/js/vendor/backbone-relational/backbone-relational.js
-
-# Husky
-!Resources/public/js/vendor/husky/dist/*
-
-# JQuery
-!Resources/public/js/vendor/jquery/jquery.js
-!Resources/public/js/vendor/jquery/jquery.min.js
-!Resources/public/js/vendor/jquery/jquery.min.map
-
-# RequireJS
-!Resources/public/js/vendor/requirejs/require.js
-
-# RequireJS-Text
-!Resources/public/js/vendor/requirejs-text/text.js
-
-# Underscore
-!Resources/public/js/vendor/underscore/underscore.js
-!Resources/public/js/vendor/underscore/underscore-min.js
-!Resources/public/js/vendor/underscore/underscore-min.map
-
-# Parsley.JS
-!Resources/public/js/vendor/parsleyjs/parsley.js
