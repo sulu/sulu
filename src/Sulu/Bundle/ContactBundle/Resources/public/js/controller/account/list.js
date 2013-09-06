@@ -45,13 +45,13 @@ define([
                     Router.navigate('contacts/companies/edit:' + item);
                 });
 
+                // fetch delete info when clicking on delete
                 this.$el.on('click', '.remove-row > span', function (event) {
                     var $element = $(event.currentTarget);
                     var $parent = $element.parent().parent();
                     var id = $parent.data('id');
 
                     this.fetchDeleteInfo(id,event);
-
 
                 }.bind(this));
 
@@ -97,10 +97,28 @@ define([
         // initializes the dialogbox and displays existing references
         initDialogBoxRemoveOne: function(values, id, event){
 
+            var title   = 'Warning!';
+            var content = 'All data is going to be lost';
+            var template = 'info' ;
+
+            // TODO set template in husky
+
+            // deletion is not allowed
+            var dependencies = this.template.dependencyListAccounts(values['children']);
+            if (parseInt(values['numChildren']) > 0) {
+                title = 'Warning!';
+                content = '<p>Existing Sub-companies found:</p><ul>'+dependencies+'</ul>' +
+                    '<p>A company cannot be deleted as long it has sub-companies. Please remove the sub-companies ' +
+                    'or unlink them.</p>';
+                template = 'info';
+            }
+
+
             var dependencies;
             if(values['contacts'].length > 0) {
                 dependencies= this.template.dependencyListContacts(values['contacts']);
             }
+
 
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
                 template: {
@@ -110,8 +128,8 @@ define([
                 },
                 data: {
                     content: {
-                        title: dependencies != undefined ?  "Warning!" : 'Info!',
-                        content: dependencies != undefined ? '<p>Existing references found:</p><ul>'+dependencies+'</ul>' : 'No dependencies found!'
+                        title: title,
+                        content: content
                     },
                     footer: {
                         buttonCancelText: "Abort",
@@ -149,6 +167,10 @@ define([
             dependencyListContacts: function(contacts) {
                 var list = "<% _.each(contacts, function(contact) { %> <li><%= contact.firstName %> <%= contact.lastName %></li> <% }); %>";
                 return _.template(list,{contacts:contacts});
+            },
+            dependencyListAccounts: function(accounts) {
+                var list = "<% _.each(accounts, function(account) { %> <li><%= account.name %></li> <% }); %>";
+                return _.template(list,{accounts:accounts});
             }
         }
     });
