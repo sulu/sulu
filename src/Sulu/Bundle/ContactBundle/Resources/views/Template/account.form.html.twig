@@ -9,18 +9,16 @@
         </div>
         <div class="grid-col-10">
             <div class="grid-row">
-                <label class="bold">Title*</label>
-                <input class="form-element" type="text" id="name" value="<%= name %>"/>
+                <label class="bold">Title *</label>
+                <input class="form-element" type="text" id="name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= name %>"/>
             </div>
             <div class="grid-row">
                 <div class="grid-col-7">
                     <label>Website</label>
-                    <input class="form-element" type="text" id="url" value="<%= (!!urls[0]) ? urls[0].url : '' %>"/>
+                    <input class="form-element" type="text" id="url" data-trigger="focusout" data-type="url" value="<%= (!!urls[0]) ? urls[0].url : '' %>"/>
                 </div>
-                <div class="grid-col-5">
+                <div class="grid-col-5" id="company">
                     <label>Company</label>
-
-                    <div id="company"></div>
                 </div>
             </div>
         </div>
