@@ -45,7 +45,24 @@ class CataloguesController extends RestController
      */
     public function getCataloguesAction()
     {
+        // Already in use - change calls
         $view = $this->responseList();
+
+        return $this->handleView($view);
+    }
+
+    /*
+     * Returns a list of catalogues from a specific package
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listCataloguesAction()
+    {
+        $where= array();
+        $packageId = $this->getRequest()->get('packageId');
+        if (!empty($packageId)) {
+            $where = array('package_id' => $packageId);
+        }
+        $view = $this->responseList($where);
 
         return $this->handleView($view);
     }
