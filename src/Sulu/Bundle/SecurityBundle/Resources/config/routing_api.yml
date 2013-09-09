@@ -1,0 +1,3 @@
+sulu_security.roles:
+    type: rest
+    resource: Sulu\Bundle\SecurityBundle\Controller\RolesController

@@ -49,8 +49,6 @@ class Role
      */
     private $changer;
 
-
-
     /**
      * Get id
      *
