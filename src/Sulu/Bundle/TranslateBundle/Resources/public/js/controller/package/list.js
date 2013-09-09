@@ -38,7 +38,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
 
         initPackageList: function() {
             
-            var packages = $('#packageList').huskyDataGrid({
+            var packagesDatagrid = $('#packageList').huskyDataGrid({
                 // FIXME use list function with fields
                 url: '/translate/api/packages',
                 pagination: false,
@@ -53,20 +53,30 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 excludeFields: ['id']
             });
 
-            packages.data('Husky.Ui.DataGrid').on('data-grid:item:click', function(item) {
-                packages.data('Husky.Ui.DataGrid').off();
+            packagesDatagrid.data('Husky.Ui.DataGrid').on('data-grid:item:click', function(item) {
+                packagesDatagrid.data('Husky.Ui.DataGrid').off();
                 this.removeHeaderbarEvents();
                 Router.navigate('settings/translate/edit:' + item+'/settings');
             }.bind(this));
 
             // show dialogbox for removing data
-            packages.data('Husky.Ui.DataGrid').on('data-grid:row:removed', function(id,event) {
-               this.initDialogBox(id);
+//            packagesDatagrid.data('Husky.Ui.DataGrid').on('data-grid:row:removed', function(id,event) {
+//               this.initDialogBox(id);
+//            }.bind(this));
+
+
+            this.$el.on('click', '.dropdown-toggle', function(event) {
+                $('.dropdown-menu').toggle();
+            });
+
+            this.$el.on('click', '#edit-remove', function(event) {
+                $('.dropdown-menu').hide();
+                this.initDialogBoxRemoveMultiple(packagesDatagrid.data('Husky.Ui.DataGrid').selectedItemIds);
             }.bind(this));
         },
 
-        // fills dialogbox and displays existing references
-        initDialogBox: function(id){
+        // fills dialogbox
+        initDialogBoxRemoveMultiple: function(ids) {
 
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
                 template: {
@@ -76,8 +86,8 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 },
                 data: {
                     content: {
-                        title:  "Warning" ,
-                        content: "Do you really want to delete the package?<br/>All data and corresponding language catalogues as well as corresponding translations are going to be lost."
+                        title: "Warning",
+                        content: "Do you really want to delete <b>many</b> contacts? All data is going to be lost."
                     },
                     footer: {
                         buttonCancelText: "Abort",
@@ -94,17 +104,61 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
             });
 
             $dialog.on('click', '.deleteButton', function() {
-                // remove package
-                var pkg = new Package({id: id});
-                pkg.destroy({
-                    success: function () {
-                        console.log('deleted model');
-                    }
-                });
+                ids.forEach(function(id) {
+                    Backbone.Relational.store.reset();
+                    var pkg = new Package({id: id});
+                    pkg.destroy({
+                        success: function () {
+                            console.log('deleted model');
+                            Router.navigate('settings/translate');
+                        }
+                    });
+                }.bind(this));
 
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             });
         },
+
+        // fills dialogbox and displays existing references
+//        initDialogBox: function(id){
+//
+//            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+//                template: {
+//                    content: '<h3><%= title %></h3><p><%= content %></p>',
+//                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
+//                    header: '<button type="button" class="close">×</button>'
+//                },
+//                data: {
+//                    content: {
+//                        title:  "Warning" ,
+//                        content: "Do you really want to delete the package?<br/>All data and corresponding language catalogues as well as corresponding translations are going to be lost."
+//                    },
+//                    footer: {
+//                        buttonCancelText: "Abort",
+//                        buttonSaveText: "Delete"
+//                    }
+//                }
+//            });
+//
+//            // TODO
+//            $dialog.off();
+//
+//            $dialog.on('click', '.closeButton', function() {
+//                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+//            });
+//
+//            $dialog.on('click', '.deleteButton', function() {
+//                // remove package
+//                var pkg = new Package({id: id});
+//                pkg.destroy({
+//                    success: function () {
+//                        console.log('deleted model');
+//                    }
+//                });
+//
+//                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+//            });
+//        },
 
         // TODO abstract ---------------------------------------
 
