@@ -918,12 +918,19 @@ function typeOf(value) {
         removeRow: function(event) {
             Husky.DEBUG && console.log(this.name, 'removeRow');
 
-            var $element, $tblRow;
+            var $element, $tblRow, id;
 
-            $element = $(event.currentTarget);
-            $tblRow = $element.parent().parent();
+            if (typeof event === 'object') {
+                $element = $(event.currentTarget);
+                $tblRow = $element.parent().parent();
 
-            this.trigger('data-grid:row:removed', $tblRow.data('id'));
+                id = $tblRow.data('id');
+            } else {
+                id = event;
+                $tblRow = this.$element.find('tr[data-id="' + id + '"]');
+            }
+
+            this.trigger('data-grid:row:removed', event);
             $tblRow.remove();
         },
 
