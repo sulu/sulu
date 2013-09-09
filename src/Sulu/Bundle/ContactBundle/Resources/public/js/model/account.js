@@ -14,7 +14,7 @@ define([
     'sulucontact/model/phone',
     'sulucontact/model/address',
     'sulucontact/model/url'
-], function (BackboneRelational, Account, Email, Phone, Address, Url) {
+], function(BackboneRelational, Account, Email, Phone, Address, Url) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/accounts',
         defaults: {
