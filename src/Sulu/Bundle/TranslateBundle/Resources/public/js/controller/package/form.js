@@ -291,14 +291,9 @@ define([
         // TODO abstract ---------------------------------------
 
         // Initialize operations in headerbar
-<<<<<<< HEAD
-        initOptions: function(){
-=======
-        initOperations: function(){
-
+        initOptions: function() {
             $('#headerbar-mid').off();
 
->>>>>>> 696e6f90ca5d68f7492fe1f4a89ebbff14f36a1d
             this.initOperationsLeft();
             this.initOperationsRight();
         },
