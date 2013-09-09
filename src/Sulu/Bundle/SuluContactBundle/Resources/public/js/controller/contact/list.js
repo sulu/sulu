@@ -65,10 +65,10 @@ define([
                 });
             }.bind(this));
 
-            this.initOperations();
+            this.initOptions();
         },
 
-        initOperations: function() {
+        initOptions: function() {
             var $optionsRight = $('#headerbar-mid-right');
             $optionsRight.empty();
             var $optionsLeft = $('#headerbar-mid-left');
