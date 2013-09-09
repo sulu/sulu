@@ -839,12 +839,16 @@ function typeOf(value) {
             var $element, itemId;
 
             $element = $(event.currentTarget);
+
+            if (!$element.is('input')) {
+                $element = $element.parent().find('input');
+            }
+
             itemId = $element.parents('tr').data('id');
 
             if (this.selectedItemIds.indexOf(itemId) > -1) {
                 $element
                     .removeClass('is-selected')
-                    .find('td:first-child input[type="checkbox"]')
                     .prop('checked', false);
 
                 // uncheck 'Select All'-checkbox
@@ -857,12 +861,12 @@ function typeOf(value) {
             } else {
                 $element
                     .addClass('is-selected')
-                    .find('td:first-child input[type="checkbox"]')
                     .prop('checked', true);
 
                 this.selectedItemIds.push(itemId);
                 this.trigger('data-grid:item:select', itemId);
             }
+            return false;
         },
 
         selectAllItems: function(event) {
@@ -900,16 +904,33 @@ function typeOf(value) {
             $table.append(this.prepareTableRow(row));
         },
 
+        prepareRemoveRow: function(event) {
+            if (!!this.options.autoRemoveHandling) {
+                this.removeRow(event);
+            } else {
+                var $element, $tblRow;
+                $element = $(event.currentTarget);
+                $tblRow = $element.parent().parent();
+                this.trigger('data-grid:row:remove-click', event, $tblRow.data('id'));
+            }
+        },
+
         removeRow: function(event) {
             Husky.DEBUG && console.log(this.name, 'removeRow');
 
-            var $element, $tblRow;
+            var $element, $tblRow, id;
 
-            $element = $(event.currentTarget);
-            $tblRow = $element.parent().parent();
+            if (typeof event === 'object') {
+                $element = $(event.currentTarget);
+                $tblRow = $element.parent().parent();
 
-            this.trigger('data-grid:row:removed', $tblRow.data('id'));
+                id = $tblRow.data('id');
+            } else {
+                id = event;
+                $tblRow = this.$element.find('tr[data-id="' + id + '"]');
+            }
 
+            this.trigger('data-grid:row:removed', event);
             $tblRow.remove();
         },
 
@@ -992,18 +1013,26 @@ function typeOf(value) {
             this.$element.off();
 
             if (!!this.options.selectItemType && this.options.selectItemType === 'checkbox') {
-                this.$element.on('click', 'tbody > tr input[type="checkbox"]', this.selectItem.bind(this));
+                this.$element.on('click', 'tbody > tr span.custom-checkbox-icon', this.selectItem.bind(this));
+                this.$element.on('change', 'tbody > tr input[type="checkbox"]', this.selectItem.bind(this));
+
                 this.$element.on('click', 'th.select-all', this.selectAllItems.bind(this));
             } else if (!!this.options.selectItemType && this.options.selectItemType === 'radio') {
                 this.$element.on('click', 'tbody > tr input[type="radio"]', this.selectItem.bind(this));
             }
+
+            this.$element.on('click', 'tbody > tr', function(event) {
+                if (!$(event.target).is('input') && !$(event.target).is('span.icon-remove')) {
+                    this.trigger('data-grid:item:click', $(event.currentTarget).data('id'));
+                }
+            }.bind(this));
 
             if (this.options.pagination) {
                 this.$element.on('click', '.pagination li.page', this.changePage.bind(this));
             }
 
             if (this.options.removeRow) {
-                this.$element.on('click', '.remove-row > span', this.removeRow.bind(this));
+                this.$element.on('click', '.remove-row > span', this.prepareRemoveRow.bind(this));
             }
         },
 
@@ -1151,7 +1180,8 @@ function typeOf(value) {
             pageSize: 10,
             showPages: 5
         },
-        excludeFields: ['id']
+        excludeFields: ['id'],
+        autoRemoveHandling: true
     };
 
 })(Husky.$, this, this.document);
@@ -1801,7 +1831,6 @@ function typeOf(value) {
 
             $firstColumn = $('#column-0');
             $firstColumn.addClass('collapsed');
-            console.log($firstColumn.hasClass('collapsed'));
         },
 
         showNavigationColumns: function(event) {
@@ -1862,7 +1891,10 @@ function typeOf(value) {
                 // ... and add class to selected element
                 $element.addClass('selected');
 
-                this.trigger('navigation:item:selected', itemModel);
+                this.trigger('navigation:item:selected', {
+                    item: itemModel,
+                    data: this.getNavigationData()
+                });
 
                 if (!!itemModel.get('hasSub')) {
 
@@ -1884,7 +1916,10 @@ function typeOf(value) {
                                     this.collapseFirstColumn();
                                 }
 
-                                this.trigger('navigation:item:sub:loaded', itemModel);
+                                this.trigger('navigation:item:sub:loaded', {
+                                    item: itemModel,
+                                    data: this.getNavigationData()
+                                });
                             }.bind(this)
                         });
                     } else {
@@ -1898,16 +1933,50 @@ function typeOf(value) {
                         if (this.currentColumnIdx > 1) {
                             this.collapseFirstColumn();
                         }
+
+                        this.trigger('navigation:item:sub:show', {
+                            item: itemModel,
+                            data: this.getNavigationData()
+                        });
                     }
 
                 } else if (itemModel.get('type') == 'content') {
-                    this.trigger('navigation:item:content:show', itemModel);
-
                     this.showContent = true;
 
                     $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
                     this.collapseFirstColumn();
+
+                    this.trigger('navigation:item:content:show', {
+                        item: itemModel,
+                        data: this.getNavigationData()
+                    });
                 }
+            }
+        },
+
+        getNavigationWidth: function() {
+            var $columns = $('.navigation-column'),
+                width = 0,
+                $column = null;
+
+            $.each($columns, function(idx, column) {
+                $column = $(column);
+
+                if ($column.hasClass('collapsed')) {
+                    width += 50;
+                } else {
+                    width += 250;
+                }
+
+            }.bind(this));
+
+            return width;
+        },
+
+        getNavigationData: function() {
+            return {
+                // TODO
+                navWidth: this.getNavigationWidth()
             }
         },
 
