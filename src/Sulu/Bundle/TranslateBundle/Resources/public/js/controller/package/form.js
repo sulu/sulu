@@ -29,11 +29,10 @@ define([
     return Backbone.View.extend({
 
         events: {
-            //'submit #catalogue-form': 'submitForm',
             'click .icon-remove': 'deleteRow',
-            'click .addRow': 'addRow',
-            'click #saveButton' : 'submitForm',
-            'click #deleteButton': 'deletePackage'
+            'click .addRow': 'addRow'
+//            'click #saveButton' : 'submitForm',
+//            'click #deleteButton': 'deletePackage'
         },
 
         initialize: function () {
@@ -110,6 +109,10 @@ define([
                 App.Navigation.trigger('navigation:item:column:show', {
                     data: this.getTabs(translatePackage.get('id'))
                 });
+
+
+                this.initializeDialog();
+
             }.bind(this));
         },
 
@@ -180,9 +183,8 @@ define([
                 translatePackage.save(null, {
                     success: function() {
                         that.undelegateEvents();
-                        dataGrid.data('Husky.Ui.DataGrid').off();
-                        $operationsLeft.off();
-                        $operationsRight.off();
+                        //dataGrid.data('Husky.Ui.DataGrid').off();
+                        that.removeHeaderbarEvents();
                         Router.navigate('settings/translate');
                     }
                 });
@@ -191,8 +193,6 @@ define([
 
         // Initializes the catalogue list
         initializeCatalogueList: function (data) {
-
-            this.initializeDialog();
 
             require(['text!sulutranslate/templates/package/table-row.html'], function (RowTemplate) {
                 dataGrid = $('#catalogues').huskyDataGrid({
@@ -221,42 +221,18 @@ define([
 
                 $('#catalogues').on('click', '.remove-row > span', function (event) {
 
-                    $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                        data: {
-                            content: {
-                                title: "Warning",
-                                content: "Do you really want to delete this entry?"
-                            },
-                            footer: {
-                                buttonCancelText: "No",
-                                buttonSaveText: "Yes"
-                            }
-                        }
+                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+                    var id = $(event.currentTarget).parent().parent().data('id');
 
-                    });
-
-                    // TODO - Event Problem
-                    $dialog.off();
-
-                    $dialog.on('click', '.closeButton', function() {
-                        $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-                    });
-
-
-                    $dialog.on('click', '.agreeButton', function() {
-                        $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-                        dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
-                        var id = $(event.currentTarget).parent().parent().data('id');
-
-                        if(id) {
-                            console.log(id, "element id to delete");
-                            cataloguesToDelete.push(id);
-                        }
-                    });
+                    if(id) {
+                        console.log(id, "element id to delete");
+                        cataloguesToDelete.push(id);
+                    }
 
                 });
 
                 this.initValidation();
+
 
 
             }.bind(this));
@@ -271,11 +247,45 @@ define([
         },
 
         deletePackage: function() {
-            translatePackage.destroy({
-                success: function () {
-                    Router.navigate('settings/translate');
+
+            //var that = this;
+
+            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                data: {
+                    content: {
+                        title: "Warning",
+                        content: "Do you really want to delete this package?"
+                    },
+                    footer: {
+                        buttonCancelText: "No",
+                        buttonSaveText: "Yes"
+                    }
                 }
+
             });
+
+            // TODO - Event Problem
+            $dialog.off();
+
+            $dialog.on('click', '.closeButton', function() {
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
+
+
+            $dialog.on('click', '.saveButton', function() {
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+
+                translatePackage.destroy({
+                    success: function () {
+                        console.log("test");
+                        this.removeHeaderbarEvents();
+                        Router.navigate('settings/translate');
+                    }.bind(this)
+                });
+            }.bind(this));
+
+
+
         },
 
         // TODO abstract ---------------------------------------
@@ -294,6 +304,11 @@ define([
             var $deleteButton = this.templates.deleteButton('Delete');
             $operationsRight.append($deleteButton);
 
+            $('#headerbar-mid-right').on('click', '#deleteButton', function() {
+                console.log("delete?");
+                this.deletePackage();
+            }.bind(this));
+
         },
 
         // Initializes the operations on the top (save)
@@ -305,6 +320,20 @@ define([
             var $saveButton = this.templates.saveButton('Save', '');
             $operationsLeft.append($saveButton);
 
+            // TODO leaving view scope?
+            $('#headerbar-mid-left').on('click', '#saveButton', function() {
+                this.submitForm(event);
+            }.bind(this));
+
+        },
+
+        removeHeaderbarEvents: function() {
+            if ($operationsLeft != undefined) {
+                $operationsLeft.off();
+            }
+            if ($operationsRight != undefined) {
+                $operationsRight.off();
+            }
         },
 
         // Template for smaller components (button, ...)
