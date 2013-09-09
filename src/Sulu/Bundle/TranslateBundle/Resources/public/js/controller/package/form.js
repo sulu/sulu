@@ -331,7 +331,7 @@ define([
             $operationsLeft.append($saveButton);
 
             // TODO leaving view scope?
-            $operationsLeft.on('click', '#saveButton', function() {
+            $operationsLeft.on('click', '#saveButton', function(event) {
                 this.submitForm(event);
             }.bind(this));
 
