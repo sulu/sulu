@@ -383,7 +383,7 @@ define([
         templates: {
 
             saveButton: function(text, route) {
-                return '<div id="saveButton" class="pull-left pointer"><span class="icon-circle-ok pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>';
+                return '<div id="saveButton" class="pull-left pointer"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>';
             },
 
             deleteButton: function(text) {
