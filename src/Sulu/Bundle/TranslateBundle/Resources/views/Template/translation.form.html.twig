@@ -28,8 +28,25 @@
     }
 
     .showOptions{
-        bottom:0;
-        left:0
+        bottom:-5px;
+        left:-15px;
+    }
+
+    .icon-arrow-right {
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 4px 0 4px 6px;
+        border-color: transparent transparent transparent #000000;
+    }
+
+
+    .icon-arrow-down {
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 6px 4px 0 4px;
+        border-color: #000000 transparent transparent transparent;
     }
 
 </style>
@@ -64,7 +81,7 @@
                 <tr data-id="<%= item.id %>">
                     <td class="relative">
                         <input class="form-element grey inputCode" readonly value="<%= item.code.code %>" data-required="true" />
-                        <span class="showOptions absolute">ShowOptions</span>
+                        <span class="showOptions absolute pointer icon-arrow-right"></span>
                     </td>
                     <td>
                         <textarea class="form-element vertical textareaTranslation" readonly><%= (!!item.value) ? item.value : '' %></textarea>
