@@ -338,7 +338,7 @@ define([
         // TODO abstract ---------------------------------------
 
         // Initialize operations in headerbar
-        initOperations: function() {
+        initOperations: function(){
             this.removeHeaderbarEvents();
             this.initOperationsLeft();
             this.initOperationsRight();

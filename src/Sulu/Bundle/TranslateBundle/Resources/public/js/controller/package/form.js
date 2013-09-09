@@ -290,6 +290,8 @@ define([
         initOperations: function(){
 
             this.removeHeaderbarEvents();
+            $('#headerbar-mid').off();
+
 
             this.initOperationsLeft();
             this.initOperationsRight();
