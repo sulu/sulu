@@ -248,8 +248,6 @@ define([
 
         deletePackage: function() {
 
-            //var that = this;
-
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
                 data: {
                     content: {
@@ -261,30 +259,28 @@ define([
                         buttonSaveText: "Yes"
                     }
                 }
-
             });
 
             // TODO - Event Problem
             $dialog.off();
 
             $dialog.on('click', '.closeButton', function() {
+                this.initOperations();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            });
+            }.bind(this));
 
 
+            // TODO naming buttons dialog
             $dialog.on('click', '.saveButton', function() {
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
 
                 translatePackage.destroy({
                     success: function () {
-                        console.log("test");
                         this.removeHeaderbarEvents();
                         Router.navigate('settings/translate');
                     }.bind(this)
                 });
             }.bind(this));
-
-
 
         },
 
@@ -293,7 +289,7 @@ define([
         // Initialize operations in headerbar
         initOperations: function(){
 
-            $('#headerbar-mid').off();
+            this.removeHeaderbarEvents();
 
             this.initOperationsLeft();
             this.initOperationsRight();
@@ -307,8 +303,14 @@ define([
             var $deleteButton = this.templates.deleteButton('Delete');
             $operationsRight.append($deleteButton);
 
-            $('#headerbar-mid-right').on('click', '#deleteButton', function() {
-                console.log("delete?");
+            $('#headerbar-mid-right').on('click', '#deleteButton', function(event) {
+
+                var deleteButton = event.currentTarget;
+
+                if (!$(deleteButton).hasClass('loading')) {
+                    $(deleteButton).addClass('loading');
+                    $('#headerbar-mid-left #saveButton').hide();
+                }
                 this.deletePackage();
             }.bind(this));
 
@@ -333,18 +335,17 @@ define([
         removeHeaderbarEvents: function() {
             $('#headerbar-mid-right').off();
             $('#headerbar-mid-left').off();
-            console.log("removed headerbar event - package form");
         },
 
         // Template for smaller components (button, ...)
         templates: {
 
             saveButton: function(text, route){
-                return '<div id="saveButton" class="pull-left pointer"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
+                return '<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div></div>';
             },
 
             deleteButton: function(text) {
-                return '<div id="deleteButton" class="pull-right pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
+                return '<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div></div>';
             }
         }
 

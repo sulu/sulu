@@ -308,7 +308,7 @@ define([
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             }.bind(this));
 
-
+            // TODO naming buttons dialog
             $dialog.on('click', '.saveButton', function() {
                 this.removeHeaderbarEvents();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
@@ -318,8 +318,6 @@ define([
                     }
                 });
             }.bind(this));
-
-
 
         },
 
