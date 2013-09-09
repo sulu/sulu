@@ -10,7 +10,8 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
+use Sulu\Bundle\CoreBundle\Controller\RestController;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
@@ -19,8 +20,10 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
  * Makes the translation codes accessible trough an REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class CodesController extends FOSRestController
+class CodesController extends RestController
 {
+    protected $entityName = 'SuluTranslateBundle:Code';
+
     private $codeEntity = 'SuluTranslateBundle:Code';
     private $catalogueEntity = 'SuluTranslateBundle:Catalogue';
     private $packageEntity = 'SuluTranslateBundle:Package';
@@ -71,8 +74,6 @@ class CodesController extends FOSRestController
      */
     public function listCodesAction()
     {
-        $listHelper = $this->get('sulu_core.list_rest_helper');
-
         $where = array();
         $packageId = $this->getRequest()->get('packageId');
         if ($packageId != null) {
@@ -83,13 +84,7 @@ class CodesController extends FOSRestController
             $where['translations_catalogue_id'] = $catalogueId;
         }
 
-        $codes = $listHelper->find($this->codeEntity, $where);
-
-        $response = array(
-            'total' => sizeof($codes),
-            'items' => $codes
-        );
-        $view = $this->view($response, 200);
+        $view = $this->responseList($where);
 
         return $this->handleView($view);
     }
@@ -102,15 +97,13 @@ class CodesController extends FOSRestController
     public function getCodeAction($id)
     {
         // TODO Complete or filter for Fields?
-        $code = $this->getDoctrine()
-            ->getRepository($this->codeEntity)
-            ->find($id);
+        $find = function ($id) {
+            return $this->getDoctrine()
+                ->getRepository($this->codeEntity)
+                ->find($id);
+        };
 
-        if ($code != null) {
-            $view = $this->view($code, 200);
-        } else {
-            $view = $this->view(null, 400);
-        }
+        $view = $this->responseGetById($id, $find);
 
         return $this->handleView($view);
     }
@@ -195,7 +188,7 @@ class CodesController extends FOSRestController
 
         if (!$code) {
             // No Code exists
-            $view = $this->view(null, 400);
+            $view = $this->view(null, 404);
         } else {
             $code->setCode($c);
             $code->setBackend($backend);
@@ -244,21 +237,21 @@ class CodesController extends FOSRestController
      */
     public function deleteCodeAction($id)
     {
-        $code = $this->getDoctrine()
-            ->getRepository($this->codeEntity)
-            ->find($id);
+        $delete = function ($id) {
+            $code = $this->getDoctrine()
+                ->getRepository($this->codeEntity)
+                ->find($id);
 
-        if ($code != null) {
+            if (!$code) {
+                throw new EntityNotFoundException($this->codeEntity, $id);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($code);
             $em->flush();
+        };
 
-            $view = $this->view(null, 204);
-
-        } else {
-            $view = $this->view(null, 404);
-
-        }
+        $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
     }

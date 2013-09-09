@@ -1,28 +1,114 @@
-<h1><%= catalogue.locale %></h1>
+<style type="text/css">
 
-<form id="codes-form">
+    /* TODO put css in husky / translate-css-file*/
+
+    textarea {
+        font-size:inherit !important;
+    }
+
+    textarea[readonly] {
+        padding: 10px 0;
+        overflow:hidden;
+    }
+
+    .grey {
+        color:grey;
+    }
+
+    .m-top-35 {
+        margin-top:35px !important;
+    }
+
+    .additionalOptions {
+        background: #f8f8f8;
+    }
+
+    .relative {
+        position: relative;
+    }
+
+    .absolute {
+        position:absolute
+    }
+
+    .showOptions{
+        bottom:-5px;
+        left:-15px;
+    }
+
+    .icon-arrow-right {
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 4px 0 4px 6px;
+        border-color: transparent transparent transparent #000000;
+    }
+
+
+    .icon-arrow-down {
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 6px 4px 0 4px;
+        border-color: #000000 transparent transparent transparent;
+    }
+
+    .table tbody td {
+        vertical-align: top !important;
+    }
+
+</style>
+
+<div class="grid-row m-bottom-20">
+    <div class="grid-col-6 pull-left">
+        <h1><%= package.name %></h1>
+    </div>
+    <div class="grid-col-6 pull-right">
+        <p class="grid-col-5 align-right m-right-10 bold grey">Language catalogue:</p>
+        <div id="languageCatalogue" class="grid-col-6"></div>
+    </div>
+</div>
+
+
+<form id="codes-form" data-validate="parsley">
 
     <div class="grid-row">
-        <h3 class="collapsable">[Section1]</h3>
-        <table class="table codes" id="section1">
+        <table class="table" id="section1">
 
             <thead>
                 <tr>
-                    <th class="grid-col-4">[Key]</th>
-                    <th class="grid-col-4">[Translation]</th>
-                    <th class="grid-col-4">[Suggestion (EN)]</th>
+                    <th width="20%">Key</th>
+                    <th width="37%">Translation</th>
+                    <th width="37%">Suggestion (EN)</th>
+                    <th width="6%"></th>
                 </tr>
             </thead>
 
             <tbody>
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
-                    <td class="grid-col-4"><p><%= item.code.code %><span class="icon-remove m-left-5"></span><p></td>
-                    <td class="grid-col-4">
-                        <textarea rows="1" class="form-element vertical"><%= (!!item.value) ? item.value : '' %></textarea>
-                        <small>[Max. <%= item.code.length %> chars]</small>
+                    <td class="relative">
+                        <input class="form-element grey inputCode" readonly value="<%= item.code.code %>" data-trigger="focusout" data-required="true" />
+                        <span class="showOptions absolute pointer icon-arrow-right"></span>
                     </td>
-                    <td class="grid-col-4"><p>[Lorem Ipsum dolor set]</p></td>
+                    <td>
+                        <textarea class="form-element vertical textareaTranslation" readonly><%= (!!item.value) ? item.value : '' %></textarea>
+                        <small class="grey">[Max. <%= item.code.length %> chars]</small>
+                    </td>
+                    <td><p class="grey">Lorem ipsum dolor asit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p></td>
+                    <td><p class="icon-remove m-left-5"></p></td>
+                </tr>
+                <tr class="additionalOptions hidden">
+                    <td colspan="4">
+                        <div class="grid-row">
+                            <div class="grid-col-3">
+                                <span>Length</span>
+                                <input class="form-element inputLength" value="<%= item.code.length %>"/>
+                            </div>
+                            <div class="grid-col-2 m-top-35"><input name="frontend" type="checkbox" class="custom-checkbox checkboxFrontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
+                            <div class="grid-col-2  m-top-35"><input name="backend" type="checkbox" class="custom-checkbox checkboxBackend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
+                        </div>
+                    </td>
                 </tr>
                 <% }); %>
             </tbody>
@@ -34,13 +120,10 @@
             <div class="grid-col-2 addCode" data-target-element="section1">
                 <span class="icon-add"></span><span class="control-label">[Add element]</span>
             </div>
-            <div class="grid-col-2">
-                <input type="submit" value="[Speichern]"/>
-            </div>
         </div>
 
     </div>
 
-    <hr/>
+    <hr class="divider"/>
 
 </form>

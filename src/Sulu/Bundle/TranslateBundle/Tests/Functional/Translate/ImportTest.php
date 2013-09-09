@@ -8,13 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TranslateBundle\Tests\Translate;
+namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Translate;
 
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 use Sulu\Bundle\TranslateBundle\Translate\Import;
 
 class ImportTest extends DatabaseTestCase
 {
+    private static $fixturePath;
+    
     /**
      * @var Import
      */
@@ -24,6 +26,12 @@ class ImportTest extends DatabaseTestCase
      * @var array
      */
     protected static $entities;
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$fixturePath = __DIR__ . '/../../Resources/DataFixtures/Files';
+    }
 
     public function setUp()
     {
@@ -53,7 +61,7 @@ class ImportTest extends DatabaseTestCase
 
     public function testXliff()
     {
-        $this->import->setFile(__DIR__ . '/../Fixtures/import.xlf');
+        $this->import->setFile(self::$fixturePath . '/import.xlf');
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('de');
@@ -88,7 +96,7 @@ class ImportTest extends DatabaseTestCase
         self::$em->clear();
 
         // test new import
-        $this->import->setFile(__DIR__ . '/../Fixtures/import_better.xlf');
+        $this->import->setFile(self::$fixturePath . '/import_better.xlf');
         $this->import->setName('Import Update');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('de');
@@ -134,7 +142,7 @@ class ImportTest extends DatabaseTestCase
         self::$em->clear();
 
         // test new import with new language code
-        $this->import->setFile(__DIR__ . '/../Fixtures/import.xlf');
+        $this->import->setFile(self::$fixturePath . '/import.xlf');
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('en');
@@ -189,7 +197,7 @@ class ImportTest extends DatabaseTestCase
      */
     public function testXliffFailFile()
     {
-        $this->import->setFile(__DIR__ . '/../Fixtures/import_fail.xlf');
+        $this->import->setFile(self::$fixturePath . '/import_fail.xlf');
         $this->import->execute();
     }
 
@@ -198,7 +206,7 @@ class ImportTest extends DatabaseTestCase
      */
     public function testPackageNotFound()
     {
-        $this->import->setFile(__DIR__ . '/../Fixtures/import.xliff');
+        $this->import->setFile(self::$fixturePath . '/import.xliff');
         $this->import->setPackageId(10);
         $this->import->setName('Fail');
         $this->import->execute();

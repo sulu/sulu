@@ -1,41 +1,44 @@
-<h2>[.DE-English]</h2>
+<form id="catalogue-form" data-validate="parsley">
 
-<form id="catalogue-form">
-
-    <div class="grid-row">
-        <label>[Title*]</label>
-        <input class="form-element" type="text" id="name" value="<%= name %>"/><br/><br/>
+    <div class="grid-row m-bottom-30">
+        <label>Title*</label>
+        <input class="form-element" type="text" id="name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= name %>"/>
     </div>
 
+    <!-- <div class="grid-row">
+        <div class="grid-col-4">
+            <label>Type*</label>
+            <select id="select-3" class="form-element">
+                <option>Please choose...</option>
+                <option>Option 1</option>
+                <option>Option 2</option>
+                <option>Option 3</option>
+            </select>
+        </div>
+    </div> -->
+
+    <hr class="divider"/>
+
     <div class="grid-row">
-        <div class="grid-col-6">
-            <label>[Type*]</label>
+        <div class="grid-row">
+            <h2>Language catalogues</h2>
+        </div>
 
-            <div class="dropdown">
-                <span class="dropdown-toggle">[Dropdown]</span>
+        <div class="grid-row m-bottom-20" id="catalogues">
 
+        </div>
 
+        <div class="grid-row">
+            <div class="grid-col-3 m-top-15 addRow" data-table-id="catalogueTable" id="addCatalogueRow">
+                <span class="icon-add"></span>
+                <span class="control-label">Add catalogue</span>
             </div>
         </div>
     </div>
 
     <hr class="divider"/>
 
-    <div class="grid-row">
-        <div class="grid-row">
-            <div class="grid-col-10"><h3>[Language catalogues]</h3></div>
-            <div class="grid-col-2 align-right m-top-15 addRow" data-table-id="catalogueTable" id="addCatalogueRow"><span class="icon-add"></span><span class="control-label">[Add language]</span></div>
-        </div>
-
-        <div class="grid-row" id="catalogues">
-
-        </div>
-
-    </div>
-
-    <hr class="divider"/>
-
-    <div class="grid-row">
+   <!-- <div class="grid-row">
         <div class="grid-row">
             <div class="grid-col-10"><h3>[Section]</h3></div>
             <div class="grid-col-2 align-right m-top-15"><span>[Add language]</span></div>
@@ -62,7 +65,6 @@
         </table>
     </div>
 
-    <hr class="divider"/>
+    <hr class="divider"/> -->
 
-    <input type="submit" value="[Speichern]"/>
 </form>

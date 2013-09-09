@@ -11,169 +11,427 @@ define([
     'jquery',
     'backbone',
     'router',
+    'parsley',
     'sulutranslate/model/code',
     'sulutranslate/collection/translations',
     'sulutranslate/model/translation',
-    'sulutranslate/model/catalogue'
-], function ($, Backbone, Router, Code, Translations, Translation, Catalogue) {
+    'sulutranslate/model/catalogue',
+    'sulutranslate/collection/catalogues',
+    'sulutranslate/model/package'
+], function($, Backbone, Router, Parsley, Code, Translations, Translation, Catalogue, Catalogues, Package) {
 
     'use strict';
 
-    var translations;
-    var catalogue;
-    var updatedTranslations;
+    var translations,
+        updatedTranslations,
+        codesToDelete,
+        selectedCatalogue,
+        catalogues,
+        $operationsLeft,
+        $operationsRight,
+        $form,
+        $dialog,
+        packageModel;
+
 
     return Backbone.View.extend({
 
         events: {
-            'submit #codes-form': 'submitForm',
             'click .addCode': 'addRowForNewCode',
             'click .icon-remove': 'removeRowAndModel',
             'click .form-element[readonly]': 'unlockFormElement'
+//            'click #saveButton': 'submitForm',
+//            'click #deleteButton': 'deleteCatalogue'
         },
 
-        initialize: function () {
+        initialize: function() {
+            codesToDelete = [];
+
+            this.initOperations();
             this.render();
+
         },
 
-        render: function () {
+        initValidation: function() {
+            $form = this.$('form[data-validate="parsley"]');
+            $form.parsley({validationMinlength: 0});
+        },
 
+        // gets a list of catalogues to the package
+        render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
-            require(['text!/translate/template/translation/form'], function (Template) {
+            require(['text!/translate/template/translation/form'], function(Template) {
 
-                var translateCatalogueId = this.options.id;
+                var packageId = this.options.id;
+                packageModel = new Package({id: packageId});
 
-                catalogue = new Catalogue({id: translateCatalogueId});
-//                console.log(translateCatalogueId, 'render: options id 1');
+                catalogues = new Catalogues({
+                    packageId: packageId,
+                    fields: 'id,locale'
+                });
 
-                // load translations only with a valid catalogue
-                catalogue.fetch({
-                    success: function(){
-//                        console.log(translateCatalogueId, 'render: options id 2');
+                packageModel.fetch({
+                    success: function() {
 
-                        this.loadTranslations(Template, translateCatalogueId);
+                        catalogues.fetch({
+                            success: function() {
+                                selectedCatalogue = catalogues.toJSON()[0];
+                                this.loadTranslations(Template);
 
-
-//                        console.log(catalogue.toJSON(), 'render: catalogue loaded');
+                            }.bind(this)
+                        });
                     }.bind(this)
                 });
+
+                this.initializeDialog();
 
             }.bind(this));
         },
 
-        loadTranslations: function(Template, translateCatalogueId){
+        // loads translations and inits the selectbox with the change event
+        loadTranslations: function(Template) {
 
-            translations = new Translations({translateCatalogueId: translateCatalogueId});
-
-            //console.log(translateCatalogueId, 'load translations: options id 3');
-
+            translations = new Translations({translateCatalogueId: selectedCatalogue.id});
             translations.fetch({
-                success:function(){
-                    var template = _.template(Template, {translations: translations.toJSON(),catalogue: catalogue.toJSON()});
+                success: function() {
+
+                    var template = _.template(Template, {
+                        translations: translations.toJSON(),
+                        catalogue: selectedCatalogue,
+                        package: packageModel.toJSON()
+                    });
                     this.$el.html(template);
-//                    console.log('load translations: template filled');
+
+                    var $selectCatalogue = $('#languageCatalogue').huskySelect({
+                        selected: {id: selectedCatalogue.id},
+                        data: catalogues.toJSON(),
+                        valueName: 'locale'
+                    });
+
+                    this.autoHeightTextareas();
+                    this.initValidation();
+
+                    // TODO event of husky when implemented
+                    $selectCatalogue.change(function() {
+
+                        selectedCatalogue = null;
+                        codesToDelete = [];
+
+                        Backbone.Relational.store.reset();
+
+                        var selectedId = $selectCatalogue.find(":selected").val();
+
+                        _.each(catalogues.toJSON(), function(cat) {
+                            if (parseInt(cat.id) === parseInt(selectedId)) {
+                                selectedCatalogue = cat;
+                            }
+                        });
+
+                        if (selectedCatalogue === null) {
+                            console.log("selected catalogue not found!");
+                        } else {
+                            this.loadTranslations(Template);
+                        }
+
+                    }.bind(this));
+
+                    this.initVisibilityOptions();
+
                 }.bind(this)
             });
         },
 
-        addRowForNewCode: function(event) {
-            var sectionId = $(event.currentTarget).data('target-element');
-            var $lastTableRow = $('#' + sectionId + ' tbody:last-child');
-            $lastTableRow.append(this.templates.rowTemplate());
+        autoHeightTextareas: function() {
+
+            // FIXME inefficient selector
+            var $textareas = $('#codes-form textarea');
+
+            _.each($textareas, function($element) {
+                $($element).css('height', $element.scrollHeight);
+            });
+
         },
 
-        removeRowAndModel: function (event) {
+        initVisibilityOptions: function() {
 
-            // TODO - API methode gibts noch nicht
+            $('.showOptions').on('click', function() {
+                $(this).toggleClass('icon-arrow-right').toggleClass('icon-arrow-down');
+                $(this).parent().parent().next('.additionalOptions').toggleClass('hidden');
+            });
 
-            var $tableRow = $(event.currentTarget).parent().parent().parent();
+        },
+
+        // removes a row
+        removeRowAndModel: function(event) {
+
+            var $tableRow = $(event.currentTarget).parent().parent();
             var translationId = $tableRow.data('id');
 
-            console.log(translationId,'translation id');
+            console.log(translationId, 'translation id');
 
+            $tableRow.next('.additionalOptions').remove();
             $tableRow.remove();
 
-            if(!!translationId) {
-                var translation = translations.get(translationId);
-                translation.destroy({
-                    success: function () {
-                        console.log("remove: deleted translation");
-                    }
-                });
+            if (!!translationId) {
+                var codeId = translations.get(translationId).get('code')['id'];
+                var code = new Code({id: codeId});
+                codesToDelete.push(code);
             }
         },
 
-        // TODO fields by default editable?
-        unlockFormElement: function(event){
+        // appends a new row to the table
+        addRowForNewCode: function(event) {
+
+            var sectionId = $(event.currentTarget).data('target-element');
+            var $lastTableRow = $('#' + sectionId + ' tbody:last-child');
+            $lastTableRow.append(this.templates.rowTemplate());
+
+            // FIXME inefficient selector
+            $form.parsley('addItem', $('#section1 tbody tr:last').prev().find('input.inputCode'));
+        },
+
+        unlockFormElement: function(event) {
             var $element = $(event.currentTarget);
             $($element).prop('readonly', false);
 
         },
 
-        submitForm: function (event) {
+        submitForm: function() {
 
             event.preventDefault();
-            updatedTranslations = new Array();
+            console.log($form.parsley('validate'), "parsley form validation");
+            if ($form.parsley('validate')) {
+                updatedTranslations = [];
 
-            var formId = $(event.currentTarget).attr('id');
-            var $rows = $('#' + formId + ' table tbody tr');
+                // FIXME inefficient selector
+                var $rows = $('#codes-form table tbody tr');
 
-            _.each($rows, function($row){
+                for (var i = 0; i < $rows.length;) {
 
-                var id = $($row).data('id');
-                var values = $($row).find('textarea');
+                    var $translation = $rows[i];
+                    var $options = $rows[i + 1];
+                    var id = $($rows[i]).data('id');
 
-                var code;
-                var translation;
+                    var newCode = $($translation).find('.inputCode').val();
+                    var newTranslation = $($translation).find('.textareaTranslation').val();
 
-                if(!!id) {
-                    translation = translations.get(id);
-                    var currentValue = translation.get('value');
+                    var newLength = $($options).find('.inputLength').val();
+                    var newFrontend = $($options).find('.checkboxFrontend').is(':checked');
+                    var newBackend = $($options).find('.checkboxBackend').is(':checked');
 
-                    // did the value change
-                    if(currentValue != values[0].value) {
-                        translation.set('value',values[0].value);
-                        updatedTranslations.push(translation);
-                        console.log(updatedTranslations, 'submit: updated array of changed elements');
+                    var translationModel = null;
 
+                    if (!!id) {
+
+                        translationModel = translations.get(id);
+
+                        var currentCode = translationModel.get('code').code;
+                        var currentTranslation = translationModel.get('value');
+                        var currentLength = translationModel.get('code').length;
+                        var currentFrontend = translationModel.get('code').frontend;
+                        var currentBackend = translationModel.get('code').backend;
+
+
+                        if (newCode != currentCode ||
+                            newTranslation != currentTranslation ||
+                            newLength != currentLength ||
+                            newFrontend != currentFrontend ||
+                            newBackend != currentBackend) {
+
+                            translationModel.get('code').code = newCode;
+                            translationModel.set('value', newTranslation);
+                            translationModel.get('code').length = newLength;
+                            translationModel.get('code').frontend = newFrontend;
+                            translationModel.get('code').backend = newBackend;
+
+                            updatedTranslations.push(translationModel);
+                        }
+
+                    } else {
+
+                        // new translation and new code
+                        if (newCode != undefined && newCode != "") {
+
+                            var codeModel = new Code();
+                            codeModel.set('code', newCode);
+                            codeModel.set('length', newLength);
+                            codeModel.set('frontend', newFrontend);
+                            codeModel.set('backend', newBackend);
+
+                            translationModel = new Translation();
+                            translationModel.set('value', newTranslation);
+
+                            translationModel.set('code', codeModel);
+                            updatedTranslations.push(translationModel);
+                        } else {
+                            //console.log("code missing");
+                        }
                     }
+                    i = i + 2;
 
-                } else {
+                }
 
-                    // new translation and new code
-                    code = new Code();
-                    code.set('code',values[0].value);
+                if (updatedTranslations.length > 0) {
+                    translations.save(updatedTranslations);
+                }
 
-                    translation = new Translation();
-                    translation.set('value',values[1].value);
+                if (codesToDelete.length > 0) {
+                    codesToDelete.forEach(function(code) {
+                        code.destroy({
+                            success: function() {
+                                console.log("remove: deleted translation");
+                            }
+                        });
+                    });
+                }
 
-                    translation.set('code', code);
-                    updatedTranslations.push(translation);
+                this.removeHeaderbarEvents();
+                Router.navigate('settings/translate');
+            }
+        },
 
+        deleteCatalogue: function() {
+
+            var catalogue = catalogues.get(selectedCatalogue.id);
+
+            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                data: {
+                    content: {
+                        title: "Warning",
+                        content: "Do you really want to delete this catalogue?"
+                    },
+                    footer: {
+                        buttonCancelText: "No",
+                        buttonSaveText: "Yes"
+                    }
                 }
 
             });
 
-            if(updatedTranslations.length > 0 ) {
-                console.log(updatedTranslations, 'items to update');
-                translations.save(updatedTranslations);
-            }
+            // TODO - Event Problem
+            $dialog.off();
+
+            $dialog.on('click', '.closeButton', function() {
+                this.initOperations();
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            }.bind(this));
+
+            // TODO naming buttons dialog
+            $dialog.on('click', '.saveButton', function() {
+                this.removeHeaderbarEvents();
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+                catalogue.destroy({
+                    success: function() {
+                        Router.navigate('settings/translate');
+                    }
+                });
+            }.bind(this));
+
         },
 
+        removeHeaderbarEvents: function() {
+            $('#headerbar-mid-right').off();
+            $('#headerbar-mid-left').off();
+        },
+
+        // Initializes the dialog
+        initializeDialog: function() {
+            $dialog = $('#dialog').huskyDialog({
+                backdrop: true,
+                width: '800px'
+            });
+        },
+
+
+        // TODO abstract ---------------------------------------
+
+        // Initialize operations in headerbar
+        initOperations: function() {
+            this.removeHeaderbarEvents();
+            this.initOperationsLeft();
+            this.initOperationsRight();
+        },
+
+        // Initializes the operations on the top (save)
+        initOperationsRight: function() {
+            $operationsRight = $('#headerbar-mid-right');
+            $operationsRight.empty();
+
+            var $deleteButton = this.templates.deleteButton('Delete');
+            $operationsRight.append($($deleteButton));
+
+            // TODO leaving view scope?
+            $operationsRight.on('click', '#deleteButton', function(event) {
+
+                var deleteButton = event.currentTarget;
+
+                if (!$(deleteButton).hasClass('loading')) {
+                    $(deleteButton).addClass('loading');
+
+                    // FIXME inefficient selector
+                    $('#headerbar-mid-left #saveButton').hide();
+                }
+
+                this.deleteCatalogue();
+
+            }.bind(this));
+        },
+
+        // Initializes the operations on the top (save)
+        initOperationsLeft: function() {
+
+            $operationsLeft = $('#headerbar-mid-left');
+            $operationsLeft.empty();
+
+            var $saveButton = this.templates.saveButton('Save', '');
+            $operationsLeft.append($saveButton);
+
+
+            // TODO leaving view scope?
+            $operationsLeft.on('click', '#saveButton', function() {
+                this.submitForm(event);
+            }.bind(this));
+        },
+
+        // TODO abstract end ---------------------------------------
+
+        // Template for smaller components (button, ...)
         templates: {
 
-            rowTemplate: function () {
+            saveButton: function(text) {
+                return '<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
+            },
+
+            deleteButton: function(text) {
+                return '<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
+            },
+
+            rowTemplate: function() {
                 return [
                     '<tr>',
-                        '<td class="grid-col-4">',
-                            '<textarea class="form-element"></textarea>',
+                        '<td width="20%">',
+                            '<input class="form-element inputCode" value="" data-trigger="focusout" data-required="true"/>',
                         '</td>',
-                        '<td class="grid-col-4">',
-                            '<textarea class="form-element vertical"></textarea>',
-                            '<small>[Max. 128 chars]</small>',
+                        '<td width="37%">',
+                            '<textarea class="form-element vertical textareaTranslation"></textarea>',
                         '</td>',
-                        '<td class="grid-col-4">',
-                            '<p>[Lorem Ipsum dolor set]</p>',
+                        '<td width="37%">',
+                            '<p class="grey"></p>',
+                        '</td>',
+                        '<td width="6%">',
+                            '<p class="icon-remove m-left-5"></p>',
+                        '</td>',
+                    '</tr>',
+                    '<tr class="additionalOptions">',
+                        '<td colspan="4">',
+                            '<div class="grid-row">',
+                                '<div class="grid-col-3">',
+                                    '<span>Length</span>',
+                                    '<input class="form-element inputLength" value=""/>',
+                                '</div>',
+                            '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                            '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                            '</div>',
                         '</td>',
                     '</tr>'].join('')
             }

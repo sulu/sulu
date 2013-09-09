@@ -10,14 +10,16 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
+use Sulu\Bundle\CoreBundle\Controller\RestController;
 
 /**
  * Make the catalogues available through a REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class CataloguesController extends FOSRestController
+class CataloguesController extends RestController
 {
+    protected $entityName = 'SuluTranslateBundle:Catalogue';
 
     /**
      * Returns the catalogue with the given id
@@ -26,11 +28,13 @@ class CataloguesController extends FOSRestController
      */
     public function getCatalogueAction($id)
     {
-        $catalogue = $this->getDoctrine()
-            ->getRepository('SuluTranslateBundle:Catalogue')
-            ->find($id);
+        $find = function ($id) {
+            return $this->getDoctrine()
+                ->getRepository('SuluTranslateBundle:Catalogue')
+                ->find($id);
+        };
 
-        $view = $this->view($catalogue, 200);
+        $view = $this->responseGetById($id, $find);
 
         return $this->handleView($view);
     }
@@ -41,27 +45,24 @@ class CataloguesController extends FOSRestController
      */
     public function getCataloguesAction()
     {
-        $response = array();
+        // Already in use - change calls
+        $view = $this->responseList();
 
-        $packageId = $this->getRequest()->get('package');
+        return $this->handleView($view);
+    }
 
-        $repository = $this->getDoctrine()
-            ->getRepository('SuluTranslateBundle:Catalogue');
-
-        if ($packageId != null) {
-            $catalogues = $repository->findBy(
-                array(
-                    'package' => $packageId
-                )
-            );
-        } else {
-            $catalogues = $repository->findAll();
+    /*
+     * Returns a list of catalogues from a specific package
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listCataloguesAction()
+    {
+        $where = array();
+        $packageId = $this->getRequest()->get('packageId');
+        if (!empty($packageId)) {
+            $where = array('package_id' => $packageId);
         }
-
-        $response['total'] = count($catalogues);
-        $response['items'] = $catalogues;
-
-        $view = $this->view($response, 200);
+        $view = $this->responseList($where);
 
         return $this->handleView($view);
     }
@@ -73,21 +74,22 @@ class CataloguesController extends FOSRestController
      */
     public function deleteCatalogueAction($id)
     {
-        $catalogue = $this->getDoctrine()
-            ->getRepository('SuluTranslateBundle:Catalogue')
-            ->find($id);
+        $delete = function ($id) {
+            $entityName = 'SuluTranslateBundle:Catalogue';
+            $catalogue = $this->getDoctrine()
+                ->getRepository($entityName)
+                ->find($id);
 
-        if ($catalogue != null) {
+            if (!$catalogue) {
+                throw new EntityNotFoundException($entityName, $id);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($catalogue);
             $em->flush();
+        };
 
-            $view = $this->view(null, 204);
-
-        } else {
-            $view = $this->view(null, 404);
-
-        }
+        $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
     }

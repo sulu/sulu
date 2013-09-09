@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TranslateBundle\Tests\Controller;
+namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
 
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
@@ -123,4 +123,30 @@ class CataloguesControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
+
+    public function testListCatalogues(){
+
+        $client = static::createClient();
+
+        $client->request('GET', '/translate/api/catalogues/list?fields=id,locale&packageId=1');
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('1', $response->items[0]->id);
+        $this->assertEquals('EN', $response->items[0]->locale);
+
+    }
+
+    public function testListCataloguesNotExisting(){
+
+        $client = static::createClient();
+        $client->request('GET', '/translate/api/catalogues/list?fields=id,locale&packageId=4711');
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $this->assertEquals('0', $response->total);
+
+    }
+
+    // TODO more list tests
 }

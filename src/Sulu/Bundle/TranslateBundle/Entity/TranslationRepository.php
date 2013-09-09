@@ -36,7 +36,12 @@ class TranslationRepository extends EntityRepository
                 )
             );
 
-        return $query->getSingleResult();
+        $result = $query->getResult();
+        if (sizeof($result) == 1) {
+            return $result[0];
+        } else {
+            return null;
+        }
     }
 
     public function findFiltered($packageId, $locale, $backend = null, $frontend = null, $location = null)
