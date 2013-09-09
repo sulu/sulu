@@ -57,7 +57,7 @@ class CataloguesController extends RestController
      */
     public function listCataloguesAction()
     {
-        $where= array();
+        $where = array();
         $packageId = $this->getRequest()->get('packageId');
         if (!empty($packageId)) {
             $where = array('package_id' => $packageId);

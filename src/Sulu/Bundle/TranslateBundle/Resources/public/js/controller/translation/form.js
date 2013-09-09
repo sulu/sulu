@@ -45,7 +45,7 @@ define([
         },
 
         initialize: function() {
-            codesToDelete = new Array();
+            codesToDelete = [];
 
             this.initOperations();
             this.render();
@@ -71,7 +71,7 @@ define([
                 });
 
                 packageModel.fetch({
-                    success: function(){
+                    success: function() {
 
                         catalogues.fetch({
                             success: function() {
@@ -95,7 +95,11 @@ define([
             translations.fetch({
                 success: function() {
 
-                    var template = _.template(Template, {translations: translations.toJSON(), catalogue: selectedCatalogue, package: packageModel.toJSON()});
+                    var template = _.template(Template, {
+                        translations: translations.toJSON(),
+                        catalogue: selectedCatalogue,
+                        package: packageModel.toJSON()
+                    });
                     this.$el.html(template);
 
                     var $selectCatalogue = $('#languageCatalogue').huskySelect({
@@ -111,7 +115,7 @@ define([
                     $selectCatalogue.change(function() {
 
                         selectedCatalogue = null;
-                        codesToDelete = new Array();
+                        codesToDelete = [];
 
                         Backbone.Relational.store.reset();
 
@@ -137,12 +141,13 @@ define([
             });
         },
 
-        autoHeightTextareas: function(){
+        autoHeightTextareas: function() {
 
+            // FIXME inefficient selector
             var $textareas = $('#codes-form textarea');
 
-            _.each($textareas, function($element){
-                $($element).css('height',$element.scrollHeight);
+            _.each($textareas, function($element) {
+                $($element).css('height', $element.scrollHeight);
             });
 
         },
@@ -181,6 +186,7 @@ define([
             var $lastTableRow = $('#' + sectionId + ' tbody:last-child');
             $lastTableRow.append(this.templates.rowTemplate());
 
+            // FIXME inefficient selector
             $form.parsley('addItem', $('#section1 tbody tr:last').prev().find('input.inputCode'));
         },
 
@@ -195,7 +201,9 @@ define([
             event.preventDefault();
             console.log($form.parsley('validate'), "parsley form validation");
             if ($form.parsley('validate')) {
-                updatedTranslations = new Array();
+                updatedTranslations = [];
+
+                // FIXME inefficient selector
                 var $rows = $('#codes-form table tbody tr');
 
                 for (var i = 0; i < $rows.length;) {
@@ -204,7 +212,7 @@ define([
                     var $options = $rows[i + 1];
                     var id = $($rows[i]).data('id');
 
-                    var newCode    = $($translation).find('.inputCode').val();
+                    var newCode = $($translation).find('.inputCode').val();
                     var newTranslation = $($translation).find('.textareaTranslation').val();
 
                     var newLength = $($options).find('.inputLength').val();
@@ -313,7 +321,7 @@ define([
                 this.removeHeaderbarEvents();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                 catalogue.destroy({
-                    success: function () {
+                    success: function() {
                         Router.navigate('settings/translate');
                     }
                 });
@@ -327,7 +335,7 @@ define([
         },
 
         // Initializes the dialog
-        initializeDialog: function(){
+        initializeDialog: function() {
             $dialog = $('#dialog').huskyDialog({
                 backdrop: true,
                 width: '800px'
@@ -338,7 +346,7 @@ define([
         // TODO abstract ---------------------------------------
 
         // Initialize operations in headerbar
-        initOperations: function(){
+        initOperations: function() {
             this.removeHeaderbarEvents();
             this.initOperationsLeft();
             this.initOperationsRight();
@@ -353,12 +361,14 @@ define([
             $operationsRight.append($($deleteButton));
 
             // TODO leaving view scope?
-            $('#headerbar-mid-right').on('click', '#deleteButton', function(event) {
+            $operationsRight.on('click', '#deleteButton', function(event) {
 
                 var deleteButton = event.currentTarget;
 
                 if (!$(deleteButton).hasClass('loading')) {
                     $(deleteButton).addClass('loading');
+
+                    // FIXME inefficient selector
                     $('#headerbar-mid-left #saveButton').hide();
                 }
 
@@ -378,7 +388,7 @@ define([
 
 
             // TODO leaving view scope?
-            $('#headerbar-mid-left').on('click', '#saveButton', function() {
+            $operationsLeft.on('click', '#saveButton', function() {
                 this.submitForm(event);
             }.bind(this));
         },
@@ -388,12 +398,12 @@ define([
         // Template for smaller components (button, ...)
         templates: {
 
-            saveButton: function(text, route) {
+            saveButton: function(text) {
                 return '<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
             },
 
             deleteButton: function(text) {
-                return '<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div></div>';
+                return '<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
             },
 
             rowTemplate: function() {
@@ -418,9 +428,9 @@ define([
                                 '<div class="grid-col-3">',
                                     '<span>Length</span>',
                                     '<input class="form-element inputLength" value=""/>',
-                            '   </div>',
-                                '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
-                                '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                                '</div>',
+                            '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                            '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
                             '</div>',
                         '</td>',
                     '</tr>'].join('')

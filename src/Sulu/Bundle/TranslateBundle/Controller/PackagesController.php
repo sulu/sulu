@@ -121,7 +121,7 @@ class PackagesController extends RestController
                 $em->flush();
                 $view = $this->view($package);
             }
-        } catch(EntityNotFoundException $enfe) {
+        } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
@@ -151,7 +151,8 @@ class PackagesController extends RestController
         return $this->processPut($package->getCatalogues(), $catalogues, $delete, $update, $add);
     }
 
-    protected function addCatalogue(Package $package, $catalogueData) {
+    protected function addCatalogue(Package $package, $catalogueData)
+    {
         $catalogueEntity = 'SuluTranslateBundle:Package';
 
         $em = $this->getDoctrine()->getManager();

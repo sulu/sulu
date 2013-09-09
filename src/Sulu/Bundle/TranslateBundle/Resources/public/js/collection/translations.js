@@ -11,14 +11,14 @@ define([
     'backbone',
     'sulutranslate/model/code',
     'sulutranslate/model/translation'
-    ], function(Backbone, Code, Translation) {
+], function(Backbone, Code, Translation) {
 
     return Backbone.Collection.extend({
 
         model: Translation,
 
         url: function() {
-            return '/translate/api/catalogues/'+this.catalogueId+'/translations'
+            return '/translate/api/catalogues/' + this.catalogueId + '/translations'
         },
 
         initialize: function(options) {
@@ -29,35 +29,31 @@ define([
             return resp.items;
         },
 
-        save: function(translations){
+        save: function(translations) {
 
             $.ajax({
 
-                headers : {
-                    'Accept' : 'application/json',
-                    'Content-Type' : 'application/json'
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
 
                 type: "PATCH",
                 url: this.url(),
-                data:  JSON.stringify(translations),
+                data: JSON.stringify(translations),
 
-                success : function(response, textStatus, jqXhr) {
+                success: function() {
                     console.log("patch successful");
                 },
-                error : function(jqXHR, textStatus, errorThrown) {
+                error: function(jqXHR, textStatus, errorThrown) {
                     // log the error to the console
                     console.log("error during patch: " + textStatus, errorThrown);
                 },
-                complete : function() {
+                complete: function() {
                     console.log("completed patch");
                 }
 
-
             });
-
         }
-
     });
-
 });

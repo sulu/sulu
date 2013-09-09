@@ -15,11 +15,11 @@ define([
         urlRoot: '/translate/api/codes',
         defaults: {
             id: null,
-            code:'',
+            code: '',
             backend: false,
             frontend: false,
-            length:50,
-            package:null
+            length: 50,
+            package: null
         }
     });
 });

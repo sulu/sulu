@@ -14,7 +14,7 @@ define([
     'parsley',
     'sulutranslate/model/package',
     'sulutranslate/model/catalogue'
-], function ($, Backbone, Router, Parsley, Package, Catalogue) {
+], function($, Backbone, Router, Parsley, Package, Catalogue) {
 
     'use strict';
 
@@ -35,13 +35,13 @@ define([
 //            'click #deleteButton': 'deletePackage'
         },
 
-        initialize: function () {
+        initialize: function() {
             this.initOperations();
             this.render();
         },
 
         // Navigation
-        getTabs: function (id) {
+        getTabs: function(id) {
             //TODO Simplify this task for bundle developer?
             var cssId = id || 'new';
 
@@ -80,13 +80,13 @@ define([
         },
 
         // Renders the form with all its components
-        render: function () {
+        render: function() {
 
             Backbone.Relational.store.reset(); //FIXME really necessary?
-            require(['text!/translate/template/catalogue/form'], function (Template) {
+            require(['text!/translate/template/catalogue/form'], function(Template) {
                 var template;
 
-                cataloguesToDelete = new Array();
+                cataloguesToDelete = [];
 
                 if (!this.options.id) {
                     translatePackage = new Package();
@@ -97,7 +97,7 @@ define([
                 } else {
                     translatePackage = new Package({id: this.options.id});
                     translatePackage.fetch({
-                        success: function (translatePackage) {
+                        success: function(translatePackage) {
                             template = _.template(Template, translatePackage.toJSON());
                             var catalogues = this.getArrayFromCatalogues(translatePackage.get('catalogues').models);
                             this.$el.html(template);
@@ -125,10 +125,11 @@ define([
             this.$form.parsley({validationMinlength: 0});
         },
 
-        getArrayFromCatalogues: function (models) {
+        getArrayFromCatalogues: function(models) {
 
-            var data = new Array();
-            $.each(models, function (model) {
+            var data = [];
+
+            $.each(models, function(model) {
                 data.push(models[model].attributes);
             });
 
@@ -136,7 +137,7 @@ define([
         },
 
         // Submits the form (includes deletes of catalogues and save of the package)
-        submitForm: function (event) {
+        submitForm: function(event) {
 
             var that = this;
 
@@ -144,14 +145,16 @@ define([
 
             translatePackage.set({name: this.$('#name').val()});
 
+            // FIXME inefficient selector: use find e.g
             var rows = $('#catalogues tbody tr');
-
 
             // create catalogues if necessary and add them
 
             for (var i = 1; i <= rows.length; i++) {
 
                 var id = $(rows[i - 1]).data('id');
+
+                // FIXME inefficient selector
                 var locale = $('#catalogues tbody tr:nth-child(' + i + ') td:nth-child(2) input').val();
                 if (locale != "") {
                     var catalogue;
@@ -167,13 +170,12 @@ define([
             }
 
 
-
             // send delete request for models which should be deleted
 
-            cataloguesToDelete.forEach(function (id) {
+            cataloguesToDelete.forEach(function(id) {
                 var model = translatePackage.get('catalogues').get(id);
                 model.destroy({
-                    success: function () {
+                    success: function() {
                         console.log("deleted model");
                     }
                 });
@@ -192,10 +194,11 @@ define([
         },
 
         // Initializes the catalogue list
-        initializeCatalogueList: function (data) {
+        initializeCatalogueList: function(data) {
 
-            require(['text!sulutranslate/templates/package/table-row.html'], function (RowTemplate) {
-                dataGrid = $('#catalogues').huskyDataGrid({
+            require(['text!sulutranslate/templates/package/table-row.html'], function(RowTemplate) {
+                var $catalogues = $('#catalogues');
+                dataGrid = $catalogues.huskyDataGrid({
                     pagination: false,
                     showPages: 6,
                     pageSize: 4,
@@ -214,17 +217,17 @@ define([
                     }
                 });
 
-                $('#addCatalogueRow').on('click', function () {
+                $('#addCatalogueRow').on('click', function() {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
                     this.$form.parsley('addItem', '#catalogues table tr:last input[type="text"]');
                 }.bind(this));
 
-                $('#catalogues').on('click', '.remove-row > span', function (event) {
+                $catalogues.on('click', '.remove-row > span', function(event) {
 
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
                     var id = $(event.currentTarget).parent().parent().data('id');
 
-                    if(id) {
+                    if (id) {
                         console.log(id, "element id to delete");
                         cataloguesToDelete.push(id);
                     }
@@ -233,17 +236,15 @@ define([
 
                 this.initValidation();
 
-
-
             }.bind(this));
         },
 
         // Initializes the dialog
-        initializeDialog: function(){
-           $dialog = $('#dialog').huskyDialog({
-               backdrop: true,
-               width: '800px'
-           });
+        initializeDialog: function() {
+            $dialog = $('#dialog').huskyDialog({
+                backdrop: true,
+                width: '800px'
+            });
         },
 
         deletePackage: function() {
@@ -275,7 +276,7 @@ define([
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
 
                 translatePackage.destroy({
-                    success: function () {
+                    success: function() {
                         this.removeHeaderbarEvents();
                         Router.navigate('settings/translate');
                     }.bind(this)
@@ -287,7 +288,7 @@ define([
         // TODO abstract ---------------------------------------
 
         // Initialize operations in headerbar
-        initOperations: function(){
+        initOperations: function() {
 
             this.removeHeaderbarEvents();
             $('#headerbar-mid').off();
@@ -298,19 +299,21 @@ define([
         },
 
         // Initializes the operations on the top (delete,export)
-        initOperationsRight:function(){
+        initOperationsRight: function() {
             $operationsRight = $('#headerbar-mid-right');
             $operationsRight.empty();
 
             var $deleteButton = this.templates.deleteButton('Delete');
             $operationsRight.append($deleteButton);
 
-            $('#headerbar-mid-right').on('click', '#deleteButton', function(event) {
+            $operationsRight.on('click', '#deleteButton', function(event) {
 
                 var deleteButton = event.currentTarget;
 
                 if (!$(deleteButton).hasClass('loading')) {
                     $(deleteButton).addClass('loading');
+
+                    // FIXME inefficient selector
                     $('#headerbar-mid-left #saveButton').hide();
                 }
                 this.deletePackage();
@@ -319,7 +322,7 @@ define([
         },
 
         // Initializes the operations on the top (save)
-        initOperationsLeft:function(){
+        initOperationsLeft: function() {
 
             $operationsLeft = $('#headerbar-mid-left');
             $operationsLeft.empty();
@@ -328,7 +331,7 @@ define([
             $operationsLeft.append($saveButton);
 
             // TODO leaving view scope?
-            $('#headerbar-mid-left').on('click', '#saveButton', function() {
+            $operationsLeft.on('click', '#saveButton', function() {
                 this.submitForm(event);
             }.bind(this));
 
@@ -342,12 +345,12 @@ define([
         // Template for smaller components (button, ...)
         templates: {
 
-            saveButton: function(text, route){
-                return '<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div></div>';
+            saveButton: function(text) {
+                return '<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
             },
 
             deleteButton: function(text) {
-                return '<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div></div>';
+                return '<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
             }
         }
 
