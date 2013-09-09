@@ -296,22 +296,20 @@ class ContactsController extends RestController implements ClassResourceInterfac
     protected function addEmail(Contact $contact, $emailData)
     {
 		$success = true;
-		if (!isset($emailData['id']) || $emailData['id'] != null) {
-			$em = $this->getDoctrine()->getManager();
+		$em = $this->getDoctrine()->getManager();
 
-			$emailType = $this->getDoctrine()
-				->getRepository('SuluContactBundle:EmailType')
-				->find($emailData['emailType']['id']);
+		$emailType = $this->getDoctrine()
+			->getRepository('SuluContactBundle:EmailType')
+			->find($emailData['emailType']['id']);
 
-			if (!$emailType || isset($emailData['id'])) {
-				$success = false;
-			} else {
-				$email = new Email();
-				$email->setEmail($emailData['email']);
-				$email->setEmailType($emailType);
-				$em->persist($email);
-				$contact->addEmail($email);
-			}
+		if (!$emailType || isset($emailData['id'])) {
+			$success = false;
+		} else {
+			$email = new Email();
+			$email->setEmail($emailData['email']);
+			$email->setEmailType($emailType);
+			$em->persist($email);
+			$contact->addEmail($email);
 		}
 
 		return $success;
@@ -375,23 +373,21 @@ class ContactsController extends RestController implements ClassResourceInterfac
     protected function addPhone(Contact $contact, $phoneData)
     {
         $success = true;
-		if (!isset($phoneData['id']) || $phoneData['id'] != null) {
-			$em = $this->getDoctrine()->getManager();
+		$em = $this->getDoctrine()->getManager();
 
-			$phoneType = $this->getDoctrine()
-				->getRepository('SuluContactBundle:PhoneType')
-				->find($phoneData['phoneType']['id']);
+		$phoneType = $this->getDoctrine()
+			->getRepository('SuluContactBundle:PhoneType')
+			->find($phoneData['phoneType']['id']);
 
-			if (!$phoneType || isset($phoneData['id'])) {
-				$success = false;
-			} else {
-				$phone = new Phone();
-				$phone->setPhone($phoneData['phone']);
-				$phone->setPhoneType($phoneType);
-				$em->persist($phone);
-				$contact->addPhone($phone);
+		if (!$phoneType || isset($phoneData['id'])) {
+			$success = false;
+		} else {
+			$phone = new Phone();
+			$phone->setPhone($phoneData['phone']);
+			$phone->setPhoneType($phoneType);
+			$em->persist($phone);
+			$contact->addPhone($phone);
 			}
-		}
 
 		return $success;
     }
@@ -454,37 +450,35 @@ class ContactsController extends RestController implements ClassResourceInterfac
     protected function addAddress(Contact $contact, $addressData)
     {
         $success = true;
-		if (!isset($addressData['id']) || $addressData['id'] != null) {
-			$em = $this->getDoctrine()->getManager();
+		$em = $this->getDoctrine()->getManager();
 
-			$addressType = $this->getDoctrine()
-				->getRepository('SuluContactBundle:AddressType')
-				->find($addressData['addressType']['id']);
+		$addressType = $this->getDoctrine()
+			->getRepository('SuluContactBundle:AddressType')
+			->find($addressData['addressType']['id']);
 
-			$country = $this->getDoctrine()
-				->getRepository('SuluContactBundle:Country')
-				->find($addressData['country']['id']);
+		$country = $this->getDoctrine()
+			->getRepository('SuluContactBundle:Country')
+			->find($addressData['country']['id']);
 
-			if (!$addressType || !$country) {
-				$success = false;
-			} else {
-				$address = new Address();
-				$address->setStreet($addressData['street']);
-				$address->setNumber($addressData['number']);
-				$address->setZip($addressData['zip']);
-				$address->setCity($addressData['city']);
-				$address->setState($addressData['state']);
-				$address->setCountry($country);
-				$address->setAddressType($addressType);
+		if (!$addressType || !$country) {
+			$success = false;
+		} else {
+			$address = new Address();
+			$address->setStreet($addressData['street']);
+			$address->setNumber($addressData['number']);
+			$address->setZip($addressData['zip']);
+			$address->setCity($addressData['city']);
+			$address->setState($addressData['state']);
+			$address->setCountry($country);
+			$address->setAddressType($addressType);
 
-				// add additional fields
-				if (isset($addressData['addition'])) {
-					$address->setAddition($addressData['addition']);
-				}
-
-				$em->persist($address);
-				$contact->addAddresse($address);
+			// add additional fields
+			if (isset($addressData['addition'])) {
+				$address->setAddition($addressData['addition']);
 			}
+
+			$em->persist($address);
+			$contact->addAddresse($address);
 		}
 
 		return $success;
