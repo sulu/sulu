@@ -31,7 +31,7 @@ class SuluContactAdmin extends Admin
         $contacts->addChild($people);
 
         $companies = new NavigationItem('Companies');
-        $companies->setIcon('building');
+        $companies->setIcon('bank');
         $companies->setType('content');
         $companies->setAction('contacts/companies');
         $contacts->addChild($companies);
