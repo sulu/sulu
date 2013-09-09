@@ -55,8 +55,9 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
 
             packages.data('Husky.Ui.DataGrid').on('data-grid:item:click', function(item) {
                 packages.data('Husky.Ui.DataGrid').off();
+                this.removeHeaderbarEvents();
                 Router.navigate('settings/translate/edit:' + item+'/settings');
-            });
+            }.bind(this));
 
             // show dialogbox for removing data
             packages.data('Husky.Ui.DataGrid').on('data-grid:row:removed', function(id,event) {
@@ -132,19 +133,22 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
 
             // TODO leaving view scope?
             $('#headerbar-mid-left').on('click', '#addButton', function(){
+                this.removeHeaderbarEvents();
                 Router.navigate('settings/translate/add');
             }.bind(this));
         },
 
+
+        removeHeaderbarEvents: function() {
+            $('#headerbar-mid-right').off();
+            $('#headerbar-mid-left').off();
+            console.log("removed headerbar event - package list");
+        },
+
         // Template for smaller components (button, ...)
         templates: {
-
             addButton: function(text){
                 return '<div id="addButton" class="pull-left pointer"><span class="icon-add pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
-            },
-
-            deleteButton: function(text) {
-                return '<div id="deleteButton" class="pull-left pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
             }
         }
 

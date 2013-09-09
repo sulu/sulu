@@ -292,6 +292,9 @@ define([
 
         // Initialize operations in headerbar
         initOperations: function(){
+
+            $('#headerbar-mid').off();
+
             this.initOperationsLeft();
             this.initOperationsRight();
         },
@@ -328,12 +331,9 @@ define([
         },
 
         removeHeaderbarEvents: function() {
-            if ($operationsLeft != undefined) {
-                $operationsLeft.off();
-            }
-            if ($operationsRight != undefined) {
-                $operationsRight.off();
-            }
+            $('#headerbar-mid-right').off();
+            $('#headerbar-mid-left').off();
+            console.log("removed headerbar event - package form");
         },
 
         // Template for smaller components (button, ...)

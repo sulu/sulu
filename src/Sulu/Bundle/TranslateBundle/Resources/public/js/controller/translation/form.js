@@ -134,8 +134,6 @@ define([
             var $textareas = $('#codes-form textarea');
 
             _.each($textareas, function($element){
-//                console.log($element.rows, "scroll height");
-//                console.log($element.scrollHeight, "scroll height");
                 $($element).css('height',$element.scrollHeight);
             });
 
@@ -170,9 +168,12 @@ define([
 
         // appends a new row to the table
         addRowForNewCode: function(event) {
+
             var sectionId = $(event.currentTarget).data('target-element');
             var $lastTableRow = $('#' + sectionId + ' tbody:last-child');
             $lastTableRow.append(this.templates.rowTemplate());
+
+            $form.parsley('addItem', $('#section1 tbody tr:last').prev().find('input.inputCode'));
         },
 
         unlockFormElement: function(event) {
@@ -315,12 +316,9 @@ define([
         },
 
         removeHeaderbarEvents: function() {
-            if ($operationsLeft != undefined) {
-                $operationsLeft.off();
-            }
-            if ($operationsRight != undefined) {
-                $operationsRight.off();
-            }
+            $('#headerbar-mid-right').off();
+            $('#headerbar-mid-left').off();
+            console.log("removed headerbar event - translations");
         },
 
         // Initializes the dialog
@@ -336,6 +334,7 @@ define([
 
         // Initialize operations in headerbar
         initOperations: function() {
+            this.removeHeaderbarEvents();
             this.initOperationsLeft();
             this.initOperationsRight();
         },
