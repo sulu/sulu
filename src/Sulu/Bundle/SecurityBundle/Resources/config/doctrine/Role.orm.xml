@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\Role" table="se_roles">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="name" type="string" column="name" length="60"/>
+        <field name="system" type="string" column="system" length="60"/>
+        <field name="context" type="string" column="context" length="60"/>
+        <field name="permission" type="smallint" column="permission"/>
+
+        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\ContactRole" mapped-by="role"
+                     field="contactRoles"/>
+
+        <many-to-one target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" field="creator">
+            <join-column name="idContactsCreator" referenced-column-name="id" on-delete="SET NULL" />
+        </many-to-one>
+        <many-to-one target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" field="changer">
+            <join-column name="idContactsChanger" referenced-column-name="id" on-delete="SET NULL" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
