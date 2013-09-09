@@ -235,6 +235,14 @@ class AccountsController extends RestController implements ClassResourceInterfac
             }
 
             $em = $this->getDoctrine()->getManager();
+
+            // remove related contacts if removeContacts is true
+            if (!is_null($this->getRequest()->get('removeContacts')) && $this->getRequest()->get('removeContacts') == "true") {
+                foreach ($account->getContacts() as $contact) {
+                    $em->remove($contact);
+                }
+            }
+
             $em->remove($account);
             $em->flush();
         };
@@ -683,6 +691,40 @@ class AccountsController extends RestController implements ClassResourceInterfac
         $note->setValue($entry['value']);
 
         return $success;
+    }
+
+    /**
+     * returns delete info for multiple ids
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function multipledeleteinfoAction() {
+
+        $ids = $this->getRequest()->get('ids');
+
+        $response = array();
+        $numContacts = 0;
+        $numChildren = 0;
+
+        foreach ($ids as $id)
+        {
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository('SuluContactBundle:Account')
+                ->find($id);
+
+            // get number of subaccounts
+            $numChildren += $account->getChildren()->count();
+
+            // get full number of contacts
+            $numContacts += $account->getContacts()->count();
+        }
+
+
+        $response['numContacts'] = $numContacts;
+        $response['numChildren'] = $numChildren;
+
+        $view = $this->view($response, 200);
+        return $this->handleView($view);
     }
 
     /**

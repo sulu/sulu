@@ -53,7 +53,8 @@ define([
                     $('.dropdown-menu').toggle();
                 });
 
-                this.$el.on('click', '#remove-people', function(event) {
+                this.$el.on('click', '#edit-remove', function(event) {
+                    $('.dropdown-menu').hide();
                     this.initDialogBoxRemoveMultiple(dataGrid.data('Husky.Ui.DataGrid').selectedItemIds);
                 }.bind(this));
 

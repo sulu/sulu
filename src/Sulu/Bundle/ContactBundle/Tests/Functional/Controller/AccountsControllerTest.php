@@ -844,9 +844,59 @@ class AccountsControllerTest extends DatabaseTestCase
 		$this->assertEquals('204', $client->getResponse()->getStatusCode());
 	}
 
+    public function testDeleteByIdAndNotDeleteContacts()
+    {
 
-    // test delete when superaccount is set: not allowed
-    public function testDeleteByIdWithSuperAccount() {
+        $client = static::createClient();
+
+        $client->request('DELETE',
+            '/contact/api/accounts/1',
+            array(
+                'removeContacts' => 'false'
+            )
+        );
+        // check if contacts are still there
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/contact/api/contacts/list');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->total);
+    }
+
+
+    public function testDeleteByIdAndDeleteContacts() {
+
+        $contact = new Contact();
+        $contact->setFirstName("Vorname");
+        $contact->setLastName("Nachname");
+        $contact->setMiddleName("Mittelname");
+        $contact->setUsername("Benutzername");
+        $contact->setPassword("Passwort");
+        $contact->setLocaleSystem("DE");
+        $contact->setCreated(new \DateTime());
+        $contact->setChanged(new \DateTime());
+        $contact->setAccount(self::$account);
+
+        self::$em->persist($contact);
+        self::$em->flush();
+
+
+        $client = static::createClient();
+
+        $client->request('DELETE',
+            '/contact/api/accounts/1',
+            array(
+                'removeContacts' => 'true'
+            )
+        );
+        // check if contacts are still there
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/contact/api/contacts/list');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->total);
+
+
 
     }
 
@@ -863,6 +913,74 @@ class AccountsControllerTest extends DatabaseTestCase
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertEquals(1, $response->total);
 	}
+
+
+    /*
+     * test if deleteinfo returns correct data
+     */
+    public function testMultipleDeleteInfo()
+    {
+        // modify test data
+        $acc = new Account();
+        $acc->setName("Test Account");
+        $acc->setChanged(new \DateTime());
+        $acc->setCreated(new \DateTime());
+        self::$em->persist($acc);
+
+        // add 5 contacts to account
+        for ($i = 0; $i<5; $i++) {
+            $contact = new Contact();
+            $contact->setFirstName("Vorname ".$i);
+            $contact->setLastName("Nachname ".$i);
+            $contact->setMiddleName("Mittelname ".$i);
+            $contact->setUsername("Benutzername ".$i);
+            $contact->setPassword("Passwort ".$i);
+            $contact->setLocaleSystem("DE");
+            $contact->setCreated(new \DateTime());
+            $contact->setChanged(new \DateTime());
+            $contact->setAccount(self::$account);
+
+            $acc->addContact($contact);
+            self::$em->persist($contact);
+        }
+
+        // add subaccount to self::$account
+        $subacc = new Account();
+        $subacc->setName("Subaccount");
+        $subacc->setChanged(new \DateTime());
+        $subacc->setCreated(new \DateTime());
+        $subacc->setParent(self::$account);
+
+        self::$em->persist($subacc);
+
+        self::$em->flush();
+
+
+        // get number of contacts from both accounts
+        $numContacts = self::$account->getContacts()->count() + $acc->getContacts()->count();
+
+
+        $client = static::createClient();
+        $client->request('GET',
+            '/contact/api/accounts/multipledeleteinfo',
+            array(
+                "ids"=>array(1,2)
+            )
+        );
+
+        // asserts
+
+        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        // return full number of contacts related to account
+        $this->assertEquals($numContacts, $response->numContacts);
+
+        // allowed if no subaccount exists
+        $this->assertEquals(1, $response->numChildren);
+
+    }
+
 
     /*
      * test if deleteinfo returns correct data
