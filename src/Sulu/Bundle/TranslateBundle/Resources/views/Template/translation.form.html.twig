@@ -45,7 +45,7 @@
 </div>
 
 
-<form id="codes-form">
+<form id="codes-form" data-validate="parsley">
 
     <div class="grid-row">
         <table class="table" id="section1">
@@ -63,7 +63,7 @@
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
                     <td class="relative">
-                        <input class="form-element grey inputCode" readonly value="<%= item.code.code %>"/>
+                        <input class="form-element grey inputCode" readonly value="<%= item.code.code %>" data-required="true" />
                         <span class="showOptions absolute">ShowOptions</span>
                     </td>
                     <td>
@@ -80,8 +80,8 @@
                                 <span>Length</span>
                                 <input class="form-element inputLength" value="<%= item.code.length %>"/>
                             </div>
-                            <div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
-                            <div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
+                            <div class="grid-col-2 m-top-35"><input name="frontend" type="checkbox" class="custom-checkbox checkboxFrontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
+                            <div class="grid-col-2  m-top-35"><input name="backend" type="checkbox" class="custom-checkbox checkboxBackend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
                         </div>
                     </td>
                 </tr>
