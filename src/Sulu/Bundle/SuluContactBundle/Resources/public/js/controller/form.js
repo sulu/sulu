@@ -112,10 +112,17 @@ define([
             });
         },
 
+        removeNullIDS: function(array) {
+            array.filter(function(item) {
+                return (item.id == null);
+            });
+        },
+
         submitForm: function(event) {
             Backbone.Relational.store.reset(); //FIXME really necessary?
             event.preventDefault();
             this.setStatic();
+            this.removeNullIDS(model.get('emails'));
             $('#emails .email-item').each(function() {
                 var email = model.get('emails').get($(this).data('id'));
                 if (!email) {
@@ -131,6 +138,7 @@ define([
                 }
             });
 
+            this.removeNullIDS(model.get('phones'));
             $('#phones .phone-item').each(function() {
                 var phone = model.get('phones').get($(this).data('id'));
                 if (!phone) {
@@ -147,6 +155,7 @@ define([
                 }
             });
 
+            this.removeNullIDS(model.get('addresses'));
             $('#addresses .address-item').each(function() {
                 var address = model.get('addresses').get($(this).data('id'));
                 if (!address) {
