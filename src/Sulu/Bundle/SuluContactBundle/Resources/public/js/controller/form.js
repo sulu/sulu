@@ -114,7 +114,7 @@ define([
 
         removeNullIDS: function(array) {
             array.filter(function(item) {
-                return (item.id == null);
+                return (item.get('id') == null);
             });
         },
 
