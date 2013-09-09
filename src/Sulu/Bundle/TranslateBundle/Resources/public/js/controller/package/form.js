@@ -35,7 +35,7 @@ define([
         },
 
         initialize: function () {
-            this.initOperations();
+            this.initOptions();
             this.render();
         },
 
@@ -269,7 +269,7 @@ define([
         // TODO abstract ---------------------------------------
 
         // Initialize operations in headerbar
-        initOperations: function(){
+        initOptions: function(){
             this.initOperationsLeft();
             this.initOperationsRight();
         },

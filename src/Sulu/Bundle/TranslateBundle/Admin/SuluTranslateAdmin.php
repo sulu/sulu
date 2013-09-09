@@ -23,10 +23,11 @@ class SuluTranslateAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem('Root');
         $settings = new NavigationItem('Settings');
-        $settings->setIcon('settings');
+        $settings->setIcon('cogwheel');
         $rootNavigationItem->addChild($settings);
         $translate = new NavigationItem('Translate');
         $translate->setAction('settings/translate');
+		$translate->setIcon('book');
         $translate->setType('content');
         $settings->addChild($translate);
         $this->setNavigation(new Navigation($rootNavigationItem));

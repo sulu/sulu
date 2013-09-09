@@ -43,7 +43,7 @@ define([
         initialize: function () {
             codesToDelete = new Array();
 
-            this.initOperations();
+            this.initOptions();
             this.render();
         },
 
@@ -248,7 +248,7 @@ define([
         // TODO abstract ---------------------------------------
 
         // Initialize operations in headerbar
-        initOperations: function(){
+        initOptions: function(){
             this.initOperationsLeft();
             this.initOperationsRight();
         },
