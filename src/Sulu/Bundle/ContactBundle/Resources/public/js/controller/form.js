@@ -158,6 +158,9 @@ define([
                 width: '650px'
             });
 
+
+            this.initOptions();
+
             this.$form = this.$('form[data-validate="parsley"]');
             this.$form.parsley({validationMinlength: 0});
         },
