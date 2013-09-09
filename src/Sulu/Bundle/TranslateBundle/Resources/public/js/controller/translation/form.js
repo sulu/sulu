@@ -196,7 +196,7 @@ define([
 
         },
 
-        submitForm: function() {
+        submitForm: function(event) {
 
             event.preventDefault();
             console.log($form.parsley('validate'), "parsley form validation");
@@ -388,7 +388,7 @@ define([
 
 
             // TODO leaving view scope?
-            $operationsLeft.on('click', '#saveButton', function() {
+            $operationsLeft.on('click', '#saveButton', function(event) {
                 this.submitForm(event);
             }.bind(this));
         },
