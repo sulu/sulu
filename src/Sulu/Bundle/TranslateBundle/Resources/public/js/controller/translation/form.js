@@ -28,7 +28,8 @@ define([
         catalogues,
         $operationsLeft,
         $operationsRight,
-        $form;
+        $form,
+        $dialog;
 
 
     return Backbone.View.extend({
@@ -73,6 +74,8 @@ define([
 
                     }.bind(this)
                 });
+
+                this.initializeDialog();
 
             }.bind(this));
         },
@@ -255,31 +258,68 @@ define([
                 }
             }
 
-            this.removeHeaderbarElements();
+            this.removeHeaderbarEvents();
             Router.navigate('settings/translate');
 
         },
 
         deleteCatalogue: function() {
 
-            this.removeHeaderbarElements();
+
             var catalogue = catalogues.get(selectedCatalogue.id);
 
-            console.log(catalogue, "catalogue");
-            catalogue.destroy({
-                success: function () {
-                    Router.navigate('settings/translate');
+            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                data: {
+                    content: {
+                        title: "Warning",
+                        content: "Do you really want to delete this catalogue?"
+                    },
+                    footer: {
+                        buttonCancelText: "No",
+                        buttonSaveText: "Yes"
+                    }
                 }
+
             });
+
+            // TODO - Event Problem
+            $dialog.off();
+
+            $dialog.on('click', '.closeButton', function() {
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
+
+
+            $dialog.on('click', '.saveButton', function() {
+                this.removeHeaderbarEvents();
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+                console.log(catalogue, "catalogue");
+                catalogue.destroy({
+                    success: function () {
+                        Router.navigate('settings/translate');
+                    }
+                });
+            }.bind(this));
+
+
+
         },
 
-        removeHeaderbarElements: function() {
+        removeHeaderbarEvents: function() {
             if ($operationsLeft != undefined) {
                 $operationsLeft.off();
             }
             if ($operationsRight != undefined) {
                 $operationsRight.off();
             }
+        },
+
+        // Initializes the dialog
+        initializeDialog: function(){
+            $dialog = $('#dialog').huskyDialog({
+                backdrop: true,
+                width: '800px'
+            });
         },
 
 
