@@ -28,7 +28,7 @@ define([
     'use strict';
 
     return Form.extend({
-        initialize: function () {
+        initialize: function() {
             this.setListUrl('contacts/people');
             this.render();
         },
@@ -36,9 +36,10 @@ define([
         render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/contact/template/contact/form'], function(Template) {
+                console.log('test');
                 var template;
 
-                var contactJson = _.clone(Contact.prototype.defaults);
+                var contactJson = $.extend(true, {}, Contact.prototype.defaults);
 
                 if (!this.options.id) {
                     this.setModel(new Contact());

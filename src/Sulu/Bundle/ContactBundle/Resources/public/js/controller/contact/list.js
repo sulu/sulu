@@ -32,7 +32,7 @@ define([
                 var template = _.template(Template);
                 this.$el.html(template);
 
-                dataGrid = this.$('#peopleList').huskyDataGrid({
+                dataGrid = this.$('#people-list').huskyDataGrid({
                     url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position',
                     pagination: false,
                     selectItemType: 'checkbox',
@@ -49,17 +49,12 @@ define([
                     Router.navigate('contacts/people/edit:' + item);
                 });
 
-                this.$el.on('click', '.remove-row > span', function(event) {
-                    var $element = $(event.currentTarget);
-                    var $parent = $element.parent().parent();
-                    var id = $parent.data('id');
+                this.$el.on('click', '.dropdown-toggle', function(event) {
+                    $('.dropdown-menu').toggle();
+                });
 
-                    this.removeItem(id);
-                }.bind(this));
-
-                this.$el.on('click', '#removePeople', function(event) {
+                this.$el.on('click', '#remove-people', function(event) {
                     this.initDialogBoxRemoveMultiple(dataGrid.data('Husky.Ui.DataGrid').selectedItemIds);
-                    return false;
                 }.bind(this));
 
                 // create dialog box
@@ -68,58 +63,21 @@ define([
                     width: '650px'
                 });
             }.bind(this));
+
+            this.initOperations();
         },
 
-        removeItem: function(id) {
-            // check if delation should be performed
-            this.initDialogBoxRemoveOne(id, event);
+        initOperations: function() {
+
+            var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.empty();
+            var $optionsLeft = $('#headerbar-mid-left');
+            $optionsLeft.empty();
+            $optionsLeft.append(this.template.button('Add', '#contacts/people/add'));
 
         },
 
-        // fills dialogbox and displays existing references
-        initDialogBoxRemoveOne: function(id, event) {
-
-            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                template: {
-                    content: '<h3><%= title %></h3><p><%= content %></p>',
-                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-                    header: '<button type="button" class="close">×</button>'
-                },
-                data: {
-                    content: {
-                        title: "Warning",
-                        content: "Do you really want to delete the contact? All data is going to be lost."
-                    },
-                    footer: {
-                        buttonCancelText: "Abort",
-                        buttonSaveText: "Delete"
-                    }
-                }
-            });
-
-            // TODO
-            $dialog.off();
-
-            $dialog.on('click', '.closeButton', function() {
-                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            });
-
-            $dialog.on('click', '.deleteButton', function() {
-
-                dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
-
-                var contact = new Contact({id: id});
-                contact.destroy({
-                    success: function() {
-                        console.log('deleted model');
-                    }
-                });
-
-                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            });
-        },
-
-        // fills dialogbox and displays existing references
+        // fills dialogbox
         initDialogBoxRemoveMultiple: function(ids, event) {
 
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
@@ -148,19 +106,25 @@ define([
             });
 
             $dialog.on('click', '.deleteButton', function() {
-
-                //dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+                // TODO remove by row
                 ids.forEach(function(id) {
                     var contact = new Contact({id: id});
                     contact.destroy({
                         success: function() {
                             console.log('deleted model');
+                            dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', id);
                         }
                     });
                 }.bind(this));
 
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             });
+        },
+
+        template: {
+            button: function(text, route) {
+                return '<a class="btn" href="'+route+'">'+text+'</a>';
+            }
         }
     });
 });
