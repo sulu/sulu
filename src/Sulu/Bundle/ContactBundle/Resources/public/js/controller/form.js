@@ -78,13 +78,13 @@ define([
             this.$saveButton = this.staticTemplates.saveButton('Save', function(event) {
                 if (!this.$saveButton.hasClass('loading')) {
                     this.$saveButton.addClass('loading');
-                    this.$deleteButton.hide();
+                    if (!!this.options.id) this.$deleteButton.hide();
 
                     if (this.$form.parsley('validate')) {
                         this.$form.submit();
                     } else {
                         this.$saveButton.removeClass('loading');
-                        this.$deleteButton.show();
+                        if (!!this.options.id) this.$deleteButton.show();
                     }
                 }
             }.bind(this));
