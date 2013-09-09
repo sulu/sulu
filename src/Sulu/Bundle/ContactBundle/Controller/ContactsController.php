@@ -227,7 +227,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
                 $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
 
                 $parentData = $this->getRequest()->get('account');
-                if ($parentData != null) {
+                if ($parentData != null && $parentData['id'] != null) {
                     /** @var Account $parent */
                     $parent = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:Account')
