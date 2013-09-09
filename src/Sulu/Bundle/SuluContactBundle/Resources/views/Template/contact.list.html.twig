@@ -1,3 +1,7 @@
-<h1>All People</h1>
-<div><a id="removePeople" href="#">Remove</a></div>
-<div id="peopleList"></div>
+{% extends "SuluContactBundle:Template:base.list.html.twig" %}
+
+{% block title %}All People{% endblock %}
+
+{% block list %}
+    <div id="people-list"></div>
+{% endblock %}
