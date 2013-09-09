@@ -11,7 +11,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
 
     'use strict';
 
-    var $dialog, packages, $operationsRight, $operationsLeft;
+    var $dialog, packages, $operationsRight, $operationsLeft, packagesDatagrid;
 
     return Backbone.View.extend({
         initialize: function() {
@@ -38,7 +38,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
 
         initPackageList: function() {
             
-            var packagesDatagrid = $('#packageList').huskyDataGrid({
+            packagesDatagrid = $('#packageList').huskyDataGrid({
                 // FIXME use list function with fields
                 url: '/translate/api/packages',
                 pagination: false,
@@ -47,7 +47,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 selectItemType: 'checkbox',
                 //removeRow: true,
                 tableHead: [
-                    {content: 'Title'},
+                    {content: 'Title'}
                     //{content: ''}
                 ],
                 excludeFields: ['id']
@@ -58,12 +58,6 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 this.removeHeaderbarEvents();
                 Router.navigate('settings/translate/edit:' + item+'/settings');
             }.bind(this));
-
-            // show dialogbox for removing data
-//            packagesDatagrid.data('Husky.Ui.DataGrid').on('data-grid:row:removed', function(id,event) {
-//               this.initDialogBox(id);
-//            }.bind(this));
-
 
             this.$el.on('click', '.dropdown-toggle', function(event) {
                 $('.dropdown-menu').toggle();
@@ -111,6 +105,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                         success: function () {
                             console.log('deleted model');
                             Router.navigate('settings/translate');
+                            packagesDatagrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', id);
                         }
                     });
                 }.bind(this));
@@ -118,47 +113,6 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             });
         },
-
-        // fills dialogbox and displays existing references
-//        initDialogBox: function(id){
-//
-//            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-//                template: {
-//                    content: '<h3><%= title %></h3><p><%= content %></p>',
-//                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-//                    header: '<button type="button" class="close">×</button>'
-//                },
-//                data: {
-//                    content: {
-//                        title:  "Warning" ,
-//                        content: "Do you really want to delete the package?<br/>All data and corresponding language catalogues as well as corresponding translations are going to be lost."
-//                    },
-//                    footer: {
-//                        buttonCancelText: "Abort",
-//                        buttonSaveText: "Delete"
-//                    }
-//                }
-//            });
-//
-//            // TODO
-//            $dialog.off();
-//
-//            $dialog.on('click', '.closeButton', function() {
-//                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-//            });
-//
-//            $dialog.on('click', '.deleteButton', function() {
-//                // remove package
-//                var pkg = new Package({id: id});
-//                pkg.destroy({
-//                    success: function () {
-//                        console.log('deleted model');
-//                    }
-//                });
-//
-//                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-//            });
-//        },
 
         // TODO abstract ---------------------------------------
 
