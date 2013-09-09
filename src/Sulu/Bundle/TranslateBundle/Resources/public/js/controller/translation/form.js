@@ -284,7 +284,6 @@ define([
 
         deleteCatalogue: function() {
 
-
             var catalogue = catalogues.get(selectedCatalogue.id);
 
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
@@ -305,8 +304,9 @@ define([
             $dialog.off();
 
             $dialog.on('click', '.closeButton', function() {
+                this.initOperations();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            });
+            }.bind(this));
 
 
             $dialog.on('click', '.saveButton', function() {
@@ -326,7 +326,6 @@ define([
         removeHeaderbarEvents: function() {
             $('#headerbar-mid-right').off();
             $('#headerbar-mid-left').off();
-            console.log("removed headerbar event - translations");
         },
 
         // Initializes the dialog
@@ -353,11 +352,20 @@ define([
             $operationsRight.empty();
 
             var $deleteButton = this.templates.deleteButton('Delete');
-            $operationsRight.append($deleteButton);
+            $operationsRight.append($($deleteButton));
 
             // TODO leaving view scope?
-            $('#headerbar-mid-right').on('click', '#deleteButton', function() {
+            $('#headerbar-mid-right').on('click', '#deleteButton', function(event) {
+
+                var deleteButton = event.currentTarget;
+
+                if (!$(deleteButton).hasClass('loading')) {
+                    $(deleteButton).addClass('loading');
+                    $('#headerbar-mid-left #saveButton').hide();
+                }
+
                 this.deleteCatalogue();
+
             }.bind(this));
         },
 
@@ -383,11 +391,11 @@ define([
         templates: {
 
             saveButton: function(text, route) {
-                return '<div id="saveButton" class="pull-left pointer"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>';
+                return '<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
             },
 
             deleteButton: function(text) {
-                return '<div id="deleteButton" class="pull-right pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
+                return '<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div></div>';
             },
 
             rowTemplate: function() {
