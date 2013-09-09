@@ -29,9 +29,11 @@ define([
     return Backbone.View.extend({
 
         events: {
-            'submit #catalogue-form': 'submitForm',
+            //'submit #catalogue-form': 'submitForm',
             'click .icon-remove': 'deleteRow',
-            'click .addRow': 'addRow'
+            'click .addRow': 'addRow',
+            'click #saveButton' : 'submitForm',
+            'click #deleteButton': 'deletePackage'
         },
 
         initialize: function () {
@@ -179,6 +181,8 @@ define([
                     success: function() {
                         that.undelegateEvents();
                         dataGrid.data('Husky.Ui.DataGrid').off();
+                        $operationsLeft.off();
+                        $operationsRight.off();
                         Router.navigate('settings/translate');
                     }
                 });
@@ -266,6 +270,14 @@ define([
            });
         },
 
+        deletePackage: function() {
+            translatePackage.destroy({
+                success: function () {
+                    Router.navigate('settings/translate');
+                }
+            });
+        },
+
         // TODO abstract ---------------------------------------
 
         // Initialize operations in headerbar
@@ -274,10 +286,14 @@ define([
             this.initOperationsRight();
         },
 
-        // Initializes the operations on the top (save)
+        // Initializes the operations on the top (delete,export)
         initOperationsRight:function(){
             $operationsRight = $('#headerbar-mid-right');
             $operationsRight.empty();
+
+            var $deleteButton = this.templates.deleteButton('Delete');
+            $operationsRight.append($deleteButton);
+
         },
 
         // Initializes the operations on the top (save)
@@ -289,11 +305,6 @@ define([
             var $saveButton = this.templates.saveButton('Save', '');
             $operationsLeft.append($saveButton);
 
-
-            // TODO leaving view scope?
-            $('#headerbar-mid-left').on('click', '#saveButton', function(){
-               this.submitForm(event);
-            }.bind(this));
         },
 
         // Template for smaller components (button, ...)
@@ -301,6 +312,10 @@ define([
 
             saveButton: function(text, route){
                 return '<div id="saveButton" class="pull-left pointer"><span class="icon-circle-ok pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
+            },
+
+            deleteButton: function(text) {
+                return '<div id="deleteButton" class="pull-right pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
             }
         }
 

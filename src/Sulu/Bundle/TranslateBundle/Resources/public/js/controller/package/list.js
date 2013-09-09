@@ -11,10 +11,11 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
 
     'use strict';
 
-    var $dialog, packages;
+    var $dialog, packages, $operationsRight, $operationsLeft;
 
     return Backbone.View.extend({
         initialize: function() {
+            this.initOperations();
             this.render();
         },
 
@@ -33,7 +34,6 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
 
             }.bind(this));
 
-            this.initOperationsRight();
         },
 
         initPackageList: function() {
@@ -45,10 +45,10 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
                 showPages: 6,
                 pageSize: 4,
                 selectItemType: 'checkbox',
-                removeRow: true,
+                //removeRow: true,
                 tableHead: [
                     {content: 'Title'},
-                    {content: ''}
+                    //{content: ''}
                 ],
                 excludeFields: ['id']
             });
@@ -62,14 +62,6 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
             packages.data('Husky.Ui.DataGrid').on('data-grid:row:removed', function(id,event) {
                this.initDialogBox(id);
             }.bind(this));
-        },
-
-        initOperationsRight:function(){
-
-            var $optionsRight = $('#headerbar-mid-right');
-            $optionsRight.empty();
-            $optionsRight.append(this.template.button('Add', '#settings/translate/add'));
-
         },
 
         // fills dialogbox and displays existing references
@@ -113,10 +105,49 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'], fu
             });
         },
 
-        template: {
-            button: function(text, route) {
-                return '<a class="btn" href="'+route+'">'+text+'</a>';
+        // TODO abstract ---------------------------------------
+
+        // Initialize operations in headerbar
+        initOperations: function(){
+            this.initOperationsLeft();
+            this.initOperationsRight();
+        },
+
+        // Initializes the operations on the top (...)
+        initOperationsRight:function(){
+            $operationsRight = $('#headerbar-mid-right');
+            $operationsRight.empty();
+
+        },
+
+        // Initializes the operations on the top (delete, export)
+        initOperationsLeft:function(){
+
+            $operationsLeft = $('#headerbar-mid-left');
+            $operationsLeft.empty();
+
+            var $addButton = this.templates.addButton('Add');
+            $operationsLeft.append($addButton);
+
+
+            // TODO leaving view scope?
+            $('#headerbar-mid-left').on('click', '#addButton', function(){
+                Router.navigate('settings/translate/add');
+            }.bind(this));
+        },
+
+        // Template for smaller components (button, ...)
+        templates: {
+
+            addButton: function(text){
+                return '<div id="addButton" class="pull-left pointer"><span class="icon-add pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
+            },
+
+            deleteButton: function(text) {
+                return '<div id="deleteButton" class="pull-left pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
             }
         }
+
+        // TODO abstract end ---------------------------------------
     });
 });
