@@ -96,6 +96,7 @@ define([
                         valueName: 'locale'
                     });
 
+                    this.autoHeightTextareas();
                     this.initValidation();
 
                     // TODO event of husky when implemented
@@ -126,6 +127,11 @@ define([
 
                 }.bind(this)
             });
+        },
+
+        autoHeightTextareas: function(){
+
+
         },
 
         initVisibilityOptions: function() {
@@ -171,7 +177,7 @@ define([
         submitForm: function() {
 
             event.preventDefault();
-            console.log($form.parsley('validate'));
+            console.log($form.parsley('validate'), "parsley form validation");
             if ($form.parsley('validate')) {
                 updatedTranslations = new Array();
                 var $rows = $('#codes-form table tbody tr');
@@ -254,11 +260,11 @@ define([
                         });
                     });
                 }
+
+                this.removeHeaderbarEvents();
+                Router.navigate('settings/translate');
+
             }
-
-            this.removeHeaderbarEvents();
-            Router.navigate('settings/translate');
-
         },
 
         deleteCatalogue: function() {
@@ -375,7 +381,7 @@ define([
                 return [
                     '<tr>',
                         '<td width="20%">',
-                            '<input class="form-element inputCode" value=""/>',
+                            '<input class="form-element inputCode" value="" data-trigger="focusout"  data-required="true"/>',
                         '</td>',
                         '<td width="37%">',
                             '<textarea class="form-element vertical textareaTranslation"></textarea>',

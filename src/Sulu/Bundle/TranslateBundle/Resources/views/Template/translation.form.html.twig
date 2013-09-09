@@ -88,7 +88,7 @@
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
                     <td class="relative">
-                        <input class="form-element grey inputCode" readonly value="<%= item.code.code %>" data-required="true" />
+                        <input class="form-element grey inputCode" readonly value="<%= item.code.code %>" data-trigger="focusout" data-required="true" />
                         <span class="showOptions absolute pointer icon-arrow-right"></span>
                     </td>
                     <td>
