@@ -69,6 +69,62 @@ define([
             return null;
         },
 
+        initOptions: function() {
+            var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.empty();
+            var $optionsLeft = $('#headerbar-mid-left');
+            $optionsLeft.empty();
+            $optionsLeft.append(this.staticTemplates.button('Save', function(event) {
+                this.$form.submit();
+                return false;
+            }.bind(this)));
+            if (!!this.options.id) {
+                $optionsLeft.append(this.staticTemplates.button('Delete', function(event) {
+                    this.initRemoveDialog();
+                    return false;
+                }.bind(this)));
+            }
+        },
+
+        // fills dialogbox
+        initRemoveDialog: function() {
+
+            this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                template: {
+                    content: '<h3><%= title %></h3><p><%= content %></p>',
+                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
+                    header: '<button type="button" class="close">×</button>'
+                },
+                data: {
+                    content: {
+                        title: "Warning",
+                        content: "Do you really want to delete this contact? All data is going to be lost."
+                    },
+                    footer: {
+                        buttonCancelText: "Abort",
+                        buttonSaveText: "Delete"
+                    }
+                }
+            });
+
+            // TODO
+            this.$dialog.off();
+
+            this.$dialog.on('click', '.closeButton', function() {
+                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            }.bind(this));
+
+            this.$dialog.on('click', '.deleteButton', function() {
+                model.destroy({
+                    success: function() {
+                        Router.navigate(listUrl);
+                    }.bind(this)
+                });
+
+                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            }.bind(this));
+        },
+
         initTemplate: function(json, template, Template) {
             template = _.template(Template, json);
             this.$el.html(template);
@@ -78,6 +134,12 @@ define([
             this.initAddresses(json);
 
             this.initFields(json);
+
+            // create dialog box
+            this.$dialog = $('#dialog').huskyDialog({
+                backdrop: true,
+                width: '650px'
+            });
 
             this.$form = this.$('form[data-validate="parsley"]');
             this.$form.parsley({validationMinlength: 0});
@@ -333,6 +395,11 @@ define([
                     '<input class="form-element phone-value" type="text" value="<%= phone %>" data-trigger="focusout" data-minlength="3" />',
                     '</div>'
                 ].join('')
+            },
+            button: function(text, fn) {
+                var $button = $('<a class="btn" href="#">' + text + '</a>');
+                $button.on('click', fn);
+                return $button;
             }
         }
     });

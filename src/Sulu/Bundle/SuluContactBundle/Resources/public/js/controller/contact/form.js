@@ -30,6 +30,7 @@ define([
     return Form.extend({
         initialize: function() {
             this.setListUrl('contacts/people');
+            this.initOptions();
             this.render();
         },
 
