@@ -9,12 +9,13 @@
 
 require.config({
     paths: {
-        text: 'vendor/requirejs/text',
+        text: 'vendor/requirejs-text/text',
         jquery: 'vendor/jquery/jquery',
         underscore: 'vendor/underscore/underscore',
         backbone: 'vendor/backbone/backbone',
-        backbonerelational: 'vendor/backbone/backbone-relational',
-        husky: 'vendor/husky/husky'
+        backbonerelational: 'vendor/backbone-relational/backbone-relational',
+        husky: 'vendor/husky/husky',
+        parsley: 'vendor/parsleyjs/parsley'
     },
     shim: {
         'underscore': {
@@ -28,6 +29,9 @@ require.config({
             deps: ['backbone']
         },
         'husky': {
+            deps: ['jquery']
+        },
+        'parsley': {
             deps: ['jquery']
         }
     }

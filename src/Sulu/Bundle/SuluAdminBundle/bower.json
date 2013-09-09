@@ -1,0 +1,22 @@
+{
+    "name": "sulu-admin",
+    "version": "0.0.0",
+    "homepage": "https://github.com/massiveart/SuluAdminBundle",
+    "authors": [],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "husky": "#develop",
+        "backbone": "1.0.*",
+        "backbone-relational": "0.8.*",
+        "requirejs": "2.1.*",
+        "requirejs-text": "2.0.*",
+        "parsleyjs": "*"
+    }
+}
