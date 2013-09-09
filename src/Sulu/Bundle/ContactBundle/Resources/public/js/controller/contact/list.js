@@ -68,12 +68,11 @@ define([
         },
 
         initOperations: function() {
-
             var $optionsRight = $('#headerbar-mid-right');
             $optionsRight.empty();
             var $optionsLeft = $('#headerbar-mid-left');
             $optionsLeft.empty();
-            $optionsLeft.append(this.template.button('Add', '#contacts/people/add'));
+            $optionsLeft.append(this.template.addButton('Add', '#contacts/people/add'));
 
         },
 
@@ -122,8 +121,12 @@ define([
         },
 
         template: {
-            button: function(text, route) {
-                return '<a class="btn" href="'+route+'">'+text+'</a>';
+            addButton: function(text, route) {
+                var $button = $('<div id="addButton" class="pull-left pointer"><span class="icon-add pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
+                $button.on('click', function() {
+                    Router.navigate(route);
+                });
+                return $button;
             }
         }
     });

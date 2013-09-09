@@ -74,12 +74,12 @@ define([
             $optionsRight.empty();
             var $optionsLeft = $('#headerbar-mid-left');
             $optionsLeft.empty();
-            $optionsLeft.append(this.staticTemplates.button('Save', function(event) {
+            $optionsLeft.append(this.staticTemplates.saveButton('Save', function(event) {
                 this.$form.submit();
                 return false;
             }.bind(this)));
             if (!!this.options.id) {
-                $optionsLeft.append(this.staticTemplates.button('Delete', function(event) {
+                $optionsRight.append(this.staticTemplates.deleteButton('Delete', function(event) {
                     this.initRemoveDialog();
                     return false;
                 }.bind(this)));
@@ -396,8 +396,13 @@ define([
                     '</div>'
                 ].join('')
             },
-            button: function(text, fn) {
-                var $button = $('<a class="btn" href="#">' + text + '</a>');
+            saveButton: function(text, fn) {
+                var $button = $('<div id="saveButton" class="pull-left pointer"><span class="icon-circle-ok pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
+                $button.on('click', fn);
+                return $button;
+            },
+            deleteButton: function(text, fn) {
+                var $button = $('<div id="deleteButton" class="pull-right pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
                 $button.on('click', fn);
                 return $button;
             }
