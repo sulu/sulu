@@ -74,15 +74,32 @@ define([
             $optionsRight.empty();
             var $optionsLeft = $('#headerbar-mid-left');
             $optionsLeft.empty();
-            $optionsLeft.append(this.staticTemplates.saveButton('Save', function(event) {
-                this.$form.submit();
-                return false;
-            }.bind(this)));
+
+            this.$saveButton = this.staticTemplates.saveButton('Save', function(event) {
+                if (!this.$saveButton.hasClass('loading')) {
+                    this.$saveButton.addClass('loading');
+                    this.$deleteButton.hide();
+
+                    if (this.$form.parsley('validate')) {
+                        this.$form.submit();
+                    } else {
+                        this.$saveButton.removeClass('loading');
+                        this.$deleteButton.show();
+                    }
+                }
+            }.bind(this));
+            $optionsLeft.append(this.$saveButton);
+
             if (!!this.options.id) {
-                $optionsRight.append(this.staticTemplates.deleteButton('Delete', function(event) {
-                    this.initRemoveDialog();
-                    return false;
-                }.bind(this)));
+                this.$deleteButton = this.staticTemplates.deleteButton('Delete', function(event) {
+                    if (!this.$deleteButton.hasClass('loading')) {
+                        this.$deleteButton.addClass('loading');
+                        this.$saveButton.hide();
+
+                        this.initRemoveDialog();
+                    }
+                }.bind(this));
+                $optionsRight.append(this.$deleteButton);
             }
         },
 
@@ -117,7 +134,7 @@ define([
             this.$dialog.on('click', '.deleteButton', function() {
                 model.destroy({
                     success: function() {
-                        Router.navigate(listUrl);
+                        this.gotoList();
                     }.bind(this)
                 });
 
@@ -240,9 +257,11 @@ define([
             if (this.$form.parsley('validate')) {
                 model.save(null, {
                     success: function() {
-                        Router.navigate(listUrl);
-                    }
+                        this.gotoList();
+                    }.bind(this)
                 });
+            } else {
+                this.$saveButton.removeClass('loading');
             }
         },
 
@@ -371,6 +390,16 @@ define([
             }
         },
 
+        gotoList: function() {
+            this.$dialog.off();
+            this.$saveButton.off();
+            if (!!this.options.id) {
+                this.$deleteButton.off();
+            }
+
+            Router.navigate(listUrl);
+        },
+
         staticTemplates: {
             emailRow: function(first) {
                 return [
@@ -397,12 +426,12 @@ define([
                 ].join('')
             },
             saveButton: function(text, fn) {
-                var $button = $('<div id="saveButton" class="pull-left pointer"><span class="icon-circle-ok pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
+                var $button = $('<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>');
                 $button.on('click', fn);
                 return $button;
             },
             deleteButton: function(text, fn) {
-                var $button = $('<div id="deleteButton" class="pull-right pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
+                var $button = $('<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>');
                 $button.on('click', fn);
                 return $button;
             }
