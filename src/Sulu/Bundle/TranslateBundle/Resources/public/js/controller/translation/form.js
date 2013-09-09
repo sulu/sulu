@@ -16,8 +16,9 @@ define([
     'sulutranslate/collection/translations',
     'sulutranslate/model/translation',
     'sulutranslate/model/catalogue',
-    'sulutranslate/collection/catalogues'
-], function($, Backbone, Router, Parsley, Code, Translations, Translation, Catalogue, Catalogues) {
+    'sulutranslate/collection/catalogues',
+    'sulutranslate/model/package'
+], function($, Backbone, Router, Parsley, Code, Translations, Translation, Catalogue, Catalogues, Package) {
 
     'use strict';
 
@@ -29,7 +30,8 @@ define([
         $operationsLeft,
         $operationsRight,
         $form,
-        $dialog;
+        $dialog,
+        packageModel;
 
 
     return Backbone.View.extend({
@@ -61,17 +63,23 @@ define([
             require(['text!/translate/template/translation/form'], function(Template) {
 
                 var packageId = this.options.id;
+                packageModel = new Package({id: packageId});
 
                 catalogues = new Catalogues({
                     packageId: packageId,
                     fields: 'id,locale'
                 });
 
-                catalogues.fetch({
-                    success: function() {
-                        selectedCatalogue = catalogues.toJSON()[0];
-                        this.loadTranslations(Template);
+                packageModel.fetch({
+                    success: function(){
 
+                        catalogues.fetch({
+                            success: function() {
+                                selectedCatalogue = catalogues.toJSON()[0];
+                                this.loadTranslations(Template);
+
+                            }.bind(this)
+                        });
                     }.bind(this)
                 });
 
@@ -87,7 +95,7 @@ define([
             translations.fetch({
                 success: function() {
 
-                    var template = _.template(Template, {translations: translations.toJSON(), catalogue: selectedCatalogue});
+                    var template = _.template(Template, {translations: translations.toJSON(), catalogue: selectedCatalogue, package: packageModel.toJSON()});
                     this.$el.html(template);
 
                     var $selectCatalogue = $('#languageCatalogue').huskySelect({
