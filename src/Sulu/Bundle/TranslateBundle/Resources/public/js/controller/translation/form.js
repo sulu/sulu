@@ -131,6 +131,13 @@ define([
 
         autoHeightTextareas: function(){
 
+            var $textareas = $('#codes-form textarea');
+
+            _.each($textareas, function($element){
+//                console.log($element.rows, "scroll height");
+//                console.log($element.scrollHeight, "scroll height");
+                $($element).css('height',$element.scrollHeight);
+            });
 
         },
 
@@ -188,7 +195,7 @@ define([
                     var $options = $rows[i + 1];
                     var id = $($rows[i]).data('id');
 
-                    var newCodemp    = $($translation).find('.inputCode').val();
+                    var newCode    = $($translation).find('.inputCode').val();
                     var newTranslation = $($translation).find('.textareaTranslation').val();
 
                     var newLength = $($options).find('.inputLength').val();
@@ -263,7 +270,6 @@ define([
 
                 this.removeHeaderbarEvents();
                 Router.navigate('settings/translate');
-
             }
         },
 
@@ -381,7 +387,7 @@ define([
                 return [
                     '<tr>',
                         '<td width="20%">',
-                            '<input class="form-element inputCode" value="" data-trigger="focusout"  data-required="true"/>',
+                            '<input class="form-element inputCode" value="" data-trigger="focusout" data-required="true"/>',
                         '</td>',
                         '<td width="37%">',
                             '<textarea class="form-element vertical textareaTranslation"></textarea>',
