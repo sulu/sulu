@@ -1,3 +1,19 @@
 sulu_contact:
     resource: "@SuluContactBundle/Resources/config/routing_api.yml"
     prefix: /api
+
+contact_form:
+    pattern: /template/contact/form
+    defaults: { _controller: SuluContactBundle:Template:contactForm }
+
+account_form:
+    pattern: /template/account/form
+    defaults: { _controller: SuluContactBundle:Template:accountForm }
+
+contact_list:
+    pattern: /template/contact/list
+    defaults: { _controller: SuluContactBundle:Template:contactList }
+
+account_list:
+    pattern: /template/account/list
+    defaults: { _controller: SuluContactBundle:Template:accountList }

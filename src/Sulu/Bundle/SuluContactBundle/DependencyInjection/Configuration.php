@@ -26,7 +26,21 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_contact');
+
+        $treeBuilder->root('sulu_contact')
+            ->children()
+                ->arrayNode('defaults')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('phoneType')->defaultValue('1')->end()
+                        ->scalarNode('emailType')->defaultValue('1')->end()
+                        ->scalarNode('addressType')->defaultValue('1')->end()
+                        ->scalarNode('urlType')->defaultValue('1')->end()
+                        ->scalarNode('country')->defaultValue('1')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
