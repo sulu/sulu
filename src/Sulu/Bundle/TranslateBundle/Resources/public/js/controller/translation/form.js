@@ -102,6 +102,9 @@ define([
                     $selectCatalogue.change(function() {
 
                         selectedCatalogue = null;
+                        codesToDelete = new Array();
+
+                        Backbone.Relational.store.reset();
 
                         var selectedId = $selectCatalogue.find(":selected").val();
 
@@ -138,9 +141,6 @@ define([
         removeRowAndModel: function(event) {
 
             var $tableRow = $(event.currentTarget).parent().parent();
-
-            console.log($(event.currentTarget).parent().parent(), "tablerow");
-
             var translationId = $tableRow.data('id');
 
             console.log(translationId, 'translation id');
@@ -171,7 +171,6 @@ define([
         submitForm: function() {
 
             event.preventDefault();
-            console.log($form);
             console.log($form.parsley('validate'));
             if ($form.parsley('validate')) {
                 updatedTranslations = new Array();
@@ -183,7 +182,7 @@ define([
                     var $options = $rows[i + 1];
                     var id = $($rows[i]).data('id');
 
-                    var newCode = $($translation).find('.inputCode').val();
+                    var newCodemp    = $($translation).find('.inputCode').val();
                     var newTranslation = $($translation).find('.textareaTranslation').val();
 
                     var newLength = $($options).find('.inputLength').val();
@@ -243,7 +242,6 @@ define([
                 }
 
                 if (updatedTranslations.length > 0) {
-                    console.log(updatedTranslations, 'items to update');
                     translations.save(updatedTranslations);
                 }
 
@@ -293,7 +291,6 @@ define([
             $dialog.on('click', '.saveButton', function() {
                 this.removeHeaderbarEvents();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-                console.log(catalogue, "catalogue");
                 catalogue.destroy({
                     success: function () {
                         Router.navigate('settings/translate');
