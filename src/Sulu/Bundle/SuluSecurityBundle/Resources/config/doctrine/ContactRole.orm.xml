@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\ContactRole" table="se_contact_roles">
+        <id name="contact" association-key="true" />
+        <id name="role" association-key="true" />
+        <field name="locale" type="string" length="60" />
+
+        <many-to-one target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" field="contact" inversed-by="contactRoles">
+            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" />
+        </many-to-one>
+        <many-to-one target-entity="Sulu\Bundle\SecurityBundle\Entity\Role" field="role" inversed-by="contactRoles">
+            <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
