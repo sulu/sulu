@@ -129,6 +129,9 @@ define([
 
             this.$dialog.on('click', '.closeButton', function() {
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+
+                this.$deleteButton.removeClass('loading');
+                this.$saveButton.show();
             }.bind(this));
 
             this.$dialog.on('click', '.deleteButton', function() {
