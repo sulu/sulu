@@ -34,10 +34,11 @@ define([
     return Backbone.View.extend({
 
         events: {
-            'submit #codes-form': 'submitForm',
             'click .addCode': 'addRowForNewCode',
             'click .icon-remove': 'removeRowAndModel',
             'click .form-element[readonly]': 'unlockFormElement'
+//            'click #saveButton': 'submitForm',
+//            'click #deleteButton': 'deleteCatalogue'
         },
 
         initialize: function() {
@@ -45,6 +46,7 @@ define([
 
             this.initOperations();
             this.render();
+
         },
 
         initValidation: function() {
@@ -123,6 +125,7 @@ define([
         initVisibilityOptions: function() {
 
             $('.showOptions').on('click', function() {
+                $(this).toggleClass('icon-arrow-right').toggleClass('icon-arrow-down');
                 $(this).parent().parent().next('.additionalOptions').toggleClass('hidden');
             });
 
@@ -229,7 +232,7 @@ define([
                             translationModel.set('code', codeModel);
                             updatedTranslations.push(translationModel);
                         } else {
-                            console.log("code missing");
+                            //console.log("code missing");
                         }
                     }
                     i = i + 2;
@@ -252,9 +255,33 @@ define([
                 }
             }
 
-            //Router.navigate('settings/translate');
+            this.removeHeaderbarElements();
+            Router.navigate('settings/translate');
 
         },
+
+        deleteCatalogue: function() {
+
+            this.removeHeaderbarElements();
+            var catalogue = catalogues.get(selectedCatalogue.id);
+
+            console.log(catalogue, "catalogue");
+            catalogue.destroy({
+                success: function () {
+                    Router.navigate('settings/translate');
+                }
+            });
+        },
+
+        removeHeaderbarElements: function() {
+            if ($operationsLeft != undefined) {
+                $operationsLeft.off();
+            }
+            if ($operationsRight != undefined) {
+                $operationsRight.off();
+            }
+        },
+
 
         // TODO abstract ---------------------------------------
 
@@ -268,6 +295,14 @@ define([
         initOperationsRight: function() {
             $operationsRight = $('#headerbar-mid-right');
             $operationsRight.empty();
+
+            var $deleteButton = this.templates.deleteButton('Delete');
+            $operationsRight.append($deleteButton);
+
+            // TODO leaving view scope?
+            $('#headerbar-mid-right').on('click', '#deleteButton', function() {
+                this.deleteCatalogue();
+            }.bind(this));
         },
 
         // Initializes the operations on the top (save)
@@ -295,33 +330,37 @@ define([
                 return '<div id="saveButton" class="pull-left pointer"><span class="icon-circle-ok pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>';
             },
 
+            deleteButton: function(text) {
+                return '<div id="deleteButton" class="pull-right pointer"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">'+text+'</span></div>';
+            },
+
             rowTemplate: function() {
                 return [
                     '<tr>',
-                    '<td class="grid-col-3">',
-                    '<input class="form-element inputCode" value=""/>',
-                    '</td>',
-                    '<td class="grid-col-4">',
-                    '<textarea class="form-element vertical textareaTranslation"></textarea>',
-                    '</td>',
-                    '<td class="grid-col-4">',
-                    '<p class="grey"></p>',
-                    '</td>',
-                    '<td class="grid-col-1">',
-                    '<p class="icon-remove m-left-5"></p>',
-                    '</td>',
+                        '<td width="20%">',
+                            '<input class="form-element inputCode" value=""/>',
+                        '</td>',
+                        '<td width="37%">',
+                            '<textarea class="form-element vertical textareaTranslation"></textarea>',
+                        '</td>',
+                        '<td width="37%">',
+                            '<p class="grey"></p>',
+                        '</td>',
+                        '<td width="6%">',
+                            '<p class="icon-remove m-left-5"></p>',
+                        '</td>',
                     '</tr>',
-                    '<tr class="additionalOptions hidden">',
-                    '<td>',
-                    '<div class="grid-row">',
-                    '<div class="grid-col-3">',
-                    '<span>Length</span>',
-                    '<input class="form-element inputLength" value=""/>',
-                    '</div>',
-                    '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
-                    '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
-                    '</div>',
-                    '</td>',
+                    '<tr class="additionalOptions">',
+                        '<td colspan="4">',
+                            '<div class="grid-row">',
+                                '<div class="grid-col-3">',
+                                    '<span>Length</span>',
+                                    '<input class="form-element inputLength" value=""/>',
+                            '   </div>',
+                                '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                                '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                            '</div>',
+                        '</td>',
                     '</tr>'].join('')
             }
         }
