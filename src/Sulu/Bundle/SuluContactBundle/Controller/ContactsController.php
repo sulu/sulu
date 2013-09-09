@@ -296,7 +296,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     protected function addEmail(Contact $contact, $emailData)
     {
 		$success = true;
-		if ($emailData['id'] != null) {
+		if (!isset($emailData['id']) || $emailData['id'] != null) {
 			$em = $this->getDoctrine()->getManager();
 
 			$emailType = $this->getDoctrine()
@@ -375,7 +375,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     protected function addPhone(Contact $contact, $phoneData)
     {
         $success = true;
-		if ($phoneData['id'] != null) {
+		if (!isset($phoneData['id']) || $phoneData['id'] != null) {
 			$em = $this->getDoctrine()->getManager();
 
 			$phoneType = $this->getDoctrine()
@@ -454,7 +454,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     protected function addAddress(Contact $contact, $addressData)
     {
         $success = true;
-		if ($addressData['id'] != null) {
+		if (!isset($addressData['id']) || $addressData['id'] != null) {
 			$em = $this->getDoctrine()->getManager();
 
 			$addressType = $this->getDoctrine()
