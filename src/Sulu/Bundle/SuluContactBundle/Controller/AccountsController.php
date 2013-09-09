@@ -10,11 +10,9 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Doctrine\ORM\EntityRepository;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Note;
@@ -237,7 +235,9 @@ class AccountsController extends RestController implements ClassResourceInterfac
             $em = $this->getDoctrine()->getManager();
 
             // remove related contacts if removeContacts is true
-            if (!is_null($this->getRequest()->get('removeContacts')) && $this->getRequest()->get('removeContacts') == "true") {
+            if (!is_null($this->getRequest()->get('removeContacts')) &&
+                $this->getRequest()->get('removeContacts') == "true"
+            ) {
                 foreach ($account->getContacts() as $contact) {
                     $em->remove($contact);
                 }
@@ -315,6 +315,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Url $url The email object to update
      * @param string $entry The entry with the new data
      * @return bool True if successful, otherwise false
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
      */
     protected function updateUrl(Url $url, $entry)
     {
@@ -697,7 +698,8 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * returns delete info for multiple ids
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function multipledeleteinfoAction() {
+    public function multipledeleteinfoAction()
+    {
 
         $ids = $this->getRequest()->get('ids');
 
@@ -705,8 +707,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
         $numContacts = 0;
         $numChildren = 0;
 
-        foreach ($ids as $id)
-        {
+        foreach ($ids as $id) {
             /** @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository('SuluContactBundle:Account')
@@ -724,6 +725,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
         $response['numChildren'] = $numChildren;
 
         $view = $this->view($response, 200);
+
         return $this->handleView($view);
     }
 
@@ -747,16 +749,16 @@ class AccountsController extends RestController implements ClassResourceInterfac
         if ($account != null) {
 
             // return a maximum of 3 accounts
-            $slicedContacts = $account->getContacts()->slice(0,3);
+            $slicedContacts = $account->getContacts()->slice(0, 3);
 
-            foreach ($slicedContacts as $c) {
-                $contact = array();
-                $contact['id'] = $c->getId();
-                $contact['firstName'] = $c->getFirstName();
-                $contact['middleName'] = $c->getMiddleName();
-                $contact['lastName'] = $c->getLastName();
-
-                $response['contacts'][] = $contact;
+            foreach ($slicedContacts as $contact) {
+                /** @var Contact $contact */
+                $response['contacts'][] = array(
+                    'id' => $contact->getId(),
+                    'firstName' => $contact->getFirstName(),
+                    'middleName' => $contact->getMiddleName(),
+                    'lastName' => $contact->getLastName(),
+                );
             }
 
             // return number of contact
@@ -765,15 +767,15 @@ class AccountsController extends RestController implements ClassResourceInterfac
             // get number of sub companies
             $response['numChildren'] = $account->getChildren()->count();
 
-            if ($response['numChildren']>0) {
+            if ($response['numChildren'] > 0) {
                 // if account has a subcompany do not allow to delete
-                $slicedChildren = $account->getChildren()->slice(0,3);
+                $slicedChildren = $account->getChildren()->slice(0, 3);
 
                 /* @var Account $sc */
                 foreach ($slicedChildren as $sc) {
                     $child = array();
-                    $child['id']    = $sc->getId();
-                    $child['name']  = $sc->getName();
+                    $child['id'] = $sc->getId();
+                    $child['name'] = $sc->getName();
 
                     $response['children'][] = $child;
                 }
@@ -782,9 +784,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             $view = $this->view($response, 200);
 
         } else {
-
             $view = $this->view(null, 404);
-
         }
 
         return $this->handleView($view);

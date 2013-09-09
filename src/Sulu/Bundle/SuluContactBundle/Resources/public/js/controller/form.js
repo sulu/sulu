@@ -91,7 +91,7 @@ define([
             $optionsLeft.append(this.$saveButton);
 
             if (!!this.options.id) {
-                this.$deleteButton = this.staticTemplates.deleteButton('Delete', function(event) {
+                this.$deleteButton = this.staticTemplates.deleteButton('Delete', function() {
                     if (!this.$deleteButton.hasClass('loading')) {
                         this.$deleteButton.addClass('loading');
                         this.$saveButton.hide();
@@ -184,6 +184,7 @@ define([
         },
 
         initFields: function(json) {
+            // FIXME excludeItems never is used ???
             var excludeItems = [];
             if (!!this.options.id) {
                 excludeItems = [
@@ -283,12 +284,11 @@ define([
         },
 
         addEmailEvent: function(event) {
-            var $element = $(event.currentTarget);
-            var id = $element.data("target-id");
-            var $div = $('#' + id);
-
-            var phoneJson = _.clone(Email.prototype.defaults);
-            var $email = this.addEmail($div, phoneJson);
+            var $element = $(event.currentTarget),
+                id = $element.data("target-id"),
+                $div = $('#' + id),
+                phoneJson = _.clone(Email.prototype.defaults);
+            this.addEmail($div, phoneJson);
         },
 
         addEmail: function($div, json, first) {
@@ -309,12 +309,12 @@ define([
         },
 
         addPhoneEvent: function(event) {
-            var $element = $(event.currentTarget);
-            var id = $element.data("target-id");
-            var $div = $('#' + id);
+            var $element = $(event.currentTarget),
+                id = $element.data("target-id"),
+                $div = $('#' + id),
+                phoneJson = _.clone(Phone.prototype.defaults);
 
-            var phoneJson = _.clone(Phone.prototype.defaults);
-            var $phone = this.addPhone($div, phoneJson);
+            this.addPhone($div, phoneJson);
         },
 
         addPhone: function($div, json) {
@@ -335,12 +335,11 @@ define([
         },
 
         addAddressEvent: function(event) {
-            var $element = $(event.currentTarget);
-            var id = $element.data("target-id");
-            var $div = $('#' + id);
-
-            var addressJson = _.clone(Address.prototype.defaults);
-            var $address = this.addAddress($div, addressJson, true);
+            var $element = $(event.currentTarget),
+                id = $element.data("target-id"),
+                $div = $('#' + id),
+                addressJson = _.clone(Address.prototype.defaults);
+            this.addAddress($div, addressJson, true);
         },
 
         addAddress: function($div, json, scroll) {
@@ -410,24 +409,24 @@ define([
             emailRow: function(first) {
                 return [
                     '<div class="grid-col-6 email-item" data-id="<%= id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!emailType)?emailType.id :defaults.emailType.id %>">',
-                    '<span class="type-name"><%= (!!emailType)?emailType.name : defaults.emailType.name %></span><span>' + (!!first ? '&nbsp;*' : '') + '</span>',
-                    '<span class="dropdown-toggle inline-block"></span>',
-                    '</label>',
-                    '<div class="remove-email"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element email-value" type="text" value="<%= email %>" data-type="email" ' + (!!first ? 'data-required="true"' : '') + ' data-trigger="focusout" />',
+                        '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!emailType)?emailType.id :defaults.emailType.id %>">',
+                            '<span class="type-name"><%= (!!emailType)?emailType.name : defaults.emailType.name %></span><span>' + (!!first ? '&nbsp;*' : '') + '</span>',
+                            '<span class="dropdown-toggle inline-block"></span>',
+                        '</label>',
+                        '<div class="remove-email"><span class="icon-remove pull-right"></span></div>',
+                        '<input class="form-element email-value" type="text" value="<%= email %>" data-type="email" ' + (!!first ? 'data-required="true"' : '') + ' data-trigger="focusout" />',
                     '</div>'
                 ].join('')
             },
             phoneRow: function() {
                 return [
                     '<div class="grid-col-6 phone-item" data-id="<%= id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phoneType)? phoneType.id : defaults.phoneType.id %>">',
-                    '<span class="type-name"><%= (!!phoneType)? phoneType.name : defaults.phoneType.name %></span>',
-                    '<span class="dropdown-toggle inline-block"></span>',
-                    '</label>',
-                    '<div class="remove-phone"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element phone-value" type="text" value="<%= phone %>" data-trigger="focusout" data-minlength="3" />',
+                        '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phoneType)? phoneType.id : defaults.phoneType.id %>">',
+                            '<span class="type-name"><%= (!!phoneType)? phoneType.name : defaults.phoneType.name %></span>',
+                            '<span class="dropdown-toggle inline-block"></span>',
+                        '</label>',
+                        '<div class="remove-phone"><span class="icon-remove pull-right"></span></div>',
+                        '<input class="form-element phone-value" type="text" value="<%= phone %>" data-trigger="focusout" data-minlength="3" />',
                     '</div>'
                 ].join('')
             },

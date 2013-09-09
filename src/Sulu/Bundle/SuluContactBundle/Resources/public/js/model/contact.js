@@ -13,15 +13,15 @@ define([
     'sulucontact/model/email',
     'sulucontact/model/phone',
     'sulucontact/model/address'
-], function (BackboneRelational, Account, Email, Phone, Address) {
+], function(BackboneRelational, Account, Email, Phone, Address) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/contacts',
         defaults: {
             id: null,
             firstName: '',
-            middleName:'',
+            middleName: '',
             lastName: '',
-            birthday:'',
+            birthday: '',
             localeSystem: '',
             title: '',
             position: '',

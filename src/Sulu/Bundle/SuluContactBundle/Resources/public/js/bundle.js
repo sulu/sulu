@@ -7,11 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['router'], function (Router) {
+define(['router'], function(Router) {
 
     'use strict';
 
-    var initialize = function () {
+    var initialize = function() {
         // list all contacts
         Router.route('contacts/people', 'contacts:people:list', function() {
             require(['sulucontact/controller/contact/list'], function(List) {

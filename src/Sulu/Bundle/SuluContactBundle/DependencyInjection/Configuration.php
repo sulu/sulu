@@ -20,30 +20,32 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getConfigTreeBuilder()
-	{
-		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root('sulu_contact');
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
 
-		$rootNode
-			->children()
-				->arrayNode('defaults')
-					->addDefaultsIfNotSet()
-					->children()
-					->scalarNode('phoneType')->defaultValue('1')->end()
-					->scalarNode('emailType')->defaultValue('1')->end()
-					->scalarNode('addressType')->defaultValue('1')->end()
-					->scalarNode('urlType')->defaultValue('1')->end()
-					->scalarNode('country')->defaultValue('1')->end()
-				->end();
+        $treeBuilder->root('sulu_contact')
+            ->children()
+                ->arrayNode('defaults')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('phoneType')->defaultValue('1')->end()
+                        ->scalarNode('emailType')->defaultValue('1')->end()
+                        ->scalarNode('addressType')->defaultValue('1')->end()
+                        ->scalarNode('urlType')->defaultValue('1')->end()
+                        ->scalarNode('country')->defaultValue('1')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
-		// Here you should define the parameters that are allowed to
-		// configure your bundle. See the documentation linked above for
-		// more information on that topic.
+        // Here you should define the parameters that are allowed to
+        // configure your bundle. See the documentation linked above for
+        // more information on that topic.
 
-		return $treeBuilder;
-	}
+        return $treeBuilder;
+    }
 }

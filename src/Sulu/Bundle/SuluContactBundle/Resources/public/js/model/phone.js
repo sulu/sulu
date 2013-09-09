@@ -10,7 +10,7 @@
 define([
     'backbonerelational',
     'sulucontact/model/phoneType'
-], function (BackboneRelational, PhoneType) {
+], function(BackboneRelational, PhoneType) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/phones',
         defaults: {

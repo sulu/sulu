@@ -32,7 +32,7 @@ define([
             require(['text!/contact/template/account/form'], function(Template) {
                 var template;
 
-                var accountJson =  $.extend(true, {}, Account.prototype.defaults);
+                var accountJson = $.extend(true, {}, Account.prototype.defaults);
 
                 if (!this.options.id) {
                     this.setModel(new Account());
