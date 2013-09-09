@@ -1,0 +1,36 @@
+{% extends "SuluContactBundle:Template:base.form.html.twig" %}
+
+{% block static %}
+    <h2 class="bold">Name and Company</h2>
+
+    <div class="grid-row">
+        <div class="grid-col-2">
+            <img class="avatar logo" src="http://placehold.it/500" alt=""/>
+        </div>
+        <div class="grid-col-10">
+            <div class="grid-row">
+                <div class="grid-col-6">
+                    <label class="bold">First name*</label>
+                    <input class="form-element" type="text" id="first-name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= firstName %>"/>
+                </div>
+                <div class="grid-col-6">
+                    <label class="bold">Last name*</label>
+                    <input class="form-element" type="text" id="last-name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= lastName %>"/>
+                </div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-col-2">
+                    <label>Title</label>
+                    <input class="form-element" type="text" id="title" value="<%= title %>"/>
+                </div>
+                <div class="grid-col-5">
+                    <label>Position</label>
+                    <input class="form-element" type="text" id="position" value="<%= position %>"/>
+                </div>
+                <div class="grid-col-5" id="company">
+                    <label>Company</label>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
