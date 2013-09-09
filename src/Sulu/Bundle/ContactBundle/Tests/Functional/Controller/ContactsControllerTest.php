@@ -254,6 +254,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		);
 
 		$response = json_decode($client->getResponse()->getContent());
+		$this->assertEquals(200, $client->getResponse()->getStatusCode());
 
 		$this->assertEquals('Erika', $response->firstName);
 		$this->assertEquals('Mustermann', $response->lastName);
