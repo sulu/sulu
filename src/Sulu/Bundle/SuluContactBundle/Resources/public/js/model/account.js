@@ -17,13 +17,15 @@ define([
 ], function(BackboneRelational, Account, Email, Phone, Address, Url) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/accounts',
-        defaults: {
-            id: null,
-            name: '',
-            emails: [],
-            phones: [],
-            addresses: [],
-            urls: []
+        defaults: function() {
+            return {
+                id: null,
+                name: '',
+                emails: [],
+                phones: [],
+                addresses: [],
+                urls: []
+            }
         }, relations: [
             {
                 type: Backbone.HasMany,

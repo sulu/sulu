@@ -64,6 +64,43 @@ define([
                 position: this.$('#position').val(),
                 account: {id: this.$('#company .name-value').data('id')}
             });
+        },
+
+        // fills dialogbox
+        initRemoveDialog: function() {
+
+            this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                data: {
+                    content: {
+                        title: "Warning",
+                        content: "Do you really want to delete this contact? All data is going to be lost."
+                    },
+                    footer: {
+                        buttonCancelText: "Abort",
+                        buttonSaveText: "Delete"
+                    }
+                }
+            });
+
+            // TODO
+            this.$dialog.off();
+
+            this.$dialog.on('click', '.closeButton', function() {
+                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+
+                this.$deleteButton.removeClass('loading-black');
+                this.$saveButton.show();
+            }.bind(this));
+
+            this.$dialog.on('click', '.saveButton', function() {
+                this.getModel().destroy({
+                    success: function() {
+                        this.gotoList();
+                    }.bind(this)
+                });
+
+                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            }.bind(this));
         }
     });
 });
