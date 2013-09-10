@@ -21,7 +21,9 @@ define([
     return Form.extend({
         initialize: function() {
             this.setListUrl('contacts/companies');
+
             this.render();
+
             if (!!this.options.id) {
                 this.setExcludeItem({id: this.options.id});
             }
@@ -30,19 +32,15 @@ define([
         render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/contact/template/account/form'], function(Template) {
-                var template;
-
-                var accountJson = $.extend(true, {}, Account.prototype.defaults);
 
                 if (!this.options.id) {
                     this.setModel(new Account());
-                    this.initTemplate(accountJson, template, Template);
+                    this.initTemplate(this.getModel().toJSON(), Template);
                 } else {
                     this.setModel(new Account({id: this.options.id}));
                     this.getModel().fetch({
                         success: function(account) {
-                            var accountJson = account.toJSON();
-                            this.initTemplate(accountJson, template, Template);
+                            this.initTemplate(account.toJSON(), Template);
                         }.bind(this)
                     });
                 }
@@ -96,17 +94,14 @@ define([
             });
         },
 
-
         // initializes the dialogbox and displays existing references
         initDialogBox: function(values) {
 
-            var title = 'Warning!';
-            var content = 'All data is going to be lost';
-            var buttonCancelText = "Abort";
-
-
-            // variables to set content
-            var set_title, set_content, set_template, set_buttonCancelText;
+            var title = 'Warning!',
+                content = 'All data is going to be lost',
+                buttonCancelText = "Abort",
+                // variables to set content
+                set_title, set_content, set_template, set_buttonCancelText; // FIXME naming conventions
 
 
             // TODO set template in husky
@@ -116,9 +111,13 @@ define([
             if (parseInt(values['numChildren']) > 0) {
                 var dependencies = this.template.dependencyListAccounts(values['children']);
                 set_title = 'Warning! Sub-Companies detected!';
+
+                // FIXME use array for templating (join)
+                // FIXME translation
                 set_content = '<p>One or more related sub-companies found.</p>';
                 set_content += '<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies ' +
                     'or remove the relation.</p>';
+
                 set_template = 'okDialog';
                 set_buttonCancelText = "Ok";
             }
@@ -177,7 +176,7 @@ define([
                 account.destroy({
                     data: {removeContacts: removeContacts},
                     processData: true,
-                    success:function() {
+                    success: function() {
                         this.gotoList();
                     }.bind(this)
                 });

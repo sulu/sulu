@@ -103,8 +103,8 @@ define([
             }
         },
 
-        initTemplate: function(json, template, Template) {
-            template = _.template(Template, json);
+        initTemplate: function(json, Template) {
+            var template = _.template(Template, json);
             this.$el.html(template);
 
             this.initEmails(json);
