@@ -104,11 +104,13 @@ define([
 
 
             // variables to set content
-            var set_title, set_content, set_template, set_buttonCancelText;
+            var set_title, set_content, set_template, set_buttonCancelText;  // FIXME naming conventions
 
 
             // TODO set template in husky
 
+            // FIXME use array for templating (join)
+            // FIXME translation
 
             // sub-account exists => deletion is not allowed
             if (parseInt(values['numChildren']) > 0)
@@ -129,7 +131,7 @@ define([
                 set_title = 'Warning! Related contacts detected';
                 set_content  = '<p>Related contacts found:</p><ul>'+dependencies+'</ul>';
                 set_content += values['numContacts']>3 ?'<p>and <strong>'+ (parseInt(values['numContacts'])-values['contacts'].length) + '</strong> more.</p>' : '';
-                set_content += '<p>Would you like to delete them with the selected company?</p>'
+                set_content += '<p>Would you like to delete them with the selected company?</p>';
                 set_content += '<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all '+parseInt(values['numContacts'])+' related contacts.</label></p>';
             }
 
