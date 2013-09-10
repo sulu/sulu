@@ -93,7 +93,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
                     $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                 });
 
-                $dialog.on('click', '.deleteButton', function() {
+                $dialog.on('click', '.saveButton', function() {
                     ids.forEach(function(id) {
                         Backbone.Relational.store.reset();
                         var pkg = new Package({id: id});
