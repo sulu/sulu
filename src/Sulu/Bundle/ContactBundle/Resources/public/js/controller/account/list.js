@@ -69,10 +69,12 @@ define([
 
         initOptions: function() {
             var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.off();
             $optionsRight.empty();
             var $optionsLeft = $('#headerbar-mid-left');
+            $optionsLeft.off();
             $optionsLeft.empty();
-            $optionsLeft.append(this.template.addButton('Add', '#contacts/people/add'));
+            $optionsLeft.append(this.template.addButton('Add', '#contacts/companies/add'));
 
         },
 
