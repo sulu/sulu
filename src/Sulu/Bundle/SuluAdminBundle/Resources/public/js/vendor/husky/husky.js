@@ -1277,11 +1277,18 @@ function typeOf(value) {
 
         // Shows the dialog and compiles the different dialog template parts 
         show: function(params) {
+            params = params || {};
 
-            var optionslocal = $.extend({}, $.fn.huskyDialog.defaults, typeof params == 'object' && params);
+            var optionslocal;
+            if (params.templateType && params.templateType.toLowerCase() === "okdialog") {
+                optionslocal = $.extend(true, {}, $.fn.huskyDialog.okDialog, params);
+            } else {
+                optionslocal = $.extend(true, {}, $.fn.huskyDialog.defaults, params);
+            }
 
-            this.template = optionslocal.template;
-            this.data = optionslocal.data;
+            this.data       = optionslocal.data;
+            this.template   = optionslocal.template;
+
 
             this.$header.append(_.template(this.template.header, this.data.header));
             this.$content.append(_.template(this.template.content, this.data.content));
@@ -1334,13 +1341,34 @@ function typeOf(value) {
     };
 
     $.fn.huskyDialog.defaults = {
-        data: null,
+        data: {
+            footer: {
+                buttonCancelText: "Cancel",
+                buttonSaveText: "Ok"
+            }
+        },
         backdrop: true,
         width: '560px',
         template: {
             content: '<h3><%= title %></h3><p><%= content %></p>',
-            footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black saveButton"><%= buttonSaveText %></button>',
-            header: '<button type="button" class="close">×</button>'
+            footer: '<button class="btn btn-gray closeButton"><%= buttonCancelText %></button><button class="btn btn-black saveButton"><%= buttonSaveText %></button>',
+            header: ''
+            // header: '<button type="button" class="close">×</button>'
+        }
+    };
+
+    $.fn.huskyDialog.okDialog = {
+        data: {
+            footer: {
+                buttonCancelText: "Ok"
+            }
+        },
+        backdrop: true,
+        width: '560px',
+        template: {
+            content: '<h3><%= title %></h3><p><%= content %></p>',
+            footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button>',
+            header: ''
         }
     };
 
