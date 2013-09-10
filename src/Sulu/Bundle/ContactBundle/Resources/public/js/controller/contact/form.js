@@ -70,11 +70,6 @@ define([
         initRemoveDialog: function() {
 
             this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                template: {
-                    content: '<h3><%= title %></h3><p><%= content %></p>',
-                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-                    header: '<button type="button" class="close">×</button>'
-                },
                 data: {
                     content: {
                         title: "Warning",
@@ -97,7 +92,7 @@ define([
                 this.$saveButton.show();
             }.bind(this));
 
-            this.$dialog.on('click', '.deleteButton', function() {
+            this.$dialog.on('click', '.saveButton', function() {
                 this.getModel().destroy({
                     success: function() {
                         this.gotoList();
