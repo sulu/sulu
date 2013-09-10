@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
@@ -31,16 +39,19 @@ class TranslationsControllerTest extends DatabaseTestCase
 
         $catalogue1 = new Catalogue();
         $catalogue1->setLocale('de');
+        $catalogue1->setIsDefault(true);
         $catalogue1->setPackage($package1);
         self::$em->persist($catalogue1);
 
         $catalogue2 = new Catalogue();
         $catalogue2->setLocale('fr');
+        $catalogue2->setIsDefault(false);
         $catalogue2->setPackage($package1);
         self::$em->persist($catalogue2);
 
         $catalogue3 = new Catalogue();
         $catalogue3->setLocale('fr');
+        $catalogue3->setIsDefault(false);
         $catalogue3->setPackage($package2);
         self::$em->persist($catalogue3);
 
@@ -96,8 +107,8 @@ class TranslationsControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
             self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
+            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
             self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
             self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
             self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
@@ -111,6 +122,32 @@ class TranslationsControllerTest extends DatabaseTestCase
     {
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
+    }
+
+    public function testGetAllWithSuggestions()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/translate/api/catalogues/2/translations');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, sizeof($response->items));
+
+        $item = $response->items[0];
+        $this->assertEquals(1, $item->id);
+        $this->assertEquals('Code 1.2', $item->value);
+        $this->assertEquals(1, $item->code->id);
+        $this->assertEquals('code.1', $item->code->code);
+        $this->assertEquals('Code 1.1', $item->suggestion);
+
+        $item = $response->items[1];
+        $this->assertEquals(2, $item->id);
+        $this->assertEquals('Code 2.2', $item->value);
+        $this->assertEquals(2, $item->code->id);
+        $this->assertEquals('code.2', $item->code->code);
+        // No Suggestion
+        $this->assertEquals('', $item->suggestion);
     }
 
     public function testGetAll()
