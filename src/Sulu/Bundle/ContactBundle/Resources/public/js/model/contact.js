@@ -16,19 +16,21 @@ define([
 ], function(BackboneRelational, Account, Email, Phone, Address) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/contacts',
-        defaults: {
-            id: null,
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            birthday: '',
-            localeSystem: '',
-            title: '',
-            position: '',
-            account: null,
-            emails: [],
-            phones: [],
-            addresses: []
+        defaults: function() {
+            return {
+                id: null,
+                firstName: '',
+                middleName: '',
+                lastName: '',
+                birthday: '',
+                localeSystem: '',
+                title: '',
+                position: '',
+                account: null,
+                emails: [],
+                phones: [],
+                addresses: []
+            }
         }, relations: [
             {
                 type: Backbone.HasOne,
