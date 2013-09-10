@@ -51,6 +51,7 @@ class ExportTest extends DatabaseTestCase
 
         $catalogue = new Catalogue();
         $catalogue->setPackage($package);
+        $catalogue->setIsDefault(false);
         $catalogue->setLocale('en');
         self::$em->persist($catalogue);
 

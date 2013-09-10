@@ -179,6 +179,8 @@ class Import
             // create a new package and catalogue for the import
             $package = new Package();
             $catalogue = new Catalogue();
+            // FIXME default catalogue with import
+            $catalogue->setIsDefault(false);
             $catalogue->setPackage($package);
             $this->em->persist($package);
             $this->em->persist($catalogue);
@@ -205,6 +207,8 @@ class Import
             // if no catalogue is found create a new one
             if ($newCatalogue) {
                 $catalogue = new Catalogue();
+                // FIXME default catalogue with import
+                $catalogue->setIsDefault(false);
                 $catalogue->setPackage($package);
                 $this->em->persist($catalogue);
             }
