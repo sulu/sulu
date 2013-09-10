@@ -34,7 +34,7 @@
                 <join-column name="idContactsCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account">
+        <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="children">
             <join-columns>
                 <join-column name="idAccountsParent" referenced-column-name="id" />
             </join-columns>
