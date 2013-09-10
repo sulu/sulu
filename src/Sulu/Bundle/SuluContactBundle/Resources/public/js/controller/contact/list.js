@@ -83,15 +83,10 @@ define([
         initDialogBoxRemoveMultiple: function(ids, event) {
 
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                template: {
-                    content: '<h3><%= title %></h3><p><%= content %></p>',
-                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-                    header: '<button type="button" class="close">×</button>'
-                },
                 data: {
                     content: {
                         title: "Warning",
-                        content: "Do you really want to delete <b>many</b> contacts? All data is going to be lost."
+                        content: "Do you really want to delete the selected contacts? All data is going to be lost."
                     },
                     footer: {
                         buttonCancelText: "Abort",
@@ -107,7 +102,7 @@ define([
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             });
 
-            $dialog.on('click', '.deleteButton', function() {
+            $dialog.on('click', '.saveButton', function() {
                 // TODO remove by row
                 ids.forEach(function(id) {
                     var contact = new Contact({id: id});

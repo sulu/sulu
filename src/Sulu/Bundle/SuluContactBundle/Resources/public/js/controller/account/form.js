@@ -102,11 +102,6 @@ define([
 
             var title = 'Warning!';
             var content = 'All data is going to be lost';
-            var template = {
-                content: '<h3><%= title %></h3><p><%= content %></p>',
-                footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-                header: '<button type="button" class="close">×</button>'
-            };
             var buttonCancelText = "Abort";
 
 
@@ -124,11 +119,7 @@ define([
                 set_content = '<p>One or more related sub-companies found.</p>';
                 set_content += '<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies ' +
                     'or remove the relation.</p>';
-                set_template = {
-                    content: '<h3><%= title %></h3><p><%= content %></p>',
-                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button>',
-                    header: '<button type="button" class="close">×</button>'
-                };
+                set_template = 'okDialog';
                 set_buttonCancelText = "Ok";
             }
             // related contacts exist => show checkbox
@@ -142,7 +133,7 @@ define([
 
             // set values to dialog box
             this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                template: set_template ? set_template : template,
+                templateType: set_template ? set_template : null,
                 data: {
                     content: {
                         title: set_title ? set_title : title,
@@ -169,7 +160,7 @@ define([
             }.bind(this));
 
             // perform action
-            this.$dialog.on('click', '.deleteButton', function() {
+            this.$dialog.on('click', '.saveButton', function() {
 
                 var removeContacts = false;
 
