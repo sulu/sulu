@@ -76,14 +76,14 @@ define([
             $optionsLeft.empty();
 
             this.$saveButton = this.staticTemplates.saveButton('Save', function(event) {
-                if (!this.$saveButton.hasClass('loading')) {
-                    this.$saveButton.addClass('loading');
+                if (!this.$saveButton.hasClass('loading-black')) {
+                    this.$saveButton.addClass('loading-black');
                     if (!!this.options.id) this.$deleteButton.hide();
 
                     if (this.$form.parsley('validate')) {
                         this.$form.submit();
                     } else {
-                        this.$saveButton.removeClass('loading');
+                        this.$saveButton.removeClass('loading-black');
                         if (!!this.options.id) this.$deleteButton.show();
                     }
                 }
@@ -92,8 +92,8 @@ define([
 
             if (!!this.options.id) {
                 this.$deleteButton = this.staticTemplates.deleteButton('Delete', function() {
-                    if (!this.$deleteButton.hasClass('loading')) {
-                        this.$deleteButton.addClass('loading');
+                    if (!this.$deleteButton.hasClass('loading-black')) {
+                        this.$deleteButton.addClass('loading-black');
                         this.$saveButton.hide();
 
                         this.initRemoveDialog();
@@ -226,7 +226,7 @@ define([
                     }.bind(this)
                 });
             } else {
-                this.$saveButton.removeClass('loading');
+                this.$saveButton.removeClass('loading-black');
             }
         },
 

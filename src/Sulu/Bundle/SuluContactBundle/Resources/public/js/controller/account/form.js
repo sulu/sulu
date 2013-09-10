@@ -164,7 +164,7 @@ define([
             // abort/close
             this.$dialog.on('click', '.closeButton', function() {
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-                this.$deleteButton.removeClass('loading');
+                this.$deleteButton.removeClass('loading-black');
                 this.$saveButton.show();
             }.bind(this));
 
