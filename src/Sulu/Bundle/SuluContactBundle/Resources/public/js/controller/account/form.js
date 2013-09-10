@@ -83,7 +83,7 @@ define([
 
                 success: function(response, textStatus, jqXhr) {
                     //console.log("get request successful");
-                    this.initDialogBox(response);
+                    this.initDialogBox(response, this.options.id);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log("error during get request: " + textStatus, errorThrown);
@@ -94,39 +94,43 @@ define([
             });
         },
 
-        // initializes the dialogbox and displays existing references
-        initDialogBox: function(values) {
 
-            var title = 'Warning!',
-                content = 'All data is going to be lost',
-                buttonCancelText = "Abort",
-                // variables to set content
-                set_title, set_content, set_template, set_buttonCancelText; // FIXME naming conventions
+        // initializes the dialogbox and displays existing references
+        initDialogBox: function(values, id){
+
+            var title   = 'Warning!';
+            var content = 'All data is going to be lost';
+            var buttonCancelText = "Abort";
+
+
+            // variables to set content
+            var set_title, set_content, set_template, set_buttonCancelText;
 
 
             // TODO set template in husky
 
 
             // sub-account exists => deletion is not allowed
-            if (parseInt(values['numChildren']) > 0) {
+            if (parseInt(values['numChildren']) > 0)
+            {
                 var dependencies = this.template.dependencyListAccounts(values['children']);
                 set_title = 'Warning! Sub-Companies detected!';
-
-                // FIXME use array for templating (join)
-                // FIXME translation
-                set_content = '<p>One or more related sub-companies found.</p>';
+                set_content  = '<p>Existing sub-companies found:</p><ul>'+dependencies+'</ul>';
+                set_content += values['numChildren']>3 ?'<p>and <strong>'+ (parseInt(values['numChildren'])-values['children'].length) + '</strong> more.</p>' : '';
                 set_content += '<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies ' +
                     'or remove the relation.</p>';
-
                 set_template = 'okDialog';
                 set_buttonCancelText = "Ok";
             }
             // related contacts exist => show checkbox
-            else if (parseInt(values['numContacts']) > 0) {
-                dependencies = this.template.dependencyListContacts(values['contacts']);
+            else if (parseInt(values['numContacts']) > 0)
+            {
+                dependencies= this.template.dependencyListContacts(values['contacts']);
                 set_title = 'Warning! Related contacts detected';
-                set_content = '<p>This company still have related contacts. Would you like to delete them with this company?</p>';
-                set_content += '<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all ' + parseInt(values["numContacts"]) + ' related contacts.</label></p>';
+                set_content  = '<p>Related contacts found:</p><ul>'+dependencies+'</ul>';
+                set_content += values['numContacts']>3 ?'<p>and <strong>'+ (parseInt(values['numContacts'])-values['contacts'].length) + '</strong> more.</p>' : '';
+                set_content += '<p>Would you like to delete them with the selected company?</p>'
+                set_content += '<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all '+parseInt(values['numContacts'])+' related contacts.</label></p>';
             }
 
 
@@ -151,15 +155,21 @@ define([
             // TODO
             this.$dialog.off();
 
+            this.$dialog.data('Husky.Ui.Dialog').on('dialog:backdrop:clicked', function() {
+                this.$deleteButton.removeClass('loading-black');
+                this.$saveButton.show();
+            }.bind(this));
+
             // abort/close
             this.$dialog.on('click', '.closeButton', function() {
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+
                 this.$deleteButton.removeClass('loading-black');
                 this.$saveButton.show();
             }.bind(this));
 
             // perform action
-            this.$dialog.on('click', '.saveButton', function() {
+            this.$dialog.on('click', '.deleteButton', function() {
 
                 var removeContacts = false;
 
@@ -169,17 +179,11 @@ define([
                     removeContacts = true;
                 }
 
-                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
 
-                //dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', item);
-                var account = this.getModel();
-                account.destroy({
-                    data: {removeContacts: removeContacts},
-                    processData: true,
-                    success: function() {
-                        this.gotoList();
-                    }.bind(this)
-                });
+                dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
+                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+                var account = new Account({id: id});
+                account.destroy({data: {removeContacts: removeContacts}, processData:true});
             }.bind(this));
         },
 
