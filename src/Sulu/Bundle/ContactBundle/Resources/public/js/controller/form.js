@@ -103,48 +103,6 @@ define([
             }
         },
 
-        // fills dialogbox
-        initRemoveDialog: function() {
-
-            this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                template: {
-                    content: '<h3><%= title %></h3><p><%= content %></p>',
-                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-                    header: '<button type="button" class="close">×</button>'
-                },
-                data: {
-                    content: {
-                        title: "Warning",
-                        content: "Do you really want to delete this contact? All data is going to be lost."
-                    },
-                    footer: {
-                        buttonCancelText: "Abort",
-                        buttonSaveText: "Delete"
-                    }
-                }
-            });
-
-            // TODO
-            this.$dialog.off();
-
-            this.$dialog.on('click', '.closeButton', function() {
-                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-
-                this.$deleteButton.removeClass('loading');
-                this.$saveButton.show();
-            }.bind(this));
-
-            this.$dialog.on('click', '.deleteButton', function() {
-                model.destroy({
-                    success: function() {
-                        this.gotoList();
-                    }.bind(this)
-                });
-
-                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            }.bind(this));
-        },
-
         initTemplate: function(json, template, Template) {
             template = _.template(Template, json);
             this.$el.html(template);
