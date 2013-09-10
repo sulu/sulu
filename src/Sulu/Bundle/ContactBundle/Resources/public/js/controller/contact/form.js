@@ -43,13 +43,13 @@ define([
 
                 if (!this.options.id) {
                     this.setModel(new Contact());
-                    this.initTemplate(contactJson, template, Template);
+                    this.initTemplate(contactJson, Template);
                 } else {
                     this.setModel(new Contact({id: this.options.id}));
                     this.getModel().fetch({
                         success: function(contact) {
                             var contactJson = contact.toJSON();
-                            this.initTemplate(contactJson, template, Template);
+                            this.initTemplate(contactJson, Template);
                         }.bind(this)
                     });
                 }
