@@ -150,27 +150,6 @@ class TranslationsControllerTest extends DatabaseTestCase
         $this->assertEquals('', $item->suggestion);
     }
 
-    public function testGetAll()
-    {
-        $client = static::createClient();
-        $client->request('GET', '/translate/api/catalogues/1/translations');
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-        $this->assertEquals(2, $response->total);
-        $this->assertEquals(2, sizeof($response->items));
-
-        $this->assertEquals(1, $response->items[0]->id);
-        $this->assertEquals('Code 1.1', $response->items[0]->value);
-        $this->assertEquals(1, $response->items[0]->code->id);
-        $this->assertEquals('code.1', $response->items[0]->code->code);
-
-        $this->assertEquals(2, $response->items[1]->id);
-        $this->assertEquals('', $response->items[1]->value);
-        $this->assertEquals(2, $response->items[1]->code->id);
-        $this->assertEquals('code.2', $response->items[1]->code->code);
-    }
-
     public function testPatch()
     {
         $request = array(
