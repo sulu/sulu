@@ -1,9 +1,21 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
+use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
+use Sulu\Bundle\TranslateBundle\Controller\Exception\NoDefaultCatalogueException;
+use Sulu\Bundle\TranslateBundle\Controller\Exception\ToManyDefaultCatalogueException;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
@@ -18,53 +30,75 @@ class TranslationsController extends RestController implements ClassResourceInte
     protected $entityName = 'SuluTranslateBundle:Translation';
 
     /**
-     * TODO description
+     * Lists all the translations or filters the translations by parameters for a single catalogue
+     * plus a suggestion
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction($slug)
     {
-        // find codes by catalogueID
-        $codes = $this->getDoctrine()
-            ->getRepository('SuluTranslateBundle:Code')
-            ->findByCatalogue($slug);
+        try {
+            // find codes by catalogueID
+            $codes = $this->getDoctrine()
+                ->getRepository('SuluTranslateBundle:Code')
+                ->findByCatalogueWithSuggestion($slug);
 
-        // construct response array
-        $translations = array();
-        for ($i = 0; $i < sizeof($codes); $i++) {
-            $code = $codes[$i];
+            // construct response array
+            $translations = array();
+            for ($i = 0; $i < sizeof($codes); $i++) {
+                $code = $codes[$i];
 
-            // if no translation available set value null
-            $value = '';
-            if (is_array($code['translations']) && sizeof($code['translations']) > 0) {
-                $value = $code['translations'][0]['value'];
+                // if no translation available set value null
+                $value = '';
+                $defaultValue = '';
+                if (is_array($code['translations']) && sizeof($code['translations']) == 1) {
+                    if ($code['translations'][0]['idCatalogues'] == $slug) {
+                        $value = $code['translations'][0]['value'];
+                    } else {
+                        $defaultValue = $code['translations'][0]['value'];
+                    }
+                } else if (is_array($code['translations']) && sizeof($code['translations']) == 2) {
+                    if ($code['translations'][0]['idCatalogues'] == $slug) {
+                        $value = $code['translations'][0]['value'];
+                        $defaultValue = $code['translations'][1]['value'];
+
+                    } else if ($code['translations'][1]['idCatalogues'] == $slug) {
+                        $value = $code['translations'][1]['value'];
+                        $defaultValue = $code['translations'][0]['value'];
+                    }
+                }
+
+                $translations[] = array(
+                    'id' => $code['id'],
+                    'value' => $value,
+                    'suggestion' => $defaultValue,
+                    'code' => array(
+                        'id' => $code['id'],
+                        'code' => $code['code'],
+                        'backend' => $code['backend'],
+                        'frontend' => $code['frontend'],
+                        'length' => $code['length']
+                    )
+                );
             }
 
-            $translations[] = array(
-                'id' => $code['id'],
-                'value' => $value,
-                'code' => array(
-                    'id' => $code['id'],
-                    'code' => $code['code'],
-                    'backend' => $code['backend'],
-                    'frontend' => $code['frontend'],
-                    'length' => $code['length']
-                )
+            $response = array(
+                'total' => sizeof($translations),
+                'items' => $translations
             );
+
+            $view = $this->view($response, 200);
+
+            return $this->handleView($view);
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
+
+            return $this->handleView($view);
         }
-
-        $response = array(
-            'total' => sizeof($translations),
-            'items' => $translations
-        );
-
-        $view = $this->view($response, 200);
-
-        return $this->handleView($view);
     }
 
     /**
-     * TODO description
+     * updates an array of translations
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -84,7 +118,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     }
 
     /**
-     * TODO description
+     * save a single translation
      * @param $catalogueId
      * @param $item
      */
@@ -114,7 +148,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     }
 
     /**
-     * TODO description
+     * create a single translation
      * @param $catalogueId
      * @param $item
      */
@@ -140,7 +174,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     }
 
     /**
-     * TODO description
+     * create a new code
      * @param $catalogueId
      * @param $item
      */
