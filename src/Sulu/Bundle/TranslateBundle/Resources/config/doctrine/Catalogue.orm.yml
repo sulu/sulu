@@ -10,6 +10,8 @@ Sulu\Bundle\TranslateBundle\Entity\Catalogue:
         locale:
             type: string
             length: '60'
+        isDefault:
+            type: boolean
     oneToMany:
         translations:
             targetEntity: Translation

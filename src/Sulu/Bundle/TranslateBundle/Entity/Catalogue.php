@@ -149,4 +149,32 @@ class Catalogue
     {
         return $this->locale;
     }
+    /**
+     * @var boolean
+     */
+    private $isDefault;
+
+
+    /**
+     * Set isDefault
+     *
+     * @param boolean $isDefault
+     * @return Catalogue
+     */
+    public function setIsDefault($isDefault)
+    {
+        $this->isDefault = $isDefault;
+    
+        return $this;
+    }
+
+    /**
+     * Get isDefault
+     *
+     * @return boolean 
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
+    }
 }
