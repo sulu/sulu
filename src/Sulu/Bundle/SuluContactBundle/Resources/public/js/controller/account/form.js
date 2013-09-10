@@ -98,55 +98,63 @@ define([
         // initializes the dialogbox and displays existing references
         initDialogBox: function(values, id){
 
-            var title   = 'Warning!';
-            var content = 'All data is going to be lost';
-            var buttonCancelText = "Abort";
+            var defaults = function (){
+                return {
+                    templateType: null,
+                    title: 'Warning!',
+                    content: 'Do you really want to delete the selected company? All data is going to be lost.',
+                    buttonCancelText: 'Cancel',
+                    buttonSaveText: 'Delete'
+                }
+            }
 
-
-            // variables to set content
-            var set_title, set_content, set_template, set_buttonCancelText;  // FIXME naming conventions
-
+            var values = defaults();
 
             // TODO set template in husky
 
-            // FIXME use array for templating (join)
             // FIXME translation
 
             // sub-account exists => deletion is not allowed
             if (parseInt(values['numChildren']) > 0)
             {
                 var dependencies = this.template.dependencyListAccounts(values['children']);
-                set_title = 'Warning! Sub-Companies detected!';
-                set_content  = '<p>Existing sub-companies found:</p><ul>'+dependencies+'</ul>';
-                set_content += values['numChildren']>3 ?'<p>and <strong>'+ (parseInt(values['numChildren'])-values['children'].length) + '</strong> more.</p>' : '';
-                set_content += '<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies ' +
-                    'or remove the relation.</p>';
-                set_template = 'okDialog';
-                set_buttonCancelText = "Ok";
+                values.title = 'Warning! Sub-Companies detected!';
+
+                values.templateType = 'okDialog';
+                values.buttonCancelText = "Ok";
+
+                var content = [];
+                content.push('<p>Existing sub-companies found:</p><ul>'+dependencies+'</ul>');
+                content.push(values['numChildren']>3 ?'<p>and <strong>'+ (parseInt(values['numChildren'])-values['children'].length) + '</strong> more.</p>' : '');
+                content.push('<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies or remove the relation.</p>');
+                values.content = content.join(" ");
             }
             // related contacts exist => show checkbox
             else if (parseInt(values['numContacts']) > 0)
             {
                 dependencies= this.template.dependencyListContacts(values['contacts']);
-                set_title = 'Warning! Related contacts detected';
-                set_content  = '<p>Related contacts found:</p><ul>'+dependencies+'</ul>';
-                set_content += values['numContacts']>3 ?'<p>and <strong>'+ (parseInt(values['numContacts'])-values['contacts'].length) + '</strong> more.</p>' : '';
-                set_content += '<p>Would you like to delete them with the selected company?</p>';
-                set_content += '<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all '+parseInt(values['numContacts'])+' related contacts.</label></p>';
+                values.title = 'Warning! Related contacts detected';
+
+                var content= [];
+                content.push('<p>Related contacts found:</p><ul>'+dependencies+'</ul>');
+                content.push(values['numContacts']>3 ?'<p>and <strong>'+ (parseInt(values['numContacts'])-values['contacts'].length) + '</strong> more.</p>' : '');
+                content.push('<p>Would you like to delete them with the selected company?</p>');
+                content.push('<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all '+parseInt(values['numContacts'])+' related contacts.</label></p>');
+                values.content = content.join(" ");
             }
 
 
             // set values to dialog box
             this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                templateType: set_template ? set_template : null,
+                templateType: values.templateType,
                 data: {
                     content: {
-                        title: set_title ? set_title : title,
-                        content: set_content ? set_content : content
+                        title: values.title,
+                        content: values.content
                     },
                     footer: {
-                        buttonCancelText: set_buttonCancelText ? set_buttonCancelText : buttonCancelText,
-                        buttonSaveText: "Delete"
+                        buttonCancelText: values.buttonCancelText,
+                        buttonSaveText: values.buttonSaveText
                     }
                 }
             });
