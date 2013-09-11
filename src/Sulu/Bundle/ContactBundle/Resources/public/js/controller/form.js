@@ -11,6 +11,7 @@ define([
     'jquery',
     'backbone',
     'router',
+    'parsley',
     'sulucontact/model/account',
     'sulucontact/model/contact',
     'sulucontact/model/country',
@@ -20,7 +21,7 @@ define([
     'sulucontact/model/phoneType',
     'sulucontact/model/address',
     'sulucontact/model/addressType'
-], function($, Backbone, Router, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType) {
+], function($, Backbone, Router, Parsley, Account, Contact, Country, Email, EmailType, Phone, PhoneType, Address, AddressType) {
 
     'use strict';
 
@@ -68,8 +69,42 @@ define([
             return null;
         },
 
-        initTemplate: function(json, template, Template) {
-            template = _.template(Template, json);
+        initOptions: function() {
+            var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.empty();
+            var $optionsLeft = $('#headerbar-mid-left');
+            $optionsLeft.empty();
+
+            this.$saveButton = this.staticTemplates.saveButton('Save', function(event) {
+                if (!this.$saveButton.hasClass('loading-black')) {
+                    this.$saveButton.addClass('loading-black');
+                    if (!!this.options.id) this.$deleteButton.hide();
+
+                    if (this.$form.parsley('validate')) {
+                        this.$form.submit();
+                    } else {
+                        this.$saveButton.removeClass('loading-black');
+                        if (!!this.options.id) this.$deleteButton.show();
+                    }
+                }
+            }.bind(this));
+            $optionsLeft.append(this.$saveButton);
+
+            if (!!this.options.id) {
+                this.$deleteButton = this.staticTemplates.deleteButton('Delete', function() {
+                    if (!this.$deleteButton.hasClass('loading-black')) {
+                        this.$deleteButton.addClass('loading-black');
+                        this.$saveButton.hide();
+
+                        this.initRemoveDialog();
+                    }
+                }.bind(this));
+                $optionsRight.append(this.$deleteButton);
+            }
+        },
+
+        initTemplate: function(json, Template) {
+            var template = _.template(Template, json);
             this.$el.html(template);
 
             this.initEmails(json);
@@ -77,6 +112,18 @@ define([
             this.initAddresses(json);
 
             this.initFields(json);
+
+            // create dialog box
+            this.$dialog = $('#dialog').huskyDialog({
+                backdrop: true,
+                width: '650px'
+            });
+
+
+            this.initOptions();
+
+            this.$form = this.$('form[data-validate="parsley"]');
+            this.$form.parsley({validationMinlength: 0});
         },
 
         initDropDown: function(that, types) {
@@ -95,6 +142,7 @@ define([
         },
 
         initFields: function(json) {
+            // FIXME excludeItems never is used ???
             var excludeItems = [];
             if (!!this.options.id) {
                 excludeItems = [
@@ -171,33 +219,38 @@ define([
                 }
             });
 
-            model.save(null, {
-                success: function() {
-                    Router.navigate(listUrl);
-                }
-            });
+            if (this.$form.parsley('validate')) {
+                model.save(null, {
+                    success: function() {
+                        this.gotoList();
+                    }.bind(this)
+                });
+            } else {
+                this.$saveButton.removeClass('loading-black');
+            }
         },
 
         initEmails: function(json) {
             var emailJson = _.clone(Email.prototype.defaults);
             this.fillFields(json.emails, 2, emailJson);
 
+            var first = true;
             json.emails.forEach(function(item) {
-                this.addEmail(this.$('#emails'), item);
+                this.addEmail(this.$('#emails'), item, first);
+                first = false;
             }.bind(this));
         },
 
         addEmailEvent: function(event) {
-            var $element = $(event.currentTarget);
-            var id = $element.data("target-id");
-            var $div = $('#' + id);
-
-            var phoneJson = _.clone(Email.prototype.defaults);
-            var $email = this.addEmail($div, phoneJson);
+            var $element = $(event.currentTarget),
+                id = $element.data("target-id"),
+                $div = $('#' + id),
+                phoneJson = _.clone(Email.prototype.defaults);
+            this.addEmail($div, phoneJson);
         },
 
-        addEmail: function($div, json) {
-            var $email = $(_.template(this.staticTemplates.emailRow(), json));
+        addEmail: function($div, json, first) {
+            var $email = $(_.template(this.staticTemplates.emailRow(first), json));
             $div.append($email);
             //$(window).scrollTop($email.offset().top);
 
@@ -214,12 +267,12 @@ define([
         },
 
         addPhoneEvent: function(event) {
-            var $element = $(event.currentTarget);
-            var id = $element.data("target-id");
-            var $div = $('#' + id);
+            var $element = $(event.currentTarget),
+                id = $element.data("target-id"),
+                $div = $('#' + id),
+                phoneJson = _.clone(Phone.prototype.defaults);
 
-            var phoneJson = _.clone(Phone.prototype.defaults);
-            var $phone = this.addPhone($div, phoneJson);
+            this.addPhone($div, phoneJson);
         },
 
         addPhone: function($div, json) {
@@ -240,12 +293,11 @@ define([
         },
 
         addAddressEvent: function(event) {
-            var $element = $(event.currentTarget);
-            var id = $element.data("target-id");
-            var $div = $('#' + id);
-
-            var addressJson = _.clone(Address.prototype.defaults);
-            var $address = this.addAddress($div, addressJson, true);
+            var $element = $(event.currentTarget),
+                id = $element.data("target-id"),
+                $div = $('#' + id),
+                addressJson = _.clone(Address.prototype.defaults);
+            this.addAddress($div, addressJson, true);
         },
 
         addAddress: function($div, json, scroll) {
@@ -301,30 +353,50 @@ define([
             }
         },
 
+        gotoList: function() {
+            this.$dialog.off();
+            this.$saveButton.off();
+            if (!!this.options.id) {
+                this.$deleteButton.off();
+            }
+
+            Router.navigate(listUrl);
+        },
+
         staticTemplates: {
-            emailRow: function() {
+            emailRow: function(first) {
                 return [
                     '<div class="grid-col-6 email-item" data-id="<%= id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!emailType)?emailType.id :defaults.emailType.id %>">',
-                    '<span class="type-name"><%= (!!emailType)?emailType.name : defaults.emailType.name %></span>',
-                    '<span class="dropdown-toggle inline-block"></span>',
-                    '</label>',
-                    '<div class="remove-email"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element email-value" type="text" value="<%= email %>"/>',
+                        '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!emailType)?emailType.id :defaults.emailType.id %>">',
+                            '<span class="type-name"><%= (!!emailType)?emailType.name : defaults.emailType.name %></span><span>' + (!!first ? '&nbsp;*' : '') + '</span>',
+                            '<span class="dropdown-toggle inline-block"></span>',
+                        '</label>',
+                        '<div class="remove-email"><span class="icon-remove pull-right"></span></div>',
+                        '<input class="form-element email-value" type="text" value="<%= email %>" data-type="email" ' + (!!first ? 'data-required="true"' : '') + ' data-trigger="focusout" />',
                     '</div>'
                 ].join('')
             },
             phoneRow: function() {
                 return [
                     '<div class="grid-col-6 phone-item" data-id="<%= id %>">',
-                    '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phoneType)? phoneType.id : defaults.phoneType.id %>">',
-                    '<span class="type-name"><%= (!!phoneType)? phoneType.name : defaults.phoneType.name %></span>',
-                    '<span class="dropdown-toggle inline-block"></span>',
-                    '</label>',
-                    '<div class="remove-phone"><span class="icon-remove pull-right"></span></div>',
-                    '<input class="form-element phone-value" type="text" value="<%= phone %>"/>',
+                        '<label class="bold drop-down-trigger type-value pull-left" data-id="<%= (!!phoneType)? phoneType.id : defaults.phoneType.id %>">',
+                            '<span class="type-name"><%= (!!phoneType)? phoneType.name : defaults.phoneType.name %></span>',
+                            '<span class="dropdown-toggle inline-block"></span>',
+                        '</label>',
+                        '<div class="remove-phone"><span class="icon-remove pull-right"></span></div>',
+                        '<input class="form-element phone-value" type="text" value="<%= phone %>" data-trigger="focusout" data-minlength="3" />',
                     '</div>'
                 ].join('')
+            },
+            saveButton: function(text, fn) {
+                var $button = $('<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>');
+                $button.on('click', fn);
+                return $button;
+            },
+            deleteButton: function(text, fn) {
+                var $button = $('<div id="deleteButton" class="pull-right pointer"><div class="loading-content"><span class="icon-circle-remove pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>');
+                $button.on('click', fn);
+                return $button;
             }
         }
     });

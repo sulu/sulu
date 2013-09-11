@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use DateTime;
-use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -19,7 +18,6 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
@@ -144,7 +142,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
 
             $parentData = $this->getRequest()->get('account');
-            if ($parentData != null) {
+            if ($parentData != null && $parentData['id'] != null) {
                 /** @var Account $parent */
                 $parent = $this->getDoctrine()
                     ->getRepository('SuluContactBundle:Account')
@@ -227,7 +225,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
                 $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
 
                 $parentData = $this->getRequest()->get('account');
-                if ($parentData != null) {
+                if ($parentData != null && $parentData['id'] != null) {
                     /** @var Account $parent */
                     $parent = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:Account')
@@ -242,7 +240,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
                 $contact->setChanged(new DateTime());
 
                 // process details
-                if (!( $this->processEmails($contact)
+                if (!($this->processEmails($contact)
                     && $this->processPhones($contact)
                     && $this->processAddresses($contact)
                     && $this->processNotes($contact))
@@ -253,8 +251,8 @@ class ContactsController extends RestController implements ClassResourceInterfac
                 $em->flush();
                 $view = $this->view($contact, 200);
             }
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -265,7 +263,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     /**
      * Process all emails from request
      * @param Contact $contact The contact on which is worked
-     * @return bool True if the processing was sucessful, otherwise false
+     * @return bool True if the processing was successful, otherwise false
      */
     protected function processEmails(Contact $contact)
     {
@@ -290,7 +288,6 @@ class ContactsController extends RestController implements ClassResourceInterfac
      * Adds a new email to the given contact and persist it with the given object manager
      * @param Contact $contact
      * @param $emailData
-     * @param ObjectManager $em
      * @return bool True if there was no error, otherwise false
      */
     protected function addEmail(Contact $contact, $emailData)
@@ -318,7 +315,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     /**
      * Updates the given email address
      * @param Email $email The email object to update
-     * @param $entry The entry with the new data
+     * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
      */
     protected function updateEmail(Email $email, $entry)
@@ -342,7 +339,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     /**
      * Process all phones from request
      * @param Contact $contact The contact on which is worked
-     * @return bool True if the processing was sucessful, otherwise false
+     * @return bool True if the processing was successful, otherwise false
      */
     protected function processPhones(Contact $contact)
     {
@@ -367,7 +364,6 @@ class ContactsController extends RestController implements ClassResourceInterfac
      * Add a new phone to the given contact and persist it with the given object manager
      * @param Contact $contact
      * @param $phoneData
-     * @param ObjectManager $em
      * @return bool True if there was no error, otherwise false
      */
     protected function addPhone(Contact $contact, $phoneData)
@@ -487,7 +483,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     /**
      * Updates the given address
      * @param Address $address The phone object to update
-     * @param $entry The entry with the new data
+     * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
      */
     protected function updateAddress(Address $address, $entry)
@@ -524,7 +520,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
     /**
      * Process all notes from request
      * @param Contact $contact The contact on which is worked
-     * @return bool True if the processing was sucessful, otherwise false
+     * @return bool True if the processing was successful, otherwise false
      */
     protected function processNotes(Contact $contact)
     {
@@ -549,7 +545,6 @@ class ContactsController extends RestController implements ClassResourceInterfac
      * Add a new note to the given contact and persist it with the given object manager
      * @param Contact $contact
      * @param $noteData
-     * @param ObjectManager $em
      * @return bool True if there was no error, otherwise false
      */
     protected function addNote(Contact $contact, $noteData)
@@ -568,8 +563,8 @@ class ContactsController extends RestController implements ClassResourceInterfac
 
     /**
      * Updates the given note
-     * @param Address $address The phone object to update
-     * @param $entry The entry with the new data
+     * @param Note $note
+     * @param array $entry The entry with the new data
      * @return bool True if successful, otherwise false
      */
     protected function updateNote(Note $note, $entry)

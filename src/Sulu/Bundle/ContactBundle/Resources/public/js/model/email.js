@@ -10,7 +10,7 @@
 define([
     'backbonerelational',
     'sulucontact/model/emailType'
-], function (BackboneRelational, EmailType) {
+], function(BackboneRelational, EmailType) {
     return Backbone.RelationalModel.extend({
         urlRoot: '/contact/api/emails',
         defaults: {

@@ -11,11 +11,11 @@
             <div class="grid-row">
                 <div class="grid-col-6">
                     <label class="bold">First name*</label>
-                    <input class="form-element" type="text" id="first-name" value="<%= firstName %>"/>
+                    <input class="form-element" type="text" id="first-name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= firstName %>"/>
                 </div>
                 <div class="grid-col-6">
                     <label class="bold">Last name*</label>
-                    <input class="form-element" type="text" id="last-name" value="<%= lastName %>"/>
+                    <input class="form-element" type="text" id="last-name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= lastName %>"/>
                 </div>
             </div>
             <div class="grid-row">
@@ -27,26 +27,10 @@
                     <label>Position</label>
                     <input class="form-element" type="text" id="position" value="<%= position %>"/>
                 </div>
-                <div class="grid-col-5">
+                <div class="grid-col-5" id="company">
                     <label>Company</label>
-
-                    <div id="company"></div>
                 </div>
             </div>
         </div>
     </div>
-
-
-    <!--
-    <hr class="divider"/>
-    <div class="grid-row">
-        <div class="grid-col-9">
-            <h2>Attachments</h2>
-        </div>
-        <div class="grid-col-3 text-right mt-10">
-            <span class="icon-add addEmail"></span><span class="control-label">Add attachment</span>
-            <span class="icon-settings addEmail"></span><span class="control-label">Edit</span>
-        </div>
-    </div>
-    -->
 {% endblock %}

@@ -10,7 +10,7 @@
 define([
     'backbonerelational',
     'sulucontact/model/urlType'
-], function (BackboneRelational, UrlType) {
+], function(BackboneRelational, UrlType) {
     return Backbone.RelationalModel.extend({
         defaults: {
             id: null,

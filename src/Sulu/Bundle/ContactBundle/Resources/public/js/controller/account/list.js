@@ -12,143 +12,209 @@ define([
     'backbone',
     'router',
     'sulucontact/model/account'
-], function ($, Backbone, Router, Account) {
+], function($, Backbone, Router, Account) {
 
     'use strict';
 
-    var $dialog, dataGrid;
+    var dataGrid;
 
     return Backbone.View.extend({
 
-        initialize: function () {
+        initialize: function() {
             this.render();
         },
 
-        render: function () {
+        render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
             this.$el.removeData('Husky.Ui.DataGrid');
 
-            require(['text!sulucontact/templates/account/table-row.html'], function (RowTemplate) {
+            require(['text!/contact/template/account/list'], function(Template) {
+                var template = _.template(Template);
+                this.$el.html(template);
 
-                dataGrid = this.$el.huskyDataGrid({
-                    url: '/contact/api/accounts/list?field=name',
-                    pagination: true,
-                    showPages: 6,
-                    pageSize: 4,
-                    template: {
-                        row: RowTemplate
-                    },
-                    selectItemType: 'radio'
+                dataGrid = this.$('#companies-list').huskyDataGrid({
+                    url: '/contact/api/accounts/list?fields=id,name',
+                    pagination: false,
+                    selectItemType: 'checkbox',
+                    tableHead: [
+                        {content: 'Company Name'}
+                        //{content: 'E-Mail'}
+                    ],
+                    excludeFields: ['id']
                 });
 
-                dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
+                dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:click', function(item) {
                     Router.navigate('contacts/companies/edit:' + item);
                 });
 
-                this.$el.on('click', '.remove-row > span', function (event) {
-                    var $element = $(event.currentTarget);
-                    var $parent = $element.parent().parent();
-                    var id = $parent.data('id');
+                this.$el.on('click', '.dropdown-toggle', function(event) {
+                    $('.dropdown-menu').toggle();
+                });
 
-                    this.fetchDeleteInfo(id,event);
-
-
+                // edit menu listener
+                this.$el.on('click', '#edit-remove', function(event) {
+                    $('.dropdown-menu').hide();
+                    this.fetchDeleteInfoMutliple(dataGrid.data('Husky.Ui.DataGrid').selectedItemIds);
                 }.bind(this));
 
-
-                $dialog = $('#dialog').huskyDialog({
+                // initialize dialog box
+                this.$dialog = $('#dialog').huskyDialog({
                     backdrop: true,
                     width: '650px'
                 });
-
-                this.initOperationsRight();
-
             }.bind(this));
+
+            this.initOptions();
         },
 
-        // fetches additional needed information needed for the dialogbox
-        fetchDeleteInfo: function(id,event){
+        initOptions: function() {
+            var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.off();
+            $optionsRight.empty();
+            var $optionsLeft = $('#headerbar-mid-left');
+            $optionsLeft.off();
+            $optionsLeft.empty();
+            $optionsLeft.append(this.template.addButton('Add', '#contacts/companies/add'));
 
-            var url = '/contact/api/accounts/'+id+'/deleteinfo';
+        },
 
-            $.ajax({
+        // get deleteinfo for multiple ids
+        fetchDeleteInfoMutliple: function(ids) {
 
-                    headers : {
-                        'Accept' : 'application/json',
-                        'Content-Type' : 'application/json'
+            // no contacts selected
+            if (ids.length == 0) {
+                //  do nothing
+                return;
+            }
+            // get delete info for multiple accounts
+            else {
+                var url = '/contact/api/accounts/multipledeleteinfo';
+
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     context: this,
                     type: "GET",
                     url: url,
-
-                    success : function(response, textStatus, jqXhr) {
-                        console.log("get request successful");
-                        this.initDialogBox(response, id,event);
+                    data: {
+                        ids: ids
                     },
-                    error : function(jqXHR, textStatus, errorThrown) {
+
+                    success: function(response, textStatus, jqXhr) {
+                        console.log("get request successful");
+                        this.initDialogBoxRemoveMultiple(response, ids);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.log("error during get request: " + textStatus, errorThrown);
                     },
-                    complete : function(response) {
+                    complete: function(response) {
                         console.log("completed request");
                     }
-            });
+                });
+            }
         },
 
         // initializes the dialogbox and displays existing references
-        initDialogBox: function(values, id, event){
+        initDialogBoxRemoveMultiple: function(values, ids) {
 
-            var dependencies;
-            if(values['contacts'].length > 0) {
-                dependencies= this.template.dependencyListContacts(values['contacts']);
+            var title = 'Warning!';
+            var content = 'All data is going to be lost';
+            var buttonCancelText = "Abort";
+
+
+            // variables to set content
+            var set_title, set_content, set_template, set_buttonCancelText;
+
+
+            // TODO set template in husky
+
+
+            // sub-account exists => deletion is not allowed
+            if (parseInt(values['numChildren']) > 0) {
+                var dependencies = this.template.dependencyListAccounts(values['children']);
+                set_title = 'Warning! Sub-Companies detected!';
+                set_content = '<p>One or more related sub-companies found.</p>';
+                set_content += '<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies ' +
+                    'or remove the relation.</p>';
+                set_template = 'okDialog';
+                set_buttonCancelText = "Ok";
+            }
+            // related contacts exist => show checkbox
+            else if (parseInt(values['numContacts']) > 0) {
+                dependencies = this.template.dependencyListContacts(values['contacts']);
+                set_title = 'Warning! Related contacts detected';
+                set_content = '<p>One or more companies still have related contacts. Would you like to delete them with the selected companies?</p>';
+                set_content += '<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all ' + parseInt(values["numContacts"]) + ' related contacts.</label></p>';
             }
 
-            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                template: {
-                    content: '<h3><%= title %></h3><p><%= content %></p>',
-                    footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-                    header: '<button type="button" class="close">×</button>'
-                },
+
+            // set values to dialog box
+            this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                templateType: set_template ? set_template : null,
                 data: {
                     content: {
-                        title: dependencies != undefined ?  "Warning!" : 'Info!',
-                        content: dependencies != undefined ? '<p>Existing references found:</p><ul>'+dependencies+'</ul>' : 'No dependencies found!'
+                        title: set_title ? set_title : title,
+                        content: set_content ? set_content : content
                     },
                     footer: {
-                        buttonCancelText: "Abort",
+                        buttonCancelText: set_buttonCancelText ? set_buttonCancelText : buttonCancelText,
                         buttonSaveText: "Delete"
                     }
                 }
             });
 
-            $dialog.on('click', '.closeButton', function() {
-                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            });
 
+            // events on dialogbox
 
-            $dialog.on('click', '.deleteButton', function() {
+            // TODO
+            this.$dialog.off();
 
-                dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
-                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-                var account = new Account({id: id});
-                account.destroy();
-            });
-        },
+            // abort/close
+            this.$dialog.on('click', '.closeButton', function() {
+                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            }.bind(this));
 
-        // displays the add button on the top
-        initOperationsRight: function(){
+            // perform action
+            this.$dialog.on('click', '.saveButton', function() {
 
-            var $operationsRight = $('#headerbar-mid-right');
-            $operationsRight.empty();
-            $operationsRight.append(this.template.button('#contacts/companies/add','Add...'));
+                var removeContacts = false;
+
+                // check if related contacts should be deleted
+                if ($('#checkDeleteContacts').length && $('#checkDeleteContacts').prop('checked')) {
+                    // delete all contacts
+                    removeContacts = true;
+                }
+
+                this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+
+                ids.forEach(function(item) {
+                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', item);
+                    var account = new Account({id: item});
+                    account.destroy({data: {removeContacts: removeContacts}, processData: true});
+                }.bind(this));
+            }.bind(this));
         },
 
         template: {
-            button: function(url, name){
-                return '<a class="btn" href="'+url+'" target="_top" title="Add">'+name+'</a>';
+            button: function(url, name) {
+                return '<a class="btn" href="' + url + '" target="_top" title="Add">' + name + '</a>';
             },
             dependencyListContacts: function(contacts) {
                 var list = "<% _.each(contacts, function(contact) { %> <li><%= contact.firstName %> <%= contact.lastName %></li> <% }); %>";
-                return _.template(list,{contacts:contacts});
+                return _.template(list, {contacts: contacts});
+            },
+            dependencyListAccounts: function(accounts) {
+                var list = "<% _.each(accounts, function(account) { %> <li><%= account.name %></li> <% }); %>";
+                return _.template(list, {accounts: accounts});
+            },
+            addButton: function(text, route) {
+                var $button = $('<div id="addButton" class="pull-left pointer"><span class="icon-add pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
+                $button.on('click', function() {
+                    Router.navigate(route);
+                });
+                return $button;
             }
         }
     });
