@@ -12,6 +12,17 @@ define(['router'], function (Router) {
     'use strict';
 
     var initialize = function () {
+
+        // list all roles
+        Router.route('settings/roles', 'security:role:list', function() {
+            require(['sulusecurity/controller/role/list'], function(List) {
+                new List({
+                    el: App.$content
+                });
+            });
+        });
+
+
     };
 
     return {
