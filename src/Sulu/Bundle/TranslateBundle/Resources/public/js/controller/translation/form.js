@@ -31,7 +31,8 @@ define([
         $operationsRight,
         $form,
         $dialog,
-        packageModel;
+        packageModel,
+        defaultCatalogue;
 
 
     return Backbone.View.extend({
@@ -67,7 +68,7 @@ define([
 
                 catalogues = new Catalogues({
                     packageId: packageId,
-                    fields: 'id,locale'
+                    fields: 'id,locale,isDefault'
                 });
 
                 packageModel.fetch({
@@ -75,7 +76,8 @@ define([
 
                         catalogues.fetch({
                             success: function() {
-                                selectedCatalogue = catalogues.toJSON()[0];
+                                defaultCatalogue = catalogues.findWhere({isDefault: true}).toJSON();
+                                selectedCatalogue = defaultCatalogue;
                                 this.loadTranslations(Template);
 
                             }.bind(this)
@@ -98,7 +100,8 @@ define([
                     var template = _.template(Template, {
                         translations: translations.toJSON(),
                         catalogue: selectedCatalogue,
-                        package: packageModel.toJSON()
+                        package: packageModel.toJSON(),
+                        defaultCatalogue: defaultCatalogue
                     });
                     this.$el.html(template);
 
