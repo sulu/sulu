@@ -145,17 +145,19 @@ define([
 
             translatePackage.set({name: this.$('#name').val()});
 
-            // FIXME inefficient selector: use find e.g
-            var rows = $('#catalogues tbody tr');
+            var rows = $('#catalogues').find('tbody tr');
 
             // create catalogues if necessary and add them
 
             for (var i = 1; i <= rows.length; i++) {
 
-                var id = $(rows[i - 1]).data('id');
+                var row = $(rows[i-1]),
+                    id = row.data('id'),
+                    isDefault = row.find('input[type=radio]').is(':checked'),
+                    locale = row.find('input.inputLocale').val();
 
-                // FIXME inefficient selector
-                var locale = $('#catalogues tbody tr:nth-child(' + i + ') td:nth-child(2) input').val();
+                console.log(id, isDefault, "id and default")
+
                 if (locale != "") {
                     var catalogue;
 
@@ -165,13 +167,15 @@ define([
                         catalogue = new Catalogue();
                         translatePackage.get('catalogues').add(catalogue);
                     }
-                    catalogue.set({'locale': locale});
+                    catalogue.set({
+                        locale: locale,
+                        isDefault: isDefault
+                    });
                 }
             }
 
 
             // send delete request for models which should be deleted
-
             cataloguesToDelete.forEach(function(id) {
                 var model = translatePackage.get('catalogues').get(id);
                 model.destroy({
@@ -185,7 +189,6 @@ define([
                 translatePackage.save(null, {
                     success: function() {
                         that.undelegateEvents();
-                        //dataGrid.data('Husky.Ui.DataGrid').off();
                         that.removeHeaderbarEvents();
                         Router.navigate('settings/translate');
                     }
@@ -202,13 +205,16 @@ define([
                     pagination: false,
                     showPages: 6,
                     pageSize: 4,
-                    //selectItemType: 'radio',
+                    className: 'catalogueList',
+
                     tableHead: [
-                        {content: 'Default Language'},
+                        {
+                            content: 'Default Language',
+                            width: '15%'
+                        },
                         {content: 'Language'},
                         {content: ''}
                     ],
-                    //excludeFields: ['id'],
                     template: {
                         row: RowTemplate
                     },
@@ -217,13 +223,13 @@ define([
                     }
                 });
 
-                console.log(data, "data");
-
+                // add row
                 $('#addCatalogueRow').on('click', function() {
-                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
+                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', isDefault: false, locale: '', translations: [] });
                     this.$form.parsley('addItem', '#catalogues table tr:last input[type="text"]');
                 }.bind(this));
 
+                // remove row
                 $catalogues.on('click', '.remove-row > span', function(event) {
 
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
@@ -236,6 +242,19 @@ define([
 
                 });
 
+                // init radio buttons - default language
+                $('#catalogues').on('click', 'input[type=radio]', function(event) {
+                    var element = $(event.currentTarget),
+                        id = element.closest('tr').data('id'),
+                        radios = $('#catalogues').find('input[type=radio]');
+
+                    _.each(radios, function(e){
+                        $(e).removeClass('is-selected').prop('checked', false);
+                    });
+
+                    element.addClass('is-selected').prop('checked', true);
+
+                }.bind(this));
 
 
                 this.initValidation();
@@ -317,8 +336,8 @@ define([
                 if (!$(deleteButton).hasClass('loading')) {
                     $(deleteButton).addClass('loading');
 
-                    // FIXME inefficient selector
-                    $('#headerbar-mid-left #saveButton').hide();
+
+                    $('#headerbar-mid-left').find('#saveButton').hide();
                 }
                 this.deletePackage();
             }.bind(this));
