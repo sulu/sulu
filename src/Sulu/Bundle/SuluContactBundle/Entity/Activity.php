@@ -1,12 +1,4 @@
 <?php
-/*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -17,11 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Activity
 {
-    /**
-     * @var integer
-     */
-    private $id;
-
     /**
      * @var string
      */
@@ -58,9 +45,19 @@ class Activity
     private $changed;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var integer
      */
-    private $contact;
+    private $id;
+
+    /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    private $changer;
+
+    /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    private $creator;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\ActivityStatus
@@ -70,23 +67,8 @@ class Activity
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
      */
-    private $creator;
+    private $contact;
 
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    private $changer;
-
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set name
@@ -97,14 +79,14 @@ class Activity
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -120,14 +102,14 @@ class Activity
     public function setDue($due)
     {
         $this->due = $due;
-
+    
         return $this;
     }
 
     /**
      * Get due
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getDue()
     {
@@ -143,14 +125,14 @@ class Activity
     public function setPriority($priority)
     {
         $this->priority = $priority;
-
+    
         return $this;
     }
 
     /**
      * Get priority
      *
-     * @return integer
+     * @return integer 
      */
     public function getPriority()
     {
@@ -166,14 +148,14 @@ class Activity
     public function setReminder($reminder)
     {
         $this->reminder = $reminder;
-
+    
         return $this;
     }
 
     /**
      * Get reminder
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getReminder()
     {
@@ -189,14 +171,14 @@ class Activity
     public function setNotification($notification)
     {
         $this->notification = $notification;
-
+    
         return $this;
     }
 
     /**
      * Get notification
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getNotification()
     {
@@ -212,14 +194,14 @@ class Activity
     public function setCreated($created)
     {
         $this->created = $created;
-
+    
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getCreated()
     {
@@ -235,14 +217,14 @@ class Activity
     public function setChanged($changed)
     {
         $this->changed = $changed;
-
+    
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getChanged()
     {
@@ -250,26 +232,59 @@ class Activity
     }
 
     /**
-     * Set contact
+     * Get id
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set changer
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
      * @return Activity
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
+    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
-        $this->contact = $contact;
-
+        $this->changer = $changer;
+    
         return $this;
     }
 
     /**
-     * Get contact
+     * Get changer
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
      */
-    public function getContact()
+    public function getChanger()
     {
-        return $this->contact;
+        return $this->changer;
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @return Activity
+     */
+    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    {
+        $this->creator = $creator;
+    
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 
     /**
@@ -281,14 +296,14 @@ class Activity
     public function setActivityStatus(\Sulu\Bundle\ContactBundle\Entity\ActivityStatus $activityStatus)
     {
         $this->activityStatus = $activityStatus;
-
+    
         return $this;
     }
 
     /**
      * Get activityStatus
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityStatus
+     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityStatus 
      */
     public function getActivityStatus()
     {
@@ -296,48 +311,25 @@ class Activity
     }
 
     /**
-     * Set creator
+     * Set contact
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $creator
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
      * @return Activity
      */
-    public function setCreator(\Sulu\Bundle\ContactBundle\Entity\Contact $creator)
+    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
     {
-        $this->creator = $creator;
-
+        $this->contact = $contact;
+    
         return $this;
     }
 
     /**
-     * Get creator
+     * Get contact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
      */
-    public function getCreator()
+    public function getContact()
     {
-        return $this->creator;
-    }
-
-    /**
-     * Set changer
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $changer
-     * @return Activity
-     */
-    public function setChanger(\Sulu\Bundle\ContactBundle\Entity\Contact $changer)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    public function getChanger()
-    {
-        return $this->changer;
+        return $this->contact;
     }
 }

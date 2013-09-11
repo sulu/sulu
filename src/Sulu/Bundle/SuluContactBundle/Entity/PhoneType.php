@@ -1,36 +1,23 @@
 <?php
-/*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
 
 /**
  * PhoneType
- * @ExclusionPolicy("all")
  */
 class PhoneType
 {
     /**
-     * @var integer
-     * @Expose
-     */
-    private $id;
-
-    /**
      * @var string
-     * @Expose
      */
     private $name;
+
+    /**
+     * @var integer
+     */
+    private $id;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -44,17 +31,7 @@ class PhoneType
     {
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
+    
     /**
      * Set name
      *
@@ -64,18 +41,28 @@ class PhoneType
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -87,7 +74,7 @@ class PhoneType
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
     {
         $this->phones[] = $phones;
-
+    
         return $this;
     }
 
@@ -104,7 +91,7 @@ class PhoneType
     /**
      * Get phones
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getPhones()
     {

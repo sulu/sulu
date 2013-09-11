@@ -1,12 +1,4 @@
 <?php
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -18,19 +10,24 @@ use Doctrine\ORM\Mapping as ORM;
 class Email
 {
     /**
-     * @var integer
-     */
-    private $id;
-
-    /**
      * @var string
      */
     private $email;
 
     /**
+     * @var integer
+     */
+    private $id;
+
+    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\EmailType
      */
     private $emailType;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -42,19 +39,10 @@ class Email
      */
     public function __construct()
     {
+        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
     /**
      * Set email
      *
@@ -79,6 +67,16 @@ class Email
     }
 
     /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Set emailType
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\EmailType $emailType
@@ -99,6 +97,39 @@ class Email
     public function getEmailType()
     {
         return $this->emailType;
+    }
+
+    /**
+     * Add contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @return Email
+     */
+    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts[] = $contacts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     */
+    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts->removeElement($contacts);
+    }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
     }
 
     /**
@@ -132,43 +163,5 @@ class Email
     public function getAccounts()
     {
         return $this->accounts;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
-
-    /**
-     * Add contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     * @return Email
-     */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts[] = $contacts;
-    
-        return $this;
-    }
-
-    /**
-     * Remove contacts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
-    {
-        $this->contacts->removeElement($contacts);
-    }
-
-    /**
-     * Get contacts
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getContacts()
-    {
-        return $this->contacts;
     }
 }
