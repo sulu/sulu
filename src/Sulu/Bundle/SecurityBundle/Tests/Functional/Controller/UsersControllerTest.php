@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class UsersControllerTest extends DatabaseTestCase
@@ -31,6 +32,18 @@ class UsersControllerTest extends DatabaseTestCase
     public function setUp()
     {
         $this->setUpSchema();
+
+        $role1 = new Role();
+        $role1->setName('Role1');
+        $role1->setChanged(new DateTime());
+        $role1->setCreated(new DateTime());
+        self::$em->persist($role1);
+
+        $role2 = new Role();
+        $role2->setName('Role1');
+        $role2->setChanged(new DateTime());
+        $role2->setCreated(new DateTime());
+        self::$em->persist($role2);
 
         $user = new User();
         $user->setUsername('admin');
@@ -97,6 +110,14 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
+                'userRoles' => array(
+                    array(
+                        'id' => 1
+                    ),
+                    array(
+                        'id' => 2
+                    )
+                )
             )
         );
 
@@ -105,6 +126,8 @@ class UsersControllerTest extends DatabaseTestCase
         $this->assertEquals('manager', $response->username);
         $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
+        $this->assertEquals('Role1', $response->userRoles[0]->name);
+        $this->assertEquals('Role2', $response->userRoles[1]->name);
 
         $client->request(
             'GET',
@@ -116,6 +139,8 @@ class UsersControllerTest extends DatabaseTestCase
         $this->assertEquals('manager', $response->username);
         $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
+        $this->assertEquals('Role1', $response->userRoles[0]->name);
+        $this->assertEquals('Role2', $response->userRoles[1]->name);
     }
 
     public function testPut()
@@ -129,6 +154,14 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
+                'userRoles' => array(
+                    array(
+                        'id' => 1
+                    ),
+                    array(
+                        'id' => 2
+                    )
+                )
             )
         );
 
@@ -137,6 +170,8 @@ class UsersControllerTest extends DatabaseTestCase
         $this->assertEquals('manager', $response->username);
         $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
+        $this->assertEquals('Role1', $response->userRoles[0]->name);
+        $this->assertEquals('Role2', $response->userRoles[1]->name);
 
         $client->request(
             'GET',
@@ -148,6 +183,8 @@ class UsersControllerTest extends DatabaseTestCase
         $this->assertEquals('manager', $response->username);
         $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
+        $this->assertEquals('Role1', $response->userRoles[0]->name);
+        $this->assertEquals('Role2', $response->userRoles[1]->name);
     }
 
     public function testDelete()
