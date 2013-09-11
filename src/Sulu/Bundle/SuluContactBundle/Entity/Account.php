@@ -55,7 +55,16 @@ class Account
     private $changer;
 
     /**
+<<<<<<< HEAD
      * @var \Sulu\Bundle\SecurityBundle\Entity\User
+=======
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $children;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+>>>>>>> develop
      */
     private $creator;
 
@@ -515,5 +524,38 @@ class Account
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    /**
+     * Add children
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     * @return Account
+     */
+    public function addChildren(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    {
+        $this->children[] = $children;
+    
+        return $this;
+    }
+
+    /**
+     * Remove children
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     */
+    public function removeChildren(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 }

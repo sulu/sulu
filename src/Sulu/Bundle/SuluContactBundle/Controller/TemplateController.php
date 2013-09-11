@@ -6,115 +6,134 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller
 {
-	/**
-	 * Returns the form for contacts
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function contactFormAction()
-	{
-		return $this->render('SuluContactBundle:Template:contact.form.html.twig', $this->getRenderArray());
-	}
 
-	/**
-	 * Returns the form for accounts
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function accountFormAction()
-	{
-		return $this->render('SuluContactBundle:Template:account.form.html.twig', $this->getRenderArray());
-	}
+    /**
+     * Returns Template for contact list
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contactListAction()
+    {
+        return $this->render('SuluContactBundle:Template:contact.list.html.twig');
+    }
 
-	/**
-	 * Returns an array for rendering a form
-	 * @return array
-	 */
-	private function getRenderArray()
-	{
-		$values = $this->getValues();
-		$defaults = $this->getDefaults();
+    /**
+     * Returns Template for account list
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function accountListAction()
+    {
+        return $this->render('SuluContactBundle:Template:account.list.html.twig');
+    }
 
-		return array(
-			'addressTypes' => $values['addressTypes'],
-			'phoneTypes' => $values['phoneTypes'],
-			'emailTypes' => $values['emailTypes'],
-			'urlTypes' => $values['urlTypes'],
-			'countries' => $values['countries'],
-			'defaultPhoneType' => $defaults['phoneType'],
-			'defaultEmailType' => $defaults['emailType'],
-			'defaultAddressType' => $defaults['addressType'],
-			'defaultUrlType' => $defaults['urlType'],
-			'defaultCountry' => $defaults['country']
-		);
-	}
+    /**
+     * Returns the form for contacts
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function contactFormAction()
+    {
+        return $this->render('SuluContactBundle:Template:contact.form.html.twig', $this->getRenderArray());
+    }
 
-	/**
-	 * Returns the possible values for the dropdowns
-	 * @return array
-	 */
-	private function getValues()
-	{
-		$values = array();
+    /**
+     * Returns the form for accounts
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function accountFormAction()
+    {
+        return $this->render('SuluContactBundle:Template:account.form.html.twig', $this->getRenderArray());
+    }
 
-		$emailTypeEntity = 'SuluContactBundle:EmailType';
-		$values['emailTypes'] = $this->getDoctrine($emailTypeEntity)
-			->getRepository($emailTypeEntity)
-			->findAll();
+    /**
+     * Returns an array for rendering a form
+     * @return array
+     */
+    private function getRenderArray()
+    {
+        $values = $this->getValues();
+        $defaults = $this->getDefaults();
 
-		$phoneTypeEntity = 'SuluContactBundle:PhoneType';
-		$values['phoneTypes'] = $this->getDoctrine()
-			->getRepository($phoneTypeEntity)
-			->findAll();
+        return array(
+            'addressTypes' => $values['addressTypes'],
+            'phoneTypes' => $values['phoneTypes'],
+            'emailTypes' => $values['emailTypes'],
+            'urlTypes' => $values['urlTypes'],
+            'countries' => $values['countries'],
+            'defaultPhoneType' => $defaults['phoneType'],
+            'defaultEmailType' => $defaults['emailType'],
+            'defaultAddressType' => $defaults['addressType'],
+            'defaultUrlType' => $defaults['urlType'],
+            'defaultCountry' => $defaults['country']
+        );
+    }
 
-		$addressTypeEntity = 'SuluContactBundle:AddressType';
-		$values['addressTypes'] = $this->getDoctrine()
-			->getRepository($addressTypeEntity)
-			->findAll();
+    /**
+     * Returns the possible values for the dropdowns
+     * @return array
+     */
+    private function getValues()
+    {
+        $values = array();
 
-		$values['urlTypes'] = $this->getDoctrine()
-			->getRepository('SuluContactBundle:UrlType')
-			->findAll();
+        $emailTypeEntity = 'SuluContactBundle:EmailType';
+        $values['emailTypes'] = $this->getDoctrine($emailTypeEntity)
+            ->getRepository($emailTypeEntity)
+            ->findAll();
 
-		$values['countries'] = $this->getDoctrine()
-			->getRepository('SuluContactBundle:Country')
-			->findAll();
+        $phoneTypeEntity = 'SuluContactBundle:PhoneType';
+        $values['phoneTypes'] = $this->getDoctrine()
+            ->getRepository($phoneTypeEntity)
+            ->findAll();
 
-		return $values;
-	}
+        $addressTypeEntity = 'SuluContactBundle:AddressType';
+        $values['addressTypes'] = $this->getDoctrine()
+            ->getRepository($addressTypeEntity)
+            ->findAll();
 
-	/**
-	 * Returns the default values for the dropdowns
-	 * @return array
-	 */
-	private function getDefaults()
-	{
-		$config = $this->container->getParameter('sulu_contact.defaults');
-		$defaults = array();
+        $values['urlTypes'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:UrlType')
+            ->findAll();
 
-		$emailTypeEntity = 'SuluContactBundle:EmailType';
-		$defaults['emailType'] = $this->getDoctrine($emailTypeEntity)
-			->getRepository($emailTypeEntity)
-			->find($config['emailType']);
+        $values['countries'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:Country')
+            ->findAll();
 
-		$phoneTypeEntity = 'SuluContactBundle:PhoneType';
-		$defaults['phoneType'] = $this->getDoctrine()
-			->getRepository($phoneTypeEntity)
-			->find($config['phoneType']);
+        return $values;
+    }
 
-		$addressTypeEntity = 'SuluContactBundle:AddressType';
-		$defaults['addressType'] = $this->getDoctrine()
-			->getRepository($addressTypeEntity)
-			->find($config['addressType']);
+    /**
+     * Returns the default values for the dropdowns
+     * @return array
+     */
+    private function getDefaults()
+    {
+        $config = $this->container->getParameter('sulu_contact.defaults');
+        $defaults = array();
 
-		$urlTypeEntity = 'SuluContactBundle:UrlType';
-		$defaults['urlType'] = $this->getDoctrine()
-			->getRepository($urlTypeEntity)
-			->find($config['urlType']);
+        $emailTypeEntity = 'SuluContactBundle:EmailType';
+        $defaults['emailType'] = $this->getDoctrine($emailTypeEntity)
+            ->getRepository($emailTypeEntity)
+            ->find($config['emailType']);
 
-		$countryEntity = 'SuluContactBundle:Country';
-		$defaults['country'] = $this->getDoctrine()
-			->getRepository($countryEntity)
-			->find($config['country']);
+        $phoneTypeEntity = 'SuluContactBundle:PhoneType';
+        $defaults['phoneType'] = $this->getDoctrine()
+            ->getRepository($phoneTypeEntity)
+            ->find($config['phoneType']);
 
-		return $defaults;
-	}
+        $addressTypeEntity = 'SuluContactBundle:AddressType';
+        $defaults['addressType'] = $this->getDoctrine()
+            ->getRepository($addressTypeEntity)
+            ->find($config['addressType']);
+
+        $urlTypeEntity = 'SuluContactBundle:UrlType';
+        $defaults['urlType'] = $this->getDoctrine()
+            ->getRepository($urlTypeEntity)
+            ->find($config['urlType']);
+
+        $countryEntity = 'SuluContactBundle:Country';
+        $defaults['country'] = $this->getDoctrine()
+            ->getRepository($countryEntity)
+            ->find($config['country']);
+
+        return $defaults;
+    }
 }

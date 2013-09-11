@@ -12,50 +12,120 @@ define([
     'backbone',
     'router',
     'sulucontact/model/contact'
-], function ($, Backbone, Router, Contact) {
+], function($, Backbone, Router, Contact) {
 
     'use strict';
 
+    var $dialog, dataGrid;
+
     return Backbone.View.extend({
 
-        initialize: function () {
+        initialize: function() {
             this.render();
         },
 
-        render: function () {
+        render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
             this.$el.removeData('Husky.Ui.DataGrid');
 
-            require(['text!sulucontact/templates/contact/table-row.html'], function (RowTemplate) {
-                var dataGrid = this.$el.huskyDataGrid({
-                    url: '/contact/api/contacts/list?field=id,fistName,lastName',
-                    pagination: true,
-                    showPages: 6,
-                    pageSize: 4,
-                    template: {
-                        row: RowTemplate
-                    },
-                    selectItemType: 'radio'
+            require(['text!/contact/template/contact/list'], function(Template) {
+                var template = _.template(Template);
+                this.$el.html(template);
+
+                dataGrid = this.$('#people-list').huskyDataGrid({
+                    url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position',
+                    pagination: false,
+                    selectItemType: 'checkbox',
+                    tableHead: [
+                        {content: 'Title'},
+                        {content: 'Firstname'},
+                        {content: 'Lastname'},
+                        {content: 'Position'}
+                    ],
+                    excludeFields: ['id']
                 });
 
-                dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:select', function (item) {
+                dataGrid.data('Husky.Ui.DataGrid').on('data-grid:item:click', function(item) {
                     Router.navigate('contacts/people/edit:' + item);
                 });
 
-                this.$el.on('click', '.remove-row > span', function (event) {
-                    dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', event);
-                    var $element = $(event.currentTarget);
-                    var $parent = $element.parent().parent();
-                    var id = $parent.data('id');
+                this.$el.on('click', '.dropdown-toggle', function(event) {
+                    $('.dropdown-menu').toggle();
+                });
 
-                    var contact = new Contact({id: id});
-                    contact.destroy({
-                        success: function () {
-                            console.log('deleted model');
-                        }
-                    });
+                this.$el.on('click', '#edit-remove', function(event) {
+                    $('.dropdown-menu').hide();
+                    this.initDialogBoxRemoveMultiple(dataGrid.data('Husky.Ui.DataGrid').selectedItemIds);
+                }.bind(this));
+
+                // create dialog box
+                $dialog = $('#dialog').huskyDialog({
+                    backdrop: true,
+                    width: '650px'
                 });
             }.bind(this));
+
+            this.initOptions();
+        },
+
+        initOptions: function() {
+            var $optionsRight = $('#headerbar-mid-right');
+            $optionsRight.off();
+            $optionsRight.empty();
+            var $optionsLeft = $('#headerbar-mid-left');
+            $optionsLeft.off();
+            $optionsLeft.empty();
+            $optionsLeft.append(this.template.addButton('Add', '#contacts/people/add'));
+
+        },
+
+        // fills dialogbox
+        initDialogBoxRemoveMultiple: function(ids, event) {
+
+            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
+                data: {
+                    content: {
+                        title: "Warning",
+                        content: "Do you really want to delete the selected contacts? All data is going to be lost."
+                    },
+                    footer: {
+                        buttonCancelText: "Abort",
+                        buttonSaveText: "Delete"
+                    }
+                }
+            });
+
+            // TODO
+            $dialog.off();
+
+            $dialog.on('click', '.closeButton', function() {
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
+
+            $dialog.on('click', '.saveButton', function() {
+                // TODO remove by row
+                ids.forEach(function(id) {
+                    var contact = new Contact({id: id});
+                    contact.destroy({
+                        success: function() {
+                            console.log('deleted model');
+                            dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', id);
+                        }
+                    });
+                }.bind(this));
+
+                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
+            });
+        },
+
+        template: {
+            addButton: function(text, route) {
+                var $button = $('<div id="addButton" class="pull-left pointer"><span class="icon-add pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
+                $button.on('click', function() {
+                    Router.navigate(route);
+                });
+                return $button;
+            }
         }
     });
 });

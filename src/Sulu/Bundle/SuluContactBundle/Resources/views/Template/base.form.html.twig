@@ -35,7 +35,7 @@
 </style>
 
 
-<form id="contact-form">
+<form id="contact-form" data-validate="parsley">
 
     <div class="grid">
 
@@ -84,16 +84,15 @@
 
             <div id="addresses"></div>
         {% endblock %}
-
-        <div class="grid-row">
-            <input type="submit" value="[SAVE]" class="m-bottom-10"/>
-        </div>
     </div>
 
 </form>
 
+{% block dialog %}<div id="dialog"></div>{% endblock %}
+
 {% block data %}
     <script type="text/javascript">
+        // FIXME don't use global vars !!!
         var addressTypes = [
             {% for type in addressTypes %}
             {
@@ -101,40 +100,40 @@
                 'name': '{{ type.name }}'
             },
             {% endfor %}
-        ];
-        var phoneTypes = [
+        ],
+        phoneTypes = [
             {% for type in phoneTypes %}
             {
                 'id':{{ type.id }},
                 'name': '{{ type.name }}'
             },
             {% endfor %}
-        ];
-        var emailTypes = [
+        ],
+        emailTypes = [
             {% for type in emailTypes %}
             {
                 'id':{{ type.id }},
                 'name': '{{ type.name }}'
             },
             {% endfor %}
-        ];
-        var urlTypes = [
+        ],
+        urlTypes = [
             {% for type in urlTypes %}
             {
                 'id':{{ type.id }},
                 'name': '{{ type.name }}'
             },
             {% endfor %}
-        ];
-        var countries = [
+        ],
+        countries = [
             {% for country in countries %}
             {
                 'id':{{ country.id }},
                 'name': '{{ country.name }}'
             },
             {% endfor %}
-        ];
-        var defaults = {
+        ],
+        defaults = {
             emailType: {
                 'id': {{ defaultEmailType.id }},
                 'name': '{{ defaultEmailType.name }}'
@@ -155,6 +154,6 @@
                 'id': {{ defaultCountry.id }},
                 'name': '{{ defaultCountry.name }}'
             }
-        }
+        };
     </script>
 {% endblock %}

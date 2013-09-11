@@ -11,8 +11,8 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Note;
@@ -217,6 +217,8 @@ class AccountsController extends RestController implements ClassResourceInterfac
     {
         $delete = function ($id) {
             $entityName = 'SuluContactBundle:Account';
+
+            /* @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository($entityName)
                 ->find($id);
@@ -225,7 +227,22 @@ class AccountsController extends RestController implements ClassResourceInterfac
                 throw new EntityNotFoundException($entityName, $id);
             }
 
+            // do not allow to delete entity if child is existent
+            if (!$account->getChildren()->count()) {
+                // return 405 error
+            }
+
             $em = $this->getDoctrine()->getManager();
+
+            // remove related contacts if removeContacts is true
+            if (!is_null($this->getRequest()->get('removeContacts')) &&
+                $this->getRequest()->get('removeContacts') == "true"
+            ) {
+                foreach ($account->getContacts() as $contact) {
+                    $em->remove($contact);
+                }
+            }
+
             $em->remove($account);
             $em->flush();
         };
@@ -298,6 +315,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Url $url The email object to update
      * @param string $entry The entry with the new data
      * @return bool True if successful, otherwise false
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
      */
     protected function updateUrl(Url $url, $entry)
     {
@@ -677,7 +695,43 @@ class AccountsController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Returns information about referenced data which will be deleted also
+     * returns delete info for multiple ids
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function multipledeleteinfoAction()
+    {
+
+        $ids = $this->getRequest()->get('ids');
+
+        $response = array();
+        $numContacts = 0;
+        $numChildren = 0;
+
+        foreach ($ids as $id) {
+            /** @var Account $account */
+            $account = $this->getDoctrine()
+                ->getRepository('SuluContactBundle:Account')
+                ->find($id);
+
+            // get number of subaccounts
+            $numChildren += $account->getChildren()->count();
+
+            // get full number of contacts
+            $numContacts += $account->getContacts()->count();
+        }
+
+
+        $response['numContacts'] = $numContacts;
+        $response['numChildren'] = $numChildren;
+
+        $view = $this->view($response, 200);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Returns information about data which will be also deleted:
+     * 3 contacts, total number of contacts, and if deleting is allowed (as 0 or 1)
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -691,26 +745,46 @@ class AccountsController extends RestController implements ClassResourceInterfac
             ->getRepository('SuluContactBundle:Account')
             ->find($id);
 
+
         if ($account != null) {
 
-            $completeContacts = $account->getContacts();
+            // return a maximum of 3 accounts
+            $slicedContacts = $account->getContacts()->slice(0, 3);
 
-            foreach ($completeContacts as $c) {
-                $contact = array();
-                $contact['id'] = $c->getId();
-                $contact['firstName'] = $c->getFirstName();
-                $contact['middleName'] = $c->getMiddleName();
-                $contact['lastName'] = $c->getLastName();
+            foreach ($slicedContacts as $contact) {
+                /** @var Contact $contact */
+                $response['contacts'][] = array(
+                    'id' => $contact->getId(),
+                    'firstName' => $contact->getFirstName(),
+                    'middleName' => $contact->getMiddleName(),
+                    'lastName' => $contact->getLastName(),
+                );
+            }
 
-                $response['contacts'][] = $contact;
+            // return number of contact
+            $response['numContacts'] = $account->getContacts()->count();
+
+            // get number of sub companies
+            $response['numChildren'] = $account->getChildren()->count();
+
+            if ($response['numChildren'] > 0) {
+                // if account has a subcompany do not allow to delete
+                $slicedChildren = $account->getChildren()->slice(0, 3);
+
+                /* @var Account $sc */
+                foreach ($slicedChildren as $sc) {
+                    $child = array();
+                    $child['id'] = $sc->getId();
+                    $child['name'] = $sc->getName();
+
+                    $response['children'][] = $child;
+                }
             }
 
             $view = $this->view($response, 200);
 
         } else {
-
             $view = $this->view(null, 404);
-
         }
 
         return $this->handleView($view);

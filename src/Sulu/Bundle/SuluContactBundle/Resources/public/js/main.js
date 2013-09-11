@@ -13,7 +13,7 @@ require.config({
     }
 });
 
-define(['sulucontact/bundle'], function (Bundle) {
+define(['sulucontact/bundle'], function(Bundle) {
 
     'use strict';
 
