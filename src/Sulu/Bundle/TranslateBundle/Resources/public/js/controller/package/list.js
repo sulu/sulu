@@ -146,7 +146,6 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
             removeHeaderbarEvents: function() {
                 $('#headerbar-mid-right').off();
                 $('#headerbar-mid-left').off();
-                console.log("removed headerbar event - package list");
             },
 
             // Template for smaller components (button, ...)
