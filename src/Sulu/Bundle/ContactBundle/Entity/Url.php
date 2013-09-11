@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -36,7 +44,7 @@ class Url
     {
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set url
      *
@@ -46,14 +54,14 @@ class Url
     public function setUrl($url)
     {
         $this->url = $url;
-    
+
         return $this;
     }
 
     /**
      * Get url
      *
-     * @return string 
+     * @return string
      */
     public function getUrl()
     {
@@ -63,7 +71,7 @@ class Url
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -79,14 +87,14 @@ class Url
     public function setUrlType(\Sulu\Bundle\ContactBundle\Entity\UrlType $urlType)
     {
         $this->urlType = $urlType;
-    
+
         return $this;
     }
 
     /**
      * Get urlType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\UrlType 
+     * @return \Sulu\Bundle\ContactBundle\Entity\UrlType
      */
     public function getUrlType()
     {
@@ -102,7 +110,7 @@ class Url
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
         $this->accounts[] = $accounts;
-    
+
         return $this;
     }
 
@@ -119,7 +127,7 @@ class Url
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccounts()
     {
