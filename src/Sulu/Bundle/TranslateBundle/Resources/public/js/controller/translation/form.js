@@ -53,6 +53,8 @@ define([
         initValidation: function() {
             $form = this.$('form[data-validate="parsley"]');
             $form.parsley( {
+                validationMinlength: 0,
+                validateIfUnchanged: true,
                 validators: {
 
                     //ISSUE does not revalidate other non unique field(s)
@@ -80,18 +82,17 @@ define([
                 }
             });
 
-            $form.parsley({validationMinlength: 0});
-
-
             $('.inputLength').change(function(event){
+
+                console.log("validation input length started");
 
                 var newValue = $(event.currentTarget).val(),
                     letterInfo = $(event.currentTarget).closest('tr').prev('tr').find('.letterInfo'),
                     textarea = letterInfo.prev('textarea');
 
                 // Fixme when new validation plugin exists
-                textarea.parsley( 'updateConstraint', { maxlength: newValue } );
-                textarea.parsley( 'validate' );
+                // textarea.parsley( 'updateConstraint', { maxlength: newValue } );
+                // textarea.parsley( 'validate' );
 
                 letterInfo.empty();
                 letterInfo.append(['[Max. ',newValue,' chars]'].join(''));
