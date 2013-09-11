@@ -1,7 +1,7 @@
 <tr <% if (!!id) { %> data-id="<%= id %>"<% } %>>
     <td>
         <label>
-            <input type="radio" class="custom-radio" name="catalogueRadio">
+            <input type="radio" class="custom-radio" name="catalogueRadio" <% if (!!isDefault) { %><%= checked="checked" %><% } %> >
             <span class="custom-radio-icon"></span>
         </label>
     </td>

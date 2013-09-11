@@ -202,7 +202,7 @@ define([
                     pagination: false,
                     showPages: 6,
                     pageSize: 4,
-                    selectItemType: 'radio',
+                    //selectItemType: 'radio',
                     tableHead: [
                         {content: 'Default Language'},
                         {content: 'Language'},
@@ -216,6 +216,8 @@ define([
                         items: data
                     }
                 });
+
+                console.log(data, "data");
 
                 $('#addCatalogueRow').on('click', function() {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', locale: '', translations: [] });
@@ -233,6 +235,8 @@ define([
                     }
 
                 });
+
+
 
                 this.initValidation();
 
