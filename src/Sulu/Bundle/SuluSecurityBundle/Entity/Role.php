@@ -10,11 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Role
 {
     /**
-     * @var integer
-     */
-    private $id;
-
-    /**
      * @var string
      */
     private $name;
@@ -27,38 +22,45 @@ class Role
     /**
      * @var string
      */
-    private $context;
+    private $module;
+
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $changed;
 
     /**
      * @var integer
      */
-    private $permission;
+    private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contactRoles;
-
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
      */
     private $creator;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
      */
     private $changer;
 
     /**
-     * Get id
-     *
-     * @return integer 
+     * @var \Doctrine\Common\Collections\Collection
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $permissions;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
+    
     /**
      * Set name
      *
@@ -106,99 +108,91 @@ class Role
     }
 
     /**
-     * Set context
+     * Set module
      *
-     * @param string $context
+     * @param string $module
      * @return Role
      */
-    public function setContext($context)
+    public function setModule($module)
     {
-        $this->context = $context;
+        $this->module = $module;
     
         return $this;
     }
 
     /**
-     * Get context
+     * Get module
      *
      * @return string 
      */
-    public function getContext()
+    public function getModule()
     {
-        return $this->context;
+        return $this->module;
     }
 
     /**
-     * Set permission
+     * Set created
      *
-     * @param integer $permission
+     * @param \DateTime $created
      * @return Role
      */
-    public function setPermission($permission)
+    public function setCreated($created)
     {
-        $this->permission = $permission;
+        $this->created = $created;
     
         return $this;
     }
 
     /**
-     * Get permission
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set changed
+     *
+     * @param \DateTime $changed
+     * @return Role
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
+    
+        return $this;
+    }
+
+    /**
+     * Get changed
+     *
+     * @return \DateTime 
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * Get id
      *
      * @return integer 
      */
-    public function getPermission()
+    public function getId()
     {
-        return $this->permission;
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->contactRoles = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Add contactRoles
-     *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\ContactRole $contactRoles
-     * @return Role
-     */
-    public function addContactRole(\Sulu\Bundle\SecurityBundle\Entity\ContactRole $contactRoles)
-    {
-        $this->contactRoles[] = $contactRoles;
-    
-        return $this;
-    }
-
-    /**
-     * Remove contactRoles
-     *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\ContactRole $contactRoles
-     */
-    public function removeContactRole(\Sulu\Bundle\SecurityBundle\Entity\ContactRole $contactRoles)
-    {
-        $this->contactRoles->removeElement($contactRoles);
-    }
-
-    /**
-     * Get contactRoles
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getContactRoles()
-    {
-        return $this->contactRoles;
+        return $this->id;
     }
 
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $creator
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
      * @return Role
      */
-    public function setCreator(\Sulu\Bundle\ContactBundle\Entity\Contact $creator = null)
+    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
     
@@ -208,7 +202,7 @@ class Role
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getCreator()
     {
@@ -218,10 +212,10 @@ class Role
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $changer
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
      * @return Role
      */
-    public function setChanger(\Sulu\Bundle\ContactBundle\Entity\Contact $changer = null)
+    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
     
@@ -231,10 +225,43 @@ class Role
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getChanger()
     {
         return $this->changer;
+    }
+
+    /**
+     * Add permissions
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
+     * @return Role
+     */
+    public function addPermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions)
+    {
+        $this->permissions[] = $permissions;
+    
+        return $this;
+    }
+
+    /**
+     * Remove permissions
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
+     */
+    public function removePermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions)
+    {
+        $this->permissions->removeElement($permissions);
+    }
+
+    /**
+     * Get permissions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 }
