@@ -54,8 +54,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$account->setName('Musterfirma');
 		$account->setCreated(new DateTime());
 		$account->setChanged(new DateTime());
-		$account->setCreator($contact);
-		$account->setChanger($contact);
 
 		$account1 = new Account();
 		$account1->setLft(0);
@@ -64,8 +62,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$account1->setName('Musterfirma');
 		$account1->setCreated(new DateTime());
 		$account1->setChanged(new DateTime());
-		$account1->setCreator($contact);
-		$account1->setChanger($contact);
 
 		$phoneType = new PhoneType();
 		$phoneType->setName('Private');

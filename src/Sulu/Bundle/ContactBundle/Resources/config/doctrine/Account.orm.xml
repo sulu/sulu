@@ -22,14 +22,14 @@
 
         <one-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="account"/>
 
-        <many-to-one field="changer" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+        <many-to-one field="changer" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
             <join-columns>
-                <join-column name="idContactsChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+        <many-to-one field="creator" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
             <join-columns>
-                <join-column name="idContactsCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
         <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\Account">

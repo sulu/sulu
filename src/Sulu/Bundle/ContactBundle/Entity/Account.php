@@ -1,12 +1,4 @@
 <?php
-/*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -17,11 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Account
 {
-    /**
-     * @var integer
-     */
-    private $id;
-
     /**
      * @var integer
      */
@@ -53,9 +40,24 @@ class Account
     private $changed;
 
     /**
+     * @var integer
+     */
+    private $id;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $contacts;
+
+    /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    private $changer;
+
+    /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    private $creator;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Account
@@ -63,14 +65,14 @@ class Account
     private $parent;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Doctrine\Common\Collections\Collection
      */
-    private $creator;
+    private $urls;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Doctrine\Common\Collections\Collection
      */
-    private $changer;
+    private $addresses;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -88,38 +90,18 @@ class Account
     private $notes;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $addresses;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $urls;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
+    
     /**
      * Set lft
      *
@@ -129,14 +111,14 @@ class Account
     public function setLft($lft)
     {
         $this->lft = $lft;
-
+    
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer
+     * @return integer 
      */
     public function getLft()
     {
@@ -152,14 +134,14 @@ class Account
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-
+    
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer
+     * @return integer 
      */
     public function getRgt()
     {
@@ -175,14 +157,14 @@ class Account
     public function setDepth($depth)
     {
         $this->depth = $depth;
-
+    
         return $this;
     }
 
     /**
      * Get depth
      *
-     * @return integer
+     * @return integer 
      */
     public function getDepth()
     {
@@ -198,14 +180,14 @@ class Account
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -221,14 +203,14 @@ class Account
     public function setCreated($created)
     {
         $this->created = $created;
-
+    
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getCreated()
     {
@@ -244,18 +226,28 @@ class Account
     public function setChanged($changed)
     {
         $this->changed = $changed;
-
+    
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getChanged()
     {
         return $this->changed;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -267,7 +259,7 @@ class Account
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-
+    
         return $this;
     }
 
@@ -284,11 +276,57 @@ class Account
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getContacts()
     {
         return $this->contacts;
+    }
+
+    /**
+     * Set changer
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @return Account
+     */
+    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    {
+        $this->changer = $changer;
+    
+        return $this;
+    }
+
+    /**
+     * Get changer
+     *
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @return Account
+     */
+    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    {
+        $this->creator = $creator;
+    
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 
     /**
@@ -300,196 +338,18 @@ class Account
     public function setParent(\Sulu\Bundle\ContactBundle\Entity\Account $parent = null)
     {
         $this->parent = $parent;
-
+    
         return $this;
     }
 
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account
+     * @return \Sulu\Bundle\ContactBundle\Entity\Account 
      */
     public function getParent()
     {
         return $this->parent;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $creator
-     * @return Account
-     */
-    public function setCreator(\Sulu\Bundle\ContactBundle\Entity\Contact $creator)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * Set changer
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $changer
-     * @return Account
-     */
-    public function setChanger(\Sulu\Bundle\ContactBundle\Entity\Contact $changer)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Add phones
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
-     * @return Account
-     */
-    public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
-    {
-        $this->phones[] = $phones;
-
-        return $this;
-    }
-
-    /**
-     * Remove phones
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
-     */
-    public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
-    {
-        $this->phones->removeElement($phones);
-    }
-
-    /**
-     * Get phones
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPhones()
-    {
-        return $this->phones;
-    }
-
-    /**
-     * Add emails
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
-     * @return Account
-     */
-    public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
-    {
-        $this->emails[] = $emails;
-
-        return $this;
-    }
-
-    /**
-     * Remove emails
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
-     */
-    public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
-    {
-        $this->emails->removeElement($emails);
-    }
-
-    /**
-     * Get emails
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEmails()
-    {
-        return $this->emails;
-    }
-
-    /**
-     * Add notes
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
-     * @return Account
-     */
-    public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
-    {
-        $this->notes[] = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Remove notes
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
-     */
-    public function removeNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
-    {
-        $this->notes->removeElement($notes);
-    }
-
-    /**
-     * Get notes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    /**
-     * Add addresses
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     * @return Account
-     */
-    public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
-    {
-        $this->addresses[] = $addresses;
-
-        return $this;
-    }
-
-    /**
-     * Remove addresses
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     */
-    public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
-    {
-        $this->addresses->removeElement($addresses);
-    }
-
-    /**
-     * Get addresses
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAddresses()
-    {
-        return $this->addresses;
     }
 
     /**
@@ -501,7 +361,7 @@ class Account
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
     {
         $this->urls[] = $urls;
-
+    
         return $this;
     }
 
@@ -518,10 +378,142 @@ class Account
     /**
      * Get urls
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getUrls()
     {
         return $this->urls;
+    }
+
+    /**
+     * Add addresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     * @return Account
+     */
+    public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    {
+        $this->addresses[] = $addresses;
+    
+        return $this;
+    }
+
+    /**
+     * Remove addresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     */
+    public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    {
+        $this->addresses->removeElement($addresses);
+    }
+
+    /**
+     * Get addresses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAddresses()
+    {
+        return $this->addresses;
+    }
+
+    /**
+     * Add phones
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     * @return Account
+     */
+    public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
+    {
+        $this->phones[] = $phones;
+    
+        return $this;
+    }
+
+    /**
+     * Remove phones
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
+     */
+    public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
+    {
+        $this->phones->removeElement($phones);
+    }
+
+    /**
+     * Get phones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPhones()
+    {
+        return $this->phones;
+    }
+
+    /**
+     * Add emails
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     * @return Account
+     */
+    public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
+    {
+        $this->emails[] = $emails;
+    
+        return $this;
+    }
+
+    /**
+     * Remove emails
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
+     */
+    public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
+    {
+        $this->emails->removeElement($emails);
+    }
+
+    /**
+     * Get emails
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEmails()
+    {
+        return $this->emails;
+    }
+
+    /**
+     * Add notes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     * @return Account
+     */
+    public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
+    {
+        $this->notes[] = $notes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove notes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Note $notes
+     */
+    public function removeNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
+    {
+        $this->notes->removeElement($notes);
+    }
+
+    /**
+     * Get notes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 }
