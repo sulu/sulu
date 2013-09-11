@@ -18,19 +18,24 @@ use Doctrine\ORM\Mapping as ORM;
 class Email
 {
     /**
-     * @var integer
-     */
-    private $id;
-
-    /**
      * @var string
      */
     private $email;
 
     /**
+     * @var integer
+     */
+    private $id;
+
+    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\EmailType
      */
     private $emailType;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -42,17 +47,8 @@ class Email
      */
     public function __construct()
     {
+        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -64,18 +60,28 @@ class Email
     public function setEmail($email)
     {
         $this->email = $email;
-    
+
         return $this;
     }
 
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -87,57 +93,19 @@ class Email
     public function setEmailType(\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType)
     {
         $this->emailType = $emailType;
-    
+
         return $this;
     }
 
     /**
      * Get emailType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\EmailType 
+     * @return \Sulu\Bundle\ContactBundle\Entity\EmailType
      */
     public function getEmailType()
     {
         return $this->emailType;
     }
-
-    /**
-     * Add accounts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     * @return Email
-     */
-    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
-    {
-        $this->accounts[] = $accounts;
-    
-        return $this;
-    }
-
-    /**
-     * Remove accounts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     */
-    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
-    {
-        $this->accounts->removeElement($accounts);
-    }
-
-    /**
-     * Get accounts
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getAccounts()
-    {
-        return $this->accounts;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
 
     /**
      * Add contacts
@@ -148,7 +116,7 @@ class Email
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -165,10 +133,43 @@ class Email
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
         return $this->contacts;
+    }
+
+    /**
+     * Add accounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @return Email
+     */
+    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    {
+        $this->accounts[] = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * Remove accounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     */
+    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    {
+        $this->accounts->removeElement($accounts);
+    }
+
+    /**
+     * Get accounts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
     }
 }

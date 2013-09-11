@@ -18,19 +18,14 @@ use Doctrine\ORM\Mapping as ORM;
 class Note
 {
     /**
-     * @var integer
-     */
-    private $id;
-
-    /**
      * @var string
      */
     private $value;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var integer
      */
-    private $accounts;
+    private $id;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -38,22 +33,17 @@ class Note
     private $contacts;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $accounts;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
+        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -65,14 +55,14 @@ class Note
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
@@ -80,36 +70,13 @@ class Note
     }
 
     /**
-     * Add accounts
+     * Get id
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     * @return Note
+     * @return integer
      */
-    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function getId()
     {
-        $this->accounts[] = $accounts;
-    
-        return $this;
-    }
-
-    /**
-     * Remove accounts
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     */
-    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
-    {
-        $this->accounts->removeElement($accounts);
-    }
-
-    /**
-     * Get accounts
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getAccounts()
-    {
-        return $this->accounts;
+        return $this->id;
     }
 
     /**
@@ -121,7 +88,7 @@ class Note
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -138,10 +105,43 @@ class Note
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
         return $this->contacts;
+    }
+
+    /**
+     * Add accounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @return Note
+     */
+    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    {
+        $this->accounts[] = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * Remove accounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     */
+    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    {
+        $this->accounts->removeElement($accounts);
+    }
+
+    /**
+     * Get accounts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
     }
 }
