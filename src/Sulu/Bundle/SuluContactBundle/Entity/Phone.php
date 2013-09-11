@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -42,7 +50,7 @@ class Phone
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set phone
      *
@@ -52,14 +60,14 @@ class Phone
     public function setPhone($phone)
     {
         $this->phone = $phone;
-    
+
         return $this;
     }
 
     /**
      * Get phone
      *
-     * @return string 
+     * @return string
      */
     public function getPhone()
     {
@@ -69,7 +77,7 @@ class Phone
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -85,14 +93,14 @@ class Phone
     public function setPhoneType(\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType)
     {
         $this->phoneType = $phoneType;
-    
+
         return $this;
     }
 
     /**
      * Get phoneType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\PhoneType 
+     * @return \Sulu\Bundle\ContactBundle\Entity\PhoneType
      */
     public function getPhoneType()
     {
@@ -108,7 +116,7 @@ class Phone
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -125,7 +133,7 @@ class Phone
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
@@ -141,7 +149,7 @@ class Phone
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
         $this->accounts[] = $accounts;
-    
+
         return $this;
     }
 
@@ -158,7 +166,7 @@ class Phone
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccounts()
     {

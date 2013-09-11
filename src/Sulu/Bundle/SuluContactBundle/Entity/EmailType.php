@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -31,7 +39,7 @@ class EmailType
     {
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -41,14 +49,14 @@ class EmailType
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -58,7 +66,7 @@ class EmailType
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -74,7 +82,7 @@ class EmailType
     public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
     {
         $this->emails[] = $emails;
-    
+
         return $this;
     }
 
@@ -91,7 +99,7 @@ class EmailType
     /**
      * Get emails
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEmails()
     {
