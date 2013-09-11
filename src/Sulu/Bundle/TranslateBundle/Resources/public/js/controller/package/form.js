@@ -156,8 +156,6 @@ define([
                     isDefault = row.find('input[type=radio]').is(':checked'),
                     locale = row.find('input.inputLocale').val();
 
-                console.log(id, isDefault, "id and default")
-
                 if (locale != "") {
                     var catalogue;
 
