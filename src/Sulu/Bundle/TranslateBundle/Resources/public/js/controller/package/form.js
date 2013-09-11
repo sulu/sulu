@@ -252,12 +252,12 @@ define([
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
                 data: {
                     content: {
-                        title: "Warning",
-                        content: "Do you really want to delete this package?"
+                        title: "Be careful!",
+                        content: "<p>The operation you are about to do will delete data.<br />This is not undoable!</p><p>Please think about it and accept or decline</p>"
                     },
                     footer: {
-                        buttonCancelText: "No",
-                        buttonSubmitText: "Yes"
+                        buttonCancelText: "Don't do it",
+                        buttonSubmitText: "Do it, I understand"
                     }
                 }
             });
