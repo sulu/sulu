@@ -55,14 +55,14 @@ class Account
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
-     */
-    private $children;
-
-    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     private $creator;
+
+    /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    private $children;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Account
