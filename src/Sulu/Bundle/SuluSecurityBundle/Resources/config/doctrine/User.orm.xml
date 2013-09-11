@@ -14,5 +14,7 @@
         <one-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
             <join-column name="idContacts" referenced-column-name="id"/>
         </one-to-one>
+
+        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user" field="userRoles"/>
     </entity>
 </doctrine-mapping>

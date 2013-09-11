@@ -136,4 +136,49 @@ class User
     {
         return $this->contact;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $userRoles;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add userRoles
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     * @return User
+     */
+    public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles)
+    {
+        $this->userRoles[] = $userRoles;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userRoles
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     */
+    public function removeUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles)
+    {
+        $this->userRoles->removeElement($userRoles);
+    }
+
+    /**
+     * Get userRoles
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserRoles()
+    {
+        return $this->userRoles;
+    }
 }

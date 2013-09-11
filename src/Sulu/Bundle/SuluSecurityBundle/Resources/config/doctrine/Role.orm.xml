@@ -14,6 +14,7 @@
         <field name="changed" type="datetime" column="changed"/>
 
         <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role" field="permissions"/>
+        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="role" field="userRoles"/>
 
         <many-to-one field="changer" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
             <join-columns>

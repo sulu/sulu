@@ -55,6 +55,11 @@ class Role
     private $permissions;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $userRoles;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -263,5 +268,38 @@ class Role
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * Add userRoles
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $userRoles
+     * @return Role
+     */
+    public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\Role $userRoles)
+    {
+        $this->userRoles[] = $userRoles;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userRoles
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $userRoles
+     */
+    public function removeUserRole(\Sulu\Bundle\SecurityBundle\Entity\Role $userRoles)
+    {
+        $this->userRoles->removeElement($userRoles);
+    }
+
+    /**
+     * Get userRoles
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserRoles()
+    {
+        return $this->userRoles;
     }
 }
