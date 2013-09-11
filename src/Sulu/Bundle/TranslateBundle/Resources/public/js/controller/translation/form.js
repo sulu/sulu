@@ -302,7 +302,7 @@ define([
                     },
                     footer: {
                         buttonCancelText: "No",
-                        buttonSaveText: "Yes"
+                        buttonSubmitText: "Yes"
                     }
                 }
 
@@ -311,13 +311,13 @@ define([
             // TODO - Event Problem
             $dialog.off();
 
-            $dialog.on('click', '.closeButton', function() {
+            $dialog.on('click', '.dialogButtonCancel', function() {
                 this.initOperations();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             }.bind(this));
 
             // TODO naming buttons dialog
-            $dialog.on('click', '.saveButton', function() {
+            $dialog.on('click', '.dialogButtonSubmit', function() {
                 this.removeHeaderbarEvents();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                 catalogue.destroy({
