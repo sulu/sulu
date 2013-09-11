@@ -1,43 +1,36 @@
 <?php
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
 
 /**
  * Country
- *
- * @ExclusionPolicy("all")
  */
 class Country
 {
     /**
-     * @var integer
-     * @Expose
-     */
-    private $id;
-
-    /**
      * @var string
-     * @Expose
      */
     private $name;
 
     /**
      * @var string
-     * @Expose
      */
     private $code;
+
+    /**
+     * @var integer
+     */
+    private $id;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -51,16 +44,6 @@ class Country
     {
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set name
@@ -71,14 +54,14 @@ class Country
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -94,18 +77,28 @@ class Country
     public function setCode($code)
     {
         $this->code = $code;
-    
+
         return $this;
     }
 
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -117,7 +110,7 @@ class Country
     public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
     {
         $this->addresses[] = $addresses;
-    
+
         return $this;
     }
 
@@ -134,7 +127,7 @@ class Country
     /**
      * Get addresses
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAddresses()
     {

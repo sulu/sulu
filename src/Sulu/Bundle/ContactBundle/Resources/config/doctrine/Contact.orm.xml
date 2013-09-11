@@ -20,14 +20,14 @@
         <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale"
                      mapped-by="contact"/>
         <one-to-many field="activities" target-entity="Sulu\Bundle\ContactBundle\Entity\Activity" mapped-by="contact"/>
-        <many-to-one field="creator" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+        <many-to-one field="changer" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
             <join-columns>
-                <join-column name="idContactsCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="changer" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+        <many-to-one field="creator" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
             <join-columns>
-                <join-column name="idContactsChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
         <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="contacts">
