@@ -11,6 +11,7 @@
 use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 
 class RolesControllerTest extends DatabaseTestCase
@@ -32,9 +33,22 @@ class RolesControllerTest extends DatabaseTestCase
         $role = new Role();
         $role->setName('Sulu Administrator');
         $role->setSystem('Sulu');
-        $role->setContext('General');
-        $role->setPermission(15);
+        $role->setModule('Security');
+        $role->setCreated(new DateTime());
+        $role->setChanged(new DateTime());
         self::$em->persist($role);
+
+        $permission1 = new Permission();
+        $permission1->setRole($role);
+        $permission1->setContext('context1');
+        $permission1->setPermissions(15);
+        self::$em->persist($permission1);
+
+        $permission2 = new Permission();
+        $permission2->setRole($role);
+        $permission2->setContext('context2');
+        $permission2->setPermissions(17);
+        self::$em->persist($permission2);
 
         self::$em->flush();
     }
@@ -50,7 +64,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\ContactRole'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -69,8 +83,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(1, count($response->total));
         $this->assertEquals('Sulu Administrator', $response->items[0]->name);
         $this->assertEquals('Sulu', $response->items[0]->system);
-        $this->assertEquals('General', $response->items[0]->context);
-        $this->assertEquals(15, $response->items[0]->permission);
+        $this->assertEquals('Security', $response->items[0]->module);
     }
 
     public function testGetById()
@@ -81,8 +94,12 @@ class RolesControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Sulu Administrator', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('General', $response->context);
-        $this->assertEquals(15, $response->permission);
+        $this->assertEquals('Security', $response->module);
+        $this->assertEquals(2, count($response->permissions));
+        $this->assertEquals('context1', $response->permissions[0]->context);
+        $this->assertEquals(15, $response->permissions[0]->permissions);
+        $this->assertEquals('context2', $response->permissions[1]->context);
+        $this->assertEquals(17, $response->permissions[1]->permissions);
     }
 
     public function testPost()
@@ -95,8 +112,17 @@ class RolesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'context' => 'Portal',
-                'permission' => 17
+                'module' => 'Portal',
+                'permissions' => array(
+                    array(
+                        'context' => 'portal1',
+                        'permissions' => 26,
+                    ),
+                    array(
+                        'context' => 'portal2',
+                        'permissions' => 8
+                    )
+                )
             )
         );
 
@@ -104,8 +130,12 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->context);
-        $this->assertEquals(17, $response->permission);
+        $this->assertEquals('Portal', $response->module);
+        $this->assertEquals(2, count($response->permissions));
+        $this->assertEquals('portal1', $response->permissions[0]->context);
+        $this->assertEquals(26, $response->permissions[0]->permissions);
+        $this->assertEquals('portal2', $response->permissions[1]->context);
+        $this->assertEquals(8, $response->permissions[1]->permissions);
 
         $client->request(
             'GET',
@@ -116,8 +146,12 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->context);
-        $this->assertEquals(17, $response->permission);
+        $this->assertEquals('Portal', $response->module);
+        $this->assertEquals(2, count($response->permissions));
+        $this->assertEquals('portal1', $response->permissions[0]->context);
+        $this->assertEquals(26, $response->permissions[0]->permissions);
+        $this->assertEquals('portal2', $response->permissions[1]->context);
+        $this->assertEquals(8, $response->permissions[1]->permissions);
     }
 
     public function testPut()
@@ -130,8 +164,7 @@ class RolesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'context' => 'Portal',
-                'permission' => 17
+                'module' => 'Portal',
             )
         );
 
@@ -139,8 +172,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->context);
-        $this->assertEquals(17, $response->permission);
+        $this->assertEquals('Portal', $response->module);
 
         $client->request(
             'GET',
@@ -151,8 +183,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->context);
-        $this->assertEquals(17, $response->permission);
+        $this->assertEquals('Portal', $response->module);
     }
 
     public function testPutNotExisting()
@@ -165,8 +196,7 @@ class RolesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'context' => 'Portal',
-                'permission' => 17
+                'module' => 'Portal',
             )
         );
 

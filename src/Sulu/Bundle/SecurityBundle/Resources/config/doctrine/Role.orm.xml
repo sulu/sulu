@@ -9,17 +9,21 @@
         </id>
         <field name="name" type="string" column="name" length="60"/>
         <field name="system" type="string" column="system" length="60"/>
-        <field name="context" type="string" column="context" length="60"/>
-        <field name="permission" type="smallint" column="permission"/>
+        <field name="module" type="string" column="module" length="60" nullable="true"/>
+        <field name="created" type="datetime" column="created"/>
+        <field name="changed" type="datetime" column="changed"/>
 
-        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\ContactRole" mapped-by="role"
-                     field="contactRoles"/>
+        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role" field="permissions"/>
 
-        <many-to-one target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" field="creator">
-            <join-column name="idContactsCreator" referenced-column-name="id" on-delete="SET NULL" />
+        <many-to-one field="changer" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
+            <join-columns>
+                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
         </many-to-one>
-        <many-to-one target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" field="changer">
-            <join-column name="idContactsChanger" referenced-column-name="id" on-delete="SET NULL" />
+        <many-to-one field="creator" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
+            <join-columns>
+                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
         </many-to-one>
     </entity>
 </doctrine-mapping>

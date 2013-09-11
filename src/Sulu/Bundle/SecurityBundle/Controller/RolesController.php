@@ -12,9 +12,11 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 
 /**
@@ -39,7 +41,7 @@ class RolesController extends RestController implements ClassResourceInterface
      */
     public function getAction($id)
     {
-        $find = function($id) {
+        $find = function ($id) {
             return $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->find($id);
@@ -58,7 +60,7 @@ class RolesController extends RestController implements ClassResourceInterface
     {
         $name = $this->getRequest()->get('name');
         $system = $this->getRequest()->get('system');
-        $context = $this->getRequest()->get('context');
+        $context = $this->getRequest()->get('module');
 
         if ($name != null && $system != null && $context != null) {
             $em = $this->getDoctrine()->getManager();
@@ -66,8 +68,17 @@ class RolesController extends RestController implements ClassResourceInterface
             $role = new Role();
             $role->setName($name);
             $role->setSystem($system);
-            $role->setContext($context);
-            $role->setPermission($this->getRequest()->get('permission', 0));
+            $role->setModule($context);
+
+            $role->setCreated(new \DateTime());
+            $role->setChanged(new \DateTime());
+
+            $permissions = $this->getRequest()->get('permissions');
+            if (!empty($permissions)) {
+                foreach ($permissions as $permissionData) {
+                    $this->addPermission($role, $permissionData);
+                }
+            }
 
             $em->persist($role);
             $em->flush();
@@ -102,13 +113,14 @@ class RolesController extends RestController implements ClassResourceInterface
 
                 $role->setName($name);
                 $role->setSystem($this->getRequest()->get('system'));
-                $role->setContext($this->getRequest()->get('context'));
-                $role->setPermission($this->getRequest()->get('permission', 0));
+                $role->setModule($this->getRequest()->get('module'));
+
+                $role->setChanged(new \DateTime());
 
                 $em->flush();
                 $view = $this->view($role);
             }
-        } catch(EntityNotFoundException $enfe) {
+        } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
@@ -124,7 +136,7 @@ class RolesController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        $delete = function($id) {
+        $delete = function ($id) {
             $role = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->find($id);
@@ -141,5 +153,31 @@ class RolesController extends RestController implements ClassResourceInterface
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Adds a permission to the given role
+     * @param Role $role
+     * @param $permissionData
+     * @return bool
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException
+     */
+    protected function addPermission(Role $role, $permissionData)
+    {
+        $permissionEntityName = 'SuluSecurityBundle:Permission';
+        $em = $this->getDoctrine()->getManager();
+
+        if (isset($permissionData['id'])) {
+            throw new EntityIdAlreadySetException($permissionEntityName, $permissionData['id']);
+        }
+
+        $permission = new Permission();
+        $permission->setContext($permissionData['context']);
+        $permission->setPermissions($permissionData['permissions']);
+        $permission->setRole($role);
+        $em->persist($permission);
+        $role->addPermission($permission);
+
+        return true;
     }
 }

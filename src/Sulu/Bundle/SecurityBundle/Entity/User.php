@@ -1,0 +1,139 @@
+<?php
+
+namespace Sulu\Bundle\SecurityBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * User
+ */
+class User
+{
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @var string
+     */
+    private $locale;
+
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     */
+    private $contact;
+
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return User
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string 
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set locale
+     *
+     * @param string $locale
+     * @return User
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    
+        return $this;
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string 
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set contact
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @return User
+     */
+    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact = null)
+    {
+        $this->contact = $contact;
+    
+        return $this;
+    }
+
+    /**
+     * Get contact
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+}
