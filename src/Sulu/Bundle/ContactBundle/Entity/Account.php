@@ -55,16 +55,12 @@ class Account
     private $changer;
 
     /**
-<<<<<<< HEAD
      * @var \Sulu\Bundle\SecurityBundle\Entity\User
-=======
-     * @var \Doctrine\Common\Collections\Collection
      */
     private $children;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
->>>>>>> develop
      */
     private $creator;
 
