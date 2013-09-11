@@ -48,13 +48,53 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('getCommands')
+            array('getCommands', 'getSecurityContexts')
         );
-        $this->admin2 = $this->getMockForAbstractClass('Sulu\Bundle\AdminBundle\Admin\Admin');
+        $this->admin2 = $this->getMockForAbstractClass(
+            'Sulu\Bundle\AdminBundle\Admin\Admin',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getCommands', 'getSecurityContexts')
+        );
         $this->command = $this->getMock('Command');
         $this->admin1->expects($this->any())
             ->method('getCommands')
             ->will($this->returnValue(array(new $this->command)));
+        $this->admin2->expects($this->any())
+            ->method('getCommands')
+            ->will($this->returnValue(array(new $this->command)));
+        $this->admin1->expects($this->any())
+            ->method('getSecurityContexts')
+            ->will(
+                $this->returnValue(
+                    array(
+                        'Sulu' => array(
+                            'Assets' => array(
+                                'assets.videos',
+                                'assets.pictures',
+                                'assets.documents'
+                            )
+                        )
+                    )
+                )
+            );
+        $this->admin2->expects($this->any())
+            ->method('getSecurityContexts')
+            ->will(
+                $this->returnValue(
+                    array(
+                        'Sulu' => array(
+                            'Portal' => array(
+                                'portals.com',
+                                'portals.de'
+                            )
+                        )
+                    )
+                )
+            );
         $rootItem1 = new NavigationItem('Root');
         $rootItem1->addChild(new NavigationItem('Child1'));
         $this->admin1->setNavigation(new Navigation($rootItem1));
@@ -82,5 +122,26 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
     public function testCommands()
     {
         $this->assertEquals($this->command, $this->adminPool->getCommands()[0]);
+    }
+
+    public function testSecurityContexts()
+    {
+        $contexts = $this->adminPool->getSecurityContexts();
+
+        $this->assertEquals(
+            array(
+                'assets.videos',
+                'assets.pictures',
+                'assets.documents'
+            ),
+            $contexts['Sulu']['Assets']
+        );
+        $this->assertEquals(
+            array(
+                'portals.com',
+                'portals.de'
+            ),
+            $contexts['Sulu']['Portal']
+        );
     }
 }
