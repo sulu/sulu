@@ -8,6 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
+
+use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;

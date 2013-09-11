@@ -1,3 +1,7 @@
 sulu_security.roles:
     type: rest
     resource: Sulu\Bundle\SecurityBundle\Controller\RolesController
+
+sulu_security.users:
+    type: rest
+    resource: Sulu\Bundle\SecurityBundle\Controller\UsersController
