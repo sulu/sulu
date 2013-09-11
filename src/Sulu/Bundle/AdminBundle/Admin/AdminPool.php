@@ -76,4 +76,15 @@ class AdminPool
 
         return $commands;
     }
+
+    public function getSecurityContexts()
+    {
+        $contexts = array();
+        foreach ($this->pool as $admin) {
+            /** @var Admin $admin */
+            $contexts = array_merge_recursive($contexts, $admin->getSecurityContexts());
+        }
+
+        return $contexts;
+    }
 }
