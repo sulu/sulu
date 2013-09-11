@@ -35,7 +35,9 @@ define([
                 dataGrid = this.$('#companies-list').huskyDataGrid({
                     url: '/contact/api/accounts/list?fields=id,name',
                     pagination: false,
-                    selectItemType: 'checkbox',
+                    selectItem: {
+                        type: 'checkbox'
+                    },
                     tableHead: [
                         {content: 'Company Name'}
                         //{content: 'E-Mail'}
@@ -93,14 +95,10 @@ define([
                 url: url,
 
                 success : function(response, textStatus, jqXhr) {
-                    console.log("get request successful");
                     this.initDialogBoxRemoveOne(response, id);
                 },
                 error : function(jqXHR, textStatus, errorThrown) {
                     console.log("error during get request: " + textStatus, errorThrown);
-                },
-                complete : function(response) {
-                    console.log("completed request");
                 }
             });
         },
@@ -134,14 +132,10 @@ define([
                     },
 
                     success: function(response, textStatus, jqXhr) {
-                        console.log("get request successful");
                         this.initDialogBoxRemoveMultiple(response, ids);
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log("error during get request: " + textStatus, errorThrown);
-                    },
-                    complete: function(response) {
-                        console.log("completed request");
                     }
                 });
             }
@@ -156,50 +150,50 @@ define([
                     title: 'Warning!',
                     content: 'Do you really want to delete the selected companies? All data is going to be lost.',
                     buttonCancelText: 'Cancel',
-                    buttonSaveText: 'Delete'
+                    buttonSubmitText: 'Delete'
                 }
             }
 
-            var values = defaults();
+            var params = defaults();
 
             // sub-account exists => deletion is not allowed
             if (parseInt(values['numChildren']) > 0)
             {
                 var dependencies = this.template.dependencyListAccounts(values['children']);
-                values.title = 'Warning! Sub-Companies detected!';
+                params.title = 'Warning! Sub-Companies detected!';
                 var content = [];
                 content.push('<p>Existing sub-companies found:</p><ul>'+dependencies+'</ul>');
                 content.push(values['numChildren']>3 ?'<p>and <strong>'+ (parseInt(values['numChildren'])-values['children'].length) + '</strong> more.</p>' : '');
                 content.push('<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies or remove the relation.</p>');
-                values.content = content.join("");
-                values.templateType = 'okDialog';
-                values.buttonCancelText = "Ok";
+                params.content = content.join("");
+                params.templateType = 'okDialog';
+                params.buttonCancelText = "Ok";
             }
             // related contacts exist => show checkbox
             else if (parseInt(values['numContacts']) > 0)
             {
                 dependencies= this.template.dependencyListContacts(values['contacts']);
-                values.title = 'Warning! Related contacts detected';
+                params.title = 'Warning! Related contacts detected';
                 var content = [];
                 content.push('<p>Related contacts found:</p><ul>'+dependencies+'</ul>');
                 content.push(values['numContacts']>3 ?'<p>and <strong>'+ (parseInt(values['numContacts'])-values['contacts'].length) + '</strong> more.</p>' : '');
-                content.push(<p>Would you like to delete them with the selected company?</p>');
+                content.push('<p>Would you like to delete them with the selected company?</p>');
                 content.push('<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all '+parseInt(values['numContacts'])+' related contacts.</label></p>');
-                values.content = content.join("");
+                params.content = content.join("");
             }
 
 
             // set values to dialog box
             this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                templateType: values.templateType,
+                templateType: params.templateType,
                 data: {
                     content: {
-                        title: values.title,
-                        content: values.content
+                        title: params.title,
+                        content: params.content
                     },
                     footer: {
-                        buttonCancelText: values.buttonCancelText,
-                        buttonSaveText: values.buttonSaveText
+                        buttonCancelText: params.buttonCancelText,
+                        buttonSubmitText: params.buttonSubmitText
                     }
                 }
             });
@@ -210,12 +204,12 @@ define([
             this.$dialog.off();
 
             // abort/close
-            this.$dialog.on('click', '.closeButton', function() {
+            this.$dialog.on('click', '.dialogButtonCancel', function() {
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             }.bind(this));
 
             // perform action
-            this.$dialog.on('click', '.deleteButton', function() {
+            this.$dialog.on('click', '.dialogButtonSubmit', function() {
 
                 var removeContacts = false;
 
@@ -243,48 +237,45 @@ define([
                     title: 'Warning!',
                     content: 'Do you really want to delete the selected companies? All data is going to be lost.',
                     buttonCancelText: 'Cancel',
-                    buttonSaveText: 'Delete'
+                    buttonSubmitText: 'Delete'
                 }
             }
 
-            var values = defaults();
+            var params = defaults();
 
 
             // sub-account exists => deletion is not allowed
             if (parseInt(values['numChildren']) > 0) {
-                var dependencies = this.template.dependencyListAccounts(values['children']);
-                values.title = 'Warning! Sub-Companies detected!';
+                params.title = 'Warning! Sub-Companies detected!';
 
                 var content = [];
                 content.push('<p>One or more related sub-companies found.</p>');
                 content.push('<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies or remove the relation.</p>');
-                values.content = content.join("");
-                values.templateType = 'okDialog';
-                values.buttonCancelText = "Ok";
+                params.content = content.join("");
+                params.templateType = 'okDialog';
+                params.buttonCancelText = "Ok";
             }
             // related contacts exist => show checkbox
             else if (parseInt(values['numContacts']) > 0) {
-                dependencies = this.template.dependencyListContacts(values['contacts']);
-                values.title = 'Warning! Related contacts detected';
+                params.title = 'Warning! Related contacts detected';
 
                 var content = [];
                 content.push('<p>One or more companies still have related contacts. Would you like to delete them with the selected companies?</p>');
                 content.push('<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all ' + parseInt(values["numContacts"]) + ' related contacts.</label></p>');
-                values.content = content.join("");
+                params.content = content.join("");
             }
-
 
             // set values to dialog box
             this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                templateType: values.templateType,
+                templateType: params.templateType,
                 data: {
                     content: {
-                        title: values.title,
-                        content: values.content
+                        title: params.title,
+                        content: params.content
                     },
                     footer: {
-                        buttonCancelText: values.buttonCancelText,
-                        buttonSaveText: values.buttonSaveText
+                        buttonCancelText:   params.buttonCancelText,
+                        buttonSubmitText:     params.buttonSubmitText
                     }
                 }
             });
@@ -296,12 +287,12 @@ define([
             this.$dialog.off();
 
             // abort/close
-            this.$dialog.on('click', '.closeButton', function() {
+            this.$dialog.on('click', '.dialogButtonCancel', function() {
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             }.bind(this));
 
             // perform action
-            this.$dialog.on('click', '.saveButton', function() {
+            this.$dialog.on('click', '.dialogButtonSubmit', function() {
 
                 var removeContacts = false;
 
@@ -313,6 +304,7 @@ define([
 
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
 
+                // remove contacts
                 ids.forEach(function(item) {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', item);
                     var account = new Account({id: item});

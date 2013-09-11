@@ -36,7 +36,6 @@ define([
         render: function() {
             Backbone.Relational.store.reset(); //FIXME really necessary?
             require(['text!/contact/template/contact/form'], function(Template) {
-                console.log('test');
                 var template;
 
                 var contactJson = $.extend(true, {}, Contact.prototype.defaults);
@@ -77,7 +76,7 @@ define([
                     },
                     footer: {
                         buttonCancelText: "Abort",
-                        buttonSaveText: "Delete"
+                        buttonSubmitText: "Delete"
                     }
                 }
             });
@@ -85,14 +84,14 @@ define([
             // TODO
             this.$dialog.off();
 
-            this.$dialog.on('click', '.closeButton', function() {
+            this.$dialog.on('click', '.dialogButtonCancel', function() {
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
 
                 this.$deleteButton.removeClass('loading-black');
                 this.$saveButton.show();
             }.bind(this));
 
-            this.$dialog.on('click', '.saveButton', function() {
+            this.$dialog.on('click', '.dialogButtonSubmit', function() {
                 this.getModel().destroy({
                     success: function() {
                         this.gotoList();

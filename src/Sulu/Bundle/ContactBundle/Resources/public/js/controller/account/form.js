@@ -104,11 +104,11 @@ define([
                     title: 'Warning!',
                     content: 'Do you really want to delete the selected company? All data is going to be lost.',
                     buttonCancelText: 'Cancel',
-                    buttonSaveText: 'Delete'
+                    buttonSubmitText: 'Delete'
                 }
             }
 
-            var values = defaults();
+            var params = defaults();
 
             // TODO set template in husky
 
@@ -118,43 +118,43 @@ define([
             if (parseInt(values['numChildren']) > 0)
             {
                 var dependencies = this.template.dependencyListAccounts(values['children']);
-                values.title = 'Warning! Sub-Companies detected!';
+                params.title = 'Warning! Sub-Companies detected!';
 
-                values.templateType = 'okDialog';
-                values.buttonCancelText = "Ok";
+                params.templateType = 'okDialog';
+                params.buttonCancelText = "Ok";
 
                 var content = [];
                 content.push('<p>Existing sub-companies found:</p><ul>'+dependencies+'</ul>');
                 content.push(values['numChildren']>3 ?'<p>and <strong>'+ (parseInt(values['numChildren'])-values['children'].length) + '</strong> more.</p>' : '');
                 content.push('<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies or remove the relation.</p>');
-                values.content = content.join(" ");
+                params.content = content.join(" ");
             }
             // related contacts exist => show checkbox
             else if (parseInt(values['numContacts']) > 0)
             {
                 dependencies= this.template.dependencyListContacts(values['contacts']);
-                values.title = 'Warning! Related contacts detected';
+                params.title = 'Warning! Related contacts detected';
 
                 var content= [];
                 content.push('<p>Related contacts found:</p><ul>'+dependencies+'</ul>');
                 content.push(values['numContacts']>3 ?'<p>and <strong>'+ (parseInt(values['numContacts'])-values['contacts'].length) + '</strong> more.</p>' : '');
                 content.push('<p>Would you like to delete them with the selected company?</p>');
                 content.push('<p><input type="checkbox" id="checkDeleteContacts"> <label for="checkDeleteContacts">Delete all '+parseInt(values['numContacts'])+' related contacts.</label></p>');
-                values.content = content.join(" ");
+                params.content = content.join(" ");
             }
 
 
             // set values to dialog box
             this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                templateType: values.templateType,
+                templateType: params.templateType,
                 data: {
                     content: {
-                        title: values.title,
-                        content: values.content
+                        title: params.title,
+                        content: params.content
                     },
                     footer: {
-                        buttonCancelText: values.buttonCancelText,
-                        buttonSaveText: values.buttonSaveText
+                        buttonCancelText: params.buttonCancelText,
+                        buttonSubmitText: params.buttonSubmitText
                     }
                 }
             });
@@ -171,7 +171,7 @@ define([
             }.bind(this));
 
             // abort/close
-            this.$dialog.on('click', '.closeButton', function() {
+            this.$dialog.on('click', '.dialogButtonCancel', function() {
                 this.$dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
 
                 this.$deleteButton.removeClass('loading-black');
@@ -179,7 +179,7 @@ define([
             }.bind(this));
 
             // perform action
-            this.$dialog.on('click', '.deleteButton', function() {
+            this.$dialog.on('click', '.dialogButtonSubmit', function() {
 
                 var removeContacts = false;
 
