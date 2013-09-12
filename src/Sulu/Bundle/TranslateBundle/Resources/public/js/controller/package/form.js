@@ -191,6 +191,8 @@ define([
                         Router.navigate('settings/translate');
                     }
                 });
+            } else {
+                $('#saveButton').removeClass('loading');
             }
         },
 
@@ -353,6 +355,12 @@ define([
 
             // TODO leaving view scope?
             $operationsLeft.on('click', '#saveButton', function(event) {
+                var button = event.currentTarget;
+
+                if (!$(button).hasClass('loading')) {
+                    $(button).addClass('loading');
+                }
+
                 this.submitForm(event);
             }.bind(this));
 
@@ -367,7 +375,7 @@ define([
         templates: {
 
             saveButton: function(text) {
-                return '<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>';
+                return $('<div id="saveButton" class="pull-left pointer"><div class="loading-content"><span class="icon-caution pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div></div>');
             },
 
             deleteButton: function(text) {
