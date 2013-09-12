@@ -23,7 +23,6 @@ define([
                 middleName: '',
                 lastName: '',
                 birthday: '',
-                localeSystem: '',
                 title: '',
                 position: '',
                 account: null,

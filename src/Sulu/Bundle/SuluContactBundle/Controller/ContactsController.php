@@ -139,8 +139,6 @@ class ContactsController extends RestController implements ClassResourceInterfac
             $contact->setTitle($this->getRequest()->get('title'));
             $contact->setPosition($this->getRequest()->get('position'));
 
-            $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
-
             $parentData = $this->getRequest()->get('account');
             if ($parentData != null && $parentData['id'] != null) {
                 /** @var Account $parent */
@@ -221,8 +219,6 @@ class ContactsController extends RestController implements ClassResourceInterfac
 
                 $contact->setTitle($this->getRequest()->get('title'));
                 $contact->setPosition($this->getRequest()->get('position'));
-
-                $contact->setLocaleSystem($this->getRequest()->get('localeSystem'));
 
                 $parentData = $this->getRequest()->get('account');
                 if ($parentData != null && $parentData['id'] != null) {
