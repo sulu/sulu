@@ -4,8 +4,9 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Sulu\Bundle\SecurityBundle\Entity\UserRole" table="se_user_roles">
-        <id name="user" association-key="true"/>
-        <id name="role" association-key="true"/>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
         <field name="locale" type="string" length="60"/>
 
         <many-to-one target-entity="Sulu\Bundle\SecurityBundle\Entity\User" field="user"

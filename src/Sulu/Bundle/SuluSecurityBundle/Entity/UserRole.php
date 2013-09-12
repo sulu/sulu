@@ -3,12 +3,23 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * UserRole
+ * @ExclusionPolicy("all");
  */
 class UserRole
 {
+    /**
+     * @var integer
+     * @Expose
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -16,14 +27,25 @@ class UserRole
 
     /**
      * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @Expose
      */
     private $user;
 
     /**
      * @var \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @Expose
      */
     private $role;
 
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set locale
@@ -46,6 +68,17 @@ class UserRole
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * Get Locales as array
+     * @return array
+     * @VirtualProperty
+     * @SerializedName("locales")
+     */
+    public function getLocales()
+    {
+        return json_decode($this->locale);
     }
 
     /**
