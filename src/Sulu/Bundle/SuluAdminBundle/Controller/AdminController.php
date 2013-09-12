@@ -27,24 +27,22 @@ class AdminController extends Controller
     }
 
     /**
-     * Create the javascript which sets the routes for each bundle
+     * Returns a array of all bundles
      * @return Response
      */
-    public function routesAction()
+    public function bundlesAction()
     {
-        $requires = array();
-
         $pool = $this->get('sulu_admin.admin_pool');
+
+        $admins = array();
 
         foreach ($pool->getAdmins() as $admin) {
             $reflection = new \ReflectionClass($admin);
             $name = strtolower(str_replace('Admin', '', $reflection->getShortName()));
-            $requires[] = '\'/bundles/' . $name . '/js/main.js\'';
+            $admins[] = $name;
         }
 
-        $response = 'require([' . implode(', ', $requires) . '], function() {
-            Backbone.history.start();
-        })';
+        $response = json_encode($admins);
 
         return new Response($response);
     }

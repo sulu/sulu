@@ -13,10 +13,7 @@
     ],
     "dependencies": {
         "husky": "#develop",
-        "backbone": "1.0.*",
         "backbone-relational": "0.8.*",
-        "requirejs": "2.1.*",
-        "requirejs-text": "2.0.*",
         "parsleyjs": "*"
     }
 }
