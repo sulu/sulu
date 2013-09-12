@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -37,7 +45,7 @@ class Note
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set value
      *
@@ -47,14 +55,14 @@ class Note
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
@@ -64,7 +72,7 @@ class Note
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -80,7 +88,7 @@ class Note
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -97,7 +105,7 @@ class Note
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
@@ -113,7 +121,7 @@ class Note
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
         $this->accounts[] = $accounts;
-    
+
         return $this;
     }
 
@@ -130,7 +138,7 @@ class Note
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccounts()
     {

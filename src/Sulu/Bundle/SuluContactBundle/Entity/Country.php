@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -36,7 +44,7 @@ class Country
     {
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -46,14 +54,14 @@ class Country
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -69,14 +77,14 @@ class Country
     public function setCode($code)
     {
         $this->code = $code;
-    
+
         return $this;
     }
 
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -86,7 +94,7 @@ class Country
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -102,7 +110,7 @@ class Country
     public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
     {
         $this->addresses[] = $addresses;
-    
+
         return $this;
     }
 
@@ -119,7 +127,7 @@ class Country
     /**
      * Get addresses
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAddresses()
     {
