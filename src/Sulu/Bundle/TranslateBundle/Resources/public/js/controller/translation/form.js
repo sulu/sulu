@@ -337,7 +337,7 @@ define([
         initializeDialog: function() {
             $dialog = $('#dialog').huskyDialog({
                 backdrop: true,
-                width: '800px'
+                width: '650px'
             });
         },
 
