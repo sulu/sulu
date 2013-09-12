@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
@@ -106,7 +114,7 @@ class Account
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set lft
      *
@@ -116,14 +124,14 @@ class Account
     public function setLft($lft)
     {
         $this->lft = $lft;
-    
+
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer 
+     * @return integer
      */
     public function getLft()
     {
@@ -139,14 +147,14 @@ class Account
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-    
+
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgt()
     {
@@ -162,14 +170,14 @@ class Account
     public function setDepth($depth)
     {
         $this->depth = $depth;
-    
+
         return $this;
     }
 
     /**
      * Get depth
      *
-     * @return integer 
+     * @return integer
      */
     public function getDepth()
     {
@@ -185,14 +193,14 @@ class Account
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -208,14 +216,14 @@ class Account
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -231,14 +239,14 @@ class Account
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -248,7 +256,7 @@ class Account
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -264,7 +272,7 @@ class Account
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -281,7 +289,7 @@ class Account
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
@@ -297,14 +305,14 @@ class Account
     public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getChanger()
     {
@@ -320,14 +328,14 @@ class Account
     public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getCreator()
     {
@@ -343,14 +351,14 @@ class Account
     public function setParent(\Sulu\Bundle\ContactBundle\Entity\Account $parent = null)
     {
         $this->parent = $parent;
-    
+
         return $this;
     }
 
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Account
      */
     public function getParent()
     {
@@ -366,7 +374,7 @@ class Account
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
     {
         $this->urls[] = $urls;
-    
+
         return $this;
     }
 
@@ -383,7 +391,7 @@ class Account
     /**
      * Get urls
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUrls()
     {
@@ -399,7 +407,7 @@ class Account
     public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
     {
         $this->addresses[] = $addresses;
-    
+
         return $this;
     }
 
@@ -416,7 +424,7 @@ class Account
     /**
      * Get addresses
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAddresses()
     {
@@ -432,7 +440,7 @@ class Account
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
     {
         $this->phones[] = $phones;
-    
+
         return $this;
     }
 
@@ -449,7 +457,7 @@ class Account
     /**
      * Get phones
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPhones()
     {
@@ -465,7 +473,7 @@ class Account
     public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
     {
         $this->emails[] = $emails;
-    
+
         return $this;
     }
 
@@ -482,7 +490,7 @@ class Account
     /**
      * Get emails
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEmails()
     {
@@ -498,7 +506,7 @@ class Account
     public function addNote(\Sulu\Bundle\ContactBundle\Entity\Note $notes)
     {
         $this->notes[] = $notes;
-    
+
         return $this;
     }
 
@@ -515,7 +523,7 @@ class Account
     /**
      * Get notes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getNotes()
     {
@@ -531,7 +539,7 @@ class Account
     public function addChildren(\Sulu\Bundle\ContactBundle\Entity\Account $children)
     {
         $this->children[] = $children;
-    
+
         return $this;
     }
 
@@ -548,7 +556,7 @@ class Account
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
