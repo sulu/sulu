@@ -730,7 +730,7 @@ function typeOf(value) {
             // set html classes
             tblClasses = [];
             tblClasses.push((!!this.options.className && this.options.className !== 'table') ? 'table ' + this.options.className : 'table');
-            tblClasses.push((this.options.selectItemType && this.options.selectItemType === 'checkbox') ? 'is-selectable' : '');
+            tblClasses.push((this.options.selectItem && this.options.selectItem.type === 'checkbox') ? 'is-selectable' : '');
 
             $table.addClass(tblClasses.join(' '));
 
@@ -738,17 +738,33 @@ function typeOf(value) {
         },
 
         prepareTableHead: function() {
-            var tblColumns, tblCellClass, tblColumnWidth, headData;
+            var tblColumns, tblCellClass, tblColumnWidth, headData, tblCheckboxWidth;
 
             tblColumns = [];
             headData = this.options.tableHead || this.data.head;
 
             // add a checkbox to head row
-            if (!!this.options.selectItemType && this.options.selectItemType === 'checkbox') {
+            if (!!this.options.selectItem) {
+
+                // default values
+                var checkboxValues = [];
+                if (this.options.selectItem.width) {
+                    checkboxValues = this.getNumberAndUnit(this.options.selectItem.width);
+                }
+
+                tblCheckboxWidth = [];
+                tblCheckboxWidth.push(
+                    'width =',
+                    checkboxValues[0],
+                    checkboxValues[1]
+                );
+
+
                 tblColumns.push(
-                    '<th class="select-all">',
-                    this.templates.checkbox({ id: 'select-all' }),
-                    '</th>');
+                    '<th class="select-all" ',tblCheckboxWidth.join(""),' >');
+                if (this.options.selectItem.type === 'checkbox')
+                    tblColumns.push(this.templates.checkbox({ id: 'select-all' }));
+                tblColumns.push('</th>');
             }
 
             headData.forEach(function(column) {
@@ -760,7 +776,12 @@ function typeOf(value) {
 
             return '<tr>' + tblColumns.join('') + '</tr>';
         },
-
+        // returns number and unit
+        getNumberAndUnit: function(numberUnit) {
+            numberUnit= String(numberUnit);
+            var regex = numberUnit.match(/(\d+)\s*(.*)/);
+            return [regex[1], regex[2]];
+        },
         prepareTableRows: function() {
             var tblRows;
 
@@ -784,7 +805,13 @@ function typeOf(value) {
             } else {
 
                 var tblRowAttributes, tblCellContent, tblCellClass,
-                    tblColumns, tblCellClasses;
+                    tblColumns, tblCellClasses, radioPrefix;
+
+                if(!!this.options.className && this.options.className != '') {
+                    radioPrefix = '-'+this.options.className;
+                } else {
+                    radioPrefix = '';
+                }
 
                 tblColumns = [];
                 tblRowAttributes = '';
@@ -792,13 +819,14 @@ function typeOf(value) {
                 // add row id to itemIds collection (~~ === shorthand for parse int)
                 !!row.id && this.allItemIds.push(~~row.id);
 
-                if (!!this.options.selectItemType && this.options.selectItemType === 'checkbox') {
+                if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
                     // add a checkbox to each row
-                    tblColumns.push('<td>', this.templates.checkbox(), '</td>');
-                } else if (!!this.options.selectItemType && this.options.selectItemType === 'radio') {
+                    tblColumns.push('<td class="selectItemColumn">', this.templates.checkbox(), '</td>');
+                } else if (!!this.options.selectItem.type && this.options.selectItem.type === 'radio') {
                     // add a radio to each row
-                    tblColumns.push('<td>', this.templates.radio({
-                        name: 'husky-radio' // TODO
+
+                    tblColumns.push('<td class="selectItemColumn">', this.templates.radio({
+                        name: 'husky-radio'+radioPrefix
                     }), '</td>');
                 }
 
@@ -844,29 +872,47 @@ function typeOf(value) {
                 $element = $element.parent().find('input');
             }
 
+            Husky.DEBUG && console.log($element.attr('type'), "element type");
+
             itemId = $element.parents('tr').data('id');
+            
+            if($element.attr('type') === 'checkbox') {
 
-            if (this.selectedItemIds.indexOf(itemId) > -1) {
-                $element
-                    .removeClass('is-selected')
-                    .prop('checked', false);
+                if (this.selectedItemIds.indexOf(itemId) > -1) {
+                    $element
+                        .removeClass('is-selected')
+                        .prop('checked', false);
 
-                // uncheck 'Select All'-checkbox
-                $('th.select-all')
-                    .find('input[type="checkbox"]')
-                    .prop('checked', false);
+                    // uncheck 'Select All'-checkbox
+                    $('th.select-all')
+                        .find('input[type="checkbox"]')
+                        .prop('checked', false);
 
-                this.selectedItemIds.splice(this.selectedItemIds.indexOf(itemId), 1);
-                this.trigger('data-grid:item:deselect', itemId);
-            } else {
-                $element
-                    .addClass('is-selected')
-                    .prop('checked', true);
+                    this.selectedItemIds.splice(this.selectedItemIds.indexOf(itemId), 1);
+                    this.trigger('data-grid:item:deselect', itemId);
+                } else {
+                    $element
+                        .addClass('is-selected')
+                        .prop('checked', true);
 
+                    this.selectedItemIds.push(itemId);
+                    this.trigger('data-grid:item:select', itemId);
+                }
+
+            } else if ($element.attr('type') === 'radio') {
+                
+                var oldSelectionId = this.selectedItemIds.pop();
+
+                if(!!oldSelectionId && oldSelectionId > -1) {
+                    $('tr[data-id="'+oldSelectionId+'"]').find('input[type="radio"]').removeClass('is-selected').prop('checked', false);
+                    this.trigger('data-grid:item:deselect', oldSelectionId);                    
+                }
+
+                $element.addClass('is-selected').prop('checked', true);
                 this.selectedItemIds.push(itemId);
                 this.trigger('data-grid:item:select', itemId);
+
             }
-            return false;
         },
 
         selectAllItems: function(event) {
@@ -1012,12 +1058,11 @@ function typeOf(value) {
         bindDOMEvents: function() {
             this.$element.off();
 
-            if (!!this.options.selectItemType && this.options.selectItemType === 'checkbox') {
+            if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
                 this.$element.on('click', 'tbody > tr span.custom-checkbox-icon', this.selectItem.bind(this));
                 this.$element.on('change', 'tbody > tr input[type="checkbox"]', this.selectItem.bind(this));
-
                 this.$element.on('click', 'th.select-all', this.selectAllItems.bind(this));
-            } else if (!!this.options.selectItemType && this.options.selectItemType === 'radio') {
+            } else if (!!this.options.selectItem.type && this.options.selectItem.type === 'radio') {
                 this.$element.on('click', 'tbody > tr input[type="radio"]', this.selectItem.bind(this));
             }
 
@@ -1034,6 +1079,18 @@ function typeOf(value) {
             if (this.options.removeRow) {
                 this.$element.on('click', '.remove-row > span', this.prepareRemoveRow.bind(this));
             }
+
+            if (this.options.selectItem && !this.options.selectItem .clickable)
+                this.$element.on('click', '.selectItemColumn', function(event) {
+
+                    // change checked state
+                    var $checkbox = $(event.target).find("input");
+                    $checkbox.prop("checked", !$checkbox.prop("checked"));
+
+                    // stop propagation
+                    event.stopPropagation();
+                    Husky.DEBUG && console.log('stopping eventPropagation');
+                }.bind(this));
         },
 
         bindCustomEvents: function() {
@@ -1046,6 +1103,8 @@ function typeOf(value) {
             this.on('data-grid:row:add', this.addRow.bind(this));
 
             this.on('data-grid:row:remove', this.removeRow.bind(this));
+
+
         },
 
         updateHandler: function() {
@@ -1159,7 +1218,7 @@ function typeOf(value) {
     $.fn.huskyDataGrid = function(options) {
         var $element = $(this);
 
-        options = $.extend({}, $.fn.huskyDataGrid.defaults, typeof options == 'object' && options);
+        options = $.extend(true, {}, $.fn.huskyDataGrid.defaults, typeof options == 'object' && options);
 
         // return if this plugin has a module instance
         if (!!$element.data(moduleName)) {
@@ -1174,11 +1233,18 @@ function typeOf(value) {
 
     $.fn.huskyDataGrid.defaults = {
         elementType: 'table',
-        selectItemType: null,
+        selectItem: {
+            type:   null,      // checkbox, radiobutton
+            width:  '50px',    // numerous value
+            clickable: null    // defines if background is clickable
+        },
         pagination: false,
         paginationOptions: {
             pageSize: 10,
             showPages: 5
+        },
+        tableHead: {
+//            {content: 'name', width: '100px'}
         },
         excludeFields: ['id'],
         autoRemoveHandling: true
@@ -1301,6 +1367,7 @@ function typeOf(value) {
                 $('body').append($backdrop);
 
                 $backdrop.click(function(){
+                    this.trigger('dialog:backdrop:click', null);
                     this.hide();
                 }.bind(this));
             }
@@ -1344,14 +1411,14 @@ function typeOf(value) {
         data: {
             footer: {
                 buttonCancelText: "Cancel",
-                buttonSaveText: "Ok"
+                buttonSubmitText: "Ok"
             }
         },
         backdrop: true,
         width: '560px',
         template: {
             content: '<h3><%= title %></h3><p><%= content %></p>',
-            footer: '<button class="btn btn-gray closeButton"><%= buttonCancelText %></button><button class="btn btn-black saveButton"><%= buttonSaveText %></button>',
+            footer: '<button class="btn btn-gray dialogButtonCancel"><%= buttonCancelText %></button><button class="btn btn-black dialogButtonSubmit"><%= buttonSubmitText %></button>',
             header: ''
             // header: '<button type="button" class="close">×</button>'
         }
@@ -1367,7 +1434,7 @@ function typeOf(value) {
         width: '560px',
         template: {
             content: '<h3><%= title %></h3><p><%= content %></p>',
-            footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button>',
+            footer: '<button class="btn btn-black dialogButtonCancel"><%= buttonCancelText %></button>',
             header: ''
         }
     };
@@ -1995,10 +2062,14 @@ function typeOf(value) {
             $.each($columns, function(idx, column) {
                 $column = $(column);
 
-                if ($column.hasClass('collapsed')) {
-                    width += 50;
+                if (!this.$navigationColumns.hasClass('show-content')) {
+                    if ($column.hasClass('collapsed')) {
+                        width += 50;
+                    } else {
+                        width += 250;
+                    }
                 } else {
-                    width += 250;
+                    width = 200;
                 }
 
             }.bind(this));
@@ -2060,6 +2131,11 @@ function typeOf(value) {
                 this.addColumn();
 
                 this.addedColumn = this.currentColumnIdx;
+
+                this.trigger('navigation:column:content:show', {
+                    data: this.getNavigationData()
+                });
+
             } else {
                 Husky.DEBUG && console.error(this.name, 'showColumn', 'No data was defined!');
             }
@@ -2289,6 +2365,12 @@ function typeOf(value) {
 
             // turn off all events
             this.$element.off();
+
+            this.$select.on('change', function() {
+                var id= this.$select.val();
+                Husky.DEBUG && console.log(this.name, 'changed: '+id);
+                this.trigger('select:item:changed', id);
+            }.bind(this));
 
             // ------------------------------------------------------------
             // DOM events
