@@ -59,6 +59,7 @@ class RolesControllerTest extends DatabaseTestCase
     public function tearDown()
     {
         parent::tearDown();
+        self::$tool->dropSchema(self::$entities);
     }
 
     public function setUpSchema()
@@ -68,6 +69,7 @@ class RolesControllerTest extends DatabaseTestCase
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -95,6 +97,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/security/api/roles/1');
         $response = json_decode($client->getResponse()->getContent());
+
         $this->assertEquals('Sulu Administrator', $response->name);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals('Security', $response->module);
