@@ -35,7 +35,9 @@ define([
                 dataGrid = this.$('#people-list').huskyDataGrid({
                     url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position',
                     pagination: false,
-                    selectItemType: 'checkbox',
+                    selectItem:{
+                        type: 'checkbox'
+                    },
                     tableHead: [
                         {content: 'Title'},
                         {content: 'Firstname'},
@@ -90,7 +92,7 @@ define([
                     },
                     footer: {
                         buttonCancelText: "Abort",
-                        buttonSaveText: "Delete"
+                        buttonSubmitText: "Delete"
                     }
                 }
             });
@@ -98,11 +100,11 @@ define([
             // TODO
             $dialog.off();
 
-            $dialog.on('click', '.closeButton', function() {
+            $dialog.on('click', '.dialogButtonCancel', function() {
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             });
 
-            $dialog.on('click', '.saveButton', function() {
+            $dialog.on('click', '.dialogButtonSubmit', function() {
                 // TODO remove by row
                 ids.forEach(function(id) {
                     var contact = new Contact({id: id});
