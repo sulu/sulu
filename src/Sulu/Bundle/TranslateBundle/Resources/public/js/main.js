@@ -13,10 +13,64 @@ require.config({
     }
 });
 
-define(['sulutranslate/bundle'], function(Bundle) {
+define({
 
-    'use strict';
+    name: "Sulu Translate Bundle",
 
-    Bundle.initialize();
+    initialize: function (app) {
+        var sandbox = app.sandbox;
+
+        app.components.addSource('sulutranslate', '/bundles/sulutranslate/js/aura_components');
+
+        // list all translation packages
+        sandbox.mvc.routes.push({
+                route: 'settings/translate',
+                components: [
+                    {
+                        name: 'package/list@sulutranslate',
+                        options: { el: '#content' }
+                    }
+                ]
+            }
+        );
+
+        // show form for new translation package
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/add',
+                components: [
+                    {
+                        name: 'package/form@sulutranslate',
+                        options: { el: '#content' }
+                    }
+                ]
+            }
+        );
+
+        // show form for editing a translation package
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/edit::id/settings',
+                components: [
+                    {
+                        name: 'package/form@sulutranslate',
+                        options: { el: '#content' }
+                    }
+                ]
+            }
+        );
+
+        // show form for editing codes
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/edit::id/details',
+                components: [
+                    {
+                        name: 'translation/form@sulutranslate',
+                        options: { el: '#content' }
+                    }
+                ]
+            }
+        );
+
+
+    }
 
 });
