@@ -48,21 +48,6 @@ class Contact
     private $birthday;
 
     /**
-     * @var string
-     */
-    private $localeSystem;
-
-    /**
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $password;
-
-    /**
      * @var \DateTime
      */
     private $created;
@@ -271,75 +256,6 @@ class Contact
     public function getBirthday()
     {
         return $this->birthday;
-    }
-
-    /**
-     * Set localeSystem
-     *
-     * @param string $localeSystem
-     * @return Contact
-     */
-    public function setLocaleSystem($localeSystem)
-    {
-        $this->localeSystem = $localeSystem;
-
-        return $this;
-    }
-
-    /**
-     * Get localeSystem
-     *
-     * @return string
-     */
-    public function getLocaleSystem()
-    {
-        return $this->localeSystem;
-    }
-
-    /**
-     * Set username
-     *
-     * @param string $username
-     * @return Contact
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return Contact
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 
     /**

@@ -94,9 +94,6 @@ class AccountsControllerTest extends DatabaseTestCase
 		$contact->setFirstName("Vorname");
 		$contact->setLastName("Nachname");
 		$contact->setMiddleName("Mittelname");
-		$contact->setUsername("Benutzername");
-		$contact->setPassword("Passwort");
-		$contact->setLocaleSystem("DE");
 		$contact->setCreated(new \DateTime());
 		$contact->setChanged(new \DateTime());
 		$contact->setAccount(self::$account);
@@ -870,9 +867,6 @@ class AccountsControllerTest extends DatabaseTestCase
         $contact->setFirstName("Vorname");
         $contact->setLastName("Nachname");
         $contact->setMiddleName("Mittelname");
-        $contact->setUsername("Benutzername");
-        $contact->setPassword("Passwort");
-        $contact->setLocaleSystem("DE");
         $contact->setCreated(new \DateTime());
         $contact->setChanged(new \DateTime());
         $contact->setAccount(self::$account);
@@ -933,9 +927,6 @@ class AccountsControllerTest extends DatabaseTestCase
             $contact->setFirstName("Vorname ".$i);
             $contact->setLastName("Nachname ".$i);
             $contact->setMiddleName("Mittelname ".$i);
-            $contact->setUsername("Benutzername ".$i);
-            $contact->setPassword("Passwort ".$i);
-            $contact->setLocaleSystem("DE");
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
             $contact->setAccount(self::$account);
@@ -994,9 +985,6 @@ class AccountsControllerTest extends DatabaseTestCase
             $contact->setFirstName("Vorname ".$i);
             $contact->setLastName("Nachname ".$i);
             $contact->setMiddleName("Mittelname ".$i);
-            $contact->setUsername("Benutzername ".$i);
-            $contact->setPassword("Passwort ".$i);
-            $contact->setLocaleSystem("DE");
             $contact->setCreated(new \DateTime());
             $contact->setChanged(new \DateTime());
             $contact->setAccount(self::$account);
