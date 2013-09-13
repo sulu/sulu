@@ -144,16 +144,19 @@ class CodesControllerTest extends DatabaseTestCase
 
         $this->catalogue1 = new Catalogue();
         $this->catalogue1->setLocale('EN')
+            ->setIsDefault(false)
             ->setPackage($this->package1);
         self::$em->persist($this->catalogue1);
 
         $this->catalogue2 = new Catalogue();
         $this->catalogue2->setLocale('DE')
+            ->setIsDefault(false)
             ->setPackage($this->package1);
         self::$em->persist($this->catalogue2);
 
         $this->catalogue3 = new Catalogue();
         $this->catalogue3->setLocale('FR')
+            ->setIsDefault(false)
             ->setPackage($this->package1);
         self::$em->persist($this->catalogue3);
 

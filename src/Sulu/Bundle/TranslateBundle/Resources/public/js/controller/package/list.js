@@ -39,13 +39,15 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
 
             initPackageList: function() {
 
-                packagesDatagrid = $('#packageList').huskyDataGrid({
+                packagesDatagrid = $('#package-list').huskyDataGrid({
                     // FIXME use list function with fields
                     url: '/translate/api/packages',
                     pagination: false,
                     showPages: 6,
                     pageSize: 4,
-                    selectItemType: 'checkbox',
+                    selectItem: {
+                        type: 'checkbox'
+                    },
                     //removeRow: true,
                     tableHead: [
                         {content: 'Title'}
@@ -76,12 +78,12 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
                     data: {
                         content: {
-                            title: "Warning",
-                            content: "Do you really want to delete the selected packages? All data is going to be lost."
+                            title: "Be careful!",
+                            content: "<p>The operation you are about to do will delete data.<br />This is not undoable!</p><p>Please think about it and accept or decline</p>"
                         },
                         footer: {
-                            buttonCancelText: "Cancel",
-                            buttonSaveText: "Delete"
+                            buttonCancelText: "Don't do it",
+                            buttonSubmitText: "Do it, I understand"
                         }
                     }
                 });
@@ -89,11 +91,12 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
                 // TODO
                 $dialog.off();
 
-                $dialog.on('click', '.closeButton', function() {
+                $dialog.on('click', '.dialogButtonCancel', function() {
                     $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                 });
 
-                $dialog.on('click', '.saveButton', function() {
+
+                $dialog.on('click', '.dialogButtonSubmit', function() {
                     ids.forEach(function(id) {
                         Backbone.Relational.store.reset();
                         var pkg = new Package({id: id});
