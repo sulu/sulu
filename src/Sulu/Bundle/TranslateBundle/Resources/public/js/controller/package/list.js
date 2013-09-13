@@ -74,18 +74,13 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
             initDialogBoxRemoveMultiple: function(ids) {
 
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                    template: {
-                        content: '<h3><%= title %></h3><p><%= content %></p>',
-                        footer: '<button class="btn btn-black closeButton"><%= buttonCancelText %></button><button class="btn btn-black deleteButton"><%= buttonSaveText %></button>',
-                        header: '<button type="button" class="close">×</button>'
-                    },
                     data: {
                         content: {
                             title: "Warning",
-                            content: "Do you really want to delete <b>many</b> contacts? All data is going to be lost."
+                            content: "Do you really want to delete the selected packages? All data is going to be lost."
                         },
                         footer: {
-                            buttonCancelText: "Abort",
+                            buttonCancelText: "Cancel",
                             buttonSaveText: "Delete"
                         }
                     }
@@ -98,7 +93,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
                     $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                 });
 
-                $dialog.on('click', '.deleteButton', function() {
+                $dialog.on('click', '.saveButton', function() {
                     ids.forEach(function(id) {
                         Backbone.Relational.store.reset();
                         var pkg = new Package({id: id});
@@ -151,7 +146,6 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
             removeHeaderbarEvents: function() {
                 $('#headerbar-mid-right').off();
                 $('#headerbar-mid-left').off();
-                console.log("removed headerbar event - package list");
             },
 
             // Template for smaller components (button, ...)
