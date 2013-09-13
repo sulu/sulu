@@ -13,10 +13,25 @@ require.config({
     }
 });
 
-define(['sulusecurity/bundle'], function (Bundle) {
+define({
 
-    'use strict';
+    name: 'Sulu Security Bundle',
 
-    Bundle.initialize();
+    initialize: function (app) {
+        var sandbox = app.sandbox;
 
+        app.components.addSource('sulusecurity', '/bundles/sulusecurity/js/components');
+
+        // list all roles
+        sandbox.mvc.routes.push({
+                route: 'settings/roles',
+                components: [
+                    {
+                        name: 'role/list@sulusecurity',
+                        options: { el: '#content' }
+                    }
+                ]
+            }
+        );
+    }
 });
