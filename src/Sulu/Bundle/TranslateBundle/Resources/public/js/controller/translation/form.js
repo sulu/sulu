@@ -31,13 +31,14 @@ define([
         $operationsRight,
         $form,
         $dialog,
-        packageModel;
+        packageModel,
+        defaultCatalogue;
 
 
     return Backbone.View.extend({
 
         events: {
-            'click .addCode': 'addRowForNewCode',
+            'click .add-code': 'addRowForNewCode',
             'click .icon-remove': 'removeRowAndModel',
             'click .form-element[readonly]': 'unlockFormElement'
         },
@@ -60,7 +61,7 @@ define([
                     //ISSUE does not revalidate other non unique field(s)
                     unique: function (val) {
                         var counter = 0,
-                            codes = $('.inputCode'),
+                            codes = $('.inputcode'),
                             unique = true;
 
                         $.each(codes, function(index, value){
@@ -84,10 +85,8 @@ define([
 
             $('.inputLength').change(function(event){
 
-                console.log("validation input length started");
-
                 var newValue = $(event.currentTarget).val(),
-                    letterInfo = $(event.currentTarget).closest('tr').prev('tr').find('.letterInfo'),
+                    letterInfo = $(event.currentTarget).closest('tr').prev('tr').find('.letter-info'),
                     textarea = letterInfo.prev('textarea');
 
                 // Fixme when new validation plugin exists
@@ -112,7 +111,7 @@ define([
 
                 catalogues = new Catalogues({
                     packageId: packageId,
-                    fields: 'id,locale'
+                    fields: 'id,locale,isDefault'
                 });
 
                 packageModel.fetch({
@@ -120,7 +119,8 @@ define([
 
                         catalogues.fetch({
                             success: function() {
-                                selectedCatalogue = catalogues.toJSON()[0];
+                                defaultCatalogue = catalogues.findWhere({isDefault: true}).toJSON();
+                                selectedCatalogue = defaultCatalogue;
                                 this.loadTranslations(Template);
 
                             }.bind(this)
@@ -143,7 +143,8 @@ define([
                     var template = _.template(Template, {
                         translations: translations.toJSON(),
                         catalogue: selectedCatalogue,
-                        package: packageModel.toJSON()
+                        package: packageModel.toJSON(),
+                        defaultCatalogue: defaultCatalogue
                     });
                     this.$el.html(template);
 
@@ -187,9 +188,9 @@ define([
 
         initVisibilityOptions: function() {
 
-            $('.showOptions').on('click', function() {
+            $('.show-options').on('click', function() {
                 $(this).toggleClass('icon-arrow-right').toggleClass('icon-arrow-down');
-                $(this).parent().parent().next('.additionalOptions').toggleClass('hidden');
+                $(this).parent().parent().next('.additional-options').toggleClass('hidden');
             });
 
         },
@@ -200,7 +201,7 @@ define([
             var $tableRow = $(event.currentTarget).parent().parent(),
                 translationId = $tableRow.data('id');
 
-            $tableRow.next('.additionalOptions').remove();
+            $tableRow.next('.additional-options').remove();
             $tableRow.remove();
 
             if (!!translationId) {
@@ -219,8 +220,8 @@ define([
 
             $lastTableRow.append(this.templates.rowTemplate());
 
-            $form.parsley('addItem', $section.find('tbody tr:last').prev().find('input.inputCode'));
-            $form.parsley('addItem', $section.find('tbody tr:last').prev().find('textarea.textareaTranslation'));
+            $form.parsley('addItem', $section.find('tbody tr:last').prev().find('input.input-code'));
+            $form.parsley('addItem', $section.find('tbody tr:last').prev().find('textarea.textarea-translation'));
             $form.parsley('addItem', $section.find('tbody tr:last').find('input.inputLength'));
         },
 
@@ -233,7 +234,7 @@ define([
         submitForm: function(event) {
 
             event.preventDefault();
-            console.log($form.parsley('validate'), "parsley form validation");
+
             if ($form.parsley('validate')) {
                 updatedTranslations = [];
 
@@ -245,12 +246,12 @@ define([
                         $options = $rows[i + 1],
                         id = $($rows[i]).data('id'),
 
-                    newCode = $($translation).find('.inputCode').val(),
-                    newTranslation = $($translation).find('.textareaTranslation').val(),
+                    newCode = $($translation).find('.input-code').val(),
+                    newTranslation = $($translation).find('.textarea-translation').val(),
 
                     newLength = $($options).find('.inputLength').val(),
-                    newFrontend = $($options).find('.checkboxFrontend').is(':checked'),
-                    newBackend = $($options).find('.checkboxBackend').is(':checked'),
+                    newFrontend = $($options).find('.checkbox-frontend').is(':checked'),
+                    newBackend = $($options).find('.checkbox-backend').is(':checked'),
 
                     translationModel = null;
 
@@ -443,11 +444,11 @@ define([
                 return [
                     '<tr>',
                         '<td width="20%">',
-                            '<input class="form-element inputCode" value="" data-trigger="focusout" data-unique="true" data-required="true"/>',
+                            '<input class="form-element input-code" value="" data-trigger="focusout" data-unique="true" data-required="true"/>',
                         '</td>',
                         '<td width="37%">',
-                            '<textarea class="form-element vertical textareaTranslation" data-maxlength="50" data-trigger="focusout"></textarea>',
-                            '<small class="grey letterInfo">[Max. 50 chars]</small>',
+                            '<textarea class="form-element vertical textarea-translation" data-maxlength="50" data-trigger="focusout"></textarea>',
+                            '<small class="grey letter-info">[Max. 50 chars]</small>',
                         '</td>',
                         '<td width="37%">',
                             '<p class="grey"></p>',
@@ -456,15 +457,15 @@ define([
                             '<p class="icon-remove m-left-5"></p>',
                         '</td>',
                     '</tr>',
-                    '<tr class="additionalOptions">',
+                    '<tr class="additional-options">',
                         '<td colspan="4">',
                             '<div class="grid-row">',
                                 '<div class="grid-col-3">',
                                     '<span>Length</span>',
                                     '<input class="form-element inputLength" value="50"  data-required="true" type="number" data-trigger="focusout"/>',
                                 '</div>',
-                            '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
-                            '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                            '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkbox-frontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                            '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkbox-backend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
                             '</div>',
                         '</td>',
                     '</tr>'].join('')

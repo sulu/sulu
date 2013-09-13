@@ -178,9 +178,10 @@ class PackagesController extends RestController
         return true;
     }
 
-    protected function updateCatalogue(Catalogue $catalogue, $entry)
+    protected function updateCatalogue(Catalogue $catalogue, $catalogueData)
     {
-        $catalogue->setLocale($entry['locale']);
+        $catalogue->setLocale($catalogueData['locale']);
+
         if (isset($catalogueData['isDefault'])) {
             $catalogue->setIsDefault($catalogueData['isDefault']);
         }

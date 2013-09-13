@@ -1,6 +1,6 @@
 <style type="text/css">
 
-    /* TODO put css in husky / translate-css-file*/
+    /* TODO put css in husky / translate-css-file */
 
     textarea {
         font-size:inherit !important;
@@ -19,7 +19,7 @@
         margin-top:35px !important;
     }
 
-    .additionalOptions {
+    .additional-options {
         background: #f8f8f8;
     }
 
@@ -31,7 +31,7 @@
         position:absolute
     }
 
-    .showOptions{
+    .show-options{
         bottom:-5px;
         left:-15px;
     }
@@ -57,6 +57,8 @@
         vertical-align: top !important;
     }
 
+    /* TODO put css in husky / translate-css-file */
+
 </style>
 
 <div class="grid-row m-bottom-20">
@@ -79,7 +81,8 @@
                 <tr>
                     <th width="20%">Key</th>
                     <th width="37%">Translation</th>
-                    <th width="37%">Suggestion</th>
+                    <th width="37%">Suggestion (<%= defaultCatalogue.locale %>)</th>
+
                     <th width="6%"></th>
                 </tr>
             </thead>
@@ -88,25 +91,25 @@
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
                     <td class="relative">
-                        <input class="form-element grey inputCode" readonly value="<%= item.code.code %>" data-trigger="focusout" data-unique="true" data-required="true" />
-                        <span class="showOptions absolute pointer icon-arrow-right"></span>
+                        <input class="form-element grey input-code" readonly value="<%= item.code.code %>" data-trigger="focusout" data-unique="true" data-required="true" />
+                        <span class="show-options absolute pointer icon-arrow-right"></span>
                     </td>
                     <td>
-                        <textarea class="form-element vertical textareaTranslation" data-minlength="0" data-maxlength="<%= item.code.length %>" data-trigger="focusout" readonly><%= (!!item.value) ? item.value : '' %></textarea>
-                        <small class="grey letterInfo">[Max. <%= item.code.length %> chars]</small>
+                        <textarea class="form-element vertical textarea-translation" data-minlength="0" data-maxlength="<%= item.code.length %>" data-trigger="focusout" readonly><%= (!!item.value) ? item.value : '' %></textarea>
+                        <small class="grey letter-info">[Max. <%= item.code.length %> chars]</small>
                     </td>
-                    <td><p class="grey">Lorem ipsum dolor asit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p></td>
+                    <td><p class="grey"><%= item.suggestion %></p></td>
                     <td><p class="icon-remove m-left-5"></p></td>
                 </tr>
-                <tr class="additionalOptions">
+                <tr class="additional-options hidden">
                     <td colspan="4">
                         <div class="grid-row">
                             <div class="grid-col-3">
                                 <span>Length</span>
                                 <input class="form-element inputLength" value="<%= item.code.length %>" data-required="true" type="number" min="0" data-trigger="focusout"/>
                             </div>
-                            <div class="grid-col-2 m-top-35"><input name="frontend" type="checkbox" class="custom-checkbox checkboxFrontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
-                            <div class="grid-col-2  m-top-35"><input name="backend" type="checkbox" class="custom-checkbox checkboxBackend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
+                            <div class="grid-col-2 m-top-35"><input name="frontend" type="checkbox" class="custom-checkbox checkbox-frontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
+                            <div class="grid-col-2  m-top-35"><input name="backend" type="checkbox" class="custom-checkbox checkbox-backend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
                         </div>
                     </td>
                 </tr>
@@ -117,7 +120,7 @@
 
 
         <div class="grid-row m-top-15 m-bottom-10">
-            <div class="grid-col-2 addCode" data-target-element="section1">
+            <div class="grid-col-2 add-code" data-target-element="section1">
                 <span class="icon-add"></span><span class="control-label">[Add element]</span>
             </div>
         </div>
