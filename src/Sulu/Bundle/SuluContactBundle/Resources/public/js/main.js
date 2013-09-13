@@ -36,7 +36,7 @@ define({
 
         // show form for new contacts
         sandbox.mvc.routes.push({
-                route: 'settings/people/add',
+                route: 'contacts/people/add',
                 components: [
                     {
                         name: 'contact/form@sulucontact',
