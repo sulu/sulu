@@ -20,15 +20,15 @@ define({
     initialize: function (app) {
         var sandbox = app.sandbox;
 
-        app.components.addSource('sulucontact', '/bundles/sulucontact/js/aura_components');
+        app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
 
         // list all contacts
         sandbox.mvc.routes.push({
                 route: 'contacts/people',
                 components: [
                     {
-                        name: 'contact/list@sulucontact',
-                        options: { el: '#content' }
+                        name: 'contacts@sulucontact',
+                        options: { el: '#content', display: 'list' }
                     }
                 ]
             }
@@ -39,8 +39,8 @@ define({
                 route: 'contacts/people/add',
                 components: [
                     {
-                        name: 'contact/form@sulucontact',
-                        options: { el: '#content' }
+                        name: 'contacts@sulucontact',
+                        options: { el: '#content', display: 'form'  }
                     }
                 ]
             }
@@ -51,8 +51,8 @@ define({
                 route: 'contacts/people/edit::id',
                 components: [
                     {
-                        name: 'contact/form@sulucontact',
-                        options: { el: '#content' }
+                        name: 'contacts@sulucontact',
+                        options: { el: '#content', display: 'form' }
                     }
                 ]
             }
