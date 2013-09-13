@@ -39,7 +39,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
 
             initPackageList: function() {
 
-                packagesDatagrid = $('#packageList').huskyDataGrid({
+                packagesDatagrid = $('#package-list').huskyDataGrid({
                     // FIXME use list function with fields
                     url: '/translate/api/packages',
                     pagination: false,

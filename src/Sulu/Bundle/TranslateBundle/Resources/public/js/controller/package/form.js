@@ -30,7 +30,7 @@ define([
 
         events: {
             'click .icon-remove': 'deleteRow',
-            'click .addRow': 'addRow'
+            'click .add-row': 'addRow'
 //            'click #saveButton' : 'submitForm',
 //            'click #deleteButton': 'deletePackage'
         },
@@ -154,7 +154,7 @@ define([
                 var row = $(rows[i-1]),
                     id = row.data('id'),
                     isDefault = row.find('input[type=radio]').is(':checked'),
-                    locale = row.find('input.inputLocale').val();
+                    locale = row.find('input.input-locale').val();
 
                 if (locale != "") {
                     var catalogue;
@@ -224,7 +224,7 @@ define([
                 });
 
                 // add row
-                $('#addCatalogueRow').on('click', function() {
+                $('#add-catalogue-row').on('click', function() {
                     dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:add', { id: '', isDefault: false, locale: '', translations: [] });
                     this.$form.parsley('addItem', '#catalogues table tr:last input[type="text"]');
                 }.bind(this));
