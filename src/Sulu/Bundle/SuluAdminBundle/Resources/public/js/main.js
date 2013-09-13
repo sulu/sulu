@@ -18,7 +18,7 @@ require(['husky'], function (Husky) {
         var bundles = JSON.parse(text);
 
         bundles.forEach(function (bundle) {
-            app.use('/bundles/' + bundle + '/js/main');
+            app.use('/bundles/' + bundle + '/js/main.js');
         }.bind(this));
 
         app.start().then(function () {
