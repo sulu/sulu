@@ -66,6 +66,30 @@ class CodeRepository extends EntityRepository
         return $query->setParameter('id', $catalogueId)->getArrayResult();
     }
 
+    public function findByCatalogueWithSuggestion($catalogueId)
+    {
+        $dqlDefaultCatalogue = 'SELECT ca2.id
+                                FROM Sulu\Bundle\TranslateBundle\Entity\Catalogue ca1
+                                    LEFT JOIN ca1.package p1
+                                    LEFT JOIN p1.catalogues ca2
+                                WHERE ca1.id = :id AND ca2.isDefault = :isDefault';
+
+        $dql = 'SELECT c, t
+                FROM Sulu\Bundle\TranslateBundle\Entity\Code c
+                    LEFT JOIN c.package p
+                    LEFT JOIN p.catalogues ca
+                    LEFT JOIN c.translations t WITH t.catalogue = ca
+                WHERE ca.id = :id OR ca.id in (' . $dqlDefaultCatalogue . ')';
+
+        $query = $this->getEntityManager()
+            ->createQuery($dql);
+
+        return $query
+            ->setParameter('isDefault', true)
+            ->setParameter('id', $catalogueId)
+            ->getArrayResult();
+    }
+
     public function findByPackage($packageId)
     {
         $dql = 'SELECT c, t

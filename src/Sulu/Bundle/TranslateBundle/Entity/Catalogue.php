@@ -10,18 +10,24 @@
 
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+
 /**
  * Catalogue
+ * @ExclusionPolicy("all")
  */
 class Catalogue
 {
     /**
      * @var integer
+     * @Expose
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\TranslateBundle\Entity\Package
+     * @Expose
      */
     private $package;
 
@@ -32,8 +38,15 @@ class Catalogue
 
     /**
      * @var string
+     * @Expose
      */
     private $locale;
+
+    /**
+     * @var boolean
+     * @Expose
+     */
+    private $isDefault;
 
     /**
      * Constructor
@@ -148,5 +161,28 @@ class Catalogue
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * Set isDefault
+     *
+     * @param boolean $isDefault
+     * @return Catalogue
+     */
+    public function setIsDefault($isDefault)
+    {
+        $this->isDefault = $isDefault;
+    
+        return $this;
+    }
+
+    /**
+     * Get isDefault
+     *
+     * @return boolean 
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
     }
 }

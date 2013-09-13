@@ -39,7 +39,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
 
             initPackageList: function() {
 
-                packagesDatagrid = $('#packageList').huskyDataGrid({
+                packagesDatagrid = $('#package-list').huskyDataGrid({
                     // FIXME use list function with fields
                     url: '/translate/api/packages',
                     pagination: false,
@@ -95,6 +95,7 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
                     $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
                 });
 
+
                 $dialog.on('click', '.dialogButtonSubmit', function() {
                     ids.forEach(function(id) {
                         Backbone.Relational.store.reset();
@@ -148,7 +149,6 @@ define(['app', 'router', 'backbone', 'husky', 'sulutranslate/model/package'],
             removeHeaderbarEvents: function() {
                 $('#headerbar-mid-right').off();
                 $('#headerbar-mid-left').off();
-                console.log("removed headerbar event - package list");
             },
 
             // Template for smaller components (button, ...)

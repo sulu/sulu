@@ -31,17 +31,16 @@ define([
         $operationsRight,
         $form,
         $dialog,
-        packageModel;
+        packageModel,
+        defaultCatalogue;
 
 
     return Backbone.View.extend({
 
         events: {
-            'click .addCode': 'addRowForNewCode',
+            'click .add-code': 'addRowForNewCode',
             'click .icon-remove': 'removeRowAndModel',
             'click .form-element[readonly]': 'unlockFormElement'
-//            'click #saveButton': 'submitForm',
-//            'click #deleteButton': 'deleteCatalogue'
         },
 
         initialize: function() {
@@ -54,7 +53,52 @@ define([
 
         initValidation: function() {
             $form = this.$('form[data-validate="parsley"]');
-            $form.parsley({validationMinlength: 0});
+            $form.parsley( {
+                validationMinlength: 0,
+                validateIfUnchanged: true,
+                validators: {
+
+                    //ISSUE does not revalidate other non unique field(s)
+                    unique: function (val) {
+                        var counter = 0,
+                            codes = $('.inputcode'),
+                            unique = true;
+
+                        $.each(codes, function(index, value){
+
+                           if($(value).val() === val) {
+                               counter++;
+                           }
+
+                           if (counter >= 2){
+                               unique = false;
+                               // works as break
+                               return false;
+                           }
+
+                        });
+
+                        return unique;
+                    }
+                }
+            });
+
+            $('.inputLength').change(function(event){
+
+                var newValue = $(event.currentTarget).val(),
+                    letterInfo = $(event.currentTarget).closest('tr').prev('tr').find('.letter-info'),
+                    textarea = letterInfo.prev('textarea');
+
+                // Fixme when new validation plugin exists
+                // textarea.parsley( 'updateConstraint', { maxlength: newValue } );
+                // textarea.parsley( 'validate' );
+
+                letterInfo.empty();
+                letterInfo.append(['[Max. ',newValue,' chars]'].join(''));
+
+            });
+
+
         },
 
         // gets a list of catalogues to the package
@@ -67,7 +111,7 @@ define([
 
                 catalogues = new Catalogues({
                     packageId: packageId,
-                    fields: 'id,locale'
+                    fields: 'id,locale,isDefault'
                 });
 
                 packageModel.fetch({
@@ -75,7 +119,8 @@ define([
 
                         catalogues.fetch({
                             success: function() {
-                                selectedCatalogue = catalogues.toJSON()[0];
+                                defaultCatalogue = catalogues.findWhere({isDefault: true}).toJSON();
+                                selectedCatalogue = defaultCatalogue;
                                 this.loadTranslations(Template);
 
                             }.bind(this)
@@ -98,7 +143,8 @@ define([
                     var template = _.template(Template, {
                         translations: translations.toJSON(),
                         catalogue: selectedCatalogue,
-                        package: packageModel.toJSON()
+                        package: packageModel.toJSON(),
+                        defaultCatalogue: defaultCatalogue
                     });
                     this.$el.html(template);
 
@@ -108,7 +154,6 @@ define([
                         valueName: 'locale'
                     });
 
-                    this.autoHeightTextareas();
                     this.initValidation();
 
                     // TODO event of husky when implemented
@@ -141,22 +186,11 @@ define([
             });
         },
 
-        autoHeightTextareas: function() {
-
-            // FIXME inefficient selector
-            var $textareas = $('#codes-form textarea');
-
-            _.each($textareas, function($element) {
-                $($element).css('height', $element.scrollHeight);
-            });
-
-        },
-
         initVisibilityOptions: function() {
 
-            $('.showOptions').on('click', function() {
+            $('.show-options').on('click', function() {
                 $(this).toggleClass('icon-arrow-right').toggleClass('icon-arrow-down');
-                $(this).parent().parent().next('.additionalOptions').toggleClass('hidden');
+                $(this).parent().parent().next('.additional-options').toggleClass('hidden');
             });
 
         },
@@ -164,12 +198,10 @@ define([
         // removes a row
         removeRowAndModel: function(event) {
 
-            var $tableRow = $(event.currentTarget).parent().parent();
-            var translationId = $tableRow.data('id');
+            var $tableRow = $(event.currentTarget).parent().parent(),
+                translationId = $tableRow.data('id');
 
-            console.log(translationId, 'translation id');
-
-            $tableRow.next('.additionalOptions').remove();
+            $tableRow.next('.additional-options').remove();
             $tableRow.remove();
 
             if (!!translationId) {
@@ -182,12 +214,15 @@ define([
         // appends a new row to the table
         addRowForNewCode: function(event) {
 
-            var sectionId = $(event.currentTarget).data('target-element');
-            var $lastTableRow = $('#' + sectionId + ' tbody:last-child');
+            var sectionId = $(event.currentTarget).data('target-element'),
+                $lastTableRow = $('#' + sectionId + ' tbody:last-child'),
+                $section = $('#section1');
+
             $lastTableRow.append(this.templates.rowTemplate());
 
-            // FIXME inefficient selector
-            $form.parsley('addItem', $('#section1 tbody tr:last').prev().find('input.inputCode'));
+            $form.parsley('addItem', $section.find('tbody tr:last').prev().find('input.input-code'));
+            $form.parsley('addItem', $section.find('tbody tr:last').prev().find('textarea.textarea-translation'));
+            $form.parsley('addItem', $section.find('tbody tr:last').find('input.inputLength'));
         },
 
         unlockFormElement: function(event) {
@@ -199,37 +234,36 @@ define([
         submitForm: function(event) {
 
             event.preventDefault();
-            console.log($form.parsley('validate'), "parsley form validation");
+
             if ($form.parsley('validate')) {
                 updatedTranslations = [];
 
-                // FIXME inefficient selector
-                var $rows = $('#codes-form table tbody tr');
+                var $rows = $('#codes-form').find('table tbody tr');
 
                 for (var i = 0; i < $rows.length;) {
 
-                    var $translation = $rows[i];
-                    var $options = $rows[i + 1];
-                    var id = $($rows[i]).data('id');
+                    var $translation = $rows[i],
+                        $options = $rows[i + 1],
+                        id = $($rows[i]).data('id'),
 
-                    var newCode = $($translation).find('.inputCode').val();
-                    var newTranslation = $($translation).find('.textareaTranslation').val();
+                    newCode = $($translation).find('.input-code').val(),
+                    newTranslation = $($translation).find('.textarea-translation').val(),
 
-                    var newLength = $($options).find('.inputLength').val();
-                    var newFrontend = $($options).find('.checkboxFrontend').is(':checked');
-                    var newBackend = $($options).find('.checkboxBackend').is(':checked');
+                    newLength = $($options).find('.inputLength').val(),
+                    newFrontend = $($options).find('.checkbox-frontend').is(':checked'),
+                    newBackend = $($options).find('.checkbox-backend').is(':checked'),
 
-                    var translationModel = null;
+                    translationModel = null;
 
                     if (!!id) {
 
                         translationModel = translations.get(id);
 
-                        var currentCode = translationModel.get('code').code;
-                        var currentTranslation = translationModel.get('value');
-                        var currentLength = translationModel.get('code').length;
-                        var currentFrontend = translationModel.get('code').frontend;
-                        var currentBackend = translationModel.get('code').backend;
+                        var currentCode = translationModel.get('code').code,
+                            currentTranslation = translationModel.get('value'),
+                            currentLength = translationModel.get('code').length,
+                            currentFrontend = translationModel.get('code').frontend,
+                            currentBackend = translationModel.get('code').backend;
 
 
                         if (newCode != currentCode ||
@@ -409,10 +443,11 @@ define([
                 return [
                     '<tr>',
                         '<td width="20%">',
-                            '<input class="form-element inputCode" value="" data-trigger="focusout" data-required="true"/>',
+                            '<input class="form-element input-code" value="" data-trigger="focusout" data-unique="true" data-required="true"/>',
                         '</td>',
                         '<td width="37%">',
-                            '<textarea class="form-element vertical textareaTranslation"></textarea>',
+                            '<textarea class="form-element vertical textarea-translation" data-maxlength="50" data-trigger="focusout"></textarea>',
+                            '<small class="grey letter-info">[Max. 50 chars]</small>',
                         '</td>',
                         '<td width="37%">',
                             '<p class="grey"></p>',
@@ -421,15 +456,15 @@ define([
                             '<p class="icon-remove m-left-5"></p>',
                         '</td>',
                     '</tr>',
-                    '<tr class="additionalOptions">',
+                    '<tr class="additional-options">',
                         '<td colspan="4">',
                             '<div class="grid-row">',
                                 '<div class="grid-col-3">',
                                     '<span>Length</span>',
-                                    '<input class="form-element inputLength" value=""/>',
+                                    '<input class="form-element inputLength" value="50"  data-required="true" type="number" data-trigger="focusout"/>',
                                 '</div>',
-                            '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkboxFrontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
-                            '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkboxBackend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                            '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkbox-frontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                            '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkbox-backend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
                             '</div>',
                         '</td>',
                     '</tr>'].join('')

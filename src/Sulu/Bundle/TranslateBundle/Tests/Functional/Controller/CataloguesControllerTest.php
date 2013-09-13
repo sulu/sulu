@@ -43,6 +43,7 @@ class CataloguesControllerTest extends DatabaseTestCase
         $catalogue = new Catalogue();
         $catalogue->setPackage($package);
         $catalogue->setLocale('EN');
+        $catalogue->setIsDefault(false);
         self::$em->persist($catalogue);
 
         self::$em->flush();
@@ -66,6 +67,7 @@ class CataloguesControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
         );
 
+        self::$tool->dropSchema(self::$entities);
         self::$tool->createSchema(self::$entities);
     }
 

@@ -71,9 +71,13 @@ class PackagesController extends RestController
             $package->setName($name);
 
             if ($catalogues != null) {
-                foreach ($catalogues as $c) {
+                foreach ($catalogues as $catalogueData) {
                     $catalogue = new Catalogue();
-                    $catalogue->setLocale($c['locale']);
+                    $catalogue->setLocale($catalogueData['locale']);
+
+                    // default value is false
+                    $catalogue->setIsDefault(isset($catalogueData['isDefault']) ? $catalogueData['isDefault'] : false);
+
                     $catalogue->setPackage($package);
                     $package->addCatalogue($catalogue);
                     $em->persist($catalogue);
@@ -163,6 +167,10 @@ class PackagesController extends RestController
 
         $catalogue = new Catalogue();
         $catalogue->setLocale($catalogueData['locale']);
+
+        // default value is false
+        $catalogue->setIsDefault(isset($catalogueData['isDefault']) ? $catalogueData['isDefault'] : false);
+
         $catalogue->setPackage($package);
         $package->addCatalogue($catalogue);
         $em->persist($catalogue);
@@ -170,10 +178,13 @@ class PackagesController extends RestController
         return true;
     }
 
-    protected function updateCatalogue(Catalogue $catalogue, $entry)
+    protected function updateCatalogue(Catalogue $catalogue, $catalogueData)
     {
-        $catalogue->setLocale($entry['locale']);
+        $catalogue->setLocale($catalogueData['locale']);
 
+        if (isset($catalogueData['isDefault'])) {
+            $catalogue->setIsDefault($catalogueData['isDefault']);
+        }
         return true;
     }
 
