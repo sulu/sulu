@@ -266,7 +266,7 @@ define([
         initializeDialog: function() {
             $dialog = $('#dialog').huskyDialog({
                 backdrop: true,
-                width: '800px'
+                width: '650px'
             });
         },
 
@@ -275,12 +275,12 @@ define([
             $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
                 data: {
                     content: {
-                        title: "Warning",
-                        content: "Do you really want to delete this package?"
+                        title: "Be careful!",
+                        content: "<p>The operation you are about to do will delete data.<br />This is not undoable!</p><p>Please think about it and accept or decline</p>"
                     },
                     footer: {
-                        buttonCancelText: "No",
-                        buttonSaveText: "Yes"
+                        buttonCancelText: "Don't do it",
+                        buttonSubmitText: "Do it, I understand"
                     }
                 }
             });
@@ -288,14 +288,14 @@ define([
             // TODO - Event Problem
             $dialog.off();
 
-            $dialog.on('click', '.closeButton', function() {
+            $dialog.on('click', '.dialogButtonCancel', function() {
                 this.initOperations();
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
             }.bind(this));
 
 
             // TODO naming buttons dialog
-            $dialog.on('click', '.saveButton', function() {
+            $dialog.on('click', '.dialogButtonSubmit', function() {
                 $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
 
                 translatePackage.destroy({
