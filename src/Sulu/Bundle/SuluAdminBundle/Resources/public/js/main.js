@@ -21,6 +21,8 @@ require(['husky'], function (Husky) {
             app.use('/bundles/' + bundle + '/js/main.js');
         }.bind(this));
 
+        app.use('aura_extensions/backbone-relational');
+
         app.start().then(function () {
             app.logger.log('Aura started...');
 
