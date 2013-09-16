@@ -49,6 +49,6 @@ define({
 
         this.sandbox.on('husky.button.add.click', function() {
             this.sandbox.emit('sulu.roles.new');
-        });
+        }.bind(this));
     }
 });
