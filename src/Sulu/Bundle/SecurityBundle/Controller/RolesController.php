@@ -60,15 +60,13 @@ class RolesController extends RestController implements ClassResourceInterface
     {
         $name = $this->getRequest()->get('name');
         $system = $this->getRequest()->get('system');
-        $context = $this->getRequest()->get('module');
 
-        if ($name != null && $system != null && $context != null) {
+        if ($name != null && $system != null) {
             $em = $this->getDoctrine()->getManager();
 
             $role = new Role();
             $role->setName($name);
             $role->setSystem($system);
-            $role->setModule($context);
 
             $role->setCreated(new \DateTime());
             $role->setChanged(new \DateTime());
@@ -113,7 +111,6 @@ class RolesController extends RestController implements ClassResourceInterface
 
                 $role->setName($name);
                 $role->setSystem($this->getRequest()->get('system'));
-                $role->setModule($this->getRequest()->get('module'));
 
                 $role->setChanged(new \DateTime());
 
