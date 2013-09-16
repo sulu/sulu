@@ -32,7 +32,8 @@ define(['text!/security/template/role/form'], function(Template) {
         save: function() {
             // FIXME  Use datamapper instead
             var data = {
-                name: this.sandbox.dom.$('#name').val()
+                name: this.sandbox.dom.$('#name').val(),
+                system: this.sandbox.dom.$('#system').val()
             };
 
             this.sandbox.emit('sulu.roles.save', data);
