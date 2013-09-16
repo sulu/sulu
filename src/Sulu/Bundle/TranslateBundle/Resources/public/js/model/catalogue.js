@@ -7,10 +7,9 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbonerelational'], function() {
-    return Backbone.RelationalModel.extend({
+define(['mvc/relationalmodel'], function(RelationalModel) {
+    return RelationalModel({
         urlRoot: '/translate/api/catalogues',
-        idAttribute: 'id',
         defaults: {
             id: null,
             locale: '',

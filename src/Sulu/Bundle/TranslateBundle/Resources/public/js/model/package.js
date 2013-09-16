@@ -7,8 +7,8 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbonerelational', 'sulutranslate/model/catalogue'], function(BackboneRelational, Catalogue) {
-    return Backbone.RelationalModel.extend({
+define(['mvc/relationalmodel', 'mvc/hasmany', 'sulutranslate/model/catalogue'], function(RelationalModel,HasMany, Catalogue) {
+    return RelationalModel({
         urlRoot: '/translate/api/packages',
         idAttribute: 'id',
         defaults: {
@@ -19,7 +19,7 @@ define(['backbonerelational', 'sulutranslate/model/catalogue'], function(Backbon
         },
         relations: [
             {
-                type: Backbone.HasMany,
+                type: HasMany,
                 key: 'catalogues',
                 relatedModel: Catalogue
             }

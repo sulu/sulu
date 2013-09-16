@@ -20,15 +20,15 @@ define({
     initialize: function (app) {
         var sandbox = app.sandbox;
 
-        app.components.addSource('sulutranslate', '/bundles/sulutranslate/js/aura_components');
+        app.components.addSource('sulutranslate', '/bundles/sulutranslate/js/components');
 
         // list all translation packages
         sandbox.mvc.routes.push({
                 route: 'settings/translate',
                 components: [
                     {
-                        name: 'package/list@sulutranslate',
-                        options: { el: '#content' }
+                        name: 'packages@sulutranslate',
+                        options: { el: '#content', display:'list' }
                     }
                 ]
             }
@@ -39,8 +39,8 @@ define({
                 route: 'settings/translate/add',
                 components: [
                     {
-                        name: 'package/form@sulutranslate',
-                        options: { el: '#content' }
+                        name: 'packages@sulutranslate',
+                        options: { el: '#content', display:'form'  }
                     }
                 ]
             }
@@ -51,8 +51,8 @@ define({
                 route: 'settings/translate/edit::id/settings',
                 components: [
                     {
-                        name: 'package/form@sulutranslate',
-                        options: { el: '#content' }
+                        name: 'packages@sulutranslate',
+                        options: { el: '#content', display:'form'}
                     }
                 ]
             }
@@ -63,8 +63,8 @@ define({
                 route: 'settings/translate/edit::id/details',
                 components: [
                     {
-                        name: 'translation/form@sulutranslate',
-                        options: { el: '#content' }
+                        name: 'translations@sulutranslate',
+                        options: { el: '#content', display:'form'  }
                     }
                 ]
             }
