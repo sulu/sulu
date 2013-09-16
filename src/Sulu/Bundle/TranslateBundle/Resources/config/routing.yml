@@ -4,9 +4,9 @@ sulu_translate:
     prefix: /api
 
 sulu_translate.template.catalogue.form:
-    path: /template/catalogue/form
+    path: /template/package/form
     defaults:
-        _controller: SuluTranslateBundle:Template:catalogueform
+        _controller: SuluTranslateBundle:Template:packageform
 
 sulu_translate.template.code.form:
      path: /template/translation/form

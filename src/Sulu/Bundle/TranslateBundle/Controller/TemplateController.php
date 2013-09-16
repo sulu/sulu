@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller
 {
-    public function catalogueformAction()
+    public function packageformAction()
     {
         return $this->render('SuluTranslateBundle:Template:package.form.html.twig', array());
     }
