@@ -26,61 +26,47 @@ define(['text!/contact/template/contact/list'], function(listTemplate) {
 
             // TODO: relational backbone && remove data
 //            this.sandbox.mvc.Relational.store.reset(); //FIXME really necessary?
-//            this.$el.removeData('Husky.Ui.DataGrid');
+            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
 
-            // TODO: template as part of sandbox
+            //  template as part of sandbox
 //            var template =  this.sandbox.template(listTemplate);
             var template = this.sandbox.template.parse(listTemplate);
-            this.$el.html(template);
-
-            // TODO: init datagrid
-
-//            this.sandbox.start([
-//                {name: 'datagrid@husky', options: {
-//                    el: this.$el.find('#people-list'),
-//                    url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position'
-//                        ,
-//                    pagination: false,
-//                    selectItemType: 'checkbox',
-//                    tableHead: [
-//                        {content: 'Title'},
-//                        {content: 'Firstname'},
-//                        {content: 'Lastname'},
-//                        {content: 'Position'}
-//                    ],
-//                    excludeFields: ['id']
-//                }}
-//            ]);
-
-//            var dataGrid =
+            this.$el.html(template); // FIXME: jquery
 
 
-//            var dataGrid = this.$('#people-list').huskyDataGrid({
-//                url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position',
-//                pagination: false,
-//                selectItemType: 'checkbox',
-//                tableHead: [
-//                    {content: 'Title'},
-//                    {content: 'Firstname'},
-//                    {content: 'Lastname'},
-//                    {content: 'Position'}
-//                ],
-//                excludeFields: ['id']
-//            });
+            this.sandbox.start([
+                {name: 'datagrid@husky', options: {
+                    el: this.$el.find('#people-list'),
+                    url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position'
+                        ,
+                    pagination: false,
+                    selectItem: {
+                        type: 'checkbox'
+                    },
+                    removeRow: false,
+                    tableHead: [
 
+                        {content: 'Title'},
+                        {content: 'Firstname'},
+                        {content: 'Lastname'},
+                        {content: 'Position'}
+                    ],
+                    excludeFields: ['id']
+                }}
+            ]);
 
-            this.sandbox.on('husky.data-grid.item.clicked', function(item) {
+            this.sandbox.on('husky.datagrid.item.click', function(item) {
                 // TODO: route to
-                //Router.navigate('contacts/people/edit:' + item);
-            });
+                this.sandbox.emit('sulu.router.navigate', 'contacts/people/edit:' + item);
+            }.bind(this));
 
-            this.sandbox.on('husky.drop-down.clicked',  function(event) {
+            this.sandbox.on('husky.dropdown.clicked',  function(event) {
                 // TODO: communicate with dropdown
 //                $('.dropdown-menu').toggle();
             });
 
-            this.sandbox.on('husky.drop-down.delete.clicked', function(event) {
+            this.sandbox.on('husky.dropdown.delete.clicked', function(event) {
                 // TODO: close dropdown & init dialogbox
 //                $('.dropdown-menu').hide();
 //                this.initDialogBoxRemoveMultiple(dataGrid.data('Husky.Ui.DataGrid').selectedItemIds);
@@ -94,19 +80,11 @@ define(['text!/contact/template/contact/list'], function(listTemplate) {
 //            });
 
 
-            // TODO: init headerbar
-//            this.initOptions();
 
-        },
+            // TODO: FIXME
+//            this.sandbox.emit('husky.header.button-type', 'saveDelete');
 
-        initOptions: function() {
-            var $optionsRight = $('#headerbar-mid-right');
-            $optionsRight.off();
-            $optionsRight.empty();
-            var $optionsLeft = $('#headerbar-mid-left');
-            $optionsLeft.off();
-            $optionsLeft.empty();
-            $optionsLeft.append(this.template.addButton('Add', '#contacts/people/add'));
+
 
         },
 

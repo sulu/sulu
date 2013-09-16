@@ -20,7 +20,7 @@ define([], function() {
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
-
+                this.renderForm();
             } else {
                 throw 'display type wrong';
             }
@@ -29,8 +29,6 @@ define([], function() {
         },
 
         renderList: function() {
-
-            // fetch all contacts
 
             this.sandbox.start([
                 {name: 'contacts/components/list@sulucontact', options: { el: this.$el}}
