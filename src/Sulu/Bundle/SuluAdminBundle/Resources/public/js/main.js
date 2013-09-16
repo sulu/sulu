@@ -62,7 +62,7 @@ require(['husky'], function (Husky) {
                     // navigation width is 300px at start
                     $('#headerbar-right').css('width', (220 - (event.data.navWidth - 300 + 45)) + "px");
 
-                    router.navigate(event.item.get('action'));
+                    app.sandbox.emit('sulu.router.navigate', event.item.get('action'));
                 });
             }
         });
