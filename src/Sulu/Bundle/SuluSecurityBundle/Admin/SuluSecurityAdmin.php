@@ -36,4 +36,15 @@ class SuluSecurityAdmin extends Admin
     {
         return array();
     }
+
+    public function getSecurityContexts()
+    {
+        return array(
+            'Sulu' => array(
+                'Security' => array(
+                    'security.roles'
+                )
+            )
+        );
+    }
 }
