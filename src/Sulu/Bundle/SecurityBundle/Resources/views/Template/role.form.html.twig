@@ -1,0 +1,16 @@
+<form id="role-form">
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <label>Title*</label>
+            <input class="form-element" type="text" id="name"/>
+        </div>
+        <div class="grid-col-6">
+            <label>System*</label>
+            <select id="system" class="form-element">
+                {% for system in systems %}
+                    <option value="{{ system }}">{{ system }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</form>

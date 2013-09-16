@@ -11,10 +11,14 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class TemplateController extends Controller {
+class TemplateController extends Controller
+{
 
-    public function rolelistAction()
+    public function roleformAction()
     {
-        return $this->render('SuluSecurityBundle:Template:role.list.html.twig', array());
+        $pool = $this->get('sulu_admin.admin_pool');
+        $contexts = $pool->getSecurityContexts();
+        $systems = array_keys($contexts);
+        return $this->render('SuluSecurityBundle:Template:role.form.html.twig', array('systems' => $systems));
     }
 }
