@@ -7,11 +7,13 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!/contact/template/contact/list'], function(listTemplate) {
+define([
+    'text!/contact/template/contact/list',
+//    'sulucontact/model/contact'   // FIXME: fix this
+], function(listTemplate, Contact) {
 
     'use strict';
 
-    var sandbox;
 
     return {
 
@@ -24,7 +26,7 @@ define(['text!/contact/template/contact/list'], function(listTemplate) {
         render: function() {
 
 
-            // TODO: relational backbone && remove data
+            // TODO: relational backbone
 //            this.sandbox.mvc.Relational.store.reset(); //FIXME really necessary?
             this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
@@ -35,9 +37,28 @@ define(['text!/contact/template/contact/list'], function(listTemplate) {
             this.$el.html(template); // FIXME: jquery
 
 
-            this.sandbox.start([
-                {name: 'datagrid@husky', options: {
-                    el: this.$el.find('#people-list'),
+            // set options dropdown
+            this.sandbox.start([{
+                name: 'dropdown@husky',
+                options: {
+                    el: '#options-dropdown',
+                    trigger: '.dropdown-menu',
+                    setParentDropDown: true,
+                    instanceName: 'options',
+                    data: [
+                        {
+                            'id': 1,
+                            'name': 'Delete'
+                        }
+                    ]
+                }
+            }]);
+
+
+            this.sandbox.start([{
+                name: 'datagrid@husky',
+                options: {
+                    el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position'
                         ,
                     pagination: false,
@@ -53,88 +74,87 @@ define(['text!/contact/template/contact/list'], function(listTemplate) {
                         {content: 'Position'}
                     ],
                     excludeFields: ['id']
-                }}
-            ]);
+                }
+            }]);
 
+            // navigate to edit contact
             this.sandbox.on('husky.datagrid.item.click', function(item) {
-                // TODO: route to
-                this.sandbox.emit('sulu.router.navigate', 'contacts/people/edit:' + item);
-            }.bind(this));
+                this.sandbox.emit('sulu.contacts.load', item);
+            }, this);
 
-            this.sandbox.on('husky.dropdown.clicked',  function(event) {
+
+            this.sandbox.on('husky.dropdown.options.clicked',  function(event) {
                 // TODO: communicate with dropdown
-//                $('.dropdown-menu').toggle();
+                this.sandbox.emit('husky.dropdown.options.toggle');
             });
 
-            this.sandbox.on('husky.dropdown.delete.clicked', function(event) {
-                // TODO: close dropdown & init dialogbox
+            this.sandbox.on('husky.dropdown.options.item.click', function() {
+                // TODO: close dropdown
 //                $('.dropdown-menu').hide();
-//                this.initDialogBoxRemoveMultiple(dataGrid.data('Husky.Ui.DataGrid').selectedItemIds);
-            });
 
-            // TODO
-//            // create dialog box
-//            var $dialog = $('#dialog').huskyDialog({
-//                backdrop: true,
-//                width: '650px'
-//            });
+                // get selected ids and show dialog
+                this.sandbox.on('husky.datagrid.items.selected', function(selectedIds) {
+                    this.initDialogBoxRemoveMultiple(selectedIds);
+                }, this);
+                this.sandbox.emit('husky.datagrid.items.get-selected');
+            },this);
 
+            // add button in headerbar
+            this.sandbox.emit('husky.header.button-type', 'add');
 
+            this.sandbox.on('husky.button.add.click', function() {
+                this.sandbox.emit('sulu.contacts.new');
+            }, this);
 
-            // TODO: FIXME
-//            this.sandbox.emit('husky.header.button-type', 'saveDelete');
 
 
 
         },
 
         // fills dialogbox
-        initDialogBoxRemoveMultiple: function(ids, event) {
+        initDialogBoxRemoveMultiple: function(ids) {
 
-            $dialog.data('Husky.Ui.Dialog').trigger('dialog:show', {
-                data: {
-                    content: {
-                        title: "Warning",
-                        content: "Do you really want to delete the selected contacts? All data is going to be lost."
-                    },
-                    footer: {
-                        buttonCancelText: "Abort",
-                        buttonSaveText: "Delete"
+            // create dialog box
+            this.sandbox.start([{
+                name: 'dialog@husky',
+                options: {
+                    el: '#dialog',
+                    backdrop: true,
+                    width: '650px',
+                    data: {
+                        content: {
+                            title: "Be careful!",
+                            content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
+                        },
+                        footer: {
+                            buttonCancelText: "Don't do it",
+                            buttonSubmitText: "Do it, I understand"
+                        }
                     }
                 }
-            });
+            }]);
 
-            // TODO
-            $dialog.off();
+            $('#dialog').off(); // FIXME: jquery
 
-            $dialog.on('click', '.closeButton', function() {
-                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            });
+            // cancel clicked - close dialog
+            this.sandbox.on('husky.dialog.cancel', function() {
+                this.sandbox.emit('husky.dialog.hide');
+            }, this);
 
-            $dialog.on('click', '.saveButton', function() {
-                // TODO remove by row
+            // delete clicked - delete contact
+            this.sandbox.on('husky.dialog.submit', function() {
                 ids.forEach(function(id) {
                     var contact = new Contact({id: id});
                     contact.destroy({
                         success: function() {
-                            console.log('deleted model');
-                            dataGrid.data('Husky.Ui.DataGrid').trigger('data-grid:row:remove', id);
+                            this.sandbox.emit('husky.datagrid.row.remove');
                         }
                     });
-                }.bind(this));
+                },this);
+                this.sandbox.emit('husky.dialog.hide');
+            }, this);
 
-                $dialog.data('Husky.Ui.Dialog').trigger('dialog:hide');
-            });
-        },
 
-        template: {
-            addButton: function(text, route) {
-                var $button = $('<div id="addButton" class="pull-left pointer"><span class="icon-add pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>');
-                $button.on('click', function() {
-                    Router.navigate(route);
-                });
-                return $button;
-            }
         }
 
     };
