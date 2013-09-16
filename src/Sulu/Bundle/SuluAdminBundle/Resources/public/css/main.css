@@ -5,18 +5,26 @@
 }
 
 /*----------------------------------------*/
-/* line 10, ../scss/modules/base.scss */
+/* line 8, ../scss/modules/base.scss */
+#content {
+  width: 800px;
+  margin-left: 300px;
+  margin-top: 100px;
+}
+
+/*----------------------------------------*/
+/* line 19, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 14, ../scss/modules/base.scss */
+/* line 23, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 22, ../scss/modules/base.scss */
+/* line 31, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
