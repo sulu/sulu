@@ -20,11 +20,6 @@ class Role
     private $system;
 
     /**
-     * @var string
-     */
-    private $module;
-
-    /**
      * @var \DateTime
      */
     private $created;
@@ -110,29 +105,6 @@ class Role
     public function getSystem()
     {
         return $this->system;
-    }
-
-    /**
-     * Set module
-     *
-     * @param string $module
-     * @return Role
-     */
-    public function setModule($module)
-    {
-        $this->module = $module;
-    
-        return $this;
-    }
-
-    /**
-     * Get module
-     *
-     * @return string 
-     */
-    public function getModule()
-    {
-        return $this->module;
     }
 
     /**

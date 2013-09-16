@@ -36,7 +36,6 @@ class RolesControllerTest extends DatabaseTestCase
         $role = new Role();
         $role->setName('Sulu Administrator');
         $role->setSystem('Sulu');
-        $role->setModule('Security');
         $role->setCreated(new DateTime());
         $role->setChanged(new DateTime());
         self::$em->persist($role);
@@ -88,7 +87,6 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(1, count($response->total));
         $this->assertEquals('Sulu Administrator', $response->items[0]->name);
         $this->assertEquals('Sulu', $response->items[0]->system);
-        $this->assertEquals('Security', $response->items[0]->module);
     }
 
     public function testGetById()
@@ -100,7 +98,6 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Sulu Administrator', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Security', $response->module);
         $this->assertEquals(2, count($response->permissions));
         $this->assertEquals('context1', $response->permissions[0]->context);
         $this->assertEquals(15, $response->permissions[0]->permissions);
@@ -118,7 +115,6 @@ class RolesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'module' => 'Portal',
                 'permissions' => array(
                     array(
                         'context' => 'portal1',
@@ -136,7 +132,6 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->module);
         $this->assertEquals(2, count($response->permissions));
         $this->assertEquals('portal1', $response->permissions[0]->context);
         $this->assertEquals(26, $response->permissions[0]->permissions);
@@ -152,7 +147,6 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->module);
         $this->assertEquals(2, count($response->permissions));
         $this->assertEquals('portal1', $response->permissions[0]->context);
         $this->assertEquals(26, $response->permissions[0]->permissions);
@@ -170,7 +164,6 @@ class RolesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'module' => 'Portal',
             )
         );
 
@@ -178,7 +171,6 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->module);
 
         $client->request(
             'GET',
@@ -189,7 +181,6 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('Portal', $response->module);
     }
 
     public function testPutNotExisting()
@@ -202,7 +193,6 @@ class RolesControllerTest extends DatabaseTestCase
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
-                'module' => 'Portal',
             )
         );
 
