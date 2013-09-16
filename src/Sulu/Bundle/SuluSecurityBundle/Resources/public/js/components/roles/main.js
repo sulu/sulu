@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['./models/role'], function(Role) {
 
     'use strict';
 
@@ -56,8 +56,12 @@ define(function() {
         },
 
         save: function(data) {
-            //TODO save
-            sandbox.emit('sulu.router.navigate', 'settings/roles');
+            var role = new Role(data);
+            role.save(null, {
+                success: function() {
+                    sandbox.emit('sulu.router.navigate', 'settings/roles');
+                }
+            });
         },
 
         remove: function(id) {
