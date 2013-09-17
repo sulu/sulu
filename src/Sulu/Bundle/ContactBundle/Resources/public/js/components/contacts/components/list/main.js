@@ -141,11 +141,12 @@ define([
             }]);
 
 //            $('#dialog').off(); // FIXME: jquery
-            this.sandbox.off('husky.dialog.cancel', this.hideDialog.bind(this));
-            this.sandbox.off('husky.dialog.submit');
+
 
             // cancel clicked - close dialog
-            this.sandbox.on('husky.dialog.cancel', this.hideDialog.bind(this));
+            this.sandbox.on('husky.dialog.cancel', function() {
+                this.sandbox.emit('husky.dialog.hide');
+            });
 
             // delete clicked - delete contact
             this.sandbox.on('husky.dialog.submit', function() {
@@ -161,13 +162,7 @@ define([
             }, this);
 
 
-        },
-
-        hideDialog: function() {
-            this.sandbox.emit('husky.dialog.hide');
         }
-
-
 
     };
 });
