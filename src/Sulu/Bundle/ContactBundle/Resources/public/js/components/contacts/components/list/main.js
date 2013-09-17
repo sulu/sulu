@@ -144,7 +144,7 @@ define([
             // cancel clicked - close dialog
             this.sandbox.on('husky.dialog.cancel', function() {
                 this.sandbox.emit('husky.dialog.hide');
-            });
+            }, this);
 
             // delete clicked - delete contact
             this.sandbox.on('husky.dialog.submit', function() {
