@@ -27,11 +27,8 @@ define([
         render: function() {
 
             RelationalStore.reset(); //FIXME really necessary?
-            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
 
-            //  template as part of sandbox
-//            var template =  this.sandbox.template(listTemplate);
             var template = this.sandbox.template.parse(listTemplate);
             this.sandbox.dom.html(this.$el, template);
 
