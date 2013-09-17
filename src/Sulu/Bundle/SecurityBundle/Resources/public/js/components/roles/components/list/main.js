@@ -21,8 +21,8 @@ define({
             {
                 name: 'datagrid@husky',
                 options: {
-                    el: '#datagrid',
-                    url: '/security/api/roles/list',
+                    el: '#content',
+                    url: '/security/api/roles/list?fields=name,system',
                     selectItem: {
                         type: 'checkbox'
                     },
@@ -36,7 +36,7 @@ define({
                     tableHead: [
                         {content: 'Content 1', width: "30%"},
                         {content: 'Content 2'},
-                        {content: 'Content 3'}
+                        {content: ''}
                     ],
                     excludeFields: ['id']
                 }

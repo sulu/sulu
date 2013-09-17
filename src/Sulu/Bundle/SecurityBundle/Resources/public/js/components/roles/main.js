@@ -17,6 +17,7 @@ define(['./models/role'], function(Role) {
         name: 'Sulu Security Role',
 
         initialize: function() {
+            console.log(this.sandbox);
             sandbox = this.sandbox;
 
             if (this.options.display == 'list') {
@@ -56,10 +57,15 @@ define(['./models/role'], function(Role) {
         },
 
         save: function(data) {
+            sandbox.emit('husky.header.button-state', 'loading-save-button');
             var role = new Role(data);
             role.save(null, {
                 success: function() {
                     sandbox.emit('sulu.router.navigate', 'settings/roles');
+                },
+                error: function() {
+                    // TODO Output error message
+                    sandbox.emit('husky.header.button-state', 'standard');
                 }
             });
         },
@@ -80,14 +86,27 @@ define(['./models/role'], function(Role) {
         },
 
         renderForm: function() {
-            sandbox.start([
-                {
-                    name: 'roles/components/form@sulusecurity',
-                    options: {
-                        el: this.options.el
-                    }
+            var role = new Role();
+
+            var component = {
+                name: 'roles/components/form@sulusecurity',
+                options: {
+                    el: this.options.el,
+                    data: role.defaults()
                 }
-            ]);
+            };
+
+            if (!!this.options.id) {
+                role.set({id: this.options.id});
+                role.fetch({
+                    success: function(model) {
+                        component.options.data = model.toJSON();
+                        sandbox.start([component]);
+                    }
+                });
+            } else {
+                sandbox.start([component]);
+            }
         }
     }
 });
