@@ -7,29 +7,40 @@
  * with this source code in the file LICENSE.
  */
 
-define({
-    name: 'Sulu App',
+define(function() {
 
-    initialize: function() {
-        if (!!this.sandbox.mvc.routes) {
+    var router;
 
-            var AppRouter = this.sandbox.mvc.Router({
-                routes: {
-                    // Default
-                    '*actions': 'defaultAction'
-                },
+    return {
+        name: 'Sulu App',
 
-                defaultAction: function(action) {
-                    // We have no matching route,
-                }
-            }), router = new AppRouter();
+        initialize: function() {
+            if (!!this.sandbox.mvc.routes) {
 
-            this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
-                router.route(route.route, function() {
-                    route.callback.apply(this, arguments);
+                var AppRouter = this.sandbox.mvc.Router({
+                    routes: {
+                        // Default
+                        '*actions': 'defaultAction'
+                    },
+
+                    defaultAction: function(action) {
+                        // We have no matching route,
+                    }
+                });
+
+                router = new AppRouter();
+
+                this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
+                    router.route(route.route, function() {
+                        route.callback.apply(this, arguments);
+                    }.bind(this));
                 }.bind(this));
-            }.bind(this));
 
+                this.bindCustomEvents();
+            }
+        },
+
+        bindCustomEvents: function() {
             // listening for navigation events
             this.sandbox.on('sulu.router.navigate', function(route) {
                 router.navigate(route, {trigger: true});
@@ -43,9 +54,5 @@ define({
                 this.sandbox.emit('sulu.router.navigate', event.item.get('action'));
             }.bind(this));
         }
-    },
-
-    updateContainer: function(elements){
-        this.$el.html(elements);
     }
 });
