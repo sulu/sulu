@@ -34,7 +34,7 @@ define({
                     removeRow: false,
                     tableHead: [
                         {content: 'Name', width: "30%"},
-                        {content: 'System'},
+                        {content: 'System'}
                     ],
                     excludeFields: ['id']
                 }
