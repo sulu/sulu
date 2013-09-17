@@ -37,20 +37,19 @@ define({
 
             // init navigation
             this.sandbox.on('navigation.item.content.show', function(event) {
-                // FIXME abstract?
                 // 45px margin to navigation at start
-                $('.demo-container').css('margin-left', (event.data.navWidth + 45) + "px");
-                // mid div has margin-left 25px at start
-                $('#headerbar-mid').css('margin-left', (event.data.navWidth - 275 + 45) + "px");
-                // navigation width is 300px at start
-                $('#headerbar-right').css('width', (220 - (event.data.navWidth - 300 + 45)) + "px");
+                $('#content').css('margin-left', (event.data.navWidth + 45) + "px");
 
                 this.sandbox.emit('sulu.router.navigate', event.item.get('action'));
             }.bind(this));
         }
     },
 
+    updateContainer: function(elements){
+        this.$el.html(elements);
+    },
+
     startComponent: function(component) {
-        this.sandbox.start([component]); //FIXME reset true
+        this.sandbox.start([component], { reset: true });
     }
 });
