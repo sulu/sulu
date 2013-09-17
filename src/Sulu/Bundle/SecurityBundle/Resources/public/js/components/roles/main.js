@@ -14,6 +14,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
     var sandbox,
         idDelete,
 
+        // callback for deleting a role after confirming
         delSubmit = function() {
             sandbox.emit('husky.dialog.hide');
             sandbox.emit('husky.header.button-state', 'loading-delete-button');
@@ -34,16 +35,19 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             unbindDialogListener();
         },
 
+        // callback for aborting the deletion of a role
         hideDialog = function() {
             sandbox.emit('husky.dialog.hide');
             unbindDialogListener();
         },
 
+        // binds the listeners to the dialog box
         bindDialogListener = function(){
             sandbox.on('husky.dialog.submit', delSubmit);
             sandbox.on('husky.dialog.cancel', hideDialog);
         },
 
+        // unbind the listeners of the dialog box
         unbindDialogListener = function(){
             sandbox.off('husky.dialog.submit', delSubmit);
             sandbox.off('husky.dialog.cancel', hideDialog);
@@ -83,11 +87,13 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             }.bind(this));
         },
 
+        // redirects to a new form, when the sulu.roles.new event is thrown
         add: function() {
             sandbox.emit('husky.header.button-state', 'loading-add-button');
             sandbox.emit('sulu.router.navigate', 'settings/roles/new');
         },
 
+        // redirects to the form with the role data, when the sulu.roles.load event with an id is thrown
         load: function(id) {
             sandbox.emit('husky.header.button-state', 'loading-add-button');
 
@@ -96,6 +102,8 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id);
         },
 
+
+        // saves the data, which is thrown together with a sulu.roles.save event
         save: function(data) {
             sandbox.emit('husky.header.button-state', 'loading-save-button');
 
@@ -113,6 +121,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             });
         },
 
+        // deletes the role with the id thrown with the sulu.role.delete event
         del: function(id) {
             idDelete = id;
 
