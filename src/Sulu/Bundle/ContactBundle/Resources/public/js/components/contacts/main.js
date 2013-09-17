@@ -55,7 +55,9 @@ define([], function() {
 
 
             }else{
-
+                this.sandbox.start([
+                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el}}
+                ]);
             }
         }
 

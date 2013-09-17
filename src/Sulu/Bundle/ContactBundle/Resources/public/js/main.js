@@ -27,13 +27,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'contacts/people',
             callback: function(){
-                this.startComponent({
-                    name: 'contacts@sulucontact',
-                    options: {
-                        el: '#content',
-                        display: 'list'
-                    }
-                });
+                this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
             }
         });
 
@@ -41,13 +35,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'contacts/people/add',
             callback: function(){
-                this.startComponent({
-                    name: 'contacts@sulucontact',
-                    options: {
-                        el: '#content',
-                        display: 'form'
-                    }
-                });
+                this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="form"/>');
             }
         });
 
@@ -55,14 +43,9 @@ define({
         sandbox.mvc.routes.push({
             route: 'contacts/people/edit::id',
             callback: function(id){
-                this.startComponent({
-                    name: 'contacts@sulucontact',
-                    options: {
-                        el: '#content',
-                        id: id,
-                        display: 'form'
-                    }
-                });
+                this.html(
+                    '<div data-aura-component="contacts@sulucontact" data-aura-display="form" data-aura-id="' +id + '"/>'
+                );
             }
         });
 
@@ -70,13 +53,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'contacts/companies',
             callback: function(){
-                this.startComponent({
-                    name: 'accounts@sulucontact',
-                    options: {
-                        el: '#content',
-                        display: 'list'
-                    }
-                });
+                this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="list"/>');
             }
         });
 
@@ -84,13 +61,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'contacts/companies/add',
             callback: function(){
-                this.startComponent({
-                    name: 'accounts@sulucontact',
-                    options: {
-                        el: '#content',
-                        display: 'form'
-                    }
-                });
+                this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="form"/>');
             }
         });
 
@@ -98,14 +69,9 @@ define({
         sandbox.mvc.routes.push({
             route: 'contacts/companies/edit::id',
             callback: function(id){
-                this.startComponent({
-                    name: 'accounts@sulucontact',
-                    options: {
-                        el: '#content',
-                        id: id,
-                        display: 'form'
-                    }
-                });
+                this.html(
+                    '<div data-aura-component="accounts@sulucontact" data-aura-display="form" data-aura-id="' +id + '"/>'
+                );
             }
         });
     }
