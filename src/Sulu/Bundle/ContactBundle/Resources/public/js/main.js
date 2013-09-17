@@ -56,7 +56,7 @@ define({
             route: 'contacts/people/edit::id',
             callback: function(id){
                 this.startComponent({
-                    name: 'contacts@sulucontacts',
+                    name: 'contacts@sulucontact',
                     options: {
                         el: '#content',
                         id: id,
@@ -99,7 +99,7 @@ define({
             route: 'contacts/companies/edit::id',
             callback: function(id){
                 this.startComponent({
-                    name: 'account@sulucontacts',
+                    name: 'accounts@sulucontact',
                     options: {
                         el: '#content',
                         id: id,
