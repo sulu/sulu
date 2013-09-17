@@ -46,7 +46,7 @@ define([
             this.initDataGrid(catalogues);
 
             // TODO
-//            this.sandbox.validate.create(catalogueFormId);
+            this.sandbox.validation.create(catalogueFormId);
             this.initFormEvents();
         },
 
@@ -143,7 +143,7 @@ define([
         submit: function() {
 
             // TODO validation
-//            if(this.sandbox.validate.validate(catalogueFormId)) {
+            if(this.sandbox.validation.validate(catalogueFormId)) {
 
                 if(!this.options.data) {
                     this.options.data = {};
@@ -154,7 +154,7 @@ define([
                 this.options.data.catalogues = this.getChangedCatalogues();
 
                 this.sandbox.emit('sulu.translate.package.save', this.options.data, this.cataloguesToDelete);
-//            }
+            }
         },
 
         getChangedCatalogues: function() {

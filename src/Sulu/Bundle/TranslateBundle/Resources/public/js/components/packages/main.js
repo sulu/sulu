@@ -23,6 +23,8 @@ define([
 
             RelationalStore.reset();
 
+            console.log(packageIdsDelete, "packageIdsDelete");
+
             sandbox.util.each(packageIdsDelete, function(index) {
 
                 var packageModel = new Package({id: packageIdsDelete[index]});
@@ -38,6 +40,8 @@ define([
             }.bind(this));
 
             unbindDialogListener();
+            sandbox.emit('husky.header.button-state', 'standard');
+            packageIdsDelete = new Array();
         },
 
         hideDialog = function() {

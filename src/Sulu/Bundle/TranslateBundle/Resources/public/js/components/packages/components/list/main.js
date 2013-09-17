@@ -98,6 +98,7 @@ define([
 
                         if (ids.length == 0) {
                             // no items selected
+                            console.log("no ids in array");
                             this.sandbox.emit('husky.header.button-state', 'standard');
                         } else if (ids.length > 0) {
                             this.sandbox.emit('sulu.translate.packages.delete', ids);
