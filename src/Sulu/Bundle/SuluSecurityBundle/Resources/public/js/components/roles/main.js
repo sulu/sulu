@@ -11,7 +11,44 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
 
     'use strict';
 
-    var sandbox;
+    var sandbox,
+        idDelete,
+
+        delSubmit = function() {
+            sandbox.emit('husky.dialog.hide');
+            sandbox.emit('husky.header.button-state', 'loading-delete-button');
+
+            Store.reset();
+
+            var role = new Role({id: idDelete});
+            role.destroy({
+                success: function() {
+                    sandbox.emit('sulu.router.navigate', 'settings/roles');
+                },
+                error: function() {
+                    // TODO Output error message
+                    sandbox.emit('husky.header.button-state', 'standard');
+                }
+            });
+
+            unbindDialogListener();
+        },
+
+        hideDialog = function() {
+            sandbox.emit('husky.dialog.hide');
+            unbindDialogListener();
+        },
+
+        bindDialogListener = function(){
+            sandbox.on('husky.dialog.submit', delSubmit);
+            sandbox.on('husky.dialog.cancel', hideDialog);
+        },
+
+        unbindDialogListener = function(){
+            sandbox.off('husky.dialog.submit', delSubmit);
+            sandbox.off('husky.dialog.cancel', hideDialog);
+        };
+
 
     return {
         name: 'Sulu Security Role',
@@ -52,7 +89,10 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
         },
 
         load: function(id) {
+            sandbox.emit('husky.header.button-state', 'loading-add-button');
+
             Store.reset();
+
             sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id);
         },
 
@@ -67,20 +107,26 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                     sandbox.emit('sulu.router.navigate', 'settings/roles');
                 },
                 error: function() {
-                    // TODO Output error message
+                    sandbox.emit('sulu.dialog.error.show', 'An error occured during saving the role!');
                     sandbox.emit('husky.header.button-state', 'standard');
                 }
             });
         },
 
         del: function(id) {
+            idDelete = id;
+
             // show dialog and call delete only when user confirms
             sandbox.emit('sulu.dialog.confirmation.show', {
                 content: {
                     title: 'Be careful!',
                     content: [
-                        'This operation you are about to do will delete data. This is not undoable!',
-                        'Please think about it and accept or decline.'
+                        '<p>',
+                        'This operation you are about to do will delete data. <br /> This is not undoable!',
+                        '</p>',
+                        '<p>',
+                        ' Please think about it and accept or decline.',
+                        '</p>'
                         ].join('')
                 },
                 footer: {
@@ -89,27 +135,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 }
             });
 
-            sandbox.on('husky.dialog.cancel', function() {
-                sandbox.emit('husky.dialog.hide');
-            });
-
-            sandbox.on('husky.dialog.submit', function() {
-                sandbox.emit('husky.dialog.hide');
-                sandbox.emit('husky.header.button-state', 'loading-delete-button');
-
-                Store.reset();
-
-                var role = new Role({id: id});
-                role.destroy({
-                    success: function() {
-                        sandbox.emit('sulu.router.navigate', 'settings/roles');
-                    },
-                    error: function() {
-                        // TODO Output error message
-                        sandbox.emit('husky.header.button-state', 'standard');
-                    }
-                });
-            });
+            bindDialogListener();
         },
 
         renderList: function() {
