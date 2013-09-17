@@ -13,6 +13,7 @@ define(['mvc/relationalmodel'], function(RelationalModel) {
 
         defaults: function() {
             return {
+                id: null,
                 name: '',
                 system: ''
             }

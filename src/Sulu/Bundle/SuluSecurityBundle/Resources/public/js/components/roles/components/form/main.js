@@ -15,8 +15,6 @@ define(['text!/security/template/role/form'], function(Template) {
         view: true,
 
         initialize: function() {
-            // FIXME Automate this call
-            this.sandbox.off();
             this.initializeHeader();
             this.render();
         },
@@ -32,6 +30,7 @@ define(['text!/security/template/role/form'], function(Template) {
         save: function() {
             // FIXME  Use datamapper instead
             var data = {
+                id: this.sandbox.dom.$('#id').val(),
                 name: this.sandbox.dom.$('#name').val(),
                 system: this.sandbox.dom.$('#system').val()
             };
@@ -40,7 +39,7 @@ define(['text!/security/template/role/form'], function(Template) {
         },
 
         render: function() {
-            this.sandbox.dom.html(this.options.el, Template);
+            this.sandbox.dom.html(this.options.el, _.template(Template, this.options.data));
         }
     }
 });

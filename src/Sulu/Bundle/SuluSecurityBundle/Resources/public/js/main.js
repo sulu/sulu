@@ -25,29 +25,44 @@ define({
         // list all roles
         sandbox.mvc.routes.push({
             route: 'settings/roles',
-            components: [
-                {
+            callback: function(){
+                this.startComponent({
                     name: 'roles@sulusecurity',
                     options: {
                         el: '#content',
                         display: 'list'
                     }
-                }
-            ]
+                });
+            }
         });
 
         // show form for a new role
         sandbox.mvc.routes.push({
             route: 'settings/roles/new',
-            components: [
-                {
+            callback: function(){
+                this.startComponent({
                     name: 'roles@sulusecurity',
                     options: {
                         el: '#content',
                         display: 'form'
                     }
-                }
-            ]
+                });
+            }
+        });
+
+        // show form for editing a role
+        sandbox.mvc.routes.push({
+            route: 'settings/roles/edit::id',
+            callback: function(id){
+                this.startComponent({
+                    name: 'roles@sulusecurity',
+                    options: {
+                        el: '#content',
+                        id: id,
+                        display: 'form'
+                    }
+                });
+            }
         });
     }
 });
