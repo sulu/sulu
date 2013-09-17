@@ -14,10 +14,6 @@
                 core.mvc.relationalModel = Backbone.RelationalModel;
 
                 sandbox.mvc.relationalModel = function(options) {
-
-//                    console.log(RelationalModel,  "relationalModel");
-//                    console.log(Backbone,  "backbone");
-
                     return core.mvc.relationalModel.extend(options);
                 };
 
@@ -31,6 +27,13 @@
                     return sandbox.mvc.HasMany;
                 });
 
+                sandbox.mvc.Store = Backbone.Relational.store;
+
+                console.log(sandbox.mvc.Store);
+
+                define('mvc/relationalstore', function() {
+                    return sandbox.mvc.Store;
+                });
             }
         }
     });
