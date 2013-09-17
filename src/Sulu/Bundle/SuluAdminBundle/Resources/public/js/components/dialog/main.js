@@ -7,27 +7,65 @@
  * with this source code in the file LICENSE.
  */
 
-define({
-    name: 'Sulu Dialog',
+define(function() {
+    var $dialog;
 
-    initialize: function() {
-        this.bindCustomEvents();
-    },
+    return {
+        name: 'Sulu Dialog',
 
-    bindCustomEvents: function() {
-        this.sandbox.on('sulu.dialog.confirmation.show', function(data) {
-            this.showConfirmationDialog(data);
-        }.bind(this));
-    },
+        initialize: function() {
+            this.bindCustomEvents();
+        },
 
-    showConfirmationDialog: function(data) {
-        this.html(
-            '<div data-aura-component="dialog@husky"' +
-                ' data-aura-data-content-title="' + data.content.title + '' +
-                ' data-aura-data-content-content="' +data.content.content + '"' +
-                ' data-aura-data-footer-buttonCancelText="' +data.footer.buttonCancelText + '"' +
-                ' data-aura-data-footer-buttonSubmitText="' +data.footer.buttonSubmitText + '"' +
-                '/>'
-        );
+        bindCustomEvents: function() {
+            this.sandbox.on('sulu.dialog.confirmation.show', function(data) {
+                this.showConfirmationDialog(data);
+            }.bind(this));
+
+            this.sandbox.on('sulu.dialog.error.show', function(message) {
+                this.showErrorDialog(message);
+            }.bind(this));
+        },
+
+        createDialogElement: function() {
+            $dialog = this.sandbox.dom.createElement('<div id="dialog"></div>');
+            this.sandbox.dom.append(this.$el, $dialog);
+        },
+
+        startComponent: function(component) {
+            this.sandbox.start([component], { reset: true });
+        },
+
+        showConfirmationDialog: function(data) {
+            this.createDialogElement();
+            this.startComponent({
+                name: 'dialog@husky',
+                options: {
+                    el: $dialog,
+                    data: data
+                }
+            });
+        },
+
+        showErrorDialog: function(message) {
+            this.createDialogElement();
+            this.startComponent({
+                name: 'dialog@husky',
+                options: {
+                    el: $dialog,
+                    templateType: 'okDialog',
+                    data: {
+                        content: {
+                            title: "An error occured!",
+                            content: message
+                        }
+                    }
+                }
+            });
+
+            this.sandbox.once('husky.dialog.cancel', function() {
+                this.sandbox.emit('husky.dialog.hide');
+            }.bind(this));
+        }
     }
 });
