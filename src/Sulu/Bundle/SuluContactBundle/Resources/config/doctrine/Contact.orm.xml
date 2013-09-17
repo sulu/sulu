@@ -12,9 +12,6 @@
         <field name="title" type="string" column="title" length="60" nullable="true"/>
         <field name="position" type="string" column="position" length="60" nullable="true"/>
         <field name="birthday" type="date" column="birthday" nullable="true"/>
-        <field name="localeSystem" type="string" column="localeSystem" length="2"/>
-        <field name="username" type="string" column="username" length="60" nullable="true"/>
-        <field name="password" type="string" column="password" length="60" nullable="true"/>
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
         <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale"
