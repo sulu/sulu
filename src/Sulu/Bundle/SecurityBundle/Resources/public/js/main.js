@@ -26,13 +26,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'settings/roles',
             callback: function(){
-                this.startComponent({
-                    name: 'roles@sulusecurity',
-                    options: {
-                        el: '#content',
-                        display: 'list'
-                    }
-                });
+                this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="list"/>');
             }
         });
 
@@ -40,13 +34,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'settings/roles/new',
             callback: function(){
-                this.startComponent({
-                    name: 'roles@sulusecurity',
-                    options: {
-                        el: '#content',
-                        display: 'form'
-                    }
-                });
+                this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="form"/>');
             }
         });
 
@@ -54,14 +42,9 @@ define({
         sandbox.mvc.routes.push({
             route: 'settings/roles/edit::id',
             callback: function(id){
-                this.startComponent({
-                    name: 'roles@sulusecurity',
-                    options: {
-                        el: '#content',
-                        id: id,
-                        display: 'form'
-                    }
-                });
+                this.html(
+                    '<div data-aura-component="roles@sulusecurity" data-aura-display="form" data-aura-id="' +id + '"/>'
+                );
             }
         });
     }

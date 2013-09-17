@@ -1,9 +1,11 @@
 <form id="role-form">
-    <input id="id" type="hidden" value="<%= id %>"/>
+    <% if(!!data.id) { %>
+        <input id="id" type="hidden" value="<%= data.id %>"/>
+    <% } %>
     <div class="grid-row">
         <div class="grid-col-6">
             <label>Title*</label>
-            <input class="form-element" type="text" id="name" value="<%= name %>"/>
+            <input class="form-element" type="text" id="name" value="<%= data.name %>"/>
         </div>
         <div class="grid-col-6">
             <label>System*</label>

@@ -20,26 +20,34 @@ define(['text!/security/template/role/form'], function(Template) {
         },
 
         initializeHeader: function() {
-            this.sandbox.emit('husky.header.button-type', 'saveDelete');
+            if (!!this.options.data.id) {
+                this.sandbox.emit('husky.header.button-type', 'saveDelete');
+            } else {
+                this.sandbox.emit('husky.header.button-type', 'save');
+            }
 
             this.sandbox.on('husky.button.save.click', function() {
                 this.save();
+            }.bind(this));
+
+            this.sandbox.on('husky.button.delete.click', function() {
+                this.sandbox.emit('sulu.roles.delete', this.sandbox.dom.val('#id'));
             }.bind(this));
         },
 
         save: function() {
             // FIXME  Use datamapper instead
             var data = {
-                id: this.sandbox.dom.$('#id').val(),
-                name: this.sandbox.dom.$('#name').val(),
-                system: this.sandbox.dom.$('#system').val()
+                id: this.sandbox.dom.val('#id'),
+                name: this.sandbox.dom.val('#name'),
+                system: this.sandbox.dom.val('#system')
             };
 
             this.sandbox.emit('sulu.roles.save', data);
         },
 
         render: function() {
-            this.sandbox.dom.html(this.options.el, _.template(Template, this.options.data));
+            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(Template, {data: this.options.data}));
         }
     }
 });
