@@ -26,13 +26,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate',
                 callback: function(){
-                    this.startComponent({
-                        name: 'packages@sulutranslate',
-                        options: {
-                            el: '#content',
-                            display:'list'
-                        }
-                    });
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="list"/>');
                 }
             }
         );
@@ -41,13 +35,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/add',
                 callback: function(){
-                    this.startComponent({
-                        name: 'packages@sulutranslate',
-                        options: {
-                            el: '#content',
-                            display:'form'
-                        }
-                    });
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="form"/>');
                 }
             }
         );
@@ -56,14 +44,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/settings',
                 callback: function(id){
-                    this.startComponent({
-                        name: 'packages@sulutranslate',
-                        options: {
-                            el: '#content',
-                            id: id,
-                            display:'form'
-                        }
-                    });
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
                 }
             }
         );
@@ -72,14 +53,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details',
                 callback: function(id){
-                    this.startComponent({
-                        name: 'translation@sulutranslate',
-                        options: {
-                            el: '#content',
-                            id: id,
-                            display:'form'
-                        }
-                    });
+                    this.html('<div data-aura-component="translation@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
                 }
             }
         );

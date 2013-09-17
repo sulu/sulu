@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define([
+    'sulutranslate/model/package',
+    'sulutranslate/model/catalogue'
+], function(Package, Catalogue) {
 
     'use strict';
 
@@ -23,6 +26,28 @@ define([], function() {
                 throw 'display type wrong';
             }
 
+            this.bindCustomEvents();
+
+        },
+
+        bindCustomEvents: function() {
+
+            // load existing
+            this.sandbox.on('sulu.translate.package.load', function(item) {
+                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + item + '/settings');
+            }, this);
+
+            // add new
+            this.sandbox.on('sulu.translate.package.new', function() {
+                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                this.sandbox.emit('sulu.router.navigate', 'settings/translate/add');
+            }, this);
+
+            // save
+            this.sandbox.on('sulu.translate.package.save', function(data,cataloguesToDelete) {
+                this.savePackage(data,cataloguesToDelete);
+            }, this);
         },
 
         renderList: function() {
@@ -30,37 +55,57 @@ define([], function() {
             this.sandbox.start([
                 {name: 'packages/components/list@sulutranslate', options: { el: this.$el}}
             ]);
-
-            this.sandbox.on('sulu.translate.package.load', function(item){
-                this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + item+'/settings');
-            }, this);
-
-            this.sandbox.on('sulu.translate.package.new', function(){
-                this.sandbox.emit('sulu.router.navigate', 'settings/translate/add');
-            }, this);
-
         },
 
 
         renderForm: function() {
 
-            console.log(this.options.id, "id");
+            if (!!this.options.id) {
 
-            if(!!this.options.id){
+                var packageModel = new Package({id: this.options.id});
+                packageModel.fetch({
+                    success: function(packageModel) {
+                        this.sandbox.start([
+                            {name: 'packages/components/form@sulutranslate', options: { el: this.$el, data: packageModel.toJSON()}}
+                        ]);
+                    }.bind(this)
+                });
 
-                // todo fetch
+            } else {
 
                 this.sandbox.start([
-                    {name: 'packages/components/form@sulutranslate', options: { el: this.$el, data: this.model.toJSON()}}
-                ]);
-
-
-            }else{
-
-                this.sandbox.start([
-                    {name: 'packages/components/form@sulutranslate', options: { el: this.$el}}
+                    {name: 'packages/components/form@sulutranslate', options: { el: this.$el} }
                 ]);
             }
+        },
+
+        savePackage: function(data, cataloguesToDelete) {
+
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+
+            this.sandbox.util.each(cataloguesToDelete, function(id) {
+                var cat = new Catalogue({id:cataloguesToDelete[id]});
+                cat.destroy({
+                    success: function() {
+                        console.log("deleted catalogue");
+                    }
+                });
+            }.bind(this));
+
+            var packageModel = new Package(data);
+            packageModel.save(null, {
+
+                success: function() {
+                    this.sandbox.emit('sulu.router.navigate', 'settings/translate');
+                }.bind(this),
+
+                error: function() {
+                    // TODO Output error message
+                    console.log("error while trying to save");
+                    this.sandbox.emit('husky.header.button-state', 'disable');
+                }.bind(this)
+            });
+
         }
 
     };

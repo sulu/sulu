@@ -8,8 +8,9 @@
  */
 
 define([
-    'text!/translate/template/package/list'
-], function(listTemplate) {
+    'text!/translate/template/package/list',
+    'mvc/relationalstore'
+], function(listTemplate, RelationalStore) {
 
     'use strict';
 
@@ -23,8 +24,7 @@ define([
         },
 
         render: function() {
-
-//            this.sandbox.mvc.Relational.store.reset(); //FIXME really necessary?
+            RelationalStore.reset();
 //            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
             var template = this.sandbox.template.parse(listTemplate);
