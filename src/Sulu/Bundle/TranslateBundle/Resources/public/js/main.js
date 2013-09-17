@@ -25,48 +25,62 @@ define({
         // list all translation packages
         sandbox.mvc.routes.push({
                 route: 'settings/translate',
-                components: [
-                    {
+                callback: function(){
+                    this.startComponent({
                         name: 'packages@sulutranslate',
-                        options: { el: '#content', display:'list' }
-                    }
-                ]
+                        options: {
+                            el: '#content',
+                            display:'list'
+                        }
+                    });
+                }
             }
         );
 
         // show form for new translation package
         sandbox.mvc.routes.push({
                 route: 'settings/translate/add',
-                components: [
-                    {
+                callback: function(){
+                    this.startComponent({
                         name: 'packages@sulutranslate',
-                        options: { el: '#content', display:'form'  }
-                    }
-                ]
+                        options: {
+                            el: '#content',
+                            display:'form'
+                        }
+                    });
+                }
             }
         );
 
         // show form for editing a translation package
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/settings',
-                components: [
-                    {
+                callback: function(id){
+                    this.startComponent({
                         name: 'packages@sulutranslate',
-                        options: { el: '#content', display:'form'}
-                    }
-                ]
+                        options: {
+                            el: '#content',
+                            id: id,
+                            display:'form'
+                        }
+                    });
+                }
             }
         );
 
         // show form for editing codes
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details',
-                components: [
-                    {
-                        name: 'translations@sulutranslate',
-                        options: { el: '#content', display:'form'  }
-                    }
-                ]
+                callback: function(id){
+                    this.startComponent({
+                        name: 'translation@sulutranslate',
+                        options: {
+                            el: '#content',
+                            id: id,
+                            display:'form'
+                        }
+                    });
+                }
             }
         );
 
