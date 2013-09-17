@@ -47,9 +47,5 @@ define({
 
     updateContainer: function(elements){
         this.$el.html(elements);
-    },
-
-    startComponent: function(component) {
-        this.sandbox.start([component], { reset: true });
     }
 });
