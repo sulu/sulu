@@ -66,12 +66,12 @@ define([
                             '<tr <% if (!!id) { %> data-id="<%= id %>"<% } %> >',
                             '<td>',
                             '<label>',
-                            '<input id="isDefault<% if (!!id) { %><%= id %><% } %>" type="radio" class="custom-radio <% if (!!isDefault) { %><%= \'is-selected\" checked=\"checked\' %><% } %>" name="catalogue-radio">',
+                            '<input type="radio" class="custom-radio isDefault <% if (!!isDefault) { %><%= \'is-selected\" checked=\"checked\' %><% } %>" name="catalogue-radio">',
                             '<span class="custom-radio-icon"></span>',
                             '</label>',
                             '</td>',
                             '<td>',
-                            '<input class="form-element" id="inputLocale<% if (!!id) { %><%= id %><% } %>" type="text" data-trigger="focusout" data-minlength="3" value="<% if (!!locale) { %><%= locale %><% } %>"/>',
+                            '<input class="form-element inputLocale" type="text" data-trigger="focusout" data-minlength="3" value="<% if (!!locale) { %><%= locale %><% } %>"/>',
                             '</td>',
                             '<td class="remove-row">',
                             '<span class="icon-remove pointer"></span>',
@@ -153,17 +153,18 @@ define([
 
             this.sandbox.util.each(rows, function(index) {
 
-                // TODO new elements - no id!
-
-                var id = this.sandbox.dom.attr(rows[index], 'data-id'),
-                    isDefault = this.sandbox.dom.is('#isDefault' + id, ':checked'),
-                    locale = this.sandbox.dom.val('#inputLocale' + id),
+                var id = this.sandbox.dom.attr(rows[index], 'data-id');
+                var checkBox = this.sandbox.dom.find('input.isDefault', rows[index]),
+                    isDefault = this.sandbox.dom.is(checkBox, ':checked'),
+                    input = this.sandbox.dom.find('input.inputLocale', rows[index]),
+                    locale = this.sandbox.dom.val(input),
                     catalogue = {
                         id: id,
                         isDefault: isDefault,
                         locale: locale
                     };
 
+                console.log(catalogue, "pushed catalogue");
                 changedCatalogues.push(catalogue);
 
             }.bind(this));
