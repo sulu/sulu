@@ -116,9 +116,10 @@ define([
         // fills dialogbox
         initDialogBoxRemoveMultiple: function(ids) {
 
-            var hideDialog = function() {
-
-            };
+            if (ids.length == 0) {
+                // no items selected
+                return;
+            }
 
             // create dialog box
             this.sandbox.start([{

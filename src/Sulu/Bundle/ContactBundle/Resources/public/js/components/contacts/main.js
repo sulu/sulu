@@ -11,8 +11,6 @@ define([], function() {
 
     'use strict';
 
-    var sandbox;
-
     return {
 
         initialize: function() {
