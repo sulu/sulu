@@ -13,12 +13,12 @@ define([
 ], function(formTemplate, RelationalStore) {
 
     'use strict';
+    var catalogueFormId = '#catalogue-form';
 
     return {
 
         name: 'Sulu Translate Package Form',
         view: true,
-
 
         initialize: function() {
             this.sandbox.off(); // FIXME automate this call
@@ -32,19 +32,28 @@ define([
 
             var packageModel = null,
                 catalogues = new Array();
+                this.cataloguesToDelete = new Array();
 
             if (!!this.options.data) {
                 packageModel = this.options.data
                 catalogues = this.options.data.catalogues;
-                this.cataloguesToDelete = [];
             }
 
             var template = this.sandbox.template.parse(formTemplate, packageModel);
             this.sandbox.dom.html(this.options.el, template);
 
+
+            this.initDataGrid(catalogues);
+
+            // TODO
+//            this.sandbox.validate.create(catalogueFormId);
+            this.initFormEvents();
+        },
+
+        initDataGrid: function(catalogues){
             this.sandbox.start([
                 {name: 'datagrid@husky', options: {
-                    el: this.sandbox.dom.find('#catalogues', '#catalogue-form'),
+                    el: this.sandbox.dom.find('#catalogues', catalogueFormId),
                     data: {
                         items: catalogues
                     },
@@ -64,33 +73,24 @@ define([
                     template: {
                         row: [
                             '<tr <% if (!!id) { %> data-id="<%= id %>"<% } %> >',
-                            '<td>',
-                            '<label>',
-                            '<input type="radio" class="custom-radio isDefault <% if (!!isDefault) { %><%= \'is-selected\" checked=\"checked\' %><% } %>" name="catalogue-radio">',
-                            '<span class="custom-radio-icon"></span>',
-                            '</label>',
-                            '</td>',
-                            '<td>',
-                            '<input class="form-element inputLocale" type="text" data-trigger="focusout" data-minlength="3" value="<% if (!!locale) { %><%= locale %><% } %>"/>',
-                            '</td>',
-                            '<td class="remove-row">',
-                            '<span class="icon-remove pointer"></span>',
-                            '</td>',
+                                '<td>',
+                                    '<label>',
+                                        '<input type="radio" class="custom-radio isDefault <% if (!!isDefault) { %><%= \'is-selected\" checked=\"checked\' %><% } %>" name="catalogue-radio">',
+                                        '<span class="custom-radio-icon"></span>',
+                                    '</label>',
+                                '</td>',
+                                '<td>',
+                                '   <input class="form-element inputLocale" type="text" data-validate="true" data-minlength="3" value="<% if (!!locale) { %><%= locale %><% } %>"/>',
+                                '</td>',
+                                '<td class="remove-row">',
+                                    '<span class="icon-remove pointer"></span>',
+                                '</td>',
                             '</tr>'
                         ].join('')
                     }
 
                 }}
             ]);
-
-            this.initFormEvents();
-        },
-
-        initFormEvents: function() {
-
-            this.$el.on('click', '#add-catalogue-row', function(event) { // FIXME: jquery
-                this.sandbox.emit('husky.datagrid.row.add', { id: '', isDefault: false, locale: '', translations: [] });
-            }.bind(this));
 
             this.sandbox.on('husky.datagrid.row.removed', function(event) {
                 var $element = this.sandbox.dom.$(event.currentTarget),
@@ -100,7 +100,28 @@ define([
                     this.getCatalogueById(id);
                 }
             }, this);
+        },
 
+        initFormEvents: function() {
+
+            this.$el.on('click', '#add-catalogue-row', function(event) { // FIXME: jquery
+                this.sandbox.emit('husky.datagrid.row.add', { id: '', isDefault: false, locale: '', translations: [] });
+            }.bind(this));
+
+        },
+
+        initializeHeader: function() {
+
+            this.sandbox.emit('husky.header.button-type', 'saveDelete');
+
+            this.sandbox.on('husky.button.save.click', function(event) {
+                this.submit();
+            }, this);
+
+            this.sandbox.on('husky.button.delete.click', function(event) {
+                console.log("delete");
+                //this.sandbox.emit('sulu.translate.package.delete');
+            }, this);
         },
 
         getCatalogueById: function(id) {
@@ -119,31 +140,21 @@ define([
             }.bind(this));
         },
 
-        initializeHeader: function() {
-
-            this.sandbox.emit('husky.header.button-type', 'saveDelete');
-
-            this.sandbox.on('husky.button.save.click', function(event) {
-                this.submit();
-            }, this);
-
-            this.sandbox.on('husky.button.delete.click', function(event) {
-                console.log("delete");
-                //this.sandbox.emit('sulu.translate.package.delete');
-            }, this);
-        },
-
         submit: function() {
 
             // TODO validation
+//            if(this.sandbox.validate.validate(catalogueFormId)) {
 
-            var changedCatalogues = this.getChangedCatalogues();
+                if(!this.options.data) {
+                    this.options.data = {};
+                    this.options.data.id;
+                }
 
-            this.options.data.name = this.sandbox.dom.val('#name');
-            this.options.data.catalogues = changedCatalogues;
-            console.log(this.options.data, "data to save");
+                this.options.data.name = this.sandbox.dom.val('#name');
+                this.options.data.catalogues = this.getChangedCatalogues();
 
-            this.sandbox.emit('sulu.translate.package.save', this.options.data, this.cataloguesToDelete);
+                this.sandbox.emit('sulu.translate.package.save', this.options.data, this.cataloguesToDelete);
+//            }
         },
 
         getChangedCatalogues: function() {
@@ -157,15 +168,19 @@ define([
                 var checkBox = this.sandbox.dom.find('input.isDefault', rows[index]),
                     isDefault = this.sandbox.dom.is(checkBox, ':checked'),
                     input = this.sandbox.dom.find('input.inputLocale', rows[index]),
-                    locale = this.sandbox.dom.val(input),
-                    catalogue = {
-                        id: id,
-                        isDefault: isDefault,
-                        locale: locale
-                    };
+                    locale = this.sandbox.dom.val(input);
 
-                console.log(catalogue, "pushed catalogue");
-                changedCatalogues.push(catalogue);
+                if(!!locale && locale.length > 0) {
+
+                    var catalogue = {
+                            id: id,
+                            isDefault: isDefault,
+                            locale: locale
+                        };
+
+                    console.log(catalogue, "pushed catalogue");
+                    changedCatalogues.push(catalogue);
+                }
 
             }.bind(this));
 

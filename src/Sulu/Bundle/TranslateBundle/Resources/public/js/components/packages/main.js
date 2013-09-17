@@ -9,14 +9,57 @@
 
 define([
     'sulutranslate/model/package',
-    'sulutranslate/model/catalogue'
-], function(Package, Catalogue) {
+    'sulutranslate/model/catalogue',
+    'mvc/relationalstore'
+], function(Package, Catalogue, RelationalStore) {
 
     'use strict';
+    var packageIdsDelete,
+        sandbox,
+
+        delPackagesSubmit = function() {
+            sandbox.emit('husky.dialog.hide');
+            //sandbox.emit('husky.header.button-state', 'disable');
+
+            RelationalStore.reset();
+
+            sandbox.util.each(packageIdsDelete, function(index) {
+
+                var packageModel = new Package({id: packageIdsDelete[index]});
+                packageModel.destroy({
+                    error: function() {
+                        // TODO Output error message
+                        console.log("error when deleting packages");
+                    }
+                });
+
+                sandbox.emit('husky.datagrid.row.remove',packageIdsDelete[index]);
+
+            }.bind(this));
+
+            unbindDialogListener();
+        },
+
+        hideDialog = function() {
+            sandbox.emit('husky.dialog.hide');
+            unbindDialogListener();
+        },
+
+        bindDialogListener = function(){
+            sandbox.on('husky.dialog.submit', delPackagesSubmit);
+            sandbox.on('husky.dialog.cancel', hideDialog);
+        },
+
+        unbindDialogListener = function(){
+            sandbox.off('husky.dialog.submit', delPackagesSubmit);
+            sandbox.off('husky.dialog.cancel', hideDialog);
+        };
 
     return {
 
         initialize: function() {
+
+            sandbox = this.sandbox;
 
             if (this.options.display === 'list') {
                 this.renderList();
@@ -48,6 +91,12 @@ define([
             this.sandbox.on('sulu.translate.package.save', function(data,cataloguesToDelete) {
                 this.savePackage(data,cataloguesToDelete);
             }, this);
+
+            // delete packages
+            this.sandbox.on('sulu.translate.packages.delete', function(packageIds) {
+                this.deletePackages(packageIds);
+            }, this);
+
         },
 
         renderList: function() {
@@ -56,7 +105,6 @@ define([
                 {name: 'packages/components/list@sulutranslate', options: { el: this.$el}}
             ]);
         },
-
 
         renderForm: function() {
 
@@ -69,6 +117,8 @@ define([
                             {name: 'packages/components/form@sulutranslate', options: { el: this.$el, data: packageModel.toJSON()}}
                         ]);
                     }.bind(this)
+
+                    // TODO errormessage
                 });
 
             } else {
@@ -105,6 +155,34 @@ define([
                     this.sandbox.emit('husky.header.button-state', 'disable');
                 }.bind(this)
             });
+
+        },
+
+        deletePackages: function(packageIds){
+            packageIdsDelete = packageIds;
+
+            // show dialog and call delete only when user confirms
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: 'Be careful!',
+                    content: [
+                        '<p>',
+                        'This operation you are about to do will delete data. <br /> This is not undoable!',
+                        '</p>',
+                        '<p>',
+                        ' Please think about it and accept or decline.',
+                        '</p>'
+                    ].join('')
+                },
+                footer: {
+                    buttonCancelText: 'Don\'t do it',
+                    buttonSubmitText: 'Do it, I understand'
+                }
+            });
+
+            console.log("here!");
+
+            bindDialogListener();
 
         }
 

@@ -13,6 +13,7 @@ define([
 ], function(listTemplate, RelationalStore) {
 
     'use strict';
+    var selectedItemIds;
 
     return {
 
@@ -30,6 +31,12 @@ define([
             var template = this.sandbox.template.parse(listTemplate);
             this.$el.html(template); // FIXME: jquery
 
+            this.initDatagrid();
+            this.initDropDown();
+        },
+
+        initDatagrid: function(){
+
             this.sandbox.start([
                 {name: 'datagrid@husky', options: {
                     el: this.$el.find('#package-list'), // FIXME: jquery
@@ -46,25 +53,62 @@ define([
                 }}
             ]);
 
-            this.initListEvents();
-        },
-
-        initListEvents: function(){
-
             this.sandbox.on('husky.datagrid.item.click', function(item) {
                 this.sandbox.emit('sulu.translate.package.load', item);
             }, this);
 
-            this.sandbox.on('husky.dropdown.clicked', function(event) {
-                // TODO: communicate with dropdown
-//                $('.dropdown-menu').toggle();
-            }, this);
+        },
 
-            this.sandbox.on('husky.dropdown.delete.clicked', function(event) {
-                // TODO: close dropdown & init dialogbox
-//                $('.dropdown-menu').hide();
-//                this.initDialogBoxRemoveMultiple(dataGrid.data('Husky.Ui.DataGrid').selectedItemIds);
-            }, this);
+        initDropDown: function(){
+
+            this.sandbox.start([{
+                name: 'dropdown@husky',
+                options: {
+                    el: '#options-dropdown',
+                    trigger: '.dropdown-toggle',
+                    setParentDropDown: true,
+                    instanceName: 'options',
+                    alignment: 'right',
+                    data: [
+                        {
+                            'id': 1,
+                            'type':'delete',
+                            'name': 'Delete'
+                        }
+                    ]
+                }
+            }]);
+
+            this.sandbox.on('husky.dropdown.options.clicked',  function() {
+                this.sandbox.emit('husky.dropdown.options.toggle');
+            });
+
+
+
+            this.sandbox.on('husky.dropdown.options.item.click', function(event) {
+
+
+
+                if (event.type == "delete") {
+                    this.sandbox.emit('husky.dropdown.options.hide');
+                    this.sandbox.emit('husky.header.button-state', 'disable');
+
+                    // get selected ids and show dialog
+                    this.sandbox.once('husky.datagrid.items.selected', function(ids) {
+
+                        if (ids.length == 0) {
+                            // no items selected
+                            this.sandbox.emit('husky.header.button-state', 'standard');
+                        } else if (ids.length > 0) {
+                            this.sandbox.emit('sulu.translate.packages.delete', ids);
+                        }
+
+                    }, this);
+
+                    this.sandbox.emit('husky.datagrid.items.get-selected');
+                }
+            },this);
+
 
         },
 
@@ -77,6 +121,7 @@ define([
 
             }, this);
         }
+
 
     };
 });
