@@ -21,27 +21,31 @@ define({
             {
                 name: 'datagrid@husky',
                 options: {
-                    el: '#content',
-                    url: '/security/api/roles/list?fields=name,system',
+                    el: this.$el,
+                    url: '/security/api/roles/list?fields=id,name,system',
                     selectItem: {
                         type: 'checkbox'
                     },
                     pagination: true,
                     paginationOptions: {
-                        pageSize: 4,
+                        pageSize: 10,
                         showPages: 6
                     },
                     removeRow: true,
                     autoRemoveHandling: false,
                     tableHead: [
-                        {content: 'Content 1', width: "30%"},
-                        {content: 'Content 2'},
+                        {content: 'Name', width: "30%"},
+                        {content: 'System'},
                         {content: ''}
                     ],
                     excludeFields: ['id']
                 }
             }
         ]);
+
+        this.sandbox.on('husky.datagrid.item.click', function(id) {
+            this.sandbox.emit('sulu.roles.load', id);
+        }.bind(this));
     },
 
     initializeHeader: function() {
