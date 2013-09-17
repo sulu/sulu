@@ -7,8 +7,8 @@
  * with this source code in the file LICENSE.
  */
 
-define(['backbonerelational'], function() {
-    return Backbone.RelationalModel.extend({
+define(['mvc/relationalmodel'], function(RelationalModel) {
+    return RelationalModel({
         defaults: {
             id: null,
             name: ''
