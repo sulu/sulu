@@ -25,10 +25,15 @@
                     return sandbox.mvc.relationalModel;
                 });
 
-                sandbox.mvc.HasMany = Backbone.HasMany;
+                sandbox.mvc.HasMany  = Backbone.HasMany;
+                sandbox.mvc.HasOne   = Backbone.HasOne;
 
                 define('mvc/hasmany', function() {
                     return sandbox.mvc.HasMany;
+                });
+
+                define('mvc/hasone', function() {
+                    return sandbox.mvc.HasOne;
                 });
 
             }
