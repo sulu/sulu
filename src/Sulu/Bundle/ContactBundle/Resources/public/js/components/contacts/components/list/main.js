@@ -9,8 +9,9 @@
 
 define([
     'text!/contact/template/contact/list',
-//    'sulucontact/model/contact'   // FIXME: fix this
-], function(listTemplate, Contact) {
+    'mvc/relationalstore',
+    'sulucontact/model/contact'   // FIXME: fix this
+], function(listTemplate, RelationalStore, Contact) {
 
     'use strict';
 
@@ -25,36 +26,36 @@ define([
 
         render: function() {
 
-
-            // TODO: relational backbone
-//            this.sandbox.mvc.Relational.store.reset(); //FIXME really necessary?
+            RelationalStore.reset(); //FIXME really necessary?
             this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
 
             //  template as part of sandbox
 //            var template =  this.sandbox.template(listTemplate);
             var template = this.sandbox.template.parse(listTemplate);
-            this.$el.html(template); // FIXME: jquery
+            this.sandbox.dom.html(this.$el, template);
 
 
-            // set options dropdown
+            // dropdown - showing options
             this.sandbox.start([{
                 name: 'dropdown@husky',
                 options: {
                     el: '#options-dropdown',
-                    trigger: '.dropdown-menu',
+                    trigger: '.dropdown-toggle',
                     setParentDropDown: true,
                     instanceName: 'options',
+                    alignment: 'right',
                     data: [
                         {
                             'id': 1,
+                            'type':'delete',
                             'name': 'Delete'
                         }
                     ]
                 }
             }]);
 
-
+            // datagrid
             this.sandbox.start([{
                 name: 'datagrid@husky',
                 options: {
@@ -83,20 +84,21 @@ define([
             }, this);
 
 
-            this.sandbox.on('husky.dropdown.options.clicked',  function(event) {
-                // TODO: communicate with dropdown
+            this.sandbox.on('husky.dropdown.options.clicked',  function() {
                 this.sandbox.emit('husky.dropdown.options.toggle');
             });
 
-            this.sandbox.on('husky.dropdown.options.item.click', function() {
-                // TODO: close dropdown
-//                $('.dropdown-menu').hide();
+            // optionsmenu clicked
+            this.sandbox.on('husky.dropdown.options.item.click', function(event) {
+                if (event.type == "delete") {
+                    this.sandbox.emit('husky.dropdown.options.hide');
 
-                // get selected ids and show dialog
-                this.sandbox.on('husky.datagrid.items.selected', function(selectedIds) {
-                    this.initDialogBoxRemoveMultiple(selectedIds);
-                }, this);
-                this.sandbox.emit('husky.datagrid.items.get-selected');
+                    // get selected ids and show dialog
+                    this.sandbox.on('husky.datagrid.items.selected', function(selectedIds) {
+                        this.initDialogBoxRemoveMultiple(selectedIds);
+                    }, this);
+                    this.sandbox.emit('husky.datagrid.items.get-selected');
+                }
             },this);
 
             // add button in headerbar
@@ -113,6 +115,10 @@ define([
 
         // fills dialogbox
         initDialogBoxRemoveMultiple: function(ids) {
+
+            var hideDialog = function() {
+
+            };
 
             // create dialog box
             this.sandbox.start([{
@@ -134,12 +140,12 @@ define([
                 }
             }]);
 
-            $('#dialog').off(); // FIXME: jquery
+//            $('#dialog').off(); // FIXME: jquery
+            this.sandbox.off('husky.dialog.cancel', this.hideDialog.bind(this));
+            this.sandbox.off('husky.dialog.submit');
 
             // cancel clicked - close dialog
-            this.sandbox.on('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-            }, this);
+            this.sandbox.on('husky.dialog.cancel', this.hideDialog.bind(this));
 
             // delete clicked - delete contact
             this.sandbox.on('husky.dialog.submit', function() {
@@ -155,7 +161,13 @@ define([
             }, this);
 
 
+        },
+
+        hideDialog: function() {
+            this.sandbox.emit('husky.dialog.hide');
         }
+
+
 
     };
 });
