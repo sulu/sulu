@@ -75,7 +75,19 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
 
         del: function(id) {
             // show dialog and call delete only when user confirms
-
+            sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: 'Be careful!',
+                    content: [
+                        'This operation you are about to do will delete data. This is not undoable!',
+                        'Please think about it and accept or decline.'
+                        ].join('')
+                },
+                footer: {
+                    buttonCancelText: 'Don\'t do it',
+                    buttonSubmitText: 'Do it, I understand'
+                }
+            });
 
             sandbox.on('husky.dialog.cancel', function() {
                 sandbox.emit('husky.dialog.hide');

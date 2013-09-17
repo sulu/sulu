@@ -31,12 +31,10 @@ define({
                         pageSize: 10,
                         showPages: 6
                     },
-                    removeRow: true,
-                    autoRemoveHandling: false,
+                    removeRow: false,
                     tableHead: [
                         {content: 'Name', width: "30%"},
                         {content: 'System'},
-                        {content: ''}
                     ],
                     excludeFields: ['id']
                 }
