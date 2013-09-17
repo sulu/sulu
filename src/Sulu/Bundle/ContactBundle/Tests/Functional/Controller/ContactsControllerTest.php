@@ -41,9 +41,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$contact->setLastName('Mustermann');
 		$contact->setTitle('Dr');
 		$contact->setPosition('CEO');
-		$contact->setLocaleSystem('en');
-		$contact->setUsername('max');
-		$contact->setPassword('password');
 		$contact->setCreated(new DateTime());
 		$contact->setChanged(new DateTime());
 
@@ -163,7 +160,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('Dr', $response->title);
 		$this->assertEquals('CEO', $response->position);
-		$this->assertEquals('en', $response->localeSystem);
 		$this->assertEquals('123456789', $response->phones[0]->phone);
 		$this->assertEquals('Private', $response->phones[0]->phoneType->name);
 		$this->assertEquals('max.mustermann@muster.at', $response->emails[0]->email);
@@ -188,7 +184,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Mustermann',
 				'title' => 'MSc',
 				'position' => 'Manager',
-				'localeSystem' => 'de',
 				'account' => array(
 					'id' => null
 				),
@@ -256,7 +251,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 		$this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
 		$this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
 		$this->assertEquals('123456789', $response->phones[0]->phone);
@@ -277,7 +271,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 		$this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
 		$this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
 		$this->assertEquals('123456789', $response->phones[0]->phone);
@@ -303,7 +296,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Mustermann',
 				'title' => 'MSc',
 				'position' => 'Manager',
-				'localeSystem' => 'de',
 				'account' => array(
 					'id' => 2
 				),
@@ -372,7 +364,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 		$this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
 		$this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
 		$this->assertEquals('123456789', $response->phones[0]->phone);
@@ -393,7 +384,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 		$this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
 		$this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
 		$this->assertEquals('123456789', $response->phones[0]->phone);
@@ -420,7 +410,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Mustermann',
 				'title' => 'MSc',
 				'position' => 'Manager',
-				'localeSystem' => 'de'
 			)
 		);
 
@@ -430,7 +419,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 
 		$client->request('GET', '/contact/api/contacts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
@@ -440,7 +428,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 	}
 
 	public function testPostWithEmptyAdditionalData()
@@ -455,7 +442,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Mustermann',
 				'title' => 'MSc',
 				'position' => 'Manager',
-				'localeSystem' => 'de',
 				'emails' => array(),
 				'phones' => array(),
 				'notes' => array(),
@@ -469,7 +455,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 
 		$client->request('GET', '/contact/api/contacts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
@@ -479,7 +464,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->lastName);
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('de', $response->localeSystem);
 	}
 
 	public function testPut()
@@ -494,7 +478,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Doe',
 				'title' => 'MBA',
 				'position' => 'Manager',
-				'localeSystem' => 'en',
 				'emails' => array(
 					array(
 						'id' => 1,
@@ -570,7 +553,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Doe', $response->lastName);
 		$this->assertEquals('MBA', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('en', $response->localeSystem);
 		$this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
 		$this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
 		$this->assertEquals('321654987', $response->phones[0]->phone);
@@ -591,7 +573,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Doe', $response->lastName);
 		$this->assertEquals('MBA', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('en', $response->localeSystem);
 		$this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
 		$this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
 		$this->assertEquals('321654987', $response->phones[0]->phone);
@@ -618,7 +599,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Doe',
 				'title' => 'MBA',
 				'position' => 'Manager',
-				'localeSystem' => 'en',
 				'emails' => array(),
 				'phones' => array(
 					array(
@@ -678,7 +658,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Doe', $response->lastName);
 		$this->assertEquals('MBA', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('en', $response->localeSystem);
 		$this->assertEquals(0, count($response->emails));
 	}
 
@@ -694,7 +673,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Doe',
 				'title' => 'MBA',
 				'position' => 'Manager',
-				'localeSystem' => 'en',
 				'emails' => array(),
 				'phones' => array(
 					array(
@@ -753,7 +731,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Doe', $response->lastName);
 		$this->assertEquals('MBA', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('en', $response->localeSystem);
 		$this->assertEquals(0, count($response->emails));
 
 		$this->assertEquals(2, $response->addresses[0]->country->id);
@@ -771,7 +748,6 @@ class ContactsControllerTest extends DatabaseTestCase
 				'lastName' => 'Doe',
 				'title' => 'MBA',
 				'position' => 'Manager',
-				'localeSystem' => 'en',
 				'account' => array(
 					'id' => 2
 				),
@@ -833,7 +809,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Doe', $response->lastName);
 		$this->assertEquals('MBA', $response->title);
 		$this->assertEquals('Manager', $response->position);
-		$this->assertEquals('en', $response->localeSystem);
 		$this->assertEquals(0, count($response->emails));
 
 		$this->assertEquals(2, $response->account->id);
@@ -868,7 +843,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->items[0]->lastName);
 		$this->assertEquals('Dr', $response->items[0]->title);
 		$this->assertEquals('CEO', $response->items[0]->position);
-		$this->assertEquals('en', $response->items[0]->localeSystem);
 	}
 
 	public function testGetListFields()
