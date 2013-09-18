@@ -53,7 +53,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details',
                 callback: function(id){
-                    this.html('<div data-aura-component="translation@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
+                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
                 }
             }
         );

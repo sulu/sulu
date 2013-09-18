@@ -79,15 +79,21 @@ define([
                 }
             }]);
 
+
             this.sandbox.on('husky.dropdown.options.clicked',  function() {
                 this.sandbox.emit('husky.dropdown.options.toggle');
             });
 
+            this.dropDown();
 
+        },
+
+        dropDown: function(){
 
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
 
-
+                // TODO - problem with events when checked, entered form, back to list, check different -> delete -> old checked values
+                //this.unbindListener();
 
                 if (event.type == "delete") {
                     this.sandbox.emit('husky.dropdown.options.hide');
@@ -101,17 +107,23 @@ define([
                             console.log("no ids in array");
                             this.sandbox.emit('husky.header.button-state', 'standard');
                         } else if (ids.length > 0) {
-                            this.sandbox.emit('sulu.translate.packages.delete', ids);
+                            this.sandbox.emit('sulu.translate.packages.delete', ids, false);
                         }
 
                     }, this);
 
                     this.sandbox.emit('husky.datagrid.items.get-selected');
+
                 }
             },this);
 
-
         },
+
+        unbindListener: function(){
+            this.sandbox.off('husky.datagrid.items.selected',this.dropDown());
+//            this.sandbox.off('husky.dropdown.options.item.click',this.dropDown());
+        },
+
 
         initializeHeader: function() {
 

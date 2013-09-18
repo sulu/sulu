@@ -15,29 +15,48 @@ define([
 
     'use strict';
     var packageIdsDelete,
+        navigateToList,
         sandbox,
+
+        // TODO refactor this.sandbox vs sandbox
 
         delPackagesSubmit = function() {
             sandbox.emit('husky.dialog.hide');
-            //sandbox.emit('husky.header.button-state', 'disable');
 
             RelationalStore.reset();
 
-            console.log(packageIdsDelete, "packageIdsDelete");
+            if(navigateToList) {
 
-            sandbox.util.each(packageIdsDelete, function(index) {
-
-                var packageModel = new Package({id: packageIdsDelete[index]});
+                var packageModel = new Package({id: packageIdsDelete[0]});
                 packageModel.destroy({
+                    success: function() {
+                        sandbox.emit('sulu.router.navigate', 'settings/translate');
+                    },
                     error: function() {
                         // TODO Output error message
                         console.log("error when deleting packages");
                     }
                 });
 
-                sandbox.emit('husky.datagrid.row.remove',packageIdsDelete[index]);
+                sandbox.emit('husky.datagrid.row.remove',packageIdsDelete[0]);
 
-            }.bind(this));
+            } else {
+
+                sandbox.util.each(packageIdsDelete, function(index) {
+
+                    var packageModel = new Package({id: packageIdsDelete[index]});
+                    packageModel.destroy({
+                        error: function() {
+                            // TODO Output error message
+                            console.log("error when deleting packages");
+                        }
+                    });
+
+                    sandbox.emit('husky.datagrid.row.remove',packageIdsDelete[index]);
+
+                }.bind(this));
+
+            }
 
             unbindDialogListener();
             sandbox.emit('husky.header.button-state', 'standard');
@@ -97,8 +116,8 @@ define([
             }, this);
 
             // delete packages
-            this.sandbox.on('sulu.translate.packages.delete', function(packageIds) {
-                this.deletePackages(packageIds);
+            this.sandbox.on('sulu.translate.packages.delete', function(packageIds, navigateToList) {
+                this.deletePackages(packageIds, navigateToList);
             }, this);
 
         },
@@ -162,8 +181,9 @@ define([
 
         },
 
-        deletePackages: function(packageIds){
+        deletePackages: function(packageIds, navigate){
             packageIdsDelete = packageIds;
+            navigateToList = navigate;
 
             // show dialog and call delete only when user confirms
             this.sandbox.emit('sulu.dialog.confirmation.show', {
@@ -184,10 +204,7 @@ define([
                 }
             });
 
-            console.log("here!");
-
             bindDialogListener();
-
         }
 
     };

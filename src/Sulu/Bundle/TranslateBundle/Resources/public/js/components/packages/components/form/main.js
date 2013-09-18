@@ -45,7 +45,7 @@ define([
 
             this.initDataGrid(catalogues);
 
-            // TODO
+            // TODO - does not work for datagrid - is not rendered at this point
             this.sandbox.validation.create(catalogueFormId);
             this.initFormEvents();
         },
@@ -119,8 +119,7 @@ define([
             }, this);
 
             this.sandbox.on('husky.button.delete.click', function(event) {
-                console.log("delete");
-                //this.sandbox.emit('sulu.translate.package.delete');
+               this.sandbox.emit('sulu.translate.packages.delete',[this.options.data.id], true);
             }, this);
         },
 
