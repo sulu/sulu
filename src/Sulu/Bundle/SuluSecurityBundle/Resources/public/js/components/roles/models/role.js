@@ -7,15 +7,22 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel'], function(RelationalModel) {
+define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(RelationalModel, HasMany, Permission) {
     return RelationalModel({
         urlRoot: '/security/api/roles',
 
         defaults: function() {
             return {
                 name: '',
-                system: ''
+                system: '',
+                permissions: []
             }
-        }
+        }, relations: [
+            {
+                type: HasMany,
+                key: 'permissions',
+                relatedModel: Permission
+            }
+        ]
     });
 });
