@@ -42,7 +42,7 @@ class SuluSecurityAdmin extends Admin
         return array(
             'Sulu' => array(
                 'Security' => array(
-                    'security.roles'
+                    'sulu.security.roles'
                 )
             )
         );
