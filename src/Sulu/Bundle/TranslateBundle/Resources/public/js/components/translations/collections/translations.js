@@ -8,12 +8,12 @@
  */
 
 define([
-    'backbone',
+    'mvc/collection',
     'sulutranslate/components/translations/models/code',
     'sulutranslate/components/translations/models/translation'
-], function(Backbone, Code, Translation) {
+], function(Collection, Code, Translation) {
 
-    return Backbone.Collection.extend({
+    return Collection({
 
         model: Translation,
 
@@ -31,7 +31,7 @@ define([
 
         save: function(translations) {
 
-            $.ajax({
+            app.core.util.ajax({
 
                 headers: {
                     'Accept': 'application/json',
@@ -46,7 +46,6 @@ define([
                     console.log("patch successful");
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    // log the error to the console
                     console.log("error during patch: " + textStatus, errorThrown);
                 },
                 complete: function() {

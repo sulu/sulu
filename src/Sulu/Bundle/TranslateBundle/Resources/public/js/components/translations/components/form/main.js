@@ -35,19 +35,43 @@ define([
                 catalogue: this.options.data.selectedCatalogue,
                 translations: this.options.data.translations
             });
+
             this.sandbox.dom.html(this.options.el, template);
 
+            // TODO
 //            this.sandbox.validation.create(catalogueFormId);
             this.initFormEvents();
+            this.initSelectCatalogues();
+            this.initVisibilityOptions();
         },
 
 
+        initSelectCatalogues: function(){
+          // TODO
+        },
 
         initFormEvents: function() {
 
 //            this.$el.on('click', '#add-catalogue-row', function(event) { // FIXME: jquery
 //                this.sandbox.emit('husky.datagrid.row.add', { id: '', isDefault: false, locale: '', translations: [] });
 //            }.bind(this));
+
+        },
+
+        initVisibilityOptions: function() {
+
+            this.sandbox.dom.on('.show-options', 'click', function(event) {
+
+                var $element = this.sandbox.dom.$(event.target);
+
+                this.sandbox.dom.toggleClass($element, 'icon-arrow-right');
+                this.sandbox.dom.toggleClass($element, 'icon-arrow-down');
+
+                var $optionsTr = this.sandbox.dom.next(this.sandbox.dom.parent(this.sandbox.dom.parent($element)),'.additional-options');
+
+                this.sandbox.dom.toggleClass($optionsTr, 'hidden');
+
+            }.bind(this));
 
         },
 
