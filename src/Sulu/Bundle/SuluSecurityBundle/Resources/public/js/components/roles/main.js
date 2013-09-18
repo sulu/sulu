@@ -54,6 +54,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             sandbox.off('husky.dialog.cancel', hideDialog);
         },
 
+    // converts the permissions from the database to a easier represenation for the form
         convertPermissionsFromBinary = function(contexts) {
             var permissions = {};
             // go through all contexts
@@ -62,15 +63,16 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 // check all permissions for this context
                 for (var key in permissionCodes) {
                     if (permissionCodes.hasOwnProperty(key)) {
-                        if ((permissionData.permissions & permissionCodes[key]) == 0) {
-                            permissions[permissionData.context][key] = false;
-                        } else {
-                            permissions[permissionData.context][key] = true;
-                        }
+                        permissions[permissionData.context][key] = !!(permissionData.permissions & permissionCodes[key]);
                     }
                 }
             });
             return permissions;
+        },
+
+    // converts the permissions from the easier representation for the form to the database
+        convertPermissionsToBinary = function(contexts) {
+            console.log(contexts);
         };
 
 
