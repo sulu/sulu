@@ -8,8 +8,6 @@
  */
 define(['mvc/relationalmodel'], function(RelationalModel) {
     return RelationalModel({
-        urlRoot: '/security/api/roles',
-
         defaults: function() {
             return {
                 context: '',
