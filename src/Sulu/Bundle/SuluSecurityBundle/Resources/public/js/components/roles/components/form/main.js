@@ -8,6 +8,8 @@
  */
 
 define(['text!/security/template/role/form'], function(Template) {
+    var horizontalValues = ['add', 'edit', 'search', 'remove', 'settings', 'circle-ok', 'building'];
+
     return {
 
         name: 'Sulu Security Role Form',
@@ -16,6 +18,7 @@ define(['text!/security/template/role/form'], function(Template) {
 
         initialize: function() {
             this.initializeHeader();
+            this.initializeMatrix();
             this.render();
         },
 
@@ -33,6 +36,50 @@ define(['text!/security/template/role/form'], function(Template) {
             this.sandbox.on('husky.button.delete.click', function() {
                 this.sandbox.emit('sulu.roles.delete', this.sandbox.dom.val('#id'));
             }.bind(this));
+        },
+
+        initializeMatrix: function() {
+            var permissionData = this.options.data.permissions,
+                vertical = [],
+                data = [],
+                contextDataKey,
+                context;
+
+            // read data from array
+            for (var contextKey in permissionData) {
+                if (permissionData.hasOwnProperty(contextKey)) {
+                    context = permissionData[contextKey];
+                    // add the context key to the array for the vertical headlines
+                    vertical.push(contextKey);
+                    contextDataKey = data.push([]) - 1;
+                    for (var permissionKey in context) {
+                        if (context.hasOwnProperty(permissionKey)) {
+                            // add the permission boolean
+                            data[contextDataKey].push(context[permissionKey]);
+                        }
+                    }
+                }
+            }
+
+            this.sandbox.start([
+                {
+                    name: 'matrix@husky',
+                    options: {
+                        el: '#matrix-container',
+                        captions: {
+                            general: 'Assets',
+                            type: 'Section',
+                            horizontal: 'Permissions',
+                            vertical: vertical // TODO replace with more readable title
+                        },
+                        values: {
+                            vertical: vertical,
+                            horizontal: horizontalValues
+                        },
+                        data: data
+                    }
+                }
+            ]);
         },
 
         save: function() {

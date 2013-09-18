@@ -11,10 +11,11 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
 
     'use strict';
 
-    var sandbox,
+    var permissionCodes = {VIEW: 64, ADD: 32, EDIT: 16, DELETE: 8, ARCHIVE: 4, LIVE: 2, SECURITY: 1 },
+        sandbox,
         idDelete,
 
-        // callback for deleting a role after confirming
+    // callback for deleting a role after confirming
         delSubmit = function() {
             sandbox.emit('husky.dialog.hide');
             sandbox.emit('husky.header.button-state', 'loading-delete-button');
@@ -35,22 +36,41 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             unbindDialogListener();
         },
 
-        // callback for aborting the deletion of a role
+    // callback for aborting the deletion of a role
         hideDialog = function() {
             sandbox.emit('husky.dialog.hide');
             unbindDialogListener();
         },
 
-        // binds the listeners to the dialog box
-        bindDialogListener = function(){
+    // binds the listeners to the dialog box
+        bindDialogListener = function() {
             sandbox.on('husky.dialog.submit', delSubmit);
             sandbox.on('husky.dialog.cancel', hideDialog);
         },
 
-        // unbind the listeners of the dialog box
-        unbindDialogListener = function(){
+    // unbind the listeners of the dialog box
+        unbindDialogListener = function() {
             sandbox.off('husky.dialog.submit', delSubmit);
             sandbox.off('husky.dialog.cancel', hideDialog);
+        },
+
+        convertPermissionsFromBinary = function(contexts) {
+            var permissions = {};
+            // go through all contexts
+            contexts.forEach(function(permissionData) {
+                permissions[permissionData.context] = {};
+                // check all permissions for this context
+                for (var key in permissionCodes) {
+                    if (permissionCodes.hasOwnProperty(key)) {
+                        if ((permissionData.permissions & permissionCodes[key]) == 0) {
+                            permissions[permissionData.context][key] = false;
+                        } else {
+                            permissions[permissionData.context][key] = true;
+                        }
+                    }
+                }
+            });
+            return permissions;
         };
 
 
@@ -136,7 +156,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                         '<p>',
                         ' Please think about it and accept or decline.',
                         '</p>'
-                        ].join('')
+                    ].join('')
                 },
                 footer: {
                     buttonCancelText: 'Don\'t do it',
@@ -174,6 +194,9 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 role.fetch({
                     success: function(model) {
                         component.options.data = model.toJSON();
+                        component.options.data.permissions = convertPermissionsFromBinary(
+                            model.get('permissions').toJSON() // add non-used contexts
+                        );
                         sandbox.start([component]);
                     }
                 });
