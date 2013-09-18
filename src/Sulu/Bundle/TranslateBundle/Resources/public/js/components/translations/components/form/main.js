@@ -13,7 +13,8 @@ define([
 ], function(formTemplate, RelationalStore) {
 
     'use strict';
-    var catalogueFormId = '#catalogue-form';
+    var catalogueFormId = '#catalogue-form',
+        codesToDelete = new Array();
 
     return {
 
@@ -38,41 +39,122 @@ define([
 
             this.sandbox.dom.html(this.options.el, template);
 
-            // TODO
+            // TODO validation
 //            this.sandbox.validation.create(catalogueFormId);
             this.initFormEvents();
             this.initSelectCatalogues();
             this.initVisibilityOptions();
         },
 
-
-        initSelectCatalogues: function(){
-          // TODO
+        initSelectCatalogues: function() {
+            // TODO
         },
 
         initFormEvents: function() {
 
-//            this.$el.on('click', '#add-catalogue-row', function(event) { // FIXME: jquery
-//                this.sandbox.emit('husky.datagrid.row.add', { id: '', isDefault: false, locale: '', translations: [] });
-//            }.bind(this));
+            // add row
+            this.sandbox.dom.on('.add-code', 'click', function(event) {
+                this.addRow(event);
+            }.bind(this));
 
+            // remove row
+            var $form = this.sandbox.dom.$('#codes-form');
+            this.sandbox.dom.on($form, 'click', function(event) {
+                this.removeRow(event);
+            }.bind(this), '.icon-remove');
+
+            // enable input fields
+            this.sandbox.dom.on('.form-element[readonly]', 'click', function(event) {
+                this.unlockFormElement(event);
+            }.bind(this));
+        },
+
+        unlockFormElement: function(event) {
+            var $element = $(event.currentTarget);
+            $($element).prop('readonly', false);
+
+        },
+
+        removeRow: function(event) {
+            var $element = this.sandbox.dom.$(event.currentTarget),
+                $tr = this.sandbox.dom.parent(this.sandbox.dom.parent($element)),
+                $trOptions = this.sandbox.dom.next($tr, '.additional-options'),
+                id = this.sandbox.dom.attr($tr, 'data-id');
+
+            this.sandbox.dom.remove($tr);
+            this.sandbox.dom.remove($trOptions);
+
+            if(!!id) {
+
+                this.sandbox.util.each(this.options.data.translations, function(key, value) {
+                    if(parseInt(value.id) === parseInt(id)) {
+                        codesToDelete.push(value.code.id);
+                        return false;
+                    }
+                });
+            }
+
+        },
+
+        addRow: function(event) {
+
+            var $element = this.sandbox.dom.$(event.currentTarget),
+                sectionId = this.sandbox.dom.attr($element, 'data-target-element'),
+                $lastTableRowOfSection = this.sandbox.dom.$('#' + sectionId + ' tbody:last-child');
+
+            this.sandbox.dom.append($lastTableRowOfSection, this.templates.rowTemplate());
+
+            // TODO validation
         },
 
         initVisibilityOptions: function() {
 
             this.sandbox.dom.on('.show-options', 'click', function(event) {
 
-                var $element = this.sandbox.dom.$(event.target);
+                var $element = this.sandbox.dom.$(event.currentTarget);
 
                 this.sandbox.dom.toggleClass($element, 'icon-arrow-right');
                 this.sandbox.dom.toggleClass($element, 'icon-arrow-down');
 
-                var $optionsTr = this.sandbox.dom.next(this.sandbox.dom.parent(this.sandbox.dom.parent($element)),'.additional-options');
+                var $optionsTr = this.sandbox.dom.next(this.sandbox.dom.parent(this.sandbox.dom.parent($element)), '.additional-options');
 
                 this.sandbox.dom.toggleClass($optionsTr, 'hidden');
 
             }.bind(this));
 
+        },
+
+        templates: {
+            rowTemplate: function() {
+                return [
+                    '<tr>',
+                        '<td width="20%">',
+                            '<input class="form-element input-code" value="" data-trigger="focusout" data-unique="true" data-required="true"/>',
+                        '</td>',
+                        '<td width="37%">',
+                            '<textarea class="form-element vertical textarea-translation" data-maxlength="50" data-trigger="focusout"></textarea>',
+                            '<small class="grey letter-info">[Max. 50 chars]</small>',
+                        '</td>',
+                        '<td width="37%">',
+                            '<p class="grey"></p>',
+                        '</td>',
+                        '<td width="6%">',
+                            '<p class="icon-remove m-left-5"></p>',
+                        '</td>',
+                    '</tr>',
+                    '<tr class="additional-options">',
+                        '<td colspan="4">',
+                            '<div class="grid-row">',
+                                '<div class="grid-col-3">',
+                                    '<span>Length</span>',
+                                    '<input class="form-element inputLength" value="50"  data-required="true" type="number" data-trigger="focusout"/>',
+                                '</div>',
+                                '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkbox-frontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                                '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkbox-backend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                            '</div>',
+                        '</td>',
+                    '</tr>'].join('')
+            }
         },
 
         initializeHeader: function() {
@@ -122,7 +204,6 @@ define([
 //                this.sandbox.emit('sulu.translate.package.save', this.options.data, this.cataloguesToDelete);
 //            }
 //        }
-
 
 
     };
