@@ -8,7 +8,8 @@
  */
 
 define(['text!/security/template/role/form'], function(Template) {
-    var horizontalValues = ['add', 'edit', 'search', 'remove', 'settings', 'circle-ok', 'building'];
+    var permissions = ['view', 'add', 'edit', 'delete', 'archive', 'live', 'security'],
+        permissionData;
 
     return {
 
@@ -17,9 +18,24 @@ define(['text!/security/template/role/form'], function(Template) {
         view: true,
 
         initialize: function() {
+            permissionData = this.options.data.permissions;
+
             this.initializeHeader();
-            this.initializeMatrix();
             this.render();
+            this.initializeMatrix();
+
+            this.bindDOMEvents();
+            this.bindCustomEvents();
+        },
+
+        bindDOMEvents: function() {
+            this.sandbox.dom.on(this.$el, 'change', this.changeSystem.bind(this), '#system');
+        },
+
+        bindCustomEvents: function() {
+            this.sandbox.on('husky.matrix.changed', function(data) {
+                this.changePermission(data);
+            }.bind(this));
         },
 
         initializeHeader: function() {
@@ -39,18 +55,22 @@ define(['text!/security/template/role/form'], function(Template) {
         },
 
         initializeMatrix: function() {
-            var permissionData = this.options.data.permissions,
-                vertical = [],
+            console.log(permissionData);
+
+            var contexts = [],
+                contextHeadlines = [],
                 data = [],
                 contextDataKey,
-                context;
+                context,
+                $matrixContainers;
 
             // read data from array
             for (var contextKey in permissionData) {
                 if (permissionData.hasOwnProperty(contextKey)) {
                     context = permissionData[contextKey];
                     // add the context key to the array for the vertical headlines
-                    vertical.push(contextKey);
+                    contexts.push(contextKey);
+                    contextHeadlines.push(contextKey.split('.').pop()); // TODO capitalize first letter
                     contextDataKey = data.push([]) - 1;
                     for (var permissionKey in context) {
                         if (context.hasOwnProperty(permissionKey)) {
@@ -61,25 +81,44 @@ define(['text!/security/template/role/form'], function(Template) {
                 }
             }
 
-            this.sandbox.start([
-                {
-                    name: 'matrix@husky',
-                    options: {
-                        el: '#matrix-container',
-                        captions: {
-                            general: 'Assets',
-                            type: 'Section',
-                            horizontal: 'Permissions',
-                            vertical: vertical // TODO replace with more readable title
-                        },
-                        values: {
-                            vertical: vertical,
-                            horizontal: horizontalValues
-                        },
-                        data: data
+            $matrixContainers = this.sandbox.dom.find('div', '#matrix-container');
+
+            this.sandbox.dom.each($matrixContainers, function(key, $matrixContainer) {
+                this.sandbox.start([
+                    {
+                        name: 'matrix@husky',
+                        options: {
+                            el: $matrixContainer,
+                            captions: {
+                                general: this.sandbox.dom.data($matrixContainer, 'title'),
+                                type: 'Section',
+                                horizontal: 'Permissions',
+                                vertical: contextHeadlines
+                            },
+                            values: {
+                                vertical: contexts,
+                                horizontal: permissions
+                            },
+                            data: data
+                        }
                     }
-                }
-            ]);
+                ]);
+            }.bind(this));
+        },
+
+        changeSystem: function() {
+            // TODO load new module-matrices for system
+        },
+
+        changePermission: function(data) {
+            console.log(data);
+            if (typeof(data.value) === 'string') {
+                permissionData[data.section][data.value.toUpperCase()] = data.activated;
+            } else {
+                this.sandbox.dom.each(data.value, function(key, value) {
+                    permissionData[data.section][value.toUpperCase()] = data.activated;
+                });
+            }
         },
 
         save: function() {
@@ -87,7 +126,8 @@ define(['text!/security/template/role/form'], function(Template) {
             var data = {
                 id: this.sandbox.dom.val('#id'),
                 name: this.sandbox.dom.val('#name'),
-                system: this.sandbox.dom.val('#system')
+                system: this.sandbox.dom.val('#system'),
+                permissions: permissionData
             };
 
             this.sandbox.emit('sulu.roles.save', data);
