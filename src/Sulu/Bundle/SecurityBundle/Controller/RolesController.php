@@ -27,6 +27,8 @@ class RolesController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluSecurityBundle:Role';
 
+    protected $permissionEntityName = 'SuluSecurityBundle:Permission';
+
     public function listAction()
     {
         $view = $this->responseList();
@@ -42,9 +44,14 @@ class RolesController extends RestController implements ClassResourceInterface
     public function getAction($id)
     {
         $find = function ($id) {
-            return $this->getDoctrine()
+            $roleData = array();
+
+            /** @var Role $role */
+            $role = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->find($id);
+
+            return $this->convertRole($role);
         };
 
         $view = $this->responseGetById($id, $find);
@@ -81,7 +88,7 @@ class RolesController extends RestController implements ClassResourceInterface
             $em->persist($role);
             $em->flush();
 
-            $view = $this->view($role, 200);
+            $view = $this->view($this->convertRole($role), 200);
         } else {
             $view = $this->view(null, 400);
         }
@@ -114,8 +121,12 @@ class RolesController extends RestController implements ClassResourceInterface
 
                 $role->setChanged(new \DateTime());
 
+                if (!$this->processPermissions($role)) {
+                    throw new RestException("Could not update dependencies!");
+                }
+
                 $em->flush();
-                $view = $this->view($role);
+                $view = $this->view($this->convertRole($role), 200);
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -153,6 +164,30 @@ class RolesController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Process all permissions from request
+     * @param Role $role The contact on which is worked
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processPermissions(Role $role)
+    {
+        $permissions = $this->getRequest()->get('permissions');
+
+        $delete = function ($permission) use ($role) {
+            $this->getDoctrine()->getManager()->remove($permission);
+        };
+
+        $update = function ($permission, $permissionData) {
+            return $this->updatePermission($permission, $permissionData);
+        };
+
+        $add = function ($permission) use ($role) {
+            return $this->addPermission($role, $permission);
+        };
+
+        return $this->processPut($role->getPermissions(), $permissions, $delete, $update, $add);
+    }
+
+    /**
      * Adds a permission to the given role
      * @param Role $role
      * @param $permissionData
@@ -170,11 +205,62 @@ class RolesController extends RestController implements ClassResourceInterface
 
         $permission = new Permission();
         $permission->setContext($permissionData['context']);
-        $permission->setPermissions($permissionData['permissions']);
+        $permission->setPermissions(
+            $this->get('sulu_security.mask_converter')
+                ->convertPermissionsToNumber($permissionData['permissions'])
+        );
         $permission->setRole($role);
         $em->persist($permission);
         $role->addPermission($permission);
 
         return true;
+    }
+
+    /**
+     * Updates an already existing permission
+     * @param Permission $permission
+     * @param $permissionData
+     * @return bool
+     */
+    private function updatePermission(Permission $permission, $permissionData)
+    {
+        $permission->setContext($permissionData['context']);
+
+        if (isset($permissionData['module'])) {
+            $permission->setModule($permissionData['module']);
+        }
+
+        $permission->setPermissions(
+            $this->get('sulu_security.mask_converter')
+                ->convertPermissionsToNumber($permissionData['permissions'])
+        );
+
+        return true;
+    }
+
+    /**
+     * Converts a role object into an array for the rest service
+     * @param Role $role
+     * @return array
+     */
+    protected function convertRole(Role $role)
+    {
+        $roleData['id'] = $role->getId();
+        $roleData['name'] = $role->getName();
+        $roleData['system'] = $role->getSystem();
+
+        $roleData['permissions'] = array();
+        foreach ($role->getPermissions() as $permission) {
+            /** @var Permission $permission */
+            $roleData['permissions'][] = array(
+                'id' => $permission->getId(),
+                'context' => $permission->getContext(),
+                'module' => $permission->getModule(),
+                'permissions' => $this->get('sulu_security.mask_converter')
+                    ->convertPermissionsToArray($permission->getPermissions())
+            );
+        }
+
+        return $roleData;
     }
 }
