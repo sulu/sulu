@@ -250,15 +250,17 @@ class RolesController extends RestController implements ClassResourceInterface
         $roleData['system'] = $role->getSystem();
 
         $roleData['permissions'] = array();
-        foreach ($role->getPermissions() as $permission) {
-            /** @var Permission $permission */
-            $roleData['permissions'][] = array(
-                'id' => $permission->getId(),
-                'context' => $permission->getContext(),
-                'module' => $permission->getModule(),
-                'permissions' => $this->get('sulu_security.mask_converter')
-                    ->convertPermissionsToArray($permission->getPermissions())
-            );
+        if (!empty($roleData['permissions'])) {
+            foreach ($role->getPermissions() as $permission) {
+                /** @var Permission $permission */
+                $roleData['permissions'][] = array(
+                    'id' => $permission->getId(),
+                    'context' => $permission->getContext(),
+                    'module' => $permission->getModule(),
+                    'permissions' => $this->get('sulu_security.mask_converter')
+                        ->convertPermissionsToArray($permission->getPermissions())
+                );
+            }
         }
 
         return $roleData;

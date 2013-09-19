@@ -11,8 +11,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
 
     'use strict';
 
-    var permissionCodes = {VIEW: 64, ADD: 32, EDIT: 16, DELETE: 8, ARCHIVE: 4, LIVE: 2, SECURITY: 1 },
-        sandbox,
+    var sandbox,
         idDelete,
 
     // callback for deleting a role after confirming
@@ -41,40 +40,17 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             sandbox.emit('husky.dialog.hide');
             unbindDialogListener();
         },
-
-    // binds the listeners to the dialog box
-        bindDialogListener = function() {
-            sandbox.on('husky.dialog.submit', delSubmit);
-            sandbox.on('husky.dialog.cancel', hideDialog);
-        },
-
     // unbind the listeners of the dialog box
         unbindDialogListener = function() {
             sandbox.off('husky.dialog.submit', delSubmit);
             sandbox.off('husky.dialog.cancel', hideDialog);
         },
 
-    // converts the permissions from the database to a easier represenation for the form
-        convertPermissionsFromBinary = function(contexts) {
-            var permissions = {};
-            // go through all contexts
-            contexts.forEach(function(permissionData) {
-                permissions[permissionData.context] = {};
-                // check all permissions for this context
-                for (var key in permissionCodes) {
-                    if (permissionCodes.hasOwnProperty(key)) {
-                        permissions[permissionData.context][key] = !!(permissionData.permissions & permissionCodes[key]);
-                    }
-                }
-            });
-            return permissions;
-        },
-
-    // converts the permissions from the easier representation for the form to the database
-        convertPermissionsToBinary = function(contexts) {
-            console.log(contexts);
+    // binds the listeners to the dialog box
+        bindDialogListener = function() {
+            sandbox.on('husky.dialog.submit', delSubmit);
+            sandbox.on('husky.dialog.cancel', hideDialog);
         };
-
 
     return {
         name: 'Sulu Security Role',
@@ -124,7 +100,6 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id);
         },
 
-
         // saves the data, which is thrown together with a sulu.roles.save event
         save: function(data) {
             sandbox.emit('husky.header.button-state', 'loading-save-button');
@@ -145,6 +120,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
 
         // deletes the role with the id thrown with the sulu.role.delete event
         del: function(id) {
+            //save id to delete it with other callback
             idDelete = id;
 
             // show dialog and call delete only when user confirms
@@ -196,9 +172,6 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 role.fetch({
                     success: function(model) {
                         component.options.data = model.toJSON();
-                        component.options.data.permissions = convertPermissionsFromBinary(
-                            model.get('permissions').toJSON() // add non-used contexts
-                        );
                         sandbox.start([component]);
                     }
                 });
