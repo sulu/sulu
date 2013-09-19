@@ -84,6 +84,8 @@ define(['text!/security/template/role/form'], function(Template) {
             $matrixContainers = this.sandbox.dom.find('div', '#matrix-container');
 
             this.sandbox.dom.each($matrixContainers, function(key, $matrixContainer) {
+                // initialize each matrix
+
                 this.sandbox.start([
                     {
                         name: 'matrix@husky',
