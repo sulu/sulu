@@ -44,8 +44,6 @@ class RolesController extends RestController implements ClassResourceInterface
     public function getAction($id)
     {
         $find = function ($id) {
-            $roleData = array();
-
             /** @var Role $role */
             $role = $this->getDoctrine()
                 ->getRepository($this->entityName)
@@ -248,10 +246,11 @@ class RolesController extends RestController implements ClassResourceInterface
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
         $roleData['system'] = $role->getSystem();
-
         $roleData['permissions'] = array();
-        if (!empty($roleData['permissions'])) {
-            foreach ($role->getPermissions() as $permission) {
+
+        $permissions = $role->getPermissions();
+        if (!empty($permissions)) {
+            foreach ($permissions as $permission) {
                 /** @var Permission $permission */
                 $roleData['permissions'][] = array(
                     'id' => $permission->getId(),
