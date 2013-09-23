@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['sulucontact/model/contact'], function(Contact) {
 
     'use strict';
 
@@ -34,7 +34,7 @@ define([], function() {
 
             // wait for navigation events
             this.sandbox.on('sulu.contacts.load', function(id) {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/people/edit:'+id);
+                this.sandbox.emit('sulu.router.navigate', 'contacts/people/edit:' + id);
             }, this);
 
             this.sandbox.on('sulu.contacts.new', function(id) {
@@ -46,15 +46,11 @@ define([], function() {
 
         renderForm: function() {
 
-            if(!!this.options.id){
-                // fetch
-
+            if (!!this.options.id) {
                 this.sandbox.start([
-                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: this.model.toJSON()}}
+                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, id: this.options.id}}
                 ]);
-
-
-            }else{
+            } else {
                 this.sandbox.start([
                     {name: 'contacts/components/form@sulucontact', options: { el: this.$el}}
                 ]);

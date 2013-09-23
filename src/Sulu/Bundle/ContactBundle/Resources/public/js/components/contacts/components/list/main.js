@@ -83,7 +83,7 @@ define([
 
             this.sandbox.on('husky.dropdown.options.clicked',  function() {
                 this.sandbox.emit('husky.dropdown.options.toggle');
-            });
+            }, this);
 
             // optionsmenu clicked
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
@@ -153,7 +153,7 @@ define([
                     contact.destroy({
                         success: function() {
                             this.sandbox.emit('husky.datagrid.row.remove');
-                        }
+                        }.bind(this)
                     });
                 },this);
                 this.sandbox.emit('husky.dialog.hide');

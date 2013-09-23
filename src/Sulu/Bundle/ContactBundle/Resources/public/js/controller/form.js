@@ -275,7 +275,7 @@ define([
             this.addPhone($div, phoneJson);
         },
 
-        addPhone: function($div, json) {
+        addPhone: function($div, json) {addaddres
             var $phone = $(_.template(this.staticTemplates.phoneRow(), json));
             $div.append($phone);
             //$(window).scrollTop($phone.offset().top);
