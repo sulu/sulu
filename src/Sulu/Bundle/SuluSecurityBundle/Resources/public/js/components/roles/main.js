@@ -171,6 +171,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 role.set({id: this.options.id});
                 role.fetch({
                     success: function(model) {
+                        console.log(model.toJSON());
                         component.options.data = model.toJSON();
                         sandbox.start([component]);
                     }
