@@ -14,24 +14,52 @@ define([
 
     'use strict';
 
+    var sandbox,
+
+    bindListener = function(){
+        sandbox.off('husky.datagrid.items.selected');
+        sandbox.on('husky.datagrid.items.selected', deletePackages);
+    },
+
+    deletePackages = function(ids){
+
+        unbindListener();
+
+        if (ids.length === 0) {
+            // no items selected
+            console.log("no ids in array");
+            sandbox.emit('husky.header.button-state', 'standard');
+        } else if (ids.length > 0) {
+            sandbox.emit('sulu.translate.packages.delete', ids, false);
+        }
+
+    },
+
+    unbindListener =  function(){
+        sandbox.off('husky.datagrid.items.selected');
+    };
+
     return {
 
         view: true,
 
         initialize: function() {
+            sandbox = this.sandbox;
+
             this.initializeHeader();
             this.render();
+            this.initDropDown();
+
         },
 
         render: function() {
             RelationalStore.reset();
-            //this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
+            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
             var template = this.sandbox.template.parse(listTemplate);
             this.sandbox.dom.html(this.options.el, template);
-
             this.initDatagrid();
-            this.initDropDown();
+
         },
 
         initDatagrid: function(){
@@ -59,6 +87,7 @@ define([
         },
 
         initDropDown: function(){
+            console.log('initDropDown');
 
             this.sandbox.start([{
                 name: 'dropdown@husky',
@@ -83,54 +112,27 @@ define([
                 this.sandbox.emit('husky.dropdown.options.toggle');
             },this);
 
-            this.dropDown();
-
-        },
-
-        dropDown: function(){
+            bindListener();
 
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
 
-                // TODO - problem with events when checked, entered form, back to list, check different -> delete -> old checked values
-                //this.unbindListener();
+                console.log("clicked on dropdown item");
 
-                if (event.type == "delete") {
+                if (event.type === "delete") {
                     this.sandbox.emit('husky.dropdown.options.hide');
                     this.sandbox.emit('husky.header.button-state', 'disable');
-
-                    // get selected ids and show dialog
-                    this.sandbox.once('husky.datagrid.items.selected', function(ids) {
-
-                        if (ids.length == 0) {
-                            // no items selected
-                            console.log("no ids in array");
-                            this.sandbox.emit('husky.header.button-state', 'standard');
-                        } else if (ids.length > 0) {
-                            this.sandbox.emit('sulu.translate.packages.delete', ids, false);
-                        }
-
-                    }, this);
-
                     this.sandbox.emit('husky.datagrid.items.get-selected');
-
                 }
             },this);
 
         },
 
-        unbindListener: function(){
-            this.sandbox.off('husky.datagrid.items.selected',this.dropDown());
-//            this.sandbox.off('husky.dropdown.options.item.click',this.dropDown());
-        },
-
-
         initializeHeader: function() {
 
             this.sandbox.emit('husky.header.button-type', 'add');
 
-            this.sandbox.on('husky.button.add.click', function(event){
+            this.sandbox.on('husky.button.add.click', function(){
                 this.sandbox.emit('sulu.translate.package.new');
-
             }, this);
         }
 
