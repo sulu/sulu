@@ -10,22 +10,22 @@
         <div class="grid-col-10">
             <div class="grid-row">
                 <div class="grid-col-6">
-                    <label class="bold">First name*</label>
-                    <input class="form-element" type="text" id="first-name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= firstName %>"/>
+                    <label class="bold">###firstName### *</label>
+                    <input class="form-element" type="text" id="first-name"data-validation-required="true" data-validation-min-length="3" data-mapper-property="firstName" value=""/>
                 </div>
                 <div class="grid-col-6">
-                    <label class="bold">Last name*</label>
-                    <input class="form-element" type="text" id="last-name" data-trigger="focusout" data-required="true" data-minlength="3" value="<%= lastName %>"/>
+                    <label class="bold">###lastName### *</label>
+                    <input class="form-element" type="text" id="last-name" data-trigger="focusout" data-validation-required="true" data-validation-min-length="3" data-mapper-property="lastName" value=""/>
                 </div>
             </div>
             <div class="grid-row">
                 <div class="grid-col-2">
                     <label>Title</label>
-                    <input class="form-element" type="text" id="title" value="<%= title %>"/>
+                    <input class="form-element" type="text" id="title" data-mapper-property="title" value=""/>
                 </div>
                 <div class="grid-col-5">
                     <label>Position</label>
-                    <input class="form-element" type="text" id="position" value="<%= position %>"/>
+                    <input class="form-element" type="text" id="position" data-mapper-property="position" value=""/>
                 </div>
                 <div class="grid-col-5" id="company">
                     <label>Company</label>
