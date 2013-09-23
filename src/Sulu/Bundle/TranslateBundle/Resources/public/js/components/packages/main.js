@@ -60,7 +60,7 @@ define([
 
             unbindDialogListener();
             sandbox.emit('husky.header.button-state', 'standard');
-            packageIdsDelete = new Array();
+            packageIdsDelete = [];
         },
 
         hideDialog = function() {
