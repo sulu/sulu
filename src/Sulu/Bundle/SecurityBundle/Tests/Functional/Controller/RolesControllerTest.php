@@ -218,7 +218,6 @@ class RolesControllerTest extends DatabaseTestCase
                 'system' => 'Sulu',
                 'permissions' => array(
                     array(
-                        'id' => 1,
                         'context' => 'portal1',
                         'permissions' => array(
                             'view' => true,
@@ -231,7 +230,7 @@ class RolesControllerTest extends DatabaseTestCase
                         ),
                     ),
                     array(
-                        'context' => 'portal3',
+                        'context' => 'portal2',
                         'permissions' => array(
                             'view' => false,
                             'add' => false,
@@ -258,7 +257,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(false, $response->permissions[0]->permissions->archive);
         $this->assertEquals(false, $response->permissions[0]->permissions->live);
         $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[1]->context);
+        $this->assertEquals('portal2', $response->permissions[1]->context);
         $this->assertEquals(false, $response->permissions[1]->permissions->view);
         $this->assertEquals(false, $response->permissions[1]->permissions->add);
         $this->assertEquals(false, $response->permissions[1]->permissions->edit);
@@ -276,7 +275,6 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('portal1', $response->permissions[0]->context);
         $this->assertEquals(true, $response->permissions[0]->permissions->view);
         $this->assertEquals(true, $response->permissions[0]->permissions->add);
         $this->assertEquals(true, $response->permissions[0]->permissions->edit);
@@ -284,7 +282,7 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(false, $response->permissions[0]->permissions->archive);
         $this->assertEquals(false, $response->permissions[0]->permissions->live);
         $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[1]->context);
+        $this->assertEquals('portal2', $response->permissions[1]->context);
         $this->assertEquals(false, $response->permissions[1]->permissions->view);
         $this->assertEquals(false, $response->permissions[1]->permissions->add);
         $this->assertEquals(false, $response->permissions[1]->permissions->edit);
