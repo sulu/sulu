@@ -13,8 +13,7 @@ define([
 ], function(formTemplate, RelationalStore) {
 
     'use strict';
-    var catalogueFormId = '#catalogue-form',
-        codesToDelete = new Array();
+    var codesToDelete = new Array();
 
     return {
 
@@ -29,7 +28,6 @@ define([
 
         render: function() {
             RelationalStore.reset();
-//            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
             var template = this.sandbox.template.parse(formTemplate, {
                 package: this.options.data.package,
@@ -47,7 +45,19 @@ define([
         },
 
         initSelectCatalogues: function() {
-            // TODO
+
+            console.log(this.options.data.catalogues, "catalogues");
+
+            this.sandbox.start([
+                {name: 'select@husky', options: {
+                    el: this.sandbox.dom.$('#languageCatalogue'),
+                    valueName: 'locale',
+                    instanceName: 'catalogues',
+                    selected: this.options.data.selectedCatalogue,
+                    data: this.options.data.catalogues
+                }}
+            ]);
+
         },
 
         initFormEvents: function() {
@@ -67,6 +77,26 @@ define([
             this.sandbox.dom.on('.form-element[readonly]', 'click', function(event) {
                 this.unlockFormElement(event);
             }.bind(this));
+
+            // automatic resize of textareas
+            this.sandbox.dom.on('#codes-form', 'keyup', function(event){
+
+                // TODO testing
+                var TEXTAREA_LINE_HEIGHT = 13,
+                    textarea = event.currentTarget,
+                    newHeight = textarea.scrollHeight,
+                    currentHeight = textarea.clientHeight;
+
+                if (newHeight > currentHeight) {
+                    textarea.style.height = newHeight + 5 + 'px';
+                }
+
+            }.bind(this), 'textarea');
+
+            // selected catalogue changed
+            this.sandbox.on('select.catalogues.item.changed', function(id){
+                this.sandbox.emit('sulu.translate.catalogue.changed', id);
+            }, this);
         },
 
         unlockFormElement: function(event) {
@@ -132,7 +162,7 @@ define([
                             '<input class="form-element input-code" value="" data-trigger="focusout" data-unique="true" data-required="true"/>',
                         '</td>',
                         '<td width="37%">',
-                            '<textarea class="form-element vertical textarea-translation" data-maxlength="50" data-trigger="focusout"></textarea>',
+                            '<textarea class="form-element vertical textarea-translation" data-maxlength="50" data-trigger="focusout" onkeyup="grow(this);"></textarea>',
                             '<small class="grey letter-info">[Max. 50 chars]</small>',
                         '</td>',
                         '<td width="37%">',

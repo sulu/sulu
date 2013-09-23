@@ -86,6 +86,26 @@ define([
 
         bindCustomEvents: function() {
 
+            this.sandbox.on('sulu.translate.catalogue.changed', function(id){
+
+                // selected catalogue changed
+                // load new translations
+                // render form?
+
+
+                selectedCatalogue = catalogues.get(id);
+                console.log(catalogues.toJSON(), "catalogues");
+                console.log(selectedCatalogue.toJSON(), "selectedCatalogue");
+
+                if(!!selectedCatalogue) {
+                    this.loadTranslations(selectedCatalogue.get('id'));
+                } else {
+                    // TODO
+                    console.log("error - unknown catalogue")
+                }
+
+            }, this);
+
 //            // load existing
 //            this.sandbox.on('sulu.translate.catalogue.load', function(item) {
 //                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
@@ -175,7 +195,6 @@ define([
                     this.options.data.catalogues = catalogues.toJSON();
                     this.options.data.selectedCatalogue = selectedCatalogue.toJSON();
                     this.options.data.translations = translations.toJSON();
-
 
                     this.sandbox.start([
                         {name: 'translations/components/form@sulutranslate', options: { el: this.$el, data: this.options.data}}
