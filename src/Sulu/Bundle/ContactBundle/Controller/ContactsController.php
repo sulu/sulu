@@ -277,7 +277,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             return $this->addEmail($contact, $email);
         };
 
-        return $this->processPut($contact->getEmails(), $emails, $delete, $update, $add);
+        return $this->processPut($contact->getEmails()->toArray(), $emails, $delete, $update, $add);
     }
 
     /**
@@ -353,7 +353,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             return $this->addPhone($contact, $phone);
         };
 
-        return $this->processPut($contact->getPhones(), $phones, $delete, $update, $add);
+        return $this->processPut($contact->getPhones()->toArray(), $phones, $delete, $update, $add);
     }
 
     /**
@@ -430,7 +430,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             return $this->addAddress($contact, $address);
         };
 
-        return $this->processPut($contact->getAddresses(), $addresses, $delete, $update, $add);
+        return $this->processPut($contact->getAddresses()->toArray(), $addresses, $delete, $update, $add);
     }
 
     /**
