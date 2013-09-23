@@ -12,8 +12,9 @@ define([
     'sulutranslate/model/catalogue',
     'mvc/relationalstore',
     'sulutranslate/components/translations/collections/catalogues',
-    'sulutranslate/components/translations/collections/translations'
-], function(Package, Catalogue, RelationalStore, Catalogues, Translations) {
+    'sulutranslate/components/translations/collections/translations',
+    'sulutranslate/components/translations/models/code'
+], function(Package, Catalogue, RelationalStore, Catalogues, Translations, Code) {
 
     'use strict';
     var sandbox,
@@ -106,12 +107,12 @@ define([
 //                this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + item + '/details');
 //            }, this);
 //
-//            // save
-//            this.sandbox.on('sulu.translate.package.save', function(data,cataloguesToDelete) {
-//                this.savePackage(data,cataloguesToDelete);
-//            }, this);
-//
-//            // delete packages
+            // save
+            this.sandbox.on('sulu.translate.translations.save', function(updatedTranslations, codesToDelete) {
+                this.saveTranslations(updatedTranslations, codesToDelete);
+            }, this);
+
+            // delete packages
             this.sandbox.on('sulu.translate.catalogue.delete', function(catalogueId) {
                 this.deleteCatalogue(catalogueId);
             }, this);
@@ -208,34 +209,32 @@ define([
         },
 
 
-//        savePackage: function(data, cataloguesToDelete) {
-//
-//            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-//
-//            this.sandbox.util.each(cataloguesToDelete, function(id) {
-//                var cat = new Catalogue({id: cataloguesToDelete[id]});
-//                cat.destroy({
-//                    success: function() {
-//                        console.log("deleted catalogue");
-//                    }
-//                });
-//            }.bind(this));
-//
-//            var packageModel = new Package(data);
-//            packageModel.save(null, {
-//
-//                success: function() {
-//                    this.sandbox.emit('sulu.router.navigate', 'settings/translate');
-//                }.bind(this),
-//
-//                error: function() {
-//                    // TODO Output error message
-//                    console.log("error while trying to save");
-//                    this.sandbox.emit('husky.header.button-state', 'disable');
-//                }.bind(this)
-//            });
-//
-//        },
+        saveTranslations: function(updatedTranslations, codesToDelete) {
+
+            console.log(updatedTranslations, "updatedTranslations");
+            console.log(codesToDelete,"codesToDelete");
+
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+
+            this.sandbox.util.each(codesToDelete, function(index) {
+                var code = new Code({id: codesToDelete[index].id});
+                code.destroy({
+                    success: function() {
+                        console.log("deleted code");
+                    },
+                    error: function(){
+                        // TODO errormessage/-handling
+                    }
+                });
+            }.bind(this));
+
+            if(updatedTranslations.length > 0) {
+                translations.save(this.sandbox, updatedTranslations);
+            }
+
+            //sandbox.emit('sulu.router.navigate', 'settings/translate');
+
+        },
 
         deleteCatalogue: function(catalogueId) {
 

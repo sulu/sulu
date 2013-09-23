@@ -29,9 +29,9 @@ define([
             return resp.items;
         },
 
-        save: function(translations) {
+        save: function(sandbox, translations) {
 
-            app.core.util.ajax({
+            sandbox.util.ajax({
 
                 headers: {
                     'Accept': 'application/json',
