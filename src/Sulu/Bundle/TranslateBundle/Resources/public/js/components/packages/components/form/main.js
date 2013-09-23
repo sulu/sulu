@@ -58,7 +58,6 @@ define([
             return navigation;
         },
 
-
         initialize: function() {
             this.sandbox.off(); // FIXME automate this call
             this.initializeHeader();

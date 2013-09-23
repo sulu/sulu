@@ -13,7 +13,6 @@ define([
 ], function(listTemplate, RelationalStore) {
 
     'use strict';
-    var selectedItemIds;
 
     return {
 
@@ -26,10 +25,10 @@ define([
 
         render: function() {
             RelationalStore.reset();
-//            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
+            //this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
             var template = this.sandbox.template.parse(listTemplate);
-            this.$el.html(template); // FIXME: jquery
+            this.sandbox.dom.html(this.options.el, template);
 
             this.initDatagrid();
             this.initDropDown();
@@ -39,7 +38,7 @@ define([
 
             this.sandbox.start([
                 {name: 'datagrid@husky', options: {
-                    el: this.$el.find('#package-list'), // FIXME: jquery
+                    el: this.sandbox.dom.$('#package-list'),
                     url: '/translate/api/packages', // FIXME use list function with fields
                     pagination: false,
                     selectItem: {
@@ -82,7 +81,7 @@ define([
 
             this.sandbox.on('husky.dropdown.options.clicked',  function() {
                 this.sandbox.emit('husky.dropdown.options.toggle');
-            });
+            },this);
 
             this.dropDown();
 
