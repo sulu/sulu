@@ -69,22 +69,25 @@ define([
 //            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
             var packageModel = null,
-                catalogues = new Array();
-                this.cataloguesToDelete = new Array();
+                catalogues = [],
+                template = null;
+
+            this.cataloguesToDelete = [];
+
 
             if (!!this.options.data) {
-                packageModel = this.options.data
+                packageModel = this.options.data;
                 catalogues = this.options.data.catalogues;
             }
 
-            var template = this.sandbox.template.parse(formTemplate, packageModel);
+            template = this.sandbox.template.parse(formTemplate, packageModel);
             this.sandbox.dom.html(this.options.el, template);
 
 
             this.initDataGrid(catalogues);
 
             // TODO - does not work for datagrid - is not rendered at this point
-            this.sandbox.validation.create(catalogueFormId);
+            //this.sandbox.validation.create(catalogueFormId);
             this.initFormEvents();
 
             this.sandbox.emit('navigation.item.column.show', {
@@ -146,9 +149,9 @@ define([
 
         initFormEvents: function() {
 
-            this.$el.on('click', '#add-catalogue-row', function(event) { // FIXME: jquery
+            this.sandbox.dom.on('#catalogue-form', 'click',function() {
                 this.sandbox.emit('husky.datagrid.row.add', { id: '', isDefault: false, locale: '', translations: [] });
-            }.bind(this));
+            }.bind(this),  '#add-catalogue-row');
 
         },
 
@@ -156,11 +159,11 @@ define([
 
             this.sandbox.emit('husky.header.button-type', 'saveDelete');
 
-            this.sandbox.on('husky.button.save.click', function(event) {
+            this.sandbox.on('husky.button.save.click', function() {
                 this.submit();
             }, this);
 
-            this.sandbox.on('husky.button.delete.click', function(event) {
+            this.sandbox.on('husky.button.delete.click', function() {
                this.sandbox.emit('sulu.translate.packages.delete',[this.options.data.id], true);
             }, this);
         },
@@ -184,7 +187,7 @@ define([
         submit: function() {
 
             // TODO validation
-            if(this.sandbox.validation.validate(catalogueFormId)) {
+            //if(this.sandbox.validation.validate(catalogueFormId)) {
 
                 if(!this.options.data) {
                     this.options.data = {};
@@ -195,31 +198,31 @@ define([
                 this.options.data.catalogues = this.getChangedCatalogues();
 
                 this.sandbox.emit('sulu.translate.package.save', this.options.data, this.cataloguesToDelete);
-            }
+            //}
         },
 
         getChangedCatalogues: function() {
 
             var rows = this.sandbox.dom.find('tbody > tr', '#catalogues'),
-                changedCatalogues = new Array();
+                changedCatalogues = [];
 
             this.sandbox.util.each(rows, function(index) {
 
-                var id = this.sandbox.dom.attr(rows[index], 'data-id');
-                var checkBox = this.sandbox.dom.find('input.isDefault', rows[index]),
+                var id = this.sandbox.dom.attr(rows[index], 'data-id'),
+                    checkBox = this.sandbox.dom.find('input.isDefault', rows[index]),
                     isDefault = this.sandbox.dom.is(checkBox, ':checked'),
                     input = this.sandbox.dom.find('input.inputLocale', rows[index]),
-                    locale = this.sandbox.dom.val(input);
+                    locale = this.sandbox.dom.val(input),
+                    catalogue = null;
 
                 if(!!locale && locale.length > 0) {
 
-                    var catalogue = {
+                    catalogue = {
                             id: id,
                             isDefault: isDefault,
                             locale: locale
                         };
 
-                    console.log(catalogue, "pushed catalogue");
                     changedCatalogues.push(catalogue);
                 }
 
