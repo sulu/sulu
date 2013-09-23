@@ -21,50 +21,51 @@ define([
         catalogues,
         selectedCatalogue,
         defaultCatalogue,
-        translations;
+        translations,
+        catalogueIdToDelete,
 
+        delCatalogueSubmit = function() {
+            sandbox.emit('husky.dialog.hide');
+            //sandbox.emit('husky.header.button-state', 'disable');
 
-//        delPackagesSubmit = function() {
-//            sandbox.emit('husky.dialog.hide');
-//            //sandbox.emit('husky.header.button-state', 'disable');
-//
-//            RelationalStore.reset();
-//
-//            console.log(packageIdsDelete, "packageIdsDelete");
-//
-//            sandbox.util.each(packageIdsDelete, function(index) {
-//
-//                var packageModel = new Package({id: packageIdsDelete[index]});
-//                packageModel.destroy({
-//                    error: function() {
-//                        // TODO Output error message
-//                        console.log("error when deleting packages");
-//                    }
-//                });
-//
-//                sandbox.emit('husky.datagrid.row.remove', packageIdsDelete[index]);
-//
-//            }.bind(this));
-//
-//            unbindDialogListener();
-//            sandbox.emit('husky.header.button-state', 'standard');
-//            packageIdsDelete = new Array();
-//        },
-//
-//        hideDialog = function() {
-//            sandbox.emit('husky.dialog.hide');
-//            unbindDialogListener();
-//        },
-//
-//        bindDialogListener = function() {
-//            sandbox.on('husky.dialog.submit', delPackagesSubmit);
-//            sandbox.on('husky.dialog.cancel', hideDialog);
-//        },
-//
-//        unbindDialogListener = function() {
-//            sandbox.off('husky.dialog.submit', delPackagesSubmit);
-//            sandbox.off('husky.dialog.cancel', hideDialog);
-//        };
+            RelationalStore.reset();
+
+            console.log(catalogueIdToDelete, "packageIdsDelete");
+
+            var catalogueModel = new Catalogue({id: catalogueIdToDelete});
+            catalogueModel.destroy({
+                error: function() {
+                    // TODO Output error message
+                    console.log("error when deleting packages");
+                }
+            });
+
+            unbindDialogListener();
+            sandbox.emit('husky.header.button-state', 'standard');
+            sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageModel.get('id') + '/details');
+
+            this.options.data = {};
+            catalogues = null;
+            selectedCatalogue = null;
+            defaultCatalogue = null;
+            translations = null;
+            catalogueIdToDelete = null;
+        },
+
+        hideDialog = function() {
+            sandbox.emit('husky.dialog.hide');
+            unbindDialogListener();
+        },
+
+        bindDialogListener = function() {
+            sandbox.on('husky.dialog.submit', delCatalogueSubmit);
+            sandbox.on('husky.dialog.cancel', hideDialog);
+        },
+
+        unbindDialogListener = function() {
+            sandbox.off('husky.dialog.submit', delCatalogueSubmit);
+            sandbox.off('husky.dialog.cancel', hideDialog);
+        };
 
     return {
 
@@ -111,9 +112,9 @@ define([
 //            }, this);
 //
 //            // delete packages
-//            this.sandbox.on('sulu.translate.packages.delete', function(packageIds) {
-//                this.deletePackages(packageIds);
-//            }, this);
+            this.sandbox.on('sulu.translate.catalogue.delete', function(catalogueId) {
+                this.deleteCatalogue(catalogueId);
+            }, this);
 
         },
 
@@ -182,7 +183,7 @@ define([
 
         },
 
-        loadTranslations: function(catalogueId) {
+        loadTranslations: function() {
 
             translations = new Translations({translateCatalogueId: selectedCatalogue.id});
             translations.fetch({
@@ -204,7 +205,7 @@ define([
                     // TODO errormessage
                 }.bind(this)
             });
-        }
+        },
 
 
 //        savePackage: function(data, cataloguesToDelete) {
@@ -236,33 +237,32 @@ define([
 //
 //        },
 
-//        deletePackages: function(packageIds) {
-//            packageIdsDelete = packageIds;
-//
-//            // show dialog and call delete only when user confirms
-//            this.sandbox.emit('sulu.dialog.confirmation.show', {
-//                content: {
-//                    title: 'Be careful!',
-//                    content: [
-//                        '<p>',
-//                        'This operation you are about to do will delete data. <br /> This is not undoable!',
-//                        '</p>',
-//                        '<p>',
-//                        ' Please think about it and accept or decline.',
-//                        '</p>'
-//                    ].join('')
-//                },
-//                footer: {
-//                    buttonCancelText: 'Don\'t do it',
-//                    buttonSubmitText: 'Do it, I understand'
-//                }
-//            });
-//
-//            console.log("here!");
-//
-//            bindDialogListener();
-//
-//        }
+        deleteCatalogue: function(catalogueId) {
+
+            catalogueIdToDelete = catalogueId;
+
+            // show dialog and call delete only when user confirms
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: 'Be careful!',
+                    content: [
+                        '<p>',
+                        'This operation you are about to do will delete data. <br /> This is not undoable!',
+                        '</p>',
+                        '<p>',
+                        ' Please think about it and accept or decline.',
+                        '</p>'
+                    ].join('')
+                },
+                footer: {
+                    buttonCancelText: 'Don\'t do it',
+                    buttonSubmitText: 'Do it, I understand'
+                }
+            });
+
+            bindDialogListener();
+
+        }
 
     };
 });

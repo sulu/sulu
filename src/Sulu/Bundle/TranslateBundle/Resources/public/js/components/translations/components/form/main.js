@@ -57,7 +57,6 @@ define([
                     data: this.options.data.catalogues
                 }}
             ]);
-
         },
 
         initFormEvents: function() {
@@ -197,8 +196,7 @@ define([
             }, this);
 
             this.sandbox.on('husky.button.delete.click', function(event) {
-                console.log("delete");
-                //this.sandbox.emit('sulu.translate.package.delete');
+                this.sandbox.emit('sulu.translate.catalogue.delete', [this.options.data.selectedCatalogue.id]);
             }, this);
         }
 
