@@ -11,7 +11,8 @@ define(['text!/security/template/role/form'], function(Template) {
     var sandbox,
         permissions = ['view', 'add', 'edit', 'delete', 'archive', 'live', 'security'],
         permissionData,
-        loadedContexts;
+        matrixContainerSelector = '#matrix-container',
+        matrixSelector = '#matrix';
 
     return {
 
@@ -58,24 +59,32 @@ define(['text!/security/template/role/form'], function(Template) {
         },
 
         initializeMatrix: function() {
+            // create new matrix div, and stop old matrix
+            var $matrix = sandbox.dom.createElement('<div id="matrix" class="loading"/>');
+            sandbox.stop(matrixSelector);
+            sandbox.dom.append(matrixContainerSelector, $matrix);
+
+            // load all the contexts from the selected module
             sandbox.util.ajax({
                 url: '/admin/contexts?system=' + sandbox.dom.val('#system')
             })
                 .done(function(data) {
                     data = JSON.parse(data);
-                    loadedContexts = data;
                     for (var module in data) {
                         if (data.hasOwnProperty(module)) {
+                            // create a matrix for every module
 
                             var contextHeadlines = [],
                                 matrixData = [];
 
                             // create required data for matrix
                             data[module].forEach(function(context) {
+                                // vertical axis of matrix
                                 var contextDataKey,
                                     matched = false;
                                 contextHeadlines.push(context.split('.').pop()); // TODO capitalize first letter
                                 permissionData.forEach(function(contextData) {
+                                    // horizontal axis of matrix
                                     if (contextData.context == context) {
                                         matched = true;
                                         contextDataKey = matrixData.push([]) - 1;
@@ -85,6 +94,7 @@ define(['text!/security/template/role/form'], function(Template) {
                                     }
                                 });
 
+                                // add an empty array to data, if no data is given for the current context
                                 if (!matched) {
                                     matrixData.push([]);
                                 }
@@ -94,7 +104,7 @@ define(['text!/security/template/role/form'], function(Template) {
                                 {
                                     name: 'matrix@husky',
                                     options: {
-                                        el: '#matrix-container',
+                                        el: matrixSelector,
                                         captions: {
                                             general: module,
                                             type: 'Section',
@@ -109,6 +119,8 @@ define(['text!/security/template/role/form'], function(Template) {
                                     }
                                 }
                             ]);
+
+                            sandbox.dom.removeClass($matrix, 'loading');
                         }
                     }
                 });
