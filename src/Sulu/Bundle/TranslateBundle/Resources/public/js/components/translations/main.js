@@ -45,7 +45,6 @@ define([
             sandbox.emit('husky.header.button-state', 'standard');
             sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageModel.get('id') + '/details');
 
-            this.options.data = {};
             catalogues = null;
             selectedCatalogue = null;
             defaultCatalogue = null;
@@ -101,12 +100,6 @@ define([
 
             }, this);
 
-//            // load existing
-//            this.sandbox.on('sulu.translate.catalogue.load', function(item) {
-//                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-//                this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + item + '/details');
-//            }, this);
-//
             // save
             this.sandbox.on('sulu.translate.translations.save', function(updatedTranslations, codesToDelete) {
                 this.saveTranslations(updatedTranslations, codesToDelete);

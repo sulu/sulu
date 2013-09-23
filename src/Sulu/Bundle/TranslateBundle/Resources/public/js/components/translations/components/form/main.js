@@ -280,8 +280,6 @@ define([
 
                         translationModel.code = codeModel;
                         updatedTranslations.push(translationModel);
-                    } else {
-                        //console.log("code missing");
                     }
                 }
                 i = i + 2;
