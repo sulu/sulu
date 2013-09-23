@@ -58,9 +58,9 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
         initialize: function() {
             sandbox = this.sandbox;
 
-            if (this.options.display == 'list') {
+            if (this.options.display === 'list') {
                 this.renderList();
-            } else if (this.options.display == 'form') {
+            } else if (this.options.display === 'form') {
                 this.renderForm();
             }
 
@@ -157,9 +157,8 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
         },
 
         renderForm: function() {
-            var role = new Role();
-
-            var component = {
+            var role = new Role(),
+                component = {
                 name: 'roles/components/form@sulusecurity',
                 options: {
                     el: this.options.el,
@@ -171,7 +170,6 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 role.set({id: this.options.id});
                 role.fetch({
                     success: function(model) {
-                        console.log(model.toJSON());
                         component.options.data = model.toJSON();
                         sandbox.start([component]);
                     }
@@ -180,5 +178,5 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 sandbox.start([component]);
             }
         }
-    }
+    };
 });
