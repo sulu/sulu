@@ -94,8 +94,8 @@ define([
             }.bind(this), 'textarea');
 
             // selected catalogue changed
-            this.sandbox.on('select.catalogues.item.changed', function(id){
-                this.sandbox.emit('sulu.translate.catalogue.changed', id);
+            this.sandbox.on('select.catalogues.item.changed', function(catalogueId){
+                this.sandbox.emit('sulu.translate.catalogue.changed', catalogueId);
             }, this);
         },
 

@@ -86,19 +86,12 @@ define([
 
         bindCustomEvents: function() {
 
-            this.sandbox.on('sulu.translate.catalogue.changed', function(id){
+            // selected catalogue in select-field changed
+            this.sandbox.on('sulu.translate.catalogue.changed', function(catalogueId){
 
-                // selected catalogue changed
-                // load new translations
-                // render form?
-
-
-                selectedCatalogue = catalogues.get(id);
-                console.log(catalogues.toJSON(), "catalogues");
-                console.log(selectedCatalogue.toJSON(), "selectedCatalogue");
-
+                selectedCatalogue = catalogues.get(catalogueId);
                 if(!!selectedCatalogue) {
-                    this.loadTranslations(selectedCatalogue.get('id'));
+                    this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageModel.get('id') + '/details:'+catalogueId);
                 } else {
                     // TODO
                     console.log("error - unknown catalogue")
@@ -165,7 +158,12 @@ define([
                             defaultCatalogue = catalogues.at(0);
                         }
 
-                        selectedCatalogue = defaultCatalogue;
+                        // when id for catalogue in url
+                        if(!!this.options.catalogue) {
+                            selectedCatalogue = catalogues.get(this.options.catalogue);
+                        } else {
+                            selectedCatalogue = defaultCatalogue;
+                        }
                         this.loadTranslations(selectedCatalogue.get('id'));
 
                     } else {

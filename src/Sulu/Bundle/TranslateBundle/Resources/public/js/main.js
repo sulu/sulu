@@ -58,6 +58,15 @@ define({
             }
         );
 
+        // show form for editing codes for catalogue
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/edit::id/details::catalogueId',
+                callback: function(id,catalogueId){
+                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="'+id+'" data-aura-catalogue="'+catalogueId+'"/>');
+                }
+            }
+        );
+
 
     }
 
