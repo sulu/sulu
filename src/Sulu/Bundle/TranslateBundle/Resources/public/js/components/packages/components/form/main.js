@@ -20,6 +20,45 @@ define([
         name: 'Sulu Translate Package Form',
         view: true,
 
+        // Navigation
+        getTabs: function(id) {
+            //TODO Simplify this task for bundle developer?
+
+            // TODO translate
+            var navigation = {
+                'title': 'Package',
+                'header': {
+                    'title': 'Package'
+                },
+                'hasSub': 'true',
+                //TODO id mandatory?
+                'sub': {
+                    'items': []
+                }
+            };
+
+            if (!!id) {
+                navigation.sub.items.push({
+                    'title': 'Details',
+                    'action': 'settings/translate/edit:' + id + '/details',
+                    'hasSub': false,
+                    'type': 'content',
+                    'id': 'translate-package-details-' + id
+                });
+            }
+
+            navigation.sub.items.push({
+                'title': 'Settings',
+                'action': 'settings/translate/edit:' + id + '/settings',
+                'hasSub': false,
+                'type': 'content',
+                'id': 'translate-package-settings-' + id
+            });
+
+            return navigation;
+        },
+
+
         initialize: function() {
             this.sandbox.off(); // FIXME automate this call
             this.initializeHeader();
@@ -48,6 +87,10 @@ define([
             // TODO - does not work for datagrid - is not rendered at this point
             this.sandbox.validation.create(catalogueFormId);
             this.initFormEvents();
+
+            this.sandbox.emit('navigation.item.column.show', {
+                data: this.getTabs(this.options.data.id)
+            },this);
         },
 
         initDataGrid: function(catalogues){
