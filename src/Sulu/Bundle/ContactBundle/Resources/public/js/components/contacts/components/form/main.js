@@ -106,10 +106,26 @@ define([
         },
 
         initializeHeader: function() {
-            this.sandbox.emit('husky.header.button-type', 'save');
-            this.sandbox.on('husky.button.save.click', function(event) {
-                this.submit();
-            }, this);
+            if (!this.options.id) {
+                this.sandbox.emit('husky.header.button-type', 'save');
+                this.sandbox.on('husky.button.save.click', function(event) {
+                    this.submit();
+                }, this);
+            } else {
+                this.sandbox.emit('husky.header.button-type', 'saveDelete');
+                this.sandbox.on('husky.button.save.click', function(event) {
+                    this.submit();
+                }, this);
+                this.sandbox.on('husky.button.delete.click', function(event) {
+                    this.deleteModel();
+                }, this);
+            }
+        },
+
+        deleteModel: function() {
+            this.sandbox.logger.log('delete Model');
+
+            // TODO delete model
         },
 
         submit: function() {
