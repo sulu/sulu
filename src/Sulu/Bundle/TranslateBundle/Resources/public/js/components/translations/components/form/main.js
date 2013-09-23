@@ -215,11 +215,12 @@ define([
                     $options = $rows[i + 1],
                     id = $($rows[i]).data('id'),
 
-                    newCode = $($translation).find('.input-code').val(),
-                    newTranslation = $($translation).find('.textarea-translation').val(),
-                    newLength = $($options).find('.inputLength').val(),
-                    newFrontend = $($options).find('.checkbox-frontend').is(':checked'),
-                    newBackend = $($options).find('.checkbox-backend').is(':checked'),
+                    newCode = this.sandbox.dom.val(this.sandbox.dom.find('.input-code',$translation)),
+                    newTranslation = this.sandbox.dom.val(this.sandbox.dom.find('.textarea-translation',$translation)),
+
+                    newLength = this.sandbox.dom.val(this.sandbox.dom.find('.inputLength',$options)),
+                    newFrontend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-frontend',$options),':checked'),
+                    newBackend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-backend',$options),':checked'),
 
                     translationModel = null;
 
