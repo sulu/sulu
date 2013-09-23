@@ -211,13 +211,10 @@ define([
 
         saveTranslations: function(updatedTranslations, codesToDelete) {
 
-            console.log(updatedTranslations, "updatedTranslations");
-            console.log(codesToDelete,"codesToDelete");
-
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             this.sandbox.util.each(codesToDelete, function(index) {
-                var code = new Code({id: codesToDelete[index].id});
+                var code = new Code({id: codesToDelete[index]});
                 code.destroy({
                     success: function() {
                         console.log("deleted code");
@@ -232,7 +229,7 @@ define([
                 translations.save(this.sandbox, updatedTranslations);
             }
 
-            //sandbox.emit('sulu.router.navigate', 'settings/translate');
+            sandbox.emit('sulu.router.navigate', 'settings/translate');
 
         },
 

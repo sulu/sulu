@@ -168,7 +168,7 @@ define([
                             '<p class="grey"></p>',
                         '</td>',
                         '<td width="6%">',
-                            '<p class="icon-remove m-left-5"></p>',
+                            '<p class="icon-remove m-left-5 pointer"></p>',
                         '</td>',
                     '</tr>',
                     '<tr class="additional-options">',
