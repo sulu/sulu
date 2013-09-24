@@ -187,7 +187,7 @@ define([
                 return [
                     '<tr>',
                         '<td width="20%">',
-                            '<input class="form-element input-code" value="" data-unique="true" data-validation-required="true"/>',
+                            '<input class="form-element input-code" value="" data-validation-unique="name" data-validation-required="true"/>',
                         '</td>',
                         '<td width="37%">',
                             '<textarea class="form-element vertical textarea-translation" data-validation-max-length="50"></textarea>',

@@ -91,7 +91,7 @@
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
                     <td class="relative">
-                        <input class="form-element grey input-code" readonly value="<%= item.code.code %>" data-unique="true" data-validation-required="true" />
+                        <input class="form-element grey input-code" readonly value="<%= item.code.code %>" data-validation-unique="name" data-validation-required="true" />
                         <span class="show-options absolute pointer icon-arrow-right"></span>
                     </td>
                     <td>
