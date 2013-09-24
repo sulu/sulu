@@ -44,6 +44,7 @@ define([
             this.initSelectCatalogues();
             this.initVisibilityOptions();
 
+            // TODO check uniqueness of codes/keys
             this.sandbox.form.create(codesForm, {debug: true});
         },
 
@@ -81,7 +82,7 @@ define([
             // automatic resize of textareas
             this.sandbox.dom.on('#codes-form', 'keyup', function(event){
 
-                // TODO test it
+                // TODO test it and do it on startup
                 //var TEXTAREA_LINE_HEIGHT = 13,
                 var textarea = event.currentTarget,
                     newHeight = textarea.scrollHeight,
