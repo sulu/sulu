@@ -17,27 +17,27 @@ define([
     var sandbox,
 
     bindListener = function(){
-        sandbox.off('husky.datagrid.items.selected');
+        sandbox.off('husky.datagrid.items.selected',deletePackages);
         sandbox.on('husky.datagrid.items.selected', deletePackages);
     },
 
     deletePackages = function(ids){
 
-        unbindListener();
+        //unbindListener();
 
         if (ids.length === 0) {
             // no items selected
-            console.log("no ids in array");
+            sandbox.logger.log("no ids in array");
             sandbox.emit('husky.header.button-state', 'standard');
         } else if (ids.length > 0) {
             sandbox.emit('sulu.translate.packages.delete', ids, false);
         }
 
-    },
-
-    unbindListener =  function(){
-        sandbox.off('husky.datagrid.items.selected');
     };
+
+//    unbindListener =  function(){
+//        sandbox.off('husky.datagrid.items.selected',deletePackages);
+//    };
 
     return {
 
@@ -45,23 +45,16 @@ define([
 
         initialize: function() {
             sandbox = this.sandbox;
-            this.clearEvents();
+
             this.initializeHeader();
-            this.render();
             this.initDropDown();
+            this.render();
 
-        },
-
-        clearEvents: function(){
-            sandbox.off('husky.datagrid.items.selected');
-            sandbox.off('husky.dropdown.options.clicked');
-            sandbox.off('husky.dropdown.options.item.click');
-            sandbox.off('husky.datagrid.item.click');
         },
 
         render: function() {
             RelationalStore.reset();
-            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
+//            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
             var template = this.sandbox.template.parse(listTemplate);
             this.sandbox.dom.html(this.options.el, template);
@@ -72,18 +65,20 @@ define([
         initDatagrid: function(){
 
             this.sandbox.start([
-                {name: 'datagrid@husky', options: {
-                    el: this.sandbox.dom.$('#package-list'),
-                    url: '/translate/api/packages', // FIXME use list function with fields
-                    pagination: false,
-                    selectItem: {
-                        type: 'checkbox'
-                    },
-                    removeRow: false,
-                    tableHead: [
-                        {content: 'Title'}
-                    ],
-                    excludeFields: ['id']
+                {
+                    name: 'datagrid@husky',
+                    options: {
+                        el: this.sandbox.dom.$('#package-list'),
+                        url: '/translate/api/packages', // FIXME use list function with fields
+                        pagination: false,
+                        selectItem: {
+                            type: 'checkbox'
+                        },
+                        removeRow: false,
+                        tableHead: [
+                            {content: 'Title'}
+                        ],
+                        excludeFields: ['id']
                 }}
             ]);
 
@@ -94,7 +89,6 @@ define([
         },
 
         initDropDown: function(){
-            console.log('initDropDown');
 
             this.sandbox.start([{
                 name: 'dropdown@husky',
@@ -124,10 +118,8 @@ define([
             this.sandbox.off('husky.dropdown.options.item.click');
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
 
-                console.log("clicked on dropdown item");
-
                 if (event.type === "delete") {
-                    this.sandbox.emit('husky.dropdown.options.hide');
+                    this.sandbox.emit('husky.dropdown.options.toggle');
                     this.sandbox.emit('husky.header.button-state', 'disable');
                     this.sandbox.emit('husky.datagrid.items.get-selected');
                 }

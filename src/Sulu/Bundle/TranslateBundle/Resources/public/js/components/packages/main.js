@@ -34,7 +34,6 @@ define([
                     },
                     error: function() {
                         // TODO Output error message
-                        console.log("error when deleting packages");
                     }
                 });
 
@@ -42,17 +41,17 @@ define([
 
             } else {
 
-                sandbox.util.each(packageIdsDelete, function(index) {
+                var clone = packageIdsDelete.slice(0);
+                sandbox.util.each(clone, function(index,value) {
 
-                    var packageModel = new Package({id: packageIdsDelete[index]});
+                    var packageModel = new Package({id: value});
                     packageModel.destroy({
                         error: function() {
                             // TODO Output error message
-                            console.log("error when deleting packages");
                         }
                     });
 
-                    sandbox.emit('husky.datagrid.row.remove',packageIdsDelete[index]);
+                    sandbox.emit('husky.datagrid.row.remove',value);
 
                 }.bind(this));
 
@@ -97,7 +96,6 @@ define([
         },
 
         bindCustomEvents: function() {
-
             // load existing
             this.sandbox.on('sulu.translate.package.load', function(item) {
                 this.sandbox.emit('husky.header.button-state', 'loading-add-button');
@@ -160,7 +158,6 @@ define([
                 var cat = new Catalogue({id:cataloguesToDelete[id]});
                 cat.destroy({
                     success: function() {
-                        console.log("deleted catalogue");
                     }
                 });
             }.bind(this));
@@ -174,7 +171,6 @@ define([
 
                 error: function() {
                     // TODO Output error message
-                    console.log("error while trying to save");
                     this.sandbox.emit('husky.header.button-state', 'disable');
                 }.bind(this)
             });
