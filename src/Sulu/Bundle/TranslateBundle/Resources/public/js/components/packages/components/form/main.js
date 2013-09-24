@@ -60,12 +60,14 @@ define([
 
         initialize: function() {
             this.sandbox.off(); // FIXME automate this call
+            RelationalStore.reset();
+
             this.initializeHeader();
             this.render();
         },
 
         render: function() {
-            RelationalStore.reset();
+
 //            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
             var packageModel = null,
@@ -87,7 +89,8 @@ define([
             this.initDataGrid(catalogues);
 
             // TODO - does not work for datagrid - is not rendered at this point
-            //this.sandbox.validation.create(catalogueFormId);
+            this.sandbox.form.create(catalogueFormId);
+
             this.initFormEvents();
 
             this.sandbox.emit('navigation.item.column.show', {
@@ -125,7 +128,7 @@ define([
                                     '</label>',
                                 '</td>',
                                 '<td>',
-                                '   <input class="form-element inputLocale" type="text" data-validate="true" data-minlength="3" value="<% if (!!locale) { %><%= locale %><% } %>"/>',
+                                '   <input class="form-element inputLocale" type="text" data-min-length="3" value="<% if (!!locale) { %><%= locale %><% } %>"/>',
                                 '</td>',
                                 '<td class="remove-row">',
                                     '<span class="icon-remove pointer"></span>',
@@ -151,6 +154,10 @@ define([
 
             this.sandbox.dom.on('#catalogue-form', 'click',function() {
                 this.sandbox.emit('husky.datagrid.row.add', { id: '', isDefault: false, locale: '', translations: [] });
+
+                // TODO add new fields to validation
+                // this.sandbox.form.addField(selectorForm, selectorField);
+
             }.bind(this),  '#add-catalogue-row');
 
         },
@@ -174,7 +181,7 @@ define([
 
             this.sandbox.util.each(this.options.data.catalogues, function(index) {
 
-                if (parseInt(catalogues[index].id) === parseInt(id)) {
+                if (parseInt(catalogues[index].id,10) === parseInt(id,10)) {
 
                     this.cataloguesToDelete.push(catalogues[index].id);
                     catalogues.splice(index,1);
@@ -187,18 +194,18 @@ define([
         submit: function() {
 
             // TODO validation
-            //if(this.sandbox.validation.validate(catalogueFormId)) {
+            if(this.sandbox.form.validate(catalogueFormId)) {
 
                 if(!this.options.data) {
                     this.options.data = {};
-                    this.options.data.id;
+                    //this.options.data.id;
                 }
 
                 this.options.data.name = this.sandbox.dom.val('#name');
                 this.options.data.catalogues = this.getChangedCatalogues();
 
                 this.sandbox.emit('sulu.translate.package.save', this.options.data, this.cataloguesToDelete);
-            //}
+            }
         },
 
         getChangedCatalogues: function() {

@@ -72,7 +72,7 @@
 </div>
 
 
-<form id="codes-form" data-validate="parsley">
+<form id="codes-form">
 
     <div class="grid-row">
         <table class="table" id="section1">
@@ -91,11 +91,11 @@
                 <% _.each(translations, function(item) { %>
                 <tr data-id="<%= item.id %>">
                     <td class="relative">
-                        <input class="form-element grey input-code" readonly value="<%= item.code.code %>" data-trigger="focusout" data-unique="true" data-required="true" />
+                        <input class="form-element grey input-code" readonly value="<%= item.code.code %>" data-unique="true" data-validation-required="true" />
                         <span class="show-options absolute pointer icon-arrow-right"></span>
                     </td>
                     <td>
-                        <textarea class="form-element vertical textarea-translation" data-minlength="0" data-maxlength="<%= item.code.length %>" data-trigger="focusout" readonly><%= (!!item.value) ? item.value : '' %></textarea>
+                        <textarea class="form-element vertical textarea-translation" data-validation-min-length="0" data-validation-max-length="<%= item.code.length %>" readonly><%= (!!item.value) ? item.value : '' %></textarea>
                         <small class="grey letter-info">[Max. <%= item.code.length %> chars]</small>
                     </td>
                     <td><p class="grey"><%= item.suggestion %></p></td>
@@ -106,7 +106,7 @@
                         <div class="grid-row">
                             <div class="grid-col-3">
                                 <span>Length</span>
-                                <input class="form-element inputLength" value="<%= item.code.length %>" data-required="true" type="number" min="0" data-trigger="focusout"/>
+                                <input class="form-element input-length" value="<%= item.code.length %>" data-validation-required="true" data-type="decimal" data-validation-min="0"  type="number" min="0"/>
                             </div>
                             <div class="grid-col-2 m-top-35"><input name="frontend" type="checkbox" class="custom-checkbox checkbox-frontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
                             <div class="grid-col-2  m-top-35"><input name="backend" type="checkbox" class="custom-checkbox checkbox-backend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>

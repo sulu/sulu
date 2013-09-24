@@ -45,11 +45,18 @@ define([
 
         initialize: function() {
             sandbox = this.sandbox;
-
+            this.clearEvents();
             this.initializeHeader();
             this.render();
             this.initDropDown();
 
+        },
+
+        clearEvents: function(){
+            sandbox.off('husky.datagrid.items.selected');
+            sandbox.off('husky.dropdown.options.clicked');
+            sandbox.off('husky.dropdown.options.item.click');
+            sandbox.off('husky.datagrid.item.click');
         },
 
         render: function() {
@@ -114,6 +121,7 @@ define([
 
             bindListener();
 
+            this.sandbox.off('husky.dropdown.options.item.click');
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
 
                 console.log("clicked on dropdown item");

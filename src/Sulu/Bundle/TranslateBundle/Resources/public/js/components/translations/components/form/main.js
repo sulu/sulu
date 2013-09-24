@@ -13,7 +13,8 @@ define([
 ], function(formTemplate, RelationalStore) {
 
     'use strict';
-    var codesToDelete = [];
+    var codesToDelete = [],
+        codesForm = '#codes-form';
 
     return {
 
@@ -22,12 +23,14 @@ define([
 
         initialize: function() {
             this.sandbox.off(); // FIXME automate this call
+            RelationalStore.reset();
+
             this.initializeHeader();
             this.render();
         },
 
         render: function() {
-            RelationalStore.reset();
+
 
             var template = this.sandbox.template.parse(formTemplate, {
                 package: this.options.data.package,
@@ -37,11 +40,11 @@ define([
 
             this.sandbox.dom.html(this.options.el, template);
 
-            // TODO validation
-//            this.sandbox.validation.create(catalogueFormId);
             this.initFormEvents();
             this.initSelectCatalogues();
             this.initVisibilityOptions();
+
+            this.sandbox.form.create(codesForm);
         },
 
         initSelectCatalogues: function() {
@@ -131,9 +134,23 @@ define([
                 sectionId = this.sandbox.dom.attr($element, 'data-target-element'),
                 $lastTableRowOfSection = this.sandbox.dom.$('#' + sectionId + ' tbody:last-child');
 
+
             this.sandbox.dom.append($lastTableRowOfSection, this.templates.rowTemplate());
 
-            // TODO validation
+            var $addedElement = this.sandbox.dom.$('#' + sectionId + ' tbody:last-child'),
+                $codeField = this.sandbox.dom.find('.input-code',$addedElement),
+                $translationField = this.sandbox.dom.find('.textarea-translation',$addedElement),
+                $lengthField = this.sandbox.dom.find('.input-length',$addedElement);
+
+            console.log($addedElement, "added element");
+
+//            this.sandbox.form.addField(codesForm,$codeField);
+//            this.sandbox.form.addField(codesForm,$translationField);
+//            this.sandbox.form.addField(codesForm,$lengthField);
+
+            // when value changes
+//            this.sandbox.form.updateConstraint(codesForm,feld, 'min-length',{minLength: 3});
+
         },
 
         initVisibilityOptions: function() {
@@ -158,10 +175,10 @@ define([
                 return [
                     '<tr>',
                         '<td width="20%">',
-                            '<input class="form-element input-code" value="" data-trigger="focusout" data-unique="true" data-required="true"/>',
+                            '<input class="form-element input-code" value="" data-unique="true" data-validation-required="true"/>',
                         '</td>',
                         '<td width="37%">',
-                            '<textarea class="form-element vertical textarea-translation" data-maxlength="50" data-trigger="focusout"></textarea>',
+                            '<textarea class="form-element vertical textarea-translation" data-validation-max-length="50"></textarea>',
                             '<small class="grey letter-info">[Max. 50 chars]</small>',
                         '</td>',
                         '<td width="37%">',
@@ -176,13 +193,13 @@ define([
                             '<div class="grid-row">',
                                 '<div class="grid-col-3">',
                                     '<span>Length</span>',
-                                    '<input class="form-element inputLength" value="50"  data-required="true" type="number" data-trigger="focusout"/>',
+                                    '<input class="form-element input-length" value="50"  data-validation-required="true" data-type="decimal" data-validation-min="0" type="number" min="0"/>',
                                 '</div>',
                                 '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkbox-frontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
                                 '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkbox-backend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
                             '</div>',
                         '</td>',
-                    '</tr>'].join('')
+                    '</tr>'].join('');
             }
         },
 
@@ -202,7 +219,7 @@ define([
         submit: function() {
 
             // TODO validation
-//            if(this.sandbox.validation.validate(catalogueFormId)) {
+            if(this.sandbox.form.validate(codesForm)) {
 
             var updatedTranslations = [],
                 $rows = this.sandbox.dom.find('table tbody tr', '#codes-form');
@@ -218,7 +235,7 @@ define([
                     newCode = this.sandbox.dom.val(this.sandbox.dom.find('.input-code',$translation)),
                     newTranslation = this.sandbox.dom.val(this.sandbox.dom.find('.textarea-translation',$translation)),
 
-                    newLength = this.sandbox.dom.val(this.sandbox.dom.find('.inputLength',$options)),
+                    newLength = this.sandbox.dom.val(this.sandbox.dom.find('.input-length',$options)),
                     newFrontend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-frontend',$options),':checked'),
                     newBackend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-backend',$options),':checked'),
 
@@ -267,10 +284,9 @@ define([
                 } else {
 
                     // new translation and new code
-                    // TODO validation?
                     if (newCode != undefined && newCode != "") {
 
-                        var codeModel = {}
+                        var codeModel = {};
                         codeModel.code = newCode;
                         codeModel.length = newLength;
                         codeModel.frontend = newFrontend;
@@ -288,7 +304,7 @@ define([
             }
 
             this.sandbox.emit('sulu.translate.translations.save', updatedTranslations, codesToDelete);
-//            }
+            }
         }
 
 
