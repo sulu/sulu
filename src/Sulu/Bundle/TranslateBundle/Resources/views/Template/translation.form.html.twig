@@ -95,7 +95,7 @@
                         <span class="show-options absolute pointer icon-arrow-right"></span>
                     </td>
                     <td>
-                        <textarea class="form-element vertical textarea-translation" data-validation-min-length="0" data-validation-max-length="<%= item.code.length %>" readonly><%= (!!item.value) ? item.value : '' %></textarea>
+                        <textarea class="form-element vertical textarea-translation" data-validation-max-length="<%= item.code.length %>" readonly><%= (!!item.value) ? item.value : '' %></textarea>
                         <small class="grey letter-info">[Max. <%= item.code.length %> chars]</small>
                     </td>
                     <td><p class="grey"><%= item.suggestion %></p></td>

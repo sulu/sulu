@@ -44,7 +44,7 @@ define([
             this.initSelectCatalogues();
             this.initVisibilityOptions();
 
-            this.sandbox.form.create(codesForm);
+            this.sandbox.form.create(codesForm, {debug: true});
         },
 
         initSelectCatalogues: function() {
@@ -133,13 +133,17 @@ define([
 
         updateLengthConstraint: function(event){
 
-            var newValue = this.sandbox.dom.val(event.currentTarget),
-                translationField =this.sandbox.dom.parent(event.currentTarget, '.additional-options');
+            var newMinLength = this.sandbox.dom.val(event.currentTarget),
+                $tr = this.sandbox.dom.prev(
+                                    this.sandbox.dom.parent(
+                                        this.sandbox.dom.parent(
+                                            this.sandbox.dom.parent(
+                                                this.sandbox.dom.parent(event.currentTarget))))),
+                $translationField = this.sandbox.dom.find('.textarea-translation',$tr),
+                $translationFieldInfo = this.sandbox.dom.find('.letter-info',$tr);
 
-            console.log(translationField, "translationField");
-
-            // when value changes
-//            this.sandbox.form.updateConstraint(codesForm,feld, 'min-length',{minLength: 3});
+            this.sandbox.dom.text($translationFieldInfo, "[Max. "+newMinLength+" chars]");
+            this.sandbox.form.updateConstraint(codesForm,$translationField, 'maxLength',{maxLength: newMinLength});
         },
 
         addRow: function(event) {
