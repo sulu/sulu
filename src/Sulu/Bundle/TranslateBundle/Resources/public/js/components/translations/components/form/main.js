@@ -45,7 +45,7 @@ define([
             this.initVisibilityOptions();
 
             // TODO check uniqueness of codes/keys
-            this.sandbox.form.create(codesForm, {debug: true});
+            this.sandbox.form.create(codesForm);
         },
 
         initSelectCatalogues: function() {
