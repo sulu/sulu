@@ -49,8 +49,6 @@ define([
 
         initSelectCatalogues: function() {
 
-            console.log(this.options.data.catalogues, "catalogues");
-
             this.sandbox.start([
                 {name: 'select@husky', options: {
                     el: this.sandbox.dom.$('#languageCatalogue'),
@@ -83,9 +81,9 @@ define([
             // automatic resize of textareas
             this.sandbox.dom.on('#codes-form', 'keyup', function(event){
 
-                // TODO testing
-                var TEXTAREA_LINE_HEIGHT = 13,
-                    textarea = event.currentTarget,
+                // TODO test it
+                //var TEXTAREA_LINE_HEIGHT = 13,
+                var textarea = event.currentTarget,
                     newHeight = textarea.scrollHeight,
                     currentHeight = textarea.clientHeight;
 
@@ -133,8 +131,13 @@ define([
 
         },
 
-        updateLengthConstraint: function(){
-            console.log("update constraint!");
+        updateLengthConstraint: function(event){
+
+            var newValue = this.sandbox.dom.val(event.currentTarget),
+                translationField =this.sandbox.dom.parent(event.currentTarget, '.additional-options');
+
+            console.log(translationField, "translationField");
+
             // when value changes
 //            this.sandbox.form.updateConstraint(codesForm,feld, 'min-length',{minLength: 3});
         },
@@ -150,7 +153,6 @@ define([
 
             var $addedRow = this.sandbox.dom.next($lastRow, 'tr'),
                 $addedOptionsRow = this.sandbox.dom.next($addedRow, 'tr'),
-
                 $codeField = this.sandbox.dom.find('.input-code',$addedRow),
                 $translationField = this.sandbox.dom.find('.textarea-translation',$addedRow),
                 $lengthField = this.sandbox.dom.find('.input-length',$addedOptionsRow);
@@ -164,13 +166,11 @@ define([
 
             this.sandbox.dom.on('.show-options', 'click', function(event) {
 
-                var $element = this.sandbox.dom.$(event.currentTarget);
+                var $element = this.sandbox.dom.$(event.currentTarget),
+                    $optionsTr = this.sandbox.dom.next(this.sandbox.dom.parent(this.sandbox.dom.parent($element)), '.additional-options');
 
                 this.sandbox.dom.toggleClass($element, 'icon-arrow-right');
                 this.sandbox.dom.toggleClass($element, 'icon-arrow-down');
-
-                var $optionsTr = this.sandbox.dom.next(this.sandbox.dom.parent(this.sandbox.dom.parent($element)), '.additional-options');
-
                 this.sandbox.dom.toggleClass($optionsTr, 'hidden');
 
             }.bind(this));
@@ -225,13 +225,10 @@ define([
 
         submit: function() {
 
-            // TODO validation
             if(this.sandbox.form.validate(codesForm)) {
 
             var updatedTranslations = [],
                 $rows = this.sandbox.dom.find('table tbody tr', '#codes-form');
-
-            console.log($rows, "zeilen");
 
             for (var i = 0; i < $rows.length;) {
 
@@ -252,7 +249,7 @@ define([
                 if (!!id) {
 
                     this.sandbox.util.each(this.options.data.translations, function(key, value) {
-                        if (parseInt(value.id) === parseInt(id)) {
+                        if (parseInt(value.id,10) === parseInt(id,10)) {
                             translationModel = value;
                             return false;
                         }
@@ -261,19 +258,17 @@ define([
 
                     if (!!translationModel) {
 
-                        console.log(translationModel, "translation model");
-
                         var currentCode = translationModel.code.code,
                             currentTranslation = translationModel.value,
                             currentLength = translationModel.code.length,
                             currentFrontend = translationModel.code.frontend,
                             currentBackend = translationModel.code.backend;
 
-                        if (newCode != currentCode ||
-                            newTranslation != currentTranslation ||
-                            newLength != currentLength ||
-                            newFrontend != currentFrontend ||
-                            newBackend != currentBackend) {
+                        if (newCode !== currentCode ||
+                            newTranslation !== currentTranslation ||
+                            newLength !== currentLength ||
+                            newFrontend !== currentFrontend ||
+                            newBackend !== currentBackend) {
 
                             translationModel.code.code = newCode;
                             translationModel.value = newTranslation;
@@ -283,15 +278,14 @@ define([
 
                             updatedTranslations.push(translationModel);
                         }
-                    } else {
-                        // TODO errormessage
-                        console.log("error - translation with id" + id + " not found");
                     }
+
+                    // TODO else errormessage
 
                 } else {
 
                     // new translation and new code
-                    if (newCode != undefined && newCode != "") {
+                    if (newCode !== undefined && newCode !== "") {
 
                         var codeModel = {};
                         codeModel.code = newCode;
@@ -311,6 +305,7 @@ define([
             }
 
             this.sandbox.emit('sulu.translate.translations.save', updatedTranslations, codesToDelete);
+            codesToDelete = [];
             }
         }
 
