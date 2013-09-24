@@ -13,39 +13,43 @@ require.config({
     }
 });
 
-define({
+define(function() {
 
-    name: 'Sulu Security Bundle',
+    'use strict';
 
-    initialize: function(app) {
-        var sandbox = app.sandbox;
+    return {
+        name: 'Sulu Security Bundle',
 
-        app.components.addSource('sulusecurity', '/bundles/sulusecurity/js/components');
+        initialize: function(app) {
+            var sandbox = app.sandbox;
 
-        // list all roles
-        sandbox.mvc.routes.push({
-            route: 'settings/roles',
-            callback: function(){
-                this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="list"/>');
-            }
-        });
+            app.components.addSource('sulusecurity', '/bundles/sulusecurity/js/components');
 
-        // show form for a new role
-        sandbox.mvc.routes.push({
-            route: 'settings/roles/new',
-            callback: function(){
-                this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="form"/>');
-            }
-        });
+            // list all roles
+            sandbox.mvc.routes.push({
+                route: 'settings/roles',
+                callback: function() {
+                    this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="list"/>');
+                }
+            });
 
-        // show form for editing a role
-        sandbox.mvc.routes.push({
-            route: 'settings/roles/edit::id',
-            callback: function(id){
-                this.html(
-                    '<div data-aura-component="roles@sulusecurity" data-aura-display="form" data-aura-id="' +id + '"/>'
-                );
-            }
-        });
-    }
+            // show form for a new role
+            sandbox.mvc.routes.push({
+                route: 'settings/roles/new',
+                callback: function() {
+                    this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="form"/>');
+                }
+            });
+
+            // show form for editing a role
+            sandbox.mvc.routes.push({
+                route: 'settings/roles/edit::id',
+                callback: function(id) {
+                    this.html(
+                        '<div data-aura-component="roles@sulusecurity" data-aura-display="form" data-aura-id="' + id + '"/>'
+                    );
+                }
+            });
+        }
+    };
 });
