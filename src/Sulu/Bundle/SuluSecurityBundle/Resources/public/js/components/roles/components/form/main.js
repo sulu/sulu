@@ -16,6 +16,7 @@ define(['text!/security/template/role/form'], function(Template) {
         permissionData,
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
+        formSelector = '#role-form',
         loadedContexts;
 
     return {
@@ -31,6 +32,7 @@ define(['text!/security/template/role/form'], function(Template) {
             this.initializeHeader();
             this.render();
             this.initializeMatrix();
+            this.initializeValidation();
 
             this.bindDOMEvents();
             this.bindCustomEvents();
@@ -61,6 +63,10 @@ define(['text!/security/template/role/form'], function(Template) {
             sandbox.on('husky.button.delete.click', function() {
                 sandbox.emit('sulu.roles.delete', sandbox.dom.val('#id'));
             }.bind(this));
+        },
+
+        initializeValidation: function() {
+            sandbox.form.create(formSelector);
         },
 
         initializeMatrix: function() {
@@ -186,15 +192,17 @@ define(['text!/security/template/role/form'], function(Template) {
         },
 
         save: function() {
-            // FIXME  Use datamapper instead
-            var data = {
-                id: sandbox.dom.val('#id'),
-                name: sandbox.dom.val('#name'),
-                system: sandbox.dom.val('#system'),
-                permissions: permissionData
-            };
+            if (!!sandbox.form.validate(formSelector)) {
+                // FIXME  Use datamapper instead
+                var data = {
+                    id: sandbox.dom.val('#id'),
+                    name: sandbox.dom.val('#name'),
+                    system: sandbox.dom.val('#system'),
+                    permissions: permissionData
+                };
 
-            sandbox.emit('sulu.roles.save', data);
+                sandbox.emit('sulu.roles.save', data);
+            }
         },
 
         render: function() {
