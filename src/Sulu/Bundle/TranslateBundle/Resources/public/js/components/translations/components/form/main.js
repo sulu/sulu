@@ -95,6 +95,11 @@ define([
 
             }.bind(this), 'textarea');
 
+            // automatic resize of textareas
+            this.sandbox.dom.on('#codes-form', 'keyup', function(event){
+                this.updateLengthConstraint(event);
+            }.bind(this), '.input-length');
+
             // selected catalogue changed
             this.sandbox.on('select.catalogues.item.changed', function(catalogueId){
                 this.sandbox.emit('sulu.translate.catalogue.changed', catalogueId);
@@ -119,7 +124,7 @@ define([
             if(!!id) {
 
                 this.sandbox.util.each(this.options.data.translations, function(key, value) {
-                    if(parseInt(value.id) === parseInt(id)) {
+                    if(parseInt(value.id,10) === parseInt(id,10)) {
                         codesToDelete.push(value.code.id);
                         return false;
                     }
@@ -128,29 +133,31 @@ define([
 
         },
 
+        updateLengthConstraint: function(){
+            console.log("update constraint!");
+            // when value changes
+//            this.sandbox.form.updateConstraint(codesForm,feld, 'min-length',{minLength: 3});
+        },
+
         addRow: function(event) {
 
             var $element = this.sandbox.dom.$(event.currentTarget),
                 sectionId = this.sandbox.dom.attr($element, 'data-target-element'),
-                $lastTableRowOfSection = this.sandbox.dom.$('#' + sectionId + ' tbody:last-child');
+                $tbody = this.sandbox.dom.find('tbody', '#' + sectionId),
+                $lastRow = this.sandbox.dom.find('tr:last', $tbody);
 
+            this.sandbox.dom.append($tbody, this.templates.rowTemplate());
 
-            this.sandbox.dom.append($lastTableRowOfSection, this.templates.rowTemplate());
+            var $addedRow = this.sandbox.dom.next($lastRow, 'tr'),
+                $addedOptionsRow = this.sandbox.dom.next($addedRow, 'tr'),
 
-            var $addedElement = this.sandbox.dom.$('#' + sectionId + ' tbody:last-child'),
-                $codeField = this.sandbox.dom.find('.input-code',$addedElement),
-                $translationField = this.sandbox.dom.find('.textarea-translation',$addedElement),
-                $lengthField = this.sandbox.dom.find('.input-length',$addedElement);
+                $codeField = this.sandbox.dom.find('.input-code',$addedRow),
+                $translationField = this.sandbox.dom.find('.textarea-translation',$addedRow),
+                $lengthField = this.sandbox.dom.find('.input-length',$addedOptionsRow);
 
-            console.log($addedElement, "added element");
-
-//            this.sandbox.form.addField(codesForm,$codeField);
-//            this.sandbox.form.addField(codesForm,$translationField);
-//            this.sandbox.form.addField(codesForm,$lengthField);
-
-            // when value changes
-//            this.sandbox.form.updateConstraint(codesForm,feld, 'min-length',{minLength: 3});
-
+            this.sandbox.form.addField(codesForm,$codeField);
+            this.sandbox.form.addField(codesForm,$translationField);
+            this.sandbox.form.addField(codesForm,$lengthField);
         },
 
         initVisibilityOptions: function() {

@@ -198,7 +198,7 @@ define([
 
                 if(!this.options.data) {
                     this.options.data = {};
-                    //this.options.data.id;
+                    this.options.data.id;
                 }
 
                 this.options.data.name = this.sandbox.dom.val('#name');
