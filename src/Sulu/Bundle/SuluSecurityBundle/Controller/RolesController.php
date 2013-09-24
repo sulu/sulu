@@ -224,10 +224,6 @@ class RolesController extends RestController implements ClassResourceInterface
     {
         $permission->setContext($permissionData['context']);
 
-        if (isset($permissionData['module'])) {
-            $permission->setModule($permissionData['module']);
-        }
-
         $permission->setPermissions(
             $this->get('sulu_security.mask_converter')
                 ->convertPermissionsToNumber($permissionData['permissions'])

@@ -218,6 +218,7 @@ class RolesControllerTest extends DatabaseTestCase
                 'system' => 'Sulu',
                 'permissions' => array(
                     array(
+                        'id' => 1,
                         'context' => 'portal1',
                         'permissions' => array(
                             'view' => true,
@@ -230,7 +231,20 @@ class RolesControllerTest extends DatabaseTestCase
                         ),
                     ),
                     array(
+                        'id' => 2,
                         'context' => 'portal2',
+                        'permissions' => array(
+                            'view' => false,
+                            'add' => false,
+                            'edit' => false,
+                            'delete' => false,
+                            'archive' => true,
+                            'live' => true,
+                            'security' => true
+                        )
+                    ),
+                    array(
+                        'context' => 'portal3',
                         'permissions' => array(
                             'view' => false,
                             'add' => false,
@@ -265,6 +279,14 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(true, $response->permissions[1]->permissions->archive);
         $this->assertEquals(true, $response->permissions[1]->permissions->live);
         $this->assertEquals(true, $response->permissions[1]->permissions->security);
+        $this->assertEquals('portal3', $response->permissions[2]->context);
+        $this->assertEquals(false, $response->permissions[2]->permissions->view);
+        $this->assertEquals(false, $response->permissions[2]->permissions->add);
+        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
+        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
+        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
+        $this->assertEquals(true, $response->permissions[2]->permissions->live);
+        $this->assertEquals(true, $response->permissions[2]->permissions->security);
 
         $client->request(
             'GET',
@@ -290,6 +312,14 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals(true, $response->permissions[1]->permissions->archive);
         $this->assertEquals(true, $response->permissions[1]->permissions->live);
         $this->assertEquals(true, $response->permissions[1]->permissions->security);
+        $this->assertEquals('portal3', $response->permissions[2]->context);
+        $this->assertEquals(false, $response->permissions[2]->permissions->view);
+        $this->assertEquals(false, $response->permissions[2]->permissions->add);
+        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
+        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
+        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
+        $this->assertEquals(true, $response->permissions[2]->permissions->live);
+        $this->assertEquals(true, $response->permissions[2]->permissions->security);
     }
 
     public function testPutNotExisting()
