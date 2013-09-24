@@ -28,6 +28,8 @@ doctrine:
                 dir: "%kernel.root_dir%/../../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                 alias: GedmoTree # this one is optional and will default to the name set for the mapping
                 is_bundle: false
+        resolve_target_entities:
+            Sulu\Bundle\ContactBundle\Entity\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
 
 stof_doctrine_extensions:
     orm:
