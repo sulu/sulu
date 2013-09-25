@@ -18,6 +18,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class MaskConverter
 {
+    /**
+     * The permissions avaiable, defined by config
+     * @var array
+     */
     protected $permissions;
 
     public function __construct($permissions)
