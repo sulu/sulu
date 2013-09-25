@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -33,6 +34,13 @@ class UsersControllerTest extends DatabaseTestCase
     public function setUp()
     {
         $this->setUpSchema();
+
+        $contact = new Contact();
+        $contact->setFirstName('Max');
+        $contact->setLastName('Mustermann');
+        $contact->setCreated(new DateTime());
+        $contact->setChanged(new DateTime());
+        self::$em->persist($contact);
 
         $role1 = new Role();
         $role1->setName('Role1');
@@ -83,6 +91,13 @@ class UsersControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
@@ -146,6 +161,9 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                ),
                 'userRoles' => array(
                     array(
                         'role' => array(
@@ -166,6 +184,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -181,6 +200,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -254,6 +274,9 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                ),
                 'userRoles' => array(
                     array(
                         'id' => 1,
@@ -276,6 +299,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -291,6 +315,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
