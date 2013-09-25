@@ -46,4 +46,14 @@ class AdminController extends Controller
 
         return new Response($response);
     }
+
+    public function contextsAction()
+    {
+        $contexts = $this->get('sulu_admin.admin_pool')->getSecurityContexts();
+        $system = $this->getRequest()->get('system');
+
+        $response = json_encode((isset($system) ? $contexts[$system] : $contexts));
+
+        return new Response($response);
+    }
 }
