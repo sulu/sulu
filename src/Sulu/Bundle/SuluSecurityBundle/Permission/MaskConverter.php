@@ -10,19 +10,20 @@
 
 namespace Sulu\Bundle\SecurityBundle\Permission;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * A helper class to convert the mask between the numerical and array representation.
  * Also offered as a service by this bundle.
  */
 class MaskConverter
 {
-    const VIEW = 64;
-    const ADD = 32;
-    const EDIT = 16;
-    const DELETE = 8;
-    const ARCHIVE = 4;
-    const LIVE = 2;
-    const SECURITY = 1;
+    protected $permissions;
+
+    public function __construct($permissions)
+    {
+        $this->permissions = $permissions;
+    }
 
     /**
      * Converts a permissions array to a bit field
@@ -35,29 +36,7 @@ class MaskConverter
 
         foreach ($permissionsData as $key => $permission) {
             if ($permission) {
-                switch ($key) {
-                    case 'view':
-                        $permissions |= self::VIEW;
-                        break;
-                    case 'add':
-                        $permissions |= self::ADD;
-                        break;
-                    case 'edit':
-                        $permissions |= self::EDIT;
-                        break;
-                    case 'delete':
-                        $permissions |= self::DELETE;
-                        break;
-                    case 'archive':
-                        $permissions |= self::ARCHIVE;
-                        break;
-                    case 'live':
-                        $permissions |= self::LIVE;
-                        break;
-                    case 'security':
-                        $permissions |= self::SECURITY;
-                        break;
-                }
+                $permissions |= $this->permissions[$key];
             }
         }
 
@@ -72,13 +51,13 @@ class MaskConverter
     public function convertPermissionsToArray($permissions)
     {
         $permissionsData = array(
-            'view' => (bool)($permissions & self::VIEW),
-            'add' => (bool)($permissions & self::ADD),
-            'edit' => (bool)($permissions & self::EDIT),
-            'delete' => (bool)($permissions & self::DELETE),
-            'archive' => (bool)($permissions & self::ARCHIVE),
-            'live' => (bool)($permissions & self::LIVE),
-            'security' => (bool)($permissions & self::SECURITY == self::SECURITY),
+            'view' => (bool)($permissions & $this->permissions['view']),
+            'add' => (bool)($permissions & $this->permissions['add']),
+            'edit' => (bool)($permissions & $this->permissions['edit']),
+            'delete' => (bool)($permissions & $this->permissions['delete']),
+            'archive' => (bool)($permissions & $this->permissions['archive']),
+            'live' => (bool)($permissions & $this->permissions['live']),
+            'security' => (bool)($permissions & $this->permissions['security']),
         );
 
         return $permissionsData;
