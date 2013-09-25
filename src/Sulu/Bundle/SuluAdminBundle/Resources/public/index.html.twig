@@ -24,28 +24,19 @@
 </head>
 <body>
 <div id="main">
-    <div id="login">
-        {% if error %}
-            <div>{{ error.message }}</div>
-        {% endif %}
+    <header data-aura-component="header@husky"></header>
 
-        <form action="{{ path('sulu_admin.login_check') }}" method="post">
-            <div class="grid-row">
-                <label for="username">Username</label>
-                <input class="form-element" type="text" id="username" name="_username" value="{{ username }}"/>
-            </div>
+    <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"></div>
 
-            <div class="grid-row">
-                <label for="password">Password</label>
-                <input class="form-element" type="password" id="password" name="_password"/>
-            </div>
+    <main class="grid" id="content" data-aura-component="app@suluadmin"></main>
 
-            <div class="grid-row">
-                <input type="hidden" name="_target_path" value="/admin"/>
-                <button class="form-element" type="submit">login</button>
-            </div>
-        </form>
-    </div>
 </div>
+
+<div id="dialogContainer" data-aura-component="dialog@suluadmin"></div>
+
+<!-- build:js app.min.js -->
+<script data-main="/bundles/suluadmin/js/main" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
+<!-- endbuild -->
 </body>
 </html>
+
