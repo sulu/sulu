@@ -26,16 +26,7 @@ define([
         initialize: function() {
             this.sandbox.off(); // FIXME automate this call
             contact = new Contact();
-            if (!!this.options.id) {
-                contact.set({id: this.options.id});
-                contact.fetch({
-                    success: function(contact) {
-                        this.render();
-                    }.bind(this)
-                });
-            } else {
-                this.render();
-            }
+            this.render();
         },
 
         render: function() {
@@ -76,7 +67,12 @@ define([
         },
 
         initData: function() {
-            var contactJson = contact.toJSON();
+            var contactJson;
+            if (!!this.options.data) {
+                contactJson = this.options.data;
+            } else {
+                contactJson = contact.toJSON();
+            }
             this.fillFields(contactJson.emails, 2, {
                 id: null,
                 email: '',
@@ -135,22 +131,30 @@ define([
                 var data = this.sandbox.form.getData(form);
 
                 data.emails = _.filter(data.emails, function(email) {
-                    if (email.id === "")delete email.id;
+                    if (email.id === "") {
+                        delete email.id;
+                    }
                     return email.email !== "";
                 });
                 data.phones = _.filter(data.phones, function(phone) {
-                    if (phone.id === "")delete phone.id;
+                    if (phone.id === "") {
+                        delete phone.id;
+                    }
                     return phone.phone !== "";
                 });
                 data.addresses = _.filter(data.addresses, function(address) {
-                    if (address.id === "")delete address.id;
+                    if (address.id === "") {
+                        delete address.id;
+                    }
                     return address.street !== "" &&
                         address.number !== "" &&
                         address.zip !== "" &&
                         address.city !== "" &&
                         address.state !== "";
                 });
-                if (data.id === '') delete data.id;
+                if (data.id === '') {
+                    delete data.id;
+                }
 
                 this.sandbox.logger.log('data', data);
 

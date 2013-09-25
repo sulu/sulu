@@ -37,7 +37,7 @@ define(['sulucontact/model/contact'], function(Contact) {
                 this.sandbox.emit('sulu.router.navigate', 'contacts/people/edit:' + id);
             }, this);
 
-            this.sandbox.on('sulu.contacts.new', function(id) {
+            this.sandbox.on('sulu.contacts.new', function() {
                 this.sandbox.emit('sulu.router.navigate', 'contacts/people/add');
             }, this);
 
@@ -47,9 +47,15 @@ define(['sulucontact/model/contact'], function(Contact) {
         renderForm: function() {
 
             if (!!this.options.id) {
-                this.sandbox.start([
-                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, id: this.options.id}}
-                ]);
+                var contactModel = new Contact();
+                contactModel.set({id: this.options.id});
+                contactModel.fetch({
+                    success: function(model) {
+                        this.sandbox.start([
+                            {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
+                        ]);
+                    }.bind(this)
+                });
             } else {
                 this.sandbox.start([
                     {name: 'contacts/components/form@sulucontact', options: { el: this.$el}}
