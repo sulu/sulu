@@ -9,6 +9,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
+use Symfony\Bridge\Doctrine\Tests\Security\User\EntityUserProviderTest;
 use Symfony\Component\Security\Core\User\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -56,7 +57,6 @@ class User implements UserInterface, Serializable
 
     /**
      * @var string
-     * @Expose
      */
     private $salt;
 
@@ -278,7 +278,7 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * Serializes the user just with the id, as it is enough for symfony
+     * Serializes the user just with the id, as it is enough
      * @link http://php.net/manual/en/serializable.serialize.php
      * @return string the string representation of the object or null
      */
@@ -292,7 +292,8 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * Unserializes just the user id, as it is enough for symfony
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * Constructs the object
      * @link http://php.net/manual/en/serializable.unserialize.php
      * @param string $serialized <p>
      * The string representation of the object.
