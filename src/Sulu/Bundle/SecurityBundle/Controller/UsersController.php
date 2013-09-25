@@ -71,9 +71,9 @@ class UsersController extends RestController implements ClassResourceInterface
 
             $user = new User();
             $user->setUsername($this->getRequest()->get('username'));
-            $user->setPassword($this->getRequest()->get('password'));
+            $user->setSalt($this->generateSalt());
+            $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
             $user->setLocale($this->getRequest()->get('locale'));
-            $user->setSalt($this->getRequest()->get('salt'));
 
             $em->persist($user);
             $em->flush();
@@ -119,9 +119,9 @@ class UsersController extends RestController implements ClassResourceInterface
             $em = $this->getDoctrine()->getManager();
 
             $user->setUsername($this->getRequest()->get('username'));
-            $user->setPassword($this->getRequest()->get('password'));
+            $user->setSalt($this->generateSalt());
+            $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
             $user->setLocale($this->getRequest()->get('locale'));
-            $user->setSalt($this->getRequest()->get('salt'));
 
             if (!$this->processUserRoles($user)) {
                 throw new RestException("Could not update dependencies!");
@@ -240,8 +240,14 @@ class UsersController extends RestController implements ClassResourceInterface
         if ($this->getRequest()->get('locale') == null) {
             throw new MissingArgumentException($this->entityName, 'locale');
         }
-        if ($this->getRequest()->get('salt') == null) {
-            throw new MissingArgumentException($this->entityName, 'salt');
-        }
+    }
+
+    private function generateSalt() {
+        return ''; //TODO implement
+    }
+
+    private function encodePassword($user, $password, $salt) {
+        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        return $encoder->encodePassword($password, $salt);
     }
 }

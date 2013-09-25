@@ -146,7 +146,6 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'salt' => 'salt',
                 'userRoles' => array(
                     array(
                         'role' => array(
@@ -167,9 +166,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('salt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -184,9 +181,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('salt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -259,7 +254,6 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'salt' => 'newsalt',
                 'userRoles' => array(
                     array(
                         'id' => 1,
@@ -282,9 +276,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('newsalt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -299,9 +291,7 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('newsalt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -318,7 +308,6 @@ class UsersControllerTest extends DatabaseTestCase
             '/security/api/users/1',
             array(
                 'username' => 'manager',
-                'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'userRoles' => array(
                     array(
@@ -340,6 +329,6 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertContains('salt', $response->message);
+        $this->assertContains('password', $response->message);
     }
 }
