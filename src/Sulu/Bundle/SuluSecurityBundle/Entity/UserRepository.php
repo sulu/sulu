@@ -33,9 +33,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         $dql = '
-            SELECT u, r, p
+            SELECT u, ur, r, p
             FROM SuluSecurityBundle:User u
-            LEFT JOIN u.roles r
+            LEFT JOIN u.userRoles ur
+            LEFT JOIN ur.role r
             LEFT JOIN r.permissions p
             WHERE u.username = :username';
 
