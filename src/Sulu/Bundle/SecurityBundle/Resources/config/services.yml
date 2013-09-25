@@ -1,4 +1,13 @@
 parameters:
+    permissions:
+        view: 64
+        add: 32
+        edit: 16
+        delete: 8
+        archive: 4
+        live: 2
+        security: 1
+
     sulu_security.admin.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin
     sulu_security.mask_converter.class: Sulu\Bundle\SecurityBundle\Permission\MaskConverter
     sulu_security.salt_generator.class: Sulu\Bundle\SecurityBundle\Permission\SaltGenerator
@@ -11,6 +20,7 @@ services:
 
     sulu_security.mask_converter:
         class: %sulu_security.mask_converter.class%
+        arguments: [%permissions%]
 
     sulu_security.salt_generator:
         class: %sulu_security.salt_generator.class%
