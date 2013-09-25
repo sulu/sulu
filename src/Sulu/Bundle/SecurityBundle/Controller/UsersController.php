@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\MissingArgumentException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
@@ -26,6 +27,7 @@ class UsersController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluSecurityBundle:User';
     protected $roleEntityName = 'SuluSecurityBundle:Role';
+    protected $contactEntityName = 'SuluContactBundle:Contact';
 
     /**
      * Lists all the users in the system
@@ -70,6 +72,7 @@ class UsersController extends RestController implements ClassResourceInterface
             $em = $this->getDoctrine()->getManager();
 
             $user = new User();
+            $user->setContact($this->getContact($this->getRequest()->get('contact')['id']));
             $user->setUsername($this->getRequest()->get('username'));
             $user->setSalt($this->generateSalt());
             $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
@@ -118,6 +121,7 @@ class UsersController extends RestController implements ClassResourceInterface
 
             $em = $this->getDoctrine()->getManager();
 
+            $user->setContact($this->getContact($this->getRequest()->get('contact')['id']));
             $user->setUsername($this->getRequest()->get('username'));
             $user->setSalt($this->generateSalt());
             $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
@@ -190,6 +194,13 @@ class UsersController extends RestController implements ClassResourceInterface
         return $this->processPut($user->getUserRoles(), $userRoles, $delete, $update, $add);
     }
 
+    /**
+     * Adds a new UserRole to the given user
+     * @param User $user
+     * @param $userRoleData
+     * @return bool
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     */
     protected function addUserRole(User $user, $userRoleData)
     {
         $em = $this->getDoctrine()->getManager();
@@ -213,6 +224,13 @@ class UsersController extends RestController implements ClassResourceInterface
         return true;
     }
 
+    /**
+     * Updates an existing UserRole with the given data
+     * @param UserRole $userRole
+     * @param $userRoleData
+     * @return bool
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     */
     private function updateUserRole(UserRole $userRole, $userRoleData)
     {
         $role = $this->getDoctrine()
@@ -229,6 +247,10 @@ class UsersController extends RestController implements ClassResourceInterface
         return true;
     }
 
+    /**
+     * Checks if all the arguments are given, and throws an exception if one is missing
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\MissingArgumentException
+     */
     private function checkArguments()
     {
         if ($this->getRequest()->get('username') == null) {
@@ -240,14 +262,50 @@ class UsersController extends RestController implements ClassResourceInterface
         if ($this->getRequest()->get('locale') == null) {
             throw new MissingArgumentException($this->entityName, 'locale');
         }
+        if ($this->getRequest()->get('contact') == null) {
+            throw new MissingArgumentException($this->entityName, 'contact');
+        }
     }
 
-    private function generateSalt() {
+    /**
+     * Returns the contact with the given id
+     * @param $id
+     * @return Contact
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     */
+    private function getContact($id)
+    {
+        $contact =  $this->getDoctrine()
+            ->getRepository($this->contactEntityName)
+            ->find($id);
+
+        if (!$contact) {
+            throw new EntityNotFoundException($this->contactEntityName, $id);
+        }
+
+        return $contact;
+    }
+
+    /**
+     * Generates a random salt for the password
+     * @return string
+     */
+    private function generateSalt()
+    {
         return ''; //TODO implement
     }
 
-    private function encodePassword($user, $password, $salt) {
+    /**
+     * Encodes the given password, for the given passwort, with he given salt and returns the result
+     * @param $user
+     * @param $password
+     * @param $salt
+     * @return mixed
+     */
+    private function encodePassword($user, $password, $salt)
+    {
         $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+
         return $encoder->encodePassword($password, $salt);
     }
 }

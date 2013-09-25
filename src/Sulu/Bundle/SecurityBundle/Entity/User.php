@@ -10,7 +10,6 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
 use Symfony\Bridge\Doctrine\Tests\Security\User\EntityUserProviderTest;
-use Symfony\Component\Security\Core\User\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
