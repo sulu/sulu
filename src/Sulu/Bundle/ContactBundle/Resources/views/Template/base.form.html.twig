@@ -190,12 +190,7 @@
                         </div>
                         <div class="grid-col-4">
                             <label>Country</label>
-                            <select class="form-element country-value"
-                                    data-mapper-property="country.id">
-                                {% for country in countries %}
-                                    <option value="{{ country.id }}">{{ country.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <div data-aura-component="select@husky" data-aura-data='{{ countries|json_encode() }}'></div>
                         </div>
                     </div>
                 </div>
