@@ -292,7 +292,7 @@ class UsersController extends RestController implements ClassResourceInterface
      */
     private function generateSalt()
     {
-        return ''; //TODO implement
+        return $this->get('sulu_security.salt_generator')->getRandomSalt();
     }
 
     /**
