@@ -20,7 +20,7 @@ define({
     initialize: function(app) {
 
         'use strict';
-        
+
         var sandbox = app.sandbox;
 
         app.components.addSource('sulusecurity', '/bundles/sulusecurity/js/components');

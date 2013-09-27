@@ -21,4 +21,9 @@ class TemplateController extends Controller
         $systems = array_keys($contexts);
         return $this->render('SuluSecurityBundle:Template:role.form.html.twig', array('systems' => $systems));
     }
+
+    public function permissionformAction()
+    {
+        return $this->render('SuluSecurityBundle:Template:permission.form.html.twig');
+    }
 }
