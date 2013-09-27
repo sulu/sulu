@@ -7,3 +7,8 @@ sulu_security.template.role.list:
      path: /template/role/form
      defaults:
          _controller: SuluSecurityBundle:Template:roleform
+
+sulu_security.template.permission.form:
+     path: /template/permission/form
+     defaults:
+         _controller: SuluSecurityBundle:Template:permissionform
