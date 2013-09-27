@@ -260,7 +260,6 @@ class RolesControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        var_dump($response);
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
