@@ -7,13 +7,14 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
         <field name="name" type="string" column="name" length="60"/>
         <field name="system" type="string" column="system" length="60"/>
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role" field="permissions"/>
-        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="role" field="userRoles"/>
+        <one-to-many field="permissions" target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role"/>
+        <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="role"/>
 
         <many-to-one field="changer" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
             <join-columns>
