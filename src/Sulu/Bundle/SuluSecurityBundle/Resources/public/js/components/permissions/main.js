@@ -7,10 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalstore'], function(RelationalStore) {
+define([
+    'mvc/relationalstore',
+    './models/user',
+    './models/role',
+    './models/permission'], function(RelationalStore, User, Role, Permission) {
 
     'use strict';
-
+    // TODO put inside return
     var sandbox,
         idDelete,
 
@@ -80,16 +84,7 @@ define(['mvc/relationalstore'], function(RelationalStore) {
 
             RelationalStore.reset();
 
-//            var role = new Role(data);
-//            role.save(null, {
-//                success: function() {
-//                    sandbox.emit('sulu.router.navigate', 'settings/roles');
-//                },
-//                error: function() {
-//                    sandbox.emit('sulu.dialog.error.show', 'An error occured during saving the role!');
-//                    sandbox.emit('husky.header.button-state', 'standard');
-//                }
-//            });
+            // TODO save
         },
 
         // deletes the role with the id thrown with the sulu.role.delete event
@@ -119,30 +114,29 @@ define(['mvc/relationalstore'], function(RelationalStore) {
         },
 
         renderForm: function() {
-//            var role = new Role();
-
-            var component = {
+            var user = new User(),
+                component = {
                 name: 'permissions/components/form@sulusecurity',
                 options: {
                     el: this.options.el
-//                    data: role.defaults()
                 }
             };
 
             if (!!this.options.id) {
-//                role.set({id: this.options.id});
-//                role.fetch({
-//                    success: function(model) {
-//                        component.options.data = model.toJSON();
+                user.set({id: this.options.id});
+                user.fetch({
+                    success: function(model) {
+                        component.options.data = model.toJSON();
 //                        component.options.data.permissions = convertPermissionsFromBinary(
 //                            model.get('permissions').toJSON() // add non-used contexts
 //                        );
-//                        sandbox.start([component]);
-//                    }
-//                });
-//            } else {
-                sandbox.start([component]);
+                        sandbox.start([component]);
+                    }
+                });
             }
+
+            // TODO error message
+
         }
     };
 });

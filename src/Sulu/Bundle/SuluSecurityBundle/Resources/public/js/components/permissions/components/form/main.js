@@ -18,11 +18,11 @@ define(['text!/security/template/permission/form'], function(Template) {
         view: true,
 
         initialize: function() {
-            //permissionData = this.options.data.permissions;
 
             this.initializeHeader();
             this.render();
-            this.initializeMatrix();
+            this.initializePasswordFields();
+            this.initializePermissions();
 
             this.bindDOMEvents();
             this.bindCustomEvents();
@@ -45,8 +45,25 @@ define(['text!/security/template/permission/form'], function(Template) {
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(Template, {data: this.options.data}));
         },
 
+        initializePasswordFields: function(){
+            this.sandbox.start([{
+                name: 'password-fields@husky',
+                options: {
+                    instanceName: "instance1",
+                    el: '#password-component'
+                }
+            }]);
+        },
+
+        initializePermissions: function(){
+
+            //TODO
+            
+
+        },
+
         bindDOMEvents: function() {
-            this.sandbox.dom.on(this.$el, 'change', this.changeSystem.bind(this), '#system');
+            //TODO
         },
 
         bindCustomEvents: function() {
