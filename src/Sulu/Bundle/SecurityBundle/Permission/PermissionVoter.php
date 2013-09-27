@@ -11,19 +11,16 @@
 namespace Sulu\Bundle\SecurityBundle\Permission;
 
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PermissionVoter implements VoterInterface
 {
-    /**
-     * The logged in user
-     * @var User
-     */
-    protected $user;
+    const USER_CLASS = 'Sulu\Bundle\SecurityBundle\Entity\User';
 
     /**
      * The permissions avaiable, defined by config
@@ -31,9 +28,9 @@ class PermissionVoter implements VoterInterface
      */
     protected $permissions;
 
-    public function __construct(SecurityContextInterface $securityContext, $permissions)
+    public function __construct($permissions)
     {
-        $this->user = $securityContext->getToken()->getUser();
+        $this->permissions = $permissions;
     }
 
     /**
@@ -44,7 +41,11 @@ class PermissionVoter implements VoterInterface
      */
     public function supportsAttribute($attribute)
     {
-        return strpos($attribute, 'permission.') === 0;
+        if (!is_array($attribute) || !isset($attribute['context']) || !isset($attribute['permission'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -55,9 +56,7 @@ class PermissionVoter implements VoterInterface
      */
     public function supportsClass($class)
     {
-        $userClass = get_class($this->user);
-
-        return $userClass === $class || is_subclass_of($class, $userClass);
+        return $class === self::USER_CLASS || is_subclass_of($class, self::USER_CLASS);
     }
 
     /**
@@ -73,7 +72,12 @@ class PermissionVoter implements VoterInterface
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        foreach ($this->user->getUserRoles() as $userRole) {
+        // if not our attribute or class, we can't decide
+        if (!$this->supportsClass(get_class($token->getUser())) || !$this->supportsAttribute($attributes)) {
+            return VoterInterface::ACCESS_ABSTAIN;
+        }
+
+        foreach ($token->getUser()->getUserRoles() as $userRole) {
             //check all given roles if they have the given attribute
             /** @var UserRole $userRole */
             foreach ($userRole->getRole()->getPermissions() as $permission) {
@@ -101,7 +105,7 @@ class PermissionVoter implements VoterInterface
 
         $hasPermission = $permission->getPermissions() & $this->permissions[$attributes['permission']];
 
-        $hasLocale = isset($attributes['locale']) && in_array($attributes['locale'], $userRole->getLocales());
+        $hasLocale = !isset($attributes['locale']) || in_array($attributes['locale'], $userRole->getLocales());
 
         return $hasContext && $hasPermission && $hasLocale;
     }
