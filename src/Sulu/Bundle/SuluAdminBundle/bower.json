@@ -14,6 +14,7 @@
     "dependencies": {
         "husky": "#develop",
         "backbone-relational": "0.8.*",
-        "parsleyjs": "*"
+        "parsleyjs": "*",
+        "globalize": "0.1.*"
     }
 }
