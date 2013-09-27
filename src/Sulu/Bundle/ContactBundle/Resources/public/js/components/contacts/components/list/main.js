@@ -9,11 +9,12 @@
 
 define([
     'text!/contact/template/contact/list',
-    'mvc/relationalstore',
-    'sulucontact/model/contact'   // FIXME: fix this
-], function(listTemplate, RelationalStore, Contact) {
+    'mvc/relationalstore'
+], function(listTemplate, RelationalStore) {
 
     'use strict';
+
+    var sandbox;
 
 
     return {
@@ -21,6 +22,7 @@ define([
         view: true,
 
         initialize: function() {
+            sandbox = this.sandbox;
             this.render();
         },
 
@@ -57,8 +59,7 @@ define([
                 name: 'datagrid@husky',
                 options: {
                     el: this.sandbox.dom.find('#people-list', this.$el),
-                    url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position'
-                        ,
+                    url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'
@@ -77,7 +78,7 @@ define([
 
             // navigate to edit contact
             this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.contacts.load', item);
+                this.sandbox.emit('sulu.contacts.contacts.load', item);
             }, this);
 
 
@@ -87,14 +88,8 @@ define([
 
             // optionsmenu clicked
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
-                if (event.type == "delete") {
-                    this.sandbox.emit('husky.dropdown.options.hide');
-
-                    // get selected ids and show dialog
-                    this.sandbox.on('husky.datagrid.items.selected', function(selectedIds) {
-                        this.initDialogBoxRemoveMultiple(selectedIds);
-                    }, this);
-                    this.sandbox.emit('husky.datagrid.items.get-selected');
+                if (event.type === "delete") {
+                    this.sandbox.emit('sulu.contacts.contacts.delete');
                 }
             },this);
 
@@ -102,65 +97,8 @@ define([
             this.sandbox.emit('husky.header.button-type', 'add');
 
             this.sandbox.on('husky.button.add.click', function() {
-                this.sandbox.emit('sulu.contacts.new');
+                this.sandbox.emit('sulu.contacts.contacts.new');
             }, this);
-
-
-
-
-        },
-
-        // fills dialogbox
-        initDialogBoxRemoveMultiple: function(ids) {
-
-            if (ids.length == 0) {
-                // no items selected
-                return;
-            }
-
-            // create dialog box
-            this.sandbox.start([{
-                name: 'dialog@husky',
-                options: {
-                    el: '#dialog',
-                    backdrop: true,
-                    width: '650px',
-                    data: {
-                        content: {
-                            title: "Be careful!",
-                            content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
-                        },
-                        footer: {
-                            buttonCancelText: "Don't do it",
-                            buttonSubmitText: "Do it, I understand"
-                        }
-                    }
-                }
-            }]);
-
-//            $('#dialog').off(); // FIXME: jquery
-
-
-            // cancel clicked - close dialog
-            this.sandbox.on('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-            }, this);
-
-            // delete clicked - delete contact
-            this.sandbox.on('husky.dialog.submit', function() {
-                ids.forEach(function(id) {
-                    var contact = new Contact({id: id});
-                    contact.destroy({
-                        success: function() {
-                            this.sandbox.emit('husky.datagrid.row.remove');
-                        }.bind(this)
-                    });
-                },this);
-                this.sandbox.emit('husky.dialog.hide');
-            }, this);
-
-
         }
-
     };
 });
