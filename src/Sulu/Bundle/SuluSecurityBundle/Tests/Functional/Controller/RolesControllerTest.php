@@ -66,9 +66,9 @@ class RolesControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -260,6 +260,7 @@ class RolesControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
+        var_dump($response);
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
