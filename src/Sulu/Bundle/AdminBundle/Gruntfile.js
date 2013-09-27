@@ -42,6 +42,12 @@ module.exports = function(grunt) {
                         expand: true,
                         flatten: true,
                         src: ['bower_components/parsleyjs/parsley.js'], dest: 'Resources/public/js/vendor/parsleyjs'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/globalize/lib/',
+                        src: ['**'],
+                        dest: 'Resources/public/js/vendor/globalize/'
                     }
                 ]
             }

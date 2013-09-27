@@ -16321,1992 +16321,7 @@ define('aura/ext/components', [],function() {
   };
 });
 
-define('bower_components/aura/lib/platform',[],function() {
-  // The bind method is used for callbacks.
-  //
-  // * (bind)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind]
-  // * (You don't need to use $.proxy)[http://www.aaron-powell.com/javascript/you-dont-need-jquery-proxy]
-  // * credits: taken from bind_even_never in this discussion: https://prototype.lighthouseapp.com/projects/8886/tickets/215-optimize-bind-bindaseventlistener#ticket-215-9
-  if (typeof Function.prototype.bind !== "function") {
-    Function.prototype.bind = function(context) {
-       var fn = this, args = Array.prototype.slice.call(arguments, 1);
-       return function(){
-          return fn.apply(context, Array.prototype.concat.apply(args, arguments));
-       };
-    };
-  }
-
-  // Returns true if an object is an array, false if it is not.
-  //
-  // * (isArray)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/isArray]
-  if (typeof Array.isArray !== "function") {
-    Array.isArray = function(vArg) {
-      return Object.prototype.toString.call(vArg) === "[object Array]";
-    };
-  }
-
-  // Creates a new object with the specified prototype object and properties.
-  //
-  // * (create)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/create]
-
-  if (!Object.create) {
-    Object.create = function (o) {
-      if (arguments.length > 1) {
-        throw new Error('Object.create implementation only accepts the first parameter.');
-      }
-      function F() {}
-      F.prototype = o;
-      return new F();
-    };
-  }
-  // Returns an array of a given object's own enumerable properties, in the same order as that provided by a for-in loop
-  // (the difference being that a for-in loop enumerates properties in the prototype chain as well).
-  //
-  // (keys)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/keys]
-  if (!Object.keys) {
-    Object.keys = (function () {
-      var ownProp = Object.prototype.hasOwnProperty,
-          hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
-          dontEnums = [
-            'toString',
-            'toLocaleString',
-            'valueOf',
-            'hasOwnProperty',
-            'isPrototypeOf',
-            'propertyIsEnumerable',
-            'constructor'
-          ],
-          dontEnumsLength = dontEnums.length;
-
-      return function (obj) {
-        if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) {
-          throw new TypeError('Object.keys called on non-object');
-        }
-
-        var result = [];
-
-        for (var prop in obj) {
-          if (ownProp.call(obj, prop)) {
-            result.push(prop);
-          }
-        }
-
-        if (hasDontEnumBug) {
-          for (var i=0; i < dontEnumsLength; i++) {
-            if (ownProp.call(obj, dontEnums[i])) {
-              result.push(dontEnums[i]);
-            }
-          }
-        }
-        return result;
-      };
-    })();
-  }
-
-
-});
-
-(function() {
-  if (window.jQuery) {
-    define('jquery', [], function () {
-      return window.jQuery;
-    });
-  } else {
-    require.config({
-      paths: {
-        jquery:     'bower_components/jquery/jquery'
-      },
-      shim: {
-        jquery:     { exports: '$' }
-      }
-    });
-  }
-
-  if (window._) {
-    define('underscore', [], function () {
-      return window._;
-    });
-  } else {
-    require.config({
-      paths: {
-        underscore: 'bower_components/underscore/underscore'
-      },
-      shim: {
-        underscore: { exports: '_' }
-      }
-    });
-  }
-
-  define('bower_components/aura/lib/base',['module', 'underscore', 'jquery', './platform'], function(module, _, $, platform) {
-
-    // Auto configure aura path... if not set yet...
-    if (!require.s.contexts._.config.paths.aura) {
-      require.config({ paths: { aura: module.id.replace(/base$/, '') }});
-    }
-
-    var base = {};
-
-    base.dom = {
-      find: function(selector, context) {
-        context = context || document;
-        return $(context).find(selector);
-      },
-      data: function(selector, attribute) {
-        return $(selector).data(attribute);
-      }
-    };
-
-    base.data = {
-      deferred: $.Deferred,
-      when: $.when
-    };
-
-    base.util = {
-      each: $.each,
-      extend: $.extend,
-      uniq: _.uniq,
-      _: _,
-      decamelize: function(camelCase, delimiter) {
-        delimiter = (delimiter === undefined) ? '_' : delimiter;
-        return camelCase.replace(/([A-Z])/g, delimiter + '$1').toLowerCase();
-      }
-    };
-
-    base.events = {
-      listen: function(context, events, selector, callback) {
-        return $(context).on(events, selector, callback);
-      },
-      bindAll: function() {
-        return _.bindAll.apply(this, arguments);
-      }
-    };
-
-    base.template = {
-      parse: _.template
-    };
-
-    return base;
-
-  });
-
-})();
-
-define('bower_components/aura/lib/logger',[], function() {
-  
-
-  var noop    = function() {},
-      console = window.console || {};
-
-  function Logger(name) {
-    this.name   = name;
-    this._log   = noop;
-    this._warn  = noop;
-    this._error = noop;
-    return this;
-  }
-
-  Logger.prototype.setName = function(name){
-    this.name = name;
-  };
-
-  Logger.prototype.enable = function() {
-    this._log   = (console.log   || noop);
-    this._warn  = (console.warn  || this._log);
-    this._error = (console.error || this._log);
-
-    if (Function.prototype.bind && typeof console === "object") {
-      var logFns = ["log", "warn", "error"];
-      for (var i = 0; i < logFns.length; i++) {
-        console[logFns[i]] = Function.prototype.call.bind(console[logFns[i]], console);
-      }
-    }
-
-    return this;
-  };
-
-  Logger.prototype.write = function(output, args){
-    var parameters = Array.prototype.slice.call(args);
-    parameters.unshift(this.name + ":");
-    output.apply(console, parameters);
-  };
-
-  Logger.prototype.log = function() {
-    this.write(this._log, arguments);
-  };
-
-  Logger.prototype.warn = function() {
-    this.write(this._warn, arguments);
-  };
-
-  Logger.prototype.error = function() {
-    this.write(this._error, arguments);
-  };
-
-  return Logger;
-});
-
-define('bower_components/aura/lib/aura.extensions',['./base', './logger'], function(base, Logger) {
-
-  var _ = base.util._,
-      slice = Array.prototype.slice,
-      deferred = base.data.deferred,
-      when     = base.data.when,
-      logger   = new Logger('Extensions').enable();
-
-  function ExtManager() {
-    this._extensions  = [];
-    this.initStatus   = deferred();
-    return this;
-  }
-
-  //---------------------------------------------------------------------------
-  // Public API
-  //---------------------------------------------------------------------------
-
-  ExtManager.prototype.add = function(ext) {
-    if (_.include(this._extensions, ext)) {
-      var msg =  ext.ref.toString() + " is already registered.";
-          msg += "Extensions can only be added once.";
-      throw new Error(msg);
-    }
-
-    if (this.initStarted) {
-      throw new Error("Init extensions already called");
-    }
-
-    this._extensions.push(ext);
-    return this;
-  };
-
-  ExtManager.prototype.onReady = function(fn) {
-    this.initStatus.then(fn);
-    return this;
-  };
-
-  ExtManager.prototype.onFailure = function(fn) {
-    this.initStatus.fail(fn);
-    return this;
-  };
-
-  ExtManager.prototype.init = function() {
-
-    if (this.initStarted) {
-      throw new Error("Init extensions already called");
-    }
-
-    this.initStarted = true;
-
-    var extensions    = _.compact(this._extensions.slice(0)),
-        initialized   = [],
-        initStatus    = this.initStatus;
-
-    // Enforce sequencial loading of extensions.
-    // The `initStatus` promise resolves to the
-    // actually resolved and loaded extensions.
-    (function _init(extDef) {
-      if (extDef) {
-        var ext = initExtension(extDef);
-        initialized.push(ext);
-        ext.done(function () { _init(extensions.shift()); });
-        ext.fail(function (err) {
-          if (!err) {
-            err = "Unknown error while loading an extension";
-          }
-          if (!(err instanceof Error)) {
-            err = new Error(err);
-          }
-          initStatus.reject(err);
-        });
-      } else if (extensions.length === 0) {
-        when.apply(undefined, initialized).done(function () {
-          initStatus.resolve(Array.prototype.slice.call(arguments));
-        });
-      }
-    })(extensions.shift());
-
-    return initStatus.promise();
-  };
-
-  //---------------------------------------------------------------------------
-  // Private API
-  //---------------------------------------------------------------------------
-
-  /*!
-   * Helper function that returns the first function found among its arguments.
-   * If no function if found, it return a noop (empty function).
-   *
-   * @return {[type]} [description]
-   */
-  function getFn() {
-    var funcs = slice.call(arguments), fn;
-    for (var f = 0, l = funcs.length; f < l; f++) {
-      fn = funcs[f];
-      if (typeof(fn) === 'function') { return fn; }
-    }
-    return function () {};
-  }
-
-  /*!
-   * If the value of the first argument is a function then invoke
-   * it with the rest of the args, otherwise, return it.
-   */
-  function getVal(val) {
-    if (typeof val === 'function') {
-      return val.apply(undefined, slice.call(arguments, 1));
-    } else {
-      return val;
-    }
-  }
-
-  /*!
-  * Actual extension loading.
-  *
-  * The sequence is:
-  *
-  * * resolves the extension reference
-  * * register and requires its dependencies if any
-  * * init the extension
-  *
-  * This method also returns a promise that allows
-  * to keep track of the app's loading sequence.
-  *
-  * If the extension provides a `afterAppStart` method,
-  * the promise will resolve to that function that
-  * will be called at the end of the app loading sequence.
-  *
-  * @param {String|Object|Function} extDef the reference and context of the extension
-  */
-
-  function initExtension(extDef) {
-    var dfd       = deferred(),
-        ref       = extDef.ref,
-        context   = extDef.context;
-
-    var req = requireExtension(ref, context);
-    req.fail(dfd.reject);
-    req.done(function (ext) {
-
-      // The extension did not return anything,
-      // but probably already did what it had to do.
-      if (!ext) { return dfd.resolve(); }
-
-      // Let's initialize it then...
-      // If ext is a function, call it
-      // Else If ext has a init method, call it
-      var init = when(getFn(ext, ext.initialize)(context));
-      init.done(function () { dfd.resolve(ext); });
-      init.fail(dfd.reject);
-    });
-    return dfd.promise();
-  }
-
-  /*!
-  * Extension resolution before actual loading.
-  * If `ext` is a String, it is considered as a reference
-  * to an AMD module that has to be loaded.
-  *
-  * This method returns a promise that resolves to the actual extension,
-  * With all its dependencies already required' too.
-  *
-  * @param {String|Object|Function} ext the reference of the extension
-  * @param {Object} context the thing this extension is supposed to extend
-  */
-
-  function requireExtension(ext, context) {
-    var dfd = deferred();
-
-    var resolve = function (ext) {
-      ext = getVal(ext, context);
-      if (ext && ext.require && ext.require.paths) {
-        var deps = Object.keys(ext.require.paths) || [];
-        require.config(ext.require);
-        require(deps, function() {
-          dfd.resolve(ext);
-        }, reject);
-      } else {
-        dfd.resolve(ext);
-      }
-    };
-
-    var reject = function (err) {
-      logger.error("Error loading ext:", ext, err);
-      dfd.reject(err);
-    };
-
-    if (typeof ext === 'string') {
-      require([ext], resolve, reject);
-    } else {
-      resolve(ext);
-    }
-
-    return dfd;
-  }
-
-  return ExtManager;
-});
-
-define('bower_components/aura/lib/aura',[
-  './base',
-  './aura.extensions',
-  './logger'
-  ], function(base, ExtManager, Logger) {
-
-  var _ = base.util._,
-      noop     = function() {},
-      freeze   = Object.freeze || noop;
-
-  /**
-  * Aura constructor and main entry point
-  *
-  * Every instance of Aura defines an Aura application.
-  * An Aura application is in charge of loading the various
-  * extensions that will apply to it (defined either
-  * programmatically or by way of configuration).
-  *
-  * An Aura application is the glue between all the extensions
-  * and components inside its instance.
-  *
-  * Internally an Aura application wraps 4 important objects:
-  *
-  * - `config` is the object passed as the first param of the apps constructor
-  * - `core`   is a container where the extensions add new features
-  * - `sandbox` is an object that will be used as a prototype, to create fresh sandboxes to the components
-  * - `extensions` An instance of the ExtensionManager. It contains all the extensions that will be loaded in the app.
-  *
-  * Extensions are here to provide features that will be used by the components...
-  * They are meant to extend the apps' core & sandbox.
-  * They also have access to the apps's config.
-  *
-  * Example of a creation of an Aura Application:
-  *
-  *     var app = aura({ key: 'value' });
-  *     app.use('ext1').use('ext2');
-  *     app.components.addSource('supercomponents', 'https://my.extern.al/components/store');
-  *     app.start('body');
-  *
-  * @class Aura
-  * @param {Object} [config] Main App config.
-  * @method constructor
-  */
-  function Aura(config) {
-
-    if (!(this instanceof Aura)) {
-      return new Aura(config);
-    }
-
-    var extManager = new ExtManager(),
-        app = this;
-
-    /**
-     * The App's internal unique reference.
-     *
-     * @property {String} ref
-     */
-    app.ref = _.uniqueId('aura_');
-
-    /**
-     * The App's config object
-     *
-     * @property {Object} config
-     */
-    app.config = config = config || {};
-    app.config.sources = app.config.sources || { "default" : "./aura_components" };
-
-
-    /*!
-     * App Sandboxes
-     */
-
-    var appSandboxes = {};
-    var baseSandbox = Object.create(base);
-
-    /**
-     * Namespace for sanboxes related methods.
-     *
-     * @type {Object}
-     */
-    app.sandboxes = {};
-
-    /**
-     * Creates a brand new sandbox, using the App's `sandbox` object as a prototype.
-     *
-     * @method sandboxes.create
-     * @param   {String} [ref]      the Sandbox unique ref
-     * @param   {Object} [options]  an object to that directly extends the Sandbox
-     * @return  {Sandbox}
-     */
-    app.sandboxes.create = function (ref, options) {
-
-      // Making shure we have a unique ref
-      ref = ref || _.uniqueId('sandbox-');
-      if (appSandboxes[ref]) {
-        throw new Error("Sandbox with ref " + ref + " already exists.");
-      }
-
-      // Create a brand new sandbox based on the baseSandbox
-      var sandbox = Object.create(baseSandbox);
-
-      // Give it a ref
-      sandbox.ref = ref || _.uniqueId('sandbox-');
-
-      // Attach a Logger
-      sandbox.logger = new Logger(sandbox.ref);
-
-      // Register it in the app's sandboxes registry
-      appSandboxes[sandbox.ref] = sandbox;
-
-      var debug = config.debug;
-      if(debug === true || (debug.enable && (debug.components.length === 0 || debug.components.indexOf(ref) !== -1))){
-        sandbox.logger.enable();
-      }
-
-      // Extend if we have some options
-      _.extend(sandbox, options || {});
-
-      return sandbox;
-    };
-
-    /**
-     * Get a sandbox by reference.
-     *
-     * @method sandboxes.get
-     * @param  {String} ref  the Sandbox ref to retreive
-     * @return {Sandbox}
-     */
-    app.sandboxes.get = function(ref) {
-      return appSandboxes[ref];
-    };
-
-    /**
-     * Tells the app to load the given extension.
-     *
-     * Aura extensions are loaded in the app during init.
-     * they are responsible for :
-     *
-     * - resolving & loading external dependencies via requirejs
-     * - they have direct access to the app's internals
-     * - they are here to add new features to the app... that are made available through the sandboxes to the components.
-     *
-     * This method can only be called before the App is actually started.
-     * Note that the App is started when its `start` method is called.
-     *
-     * @method use
-     * @param  {String | Object | Function} ref the reference of the extension
-     * @return {Aura} the Aura app object
-     * @chainable
-     */
-    app.use = function(ref) {
-      extManager.add({ ref: ref, context: app });
-      return app;
-    };
-
-    /**
-     * Namespace for components related methods.
-     *
-     * @type {Object}
-     */
-    app.components = {};
-
-    /**
-     * Adds a new source for components.
-     * A Component source is an endpoint (basically a URL)
-     * that is the root of a component repository.
-     *
-     * @method  components.addSource
-     * @param {String} name    the name of the source.
-     * @param {String} baseUrl the base url for those components.
-     */
-    app.components.addSource = function(name, baseUrl) {
-      if (config.sources[name]) {
-        throw new Error("Components source '" + name + "' is already registered");
-      }
-      config.sources[name] = baseUrl;
-      return app;
-    };
-
-    /**
-     * `core` is just a namespace used by the extensions to add features to the App.
-     *
-     * @property {Object} core
-     */
-    app.core = Object.create(base);
-
-    /**
-     * Application start.
-     *
-     * Bootstraps the extensions loading process.
-     * All the extensions are resolved and loaded when `start` id called.
-     * Start returns a promise that shall fail if any of the
-     * extensions fails to load.
-     *
-     * The app's responsibility is to load its extensions,
-     * make sure they are properly loaded when the app starts
-     * and eventually make sure they are properly cleaned up when the app stops
-     *
-     * @method start
-     * @param  {Object | String | Array} options start options.
-     * @return {Promise} a promise that resolves when the app is started.
-     */
-    app.start = function(options) {
-
-      if (app.started) {
-        app.logger.error("Aura already started!");
-        return extManager.initStatus;
-      }
-
-      app.logger.log("Starting Aura");
-
-      var startOptions = options || {};
-
-      // Support for different types of options (string, DOM Selector or Object)
-      if (typeof options === 'string') {
-        startOptions = { components: app.core.dom.find(options) };
-      } else if (Array.isArray(options)) {
-        startOptions = { components: options };
-      } else if (options && options.widgets && !options.components) {
-        startOptions.components = options.widgets;
-      } else if (startOptions.components === undefined) {
-        startOptions.components = app.core.dom.find(app.config.components || 'body');
-      }
-
-      extManager.onReady(function(exts) {
-        // Then we call all the `afterAppStart` provided by the extensions
-        base.util.each(exts, function(i, ext) {
-          if (ext && typeof(ext.afterAppStart) === 'function') {
-            ext.afterAppStart(app);
-          }
-        });
-      });
-
-      // If there was an error in the boot sequence we
-      // reject every body and perform a cleanup
-      // TODO: Provide a better error message to the user.
-      extManager.onFailure(function() {
-        app.logger.error("Error initializing app:", app.config.name, arguments);
-        app.stop();
-      });
-
-      app.startOptions = startOptions;
-      app.started = true;
-
-      // Finally... we return a promise that allows
-      // to keep track of the loading process...
-      return extManager.init();
-    };
-
-    /**
-     * Stops the application and unregister its loaded dependencies.
-     *
-     * @method stop
-     * @return {void}
-     */
-    app.stop = function() {
-      // TODO: We ne to actually do some cleanup here.
-      app.started = false;
-    };
-
-    /**
-     * Sandboxes are a way to implement the facade pattern on top of the features provided by `core`.
-     *
-     * The `sandbox` property of an Aura App is just an Object that will be used
-     * as a blueprint, once the app is started, to create new instances
-     * of sandboxed environments for the Components.
-     * @property {Object} sandbox
-     */
-    app.sandbox = baseSandbox;
-
-    /**
-     * App Logger
-     *
-     * @property {Logger} logger
-     */
-    app.logger     = new Logger(app.ref);
-
-    /**
-     * @class Sandbox
-     */
-
-    /**
-     * Stop method for a Sandbox.
-     * If no arguments provided, the sandbox itself and all its children are stopped.
-     * If a DOM Selector is provided, all matching children will be stopped.
-     *
-     * @param  {undefined|String} DOM Selector
-     */
-    app.sandbox.stop = function(selector) {
-      if (selector) {
-        app.core.dom.find(selector, this.el).each(function(i, el) {
-          var ref = app.core.dom.find(el).data('__sandbox_ref__');
-          stopSandbox(ref);
-        });
-      } else {
-        stopSandbox(this);
-      }
-    };
-
-    function stopSandbox(sandbox) {
-      if (typeof sandbox === 'string') {
-        sandbox = app.sandboxes.get(sandbox);
-      }
-      if (sandbox) {
-        var event = ['aura', 'sandbox', 'stop'].join(app.config.mediator.delimiter);
-        _.invoke(sandbox._children, 'stop');
-        app.core.mediator.emit(event, sandbox);
-        if (sandbox._component) {
-          sandbox._component.invokeWithCallbacks('remove');
-        }
-        sandbox.stopped  = true;
-        sandbox.el && app.core.dom.find(sandbox.el).remove();
-        appSandboxes[sandbox.ref] = null;
-        delete appSandboxes[sandbox.ref]; // do we need to actually call `delete` ?
-        return sandbox;
-      }
-    }
-
-    // Register core extensions : debug, mediator and components.
-    config.debug = config.debug || {};
-    var debug = config.debug;
-    if (debug.enable) {
-      if(debug.components){
-        debug.components = debug.components.split(' ');
-      }else{
-        debug.components = [];
-      }
-      app.logger.enable();
-      app.use('aura/ext/debug');
-    }
-
-    app.use('aura/ext/mediator');
-    app.use('aura/ext/components');
-
-    return app;
-  }
-
-  return Aura;
-});
-
-define('husky',[
-    'bower_components/aura/lib/aura'
-], function(Aura) {
-
-    
-
-    // husky - subclass of aurajs
-    function Husky(config) {
-
-        if (!(this instanceof Husky)) {
-            return new Husky(config);
-        }
-
-        Aura.call(this, config);  // call super constructor.
-
-        var app = this;
-
-        app.components.addSource('husky', './husky_components');
-
-        app.use('./husky_extensions/jquery');
-        app.use('./husky_extensions/backbone');
-        app.use('./husky_extensions/collection');
-        app.use('./husky_extensions/model');
-        app.use('./husky_extensions/husky-validation');
-        app.use('./husky_extensions/util');
-        app.use('./husky_extensions/template');
-        app.use('./husky_extensions/globalize');
-
-    }
-
-    // subclass extends superclass
-    Husky.prototype = Object.create(Aura.prototype);
-    Husky.prototype.constructor = Husky;
-
-    return Husky;
-});
-
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('form/util',[], function() {
-
-    var ignoredKeys = [
-        'form',
-        'validation'
-    ];
-
-    return {
-        debugEnabled: false,
-
-        // get form fields
-        getFields: function(element) {
-            return $(element).find('input:not([data-form="false"], [type="submit"], [type="button"]), textarea:not([data-form="false"]), select:not([data-form="false"]), *[data-form="true"]');
-        },
-
-        /**
-         * Parses the data of a element
-         * Inspired by aurajs <http://aurajs.com>
-         */
-        parseData: function(el, namespace, defaults) {
-            var name,
-                $el = $(el);
-
-            return this.buildOptions($el.data(), namespace, '', defaults);
-        },
-
-        /**
-         * Build options for given data
-         * Inspired by aurajs <http://aurajs.com>
-         *
-         * TODO Example
-         */
-        buildOptions: function(data, namespace, subNamespace, defaults) {
-            if (!subNamespace)subNamespace = '';
-            if (!defaults)defaults = {};
-
-            var options = $.extend({}, defaults, {}),
-                fullNamespace = namespace + this.ucFirst(subNamespace);
-
-            $.each(data, function(key, value) {
-                var regExp = new RegExp("^" + fullNamespace);
-                if (regExp.test(key)) {
-                    if ($.inArray(key, ignoredKeys) == -1) {
-                        if (key !== fullNamespace) {
-                            key = key.replace(regExp, "");
-                        } else {
-                            key = key.replace(new RegExp("^" + namespace), "");
-                        }
-                        if (key !== '') {
-                            key = this.lcFirst(key);
-                            options[key] = value;
-                        }
-                    }
-                }
-            }.bind(this));
-
-            return options;
-        },
-
-        debug: function(p1, p2, p3) {
-            if (!!this.debugEnabled) {
-                if (!!p1) {
-                    if (!!p2) {
-                        if (!!p3) {
-                            console.log("Husky Validation:", p1, p2, p3)
-                        } else {
-                            console.log("Husky Validation:", p1, p2)
-                        }
-                    } else {
-                        console.log("Husky Validation:", p1)
-                    }
-                } else {
-                    console.log("Husky Validation")
-                }
-            }
-        },
-
-        /**
-         *  JavaScript equivalent of PHP’s ucfirst
-         *  inspired by http://kevin.vanzonneveld.net
-         */
-        ucFirst: function(str) {
-            str += '';
-            var f = str.charAt(0).toUpperCase();
-            return f + str.substr(1);
-        },
-
-        lcFirst: function(str) {
-            return str.charAt(0).toLowerCase() + str.slice(1);
-        },
-
-        startsWith: function(str, starts) {
-            return str.indexOf(starts) == 0;
-        }
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('form/element',['form/util'], function(Util) {
-
-    return function(el, options) {
-        var defaults = {
-                type: 'string',
-                validationTrigger: 'focusout',                     // default validate trigger
-                validationAddClasses: true,                        // add error and success classes
-                validationSuccessClass: 'husky-validate-success',  // success class
-                validationErrorClass: 'husky-validate-error',      // error class
-                validation: true                                   // validation on/off
-            },
-            ignoredOptions = [
-                'validation',
-                'validationTrigger',
-                'validationAddClasses',
-                'validationSuccessClass',
-                'validationErrorClass',
-                'validationSubmitEvent'
-            ],
-            valid,
-            validators = {},
-            type,
-            lastValue = null;
-
-        var that = {
-            initialize: function() {
-                this.$el = $(el);
-
-                // set data element
-                this.$el.data('element', this);
-
-                this.options = $.extend({}, defaults, options);
-
-                // init validation if necessary
-                if (!!this.options.validation) {
-                    that.initValidation.call(this);
-                }
-            },
-
-            initValidation: function() {
-                that.bindValidationDomEvents.call(this);
-
-                that.initValidators.call(this);
-                that.initType.call(this);
-            },
-
-            bindValidationDomEvents: function() {
-                // build trigger
-                var triggers = ( !this.options.validationTrigger ? '' : this.options.validationTrigger );
-                // break if no trigger is set
-                if (triggers === '' || triggers === 'none') return;
-
-                // always bind change event, for better UX when a select is invalid
-                if (this.$el.is('select')) {
-                    triggers += new RegExp('change', 'i').test(triggers) ? '' : ' change';
-                }
-
-                // trim triggers to bind them correctly with .on()
-                triggers = triggers.replace(/^\s+/g, '').replace(/\s+$/g, '');
-
-                // bind event
-                this.$el.bind(triggers, this.validate.bind(this));
-            },
-
-            initValidators: function() {
-                // create validators for each of the constraints
-                $.each(this.options, function(key, val) {
-                    // val not false
-                    // key is not ignored
-                    // and key starts with validation
-                    if (!!val && $.inArray(key, ignoredOptions) == -1 && Util.startsWith(key, 'validation')) {
-                        // filter validation prefix
-                        var name = Util.lcFirst(key.replace('validation', ''));
-                        require(['validator/' + name], function(Validator) {
-                            var options = Util.buildOptions(this.options, 'validation', name);
-                            validators[name] = new Validator(this.$el, options);
-                            Util.debug('Element Validator', key, options);
-                        }.bind(this));
-                    }
-                }.bind(this));
-            },
-
-            initType: function() {
-                // if type exists
-                if (!!this.options.type) {
-                    require(['type/' + this.options.type], function(Type) {
-                        var options = Util.buildOptions(this.options, 'type');
-                        type = new Type(this.$el, options);
-                        Util.debug('Element Type', type, options);
-                    }.bind(this));
-                }
-            },
-
-            hasConstraints: function() {
-                return Object.keys(validators).length > 0 || (type != null && type.needsValidation());
-            },
-
-            needsValidation: function() {
-                return lastValue !== this.$el.val();
-            },
-
-            reset: function() {
-                this.$el.removeClass(this.options.validationSuccessClass);
-                this.$el.removeClass(this.options.validationErrorClass);
-            },
-
-            setValid: function(state) {
-                valid = state;
-                if (!!this.options.validationAddClasses) {
-                    that.reset.call(this);
-
-                    if (!!state) {
-                        this.$el.addClass(this.options.validationSuccessClass);
-                    } else {
-                        this.$el.addClass(this.options.validationErrorClass);
-                    }
-                }
-            }
-        };
-
-        var result = {
-            validate: function(force) {
-                // only if value changed or force is set
-                if (force || that.needsValidation.call(this)) {
-                    if (!that.hasConstraints.call(this)) {
-                        // delete state
-                        that.reset.call(this);
-                        return true;
-                    }
-
-                    var result = true;
-                    // check each validator
-                    $.each(validators, function(key, validator) {
-                        if (!validator.validate()) {
-                            result = false;
-                            // TODO Messages
-                        }
-                    });
-
-                    // check type
-                    if (type != null && !type.validate()) {
-                        result = false;
-                    }
-
-                    that.setValid.call(this, result);
-                }
-                return this.isValid();
-            },
-
-            isValid: function() {
-                return valid;
-            },
-
-            updateConstraint: function(name, options) {
-                if ($.inArray(name, Object.keys(validators)) > -1) {
-                    validators[name].updateConstraint(options);
-                    this.validate();
-                } else {
-                    throw "No constraint with name: " + name;
-                }
-            },
-
-            deleteConstraint: function(name) {
-                if ($.inArray(name, Object.keys(validators)) > -1) {
-                    delete validators[name];
-                    this.validate(true);
-                } else {
-                    throw "No constraint with name: " + name;
-                }
-            },
-
-            addConstraint: function(name, options) {
-                if ($.inArray(name, Object.keys(validators)) == -1) {
-                    require(['validator/' + name], function(Validator) {
-                        validators[name] = new Validator(this.$el, options);
-                    }.bind(this));
-                } else {
-                    throw "Constraint with name: " + name + " already exists";
-                }
-            },
-
-            setValue: function(value) {
-                type.setValue(value);
-            },
-
-            getValue: function(data) {
-                return type.getValue(data);
-            }
-        };
-
-        that.initialize.call(result);
-        return result;
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('form/validation',[
-    'form/util'
-], function(Util) {
-
-    return function(form) {
-        var valid;
-
-        // private functions
-        var that = {
-            initialize: function() {
-                that.bindValidationDomEvents.call(this);
-
-                Util.debug('INIT Validation');
-            },
-
-            bindValidationDomEvents: function() {
-                if (!!form.options.validationSubmitEvent) {
-                    // avoid submit if not valid
-                    form.$el.on('submit', function() {
-                        return form.validation.validate();
-                    }.bind(this));
-                }
-            },
-
-            setValid: function(state) {
-                valid = state;
-            }
-        };
-
-        // define validation interface
-        var result = {
-            validate: function(force) {
-                var result = true;
-                // validate each element
-                $.each(form.elements, function(key, element) {
-                    if (!element.validate(force)) {
-                        result = false;
-                    }
-                });
-
-                that.setValid.call(this, result);
-                Util.debug('Validation', !!result ? 'success' : 'error');
-                return result;
-            },
-
-            isValid: function() {
-                return valid;
-            },
-
-            updateConstraint: function(selector, name, options) {
-                var $element = $(selector);
-                if (!!$element.data('element')) {
-                    $(selector).data('element').updateConstraint(name, options);
-                } else {
-                    throw 'No validation element';
-                }
-            },
-
-            deleteConstraint: function(selector, name) {
-                var $element = $(selector);
-                if (!!$element.data('element')) {
-                    $element.data('element').deleteConstraint(name);
-                } else {
-                    throw 'No validation element';
-                }
-            },
-
-            addConstraint: function(selector, name, options) {
-                var $element = $(selector);
-                if (!!$element.data('element')) {
-                    $element.data('element').addConstraint(name, options);
-                } else {
-                    // create a new one
-                    var element = form.addField(selector);
-                    // add constraint
-                    element.addConstraint(name, options);
-                    form.elements.push(element);
-                }
-            }
-        };
-
-        that.initialize.call(result);
-        return result;
-    }
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('form/mapper',[
-    'form/util'
-], function(Util) {
-
-    return function(form) {
-        var valid;
-
-        // private functions
-        var that = {
-            initialize: function() {
-                Util.debug('INIT Mapper');
-            },
-
-            processData: function(el) {
-                // get attributes
-                var $el = $(el),
-                    type = $el.data('type'),
-                    element = $el.data('element');
-
-                // if type == array process children, else get value
-                if (type !== 'array') {
-                    return element.getValue();
-                } else {
-                    var result = [];
-                    $.each($el.children(), function(key1, value1) {
-                        result.push(form.mapper.getData($(value1)));
-                    });
-                    return result;
-                }
-            }
-        };
-
-        // define mapper interface
-        var result = {
-            setData: function(data, $el) {
-                if (!$el)$el = form.$el;
-                $.each(data, function(key, value) {
-                    // search field with mapper property
-                    var selector = '*[data-mapper-property="' + key + '"]',
-                        $element = $el.find(selector),
-                        element = $element.data('element');
-
-                    if ($element.length > 0) {
-                        // if field is an array
-                        if ($.isArray(value)) {
-                            // remember first child remove the rest
-                            var $child = $element.children().first();
-
-                            // remove fields
-                            $.each(Util.getFields($element), function(key, value) {
-                                form.removeField(value);
-                            }.bind(this));
-                            $element.children().remove();
-
-                            // foreach array elements: create a new dom element, call setData recursively
-                            $.each(value, function(key1, value1) {
-                                var $newElement = $child.clone();
-                                $element.append($newElement);
-                                var $newFields = Util.getFields($newElement);
-
-                                $.each($newFields, function(key, value) {
-                                    form.addField($(value));
-                                }.bind(this));
-
-                                // FIXME wait for type (async load)
-                                setTimeout(function() {
-                                    form.mapper.setData(value1, $newElement);
-                                }, 100);
-                            });
-                        } else {
-                            // if element is not in form add it
-                            if (!element) {
-                                element = form.addField($element);
-                                // FIXME wait for type (async load)
-                                setTimeout(function() {
-                                    element.setValue(value);
-                                }, 100);
-                            } else {
-                                element.setValue(value);
-                            }
-                        }
-                    }
-                }.bind(this));
-            },
-
-            getData: function($el) {
-                if (!$el)$el = form.$el;
-                var data = {};
-
-                // search field with mapper property
-                var selector = '*[data-mapper-property]',
-                    $elements = $el.find(selector);
-
-                // do it while elements exists
-                while ($elements.length > 0) {
-                    // get first
-                    var $el = $($elements.get(0)),
-                        property = $el.data('mapper-property');
-
-                    if (property.match(/.*\..*/)) {
-                        var parts = property.split('.');
-                        data[parts[0]] = {};
-                        data[parts[0]][parts[1]] = that.processData.call(this, $el);
-                    } else {
-                        // process it
-                        data[property] = that.processData.call(this, $el);
-                    }
-
-                    // remove element itselve
-                    $elements = $elements.not($el);
-                    // remove child elements
-                    $elements = $elements.not($el.find(selector))
-                }
-                return data;
-            }
-        };
-
-        that.initialize.call(result);
-        return result;
-    }
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-require.config({
-    paths: {
-        'form': 'js/form',
-        'form/mapper': 'js/mapper',
-        'form/validation': 'js/validation',
-        'form/element': 'js/element',
-        'form/util': 'js/util',
-
-        'type/default': 'js/types/default',
-        'type/string': 'js/types/string',
-        'type/date': 'js/types/date',
-        'type/decimal': 'js/types/decimal',
-        'type/email': 'js/types/email',
-        'type/url': 'js/types/url',
-        'type/label': 'js/types/label',
-
-        'validator/default': 'js/validators/default',
-        'validator/min': 'js/validators/min',
-        'validator/max': 'js/validators/max',
-        'validator/minLength': 'js/validators/min-length',
-        'validator/maxLength': 'js/validators/max-length',
-        'validator/required': 'js/validators/required'
-    }
-});
-
-define('form',[
-    'form/element',
-    'form/validation',
-    'form/mapper',
-    'form/util'
-], function(Element, Validation, Mapper, Util) {
-
-    return function(el, options) {
-        var defaults = {
-                //language: 'de',               // language
-                debug: false,                   // debug on/off
-                validation: true,               // validation on/off
-                validationTrigger: 'focusout',  // default validate trigger
-                validationAddClasses: true,     // add error and success classes
-                validationSubmitEvent: true,    // avoid submit if not valid
-                mapper: true                    // mapper on/off
-            },
-            valid;
-
-        // private functions
-        var that = {
-            initialize: function() {
-                this.$el = $(el);
-                this.options = $.extend(defaults, this.$el.data(), options);
-
-                // set culture
-                //require(['cultures/globalize.culture.' + this.options.language], function() {
-                //    Globalize.culture(this.options.language);
-                //}.bind(this));
-
-                // enable / disable debug
-                Util.debugEnabled = this.options.debug;
-
-                that.initFields.call(this);
-
-                if (!!this.options.validation) {
-                    this.validation = new Validation(this);
-                }
-
-                if (!!this.options.mapper) {
-                    this.mapper = new Mapper(this);
-                }
-
-                this.$el.data('form-object', this);
-                Util.debug('Form', this);
-                Util.debug('Elements', this.elements);
-            },
-
-            // initialize field objects
-            initFields: function() {
-                $.each(Util.getFields(this.$el), function(key, value) {
-                    this.addField.call(this, value);
-                }.bind(this));
-            },
-
-            bindValidationDomEvents: function() {
-                if (!!this.options.validationSubmitEvent) {
-                    // avoid submit if not valid
-                    this.$el.on('submit', function() {
-                        return this.validation.validate();
-                    }.bind(this));
-                }
-            }
-        };
-
-        var result = {
-            elements: [],
-            options: {},
-            validation: false,
-            mapper: false,
-
-            addField: function(selector) {
-                var $element = $(selector),
-                    options = Util.parseData($element, '', this.options),
-                    element = new Element($element, options);
-
-                this.elements.push(element);
-                Util.debug('Element created', options);
-                return element;
-            },
-
-            removeField: function(selector) {
-                var $element = $(selector),
-                    element = $element.data('element');
-
-                this.elements.splice(this.elements.indexOf(element), 1);
-            }
-        };
-
-        that.initialize.call(result);
-        return result;
-    }
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/default',[], function() {
-
-    return function($el, defaults, options, name, typeInterface) {
-
-        var that = {
-                initialize: function() {
-                    this.$el = $el;
-                    this.options = $.extend({}, defaults, options);
-
-                    if (!!this.initializeSub) this.initializeSub();
-                }
-            },
-            defaultInterface = {
-                name: name,
-
-                needsValidation: function() {
-                    return true;
-                },
-
-                updateConstraint: function(options) {
-                    this.options = $.extend({}, this.options, options);
-                },
-
-                // mapper functionality set value into input
-                setValue: function(value) {
-                    this.$el.val(this.getViewData.call(this, value));
-                },
-
-                // mapper functionality get value from input
-                getValue: function() {
-                    return this.getModelData.call(this, this.$el.val());
-                },
-
-                // internationalization of view data: default none
-                getViewData: function(value) {
-                    return value;
-                },
-
-                // internationalization of model data: default none
-                getModelData: function(value) {
-                    return value;
-                }
-            },
-            result = $.extend({}, defaultInterface, typeInterface);
-
-        that.initialize.call(result);
-        return result;
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/string',[
-    'type/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-        };
-
-        var typeInterface = {
-            needsValidation: function() {
-                return false;
-            },
-
-            validate: function() {
-                return true;
-            }
-        };
-
-        return new Default($el, defaults, options, 'string', typeInterface);
-    };
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/date',[
-    'type/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            format: "d"     // possibilities f, F, t, T, d, D
-        };
-
-        var getDate = function(value) {
-                return new Date(value);
-            },
-            toMysqlFormat = function(date) {
-                return date.toISOString();
-            };
-
-        var subType = {
-            validate: function() {
-                var val = this.$el.val();
-                if (val == "")return true;
-
-                var date = Globalize.parseDate(val, this.options.format);
-                return date != null;
-            },
-
-            // internationalization of view data: Globalize library
-            getViewData: function(value) {
-                return Globalize.format(getDate(value), this.options.format);
-            },
-
-            // internationalization of model data: Globalize library
-            getModelData: function(value) {
-                var date = Globalize.parseDate(this.$el.val(), this.options.format);
-                return toMysqlFormat(date);
-            }
-        };
-
-        return new Default($el, defaults, options, 'date', subType);
-    };
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/decimal',[
-    'type/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            regExp: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/
-        };
-
-        var typeInterface = {
-            initializeSub:function(){
-                // TODO internationalization
-            },
-
-            validate: function() {
-                var val = this.$el.val();
-                if (val == "")return true;
-
-                return this.options.regExp.test(this.$el.val());
-            }
-        };
-
-        return new Default($el, defaults, options, 'decimal', typeInterface);
-    };
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/email',[
-    'type/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            regExp: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))){2,6}$/i
-        };
-
-        var typeInterface = {
-            validate: function() {
-                var val = this.$el.val();
-                if (val == "")return true;
-
-                return this.options.regExp.test(this.$el.val());
-            }
-        };
-
-        return new Default($el, defaults, options, 'email', typeInterface);
-    };
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/url',[
-    'type/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            regExp: /^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
-        };
-
-        var typeInterface = {
-            validate: function() {
-                var val = this.$el.val();
-                if (val == "")return true;
-
-                if (this.data['url-strict'] !== 'true') {
-                    val = new RegExp('(https?|s?ftp|git)', 'i').test(val) ? val : 'http://' + val;
-                }
-                return this.options.regExp.test(val);
-            }
-        };
-
-        return new Default($el, defaults, options, 'email', typeInterface);
-    };
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('type/label',[
-    'type/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            id: 'id',
-            label: 'name'
-        };
-
-        var typeInterface = {
-            setValue: function(value) {
-                if (!!value[this.options.label]) {
-                    this.$el.text(value[this.options.label])
-                }
-
-                if (!!value[this.options.id]) {
-                    this.$el.data(this.options.id, value[this.options.id])
-                }
-            },
-
-            getValue: function() {
-                var result = {};
-                result[this.options.id] = this.$el.data(this.options.id);
-                result[this.options.label] = this.$el.text();
-                return result
-            },
-
-            needsValidation: function() {
-                return false;
-            },
-
-            validate: function() {
-                return true;
-            }
-        };
-
-        return new Default($el, defaults, options, 'label', typeInterface);
-    };
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('validator/default',[], function() {
-
-    return function($el, defaults, options, name) {
-
-        return {
-            name: name,
-
-            initialize: function() {
-                this.$el = $el;
-                this.data = $.extend(defaults, this.$el.data(), options);
-                this.updateData();
-
-                if (!!this.initializeSub) this.initializeSub();
-            },
-
-            updateConstraint: function(options) {
-                this.data = $.extend({}, this.data, options);
-                this.updateData();
-            },
-
-            updateData: function() {
-                $.each(this.data, function(key, value) {
-                    this.$el.data(key, value);
-                }.bind(this));
-            }
-        };
-
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('validator/min',[
-    'validator/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            min: 0
-        };
-
-        var result = $.extend({}, new Default($el, defaults, options, 'min'), {
-            validate: function() {
-                var val = this.$el.val();
-                return Number(val) >= this.data.min;
-            }
-        });
-
-        result.initialize();
-        return result;
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('validator/max',[
-    'validator/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            max: 999
-        };
-
-        var result = $.extend({}, new Default($el, defaults, options, 'max'), {
-            validate: function() {
-                var val = this.$el.val();
-                return Number(val) <= this.data.max;
-            }
-        });
-
-        result.initialize();
-        return result;
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('validator/minLength',[
-    'validator/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            minLength: 0
-        };
-
-        var result = $.extend({}, new Default($el, defaults, options, 'min-length'), {
-            validate: function() {
-                var val = this.$el.val();
-                return val.length >= this.data.minLength;
-            }
-        });
-
-        result.initialize();
-        return result;
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('validator/maxLength',[
-    'validator/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {
-            maxLength: 999
-        };
-
-        var result = $.extend({}, new Default($el, defaults, options, 'max-length'), {
-            validate: function() {
-                var val = this.$el.val();
-                return val.length <= this.data.maxLength;
-            }
-        });
-
-        result.initialize();
-        return result;
-    };
-
-});
-
-/*
- * This file is part of the Husky Validation.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- */
-
-define('validator/required',[
-    'validator/default'
-], function(Default) {
-
-    return function($el, options) {
-        var defaults = {};
-
-        var result = $.extend({}, new Default($el, defaults, options, 'required'), {
-            validate: function() {
-                if (!!this.data.required) {
-                    var val = this.$el.val();
-                    // for checkboxes and select multiples. Check there is at least one required value
-                    if ('object' === typeof val) {
-                        for (var i in val) {
-                            if (this.validate(val[i])) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-                    // parsleyJS notNull && notBlank
-                    return val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
-                }
-                return true;
-            }
-        });
-
-        result.initialize();
-        return result;
-    };
-
-});
-
+define("form/util",[],function(){var e=["form","validation"];return{debugEnabled:!1,getFields:function(e){return $(e).find('input:not([data-form="false"], [type="submit"], [type="button"]), textarea:not([data-form="false"]), select:not([data-form="false"]), *[data-form="true"]')},parseData:function(e,t,n){var r=$(e);return this.buildOptions(r.data(),t,"",n)},buildOptions:function(t,n,r,i){r||(r=""),i||(i={});var s=$.extend({},i,{}),o=n+this.ucFirst(r);return $.each(t,function(t,r){var i=new RegExp("^"+o);i.test(t)&&$.inArray(t,e)===-1&&(t!==o?t=t.replace(i,""):t=t.replace(new RegExp("^"+n),""),t!==""&&(t=this.lcFirst(t),s[t]=r))}.bind(this)),s},debug:function(e,t,n){!this.debugEnabled||(e?t?n?console.log("Husky Validation:",e,t,n):console.log("Husky Validation:",e,t):console.log("Husky Validation:",e):console.log("Husky Validation"))},ucFirst:function(e){e+="";var t=e.charAt(0).toUpperCase();return t+e.substr(1)},lcFirst:function(e){return e.charAt(0).toLowerCase()+e.slice(1)},startsWith:function(e,t){return e.indexOf(t)===0},print:function(e,t){t||(t=1);var n="",r="&nbsp;&nbsp;&nbsp;&nbsp;",i,s,o="",u=0;while(u<t)o+=r,u++;for(i in e)e.hasOwnProperty(i)&&(s=e[i],typeof s=="string"?this.isNumeric(s)?n+=o+i+": "+s+"; </br>":(s.length>7&&(s=s.substring(0,6)+" ..."),n+=o+i+": '"+s+"'; </br>"):n+=o+i+": { </br>"+o+r+print(s,t++)+"}");return n},isNumeric:function(e){return e.match(/-?\d+(.\d+)?/)}}}),define("form/element",["form/util"],function(e){return function(t,n,r){var i={type:"string",validationTrigger:"focusout",validationAddClasses:!0,validationAddClassesParent:!0,validationSuccessClass:"husky-validate-success",validationErrorClass:"husky-validate-error",validationClass:"husky-validate",validation:!0},s=["validation","validationTrigger","validationAddClasses","validationAddClassesParent","validationClass","validationSuccessClass","validationErrorClass","validationSubmitEvent"],o,u={},a,f=null,l=null,c={initialize:function(){l=$.Deferred(),this.requireCounter=0,this.initialized=l.promise(),this.$el=$(t),this.$el.data("element",this),this.options=$.extend({},i,r),!this.options.validationAddClasses||this.$el.addClass(this.options.validationClass),!this.options.validation||c.initValidation.call(this)},resolveInitialization:function(){this.requireCounter--,this.requireCounter===0&&l.resolve()},initValidation:function(){c.bindValidationDomEvents.call(this),c.initValidators.call(this),c.initType.call(this)},bindValidationDomEvents:function(){var e=this.options.validationTrigger?this.options.validationTrigger:"";if(e===""||e==="none")return;this.$el.is("select")&&(e+=(new RegExp("change","i")).test(e)?"":" change"),e=e.replace(/^\s+/g,"").replace(/\s+$/g,""),this.$el.bind(e,this.validate.bind(this))},initValidators:function(){$.each(this.options,function(t,r){if(!!r&&$.inArray(t,s)===-1&&e.startsWith(t,"validation")){var i=e.lcFirst(t.replace("validation",""));this.requireCounter++,require(["validator/"+i],function(r){var s=e.buildOptions(this.options,"validation",i);u[i]=new r(this.$el,n,s),e.debug("Element Validator",t,s),c.resolveInitialization.call(this)}.bind(this))}}.bind(this))},initType:function(){!this.options.type||(this.requireCounter++,require(["type/"+this.options.type],function(t){var n=e.buildOptions(this.options,"type");a=new t(this.$el,n),e.debug("Element Type",a,n),c.resolveInitialization.call(this)}.bind(this)))},hasConstraints:function(){return Object.keys(u).length>0||a!==null&&a.needsValidation()},needsValidation:function(){return f!==this.$el.val()},reset:function(){var e=this.$el;!this.options.validationAddClassesParent||(e=e.parent()),e.removeClass(this.options.validationSuccessClass),e.removeClass(this.options.validationErrorClass)},setValid:function(e){o=e;if(!!this.options.validationAddClasses){c.reset.call(this);var t=this.$el;!this.options.validationAddClassesParent||(t=t.parent()),e?t.addClass(this.options.validationSuccessClass):t.addClass(this.options.validationErrorClass)}}},h={validate:function(e){if(e||c.needsValidation.call(this)){if(!c.hasConstraints.call(this))return c.reset.call(this),!0;var t=!0;$.each(u,function(e,n){n.validate()||(t=!1)}),a!==null&&!a.validate()&&(t=!1),c.setValid.call(this,t)}return this.isValid()},isValid:function(){return o},updateConstraint:function(e,t){if(!($.inArray(e,Object.keys(u))>-1))throw"No constraint with name: "+e;u[e].updateConstraint(t),this.validate()},deleteConstraint:function(e){if(!($.inArray(e,Object.keys(u))>-1))throw"No constraint with name: "+e;delete u[e],this.validate(!0)},addConstraint:function(e,t){if($.inArray(e,Object.keys(u))!==-1)throw"Constraint with name: "+e+" already exists";require(["validator/"+e],function(r){u[e]=new r(this.$el,n,t)}.bind(this))},setValue:function(e){a.setValue(e)},getValue:function(e){return a.getValue(e)}};return c.initialize.call(h),h}}),define("form/validation",["form/util"],function(e){return function(t){var n,r={initialize:function(){r.bindValidationDomEvents.call(this),e.debug("INIT Validation")},bindValidationDomEvents:function(){!t.options.validationSubmitEvent||t.$el.on("submit",function(){return t.validation.validate()}.bind(this))},setValid:function(e){n=e}},i={validate:function(n){var i=!0;return $.each(t.elements,function(e,t){t.validate(n)||(i=!1)}),r.setValid.call(this,i),e.debug("Validation",i?"success":"error"),i},isValid:function(){return n},updateConstraint:function(e,t,n){var r=$(e);if(!r.data("element"))throw"No validation element";$(e).data("element").updateConstraint(t,n)},deleteConstraint:function(e,t){var n=$(e);if(!n.data("element"))throw"No validation element";n.data("element").deleteConstraint(t)},addConstraint:function(e,n,r){var i=$(e),s;i.data("element")?i.data("element").addConstraint(n,r):(s=t.addField(e),s.addConstraint(n,r),t.elements.push(s))}};return r.initialize.call(i),i}}),define("form/mapper",["form/util"],function(e){return function(t){var n={initialize:function(){e.debug("INIT Mapper")},processData:function(e){var n=$(e),r=n.data("type"),i=n.data("element"),s;return r!=="array"?i.getValue():(s=[],$.each(n.children(),function(e,n){s.push(t.mapper.getData($(n)))}),s)},setArrayData:function(n,r){var i=r.children().first(),s;$.each(e.getFields(r),function(e,n){t.removeField(n)}.bind(this)),r.children().remove(),$.each(n,function(n,o){var u=i.clone(),a=e.getFields(u),f=$.Deferred(),l=a.length;r.append(u),f.then(function(){t.mapper.setData(o,u)}),$.each(a,function(e,n){s=t.addField($(n)),s.initialized.then(function(){l--,l===0&&f.resolve()})}.bind(this))})}},r={setData:function(e,r){r||(r=t.$el),$.each(e,function(e,i){var s='*[data-mapper-property="'+e+'"]',o=r.find(s),u=o.data("element");o.length>0&&($.isArray(i)?n.setArrayData.call(this,i,o):u?u.setValue(i):(u=t.addField(o),u.initialized.then(function(){u.setValue(i)})))}.bind(this))},getData:function(e){e||(e=t.$el);var r={},i,s,o,u="*[data-mapper-property]",a=e.find(u);while(a.length>0)i=$(a.get(0)),s=i.data("mapper-property"),s.match(/.*\..*/)?(o=s.split("."),r[o[0]]={},r[o[0]][o[1]]=n.processData.call(this,i)):r[s]=n.processData.call(this,i),a=a.not(i),a=a.not(i.find(u));return r}};return n.initialize.call(r),r}}),require.config({paths:{form:"js/form","form/mapper":"js/mapper","form/validation":"js/validation","form/element":"js/element","form/util":"js/util","type/default":"js/types/default","type/string":"js/types/string","type/date":"js/types/date","type/decimal":"js/types/decimal","type/email":"js/types/email","type/url":"js/types/url","type/label":"js/types/label","validator/default":"js/validators/default","validator/min":"js/validators/min","validator/max":"js/validators/max","validator/minLength":"js/validators/min-length","validator/maxLength":"js/validators/max-length","validator/required":"js/validators/required","validator/unique":"js/validators/unique"}}),define("form",["form/element","form/validation","form/mapper","form/util"],function(e,t,n,r){return function(i,s){var o={debug:!1,validation:!0,validationTrigger:"focusout",validationAddClassesParent:!0,validationAddClasses:!0,validationSubmitEvent:!0,mapper:!0},u={initialize:function(){this.$el=$(i),this.options=$.extend(o,this.$el.data(),s),r.debugEnabled=this.options.debug,u.initFields.call(this),!this.options.validation||(this.validation=new t(this)),!this.options.mapper||(this.mapper=new n(this)),this.$el.data("form-object",this),r.debug("Form",this),r.debug("Elements",this.elements)},initFields:function(){$.each(r.getFields(this.$el),function(e,t){this.addField.call(this,t)}.bind(this))},bindValidationDomEvents:function(){!this.options.validationSubmitEvent||this.$el.on("submit",function(){return this.validation.validate()}.bind(this))}},a={elements:[],options:{},validation:!1,mapper:!1,addField:function(t){var n=$(t),i=r.parseData(n,"",this.options),s=new e(n,this,i);return this.elements.push(s),r.debug("Element created",i),s},removeField:function(e){var t=$(e),n=t.data("element");this.elements.splice(this.elements.indexOf(n),1)}};return u.initialize.call(a),a}}),define("type/default",[],function(){return function(e,t,n,r,i){var s={initialize:function(){this.$el=e,this.options=$.extend({},t,n),!this.initializeSub||this.initializeSub()}},o={name:r,needsValidation:function(){return!0},updateConstraint:function(e){$.extend(this.options,e)},setValue:function(e){this.$el.val(this.getViewData.call(this,e))},getValue:function(){return this.getModelData.call(this,this.$el.val())},getViewData:function(e){return e},getModelData:function(e){return e}},u=$.extend({},o,i);return s.initialize.call(u),u}}),define("type/string",["type/default"],function(e){return function(t,n){var r={},i={needsValidation:function(){return!1},validate:function(){return!0}};return new e(t,r,n,"string",i)}}),define("type/date",["type/default"],function(e){return function(t,n){var r={format:"d"},i=function(e){return console.log(e,new Date(e)),new Date(e)},s={validate:function(){var e=this.$el.val(),t;return e===""?!0:(t=Globalize.parseDate(e,this.options.format),t!==null)},getViewData:function(e){return Globalize.format(i(e),this.options.format)},getModelData:function(e){if(e!==""){var t=Globalize.parseDate(e,this.options.format);return t.toISOString()}return e}};return new e(t,r,n,"date",s)}}),define("type/decimal",["type/default"],function(e){return function(t,n){var r={regExp:/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/},i={initializeSub:function(){},validate:function(){var e=this.$el.val();return e===""?!0:this.options.regExp.test(this.$el.val())}};return new e(t,r,n,"decimal",i)}}),define("type/email",["type/default"],function(e){return function(t,n){var r={regExp:/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))){2,6}$/i},i={validate:function(){var e=this.$el.val();return e===""?!0:this.options.regExp.test(this.$el.val())}};return new e(t,r,n,"email",i)}}),define("type/url",["type/default"],function(e){return function(t,n){var r={regExp:/^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i},i={validate:function(){var e=this.$el.val();return e===""?!0:(this.options["url-strict"]!=="true"&&(e=(new RegExp("(https?|s?ftp|git)","i")).test(e)?e:"http://"+e),this.options.regExp.test(e))}};return new e(t,r,n,"email",i)}}),define("type/label",["type/default"],function(e){return function(t,n){var r={id:"id",label:"name"},i={setValue:function(e){!e[this.options.label]||this.$el.text(e[this.options.label]),!e[this.options.id]||this.$el.data(this.options.id,e[this.options.id])},getValue:function(){var e={};return e[this.options.id]=this.$el.data(this.options.id),e[this.options.label]=this.$el.text(),e},needsValidation:function(){return!1},validate:function(){return!0}};return new e(t,r,n,"label",i)}}),define("validator/default",[],function(){return function(e,t,n,r,i){return{name:i,initialize:function(){this.$el=e,this.data=$.extend(n,this.$el.data(),r),this.updateData(),!this.initializeSub||this.initializeSub()},updateConstraint:function(e){$.extend(this.data,e),this.updateData()},updateData:function(){$.each(this.data,function(e,t){this.$el.data(e,t)}.bind(this))}}}}),define("validator/min",["validator/default"],function(e){return function(t,n,r){var i={min:0},s=$.extend(new e(t,n,i,r,"min"),{validate:function(){var e=this.$el.val();return Number(e)>=this.data.min}});return s.initialize(),s}}),define("validator/max",["validator/default"],function(e){return function(t,n,r){var i={max:999},s=$.extend(new e(t,n,i,r,"max"),{validate:function(){var e=this.$el.val();return Number(e)<=this.data.max}});return s.initialize(),s}}),define("validator/minLength",["validator/default"],function(e){return function(t,n,r){var i={minLength:0},s=$.extend(new e(t,n,i,r,"min-length"),{validate:function(){var e=this.$el.val();return e.length>=this.data.minLength}});return s.initialize(),s}}),define("validator/maxLength",["validator/default"],function(e){return function(t,n,r){var i={maxLength:999},s=$.extend(new e(t,n,i,r,"max-length"),{validate:function(){var e=this.$el.val();return e.length<=this.data.maxLength}});return s.initialize(),s}}),define("validator/required",["validator/default"],function(e){return function(t,n,r){var i={},s=$.extend(new e(t,n,i,r,"required"),{validate:function(e){if(!!this.data.required){var t=e||this.$el.val(),n;if("object"==typeof t){for(n in t)if(this.validate(t[n]))return!0;return!1}return t.length>0&&""!==t.replace(/^\s+/g,"").replace(/\s+$/g,"")}return!0}});return s.initialize(),s}}),define("validator/unique",["validator/default"],function(e){return function(t,n,r){var i={validationUnique:null},s=$.extend({},new e(t,n,i,r,"unique"),{validate:function(){var e=$(t).val(),r=t.data("validation-unique"),i=0;return $.each(n.elements,function(t,n){var s=n.options.validationUnique,o=n.getValue();return r===s&&e===o&&i++,i<=1}),i<=1}});return s.initialize(),s}});
 define("husky-validation", function(){});
 
 /*!
@@ -19898,7 +17913,813 @@ Globalize.culture = function( cultureSelector ) {
 
 define("globalize_lib", function(){});
 
+define('bower_components/aura/lib/platform',[],function() {
+  // The bind method is used for callbacks.
+  //
+  // * (bind)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind]
+  // * (You don't need to use $.proxy)[http://www.aaron-powell.com/javascript/you-dont-need-jquery-proxy]
+  // * credits: taken from bind_even_never in this discussion: https://prototype.lighthouseapp.com/projects/8886/tickets/215-optimize-bind-bindaseventlistener#ticket-215-9
+  if (typeof Function.prototype.bind !== "function") {
+    Function.prototype.bind = function(context) {
+       var fn = this, args = Array.prototype.slice.call(arguments, 1);
+       return function(){
+          return fn.apply(context, Array.prototype.concat.apply(args, arguments));
+       };
+    };
+  }
+
+  // Returns true if an object is an array, false if it is not.
+  //
+  // * (isArray)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/isArray]
+  if (typeof Array.isArray !== "function") {
+    Array.isArray = function(vArg) {
+      return Object.prototype.toString.call(vArg) === "[object Array]";
+    };
+  }
+
+  // Creates a new object with the specified prototype object and properties.
+  //
+  // * (create)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/create]
+
+  if (!Object.create) {
+    Object.create = function (o) {
+      if (arguments.length > 1) {
+        throw new Error('Object.create implementation only accepts the first parameter.');
+      }
+      function F() {}
+      F.prototype = o;
+      return new F();
+    };
+  }
+  // Returns an array of a given object's own enumerable properties, in the same order as that provided by a for-in loop
+  // (the difference being that a for-in loop enumerates properties in the prototype chain as well).
+  //
+  // (keys)[https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/keys]
+  if (!Object.keys) {
+    Object.keys = (function () {
+      var ownProp = Object.prototype.hasOwnProperty,
+          hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+          dontEnums = [
+            'toString',
+            'toLocaleString',
+            'valueOf',
+            'hasOwnProperty',
+            'isPrototypeOf',
+            'propertyIsEnumerable',
+            'constructor'
+          ],
+          dontEnumsLength = dontEnums.length;
+
+      return function (obj) {
+        if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) {
+          throw new TypeError('Object.keys called on non-object');
+        }
+
+        var result = [];
+
+        for (var prop in obj) {
+          if (ownProp.call(obj, prop)) {
+            result.push(prop);
+          }
+        }
+
+        if (hasDontEnumBug) {
+          for (var i=0; i < dontEnumsLength; i++) {
+            if (ownProp.call(obj, dontEnums[i])) {
+              result.push(dontEnums[i]);
+            }
+          }
+        }
+        return result;
+      };
+    })();
+  }
+
+
+});
+
+(function() {
+  if (window.jQuery) {
+    define('jquery', [], function () {
+      return window.jQuery;
+    });
+  } else {
+    require.config({
+      paths: {
+        jquery:     'bower_components/jquery/jquery'
+      },
+      shim: {
+        jquery:     { exports: '$' }
+      }
+    });
+  }
+
+  if (window._) {
+    define('underscore', [], function () {
+      return window._;
+    });
+  } else {
+    require.config({
+      paths: {
+        underscore: 'bower_components/underscore/underscore'
+      },
+      shim: {
+        underscore: { exports: '_' }
+      }
+    });
+  }
+
+  define('bower_components/aura/lib/base',['module', 'underscore', 'jquery', './platform'], function(module, _, $, platform) {
+
+    // Auto configure aura path... if not set yet...
+    if (!require.s.contexts._.config.paths.aura) {
+      require.config({ paths: { aura: module.id.replace(/base$/, '') }});
+    }
+
+    var base = {};
+
+    base.dom = {
+      find: function(selector, context) {
+        context = context || document;
+        return $(context).find(selector);
+      },
+      data: function(selector, attribute) {
+        return $(selector).data(attribute);
+      }
+    };
+
+    base.data = {
+      deferred: $.Deferred,
+      when: $.when
+    };
+
+    base.util = {
+      each: $.each,
+      extend: $.extend,
+      uniq: _.uniq,
+      _: _,
+      decamelize: function(camelCase, delimiter) {
+        delimiter = (delimiter === undefined) ? '_' : delimiter;
+        return camelCase.replace(/([A-Z])/g, delimiter + '$1').toLowerCase();
+      }
+    };
+
+    base.events = {
+      listen: function(context, events, selector, callback) {
+        return $(context).on(events, selector, callback);
+      },
+      bindAll: function() {
+        return _.bindAll.apply(this, arguments);
+      }
+    };
+
+    base.template = {
+      parse: _.template
+    };
+
+    return base;
+
+  });
+
+})();
+
+define('bower_components/aura/lib/logger',[], function() {
+  
+
+  var noop    = function() {},
+      console = window.console || {};
+
+  function Logger(name) {
+    this.name   = name;
+    this._log   = noop;
+    this._warn  = noop;
+    this._error = noop;
+    return this;
+  }
+
+  Logger.prototype.setName = function(name){
+    this.name = name;
+  };
+
+  Logger.prototype.enable = function() {
+    this._log   = (console.log   || noop);
+    this._warn  = (console.warn  || this._log);
+    this._error = (console.error || this._log);
+
+    if (Function.prototype.bind && typeof console === "object") {
+      var logFns = ["log", "warn", "error"];
+      for (var i = 0; i < logFns.length; i++) {
+        console[logFns[i]] = Function.prototype.call.bind(console[logFns[i]], console);
+      }
+    }
+
+    return this;
+  };
+
+  Logger.prototype.write = function(output, args){
+    var parameters = Array.prototype.slice.call(args);
+    parameters.unshift(this.name + ":");
+    output.apply(console, parameters);
+  };
+
+  Logger.prototype.log = function() {
+    this.write(this._log, arguments);
+  };
+
+  Logger.prototype.warn = function() {
+    this.write(this._warn, arguments);
+  };
+
+  Logger.prototype.error = function() {
+    this.write(this._error, arguments);
+  };
+
+  return Logger;
+});
+
+define('bower_components/aura/lib/aura.extensions',['./base', './logger'], function(base, Logger) {
+
+  var _ = base.util._,
+      slice = Array.prototype.slice,
+      deferred = base.data.deferred,
+      when     = base.data.when,
+      logger   = new Logger('Extensions').enable();
+
+  function ExtManager() {
+    this._extensions  = [];
+    this.initStatus   = deferred();
+    return this;
+  }
+
+  //---------------------------------------------------------------------------
+  // Public API
+  //---------------------------------------------------------------------------
+
+  ExtManager.prototype.add = function(ext) {
+    if (_.include(this._extensions, ext)) {
+      var msg =  ext.ref.toString() + " is already registered.";
+          msg += "Extensions can only be added once.";
+      throw new Error(msg);
+    }
+
+    if (this.initStarted) {
+      throw new Error("Init extensions already called");
+    }
+
+    this._extensions.push(ext);
+    return this;
+  };
+
+  ExtManager.prototype.onReady = function(fn) {
+    this.initStatus.then(fn);
+    return this;
+  };
+
+  ExtManager.prototype.onFailure = function(fn) {
+    this.initStatus.fail(fn);
+    return this;
+  };
+
+  ExtManager.prototype.init = function() {
+
+    if (this.initStarted) {
+      throw new Error("Init extensions already called");
+    }
+
+    this.initStarted = true;
+
+    var extensions    = _.compact(this._extensions.slice(0)),
+        initialized   = [],
+        initStatus    = this.initStatus;
+
+    // Enforce sequencial loading of extensions.
+    // The `initStatus` promise resolves to the
+    // actually resolved and loaded extensions.
+    (function _init(extDef) {
+      if (extDef) {
+        var ext = initExtension(extDef);
+        initialized.push(ext);
+        ext.done(function () { _init(extensions.shift()); });
+        ext.fail(function (err) {
+          if (!err) {
+            err = "Unknown error while loading an extension";
+          }
+          if (!(err instanceof Error)) {
+            err = new Error(err);
+          }
+          initStatus.reject(err);
+        });
+      } else if (extensions.length === 0) {
+        when.apply(undefined, initialized).done(function () {
+          initStatus.resolve(Array.prototype.slice.call(arguments));
+        });
+      }
+    })(extensions.shift());
+
+    return initStatus.promise();
+  };
+
+  //---------------------------------------------------------------------------
+  // Private API
+  //---------------------------------------------------------------------------
+
+  /*!
+   * Helper function that returns the first function found among its arguments.
+   * If no function if found, it return a noop (empty function).
+   *
+   * @return {[type]} [description]
+   */
+  function getFn() {
+    var funcs = slice.call(arguments), fn;
+    for (var f = 0, l = funcs.length; f < l; f++) {
+      fn = funcs[f];
+      if (typeof(fn) === 'function') { return fn; }
+    }
+    return function () {};
+  }
+
+  /*!
+   * If the value of the first argument is a function then invoke
+   * it with the rest of the args, otherwise, return it.
+   */
+  function getVal(val) {
+    if (typeof val === 'function') {
+      return val.apply(undefined, slice.call(arguments, 1));
+    } else {
+      return val;
+    }
+  }
+
+  /*!
+  * Actual extension loading.
+  *
+  * The sequence is:
+  *
+  * * resolves the extension reference
+  * * register and requires its dependencies if any
+  * * init the extension
+  *
+  * This method also returns a promise that allows
+  * to keep track of the app's loading sequence.
+  *
+  * If the extension provides a `afterAppStart` method,
+  * the promise will resolve to that function that
+  * will be called at the end of the app loading sequence.
+  *
+  * @param {String|Object|Function} extDef the reference and context of the extension
+  */
+
+  function initExtension(extDef) {
+    var dfd       = deferred(),
+        ref       = extDef.ref,
+        context   = extDef.context;
+
+    var req = requireExtension(ref, context);
+    req.fail(dfd.reject);
+    req.done(function (ext) {
+
+      // The extension did not return anything,
+      // but probably already did what it had to do.
+      if (!ext) { return dfd.resolve(); }
+
+      // Let's initialize it then...
+      // If ext is a function, call it
+      // Else If ext has a init method, call it
+      var init = when(getFn(ext, ext.initialize)(context));
+      init.done(function () { dfd.resolve(ext); });
+      init.fail(dfd.reject);
+    });
+    return dfd.promise();
+  }
+
+  /*!
+  * Extension resolution before actual loading.
+  * If `ext` is a String, it is considered as a reference
+  * to an AMD module that has to be loaded.
+  *
+  * This method returns a promise that resolves to the actual extension,
+  * With all its dependencies already required' too.
+  *
+  * @param {String|Object|Function} ext the reference of the extension
+  * @param {Object} context the thing this extension is supposed to extend
+  */
+
+  function requireExtension(ext, context) {
+    var dfd = deferred();
+
+    var resolve = function (ext) {
+      ext = getVal(ext, context);
+      if (ext && ext.require && ext.require.paths) {
+        var deps = Object.keys(ext.require.paths) || [];
+        require.config(ext.require);
+        require(deps, function() {
+          dfd.resolve(ext);
+        }, reject);
+      } else {
+        dfd.resolve(ext);
+      }
+    };
+
+    var reject = function (err) {
+      logger.error("Error loading ext:", ext, err);
+      dfd.reject(err);
+    };
+
+    if (typeof ext === 'string') {
+      require([ext], resolve, reject);
+    } else {
+      resolve(ext);
+    }
+
+    return dfd;
+  }
+
+  return ExtManager;
+});
+
+define('bower_components/aura/lib/aura',[
+  './base',
+  './aura.extensions',
+  './logger'
+  ], function(base, ExtManager, Logger) {
+
+  var _ = base.util._,
+      noop     = function() {},
+      freeze   = Object.freeze || noop;
+
+  /**
+  * Aura constructor and main entry point
+  *
+  * Every instance of Aura defines an Aura application.
+  * An Aura application is in charge of loading the various
+  * extensions that will apply to it (defined either
+  * programmatically or by way of configuration).
+  *
+  * An Aura application is the glue between all the extensions
+  * and components inside its instance.
+  *
+  * Internally an Aura application wraps 4 important objects:
+  *
+  * - `config` is the object passed as the first param of the apps constructor
+  * - `core`   is a container where the extensions add new features
+  * - `sandbox` is an object that will be used as a prototype, to create fresh sandboxes to the components
+  * - `extensions` An instance of the ExtensionManager. It contains all the extensions that will be loaded in the app.
+  *
+  * Extensions are here to provide features that will be used by the components...
+  * They are meant to extend the apps' core & sandbox.
+  * They also have access to the apps's config.
+  *
+  * Example of a creation of an Aura Application:
+  *
+  *     var app = aura({ key: 'value' });
+  *     app.use('ext1').use('ext2');
+  *     app.components.addSource('supercomponents', 'https://my.extern.al/components/store');
+  *     app.start('body');
+  *
+  * @class Aura
+  * @param {Object} [config] Main App config.
+  * @method constructor
+  */
+  function Aura(config) {
+
+    if (!(this instanceof Aura)) {
+      return new Aura(config);
+    }
+
+    var extManager = new ExtManager(),
+        app = this;
+
+    /**
+     * The App's internal unique reference.
+     *
+     * @property {String} ref
+     */
+    app.ref = _.uniqueId('aura_');
+
+    /**
+     * The App's config object
+     *
+     * @property {Object} config
+     */
+    app.config = config = config || {};
+    app.config.sources = app.config.sources || { "default" : "./aura_components" };
+
+
+    /*!
+     * App Sandboxes
+     */
+
+    var appSandboxes = {};
+    var baseSandbox = Object.create(base);
+
+    /**
+     * Namespace for sanboxes related methods.
+     *
+     * @type {Object}
+     */
+    app.sandboxes = {};
+
+    /**
+     * Creates a brand new sandbox, using the App's `sandbox` object as a prototype.
+     *
+     * @method sandboxes.create
+     * @param   {String} [ref]      the Sandbox unique ref
+     * @param   {Object} [options]  an object to that directly extends the Sandbox
+     * @return  {Sandbox}
+     */
+    app.sandboxes.create = function (ref, options) {
+
+      // Making shure we have a unique ref
+      ref = ref || _.uniqueId('sandbox-');
+      if (appSandboxes[ref]) {
+        throw new Error("Sandbox with ref " + ref + " already exists.");
+      }
+
+      // Create a brand new sandbox based on the baseSandbox
+      var sandbox = Object.create(baseSandbox);
+
+      // Give it a ref
+      sandbox.ref = ref || _.uniqueId('sandbox-');
+
+      // Attach a Logger
+      sandbox.logger = new Logger(sandbox.ref);
+
+      // Register it in the app's sandboxes registry
+      appSandboxes[sandbox.ref] = sandbox;
+
+      var debug = config.debug;
+      if(debug === true || (debug.enable && (debug.components.length === 0 || debug.components.indexOf(ref) !== -1))){
+        sandbox.logger.enable();
+      }
+
+      // Extend if we have some options
+      _.extend(sandbox, options || {});
+
+      return sandbox;
+    };
+
+    /**
+     * Get a sandbox by reference.
+     *
+     * @method sandboxes.get
+     * @param  {String} ref  the Sandbox ref to retreive
+     * @return {Sandbox}
+     */
+    app.sandboxes.get = function(ref) {
+      return appSandboxes[ref];
+    };
+
+    /**
+     * Tells the app to load the given extension.
+     *
+     * Aura extensions are loaded in the app during init.
+     * they are responsible for :
+     *
+     * - resolving & loading external dependencies via requirejs
+     * - they have direct access to the app's internals
+     * - they are here to add new features to the app... that are made available through the sandboxes to the components.
+     *
+     * This method can only be called before the App is actually started.
+     * Note that the App is started when its `start` method is called.
+     *
+     * @method use
+     * @param  {String | Object | Function} ref the reference of the extension
+     * @return {Aura} the Aura app object
+     * @chainable
+     */
+    app.use = function(ref) {
+      extManager.add({ ref: ref, context: app });
+      return app;
+    };
+
+    /**
+     * Namespace for components related methods.
+     *
+     * @type {Object}
+     */
+    app.components = {};
+
+    /**
+     * Adds a new source for components.
+     * A Component source is an endpoint (basically a URL)
+     * that is the root of a component repository.
+     *
+     * @method  components.addSource
+     * @param {String} name    the name of the source.
+     * @param {String} baseUrl the base url for those components.
+     */
+    app.components.addSource = function(name, baseUrl) {
+      if (config.sources[name]) {
+        throw new Error("Components source '" + name + "' is already registered");
+      }
+      config.sources[name] = baseUrl;
+      return app;
+    };
+
+    /**
+     * `core` is just a namespace used by the extensions to add features to the App.
+     *
+     * @property {Object} core
+     */
+    app.core = Object.create(base);
+
+    /**
+     * Application start.
+     *
+     * Bootstraps the extensions loading process.
+     * All the extensions are resolved and loaded when `start` id called.
+     * Start returns a promise that shall fail if any of the
+     * extensions fails to load.
+     *
+     * The app's responsibility is to load its extensions,
+     * make sure they are properly loaded when the app starts
+     * and eventually make sure they are properly cleaned up when the app stops
+     *
+     * @method start
+     * @param  {Object | String | Array} options start options.
+     * @return {Promise} a promise that resolves when the app is started.
+     */
+    app.start = function(options) {
+
+      if (app.started) {
+        app.logger.error("Aura already started!");
+        return extManager.initStatus;
+      }
+
+      app.logger.log("Starting Aura");
+
+      var startOptions = options || {};
+
+      // Support for different types of options (string, DOM Selector or Object)
+      if (typeof options === 'string') {
+        startOptions = { components: app.core.dom.find(options) };
+      } else if (Array.isArray(options)) {
+        startOptions = { components: options };
+      } else if (options && options.widgets && !options.components) {
+        startOptions.components = options.widgets;
+      } else if (startOptions.components === undefined) {
+        startOptions.components = app.core.dom.find(app.config.components || 'body');
+      }
+
+      extManager.onReady(function(exts) {
+        // Then we call all the `afterAppStart` provided by the extensions
+        base.util.each(exts, function(i, ext) {
+          if (ext && typeof(ext.afterAppStart) === 'function') {
+            ext.afterAppStart(app);
+          }
+        });
+      });
+
+      // If there was an error in the boot sequence we
+      // reject every body and perform a cleanup
+      // TODO: Provide a better error message to the user.
+      extManager.onFailure(function() {
+        app.logger.error("Error initializing app:", app.config.name, arguments);
+        app.stop();
+      });
+
+      app.startOptions = startOptions;
+      app.started = true;
+
+      // Finally... we return a promise that allows
+      // to keep track of the loading process...
+      return extManager.init();
+    };
+
+    /**
+     * Stops the application and unregister its loaded dependencies.
+     *
+     * @method stop
+     * @return {void}
+     */
+    app.stop = function() {
+      // TODO: We ne to actually do some cleanup here.
+      app.started = false;
+    };
+
+    /**
+     * Sandboxes are a way to implement the facade pattern on top of the features provided by `core`.
+     *
+     * The `sandbox` property of an Aura App is just an Object that will be used
+     * as a blueprint, once the app is started, to create new instances
+     * of sandboxed environments for the Components.
+     * @property {Object} sandbox
+     */
+    app.sandbox = baseSandbox;
+
+    /**
+     * App Logger
+     *
+     * @property {Logger} logger
+     */
+    app.logger     = new Logger(app.ref);
+
+    /**
+     * @class Sandbox
+     */
+
+    /**
+     * Stop method for a Sandbox.
+     * If no arguments provided, the sandbox itself and all its children are stopped.
+     * If a DOM Selector is provided, all matching children will be stopped.
+     *
+     * @param  {undefined|String} DOM Selector
+     */
+    app.sandbox.stop = function(selector) {
+      if (selector) {
+        app.core.dom.find(selector, this.el).each(function(i, el) {
+          var ref = app.core.dom.find(el).data('__sandbox_ref__');
+          stopSandbox(ref);
+        });
+      } else {
+        stopSandbox(this);
+      }
+    };
+
+    function stopSandbox(sandbox) {
+      if (typeof sandbox === 'string') {
+        sandbox = app.sandboxes.get(sandbox);
+      }
+      if (sandbox) {
+        var event = ['aura', 'sandbox', 'stop'].join(app.config.mediator.delimiter);
+        _.invoke(sandbox._children, 'stop');
+        app.core.mediator.emit(event, sandbox);
+        if (sandbox._component) {
+          sandbox._component.invokeWithCallbacks('remove');
+        }
+        sandbox.stopped  = true;
+        sandbox.el && app.core.dom.find(sandbox.el).remove();
+        appSandboxes[sandbox.ref] = null;
+        delete appSandboxes[sandbox.ref]; // do we need to actually call `delete` ?
+        return sandbox;
+      }
+    }
+
+    // Register core extensions : debug, mediator and components.
+    config.debug = config.debug || {};
+    var debug = config.debug;
+    if (debug.enable) {
+      if(debug.components){
+        debug.components = debug.components.split(' ');
+      }else{
+        debug.components = [];
+      }
+      app.logger.enable();
+      app.use('aura/ext/debug');
+    }
+
+    app.use('aura/ext/mediator');
+    app.use('aura/ext/components');
+
+    return app;
+  }
+
+  return Aura;
+});
+
+define('husky',[
+    'bower_components/aura/lib/aura'
+], function(Aura) {
+
+    
+
+    // husky - subclass of aurajs
+    function Husky(config) {
+
+        if (!(this instanceof Husky)) {
+            return new Husky(config);
+        }
+
+        Aura.call(this, config);  // call super constructor.
+
+        var app = this;
+
+        app.components.addSource('husky', './husky_components');
+
+        app.use('./husky_extensions/jquery');
+        app.use('./husky_extensions/backbone');
+        app.use('./husky_extensions/collection');
+        app.use('./husky_extensions/model');
+        app.use('./husky_extensions/husky-validation');
+        app.use('./husky_extensions/util');
+        app.use('./husky_extensions/template');
+        app.use('./husky_extensions/globalize');
+
+    }
+
+    // subclass extends superclass
+    Husky.prototype = Object.create(Aura.prototype);
+    Husky.prototype.constructor = Husky;
+
+    // Husky version flag
+    Husky.prototype.version = '0.1.0';
+
+    return Husky;
+});
+
 define('__component__$navigation@husky',['jquery'], function($) {
+
+    
 
     var sandbox;
 
@@ -19909,11 +18730,8 @@ define('__component__$navigation@husky',['jquery'], function($) {
         initialize: function() {
 
             sandbox = this.sandbox;
-
             sandbox.logger.log('initialize', this);
-
             sandbox.logger.log(arguments);
-
 
             this.$navigation = $('<div/>', {
                 class: 'navigation'
@@ -20050,10 +18868,18 @@ define('__component__$navigation@husky',['jquery'], function($) {
                 'class': 'navigation-column-header'
             });
 
-            $columnHeader.html(this.template.columnHeader({
-                title: this.columnHeader.title,
-                logo: this.columnHeader.logo
-            }));
+            if (this.columnHeader.displayOption === 'link') {
+                $columnHeader.html(this.template.columnHeaderLink({
+                    title: this.columnHeader.title,
+                    icon: this.columnHeader.icon,
+                    action: this.columnHeader.action
+                }));
+            } else {
+                $columnHeader.html(this.template.columnHeader({
+                    title: this.columnHeader.title,
+                    logo: this.columnHeader.logo
+                }));
+            }
 
             return $columnHeader;
         },
@@ -20117,20 +18943,22 @@ define('__component__$navigation@husky',['jquery'], function($) {
         },
 
         addColumn: function() {
-            var $subColumns, $subColumnsContainer;
+            var $subColumns, $subColumnsContainer = $('.navigation-sub-columns-container');
 
             this.currentColumnIdx++;
 
-            if (this.currentColumnIdx === 2 && !$('.navigation-sub-columns-container').size()) {
+            // FIXME check if necessary
+            if (this.currentColumnIdx === 2 && !$subColumnsContainer.size()) {
                 $subColumns = $('<li/>', {
                     'class': 'navigation-sub-columns-container'
                 });
 
                 $subColumns.append(this.prepareNavigationSubColumn());
                 this.$navigationColumns.append($subColumns);
+                $subColumnsContainer = $('.navigation-sub-columns-container');
             }
 
-            if (!!$('.navigation-sub-columns-container').size()) {
+            if (!!$subColumnsContainer.size()) {
                 this.$navigationSubColumns.append(this.prepareNavigationColumn());
                 this.scrollToLastSubColumn();
             } else {
@@ -20155,11 +18983,13 @@ define('__component__$navigation@husky',['jquery'], function($) {
             $firstColumn = $('#column-0');
             $secondColumn = $('#column-1');
 
-            this.$navigationColumns.removeClass('show-content');
+            if (!$element.hasClass('content-column')) {
+                this.$navigationColumns.removeClass('show-content');
+            }
 
             this.showContent = false;
 
-            if (!$element.hasClass('navigation-column-item') && !$element.is('span')) {
+            if (!$element.hasClass('content-column') && !$element.hasClass('navigation-column-item') && !$element.is('span')) {
                 $firstColumn.removeClass('hide');
                 $secondColumn.removeClass('collapsed');
 
@@ -20193,7 +19023,6 @@ define('__component__$navigation@husky',['jquery'], function($) {
 
             itemModel = this.itemsCollection.get(elementId);
 
-            this.currentColumnIdx = $elementColumn.data('column-id');
             this.currentColumnIdx = $elementColumn.data('column-id');
 
             if (!!itemModel && this.selectionLocked) {
@@ -20254,11 +19083,19 @@ define('__component__$navigation@husky',['jquery'], function($) {
                         });
                     }
 
-                } else if (itemModel.get('type') == 'content') {
+                } else if (itemModel.get('type') === 'content') {
                     this.showContent = true;
 
                     this.updateColumns();
-                    this.collapseFirstColumn();
+                    if ($elementColumn.data('columnId') !== 0) {
+                        this.collapseFirstColumn();
+                    } else {
+                        $('#column-1').remove();
+                        $('#column-0')
+                            .removeClass('hide')
+                            .removeClass('collapsed')
+                            .parent().removeClass('show-content');
+                    }
 
                     sandbox.emit('navigation.item.content.show', {
                         item: itemModel,
@@ -20266,6 +19103,30 @@ define('__component__$navigation@husky',['jquery'], function($) {
                     });
                 }
             }
+        },
+
+        headerLinkClick: function() {
+            var action = $('.navigation-header-link').data('action'),
+                $column0 = $('#column-0'),
+                $column1 = $('#column-1');
+
+            this.removeContentColumn();
+
+            $column0.parent().removeClass('show-content');
+            if ($column0.hasClass('hide') && $column1.hasClass('collapsed')) {
+                $column0.removeClass('hide');
+                $column0.addClass('collapsed');
+                $column1.removeClass('collapsed');
+            } else if ($column0.hasClass('collapsed')) {
+                $column0.removeClass('collapsed');
+            }
+
+            sandbox.emit('navigation.item.content.show', {
+                item: {
+                    action: action
+                },
+                data: this.getNavigationData()
+            });
         },
 
         // remove old columns before loading new ones
@@ -20285,6 +19146,8 @@ define('__component__$navigation@husky',['jquery'], function($) {
                 if (!this.$navigationColumns.hasClass('show-content')) {
                     if ($column.hasClass('collapsed')) {
                         width += 50;
+                    } else if ($column.hasClass('content-column')) {
+                        width += 150;
                     } else {
                         width += 250;
                     }
@@ -20301,7 +19164,7 @@ define('__component__$navigation@husky',['jquery'], function($) {
             return {
                 // TODO
                 navWidth: this.getNavigationWidth()
-            }
+            };
         },
 
         showFirstNavigationColumn: function(event) {
@@ -20322,37 +19185,69 @@ define('__component__$navigation@husky',['jquery'], function($) {
             }
         },
 
+        removeContentColumn: function() {
+            var $contentColumn = this.$navigation.find('.content-column');
+            if ($contentColumn.length > 0) {
+                this.currentColumnIdx -= $contentColumn.length;
+                $contentColumn.remove();
+            }
+        },
+
+        removeSubColumns: function() {
+            var $subColumns = this.$navigation.find('.navigation-sub-columns-container');
+            if ($subColumns.length > 0) {
+                this.currentColumnIdx -= this.$navigation.find('.navigation-sub-columns').length;
+                $subColumns.remove();
+            }
+        },
+
         // TODO
         showColumn: function(params) {
             sandbox.logger.log('showColumn');
 
-            var $showedColumn;
+            var $showedColumn,
+                $column0,
+                $column1,
+                countCol0,
+                countCol1;
 
             params = params || {};
 
             if (!!params.data) {
+                if (params.data.displayOption === 'content') {
+                    this.removeContentColumn();
+                }
+                $column0 = $('#column-0');
+                $column1 = $('#column-1');
+                countCol0 = $column0.length;
+                countCol1 = $column1.length;
+
                 this.columnHeader = params.data.header || null;
                 this.columnItems = params.data.sub.items || null;
 
                 this.setConfigs(params.data);
 
-                $showedColumn = $('#column-' + this.addedColumn);
-
-                $('#column-0').addClass('hide');
-                $('#column-1').addClass('collapsed');
-
-                if (!!$showedColumn.size()) {
-                    this.currentColumnIdx--;
-                    $showedColumn.remove();
+                // FIXME check if only special case
+                if (!(countCol0 === 1 && countCol1 === 0)) {
+                    $('#column-0').addClass('hide');
+                    $('#column-1').addClass('collapsed');
                 }
+
+                // FIXME check if necessary
+                // if (!!$showedColumn.size()) {
+                //     this.currentColumnIdx--;
+                //     $showedColumn.remove();
+                // }
 
                 this.showContent = true;
 
                 this.addColumn();
 
                 this.addedColumn = this.currentColumnIdx;
+                $showedColumn = $('#column-' + this.addedColumn);
+                $showedColumn.find('ul.navigation-items li:first').addClass('selected');
 
-                sandbox.emit('navigation.column.content.show', {
+                sandbox.emit('navigation.size.changed', {
                     data: this.getNavigationData()
                 });
 
@@ -20427,6 +19322,7 @@ define('__component__$navigation@husky',['jquery'], function($) {
             $(window).on('resize load', this.setNavigationSize.bind(this));
 
             this.$el.on('click', '.navigation-column-item', this.selectItem.bind(this));
+            this.$el.on('click', '.navigation-header-link', this.headerLinkClick.bind(this));
             this.$el.on('click', '.navigation-column:eq(1)', this.showNavigationColumns.bind(this));
             this.$el.on('click', '.navigation-column:eq(0).collapsed', this.showFirstNavigationColumn.bind(this));
             this.$el.on('mousewheel DOMMouseScroll', '.navigation-sub-columns-container', this.scrollSubColumns.bind(this));
@@ -20466,6 +19362,16 @@ define('__component__$navigation@husky',['jquery'], function($) {
         },
 
         template: {
+            columnHeaderLink: function(data) {
+                data.title = data.title || sandbox.translate('navigation.list');
+                data.icon = data.icon || 'list';
+                data.action = data.action || '';
+
+                return [
+                    '<div class="navigation-header-link pointer" data-action="', data.action, '"><span class="icon-', data.icon, '"></span>&nbsp;', data.title, '</div>'
+                ].join('');
+            },
+
             columnHeader: function(data) {
                 var titleTemplate = null;
 
@@ -20496,7 +19402,7 @@ define('__component__$navigation@husky',['jquery'], function($) {
                 ].join('');
             }
         }
-    }
+    };
 });
 
 /*
@@ -20515,7 +19421,7 @@ define('__component__$navigation@husky',['jquery'], function($) {
  *
  * Provided Events:
  *  husky.header.move-buttons: move middle part to match given navigation width
- *  husky.header.button-type: change ButtonType [save, saveDelete, add, template]
+ *  husky.header.button-type: change ButtonType [save, saveDelete, saved, savedDelete, add, reset, template]
  *  husky.header.button-state: change state of buttons
  *
  * Used Events:
@@ -20525,6 +19431,8 @@ define('__component__$navigation@husky',['jquery'], function($) {
 
 define('__component__$header@husky',[], function() {
 
+    
+
     var sandbox,
         type,
         types = {
@@ -20533,7 +19441,7 @@ define('__component__$header@husky',[], function() {
                     return [
                         '<div class="grid-row">',
                         '   <div class="grid-col-6 left">',
-                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-background="black" data-aura-icon-type="caution" data-aura-text="Save"/>',
+                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-button-state="disable" data-aura-background="black" data-aura-icon-type="circle-ok" data-aura-text="Saved"/>',
                         '   </div>',
                         '</div>'
                     ].join('');
@@ -20544,6 +19452,13 @@ define('__component__$header@husky',[], function() {
 
                 states: {
                     standard: function() {
+                        // set text to saved and OK
+                        sandbox.emit('husky.button.save.set-content', 'Saved', 'circle-ok');
+                        sandbox.emit('husky.button.save.state', 'disable');
+                    },
+                    dirty: function() {
+                        // set text to save and icon to !
+                        sandbox.emit('husky.button.save.set-content', 'Save', 'caution');
                         sandbox.emit('husky.button.save.state', 'standard');
                     },
                     disable: function() {
@@ -20551,6 +19466,10 @@ define('__component__$header@husky',[], function() {
                     },
                     'loading-save-button': function() {
                         sandbox.emit('husky.button.save.state', 'loading');
+                    },
+                    hide: function() {
+                        // hide save button
+                        sandbox.emit('husky.button.save.state', 'hide');
                     }
                 }
             },
@@ -20559,7 +19478,7 @@ define('__component__$header@husky',[], function() {
                     return [
                         '<div class="grid-row">',
                         '   <div class="grid-col-6 left">',
-                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-background="black" data-aura-icon-type="caution" data-aura-text="Save"/>',
+                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-button-state="disable" data-aura-background="black" data-aura-icon-type="circle-ok" data-aura-text="Saved"/>',
                         '   </div>',
                         '   <div class="grid-col-6 right">',
                         '       <div id="delete-button" class="pull-right" data-aura-component="button@husky" data-aura-instance-name="delete" data-aura-button-type="icon" data-aura-background="black" data-aura-icon-type="circle-remove" data-aura-text="Delete"/>',
@@ -20573,6 +19492,13 @@ define('__component__$header@husky',[], function() {
 
                 states: {
                     standard: function() {
+                        sandbox.emit('husky.button.save.set-content', 'Saved', 'circle-ok');
+                        sandbox.emit('husky.button.save.state', 'disable');
+                        sandbox.emit('husky.button.delete.state', 'standard');
+                    },
+                    dirty: function() {
+                        // set text to save and icon to !
+                        sandbox.emit('husky.button.save.set-content', 'Save', 'caution');
                         sandbox.emit('husky.button.save.state', 'standard');
                         sandbox.emit('husky.button.delete.state', 'standard');
                     },
@@ -20587,6 +19513,10 @@ define('__component__$header@husky',[], function() {
                     'loading-delete-button': function() {
                         sandbox.emit('husky.button.save.state', 'disable');
                         sandbox.emit('husky.button.delete.state', 'loading');
+                    },
+                    hide: function() {
+//                        sandbox.emit('husky.button.save.state', 'hide');
+//                        sandbox.emit('husky.button.delete.state', 'hide');
                     }
                 }
             },
@@ -20615,6 +19545,14 @@ define('__component__$header@husky',[], function() {
                         sandbox.emit('husky.button.add.state', 'loading');
                     }
                 }
+            },
+            reset: {
+                template: function() {
+                    return [];
+                },
+                reset: function() {
+                },
+                states: { }
             }
         },
         defaults = {
@@ -20679,6 +19617,10 @@ define('__component__$header@husky',[], function() {
             this.sandbox.on('navigation.item.content.show', function(item) {
                 this.moveButtons(item.data.navWidth);
             }.bind(this));
+            this.sandbox.on('navigation.size.changed', function(item) {
+                this.moveButtons(item.data.navWidth);
+            }.bind(this));
+            
             this.sandbox.on('husky.header.move-buttons', this.moveButtons.bind(this));
 
             // add buttons
@@ -20690,9 +19632,9 @@ define('__component__$header@husky',[], function() {
 
         // move buttons with navigation width
         moveButtons: function(navWidth) {
-            var headerLeft = parseInt(this.sandbox.dom.css(this.$header, 'padding-left')),
+            var headerLeft = parseInt(this.sandbox.dom.css(this.$header, 'padding-left'), 10),
                 marginLeft = navWidth + this.options.marginMid - headerLeft,
-                width = parseInt(this.sandbox.dom.css(this.$mid, 'width'));
+                width = parseInt(this.sandbox.dom.css(this.$mid, 'width'), 10);
 
             this.$mid.css('margin-left', marginLeft);
             this.$right.css('margin-left', width + marginLeft + this.options.marginRight);
@@ -20754,6 +19696,8 @@ define('__component__$header@husky',[], function() {
 
 define('__component__$button@husky',[], function() {
 
+    
+
     var type,
         types = {
             icon: {
@@ -20763,6 +19707,8 @@ define('__component__$button@husky',[], function() {
                     type.bindDomEvents.call(this);
                 },
                 bindDomEvents: function() {
+                    // FIXME if not events would be triggered multiple times
+                    this.$el.off('click');
                     this.$el.on('click', this.clickEvent.bind(this));
                 },
                 unBindDomEvents: function() {
@@ -20779,17 +19725,21 @@ define('__component__$button@husky',[], function() {
 
                 states: {
                     standard: function() {
+                        this.sandbox.dom.show(this.$el);
                         type.reset.call(this);
 
                         type.bindDomEvents.call(this);
+                        this.sandbox.dom.addClass(this.$el, 'pointer');
                     },
                     disable: function() {
+                        this.sandbox.dom.show(this.$el);
                         this.sandbox.dom.addClass(this.$el, 'disable');
                         this.sandbox.dom.removeClass(this.$el, 'pointer');
 
                         type.unBindDomEvents.call(this);
                     },
                     loading: function() {
+                        this.sandbox.dom.show(this.$el);
                         if (!!this.options.background) {
                             this.sandbox.dom.addClass(this.$el, 'loading-' + this.options.background);
                         } else {
@@ -20798,12 +19748,18 @@ define('__component__$button@husky',[], function() {
                         this.sandbox.dom.removeClass(this.$el, 'pointer');
 
                         type.unBindDomEvents.call(this);
+                    },
+                    hide: function() {
+                        this.sandbox.dom.hide(this.$el);
+
                     }
+
                 }
             }
         },
         defaults = {
             buttonType: 'icon',         // type of button [icon, custom]
+            buttonState: null,            // type of button [icon, custom]
             instanceName: 'undefined',  // name of instance used in events
             text: 'undefined',          // button text
             iconType: 'caution',        // button icon
@@ -20825,6 +19781,7 @@ define('__component__$button@husky',[], function() {
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
             this.render();
+            this.bindCustomEvents();
         },
 
         render: function() {
@@ -20844,8 +19801,11 @@ define('__component__$button@husky',[], function() {
 
             type.init.call(this);
 
-            this.bindCustomEvents();
+            if (!!this.options.buttonState) {
+                this.changeState(this.options.buttonState);
+            }
         },
+
 
         clickEvent: function() {
             this.sandbox.emit(this.getEvent('click'));
@@ -20853,6 +19813,7 @@ define('__component__$button@husky',[], function() {
 
         bindCustomEvents: function() {
             this.sandbox.on(this.getEvent('state'), this.changeState.bind(this));
+            this.sandbox.on(this.getEvent('set-content'), this.setContent.bind(this));
         },
 
         changeState: function(state) {
@@ -20862,20 +19823,27 @@ define('__component__$button@husky',[], function() {
             } else {
                 throw 'not implemented';
             }
+        },
+
+        setContent: function(text, icon) {
+            this.options.text = text;
+            this.options.iconType = icon;
+//            type.init.call(this);
+            this.render();
         }
-    }
+    };
 });
 
 /**
- *	Name: Datagrid
- * 
- *	Options:
- *		- autoRemoveHandling: raises an event before a row is removed
- *		- className: additional classname for the wrapping div 
- *		- data: array of data to display (instead of using a url)
- *		- elementType: type of datagrid (table,..) ??
- *		- excludeFields: array of field to exclude
- *		- pagination: display a pagination
+ *    Name: Datagrid
+ *
+ *    Options:
+ *        - autoRemoveHandling: raises an event before a row is removed
+ *        - className: additional classname for the wrapping div
+ *        - data: array of data to display (instead of using a url)
+ *        - elementType: type of datagrid (table,..) ??
+ *        - excludeFields: array of field to exclude
+ *        - pagination: display a pagination
  *      - pageSize: lines per page
  *      - showPages: amount of pages that will be shown
  *      - removeRow: displays in the last column an icon to remove a row
@@ -20883,12 +19851,12 @@ define('__component__$button@husky',[], function() {
  *      - selectItem.width: typ of select [checkbox, radio]
  *      - url: url to fetch content
  *
- *	Provided Events:
+ *    Provided Events:
  *       - husky.datagrid.item.deselect - raised when item is deselected
  *       - husky.datagrid.item.select - raised when item is selected
  *       - husky.datagrid.all.deselect - raised when all items get deselected via the header checkbox
  *       - husky.datagrid.all.select - raised when all items get selected via the header checkbox
- *       - husky.datagrid.row.remove-click - raised when clicked on the remove-row-icon 
+ *       - husky.datagrid.row.remove-click - raised when clicked on the remove-row-icon
  *       - husky.datagrid.row.removed - raised when row got removed
  *       - husky.datagrid.page.change - raised when the the current page changes
  *       - husky.datagrid.update - raised when the data needs to be updated
@@ -20897,7 +19865,7 @@ define('__component__$button@husky',[], function() {
  *       - husky.datagrid.data.provide - raised when when husky.datagrid.data.get is triggered
  *
  *
- * 	Used Events:
+ *    Used Events:
  *       - husky.datagrid.update
  *       - husky.datagrid.row.add - used to add a row
  *       - husky.datagrid.row.remove - used to remove a row
@@ -20908,31 +19876,33 @@ define('__component__$button@husky',[], function() {
 
 define('__component__$datagrid@husky',[],function() {
 
+    
 
-	/*
-	 *	Default values for options
-	 */
-	var defaults = {
-		autoRemoveHandling: true,
-		className: 'datagridcontainer', 
-		elementType: 'table', //??
-		data: null,
-		defaultMeasureUnit: 'px',
-		excludeFields: ['id'],
-		pagination: false,
+    /*
+     *	Default values for options
+     */
+    var defaults = {
+        autoRemoveHandling: true,
+        className: 'datagridcontainer',
+        elementType: 'table', //??
+        data: null,
+        defaultMeasureUnit: 'px',
+        excludeFields: ['id'],
+        pagination: false,
         paginationOptions: {
             pageSize: 10,
             showPages: 5
         },
         removeRow: true,
         selectItem: {
-            type:   null,      // checkbox, radiobutton
-            width:  '50px',    // numerous value
+            type: null,      // checkbox, radiobutton
+            width: '50px'    // numerous value
             //clickable: false   // defines if background is clickable TODO do not use until fixed
         },
         tableHead: [],
-        url: null,
-	};
+        url: null
+    };
+
 
     return {
 
@@ -20940,55 +19910,53 @@ define('__component__$datagrid@husky',[],function() {
 
         initialize: function() {
             this.sandbox.logger.log('initialized datagrid');
-            //this.sandbox.logger.log('options', this.options)
-           	//this.sandbox.logger.log('el', this.$el);
 
             // extend default options and set variables
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.name = this.options.name;
-	        this.data = null;
-	        this.configs = {};
-			this.allItemIds = [];
-	        this.selectedItemIds = [];
+            this.data = null;
+            this.configs = {};
+            this.allItemIds = [];
+            this.selectedItemIds = [];
 
-	        // append datagrid to html element
-	        this.$originalElement = this.sandbox.dom.$(this.options.el);
-	        this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
-	        this.$originalElement.append(this.$element);
+            // append datagrid to html element
+            this.$originalElement = this.sandbox.dom.$(this.options.el);
+            this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
+            this.$originalElement.append(this.$element);
 
-	        this.options.pagination = (this.options.pagination !== undefined) ? !!this.options.pagination : !!this.options.url;
+            this.options.pagination = (this.options.pagination !== undefined) ? !!this.options.pagination : !!this.options.url;
 
-	       	this.getData();
+            this.getData();
         },
 
         /*
          * Gets the data either via the url or the array
-        */
+         */
         getData: function() {
 
-        	if (!!this.options.url) {
-	            
-	            this.sandbox.logger.log('load data from url');
-	            this.load({ url: this.options.url});
+            if (!!this.options.url) {
 
-	        } else if (!!this.options.data.items) {
+                this.sandbox.logger.log('load data from url');
+                this.load({ url: this.options.url});
 
-	        	this.sandbox.logger.log('load data from array');
-				this.data = this.options.data;
-			
-	            this.setConfigs();
+            } else if (!!this.options.data.items) {
 
-	            this.prepare()
-	                .appendPagination()
-	                .render();
-	        }
+                this.sandbox.logger.log('load data from array');
+                this.data = this.options.data;
 
-	        this.sandbox.logger.log('data in datagrid', this.data);
+                this.setConfigs();
+
+                this.prepare()
+                    .appendPagination()
+                    .render();
+            }
+
+            this.sandbox.logger.log('data in datagrid', this.data);
         },
 
         load: function(params) {
-        	
-        	this.sandbox.logger.log('loading data');
+
+            this.sandbox.logger.log('loading data');
 
             this.sandbox.util.ajax({
 
@@ -21013,9 +19981,13 @@ define('__component__$datagrid@husky',[],function() {
         },
 
         getUrl: function(params) {
-            var delimiter = '?';
-            if (params.url.indexOf('?') != -1) delimiter = '&';
-            var url = params.url + delimiter + 'pageSize=' + this.options.paginationOptions.pageSize;
+            var delimiter = '?', url;
+
+            if (params.url.indexOf('?') !== -1) {
+                delimiter = '&';
+            }
+
+            url = params.url + delimiter + 'pageSize=' + this.options.paginationOptions.pageSize;
 
             if (params.page > 1) {
                 url += '&page=' + params.page;
@@ -21098,9 +20070,12 @@ define('__component__$datagrid@husky',[],function() {
 
 
                 tblColumns.push(
-                    '<th class="select-all" ',tblCheckboxWidth.join(""),' >');
-                if (this.options.selectItem.type === 'checkbox')
+                    '<th class="select-all" ', tblCheckboxWidth.join(""), ' >');
+
+                if (this.options.selectItem.type === 'checkbox') {
                     tblColumns.push(this.templates.checkbox({ id: 'select-all' }));
+                }
+
                 tblColumns.push('</th>');
             }
 
@@ -21110,7 +20085,7 @@ define('__component__$datagrid@husky',[],function() {
                 // get width and measureunit
                 if (!!column.width) {
                     widthValues = this.getNumberAndUnit(column.width, this.options.defaultMeasureUnit);
-                    tblColumnWidth = ' width="' + widthValues[0] + widthValues[1] + '"' ;
+                    tblColumnWidth = ' width="' + widthValues[0] + widthValues[1] + '"';
                 }
 
                 tblColumns.push('<th' + tblCellClass + tblColumnWidth + '>' + column.content + '</th>');
@@ -21121,11 +20096,11 @@ define('__component__$datagrid@husky',[],function() {
 
         // returns number and unit
         getNumberAndUnit: function(numberUnit, defaultUnit) {
-            numberUnit= String(numberUnit);
+            numberUnit = String(numberUnit);
             var regex = numberUnit.match(/(\d+)\s*(.*)/);
             // no unit , set default
             if ((!!defaultUnit) && (!regex[2])) {
-            	regex[2] = defaultUnit;
+                regex[2] = defaultUnit;
             }
             return [regex[1], regex[2]];
         },
@@ -21153,10 +20128,10 @@ define('__component__$datagrid@husky',[],function() {
             } else {
 
                 var tblRowAttributes, tblCellContent, tblCellClass,
-                    tblColumns, tblCellClasses, radioPrefix;
+                    tblColumns, tblCellClasses, radioPrefix, key, column;
 
-                if(!!this.options.className && this.options.className != '') {
-                    radioPrefix = '-'+this.options.className;
+                if (!!this.options.className && this.options.className !== '') {
+                    radioPrefix = '-' + this.options.className;
                 } else {
                     radioPrefix = '';
                 }
@@ -21164,8 +20139,7 @@ define('__component__$datagrid@husky',[],function() {
                 tblColumns = [];
                 tblRowAttributes = '';
 
-                // add row id to itemIds collection (~~ === shorthand for parse int)
-                !!row.id && this.allItemIds.push(~~row.id);
+                !!row.id && this.allItemIds.push(parseInt(row.id, 10));
 
                 if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
                     // add a checkbox to each row
@@ -21174,25 +20148,28 @@ define('__component__$datagrid@husky',[],function() {
                     // add a radio to each row
 
                     tblColumns.push('<td>', this.templates.radio({
-                        name: 'husky-radio'+radioPrefix
+                        name: 'husky-radio' + radioPrefix
                     }), '</td>');
                 }
 
-                for (var key in row) {
-                    var column = row[key];
-                    if (this.options.excludeFields.indexOf(key) < 0) {
-                        tblCellClasses = [];
-                        tblCellContent = (!!column.thumb) ? '<img alt="' + (column.alt || '') + '" src="' + column.thumb + '"/>' : column;
+                for (key in row) {
+                    if (row.hasOwnProperty(key)) {
+                        column = row[key];
 
-                        // prepare table cell classes
-                        !!column.class && tblCellClasses.push(column.class);
-                        !!column.thumb && tblCellClasses.push('thumb');
+                        if (this.options.excludeFields.indexOf(key) < 0) {
+                            tblCellClasses = [];
+                            tblCellContent = (!!column.thumb) ? '<img alt="' + (column.alt || '') + '" src="' + column.thumb + '"/>' : column;
 
-                        tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
+                            // prepare table cell classes
+                            !!column.class && tblCellClasses.push(column.class);
+                            !!column.thumb && tblCellClasses.push('thumb');
 
-                        tblColumns.push('<td ' + tblCellClass + ' >' + tblCellContent + '</td>');
-                    } else {
-                        tblRowAttributes += ' data-' + key + '="' + column + '"';
+                            tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
+
+                            tblColumns.push('<td ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                        } else {
+                            tblRowAttributes += ' data-' + key + '="' + column + '"';
+                        }
                     }
                 }
 
@@ -21213,7 +20190,7 @@ define('__component__$datagrid@husky',[],function() {
 
             // Todo review handling of events for new rows in datagrid (itemId empty?)
 
-            var $element, itemId;
+            var $element, itemId, oldSelectionId;
 
             $element = this.sandbox.dom.$(event.currentTarget);
 
@@ -21222,8 +20199,8 @@ define('__component__$datagrid@husky',[],function() {
             }
 
             itemId = $element.parents('tr').data('id');
-            
-            if($element.attr('type') === 'checkbox') {
+
+            if ($element.attr('type') === 'checkbox') {
 
                 if (this.selectedItemIds.indexOf(itemId) > -1) {
                     $element
@@ -21241,8 +20218,8 @@ define('__component__$datagrid@husky',[],function() {
                     $element
                         .addClass('is-selected')
                         .prop('checked', true);
-                    
-                    if(!!itemId){
+
+                    if (!!itemId) {
                         this.selectedItemIds.push(itemId);
                         this.sandbox.emit('husky.datagrid.item.select', itemId);
                     } else {
@@ -21251,17 +20228,17 @@ define('__component__$datagrid@husky',[],function() {
                 }
 
             } else if ($element.attr('type') === 'radio') {
-                
-                var oldSelectionId = this.selectedItemIds.pop();
 
-                if(!!oldSelectionId && oldSelectionId > -1) {
-                    this.sandbox.dom.$('tr[data-id="'+oldSelectionId+'"]').find('input[type="radio"]').removeClass('is-selected').prop('checked', false);
-                    this.sandbox.emit('husky.datagrid.item.deselect', oldSelectionId);                    
+                oldSelectionId = this.selectedItemIds.pop();
+
+                if (!!oldSelectionId && oldSelectionId > -1) {
+                    this.sandbox.dom.$('tr[data-id="' + oldSelectionId + '"]').find('input[type="radio"]').removeClass('is-selected').prop('checked', false);
+                    this.sandbox.emit('husky.datagrid.item.deselect', oldSelectionId);
                 }
 
                 $element.addClass('is-selected').prop('checked', true);
-                
-                if(!!itemId){
+
+                if (!!itemId) {
                     this.selectedItemIds.push(itemId);
                     this.sandbox.emit('husky.datagrid.item.select', itemId);
                 } else {
@@ -21310,9 +20287,9 @@ define('__component__$datagrid@husky',[],function() {
                 var $tblRow, id;
 
                 $tblRow = this.sandbox.dom.$(event.currentTarget).parent().parent();
-                id = $tblRow.data('id');    
+                id = $tblRow.data('id');
 
-                if(!!id) {
+                if (!!id) {
                     this.sandbox.emit('husky.datagrid.row.remove-click', event, id);
                 } else {
                     this.sandbox.emit('husky.datagrid.row.remove-click', event, $tblRow);
@@ -21322,7 +20299,7 @@ define('__component__$datagrid@husky',[],function() {
 
         removeRow: function(event) {
 
-            var $element, $tblRow, id;
+            var $element, $tblRow, id, idx;
 
             if (typeof event === 'object') {
 
@@ -21334,11 +20311,11 @@ define('__component__$datagrid@husky',[],function() {
                 id = event;
                 $tblRow = this.$element.find('tr[data-id="' + id + '"]');
             }
-            
-            var index = this.selectedItemIds.indexOf(id);            
-            
-            if(index >= 0) {
-                this.selectedItemIds.splice(index,1);
+
+            idx = this.selectedItemIds.indexOf(id);
+
+            if (idx >= 0) {
+                this.selectedItemIds.splice(idx, 1);
             }
 
             this.sandbox.emit('husky.datagrid.row.removed', event);
@@ -21359,7 +20336,7 @@ define('__component__$datagrid@husky',[],function() {
         preparePagination: function() {
             var $pagination;
 
-            if (!!this.configs.total && ~~this.configs.total >= 1) {
+            if (!!this.configs.total && parseInt(this.configs.total, 10) >= 1) {
                 $pagination = this.sandbox.dom.$('<div/>');
                 $pagination.addClass('pagination');
 
@@ -21417,7 +20394,7 @@ define('__component__$datagrid@husky',[],function() {
 
 
         bindDOMEvents: function() {
-            
+
             if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
                 this.$element.on('click', 'tbody > tr span.custom-checkbox-icon', this.selectItem.bind(this));
                 this.$element.on('change', 'tbody > tr input[type="checkbox"]', this.selectItem.bind(this));
@@ -21429,8 +20406,8 @@ define('__component__$datagrid@husky',[],function() {
             this.$element.on('click', 'tbody > tr', function(event) {
                 if (!this.sandbox.dom.$(event.target).is('input') && !this.sandbox.dom.$(event.target).is('span.icon-remove')) {
                     var id = this.sandbox.dom.$(event.currentTarget).data('id');
-                    
-                    if(!!id) {
+
+                    if (!!id) {
                         this.sandbox.emit('husky.datagrid.item.click', id);
                     } else {
                         this.sandbox.emit('husky.datagrid.item.click', event);
@@ -21460,14 +20437,14 @@ define('__component__$datagrid@husky',[],function() {
 
             //         itemId = this.sandbox.dom.$(event.target).parents('tr').data('id');
 
-                    // if(!!itemId){
-                    //     this.selectedItemIds.push(itemId);
-                    //     this.sandbox.once('husky.datagrid.item.select', itemId);
-                    // } else {
-                    //     this.sandbox.once('husky.datagrid.item.select', event);
-                    // }
+            // if(!!itemId){
+            //     this.selectedItemIds.push(itemId);
+            //     this.sandbox.once('husky.datagrid.item.select', itemId);
+            // } else {
+            //     this.sandbox.once('husky.datagrid.item.select', event);
+            // }
 
-                    // stop propagation
+            // stop propagation
             //         event.stopPropagation();
             // }.bind(this));
         },
@@ -21485,11 +20462,11 @@ define('__component__$datagrid@husky',[],function() {
             // trigger selectedItems
             this.sandbox.on('husky.datagrid.items.get-selected', this.getSelectedItemsIds.bind(this));
 
-            this.sandbox.on('husky.datagrid.data.get',this.provideData.bind(this));
+            this.sandbox.on('husky.datagrid.data.get', this.provideData.bind(this));
         },
 
-        provideData: function(){
-            this.sandbox.emit('husky.datagrid.data.provide',this.data);
+        provideData: function() {
+            this.sandbox.emit('husky.datagrid.data.provide', this.data);
         },
 
         updateHandler: function() {
@@ -21508,88 +20485,88 @@ define('__component__$datagrid@husky',[],function() {
                 .outerWidth(this.$element.outerWidth())
                 .outerHeight(this.$element.outerHeight())
                 .empty();
-                //.addClass('is-loading');
+            //.addClass('is-loading');
         },
-
         removeLoader: function() {
             return this.$element.removeClass('is-loading');
         },
 
         // trigger selected items
         getSelectedItemsIds: function() {
-            this.sandbox.emit('husky.datagrid.items.selected', this.selectedItemIds)
+            this.sandbox.emit('husky.datagrid.items.selected', this.selectedItemIds);
         },
 
         templates: {
             removeRow: function() {
                 return [
                     '<span class="icon-remove"></span>'
-                ].join('')
+                ].join('');
             },
+
             checkbox: function(data) {
                 var id, name;
 
                 data = data || {};
-                id = (!!data['id']) ? ' id="' + data['id'] + '"' : '';
-                name = (!!data['name']) ? ' name="' + data['name'] + '"' : '';
+                id = (!!data.id) ? ' id="' + data.id + '"' : '';
+                name = (!!data.name) ? ' name="' + data.name + '"' : '';
 
                 return [
                     '<input', id, name, ' type="checkbox" class="custom-checkbox"/>',
                     '<span class="custom-checkbox-icon"></span>'
-                ].join('')
+                ].join('');
             },
 
             radio: function(data) {
                 var id, name;
 
                 data = data || {};
-                id = (!!data['id']) ? ' id="' + data['id'] + '"' : '';
-                name = (!!data['name']) ? ' name="' + data['name'] + '"' : '';
+                id = (!!data.id) ? ' id="' + data.id + '"' : '';
+                name = (!!data.name) ? ' name="' + data.name + '"' : '';
 
                 return [
                     '<input', id, name, ' type="radio" class="custom-radio"/>',
                     '<span class="custom-radio-icon"></span>'
-                ].join('')
+                ].join('');
             },
 
             // Pagination
             paginationPrevNavigation: function(data) {
-                var prev, first, selectedPage;
+                var selectedPage;
 
                 data = data || {};
-                selectedPage = ~~data['selectedPage'];
+                selectedPage = parseInt(data.selectedPage, 10);
 
                 return [
                     '<ul>',
-                    '<li class="pagination-first page" data-page="1"></li>',
-                    '<li class="pagination-prev page" data-page="', selectedPage - 1, '">', 'Previous', '</li>',
+                        '<li class="pagination-first page" data-page="1"></li>',
+                        '<li class="pagination-prev page" data-page="', selectedPage - 1, '">', 'Previous', '</li>',
                     '</ul>'
-                ].join('')
+                ].join('');
             },
 
             paginationNextNavigation: function(data) {
                 var next, last, pageSize, selectedPage;
 
                 data = data || {};
-                next = data['next'] || 'Next';
-                last = data['last'] || 'Last';
-                pageSize = data['pageSize'];
-                selectedPage = ~~data['selectedPage'];
+                next = data.next || 'Next';
+                last = data.last || 'Last';
+                pageSize = data.pageSize || 10;
+                selectedPage = (!!data.selectedPage) ? parseInt(data.selectedPage, 10) : 0;
 
                 return [
                     '<ul>',
-                    '<li class="pagination-next page" data-page="', selectedPage + 1, '">', next, '</li>',
-                    '<li class="pagination-last page" data-page="', pageSize, '"></li>',
+                        '<li class="pagination-next page" data-page="', selectedPage + 1, '">', next, '</li>',
+                        '<li class="pagination-last page" data-page="', pageSize, '"></li>',
                     '</ul>'
-                ].join('')
+                ].join('');
             },
 
             paginationPageNavigation: function(data) {
                 var pageSize, i, pageItems, selectedPage, pageClass;
 
                 data = data || {};
-                pageSize = ~~data['pageSize'];
-                selectedPage = ~~data['selectedPage'];
+                pageSize = data.pageSize || 10;
+                selectedPage = (!!data.selectedPage) ? parseInt(data.selectedPage, 10) : 0;
 
                 pageItems = [];
 
@@ -21603,7 +20580,7 @@ define('__component__$datagrid@husky',[],function() {
                 return '<ul>' + pageItems.join('') + '</ul>';
             }
         }
-        
+
     };
 
 });
@@ -21619,12 +20596,14 @@ define('__component__$datagrid@husky',[],function() {
 
 define('__component__$dialog@husky',['jquery'], function($) {
 
+    
+
     var sandbox,
         defaults = {
             data: {
                 footer: {
-                    buttonCancelText: "Cancel",
-                    buttonSubmitText: "Ok"
+                    buttonCancelText: 'Cancel',
+                    buttonSubmitText: 'Ok'
                 }
             },
             backdrop: true,
@@ -21656,7 +20635,7 @@ define('__component__$dialog@husky',['jquery'], function($) {
         initialize: function() {
             sandbox = this.sandbox;
 
-            if (!!this.options.templateType && this.options.templateType.toLowerCase() == 'okdialog') {
+            if (!!this.options.templateType && this.options.templateType.toLowerCase() === 'okdialog') {
                 this.options = this.sandbox.util.extend(true, {}, defaultsOk, this.options);
             } else {
                 this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -21664,8 +20643,6 @@ define('__component__$dialog@husky',['jquery'], function($) {
 
             this.$element = $('<div class="husky-dialog hidden fade"/>');
             $(this.options.el).append(this.$element);
-
-            console.log($(this.options.el));
 
             this.init();
         },
@@ -21691,8 +20668,8 @@ define('__component__$dialog@husky',['jquery'], function($) {
             this.$element.append(this.$content);
             this.$element.append(this.$footer);
 
-            var width = this.options.width;
-            var marginLeft = parseInt(this.options.width) / 2;
+            var width = this.options.width,
+                marginLeft = parseInt(this.options.width, 10) / 2;
 
             this.$element.css({
                 'width': width,
@@ -21725,14 +20702,14 @@ define('__component__$dialog@husky',['jquery'], function($) {
             this.data = this.options.data;
             this.template = this.options.template;
 
-            this.$header.append(_.template(this.template.header, this.data.header));
-            this.$content.append(_.template(this.template.content, this.data.content));
-            this.$footer.append(_.template(this.template.footer, this.data.footer));
+            this.$header.append(this.sandbox.template.parse(this.template.header, this.data.header));
+            this.$content.append(this.sandbox.template.parse(this.template.content, this.data.content));
+            this.$footer.append(this.sandbox.template.parse(this.template.footer, this.data.footer));
 
             this.$element.show();
 
             if (this.options.backdrop) {
-                $backdrop = $('<div id="husky-dialog-backdrop" class="husky-dialog-backdrop fade in"></div>');
+                var $backdrop = $('<div id="husky-dialog-backdrop" class="husky-dialog-backdrop fade in"></div>');
                 $('body').append($backdrop);
 
                 $backdrop.click(function() {
@@ -21794,6 +20771,8 @@ define('__component__$dialog@husky',['jquery'], function($) {
 
 define('__component__$dropdown@husky',['jquery'], function($) {
 
+    
+
     var sandbox,
         moduleName = 'Husky.Ui.DropDown',
         defaults = {
@@ -21851,7 +20830,7 @@ define('__component__$dropdown@husky',['jquery'], function($) {
             }
 
             // check alginment
-            if (this.options.alignment == 'right') {
+            if (this.options.alignment === 'right') {
                 this.$dropDown.addClass('dropdown-align-right');
             }
 
@@ -21876,7 +20855,7 @@ define('__component__$dropdown@husky',['jquery'], function($) {
 
             // init drop-down
 
-            if (this.options.trigger != '') {
+            if (this.options.trigger !== '') {
                 $(this.options.el).on('click', this.options.trigger, this.triggerClick.bind(this));
             } else {
                 $(this.options.el).on('click', this.triggerClick.bind(this));
@@ -21884,29 +20863,28 @@ define('__component__$dropdown@husky',['jquery'], function($) {
 
             // mouse control
             this.$dropDownList.on('click', 'li', function(event) {
-                var $element = $(event.currentTarget);
-                var id = $element.data('id');
+                var $element = $(event.currentTarget),
+                    id = $element.data('id');
                 this.clickItem(id);
             }.bind(this));
 
 
         },
 
-        bindCustomEvents : function() {
+        bindCustomEvents: function() {
             this.sandbox.on(this.getEvent('toggle'), this.triggerClick.bind(this));
             this.sandbox.on(this.getEvent('show'), this.showDropDown.bind(this));
             this.sandbox.on(this.getEvent('hide'), this.hideDropDown.bind(this));
         },
 
         getEvent: function(append) {
-            console.log("instance - name", this.options.instanceName);
             return 'husky.dropdown.' + this.options.instanceName + '.' + append;
         },
 
         // trigger event with clicked item
         clickItem: function(id) {
             this.options.data.forEach(function(item) {
-                if (item.id == id) {
+                if (item.id === id) {
                     sandbox.logger.log(this.name, 'item.click: ' + id, 'success');
                     sandbox.emit(this.getEvent('item.click'), item, this.$el);
                     return false;
@@ -21936,9 +20914,9 @@ define('__component__$dropdown@husky',['jquery'], function($) {
             sandbox.util.ajax({
                 url: url,
                 success: function(response) {
-                   this.sandbox.logger.log(this.name, 'load', 'success');
+                    this.sandbox.logger.log(this.name, 'load', 'success');
 
-                    if (response.total > 0 && response.items.length == response.total) {
+                    if (response.total > 0 && response.items.length === response.total) {
                         this.options.data = response.items;
                     } else {
                         this.options.data = [];
@@ -21977,7 +20955,9 @@ define('__component__$dropdown@husky',['jquery'], function($) {
         isVisible: function(item) {
             var result = true;
             this.options.excludeItems.forEach(function(testItem) {
-                if (item.id == testItem.id) result = false;
+                if (item.id === testItem.id) {
+                    result = false;
+                }
             }.bind(this));
             return result;
         },
@@ -22011,10 +20991,210 @@ define('__component__$dropdown@husky',['jquery'], function($) {
             return this.options.url;
         }
 
-    }
+    };
 
 });
 
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART Webservices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('__component__$matrix@husky',[],function() {
+
+    
+
+    var sandbox,
+        activeClass = 'is-active';
+
+    return {
+        initialize: function() {
+            sandbox = this.sandbox;
+
+            this.$element = sandbox.dom.createElement('<div class="husky-matrix"/>');
+
+            this.prepare();
+
+            sandbox.dom.append(this.$el, this.$element);
+
+            this.bindDOMEvents();
+            this.bindCustomEvents();
+        },
+
+        bindDOMEvents: function() {
+            sandbox.dom.on(this.$element, 'click', this.toggleIcon.bind(this), 'tbody > tr > td:has(span[class^="icon-"])');
+            sandbox.dom.on(this.$element, 'click', this.setRowActive.bind(this), 'tbody > tr > td:last-child');
+        },
+
+        bindCustomEvents: function() {
+            sandbox.on('husky.matrix.set-all', this.setAllActive.bind(this));
+            sandbox.on('husky.matrix.unset-all', this.unsetAllActive.bind(this));
+        },
+
+        toggleIcon: function(event) {
+            var $target = event.currentTarget;
+            $target = sandbox.dom.find('span[class^="icon-"]', $target);
+            sandbox.dom.toggleClass($target, activeClass);
+
+            // emit events for communication with the outside
+            sandbox.emit('husky.matrix.changed', {
+                section: sandbox.dom.data($target, 'section'),
+                value: sandbox.dom.data($target, 'value'),
+                activated: sandbox.dom.hasClass($target, activeClass)
+            });
+        },
+
+        setRowActive: function(event) {
+            var $tr = sandbox.dom.parent(event.currentTarget),
+                $targets = sandbox.dom.find('span[class^="icon-"]', $tr);
+            sandbox.dom.addClass($targets, activeClass);
+
+            // emit events for communication with the outside
+            sandbox.emit('husky.matrix.changed', {
+                section: sandbox.dom.data($targets, 'section'),
+                value: this.options.values.horizontal,
+                activated: true
+            });
+        },
+
+        setAllActive: function() {
+            var $targets = sandbox.dom.find('span[class^="icon-"]', this.$element),
+                $trs = sandbox.dom.find('tbody > tr', this.$element);
+            sandbox.dom.addClass($targets, activeClass);
+
+            // emit events for communication with the outsite
+            sandbox.dom.each($trs, function(key, $tr) {
+                sandbox.emit('husky.matrix.changed', {
+                    section: sandbox.dom.data(sandbox.dom.find('td.section', $tr), 'section'),
+                    value: this.options.values.horizontal,
+                    activated: true
+                });
+            }.bind(this));
+        },
+
+        unsetAllActive: function() {
+            var $targets = sandbox.dom.find('span[class^="icon-"]', this.$element),
+                $trs = sandbox.dom.find('tbody > tr', this.$element);
+            sandbox.dom.removeClass($targets, activeClass);
+
+            // emit events for communication with the outsite
+            sandbox.dom.each($trs, function(key, $tr) {
+                sandbox.emit('husky.matrix.changed', {
+                    section: sandbox.dom.data(sandbox.dom.find('td.section', $tr), 'section'),
+                    value: this.options.values.horizontal,
+                    activated: false
+                });
+            }.bind(this));
+        },
+
+        prepare: function() {
+            this.$element.append(this.prepareTable());
+        },
+
+        prepareTable: function() {
+            var $table;
+
+            $table = sandbox.dom.createElement('<table class="table matrix"/>');
+            sandbox.dom.append($table, this.prepareTableHead());
+
+            if (!!this.options.captions.vertical) {
+                sandbox.dom.append($table, this.prepareTableBody());
+            }
+
+            return $table;
+        },
+
+        prepareTableHead: function() {
+            var $thead = sandbox.dom.createElement('<thead/>'),
+                $tr = sandbox.dom.createElement('<tr/>'),
+                $thSection = sandbox.dom.createElement('<th class="section"/>'),
+                $thGeneral, $th;
+
+            if (!!this.options.captions.general) {
+                $thGeneral = sandbox.dom.createElement('<th class="general"/>');
+                sandbox.dom.html($thGeneral, this.options.captions.general);
+                sandbox.dom.append($tr, $thGeneral);
+            }
+
+            sandbox.dom.html($thSection, this.options.captions.type);
+
+            sandbox.dom.append($tr, $thSection);
+
+            if (typeof(this.options.captions.horizontal) === 'string') {
+                // insert a header for all values, if the horizontal caption is a string
+                $th = sandbox.dom.createElement('<th/>', {colspan: this.options.values.horizontal.length});
+                sandbox.dom.html($th, this.options.captions.horizontal);
+                sandbox.dom.append($tr, $th);
+            } else {
+                // insert the corresponding headers, if the horizontal caption is an array
+                this.options.captions.horizontal.forEach(function(caption) {
+                    var $th = sandbox.dom.createElement('<th/>');
+                    sandbox.dom.html($th, caption);
+                    sandbox.dom.append($tr, $th);
+                });
+            }
+
+            // add empty th for all link
+            sandbox.dom.append($tr, sandbox.dom.createElement('<th/>'));
+
+            sandbox.dom.append($thead, $tr);
+
+            return $thead;
+        },
+
+        prepareTableBody: function() {
+            var $tbody = sandbox.dom.createElement('<tbody/>'),
+                i, $tr, $tdHead, $tdAll,
+                j, $tdValue, $span;
+
+            for (i = 0; i < this.options.captions.vertical.length; i++) {
+                $tr = sandbox.dom.createElement('<tr/>');
+                $tdHead = sandbox.dom.createElement('<td class="section"/>');
+                $tdAll = sandbox.dom.createElement('<td class="all"/>');
+
+                // insert empty line, if there is a general caption
+                if (!!this.options.captions.general) {
+                    sandbox.dom.append($tr, sandbox.dom.createElement('<td/>'));
+                }
+
+                // insert vertical headlines as first element
+                sandbox.dom.html($tdHead, this.options.captions.vertical[i]);
+                sandbox.dom.data($tdHead, 'section', this.options.values.vertical[i]);
+                sandbox.dom.append($tr, $tdHead);
+
+                // insert values of matrix
+                for (j = 0; j < this.options.values.horizontal.length; j++) {
+                    $tdValue = sandbox.dom.createElement('<td class="value"/>');
+                    $span = sandbox.dom.createElement(
+                        '<span class="icon-' + this.options.values.horizontal[j] + '"/>'
+                    );
+                    sandbox.dom.data($span, 'value', this.options.values.horizontal[j]);
+                    sandbox.dom.data($span, 'section', this.options.values.vertical[i]);
+
+                    // set activated if set in delivered data
+                    if (!!this.options.data[i][j]) {
+                        sandbox.dom.addClass($span, activeClass);
+                    }
+
+                    sandbox.dom.append($tdValue, $span);
+                    sandbox.dom.append($tr, $tdValue);
+                }
+
+                //add all link
+                sandbox.dom.html($tdAll, 'All');
+                sandbox.dom.append($tr, $tdAll);
+
+                sandbox.dom.append($tbody, $tr);
+            }
+
+            return $tbody;
+        }
+    };
+});
 /*****************************************************************************
  *
  *  Select
@@ -22032,8 +21212,9 @@ define('__component__$dropdown@husky',['jquery'], function($) {
 
 define('__component__$select@husky',[],function() {
 
+    
 
-    var defaults =  {
+    var defaults = {
         url: '',
         data: [],
         valueName: 'name',
@@ -22059,11 +21240,11 @@ define('__component__$select@husky',[],function() {
 
             this.$element.append(this.$select);
             this.$originalElement.append(this.$element);
-           
+
             this.prepareData();
             this.bindDOMEvents();
         },
-        
+
         // bind dom elements
         bindDOMEvents: function() {
 
@@ -22071,9 +21252,9 @@ define('__component__$select@husky',[],function() {
             this.$element.off();
 
             this.$select.on('change', function() {
-                var id= this.$select.val();
-               this.sandbox.logger.log('changed: '+id);
-                this.sandbox.emit('select.'+this.options.instanceName+'.item.changed', id);
+                var id = this.$select.val();
+                this.sandbox.logger.log('changed: ' + id);
+                this.sandbox.emit('select.' + this.options.instanceName + '.item.changed', id);
             }.bind(this));
 
         },
@@ -22096,7 +21277,7 @@ define('__component__$select@husky',[],function() {
                 success: function(response) {
                     this.sandbox.logger.log('load', 'success');
 
-                    if (response.total > 0 && response.items.length == response.total) {
+                    if (response.total > 0 && response.items.length === response.total) {
                         this.options.data = response.items;
                     } else {
                         this.options.data = [];
@@ -22113,7 +21294,7 @@ define('__component__$select@husky',[],function() {
 
             // FIXME event will be binded later
             setTimeout(function() {
-                this.sandbox.emit('select.'+this.options.instanceName+'.loadData');
+                this.sandbox.emit('select.' + this.options.instanceName + '.loadData');
             }.bind(this), 200);
 
         },
@@ -22125,22 +21306,509 @@ define('__component__$select@husky',[],function() {
 
         generateOption: function(item) {
             var $option = $('<option value="' + item.id + '">' + item[this.options.valueName] + '</option>');
-            if ((this.options.selected != null && this.options.selected.id == item.id) ||
-                (this.options.selected == null && this.options.defaultItem.id == item.id)) {
-                $option.attr("selected", true);
+            if ((this.options.selected !== null && this.options.selected.id === item.id) ||
+                (this.options.selected === null && this.options.defaultItem.id === item.id)) {
+                $option.attr('selected', true);
             }
             this.$select.append($option);
         },
 
         clearOptions: function() {
             this.$select.find('option').remove();
-        }    
+        }
 
     };
 
 });
 
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * Name: auto-complete
+ * Options:
+ *  url ... url to load data
+ *  valueName ... propertyName for value
+ *  minLength ... min length for request
+ *  keyControl ... control with up/down key
+ *  value ... value to display at start
+ *  excludeItems ... items to filter
+ *
+ * Provided Events:
+ *  auto-complete.load-data ... event to append data
+ */
+
+define('__component__$auto-complete@husky',[], function() {
+
+    
+
+    var defaults = {
+            url: '',            // url to load data
+            valueName: 'name',  // propertyName for value
+            minLength: 3,       // min length for request
+            keyControl: true,   // control with up/down key
+            value: null,        // value to display at start
+            excludeItems: []    // items to filter
+        },
+        successClass = 'husky-auto-complete-success',
+        failClass = 'husky-auto-complete-error',
+        loadingClass = 'husky-auto-complete-loading';
+
+    return {
+        data: [],
+
+        getEvent: function(append) {
+            return 'husky.auto-complete.' + append;
+        },
+
+        // get url for pattern
+        getUrl: function(pattern) {
+            var delimiter = '?';
+            if (this.options.url.indexOf('?') !== -1) {
+                delimiter = '&';
+            }
+
+            return this.options.url + delimiter + 'search=' + pattern;
+        },
+
+        getValueID: function() {
+            if (!!this.options.value) {
+                return this.options.value.id;
+            } else {
+                return null;
+            }
+        },
+
+        getValueName: function() {
+            if (!!this.options.value) {
+                return this.options.value[this.options.valueName];
+            } else {
+                return '';
+            }
+        },
+
+        initialize: function() {
+            this.sandbox.logger.log('initialize', this);
+            this.sandbox.logger.log(arguments);
+
+            // extend default options
+            this.options = this.sandbox.util.extend({}, defaults, this.options);
+
+            this.render();
+        },
+
+        render: function() {
+            this.$el.addClass('dropdown husky-auto-complete');
+            // init form-element and dropdown menu
+            this.$valueField = $('<input type="text" autofill="false" class="name-value form-element husky-validate" data-id="' + this.getValueID() + '" value="' + this.getValueName() + '"/>');
+            this.$dropDown = $('<div class="dropdown-menu" />');
+            this.$dropDownList = $('<ul/>');
+            this.$el.append(this.$valueField);
+            this.$el.append(this.$dropDown);
+            this.$dropDown.append(this.$dropDownList);
+            this.hideDropDown();
+
+            // bind dom elements
+            this.bindDOMEvents();
+
+            if (!!this.options.value) {
+                this.successState();
+            }
+        },
+
+        // bind dom elements
+        bindDOMEvents: function() {
+            // turn off all events
+            this.$el.off();
+
+            // input value changed
+            this.$valueField.on('input', this.inputChanged.bind(this));
+
+            // mouse control
+            this.$dropDownList.on('click', 'li', function(event) {
+                var $element = $(event.currentTarget),
+                    id = $element.data('id'),
+                    item = {id: id};
+
+                item[this.options.valueName] = $element.text();
+                this.selectItem(item);
+            }.bind(this));
+
+            // focus in
+            this.$valueField.on('focusin', function() {
+                this.$valueField.trigger('input');
+            }.bind(this));
+
+            // focus out
+            this.$valueField.on('focusout', function() {
+                // FIXME may there is a better solution ???
+                setTimeout(function() {
+                    this.hideDropDown();
+                }.bind(this), 250);
+            }.bind(this));
+
+            // key control
+            if (this.options.keyControl) {
+                this.$valueField.on('keydown', function(event) {
+                    // key 40 = down, key 38 = up, key 13 = enter
+                    if ([40, 38, 13].indexOf(event.which) === -1) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    if (this.$dropDown.is(':visible')) {
+
+                        if (event.which === 40) {
+                            this.pressKeyDown();
+                        }
+                        else if (event.which === 38) {
+                            this.pressKeyUp();
+                        }
+                        else if (event.which === 13) {
+                            this.pressKeyEnter();
+                        }
+
+                    } else {
+                        // If dropdown not visible => search for given pattern
+                        this.noState();
+                        this.loadData(this.$valueField.val());
+                    }
+                }.bind(this));
+
+                // remove hover class by mouseover
+                this.$dropDownList.on('mouseover', 'li', function() {
+                    this.$dropDownList.children().removeClass('hover');
+                }.bind(this));
+            }
+        },
+
+        // value of input changed
+        inputChanged: function() {
+            this.sandbox.logger.log('inputChanged');
+
+            // value is not success
+            this.noState();
+
+            var val = this.$valueField.val();
+            if (val.length >= this.options.minLength) {
+                this.loadData(val);
+            }
+        },
+
+        // load data from server
+        loadData: function(pattern) {
+            var url = this.getUrl(pattern);
+            this.sandbox.logger.log('load: ' + url);
+            this.loadingState();
+
+            $.ajax({
+                url: url,
+                success: function(response) {
+                    this.sandbox.logger.log('load', 'success');
+
+                    this.noState();
+
+                    // if only one result this is it, if no result hideDropDown, else generateDropDown
+                    this.updateData(response.items);
+                    if (this.data.length > 1) {
+                        this.generateDropDown(this.data);
+                    } else if (this.data.length === 1) {
+                        this.selectItem(this.data[0]);
+                    } else {
+                        this.failState();
+                        this.hideDropDown();
+                    }
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log('load', 'error');
+
+                    this.failState();
+                    this.hideDropDown();
+                }.bind(this)
+            });
+
+            this.sandbox.emit(this.getEvent('load-data'));
+        },
+
+        // update global data array
+        updateData: function(newData) {
+            this.data = [];
+            if (!!newData && $.isArray(newData)) {
+                newData.forEach(function(item) {
+                    if (this.isVisible(item)) {
+                        this.data.push(item);
+                    }
+                }.bind(this));
+            }
+        },
+
+        // generate dropDown with given items
+        generateDropDown: function(items) {
+            this.clearDropDown();
+            items.forEach(function(item) {
+                if (this.isVisible(item)) {
+                    this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
+                }
+            }.bind(this));
+            this.showDropDown();
+        },
+
+        // is item visible (filter)
+        isVisible: function(item) {
+            var result = true;
+            this.options.excludeItems.forEach(function(testItem) {
+                if (parseInt(item.id, 10) === parseInt(testItem.id, 10)) {
+                    result = false;
+                }
+            }.bind(this));
+            return result;
+        },
+
+        // clear childs of list
+        clearDropDown: function() {
+            // FIXME make it easier
+            this.$dropDown.children('ul').children('li').remove();
+        },
+
+        // make dropDown visible
+        showDropDown: function() {
+            this.sandbox.logger.log('show dropdown');
+            this.$dropDown.show();
+        },
+
+        // hide dropDown
+        hideDropDown: function() {
+            this.sandbox.logger.log('hide dropdown');
+            this.clearDropDown();
+            this.$dropDown.hide();
+        },
+
+        // set class success to container
+        successState: function() {
+            this.sandbox.logger.log('set success');
+            this.clearDropDown();
+            this.$el.parent().removeClass(failClass);
+            this.$el.parent().removeClass(loadingClass);
+            this.$el.parent().addClass(successClass);
+        },
+
+        // remove class success, fail and loading of container
+        noState: function() {
+            this.sandbox.logger.log('remove success and fail');
+            this.$valueField.data('');
+            this.$el.parent().removeClass(failClass);
+            this.$el.parent().removeClass(loadingClass);
+            this.$el.parent().removeClass(successClass);
+        },
+
+        // add class fail to container
+        failState: function() {
+            this.sandbox.logger.log('set fail');
+            this.$el.parent().addClass(failClass);
+            this.$el.parent().removeClass(loadingClass);
+            this.$el.parent().removeClass(successClass);
+        },
+
+        // add class loading to container
+        loadingState: function() {
+            this.sandbox.logger.log('set loading');
+            this.$el.parent().removeClass(failClass);
+            this.$el.parent().addClass(loadingClass);
+            this.$el.parent().removeClass(successClass);
+        },
+
+        // handle key down
+        pressKeyDown: function() {
+            this.sandbox.logger.log('key down');
+
+            // get actual and next element
+            var $actual = this.$dropDownList.children('.hover'),
+                $next = $actual.next();
+
+            // no element selected
+            if ($next.length === 0) {
+                $next = this.$dropDownList.children().first();
+            }
+
+            $actual.removeClass('hover');
+            $next.addClass('hover');
+        },
+
+        // handle key up
+        pressKeyUp: function() {
+            this.sandbox.logger.log('key up');
+
+            // get actual and next element
+            var $actual = this.$dropDownList.children('.hover'),
+                $next = $actual.prev();
+            // no element selected
+            if ($next.length === 0) {
+                $next = this.$dropDownList.children().last();
+            }
+
+            $actual.removeClass('hover');
+            $next.addClass('hover');
+        },
+
+        // handle key enter
+        pressKeyEnter: function() {
+            this.sandbox.logger.log('key enter');
+
+            // if one element selected
+            var $actual = this.$dropDownList.children('.hover'),
+                item, value, childs, that;
+            if ($actual.length === 1) {
+                item = {id: $actual.data('id')};
+                item[this.options.valueName] = $actual.text();
+                this.selectItem(item);
+            } else {
+                // if it is one of the list
+                value = this.$valueField.val();
+                childs = this.$dropDownList.children();
+                that = this;
+
+                $(childs).each(function() {
+                    if ($(this).text() === value) {
+                        // found an item select it
+                        var item = {id: $(this).data('id')};
+                        item[that.options.valueName] = $(this).text();
+                        that.selectItem(item);
+                        return false;
+                    }
+                });
+            }
+        },
+
+        // select an item
+        selectItem: function(item) {
+            this.sandbox.logger.log('select item: ' + item.id);
+            // set id to data-id
+            this.$valueField.data('id', item.id);
+            // set value to value
+            this.$valueField.val(item[this.options.valueName]);
+
+            this.hideDropDown();
+            this.successState();
+        }
+    };
+});
+
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * Name: button
+ * Options:
+ *  labels.inputPassword1: text for the label for the first password field
+ *  labels.inputPassword2: text for the label for the second password field
+ *  labels.generateLabel: text for the generate label
+ *  instanceName: name of the instance of this component
+ *
+ * Provided Events:
+ *  husky.passwords.fields.<<instanceName>>.generated.passwords: password generated
+ *
+ */
+
+define('__component__$password-fields@husky',[], function() {
+
+    
+
+    var defaults = {
+        instanceName: 'undefined',
+        labels: {
+            inputPassword1: 'Password',
+            inputPassword2: 'Repeat Password',
+            generateLabel: 'Generate password'
+        }
+    };
+
+    return {
+
+        initialize: function() {
+            this.sandbox.logger.log('initialize', this);
+            this.sandbox.logger.log(arguments);
+
+            // extend default options
+            this.options = this.sandbox.util.extend({}, defaults, this.options);
+            this.options.ids =
+            {
+                inputPassword1: 'husky-password-fields-' + this.options.instanceName + '-password1',
+                inputPassword2: 'husky-password-fields-' + this.options.instanceName + '-password2',
+                generateLabel: 'husky-password-fields-' + this.options.instanceName + '-generate'
+            };
+            this.render();
+        },
+
+        render: function() {
+
+            this.$originalElement = this.sandbox.dom.$(this.options.el);
+            this.$element = this.sandbox.dom.$(this.template());
+            this.$originalElement.append(this.$element);
+
+            this.bindDomEvents();
+        },
+
+        bindDomEvents: function() {
+
+            this.$element.on('click', '#'+this.options.ids.generateLabel, function() {
+                this.generatePasswords();
+                this.sandbox.emit('husky.passwords.fields.' + this.options.instanceName + '.generated.passwords');
+            }.bind(this));
+        },
+
+        generatePasswords: function() {
+            var generatedPassword = 'test';
+
+            // TODO generate password
+
+            this.sandbox.dom.val('#'+this.options.ids.inputPassword1, generatedPassword);
+            this.sandbox.dom.val('#'+this.options.ids.inputPassword2, generatedPassword);
+        },
+
+        template: function() {
+
+            return [
+                '<div class="husky-password-fields grid">',
+                '    <div class="grid-row">',
+                '        <div class="grid-col-6">',
+                '            <div class="grid-row m-height-25">',
+                '                <div class="grid-col-6">',
+                '                    <label>', this.options.labels.inputPassword1, '</label>',
+                '                </div>',
+                '                <div class="grid-col-6 align-right" id="', this.options.ids.generateLabel, '">',
+                '                    <span class="icon-keys m-right-10"></span><span class="pointer">', this.options.labels.generateLabel, '</span>',
+                '                </div>',
+                '            </div>',
+                '            <div class="grid-row">',
+                '                <input class="form-element" type="text" id="', this.options.ids.inputPassword1, '"/>',
+                '            </div>',
+                '        </div>',
+                '        <div class="grid-col-6">',
+                '            <div class="grid-row m-height-25">',
+                '                <label>', this.options.labels.inputPassword2, '</label>',
+                '            </div>',
+                '            <div class="grid-row">',
+                '                <input class="form-element" type="text" id="', this.options.ids.inputPassword2, '"/>',
+                '            </div>',
+                '        </div>',
+                '    </div>',
+                '</div>'
+            ].join('');
+        }
+    };
+});
+
 (function() {
+
+    
 
     if (window.Backbone) {
         define('backbone', [], function() {
@@ -22159,7 +21827,8 @@ define('__component__$select@husky',[],function() {
         initialize: function(app) {
             var core = app.core,
                 sandbox = app.sandbox,
-                _ = app.sandbox.util._;
+                _ = app.sandbox.util._,
+                views = {};
 
             core.mvc = require('backbone');
 
@@ -22195,34 +21864,34 @@ define('__component__$select@husky',[],function() {
                 return sandbox.mvc.Collection;
             });
 
-            var views = {};
-
             // Injecting a Backbone view in the Component just before initialization.
             // This View's class will be built and cached this first time the component is included.
             app.components.before('initialize', function(options) {
 
                 if (!this) {
-                    throw new Error("Missing context!");
+                    throw new Error('Missing context!');
                 }
 
                 // check component needs a view
                 if (!!this.view) {
 
-                    var View = views[options.ref];
+                    var View = views[options.ref],
+                        ext;
 
                     if (!View) {
-                        var ext = _.pick(this, 'model', 'collection', 'id', 'attributes', 'className', 'tagName', 'events');
+                        ext = _.pick(this, 'model', 'collection', 'id', 'attributes', 'className', 'tagName', 'events');
                         views[options.ref] = View = sandbox.mvc.View(ext);
                     }
                     this.view = new View({ el: this.$el });
                     this.view.sandbox = this.sandbox;
+                    this.view.parent = this;
                 }
             });
 
             app.components.before('remove', function() {
 
                 if (!this) {
-                    throw new Error("Missing context!");
+                    throw new Error('Missing context!');
                 }
 
                 this.view && this.view.stopListening();
@@ -22240,6 +21909,8 @@ define('__component__$select@husky',[],function() {
 })();
 
 define('husky_extensions/collection',[],function() {
+
+    
 
     // simplified backbone collection
     var Collection = {
@@ -22264,10 +21935,13 @@ define('husky_extensions/collection',[],function() {
             app.sandbox.data.Collection = Collection;
         }
 
-    }
+    };
 });
 
 (function() {
+
+    
+
     require.config({
         paths: {
             'globalize_lib': 'bower_components/globalize/lib/globalize',
@@ -22295,7 +21969,9 @@ define('husky_extensions/collection',[],function() {
                 };
 
                 app.sandbox.translate = function(key) {
-                    if (!app.config.culture || !app.config.culture.name)return key;
+                    if (!app.config.culture || !app.config.culture.name) {
+                        return key;
+                    }
                     var translation = Globalize.localize(key, app.config.culture.name);
                     return !!translation ? translation : key;
                 };
@@ -22310,15 +21986,20 @@ define('husky_extensions/collection',[],function() {
 
             afterAppStart: function(app) {
                 if (!!app.config.culture && !!app.config.culture) {
-                    if (!!app.config.culture.messages) app.config.culture.messages = {};
+                    if (!app.config.culture.messages) {
+                        app.config.culture.messages = { };
+                    }
                     app.setLanguage(app.config.culture.name, app.config.culture.messages);
                 }
             }
-        }
+        };
     });
 })();
 
 (function() {
+
+    
+
     require.config({
         paths: { "form": 'bower_components/husky-validation/dist/validation' }
     });
@@ -22345,7 +22026,9 @@ define('husky_extensions/collection',[],function() {
                     },
 
                     validate: function(selector, force) {
-                        if (!force) force = false;
+                        if (!force) {
+                            force = false;
+                        }
 
                         return  app.sandbox.form.getObject(selector).validation.validate(force);
                     },
@@ -22400,17 +22083,20 @@ define('husky_extensions/collection',[],function() {
                         },
 
                         deleteConstraint: function(elementSelector, constraintName) {
-                            app.sandbox.form.element.getObject(elementSelector).deleteConstraint(constraintName, options);
+                            app.sandbox.form.element.getObject(elementSelector).deleteConstraint(constraintName);
                         }
                     }
 
-                }
+                };
             }
-        }
+        };
     });
 })();
 
-(function() {    
+(function() {
+
+    
+
     if (window.jQuery) {
         define('jquery', [], function() {
             return window.jQuery;
@@ -22446,6 +22132,10 @@ define('husky_extensions/collection',[],function() {
                 return $(selector).html(content);
             };
 
+            app.core.dom.each = function(selector, callback) {
+                $(selector).each(callback);
+            };
+
             app.core.dom.append = function(selector, element) {
                 return $(selector).append(element);
             };
@@ -22464,6 +22154,18 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.removeClass = function(selector, classes) {
                 return $(selector).removeClass(classes);
+            };
+
+            app.core.dom.toggleClass = function(selector, classes) {
+                return $(selector).toggleClass(classes);
+            };
+
+            app.core.dom.hasClass = function(selector, classes) {
+                return $(selector).hasClass(classes);
+            };
+
+            app.core.dom.parent = function(selector) {
+                return $(selector).parent();
             };
 
             app.core.dom.width = function(selector) {
@@ -22487,33 +22189,70 @@ define('husky_extensions/collection',[],function() {
                 return $(selector).is(type);
             };
 
+            app.core.dom.data = function(selector, key, value) {
+                if (!!value) {
+                    return $(selector).data(key, value);
+                } else {
+                    return $(selector).data(key);
+                }
+            };
+
             app.core.dom.onReady = function(callback) {
                 $(window).on('load', callback);
             };
 
-            app.core.dom.val = function(selector) {
-                return $(selector).val();
+            app.core.dom.val = function(selector, value) {
+                if (!!value) {
+                    $(selector).val(value);
+                } else {
+                    return $(selector).val();
+                }
             };
 
-            app.core.dom.on = function(selector, event, callback, filter){
-                if(!!filter) {
+            app.core.dom.on = function(selector, event, callback, filter) {
+                if (!!filter) {
                     $(selector).on(event, filter, callback);
                 } else {
                     $(selector).on(event, callback);
                 }
-            }
+            };
+
+            app.core.dom.one = function(selector, event, callback, filter) {
+                if (!!filter) {
+                    $(selector).one(event, filter, callback);
+                } else {
+                    $(selector).one(event, callback);
+                }
+            };
 
             app.core.dom.toggleClass = function(selector, className) {
                 $(selector).toggleClass(className);
-            }
+            };
 
-            app.core.dom.parent = function(selector) {
-                return $(selector).parent();
-            }
+            app.core.dom.parent = function(selector, filter) {
+                return $(selector).parent(filter);
+            };
 
             app.core.dom.next = function(selector, filter) {
                 return $(selector).next(filter);
-            }
+            };
+
+            app.core.dom.prev = function(selector, filter) {
+                return $(selector).prev(filter);
+            };
+
+            app.core.dom.text = function(selector, value) {
+                return $(selector).text(value);
+            };
+
+
+            app.core.dom.hide = function(selector) {
+                return $(selector).hide();
+            };
+
+            app.core.dom.show = function(selector) {
+                return $(selector).show();
+            };
 
             app.core.util.ajax = $.ajax;
         }
@@ -22521,6 +22260,8 @@ define('husky_extensions/collection',[],function() {
 })();
 
 define('husky_extensions/model',[],function() {
+
+    
 
     // simplified backbone model
     var Model = {
@@ -22542,10 +22283,12 @@ define('husky_extensions/model',[],function() {
             app.sandbox.data.Model = Model;
         }
 
-    }
+    };
 });
 
 define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
+
+    
 
     function TemplateManager(options) {
         this.options = _.defaults(options || {}, {
@@ -22563,8 +22306,9 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
         load: function(names, widget) {
             names = _.isString(names) ? [names] : names;
 
-            var resolved = {};
-            var unresolved = [];
+            var resolved = {},
+                unresolved = [],
+                deferred, files;
 
             _.each(names, function(name) {
                 var template = this.find(widget + '/' + name);
@@ -22575,14 +22319,14 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
                 }
             }, this);
 
-            var deferred = new $.Deferred();
+            deferred = new $.Deferred();
 
             if (!unresolved.length) {
                 deferred.resolve(resolved);
             } else {
-                var files = _.map(unresolved, function(u) {
+                files = _.map(unresolved, function(u) {
                     var path = u + '.' + this.options.type;
-                    if (u.indexOf('/') != 0) {
+                    if (u.indexOf('/') !== 0) {
                         // TODO default path
                     }
                     return 'text!' + path;
@@ -22596,7 +22340,6 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
                     deferred.resolve(resolved);
                 }, this), function(error) {
-                    console.error(error);
                     deferred.reject(error);
                 });
             }
@@ -22606,12 +22349,13 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
         find: function(name, namespace) {
             namespace = namespace || 'aura';
-            var template = $('script[data-' + namespace + '-template="' + name + '"]').html();
+            var template = $('script[data-' + namespace + '-template="' + name + '"]').html(),
+                hash;
 
             if (template) {
                 return this.options.compiler(template);
             } else {
-                var hash = _.find(this.options.lookup, function(h) {
+                hash = _.find(this.options.lookup, function(h) {
                     return !!h[name];
                 }) || {};
 
@@ -22624,13 +22368,12 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
         var manager = new TemplateManager(app.config.template);
 
         app.core.Components.Base.prototype.renderTemplate = function(tplName, context) {
-            var tpl = this._templates[tplName];
 
-            if (typeof tpl === 'function') {
-                var regExp = new RegExp('(###\\w*###)', 'gi'),
+            if (typeof this.loadedTemplates[tplName] === 'function') {
+                var tpl = this.loadedTemplates[tplName],
+                    regExp = new RegExp('(###\\w*###)', 'gi'),
                     template = tpl(context),
-                    result = template.match(regExp),
-                    key, translation;
+                    result = template.match(regExp);
 
                 if (!!result) {
                     this.sandbox.util.each(result, function(key, value) {
@@ -22647,15 +22390,15 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
         app.components.before('initialize', function() {
 
-            this._templates = {};
+            this.loadedTemplates = {};
 
-            if (this.templates == null || !this.templates.length) {
+            if (!this.templates || !this.templates.length) {
                 return;
             }
 
             var loading = manager.load(this.templates, this.options.name);
             loading.done(_.bind(function(templates) {
-                this._templates = templates;
+                this.loadedTemplates = templates;
             }, this));
 
             return loading.promise();
@@ -22663,33 +22406,38 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
     };
 
 });
-define('husky_extensions/util',[], {
 
-    name: 'Util',
+define('husky_extensions/util',[],function() {
 
-    initialize: function(app) {
+    
 
-        // for comparing arrays
-        app.core.util.compare = function(a, b) {
-            if (this.typeOf(a) === 'array' && this.typeOf(b) === 'array') {
-                return JSON.stringify(a) === JSON.stringify(b);
-            }
-        },
+    return {
+        name: 'Util',
 
-        // Crockfords better typeof
-        app.core.util.typeOf = function(value) {
-            var s = typeof value;
-            if (s === 'object') {
-                if (value) {
-                    if (value instanceof Array) {
-                        s = 'array';
-                    }
-                } else {
-                    s = 'null';
+        initialize: function(app) {
+
+            // for comparing arrays
+            app.core.util.compare = function(a, b) {
+                if (this.typeOf(a) === 'array' && this.typeOf(b) === 'array') {
+                    return JSON.stringify(a) === JSON.stringify(b);
                 }
-            }
-            return s;
-        }
+            };
 
-    }
+            // Crockfords better typeof
+            app.core.util.typeOf = function(value) {
+                var s = typeof value;
+                if (s === 'object') {
+                    if (value) {
+                        if (value instanceof Array) {
+                            s = 'array';
+                        }
+                    } else {
+                        s = 'null';
+                    }
+                }
+                return s;
+            };
+
+        }
+    };
 });
