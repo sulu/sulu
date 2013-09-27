@@ -124,6 +124,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
             idDelete = id;
 
             // show dialog and call delete only when user confirms
+            // TODO improvement: sulu dialog with callback
             sandbox.emit('sulu.dialog.confirmation.show', {
                 content: {
                     title: 'Be careful!',
