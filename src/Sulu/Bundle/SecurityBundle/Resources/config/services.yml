@@ -1,8 +1,12 @@
 parameters:
     sulu_security.admin.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin
+    sulu_security.mask_converter.class: Sulu\Bundle\SecurityBundle\Permission\MaskConverter
 
 services:
     sulu_security.admin:
         class: %sulu_security.admin.class%
         tags:
         - { name: sulu.admin }
+
+    sulu_security.mask_converter:
+        class: %sulu_security.mask_converter.class%

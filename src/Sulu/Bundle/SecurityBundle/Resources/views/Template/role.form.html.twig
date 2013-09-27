@@ -1,0 +1,35 @@
+<form id="role-form">
+    <% if(!!data.id) { %>
+        <input id="id" type="hidden" value="<%= data.id %>"/>
+    <% } %>
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <label>Title*</label>
+            <input class="form-element" type="text" id="name" value="<%= data.name %>" data-validation-required="true"/>
+        </div>
+        <div class="grid-col-6">
+            <label>System*</label>
+            <select id="system" class="form-element">
+                {% for system in systems %}
+                    <option value="{{ system }}">{{ system }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="grid-row">
+        <label>God mode</label>
+
+        <input class="form-element custom-checkbox" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
+        <span class="custom-checkbox-icon"></span>
+        This is a god
+    </div>
+
+    <hr class="divider" />
+
+    <div class="grid-row">
+        <div id="matrix-container"></div>
+    </div>
+</form>
