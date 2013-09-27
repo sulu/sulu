@@ -16,7 +16,8 @@
         "friendsofsymfony/rest-bundle": "0.12.*",
         "jms/serializer-bundle": "@dev",
         "sulu/core-bundle": "dev-develop",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",

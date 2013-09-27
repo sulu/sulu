@@ -20,6 +20,12 @@ class SuluSecurityAdmin extends Admin
     public function __construct()
     {
         $rootNavigationItem = new NavigationItem('Root');
+        $settings = new NavigationItem('Settings', $rootNavigationItem);
+        $settings->setIcon('settings');
+        $roles = new NavigationItem('Roles &amp; Permissions', $settings);
+        $roles->setAction('settings/roles');
+        $roles->setIcon('settings');
+        $roles->setType('content');
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
@@ -31,4 +37,15 @@ class SuluSecurityAdmin extends Admin
         return array();
     }
 
+    public function getSecurityContexts()
+    {
+        return array(
+            'Sulu' => array(
+                'Security' => array(
+                    'sulu.security.roles',
+                    'sulu.security.groups'
+                )
+            )
+        );
+    }
 }
