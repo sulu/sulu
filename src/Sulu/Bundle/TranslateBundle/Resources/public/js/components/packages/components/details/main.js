@@ -125,10 +125,22 @@ define([], function() {
 
                 }.bind(this), 'textarea');
 
+                this.sandbox.dom.on('#codes', 'change', function(event) {
+                    var $element = this.sandbox.dom.$(event.currentTarget),
+                        $item = $element.parent().parent().parent().parent().parent(),
+                        $translation = this.sandbox.dom.find('.translation-value', $item),
+                        $lengthInfo = this.sandbox.dom.find('.length-info', $item),
+                        length = parseInt($element.val(), 10);
+
+                    this.sandbox.form.updateConstraint(form, $translation, 'maxLength', {maxLength: length});
+                    this.sandbox.dom.html($lengthInfo, length);
+                }.bind(this), '.length-value');
+
                 // selected catalogue changed
                 this.sandbox.on('select.catalogues.item.changed', function(catalogueId) {
                     this.sandbox.emit('sulu.translate.catalogue.changed', this.options.data.id, catalogueId);
                 }, this);
+
             },
 
             bindCustomEvents: function() {
@@ -149,6 +161,7 @@ define([], function() {
                         $code = this.sandbox.dom.find('.code-value', $item),
                         $translation = this.sandbox.dom.find('.translation-value', $item),
                         $length = this.sandbox.dom.find('.length-value', $item),
+                        $lengthInfo = this.sandbox.dom.find('.length-info', $item),
                         $frontend = this.sandbox.dom.find('.frontend-value', $item),
                         $backend = this.sandbox.dom.find('.backend-value', $item),
                         $suggestion = this.sandbox.dom.find('.suggestion-value', $item);
@@ -156,10 +169,14 @@ define([], function() {
                     this.sandbox.dom.data($item, 'id', value.id);
                     this.sandbox.dom.val($code, value.code.code);
                     this.sandbox.dom.val($translation, value.value);
-                    this.sandbox.dom.html($suggestion, value.suggestion);
                     this.sandbox.dom.val($length, value.code.length);
                     this.sandbox.dom.prop($frontend, 'checked', value.code.frontend);
                     this.sandbox.dom.prop($backend, 'checked', value.code.backend);
+
+                    this.sandbox.dom.html($lengthInfo, value.code.length);
+                    this.sandbox.dom.html($suggestion, value.suggestion);
+
+                    this.sandbox.dom.data($translation, 'validationMaxLength', value.code.length);
 
                     this.sandbox.dom.append('#codes', $item);
                 }.bind(this));
