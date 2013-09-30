@@ -56,9 +56,8 @@ define(['text!/security/template/permission/form'], function(Template) {
         },
 
         initializePermissions: function(){
-
             //TODO
-            
+
 
         },
 

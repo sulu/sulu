@@ -5,7 +5,7 @@
     <div class="grid-row">
         <div class="grid-col-6">
             <label>Title*</label>
-            <input class="form-element" type="text" id="name" value="<%= data.name %>"/>
+            <input class="form-element" type="text" id="name" value="<%= data.name %>" data-validation-required="true"/>
         </div>
         <div class="grid-col-6">
             <label>System*</label>
@@ -20,8 +20,16 @@
     <hr class="divider" />
 
     <div class="grid-row">
-        <div id="matrix-container">
-            <div id="matrix-security" data-title="Security" data-module="Security"></div>
-        </div>
+        <label>God mode</label>
+
+        <input class="form-element custom-checkbox" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
+        <span class="custom-checkbox-icon"></span>
+        This is a god
+    </div>
+
+    <hr class="divider" />
+
+    <div class="grid-row">
+        <div id="matrix-container"></div>
     </div>
 </form>
