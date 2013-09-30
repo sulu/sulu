@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', 'sulutranslate/model/catalogue'], function(RelationalModel,HasMany, Catalogue) {
+define(['mvc/relationalmodel', 'mvc/hasmany', 'sulutranslate/models/catalogue'], function(RelationalModel,HasMany, Catalogue) {
     return RelationalModel({
         urlRoot: '/translate/api/packages',
         idAttribute: 'id',

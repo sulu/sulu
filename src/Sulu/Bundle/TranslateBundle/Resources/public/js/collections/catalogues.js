@@ -9,7 +9,7 @@
 
 define([
     'mvc/collection',
-    'sulutranslate/model/catalogue'
+    'sulutranslate/models/catalogue'
 ], function(Collection, Catalogue) {
 
     return Collection({

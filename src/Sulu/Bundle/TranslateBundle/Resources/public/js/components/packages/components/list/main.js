@@ -7,89 +7,30 @@
  * with this source code in the file LICENSE.
  */
 
-define([
-    'text!/translate/template/package/list',
-    'mvc/relationalstore'
-], function(listTemplate, RelationalStore) {
+define([], function() {
 
     'use strict';
 
-    var sandbox,
+    var sandbox;
 
-    bindListener = function(){
-        sandbox.off('husky.datagrid.items.selected',deletePackages);
-        sandbox.on('husky.datagrid.items.selected', deletePackages);
-    },
-
-    deletePackages = function(ids){
-
-        //unbindListener();
-
-        if (ids.length === 0) {
-            // no items selected
-            sandbox.logger.log("no ids in array");
-            sandbox.emit('husky.header.button-state', 'standard');
-        } else if (ids.length > 0) {
-            sandbox.emit('sulu.translate.packages.delete', ids, false);
-        }
-
-    };
-
-//    unbindListener =  function(){
-//        sandbox.off('husky.datagrid.items.selected',deletePackages);
-//    };
 
     return {
 
         view: true,
 
+        templates: ['/translate/template/package/list'],
+
         initialize: function() {
             sandbox = this.sandbox;
-
-            this.initializeHeader();
-            this.initDropDown();
             this.render();
-
         },
 
         render: function() {
-            RelationalStore.reset();
-//            this.$el.removeData('Husky.Ui.DataGrid'); // FIXME: jquery
 
-            var template = this.sandbox.template.parse(listTemplate);
-            this.sandbox.dom.html(this.options.el, template);
-            this.initDatagrid();
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/translate/template/package/list'));
 
-        },
 
-        initDatagrid: function(){
-
-            this.sandbox.start([
-                {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: this.sandbox.dom.$('#package-list'),
-                        url: '/translate/api/packages', // FIXME use list function with fields
-                        pagination: false,
-                        selectItem: {
-                            type: 'checkbox'
-                        },
-                        removeRow: false,
-                        tableHead: [
-                            {content: 'Title'}
-                        ],
-                        excludeFields: ['id']
-                }}
-            ]);
-
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.translate.package.load', item);
-            }, this);
-
-        },
-
-        initDropDown: function(){
-
+            // dropdown - showing options
             this.sandbox.start([{
                 name: 'dropdown@husky',
                 options: {
@@ -108,34 +49,48 @@ define([
                 }
             }]);
 
+            // datagrid
+            this.sandbox.start([{
+                name: 'datagrid@husky',
+                options: {
+                    el: this.sandbox.dom.find('#package-list', this.$el),
+                    url: '/translate/api/packages',
+                    pagination: false,
+                    selectItem: {
+                        type: 'checkbox'
+                    },
+                    removeRow: false,
+                    tableHead: [
+                        {content: 'Name'}
+                    ]
+                }
+            }]);
+
+            // navigate to edit contact
+            this.sandbox.on('husky.datagrid.item.click', function(item) {
+                this.sandbox.emit('sulu.translate.package.load', item);
+            }, this);
+
 
             this.sandbox.on('husky.dropdown.options.clicked',  function() {
                 this.sandbox.emit('husky.dropdown.options.toggle');
-            },this);
+            }, this);
 
-            bindListener();
-
-            this.sandbox.off('husky.dropdown.options.item.click');
+            // optionsmenu clicked
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
-
                 if (event.type === "delete") {
-                    this.sandbox.emit('husky.dropdown.options.toggle');
-                    this.sandbox.emit('husky.header.button-state', 'disable');
-                    this.sandbox.emit('husky.datagrid.items.get-selected');
+                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids){
+                        this.sandbox.emit('sulu.translate.packages.delete', ids);
+                    }.bind(this));
                 }
             },this);
 
-        },
-
-        initializeHeader: function() {
-
+            // add button in headerbar
             this.sandbox.emit('husky.header.button-type', 'add');
 
-            this.sandbox.on('husky.button.add.click', function(){
+            this.sandbox.on('husky.button.add.click', function() {
                 this.sandbox.emit('sulu.translate.package.new');
             }, this);
         }
-
-
     };
 });

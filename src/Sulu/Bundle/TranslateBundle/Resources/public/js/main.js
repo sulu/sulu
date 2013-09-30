@@ -18,6 +18,9 @@ define({
     name: "Sulu Translate Bundle",
 
     initialize: function (app) {
+
+        'use strict';
+
         var sandbox = app.sandbox;
 
         app.components.addSource('sulutranslate', '/bundles/sulutranslate/js/components');
@@ -35,7 +38,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/add',
                 callback: function(){
-                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="form"/>');
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="settings"/>');
                 }
             }
         );
@@ -44,7 +47,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/settings',
                 callback: function(id){
-                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="settings" data-aura-id="' + id + '"/>');
                 }
             }
         );
@@ -53,7 +56,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details',
                 callback: function(id){
-                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="details" data-aura-id="' + id + '"/>');
                 }
             }
         );
@@ -62,7 +65,7 @@ define({
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details::catalogueId',
                 callback: function(id,catalogueId){
-                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="'+id+'" data-aura-catalogue="'+catalogueId+'"/>');
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="details" data-aura-id="' + id + '" data-aura-catalogue="' + catalogueId + '"/>');
                 }
             }
         );

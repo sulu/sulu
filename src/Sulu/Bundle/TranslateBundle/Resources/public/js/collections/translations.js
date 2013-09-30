@@ -9,16 +9,18 @@
 
 define([
     'mvc/collection',
-    'sulutranslate/components/translations/models/code',
-    'sulutranslate/components/translations/models/translation'
+    'sulutranslate/models/code',
+    'sulutranslate/models/translation'
 ], function(Collection, Code, Translation) {
 
-    return Collection({
+    'use strict';
+
+    return new Collection({
 
         model: Translation,
 
         url: function() {
-            return '/translate/api/catalogues/' + this.catalogueId + '/translations'
+            return '/translate/api/catalogues/' + this.catalogueId + '/translations';
         },
 
         initialize: function(options) {
@@ -29,7 +31,7 @@ define([
             return resp.items;
         },
 
-        save: function(sandbox, translations) {
+        save: function(sandbox, translations, options) {
 
             sandbox.util.ajax({
 
@@ -43,13 +45,19 @@ define([
                 data: JSON.stringify(translations),
 
                 success: function() {
-                    console.log("patch successful");
+                    if (!!options && !!options.success && typeof options.success === 'function') {
+                        options.success();
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("error during patch: " + textStatus, errorThrown);
+                    if (!!options && !!options.error && typeof options.error === 'function') {
+                        options.error(jqXHR, textStatus, errorThrown);
+                    }
                 },
                 complete: function() {
-                    console.log("completed patch");
+                    if (!!options && !!options.complete && typeof options.complete === 'function') {
+                        options.complete();
+                    }
                 }
 
             });

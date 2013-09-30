@@ -9,8 +9,8 @@
 
 define([
     'mvc/relationalmodel',
-    'sulutranslate/model/catalogue',
-    'sulutranslate/components/translations/models/code',
+    'sulutranslate/models/catalogue',
+    'sulutranslate/models/code',
     'mvc/hasone'], function(RelationalModel, Catalogue, Code, HasOne) {
     return RelationalModel({
         urlRoot: '/translate/api/translation',
