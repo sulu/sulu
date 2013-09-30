@@ -6,11 +6,12 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
         <field name="context" type="string" column="context" length="60"/>
         <field name="module" type="string" column="module" nullable="true" length="60"/>
         <field name="permissions" type="smallint" column="permissions"/>
 
-        <many-to-one target-entity="Sulu\Bundle\SecurityBundle\Entity\Role" field="role" inversed-by="permissions">
+        <many-to-one field="role" target-entity="Sulu\Bundle\SecurityBundle\Entity\Role" inversed-by="permissions">
             <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
         </many-to-one>
 

@@ -44,8 +44,6 @@ class RolesController extends RestController implements ClassResourceInterface
     public function getAction($id)
     {
         $find = function ($id) {
-            $roleData = array();
-
             /** @var Role $role */
             $role = $this->getDoctrine()
                 ->getRepository($this->entityName)
@@ -226,10 +224,6 @@ class RolesController extends RestController implements ClassResourceInterface
     {
         $permission->setContext($permissionData['context']);
 
-        if (isset($permissionData['module'])) {
-            $permission->setModule($permissionData['module']);
-        }
-
         $permission->setPermissions(
             $this->get('sulu_security.mask_converter')
                 ->convertPermissionsToNumber($permissionData['permissions'])
@@ -248,17 +242,20 @@ class RolesController extends RestController implements ClassResourceInterface
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
         $roleData['system'] = $role->getSystem();
-
         $roleData['permissions'] = array();
-        foreach ($role->getPermissions() as $permission) {
-            /** @var Permission $permission */
-            $roleData['permissions'][] = array(
-                'id' => $permission->getId(),
-                'context' => $permission->getContext(),
-                'module' => $permission->getModule(),
-                'permissions' => $this->get('sulu_security.mask_converter')
-                    ->convertPermissionsToArray($permission->getPermissions())
-            );
+
+        $permissions = $role->getPermissions();
+        if (!empty($permissions)) {
+            foreach ($permissions as $permission) {
+                /** @var Permission $permission */
+                $roleData['permissions'][] = array(
+                    'id' => $permission->getId(),
+                    'context' => $permission->getContext(),
+                    'module' => $permission->getModule(),
+                    'permissions' => $this->get('sulu_security.mask_converter')
+                        ->convertPermissionsToArray($permission->getPermissions())
+                );
+            }
         }
 
         return $roleData;

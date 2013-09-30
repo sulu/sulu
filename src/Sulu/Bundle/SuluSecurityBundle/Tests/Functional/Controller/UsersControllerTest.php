@@ -194,7 +194,8 @@ class UsersControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
     }
 
-    public function testPostWithMissingArgument() {
+    public function testPostWithMissingArgument()
+    {
         $client = static::createClient();
 
         $client->request(
