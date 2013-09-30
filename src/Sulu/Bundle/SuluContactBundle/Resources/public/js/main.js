@@ -18,6 +18,9 @@ define({
     name: "Sulu Contact Bundle",
 
     initialize: function (app) {
+
+        'use strict';
+
         var sandbox = app.sandbox;
 
         app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
