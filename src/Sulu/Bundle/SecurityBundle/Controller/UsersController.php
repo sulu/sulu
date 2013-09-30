@@ -17,6 +17,7 @@ use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Makes the users accessible through a rest api
@@ -243,5 +244,49 @@ class UsersController extends RestController implements ClassResourceInterface
         if ($this->getRequest()->get('salt') == null) {
             throw new MissingArgumentException($this->entityName, 'salt');
         }
+    }
+
+    /**
+     * Returns roles for a specific user
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getRolesAction($id)
+    {
+        try {
+            if ($this->isValidId($id)) {
+
+                $find = function ($id) {
+                    return $this->getDoctrine()
+                        ->getRepository($this->entityName)
+                        ->findRolesOfUser($id);
+                };
+
+                $view = $this->responseGetById($id, $find);
+
+            } else {
+                throw new RestException("Invalid id - id must be an integer and greater than 0!");
+            }
+        } catch (RestException $re) {
+            $view = $this->view($re->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+
+    }
+
+    /***
+     * Checks if the id is valid
+     * @param $id
+     * @return bool
+     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\RestException
+     */
+    private function isValidId($id)
+    {
+        $tmp = (int) $id;
+        if (is_int($tmp) && $tmp > 0) {
+            return true;
+        }
+        return false;
     }
 }

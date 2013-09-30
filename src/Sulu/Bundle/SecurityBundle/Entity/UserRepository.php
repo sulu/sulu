@@ -20,35 +20,39 @@ use Doctrine\ORM\QueryBuilder;
 class UserRepository extends EntityRepository
 {
     /**
-     * Searches Entities by where clauses, pagination and sorted
-     * @param integer|null $limit Page size for Pagination
-     * @param integer|null $offset Offset for Pagination
-     * @param array|null $sorting Columns to sort
-     * @param array|null $where Where clauses
-     * @return array Results
+     * Returns roles for a specific user (includes permissions and email)
+     * @param $id
+     * @return array
      */
-    public function findGetAll($limit = null, $offset = null, $sorting = null, $where = array())
+    public function findRolesOfUser($id)
     {
-        // create basic query
-        $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.package', 'p')
-            ->leftJoin('u.translations', 't')
-            ->leftJoin('t.catalogue', 'c')
-            ->addSelect('p')
-            ->addSelect('t')
-            ->addSelect('c');
 
-        $qb = $this->addSorting($qb, $sorting, 'u');
-        $qb = $this->addPagination($qb, $offset, $limit);
+        $dql = 'SELECT user, contact, emails, userRoles, role, permissions
+				FROM SuluSecurityBundle:User user
+					LEFT JOIN user.contact contact
+					LEFT JOIN contact.emails emails
+                    LEFT JOIN user.userRoles userRoles
+                    LEFT JOIN userRoles.role role
+                    LEFT JOIN role.permissions permissions
+				WHERE user.id = :userId AND
+					  user.contact = contact.id';
 
-        // if needed add where statements
-        if (is_array($where) && sizeof($where) > 0) {
-            $qb = $this->addWhere($qb, $where);
-        }
+        $query = $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters(
+                array(
+                    'userId' => $id
+                )
+            );
 
-        $query = $qb->getQuery();
+        $result = $query->getArrayResult();
 
-        return $query->getArrayResult();
+        return $result;
+    }
+
+    function __toString()
+    {
+        return "UserRepository";
     }
 
 
