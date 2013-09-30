@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
@@ -138,8 +139,12 @@ class PackagesController extends RestController
     {
         $catalogues = $this->getRequest()->get('catalogues');
 
-        $delete = function ($catalogue) use ($package) {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        $delete = function ($catalogue) use ($package, $em) {
             $package->removeCatalogue($catalogue);
+            $em->remove($catalogue);
 
             return true;
         };
@@ -185,6 +190,7 @@ class PackagesController extends RestController
         if (isset($catalogueData['isDefault'])) {
             $catalogue->setIsDefault($catalogueData['isDefault']);
         }
+
         return true;
     }
 
