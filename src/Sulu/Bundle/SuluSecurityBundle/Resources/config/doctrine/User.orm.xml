@@ -3,7 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\SecurityBundle\Entity\User" table="se_users">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\User" repository-class="Sulu\Bundle\SecurityBundle\Entity\UserRepository" table="se_users">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

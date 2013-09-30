@@ -8,16 +8,16 @@
 * with this source code in the file LICENSE.
 */
 
-namespace Sulu\Bundle\TranslateBundle\Entity;
+namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Repository for the Codes, implementing some additional functions
+ * Repository for the User, implementing some additional functions
  * for querying objects
  */
-class CodeRepository extends EntityRepository
+class UserRepository extends EntityRepository
 {
     /**
      * Searches Entities by where clauses, pagination and sorted
@@ -51,107 +51,5 @@ class CodeRepository extends EntityRepository
         return $query->getArrayResult();
     }
 
-    public function findByCatalogue($catalogueId)
-    {
-        $dql = 'SELECT c, t
-                FROM  Sulu\Bundle\TranslateBundle\Entity\Code c
-                    LEFT JOIN c.package p
-                    LEFT JOIN p.catalogues ca
-                    LEFT JOIN c.translations t WITH t.catalogue = ca
-                WHERE ca.id = :id';
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql);
-
-        return $query->setParameter('id', $catalogueId)->getArrayResult();
-    }
-
-    public function findByCatalogueWithSuggestion($catalogueId)
-    {
-        $dqlDefaultCatalogue = 'SELECT ca2.id
-                                FROM Sulu\Bundle\TranslateBundle\Entity\Catalogue ca1
-                                    LEFT JOIN ca1.package p1
-                                    LEFT JOIN p1.catalogues ca2
-                                WHERE ca1.id = :id AND ca2.isDefault = :isDefault';
-
-        $dql = 'SELECT c, t
-                FROM Sulu\Bundle\TranslateBundle\Entity\Code c
-                    LEFT JOIN c.package p
-                    LEFT JOIN p.catalogues ca
-                    LEFT JOIN c.translations t WITH t.catalogue = ca
-                WHERE ca.id = :id OR ca.id in (' . $dqlDefaultCatalogue . ')';
-
-        $query = $this->getEntityManager()
-            ->createQuery($dql);
-
-        return $query
-            ->setParameter('isDefault', true)
-            ->setParameter('id', $catalogueId)
-            ->getArrayResult();
-    }
-
-    public function findByPackage($packageId)
-    {
-        $dql = 'SELECT c, t
-                FROM  Sulu\Bundle\TranslateBundle\Entity\Code c
-                    LEFT JOIN c.package p
-                    LEFT JOIN p.catalogues ca
-                    LEFT JOIN c.translations t WITH t.catalogue = ca
-                WHERE p.id = :id';
-
-        $query = $this->getEntityManager()
-            ->createQuery($dql);
-
-        return $query->setParameter('id', $packageId)->getArrayResult();
-    }
-
-    /**
-     * Add sorting to querybuilder
-     * @param QueryBuilder $qb
-     * @param array $sorting
-     * @param string $prefix
-     * @return QueryBuilder
-     */
-    private function addSorting($qb, $sorting, $prefix = 'u')
-    {
-        // add order by
-        foreach ($sorting as $k => $d) {
-            $qb->addOrderBy($prefix . '.' . $k, $d);
-        }
-
-        return $qb;
-    }
-
-    /**
-     * add pagination to querybuilder
-     * @param QueryBuilder $qb
-     * @param integer|null $limit Page size for Pagination
-     * @param integer|null $offset Offset for Pagination
-     * @return QueryBuilder
-     */
-    private function addPagination($qb, $offset, $limit)
-    {
-        // add pagination
-        $qb->setFirstResult($offset);
-        $qb->setMaxResults($limit);
-
-        return $qb;
-    }
-
-    /**
-     * add where to querybuilder
-     * @param QueryBuilder $qb
-     * @param array $where
-     * @return QueryBuilder
-     */
-    private function addWhere($qb, $where)
-    {
-        $and = $qb->expr()->andX();
-        foreach ($where as $k => $v) {
-            $and->add($qb->expr()->eq($k, $v));
-        }
-        $qb->where($and);
-
-        return $qb;
-    }
 }
