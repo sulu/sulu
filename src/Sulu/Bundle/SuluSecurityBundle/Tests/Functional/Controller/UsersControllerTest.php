@@ -17,6 +17,11 @@ use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
+
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\ContactBundle\Entity\EmailType;
 
 class UsersControllerTest extends DatabaseTestCase
 {
@@ -48,11 +53,30 @@ class UsersControllerTest extends DatabaseTestCase
         $role2->setCreated(new DateTime());
         self::$em->persist($role2);
 
+        $emailType = new EmailType();
+        $emailType->setName('Private');
+        self::$em->persist($emailType);
+
+        $email = new Email();
+        $email->setEmail('max.mustermann@muster.at');
+        $email->setEmailType($emailType);
+        self::$em->persist($email);
+
+
+        $contact = new Contact();
+        $contact->setFirstName("Max");
+        $contact->setLastName("Muster");
+        $contact->setCreated(new DateTime());
+        $contact->setChanged(new DateTime());
+        $contact->addEmail($email);
+        self::$em->persist($contact);
+
         $user = new User();
         $user->setUsername('admin');
         $user->setPassword('securepassword');
         $user->setSalt('salt');
         $user->setLocale('de');
+        $user->setContact($contact);
         self::$em->persist($user);
 
         self::$em->flush();
@@ -68,6 +92,18 @@ class UsersControllerTest extends DatabaseTestCase
         $userRole2->setUser($user);
         $userRole2->setLocale('de');
         self::$em->persist($userRole2);
+
+        $permission1 = new Permission();
+        $permission1->setPermissions("Permission 1");
+        $permission1->setRole($role1);
+        $permission1->setContext("Context 1");
+        self::$em->persist($permission1);
+
+        $permission2 = new Permission();
+        $permission2->setPermissions("Permission 2");
+        $permission2->setRole($role2);
+        $permission2->setContext("Context 2");
+        self::$em->persist($permission2);
 
         self::$em->flush();
     }
@@ -87,6 +123,22 @@ class UsersControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
+
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -342,5 +394,44 @@ class UsersControllerTest extends DatabaseTestCase
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
         $this->assertContains('salt', $response->message);
+    }
+
+    public function testGetUserRoles(){
+
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/security/api/users/1/roles'
+        );
+
+        $response = json_decode($client->getResponse()->getContent())[0];
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('1', $response->id);
+        $this->assertEquals('admin', $response->username);
+        $this->assertEquals('securepassword', $response->password);
+        $this->assertEquals('max.mustermann@muster.at', $response->contact->emails[0]->email);
+
+        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
+        $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
+        $this->assertEquals('Role2', $response->userRoles[1]->role->name);
+        $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
+
+        $this->assertEquals('Context 1', $response->userRoles[0]->role->permissions[0]->context);
+        $this->assertEquals('Context 2', $response->userRoles[1]->role->permissions[0]->context);
+    }
+
+    public function testGetNotExistingUserRoles(){
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/security/api/users/1324/roles'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
     }
 }
