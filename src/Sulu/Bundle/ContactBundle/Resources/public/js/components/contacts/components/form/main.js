@@ -7,15 +7,13 @@
  * with this source code in the file LICENSE.
  */
 
-define([
-    'sulucontact/model/contact'
-], function(Contact) {
+define([], function() {
 
     'use strict';
 
     var form = '#contact-form',
-        contact,
-        emailItem, phoneItem, addressItem, tmp;
+        emailItem, phoneItem, addressItem, tmp,
+        currentType, currentState;
 
     return {
 
@@ -24,13 +22,14 @@ define([
         templates: ['/contact/template/contact/form'],
 
         initialize: function() {
-            this.sandbox.off(); // FIXME automate this call
-            contact = new Contact();
+            currentType = currentState = '';
             this.render();
+            this.setHeaderBar(true);
+            this.listenForChange();
         },
 
         render: function() {
-            this.initializeHeader();
+
 
             this.$el.html(this.renderTemplate('/contact/template/contact/form'));
 
@@ -52,7 +51,11 @@ define([
                 this.$el.find('#emails .email-item:first label span:first').after('<span>&nbsp;*</span>');
             }.bind(this), 10);
 
+
+
             this.bindDomEvents();
+            this.bindCustomEvents();
+
         },
 
         bindDomEvents: function() {
@@ -66,13 +69,26 @@ define([
             this.sandbox.dom.on('#addresses', 'click', this.removeAddress.bind(this), '.remove-address');
         },
 
+        bindCustomEvents: function() {
+            // delete contact
+            this.sandbox.on('husky.button.delete.click', function() {
+                this.sandbox.emit('sulu.contacts.contacts.delete', this.options.data.id);
+            }, this);
+
+            // contact saved
+            this.sandbox.on('sulu.contacts.contacts.saved', function(id) {
+                this.options.data.id = id;
+                this.setHeaderBar(true);
+            }, this);
+
+            // contact saved
+            this.sandbox.on('husky.button.save.click', function() {
+                this.submit();
+            }, this);
+        },
+
         initData: function() {
-            var contactJson;
-            if (!!this.options.data) {
-                contactJson = this.options.data;
-            } else {
-                contactJson = contact.toJSON();
-            }
+            var contactJson = this.options.data;
             this.fillFields(contactJson.emails, 2, {
                 id: null,
                 email: '',
@@ -101,48 +117,27 @@ define([
             }
         },
 
-        initializeHeader: function() {
-            if (!this.options.id) {
-                this.sandbox.emit('husky.header.button-type', 'save');
-                this.sandbox.on('husky.button.save.click', function(event) {
-                    this.submit();
-                }, this);
-            } else {
-                this.sandbox.emit('husky.header.button-type', 'saveDelete');
-                this.sandbox.on('husky.button.save.click', function(event) {
-                    this.submit();
-                }, this);
-                this.sandbox.on('husky.button.delete.click', function(event) {
-                    this.deleteModel();
-                }, this);
-            }
-        },
 
-        deleteModel: function() {
-            this.sandbox.logger.log('delete Model');
 
-            // TODO delete model
-        },
 
         submit: function() {
             this.sandbox.logger.log('save Model');
 
             if (this.sandbox.form.validate(form)) {
                 var data = this.sandbox.form.getData(form);
-
-                data.emails = _.filter(data.emails, function(email) {
+                data.emails = this.sandbox.util._.filter(data.emails, function(email) {
                     if (email.id === "") {
                         delete email.id;
                     }
                     return email.email !== "";
                 });
-                data.phones = _.filter(data.phones, function(phone) {
+                data.phones = this.sandbox.util._.filter(data.phones, function(phone) {
                     if (phone.id === "") {
                         delete phone.id;
                     }
                     return phone.phone !== "";
                 });
-                data.addresses = _.filter(data.addresses, function(address) {
+                data.addresses = this.sandbox.util._.filter(data.addresses, function(address) {
                     if (address.id === "") {
                         delete address.id;
                     }
@@ -158,18 +153,8 @@ define([
 
                 this.sandbox.logger.log('data', data);
 
-                contact.set(data);
-
-                contact.save(null, {
-                    success: function() {
-                        this.gotoList();
-                    }.bind(this)
-                });
+                this.sandbox.emit('sulu.contacts.contacts.save', data);
             }
-        },
-
-        gotoList: function() {
-            this.sandbox.emit('sulu.router.navigate', 'contacts/people');
         },
 
         addEmail: function() {
@@ -246,6 +231,45 @@ define([
             this.sandbox.form.removeField(form, $item.find('.country-value'));
 
             $item.remove();
+        },
+
+        // @var Bool saved - defines if saved state should be shown
+        setHeaderBar : function(saved) {
+
+            console.log("asdfasdfasdfasdfas fasdf asf as fas fasdf ");
+            var changeType, changeState,
+                ending = (!!this.options.data && !!this.options.data.id) ? 'Delete' : '';
+
+            changeType = 'save'+ending;
+
+            if (saved) {
+                if (ending==='') {
+                    changeState = 'hide';
+                } else {
+                    changeState = 'standard';
+                }
+            } else {
+                changeState = 'dirty';
+            }
+
+            if (currentType !== changeType) {
+                this.sandbox.emit('husky.header.button-type', changeType);
+                currentType = changeType;
+            }
+            if (currentState !== changeState) {
+                this.sandbox.emit('husky.header.button-state', changeState);
+                currentState = changeState;
+            }
+        },
+
+
+        listenForChange : function() {
+            this.sandbox.dom.on('#contact-form', 'change', function() {
+                this.setHeaderBar(false);
+            }.bind(this), "select, input");
+            this.sandbox.dom.on('#contact-form', 'keyup', function() {
+                this.setHeaderBar(false);
+            }.bind(this), "input");
         }
 
     };
