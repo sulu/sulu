@@ -11,10 +11,12 @@ define(['sulucontact/model/contact'], function(Contact) {
 
     'use strict';
 
+    var sandbox;
+
     return {
 
         initialize: function() {
-
+            sandbox = this.sandbox;
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
@@ -22,50 +24,192 @@ define(['sulucontact/model/contact'], function(Contact) {
             } else {
                 throw 'display type wrong';
             }
-
-//            this.sandbox.on('sulu.contact.save', this.save, this)
         },
 
         renderList: function() {
 
-            this.sandbox.start([
+            sandbox.start([
                 {name: 'contacts/components/list@sulucontact', options: { el: this.$el}}
             ]);
 
             // wait for navigation events
-            this.sandbox.on('sulu.contacts.load', function(id) {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/people/edit:' + id);
+            sandbox.on('sulu.contacts.contacts.load', function(id) {
+                sandbox.emit('husky.header.button-state', 'loading-add-button');
+                sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id);
             }, this);
 
-            this.sandbox.on('sulu.contacts.new', function() {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/people/add');
+            // add new contact
+            sandbox.on('sulu.contacts.contacts.new', function() {
+                sandbox.emit('husky.header.button-state', 'loading-add-button');
+                sandbox.emit('sulu.router.navigate', 'contacts/contacts/add');
             }, this);
+
+            // delete selected contacts
+            sandbox.on('sulu.contacts.contacts.delete', function(ids) {
+                if (ids.length<1) {
+                    sandbox.emit('sulu.dialog.error.show','No contacts selected for Deletion');
+                    return;
+                }
+                this.confirmDeleteDialog(function(wasConfirmed) {
+                    if (wasConfirmed) {
+                        sandbox.emit('husky.header.button-state', 'loading-add-button');
+                        ids.forEach(function(id) {
+                            var contact = new Contact({id: id});
+                            contact.destroy({
+                                success: function() {
+                                    sandbox.emit('husky.datagrid.row.remove', id);
+                                }
+                            });
+                        });
+                        sandbox.emit('husky.header.button-state', 'standard');
+                    }
+                });
+            });
 
         },
 
 
         renderForm: function() {
 
+            // show navigation submenu
+            sandbox.emit('navigation.item.column.show', {
+                data: this.getTabs(this.options.id)
+            });
+
+            // load data and show form
+            var contact = new Contact();
             if (!!this.options.id) {
-                var contactModel = new Contact();
-                contactModel.set({id: this.options.id});
-                contactModel.fetch({
+                contact.set({id: this.options.id});
+                contact.fetch({
                     success: function(model) {
-                        this.sandbox.start([
+                        sandbox.start([
                             {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
                         ]);
-                    }.bind(this)
+                    }.bind(this),
+                    error: function() {
+                        sandbox.logger.log("error while fetching contact");
+                    }
                 });
             } else {
-                this.sandbox.start([
-                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el}}
+                sandbox.start([
+                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: contact.toJSON()}}
                 ]);
             }
+
+            // delete contact
+            sandbox.on('sulu.contacts.contacts.delete',function(){
+                this.confirmDeleteDialog(function(wasConfirmed){
+                    if(wasConfirmed) {
+                        sandbox.emit('husky.header.button-state', 'loading-delete-button');
+                        contact.destroy({
+                            success: function() {
+                                sandbox.emit('sulu.router.navigate', 'contacts/contacts');
+                            }
+                        });
+                    }
+                });
+            }, this);
+
+            // save contact
+            sandbox.on('sulu.contacts.contacts.save',function(data) {
+                sandbox.emit('husky.header.button-state', 'loading-save-button');
+                contact.set(data);
+                contact.save(null, {
+                    // on success save contacts id
+                    success: function(response) {
+                        sandbox.emit('husky.header.button-state', 'standard');
+                        sandbox.emit('sulu.contacts.contacts.saved', response.id);
+                    }.bind(this),
+                    error: function() {
+                        sandbox.logger.log("error while saving profile");
+                    }
+                });
+            });
+        },
+
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmDeleteDialog : function(callbackFunction) {
+            // check if callback is a function
+            if ( !!callbackFunction && typeof(callbackFunction)!=='function') { throw 'callback is not a function'; }
+
+            // show dialog
+            sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: "Be careful!",
+                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
+                },
+                footer: {
+                    buttonCancelText: "Don't do it",
+                    buttonSubmitText: "Do it, I understand"
+                }
+            });
+
+            // submit -> delete
+            sandbox.once('husky.dialog.submit', function() {
+                sandbox.emit('husky.dialog.hide');
+                if (!!callbackFunction) { callbackFunction(true); }
+            });
+
+            // cancel
+            sandbox.once('husky.dialog.cancel', function() {
+                sandbox.emit('husky.dialog.hide');
+                if (!!callbackFunction) { callbackFunction(false); }
+            });
+        },
+
+
+        // Navigation
+        getTabs: function(id) {
+            //TODO Simplify this task for bundle developer?
+            var cssId = id || 'new',
+
+            // TODO translate
+                navigation = {
+                    'title': 'Contact',
+                    'header': {
+                        'title': 'Contact'
+                    },
+                    'hasSub': 'true',
+                    'displayOption':'content',
+                    //TODO id mandatory?
+                    'sub': {
+                        'items': []
+                    }
+                };
+
+            if (!!id) {
+                navigation.sub.items.push({
+                    'title': 'Details',
+                    'action': 'contacts/contacts/edit:' + cssId+ '/details',
+                    'hasSub': false,
+                    'type': '' +
+                        '',
+                    'id': 'contacts-details-' + cssId
+                });
+            }
+
+            navigation.sub.items.push({
+                'title': 'Permissions',
+                'action': 'contacts/contacts/edit:' + cssId + '/permissions',
+                'hasSub': false,
+                'type': 'content',
+                'id': 'contacts-permission-' + cssId
+            });
+
+            navigation.sub.items.push({
+                'title': 'Settings',
+                'action': 'contacts/contacts/edit:' + cssId + '/settings',
+                'hasSub': false,
+                'type': 'content',
+                'id': 'contacts-settings-' + cssId
+            });
+
+            return navigation;
         }
-
-
-
-
 
     };
 });
