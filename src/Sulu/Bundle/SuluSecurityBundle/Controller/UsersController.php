@@ -225,7 +225,11 @@ class UsersController extends RestController implements ClassResourceInterface
         }
 
         $userRole->setRole($role);
-        $userRole->setLocale(json_encode($userRoleData['locales']));
+        if(array_key_exists('locales', $userRoleData)){
+            $userRole->setLocale(json_encode($userRoleData['locales']));
+        } else {
+            $userRole->setLocale($userRoleData['locale']);
+        }
 
         return true;
     }
