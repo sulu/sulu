@@ -20372,7 +20372,12 @@ define('__component__$navigation@husky',['jquery'], function($) {
         },
 
         showNavigationColumns: function(event) {
-            var $firstColumn, $secondColumn, $element;
+            var $firstColumn, $secondColumn, $element,
+                $target = $(event.target);
+
+            if ($target.hasClass('navigation-column-header')) {
+                return;
+            }
 
             $element = $(event.target);
             $firstColumn = $('#column-0');
