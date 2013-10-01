@@ -9,6 +9,8 @@
 
 define(function() {
 
+    'use strict';
+
     var router;
 
     return {
@@ -54,5 +56,5 @@ define(function() {
                 this.sandbox.emit('sulu.router.navigate', event.item.get('action'));
             }.bind(this));
         }
-    }
+    };
 });
