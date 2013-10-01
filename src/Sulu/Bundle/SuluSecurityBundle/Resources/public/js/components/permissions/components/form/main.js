@@ -40,6 +40,9 @@ define(['text!/security/template/permission/form'], function(Template) {
             this.initializeHeaderbar();
         },
 
+
+
+        // ---
         // Headerbar
 
         initializeHeaderbar: function(){
@@ -93,10 +96,17 @@ define(['text!/security/template/permission/form'], function(Template) {
 
 
 
-        
+
+        // ---
+        // Form
 
         render: function() {
-            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(Template, {data: this.options.data}));
+            var email = "";
+            if(!!this.contact.emails && this.contact.emails.length > 0) {
+                email = this.contact.emails[0].email;
+            }
+
+            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(Template, {user: this.user, email: email}));
         },
 
         initializePasswordFields: function() {
@@ -105,18 +115,77 @@ define(['text!/security/template/permission/form'], function(Template) {
                     name: 'password-fields@husky',
                     options: {
                         instanceName: "instance1",
-                        el: '#password-component'
+                        el: '#password-component',
+                        values: {
+                            inputPassword1: this.user.password,
+                            inputPassword2: this.user.password
+                        }
                     }
                 }
             ]);
         },
+
+        bindDOMEvents: function() {
+
+        },
+
+        bindCustomEvents: function() {
+            // delete contact
+            this.sandbox.on('husky.button.delete.click', function() {
+                this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
+            }, this);
+
+            // contact saved
+            this.sandbox.on('sulu.user.permissions.save', function(id, data) {
+                if (!this.options.data.id) {
+                    this.options.data = data;
+                }
+                this.setHeaderBar(true);
+            }, this);
+
+            // contact saved
+            this.sandbox.on('husky.button.save.click', function() {
+                this.save();
+            }, this);
+        },
+
+        save: function() {
+            // FIXME  Use datamapper instead
+            // TODO validation
+            this.getPassword();
+
+            var data = {
+                id: this.user.id,
+                username: this.sandbox.dom.val('#username'),
+                password: this.password
+            };
+
+            this.sandbox.emit('sulu.user.permissions.save', data);
+        },
+
+        getPassword: function(){
+            this.sandbox.emit('husky.password.fields.instance1.get.passwords', function(password1, password2){
+                if(password1 === password2) {
+                    this.password = password1;
+                } else {
+                    this.sandbox.logger.log("invalid passwords");
+                    this.password = null;
+                    // TODO error message
+                }
+            }.bind(this));
+        },
+
+
+
+        // ---
+        // Grid with roles and permissions
 
         initializeRoles: function() {
 
             var $permissionsContainer = this.sandbox.dom.$('#permissions-grid'),
                 $table = this.sandbox.dom.createElement('<table/>', {class: 'table'}),
                 $tableHeader = this.prepareTableHeader(),
-                //$tableRows = this.prepareTableContent(),
+            //$tableRows = this.prepareTableContent(),
                 $tmp;
 
             //this.sandbox.dom.empty($permissionsContainer);
@@ -146,42 +215,6 @@ define(['text!/security/template/permission/form'], function(Template) {
 
             return this.sandbox.dom.append($tableBody, tableContent.join(''));
 
-        },
-
-        bindDOMEvents: function() {
-
-        },
-
-        bindCustomEvents: function() {
-            // delete contact
-            this.sandbox.on('husky.button.delete.click', function() {
-                //this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
-            }, this);
-
-            // contact saved
-            this.sandbox.on('sulu.user.permissions.save', function(id, data) {
-                if (!this.options.data.id) {
-                    this.options.data = data;
-                }
-                this.setHeaderBar(true);
-            }, this);
-
-            // contact saved
-            this.sandbox.on('husky.button.save.click', function() {
-                this.save();
-            }, this);
-        },
-
-        save: function() {
-            // FIXME  Use datamapper instead
-            var data = {
-//                id: this.sandbox.dom.val('#id'),
-//                name: this.sandbox.dom.val('#name'),
-//                system: this.sandbox.dom.val('#system'),
-//                permissions: permissionData
-            };
-
-            this.sandbox.emit('sulu.user.permissions.save', data);
         },
 
         template: {
