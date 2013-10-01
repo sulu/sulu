@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->root('sulu_admin')
             ->children()
                 ->scalarNode('name')->end()
+                ->scalarNode('user_data_service')->defaultValue('user.services.user_data')->end()
             ->end()
         ;
 

@@ -9,6 +9,8 @@
 
 define(function() {
 
+    'use strict';
+
     var router;
 
     return {
