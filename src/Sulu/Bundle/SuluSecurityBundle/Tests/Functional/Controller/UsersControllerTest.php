@@ -412,15 +412,12 @@ class UsersControllerTest extends DatabaseTestCase
         $this->assertEquals('1', $response->id);
         $this->assertEquals('admin', $response->username);
         $this->assertEquals('securepassword', $response->password);
-        $this->assertEquals('max.mustermann@muster.at', $response->contact->emails[0]->email);
 
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
 
-        $this->assertEquals('Context 1', $response->userRoles[0]->role->permissions[0]->context);
-        $this->assertEquals('Context 2', $response->userRoles[1]->role->permissions[0]->context);
     }
 
     public function testGetNotExistingUserRoles(){
