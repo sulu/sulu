@@ -25,20 +25,21 @@ define([], function() {
             getTabs: function() {
                 // TODO translate
                 var navigation = {
-                    'title': 'Package',
-                    'displayOption': 'content',
-                    'header': {
-                        'displayOption': 'link',
-                        'action': 'settings/translate'
+                        'title': 'Package',
+                        'displayOption': 'content',
+                        'header': {
+                            'displayOption': 'link',
+                            'action': 'settings/translate'
+                        },
+                        'hasSub': 'true',
+                        //TODO id mandatory?
+                        'sub': {
+                            'items': []
+                        }
                     },
-                    'hasSub': 'true',
-                    //TODO id mandatory?
-                    'sub': {
-                        'items': []
-                    }
-                };
+                    firstId = this.sandbox.dom.data('#catalogues .catalogue-item:first', 'id');
 
-                if (!!this.options.data.id) {
+                if (!!this.options.data.id && !!firstId) {
                     navigation.sub.items.push({
                         'title': 'Settings',
                         'action': 'settings/translate/edit:' + this.options.data.id + '/settings',
@@ -55,7 +56,6 @@ define([], function() {
                         'type': 'content',
                         'id': 'translate-package-details-' + this.options.data.id
                     });
-
                 }
 
                 return navigation;
@@ -64,6 +64,7 @@ define([], function() {
             initialize: function() {
                 currentType = '';
                 currentState = '';
+                this.form = false;
 
                 this.render();
                 this.setHeaderBar(true);
@@ -80,6 +81,7 @@ define([], function() {
                 this.initData();
 
                 this.sandbox.form.create(form);
+                this.form = true;
 
                 this.setTabs();
 
@@ -108,15 +110,6 @@ define([], function() {
                 }, this);
 
                 // contact saved
-                this.sandbox.on('sulu.translate.package.saved', function(id) {
-                    if (!this.options.data.id) {
-                        this.options.data.id = id;
-                        this.setTabs();
-                    }
-                    this.setHeaderBar(true);
-                }, this);
-
-                // contact saved
                 this.sandbox.on('husky.button.save.click', function() {
                     this.submit();
                 }, this);
@@ -129,6 +122,13 @@ define([], function() {
                     locale: ''
                 });
 
+                this.initCatalogues();
+
+                this.sandbox.dom.val('.name-value', !!this.options.data.name ? this.options.data.name : '');
+            },
+
+            initCatalogues: function() {
+                this.sandbox.dom.remove('#catalogues .catalogue-item');
                 this.sandbox.dom.each(this.options.data.catalogues, function(key, value) {
                     var $item = catalogueItem.clone(),
                         $isDefault = this.sandbox.dom.find('.is-default-value', $item),
@@ -139,9 +139,12 @@ define([], function() {
                     this.sandbox.dom.val($locale, !!value.locale ? value.locale : '');
 
                     this.sandbox.dom.append('#catalogues', $item);
-                }.bind(this));
 
-                this.sandbox.dom.val('.name-value', !!this.options.data.name ? this.options.data.name : '');
+                    if(!!this.form){
+                        this.sandbox.form.addField(form, $isDefault);
+                        this.sandbox.form.addField(form, $locale);
+                    }
+                }.bind(this));
             },
 
             fillFields: function(field, minAmount, value) {
