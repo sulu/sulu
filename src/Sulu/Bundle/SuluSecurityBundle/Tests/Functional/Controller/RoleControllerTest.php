@@ -364,11 +364,31 @@ class RolesControllerTest extends DatabaseTestCase
         $client = static::createClient();
 
         $client->request(
+            'GET',
+            '/security/api/roles'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(2, $response->total);
+
+
+        $client->request(
             'DELETE',
             '/security/api/roles/1'
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+
+        $client->request(
+            'GET',
+            '/security/api/roles'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $response->total);
     }
 
     public function testDeleteNotExisting()
@@ -406,6 +426,6 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertEquals('Sulu', $response->items[1]->system);
 
         $this->assertEquals('context1', $response->items[0]->permissions[0]->context);
-        $this->assertEquals('context2', $response->items[0]->permissions[1]->context);
+        $this->assertEquals('context2', $response->items[1]->permissions[1]->context);
     }
 }
