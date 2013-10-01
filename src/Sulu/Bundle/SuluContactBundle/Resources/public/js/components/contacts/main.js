@@ -120,7 +120,7 @@ define(['sulucontact/model/contact'], function(Contact) {
                     error: function() {
                        this.sandbox.logger.log("error while saving profile");
                     }.bind(this)
-                }.bind(this));
+                });
             }, this);
         },
 
@@ -168,7 +168,8 @@ define(['sulucontact/model/contact'], function(Contact) {
                 navigation = {
                     'title': 'Contact',
                     'header': {
-                        'title': 'Contact'
+                        'displayOption':'link',
+                        'action':'contacts/contacts'
                     },
                     'hasSub': 'true',
                     'displayOption':'content',
@@ -183,8 +184,8 @@ define(['sulucontact/model/contact'], function(Contact) {
                     'title': 'Details',
                     'action': 'contacts/contacts/edit:' + cssId+ '/details',
                     'hasSub': false,
-                    'type': '' +
-                        '',
+                    'type': 'content',
+                    'selected': true,
                     'id': 'contacts-details-' + cssId
                 });
             }

@@ -31,8 +31,6 @@ define([], function() {
             },
 
             render: function() {
-
-
                 this.$el.html(this.renderTemplate('/contact/template/contact/form'));
 
                 emailItem = this.$el.find('#emails .email-item:first');
@@ -42,15 +40,27 @@ define([], function() {
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
                 var data = this.initData();
+
+                this.sandbox.start([
+                    {
+                        name: 'auto-complete@husky',
+                        options: {
+                            el: '#company',
+                            url: '/contact/api/accounts/list?searchFields=id,name',
+                            value: data.account
+                        }
+                    }
+                ]);
+
                 tmp = this.sandbox.form.create(form);
+
                 // FIXME when everything is loaded
                 setTimeout(function() {
                     this.sandbox.form.setData(form, data);
                     this.sandbox.start(form);
 
                     this.sandbox.form.addConstraint(form, '#emails .email-item:first input.email-value', 'required', {required: true});
-                    // FIXME abstract JQuery
-                    this.$el.find('#emails .email-item:first label span:first').after('<span>&nbsp;*</span>');
+                    this.sandbox.dom.addClass('#emails .email-item:first label span:first', 'required');
                 }.bind(this), 10);
 
 
@@ -150,6 +160,11 @@ define([], function() {
                     if (data.id === '') {
                         delete data.id;
                     }
+
+                    // FIXME auto complete in mapper
+                    data.account = {
+                        id: this.sandbox.dom.data('#company .name-value', 'id')
+                    };
 
                     this.sandbox.logger.log('data', data);
 
