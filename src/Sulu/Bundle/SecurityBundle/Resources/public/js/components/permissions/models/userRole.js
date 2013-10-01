@@ -7,24 +7,27 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(RelationalModel, HasMany, Permission) {
+define([
+    'mvc/relationalmodel',
+    'mvc/hasone',
+    'sulusecurity/models/role'
+], function(relationalModel, HasOne, Role) {
 
     'use strict';
 
-    return new RelationalModel({
+    return relationalModel({
         urlRoot: '/security/api/roles',
 
         defaults: function() {
             return {
-                name: '',
-                system: '',
-                permissions: []
+                locale: '',
+                role: null
             };
         }, relations: [
             {
-                type: HasMany,
+                type: HasOne,
                 key: 'permissions',
-                relatedModel: Permission
+                relatedModel: Role
             }
         ]
     });

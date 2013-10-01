@@ -7,25 +7,25 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', './role'], function(RelationalModel, HasMany, Role) {
+define(['mvc/relationalmodel', 'mvc/hasmany', './userRole'], function(RelationalModel, HasMany, UserRole) {
 
     'use strict';
 
     return new RelationalModel({
+
         urlRoot: '/security/api/users',
 
-        defaults: function() {
-            return {
-                name: '',
+        defaults:  {
+                username: '',
                 password: '',
-                email: '',
-                roles: []
-            };
+                contact: [],
+                userRoles: []
+
         }, relations: [
             {
                 type: HasMany,
-                key: 'roles',
-                relatedModel: Role
+                key: 'userRoles',
+                relatedModel: UserRole
             }
         ]
     });

@@ -19,10 +19,12 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         initialize: function() {
 
+            this.data = this.options.data;
+
             this.initializeHeader();
             this.render();
             this.initializePasswordFields();
-            this.initializePermissions();
+            this.initializeRoles();
 
             this.bindDOMEvents();
             this.bindCustomEvents();
@@ -55,9 +57,9 @@ define(['text!/security/template/permission/form'], function(Template) {
             }]);
         },
 
-        initializePermissions: function(){
-            //TODO
+        initializeRoles: function(){
 
+            // #permissions-grid
 
         },
 

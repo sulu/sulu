@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalstore', './models/role'], function(Store, Role) {
+define(['mvc/relationalstore', 'sulusecurity/models/role'], function(Store, Role) {
 
     'use strict';
 
