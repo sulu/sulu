@@ -149,7 +149,7 @@ define([], function() {
 
                     this.sandbox.dom.append('#catalogues', $item);
 
-                    if(!!this.form){
+                    if (!!this.form) {
                         this.sandbox.form.addField(form, $isDefault);
                         this.sandbox.form.addField(form, $locale);
                     }
@@ -170,6 +170,10 @@ define([], function() {
                         $items = this.sandbox.dom.find('#catalogues .catalogue-item'),
                         item, id,
                         $item, $locale, $isDefault;
+                    
+                    if (!!this.options.data.id) {
+                        data.id = this.options.data.id;
+                    }
 
                     data.name = this.sandbox.dom.val('.name-value');
                     data.catalogues = [];
