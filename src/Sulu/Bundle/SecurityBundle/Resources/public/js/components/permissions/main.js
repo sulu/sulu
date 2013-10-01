@@ -17,46 +17,12 @@ define([
 ], function(RelationalStore, User, Role, Permission, Contact, Roles) {
 
     'use strict';
-    // TODO put inside return
-    var sandbox,
-        idDelete,
-
-    // callback for deleting a role after confirming
-        delSubmit = function() {
-            sandbox.emit('husky.dialog.hide');
-            sandbox.emit('husky.header.button-state', 'loading-delete-button');
-
-            RelationalStore.reset();
-
-            // delete
-
-            unbindDialogListener();
-        },
-
-    // callback for aborting the deletion of a role
-        hideDialog = function() {
-            sandbox.emit('husky.dialog.hide');
-            unbindDialogListener();
-        },
-
-    // binds the listeners to the dialog box
-        bindDialogListener = function() {
-            sandbox.on('husky.dialog.submit', delSubmit);
-            sandbox.on('husky.dialog.cancel', hideDialog);
-        },
-
-    // unbind the listeners of the dialog box
-        unbindDialogListener = function() {
-            sandbox.off('husky.dialog.submit', delSubmit);
-            sandbox.off('husky.dialog.cancel', hideDialog);
-        };
 
     return {
 
         name: 'Sulu Contact Permissions',
 
         initialize: function() {
-            sandbox = this.sandbox;
 
             if (this.options.display === 'form') {
                 this.renderForm();
@@ -71,45 +37,39 @@ define([
                 this.save(data);
             }.bind(this));
 
+            // delete contact
             this.sandbox.on('sulu.user.permissions.delete', function(id) {
-                this.del(id);
-            }.bind(this));
+                this.confirmDeleteDialog(function(wasConfirmed) {
+                    if (wasConfirmed) {
+                        var contactModel = Contact.findOrCreate({id: id});
+
+                        this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+                        contactModel.destroy({
+                            success: function() {
+                                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
+                            }.bind(this)
+                        });
+                    }
+                }.bind(this));
+            }, this);
         },
 
-        // saves the data, which is thrown together with a sulu.roles.save event
-//        save: function(data) {
-//            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-//
-//            RelationalStore.reset();
-//
-//            // TODO save
-//        },
 
-        // deletes the role with the id thrown with the sulu.role.delete event
-        del: function(id) {
-            idDelete = id;
+        save: function(data) {
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
-            // show dialog and call delete only when user confirms
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: 'Be careful!',
-                    content: [
-                        '<p>',
-                        'This operation you are about to do will delete data. <br /> This is not undoable!',
-                        '</p>',
-                        '<p>',
-                        ' Please think about it and accept or decline.',
-                        '</p>'
-                    ].join('')
-                },
-                footer: {
-                    buttonCancelText: 'Don\'t do it',
-                    buttonSubmitText: 'Do it, I understand'
-                }
+            var userModel = User.findOrCreate(data);
+            userModel.url = '/security/api/users/'+data.id;
+
+            this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
+            userModel.save({
+                success: function() {
+                    this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
+                }.bind(this)
             });
 
-            bindDialogListener();
         },
+
 
         renderForm: function() {
 
@@ -120,12 +80,12 @@ define([
                 this.loadContactData(this.options.id);
             } else {
                 // TODO error message
-                sandbox.logger.log('error: form not accessible without contact id');
+                this.sandbox.logger.log('error: form not accessible without contact id');
             }
         },
 
         loadContactData: function(id) {
-            var contact = new Contact({id: id});
+            var contact = Contact.findOrCreate({id: id});
             contact.fetch({
                     success: function(contactModel) {
                         this.contact = contactModel;
@@ -162,7 +122,7 @@ define([
 
             if (!!userId) {
 
-                user = new User({id: userId});
+                user = User.findOrCreate({id: userId});
                 user.url = '/security/api/users/'+userId+'/roles';
                 user.fetch({
                     success: function(userModel) {
@@ -196,6 +156,45 @@ define([
                 }}
             ]);
 
+        },
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmDeleteDialog: function(callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            // show dialog
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: "Be careful!",
+                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
+                },
+                footer: {
+                    buttonCancelText: "Don't do it",
+                    buttonSubmitText: "Do it, I understand"
+                }
+            });
+
+            // submit -> delete
+            this.sandbox.once('husky.dialog.submit', function() {
+                this.sandbox.emit('husky.dialog.hide');
+                if (!!callbackFunction) {
+                    callbackFunction.call(this, true);
+                }
+            }.bind(this));
+
+            // cancel
+            this.sandbox.once('husky.dialog.cancel', function() {
+                this.sandbox.emit('husky.dialog.hide');
+                if (!!callbackFunction) {
+                    callbackFunction.call(this, false);
+                }
+            }.bind(this));
         }
 
     };
