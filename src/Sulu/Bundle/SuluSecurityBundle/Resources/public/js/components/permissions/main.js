@@ -55,12 +55,16 @@ define([
             }, this);
         },
 
-
         save: function(data) {
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             var userModel = User.findOrCreate(data);
-            userModel.url = '/security/api/users/' + data.id;
+            if(!!data.id) {
+                userModel.url = '/security/api/users/' + data.id;
+            } else {
+                userModel.url = '/security/api/users';
+                userModel.set('contact', Contact.findOrCreate({id: this.contact.id}));
+            }
 
             userModel.save(null, {
                 success: function() {
@@ -74,6 +78,10 @@ define([
 
         },
 
+
+
+
+        // render form and load data
 
         renderForm: function() {
 
@@ -91,25 +99,25 @@ define([
         loadContactData: function(id) {
             var contact = Contact.findOrCreate({id: id});
             contact.fetch({
-                    success: function(contactModel) {
-                        this.contact = contactModel;
-                        this.loadRoles();
-                    }.bind(this),
-                    error: function(){
-                        // TODO error message
-                    }
+                success: function(contactModel) {
+                    this.contact = contactModel;
+                    this.loadRoles();
+                }.bind(this),
+                error: function() {
+                    // TODO error message
+                }
             });
 
         },
 
-        loadRoles: function(){
+        loadRoles: function() {
             var roles = new Roles();
             roles.fetch({
                 success: function(rolesCollection) {
                     this.roles = rolesCollection;
                     this.loadUserRoles();
                 }.bind(this),
-                error: function(){
+                error: function() {
                     // TODO error message
                 }
             });
@@ -118,7 +126,7 @@ define([
 
         loadUserRoles: function() {
 
-            var userId = 1,
+            var userId,
                 user;
 
             // TODO when security bundle is registered return also user with contact
@@ -127,7 +135,7 @@ define([
             if (!!userId) {
 
                 user = User.findOrCreate({id: userId});
-                user.url = '/security/api/users/'+userId+'/roles';
+                user.url = '/security/api/users/' + userId + '/roles';
                 user.fetch({
                     success: function(userModel) {
                         this.user = userModel;
@@ -145,22 +153,28 @@ define([
 
         },
 
-        startComponent: function(){
+        startComponent: function() {
 
             var data = {};
             data.contact = this.contact.toJSON();
             data.user = this.user.toJSON();
             data.roles = this.roles.toJSON();
 
-            this.sandbox.start([{
-                name: 'permissions/components/form@sulusecurity',
-                options: {
-                    el: this.$el,
-                    data: data
-                }}
+            this.sandbox.start([
+                {
+                    name: 'permissions/components/form@sulusecurity',
+                    options: {
+                        el: this.$el,
+                        data: data
+                    }}
             ]);
 
         },
+
+
+
+
+        // dialog
 
         /**
          * @var ids - array of ids to delete
