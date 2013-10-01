@@ -18,16 +18,34 @@ use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
 use Sulu\Bundle\CoreBundle\Controller\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes the roles accessible through a REST-API
  * @package Sulu\Bundle\SecurityBundle\Controller
  */
-class RolesController extends RestController implements ClassResourceInterface
+class RoleController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluSecurityBundle:Role';
 
     protected $permissionEntityName = 'SuluSecurityBundle:Permission';
+
+    public function cgetAction() {
+
+        $roles = $this->getDoctrine()
+            ->getRepository($this->entityName)
+            ->findAll();
+
+        $convertedRoles = [];
+        foreach($roles as $role) {
+            array_push($convertedRoles, $this->convertRole($role));
+        }
+
+        $view = $this->view($convertedRoles, 200);
+
+        return $this->handleView($view);
+    }
+
 
     public function listAction()
     {

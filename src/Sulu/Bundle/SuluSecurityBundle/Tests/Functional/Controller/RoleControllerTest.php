@@ -40,6 +40,13 @@ class RolesControllerTest extends DatabaseTestCase
         $role->setChanged(new DateTime());
         self::$em->persist($role);
 
+        $role2 = new Role();
+        $role2->setName('Sulu Editor');
+        $role2->setSystem('Sulu');
+        $role2->setCreated(new DateTime());
+        $role2->setChanged(new DateTime());
+        self::$em->persist($role2);
+
         $permission1 = new Permission();
         $permission1->setRole($role);
         $permission1->setContext('context1');
@@ -50,6 +57,18 @@ class RolesControllerTest extends DatabaseTestCase
         $permission2->setRole($role);
         $permission2->setContext('context2');
         $permission2->setPermissions(17);
+        self::$em->persist($permission2);
+
+        $permission1 = new Permission();
+        $permission1->setRole($role2);
+        $permission1->setContext('context1');
+        $permission1->setPermissions(64);
+        self::$em->persist($permission1);
+
+        $permission2 = new Permission();
+        $permission2->setRole($role2);
+        $permission2->setContext('context2');
+        $permission2->setPermissions(35);
         self::$em->persist($permission2);
 
         self::$em->flush();
@@ -83,8 +102,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, count($response->total));
+        $this->assertEquals(2, $response->total);
         $this->assertEquals('Sulu Administrator', $response->items[0]->name);
         $this->assertEquals('Sulu', $response->items[0]->system);
     }
@@ -123,7 +141,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/security/api/roles',
+            '/security/api/role',
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
@@ -180,7 +198,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/security/api/roles/2'
+            '/security/api/roles/3'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -366,5 +384,26 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
         $this->assertContains('10', $response->message);
+    }
+
+    public function testGetAll(){
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/security/api/roles'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('Sulu Administrator', $response[0]->name);
+        $this->assertEquals('Sulu Editor', $response[1]->name);
+
+        $this->assertEquals('Sulu', $response[0]->system);
+        $this->assertEquals('Sulu', $response[1]->system);
+
+        $this->assertEquals('context1', $response[0]->permissions[0]->context);
+        $this->assertEquals('context2', $response[0]->permissions[1]->context);
     }
 }
