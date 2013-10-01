@@ -405,7 +405,7 @@ class UsersControllerTest extends DatabaseTestCase
             '/security/api/users/1/roles'
         );
 
-        $response = json_decode($client->getResponse()->getContent())[0];
+        $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 

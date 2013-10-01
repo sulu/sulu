@@ -261,9 +261,6 @@ class RolesControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        // TODO throws error
-        // {"code":0,"message":"The id-field of the  \"SuluSecurityBundle:Permission\"-Entity already has an id with the value \"1\" ."}
-
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals('portal1', $response->permissions[0]->context);

@@ -47,7 +47,11 @@ class UserRepository extends EntityRepository
 
         $result = $query->getArrayResult();
 
-        return $result;
+        if(sizeof($result) > 0) {
+            return $result[0];
+        } else {
+            return null;
+        }
     }
 
     function __toString()
