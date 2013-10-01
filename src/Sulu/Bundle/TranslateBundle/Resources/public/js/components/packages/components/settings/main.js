@@ -170,7 +170,8 @@ define([], function() {
                         $items = this.sandbox.dom.find('#catalogues .catalogue-item'),
                         item, id,
                         $item, $locale, $isDefault;
-                    
+
+
                     if (!!this.options.data.id) {
                         data.id = this.options.data.id;
                     }
