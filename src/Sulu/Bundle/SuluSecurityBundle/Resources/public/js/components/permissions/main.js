@@ -12,7 +12,9 @@ define([
     './models/user',
     'sulusecurity/models/role',
     'sulusecurity/models/permission',
-    'sulucontact/model/contact'], function(RelationalStore, User, Role, Permission, Contact) {
+    'sulucontact/model/contact',
+    './collections/roles'
+], function(RelationalStore, User, Role, Permission, Contact, Roles) {
 
     'use strict';
     // TODO put inside return
@@ -127,11 +129,25 @@ define([
             contact.fetch({
                     success: function(contactModel) {
                         this.contact = contactModel;
-                        this.loadUserRoles();
+                        this.loadRoles();
                     }.bind(this),
                     error: function(){
                         // TODO error message
                     }
+            });
+
+        },
+
+        loadRoles: function(){
+            var roles = new Roles();
+            roles.fetch({
+                success: function(rolesCollection) {
+                    this.roles = rolesCollection;
+                    this.loadUserRoles();
+                }.bind(this),
+                error: function(){
+                    // TODO error message
+                }
             });
 
         },
@@ -170,6 +186,7 @@ define([
             var data = {};
             data.contact = this.contact.toJSON();
             data.user = this.user.toJSON();
+            data.roles = this.roles.toJSON();
 
             this.sandbox.start([{
                 name: 'permissions/components/form@sulusecurity',
