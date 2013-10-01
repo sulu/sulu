@@ -18,7 +18,6 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './userRole'], function(Relational
         defaults:  {
                 username: '',
                 password: '',
-                contact: [],
                 userRoles: []
 
         }, relations: [

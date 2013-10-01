@@ -26,7 +26,7 @@ define([
         }, relations: [
             {
                 type: HasOne,
-                key: 'permissions',
+                key: 'role',
                 relatedModel: Role
             }
         ]
