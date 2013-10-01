@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', './userRole'], function(RelationalModel, HasMany, UserRole) {
+define(['mvc/relationalmodel', 'mvc/hasmany', './userRole', 'sulucontact/model/contact', 'mvc/hasone' ], function(RelationalModel, HasMany, UserRole, Contact, HasOne) {
 
     'use strict';
 
@@ -18,7 +18,9 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './userRole'], function(Relational
         defaults:  {
                 username: '',
                 password: '',
-                salt: '$a7T',
+                salt: '$a7T', // serverside requirement?
+                locale: 'en', // serverside requirement?
+                contact: [],
                 userRoles: []
 
         }, relations: [
@@ -26,6 +28,11 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './userRole'], function(Relational
                 type: HasMany,
                 key: 'userRoles',
                 relatedModel: UserRole
+            },
+            {
+                type: HasOne,
+                key: 'contact',
+                relatedModel: Contact
             }
         ]
     });
