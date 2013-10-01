@@ -1,28 +1,29 @@
 <div class="grid-row">
     <h2 class="bold">Username &amp; password</h2>
 </div>
-<div class="grid-row">
-    <div class="grid-col-6">
-        <label for="username">Username
-            <input name="username" id="username" type="text" class="form-element"/>
-        </label>
+<form id="permissions-form">
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <label for="username">Username
+                <input name="username" id="username" type="text" class="form-element"/>
+            </label>
+        </div>
+        <div class="grid-col-6">
+            <label for="email">Primary email address*
+                <input name="email" id="email" type="text" class="form-element" disabled value="john.doe@gmail.com"/>
+            </label>
+        </div>
     </div>
-    <div class="grid-col-6">
-        <label for="email">Primary email address*
-            <input name="email" id="email" type="text" class="form-element" disabled value="john.doe@gmail.com"/>
-        </label>
+
+    <div class="grid-row m-top-20" id="password-component"></div>
+
+    <hr class="divider"/>
+
+    <div class="grid-row m-top-30">
+
+        <div class="gridrow">
+            <h2>Sulu permissions</h2>
+        </div>
+        <div class="gridrow" id="permissions-grid"></div>
     </div>
-</div>
-
-<div class="grid-row m-top-20" id="password-component"></div>
-
-<hr class="divider"/>
-
-<div class="grid-row m-top-30">
-
-    <div class="gridrow">
-        <h2>Sulu permissions</h2>
-    </div>
-    <div class="gridrow" id="permissions-grid"></div>
-</div>
-
+</form>
