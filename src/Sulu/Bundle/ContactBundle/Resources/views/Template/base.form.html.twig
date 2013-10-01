@@ -23,6 +23,12 @@
     #emails div:hover > div.remove-email {
         display: block;
     }
+
+    #emails .husky-validate-success label::after,
+    #phones .husky-validate-success label::after,
+    #addresses .husky-validate-success label::after {
+        content: "";
+    }
 </style>
 
 
@@ -190,7 +196,9 @@
                         </div>
                         <div class="grid-col-4">
                             <label>Country</label>
-                            <div data-aura-component="select@husky" data-aura-data='{{ countries|json_encode() }}'></div>
+
+                            <div data-aura-component="select@husky"
+                                 data-aura-data='{{ countries|json_encode() }}'></div>
                         </div>
                     </div>
                 </div>

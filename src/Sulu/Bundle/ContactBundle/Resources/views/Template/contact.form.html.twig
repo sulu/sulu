@@ -10,11 +10,11 @@
         <div class="grid-col-10">
             <div class="grid-row">
                 <div class="grid-col-6">
-                    <label class="bold">###sulu.firstName### *</label>
+                    <label class="required">###sulu.firstName###</label>
                     <input class="form-element" type="text" id="first-name"data-validation-required="true" data-validation-min-length="3" data-mapper-property="firstName" value=""/>
                 </div>
                 <div class="grid-col-6">
-                    <label class="bold">###lastName### *</label>
+                    <label class="required">###lastName###</label>
                     <input class="form-element" type="text" id="last-name" data-trigger="focusout" data-validation-required="true" data-validation-min-length="3" data-mapper-property="lastName" value=""/>
                 </div>
             </div>
@@ -27,8 +27,9 @@
                     <label>Position</label>
                     <input class="form-element" type="text" id="position" data-mapper-property="position" value=""/>
                 </div>
-                <div class="grid-col-5" id="company">
+                <div class="grid-col-5">
                     <label>Company</label>
+                    <div id="company"></div>
                 </div>
             </div>
         </div>
