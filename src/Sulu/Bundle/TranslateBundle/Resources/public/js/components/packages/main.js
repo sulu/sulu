@@ -19,8 +19,6 @@ define([
     return {
 
         initialize: function() {
-            this.packageModel = new Package();
-
             this.bindCustomEvents();
 
             if (this.options.display === 'list') {
@@ -34,14 +32,15 @@ define([
             }
         },
 
-        bindCustomEvents:function(){
+        bindCustomEvents: function() {
             // delete contact
             this.sandbox.on('sulu.translate.package.delete', function(id) {
                 this.confirmDeleteDialog(function(wasConfirmed) {
                     if (wasConfirmed) {
+                        var packageModel = this.getModel(id);
+
                         this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
-                        this.packageModel.set({id: id});
-                        this.packageModel.destroy({
+                        packageModel.destroy({
                             success: function() {
                                 this.sandbox.emit('sulu.router.navigate', 'settings/translate');
                             }.bind(this)
@@ -49,6 +48,17 @@ define([
                     }
                 }.bind(this));
             }, this);
+        },
+
+        getModel: function(id) {
+            // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
+            var packageModel = Package.findOrCreate(id);
+            if (!packageModel) {
+                packageModel = new Package({
+                    id: id
+                });
+            }
+            return packageModel;
         },
 
         renderList: function() {
@@ -80,8 +90,9 @@ define([
                         this.sandbox.emit('husky.header.button-state', 'loading-add-button');
 
                         ids.forEach(function(id) {
-                            this.packageModel.set({id: id});
-                            this.packageModel.destroy({
+                            var packageModel = this.getModel(id);
+
+                            packageModel.destroy({
                                 success: function() {
                                     this.sandbox.emit('husky.datagrid.row.remove', id);
                                 }.bind(this)
@@ -95,15 +106,11 @@ define([
         },
 
         renderSettings: function() {
+            var packageModel;
             if (!!this.options.id) {
-                // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
-                this.packageModel = Package.findOrCreate(this.options.id);
-                if (!this.packageModel) {
-                    this.packageModel = new Package({
-                        id: this.options.id
-                    });
-                }
-                this.packageModel.fetch({
+                 packageModel = this.getModel(this.options.id);
+
+                packageModel.fetch({
                     success: function(model) {
                         this.sandbox.start([
                             {name: 'packages/components/settings@sulutranslate', options: { el: this.$el, data: model.toJSON()}}
@@ -114,20 +121,28 @@ define([
                     }.bind(this)
                 });
             } else {
+                packageModel = new Package();
                 this.sandbox.start([
-                    {name: 'packages/components/settings@sulutranslate', options: { el: this.$el, data: this.packageModel.toJSON()}}
+                    {name: 'packages/components/settings@sulutranslate', options: { el: this.$el, data: packageModel.toJSON()}}
                 ]);
             }
 
             // save contact
             this.sandbox.on('sulu.translate.package.save', function(data) {
+                var packageModel = new Package();
+                if (!!data.id) {
+                    packageModel = this.getModel(data.id);
+                }
+
                 this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-                this.packageModel.set(data);
-                this.packageModel.save(null, {
+                packageModel.set(data);
+                packageModel.save(null, {
                     // on success save contacts id
                     success: function(response) {
+                        var model = response.toJSON();
                         this.sandbox.emit('husky.header.button-state', 'standard');
-                        this.sandbox.emit('sulu.translate.package.saved', response.id);
+                        //this.sandbox.emit('sulu.translate.package.saved', model.id, model);
+                        this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + model.id + '/settings');
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while saving profile");
@@ -138,14 +153,9 @@ define([
 
         renderDetails: function() {
             if (!!this.options.id) {
-                // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
-                this.packageModel = Package.findOrCreate(this.options.id);
-                if (!this.packageModel) {
-                    this.packageModel = new Package({
-                        id: this.options.id
-                    });
-                }
-                this.packageModel.fetch({
+                var packageModel = this.getModel(this.options.id);
+
+                packageModel.fetch({
                     success: function(model) {
                         this.loadCatalogues(model);
                     }.bind(this),
