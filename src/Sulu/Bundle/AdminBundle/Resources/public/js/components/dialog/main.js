@@ -8,6 +8,9 @@
  */
 
 define(function() {
+
+    'use strict';
+
     var $dialog;
 
     return {
@@ -67,5 +70,5 @@ define(function() {
                 this.sandbox.emit('husky.dialog.hide');
             }.bind(this));
         }
-    }
+    };
 });
