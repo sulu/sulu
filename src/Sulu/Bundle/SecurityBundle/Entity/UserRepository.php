@@ -27,15 +27,11 @@ class UserRepository extends EntityRepository
     public function findRolesOfUser($id)
     {
 
-        $dql = 'SELECT user, contact, emails, userRoles, role, permissions
+        $dql = 'SELECT user, userRoles, role
 				FROM SuluSecurityBundle:User user
-					LEFT JOIN user.contact contact
-					LEFT JOIN contact.emails emails
                     LEFT JOIN user.userRoles userRoles
                     LEFT JOIN userRoles.role role
-                    LEFT JOIN role.permissions permissions
-				WHERE user.id = :userId AND
-					  user.contact = contact.id';
+				WHERE user.id = :userId';
 
         $query = $this->getEntityManager()
             ->createQuery($dql)

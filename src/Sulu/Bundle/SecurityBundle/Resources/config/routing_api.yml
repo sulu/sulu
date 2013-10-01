@@ -1,6 +1,6 @@
 sulu_security.roles:
     type: rest
-    resource: Sulu\Bundle\SecurityBundle\Controller\RolesController
+    resource: Sulu\Bundle\SecurityBundle\Controller\RoleController
 
 sulu_security.users:
     type: rest
