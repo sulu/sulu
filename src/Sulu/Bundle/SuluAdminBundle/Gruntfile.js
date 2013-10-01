@@ -30,11 +30,6 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['bower_components/backbone/backbone.js', 'bower_components/backbone/backbone-min.js', 'bower_components/backbone/backbone-min.map'], dest: 'Resources/public/js/vendor/backbone'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
                         src: ['bower_components/backbone-relational/backbone-relational.js'], dest: 'Resources/public/js/vendor/backbone-relational'
                     },
                     {
@@ -46,27 +41,13 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['bower_components/jquery/jquery.js', 'bower_components/jquery/jquery.min.map', 'bower_components/jquery/jquery.min.js'], dest: 'Resources/public/js/vendor/jquery'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: ['bower_components/requirejs/require.js'], dest: 'Resources/public/js/vendor/requirejs'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: ['bower_components/requirejs-text/text.js'], dest: 'Resources/public/js/vendor/requirejs-text'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
                         src: ['bower_components/parsleyjs/parsley.js'], dest: 'Resources/public/js/vendor/parsleyjs'
                     },
                     {
                         expand: true,
-                        flatten: true,
-                        src: ['bower_components/underscore/underscore.js', 'bower_components/underscore/underscore-min.js', 'bower_components/underscore/underscore-min.map'], dest: 'Resources/public/js/vendor/underscore'
+                        cwd: 'bower_components/globalize/lib/',
+                        src: ['**'],
+                        dest: 'Resources/public/js/vendor/globalize/'
                     }
                 ]
             }
@@ -211,14 +192,14 @@ module.exports = function(grunt) {
         'clean:dist',
         'copy:build',
         'useminPrepare',
-        'requirejs',
-        'concat',
+        // FIXME 'requirejs',
+        // FIXME 'concat',
         'compass:dev',
         'cssmin',
         //'rev',    FIXME: use rev as soon as usemin can handle it correctly
-        'usemin',
-        'copy:buildResult',
-        'replace:buildResult',
+        // FIXME 'usemin',
+        // FIXME 'copy:buildResult',
+        // FIXME 'replace:buildResult',
         'clean:build',
         'publish'
     ]);

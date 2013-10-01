@@ -9,37 +9,44 @@
 
 require.config({
     paths: {
-        text: 'vendor/requirejs-text/text',
-        jquery: 'vendor/jquery/jquery',
-        underscore: 'vendor/underscore/underscore',
-        backbone: 'vendor/backbone/backbone',
-        backbonerelational: 'vendor/backbone-relational/backbone-relational',
-        husky: 'vendor/husky/husky',
-        parsley: 'vendor/parsleyjs/parsley'
-    },
-    shim: {
-        'underscore': {
-            exports: '_'
-        },
-        'backbone': {
-            deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
-        },
-        'backbonerelational': {
-            deps: ['backbone']
-        },
-        'husky': {
-            deps: ['jquery']
-        },
-        'parsley': {
-            deps: ['jquery']
-        }
+        'cultures': 'vendor/globalize/cultures'
     }
 });
 
-require(['app'], function(App) {
+require(['husky'], function(Husky) {
 
     'use strict';
 
-    App.initialize();
+    // TODO get language from user
+    var language = 'de', app;
+
+    require(['text!/admin/bundles', 'text!language/sulu.' + language + '.json'], function(text, messagesText) {
+        var bundles = JSON.parse(text),
+            messages = JSON.parse(messagesText);
+
+        app = new Husky({
+            debug: {
+                enable: true
+            },
+            culture: {
+                name: language,
+                messages: messages
+            }
+        });
+
+
+        bundles.forEach(function(bundle) {
+            app.use('/bundles/' + bundle + '/js/main.js');
+        }.bind(this));
+
+        app.use('aura_extensions/backbone-relational');
+
+        app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
+
+        app.use(function(app) {
+            window.App = app.sandboxes.create();
+        });
+
+        app.start();
+    });
 });

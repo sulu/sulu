@@ -8,6 +8,6 @@ sulu_admin.navigation:
     resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController
 
 sulu_admin.routes:
-    path: /routes
+    path: /bundles
     defaults:
-        _controller: SuluAdminBundle:Admin:routes
+        _controller: SuluAdminBundle:Admin:bundles
