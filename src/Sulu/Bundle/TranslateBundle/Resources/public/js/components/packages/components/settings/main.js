@@ -110,6 +110,15 @@ define([], function() {
                 }, this);
 
                 // contact saved
+                this.sandbox.on('sulu.translate.package.saved', function(id, data) {
+                    if (!this.options.data.id) {
+                        this.options.data = data;
+                    }
+                    this.setTabs();
+                    this.setHeaderBar(true);
+                }, this);
+
+                // contact saved
                 this.sandbox.on('husky.button.save.click', function() {
                     this.submit();
                 }, this);
