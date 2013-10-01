@@ -38,6 +38,8 @@ define(['text!/security/template/permission/form'], function(Template) {
             this.bindCustomEvents();
 
             this.initializeHeaderbar();
+
+            this.sandbox.form.create(this.formId);
         },
 
 
@@ -135,7 +137,6 @@ define(['text!/security/template/permission/form'], function(Template) {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
-            // contact saved
             this.sandbox.on('sulu.user.permissions.save', function(id, data) {
                 if (!this.options.data.id) {
                     this.options.data = data;
@@ -143,7 +144,6 @@ define(['text!/security/template/permission/form'], function(Template) {
                 this.setHeaderBar(true);
             }, this);
 
-            // contact saved
             this.sandbox.on('husky.button.save.click', function() {
                 this.save();
             }, this);
@@ -151,16 +151,19 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         save: function() {
             // FIXME  Use datamapper instead
-            // TODO validation
-            this.getPassword();
 
-            var data = {
-                id: this.user.id,
-                username: this.sandbox.dom.val('#username'),
-                password: this.password
-            };
+            if (this.sandbox.form.validate(this.formId)) {
 
-            this.sandbox.emit('sulu.user.permissions.save', data);
+                this.sandbox.logger.log('validation succeeded');
+                this.getPassword();
+                var data = {
+                    id: this.user.id,
+                    username: this.sandbox.dom.val('#username'),
+                    password: this.password
+                };
+
+                this.sandbox.emit('sulu.user.permissions.save', data);
+            }
         },
 
         getPassword: function(){
@@ -181,6 +184,8 @@ define(['text!/security/template/permission/form'], function(Template) {
         // Grid with roles and permissions
 
         initializeRoles: function() {
+
+            // TODO
 
             var $permissionsContainer = this.sandbox.dom.$('#permissions-grid'),
                 $table = this.sandbox.dom.createElement('<table/>', {class: 'table'}),
