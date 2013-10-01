@@ -643,14 +643,14 @@ table {
   font-style: normal;
 }
 
-/* line 31, ../scss/typo.scss */
+/* line 32, ../scss/typo.scss */
 body {
   font-size: 14px;
   font-family: "MuseoSansCondensed300", Helvetica, Arial, sans-serif;
   line-height: 20px;
 }
 
-/* line 45, ../scss/typo.scss */
+/* line 46, ../scss/typo.scss */
 h1,
 h2,
 h3,
@@ -663,38 +663,38 @@ h6 {
   color: #999999;
 }
 
-/* line 52, ../scss/typo.scss */
+/* line 53, ../scss/typo.scss */
 h1 {
   font-size: 36px;
   line-height: 40px;
 }
 
-/* line 57, ../scss/typo.scss */
+/* line 58, ../scss/typo.scss */
 h2 {
   font-size: 24px;
   line-height: 30px;
 }
 
-/* line 62, ../scss/typo.scss */
+/* line 63, ../scss/typo.scss */
 h3 {
   font-size: 20px;
   line-height: 25px;
 }
 
-/* line 67, ../scss/typo.scss */
+/* line 68, ../scss/typo.scss */
 h4 {
   font-size: 18px;
   line-height: 20px;
 }
 
-/* line 71, ../scss/typo.scss */
+/* line 72, ../scss/typo.scss */
 h5 {
   font-size: 14px;
   line-height: 15px;
 }
 
-/* line 79, ../scss/typo.scss */
-.bold {
+/* line 80, ../scss/typo.scss */
+.bold, .header .header-left .username {
   font-family: 'MuseoSansCondensed700' !important;
 }
 
@@ -3191,45 +3191,62 @@ hr.divider {
   left: 0;
   z-index: 100;
 }
-/* line 42, ../scss/modules/header.scss */
+/* line 44, ../scss/modules/header.scss */
 .header .header-left {
   position: absolute;
   width: 250px;
 }
-/* line 48, ../scss/modules/header.scss */
+/* line 50, ../scss/modules/header.scss */
+.header .header-left .username {
+  display: inline-block;
+  margin-top: 10px;
+}
+/* line 56, ../scss/modules/header.scss */
+.header .header-left .logout {
+  margin-top: 10px;
+  margin-left: 5px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.8em;
+}
+/* line 63, ../scss/modules/header.scss */
+.header .header-left .logout:hover {
+  text-decoration: underline;
+}
+/* line 69, ../scss/modules/header.scss */
 .header .header-right {
   position: absolute;
   width: 175px;
   margin-left: 1134px;
 }
-/* line 55, ../scss/modules/header.scss */
+/* line 76, ../scss/modules/header.scss */
 .header .header-mid {
   position: absolute;
   width: 800px;
   margin-left: 284px;
 }
-/* line 61, ../scss/modules/header.scss */
+/* line 82, ../scss/modules/header.scss */
 .header .header-mid .left {
   font-size: 18px;
   margin-top: 8px;
 }
-/* line 66, ../scss/modules/header.scss */
+/* line 87, ../scss/modules/header.scss */
 .header .header-mid .right {
   text-align: right;
   font-size: 14px;
   margin-top: 10px;
 }
-/* line 72, ../scss/modules/header.scss */
+/* line 93, ../scss/modules/header.scss */
 .header .header-mid .icon-btn {
   color: white;
 }
-/* line 75, ../scss/modules/header.scss */
+/* line 96, ../scss/modules/header.scss */
 .header .header-mid .icon-btn.disable {
   color: #999999;
   cursor: default !important;
 }
 
-/* line 84, ../scss/modules/header.scss */
+/* line 105, ../scss/modules/header.scss */
 .navigation {
   padding-top: 100px !important;
 }
@@ -4193,6 +4210,15 @@ a.btn-black {
   opacity: 1;
 }
 
+/* line 13, ../scss/modules/validation.scss */
+.required {
+  font-family: 'MuseoSansCondensed700' !important;
+}
+/* line 16, ../scss/modules/validation.scss */
+.required::after {
+  content: " *";
+}
+
 /* line 8, ../scss/modules/loading.scss */
 .loading .loading-content {
   display: none;
@@ -4206,4 +4232,77 @@ a.btn-black {
 /* line 24, ../scss/modules/loading.scss */
 .loading-gray .loading-content {
   display: none;
+}
+
+/* line 1, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select {
+  position: relative;
+}
+/* line 5, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-label {
+  background: #ccc;
+  padding: 10px;
+  border-radius: 6px;
+}
+/* line 10, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-label.dropdown-open {
+  background: #999 !important;
+}
+/* line 15, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list {
+  width: 100%;
+  /*display: inline-block;*/
+  border: 1px solid #ccc;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  margin-top: 20px;
+  background-color: #FFF;
+  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25);
+}
+/* line 27, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list::after, .husky-dropdown-multiple-select .dropdown-list::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -10px;
+  left: 5px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #FFF;
+}
+/* line 41, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list::before {
+  top: -11px;
+  left: 4px;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 11px solid #ccc;
+}
+/* line 50, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list.dropdown-align-right {
+  left: auto !important;
+  right: 0;
+}
+/* line 54, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::after, .husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::before {
+  left: auto !important;
+  right: 5px;
+}
+/* line 60, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul {
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+}
+/* line 65, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul > li {
+  padding: 5px 10px;
+}
+/* line 69, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul > li:hover, .husky-dropdown-multiple-select .dropdown-list > ul > li.hover {
+  background-color: #ccc;
+  cursor: pointer;
 }
