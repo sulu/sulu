@@ -397,13 +397,15 @@ class RolesControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('Sulu Administrator', $response[0]->name);
-        $this->assertEquals('Sulu Editor', $response[1]->name);
+        $this->assertEquals(2, $response->total);
 
-        $this->assertEquals('Sulu', $response[0]->system);
-        $this->assertEquals('Sulu', $response[1]->system);
+        $this->assertEquals('Sulu Administrator', $response->items[0]->name);
+        $this->assertEquals('Sulu Editor', $response->items[1]->name);
 
-        $this->assertEquals('context1', $response[0]->permissions[0]->context);
-        $this->assertEquals('context2', $response[0]->permissions[1]->context);
+        $this->assertEquals('Sulu', $response->items[0]->system);
+        $this->assertEquals('Sulu', $response->items[1]->system);
+
+        $this->assertEquals('context1', $response->items[0]->permissions[0]->context);
+        $this->assertEquals('context2', $response->items[0]->permissions[1]->context);
     }
 }

@@ -41,7 +41,12 @@ class RoleController extends RestController implements ClassResourceInterface
             array_push($convertedRoles, $this->convertRole($role));
         }
 
-        $view = $this->view($convertedRoles, 200);
+        $response = array(
+            'total' => count($convertedRoles),
+            'items' => $convertedRoles
+        );
+
+        $view = $this->view($response, 200);
 
         return $this->handleView($view);
     }
