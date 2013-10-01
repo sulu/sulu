@@ -4,13 +4,12 @@
 <form id="permissions-form">
     <div class="grid-row">
         <div class="grid-col-6">
-            <label for="username">Username
-                <input name="username" id="username" type="text" class="form-element" value="<%= user.username%>"/>
-            </label>
+            <label for="username">Username</label>
+            <input name="username" id="username" type="text" class="form-element" value="<%= user.username%>" data-validation-required="true" data-validation-min-length="3"/>
         </div>
         <div class="grid-col-6">
             <label for="email">Primary email address*
-                <input name="email" id="email" type="text" class="form-element" disabled value="<%= email %>"/>
+                <input name="email" id="email" type="text" class="form-element" disabled value="<%= email %>" />
             </label>
         </div>
     </div>

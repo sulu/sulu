@@ -48,6 +48,7 @@ define([
                             success: function() {
                                 this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
                             }.bind(this)
+
                         });
                     }
                 }.bind(this));
@@ -59,13 +60,16 @@ define([
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             var userModel = User.findOrCreate(data);
-            userModel.url = '/security/api/users/'+data.id;
+            userModel.url = '/security/api/users/' + data.id;
 
-            this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
-            userModel.save({
+            userModel.save(null, {
                 success: function() {
-                    this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
+                    this.sandbox.emit('sulu.router.navigate', '/contacts/contacts');
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
                 }.bind(this)
+
             });
 
         },
