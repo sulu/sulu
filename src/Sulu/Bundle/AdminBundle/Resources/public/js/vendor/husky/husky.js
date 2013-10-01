@@ -15895,7 +15895,7 @@ define('aura/ext/components', [],function() {
        */
       this.$el        = core.dom.find(opts.el);
 
-      invokeWithCallbacks('initialize', this, this.options);
+      this.invokeWithCallbacks('initialize', this.options);
       return this;
     }
 
@@ -15942,7 +15942,7 @@ define('aura/ext/components', [],function() {
      * @return {Promise} a Promise that will resolve to the return value of the original function invoked.
      */
     Component.prototype.invokeWithCallbacks = function(methodName) {
-      invokeWithCallbacks(methodName, this);
+      return invokeWithCallbacks.apply(undefined, [methodName, this].concat([].slice.call(arguments, 1)));
     };
 
     // Stolen from Backbone 0.9.9 !
@@ -16299,7 +16299,7 @@ define('aura/ext/components', [],function() {
       },
 
       /**
-       * When all of an application's extensions are finally loaded, the 'extensions' 
+       * When all of an application's extensions are finally loaded, the 'extensions'
        * afterAppStart methods are then called.
        *
        * @method components.afterAppStart
@@ -16856,7 +16856,11 @@ define('form/mapper',[
 
                     // if type == array process children, else get value
                     if (type !== 'array') {
-                        return element.getValue();
+                        if (!!element) {
+                            return element.getValue();
+                        } else {
+                            return null;
+                        }
                     } else {
                         result = [];
                         $.each($el.children(), function(key1, value1) {
@@ -17006,6 +17010,7 @@ require.config({
         'type/email': 'js/types/email',
         'type/url': 'js/types/url',
         'type/label': 'js/types/label',
+        'type/select': 'js/types/select',
 
         'validator/default': 'js/validators/default',
         'validator/min': 'js/validators/min',
@@ -17433,6 +17438,52 @@ define('type/label',[
             };
 
         return new Default($el, defaults, options, 'label', typeInterface);
+    };
+});
+
+/*
+ * This file is part of the Husky Validation.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+define('type/select',[
+    'type/default'
+], function(Default) {
+
+    
+
+    return function($el, options) {
+        var defaults = {
+                id: 'id',
+                label: 'name'
+            },
+            typeInterface = {
+                setValue: function(value) {
+                    this.$el.val(value[this.options.id]);
+                },
+
+                getValue: function() {
+                    var result = {};
+                    result[this.options.id] = this.$el.val();
+                    result[this.options.label] = this.$el.find('option:selected').text();
+                    return result;
+                },
+
+                needsValidation: function() {
+                    return false;
+                },
+
+                validate: function() {
+                    return true;
+                }
+            };
+
+        return new Default($el, defaults, options, 'select', typeInterface);
     };
 });
 
@@ -19488,17 +19539,23 @@ define('bower_components/aura/lib/logger',[], function() {
     this._log   = noop;
     this._warn  = noop;
     this._error = noop;
+    this._enabled = false;
     return this;
   }
+
+  Logger.prototype.isEnabled = function () {
+    return this._enabled;
+  };
 
   Logger.prototype.setName = function(name){
     this.name = name;
   };
 
   Logger.prototype.enable = function() {
-    this._log   = (console.log   || noop);
-    this._warn  = (console.warn  || this._log);
-    this._error = (console.error || this._log);
+    this._log     = (console.log   || noop);
+    this._warn    = (console.warn  || this._log);
+    this._error   = (console.error || this._log);
+    this._enabled = true;
 
     if (Function.prototype.bind && typeof console === "object") {
       var logFns = ["log", "warn", "error"];
@@ -20052,6 +20109,11 @@ define('bower_components/aura/lib/aura',[
     // Register core extensions : debug, mediator and components.
     config.debug = config.debug || {};
     var debug = config.debug;
+    if (debug === true) {
+      config.debug = debug = {
+        enable: true
+      };
+    }
     if (debug.enable) {
       if(debug.components){
         debug.components = debug.components.split(' ');
@@ -22637,6 +22699,10 @@ define('__component__$matrix@husky',[],function() {
  *      - valueName: name of the attribute used for display
  *      - selected: object with an id attribute e.g. {id : 1}
  *      - defaultItem: object with an id attribute e.g. {id : 1}
+ *      - property: data-mapper-property
+ *      - type: data-type
+ *      - typeId: id property
+ *      - typeLabel: label property
  *
  *  Provided Events
  *      - select.item.changed - raised when the selected element changed
@@ -22654,7 +22720,11 @@ define('__component__$select@husky',[],function() {
         valueName: 'name',
         selected: null,
         defaultItem: { id: 1 },
-        instanceName: 'undefined'
+        instanceName: 'undefined',
+        property: null,
+        type: 'select',
+        typeId: null,
+        typeLabel: null
     };
 
     return {
@@ -22669,7 +22739,17 @@ define('__component__$select@husky',[],function() {
 
             this.$originalElement = this.sandbox.dom.$(this.options.el);
             // TODO class via options
-            this.$select = $('<select class="select-value form-element"/>');
+
+            var dataAttr = [
+                    (!!this.options.property) ? 'data-mapper-property="' + this.options.property + '" data-type="' + this.options.type + '" ' : '',
+                    (!!this.options.property && !!this.options.typeId) ? 'data-type-id="' + this.options.typeId + '" ' : '',
+                    (!!this.options.property && !!this.options.typeLabel) ? 'data-type-label="' + this.options.typeLabel + '" ' : ''
+                ].join(''),
+                selectHtml = [
+                    '<select class="select-value form-element" ', dataAttr, '/>'
+                ].join('');
+
+            this.$select = $(selectHtml);
             this.$element = this.sandbox.dom.$('<div class="husky-select"/>');
 
             this.$element.append(this.$select);
@@ -23402,6 +23482,9 @@ define('__component__$dropdown-multiple-select@husky',[], function() {
  * Provided Events:
  *  husky.passwords.fields.<<instanceName>>.generated.passwords: password generated
  *
+ * Used Events
+ *  husky.passwords.fields.<<instanceName>>.get.passwords: callback for passwords
+ *
  */
 
 define('__component__$password-fields@husky',[], function() {
@@ -23414,7 +23497,12 @@ define('__component__$password-fields@husky',[], function() {
             inputPassword1: 'Password',
             inputPassword2: 'Repeat Password',
             generateLabel: 'Generate password'
+        },
+        values: {
+            inputPassword1: '',
+            inputPassword2: ''
         }
+
     };
 
     return {
@@ -23441,6 +23529,21 @@ define('__component__$password-fields@husky',[], function() {
             this.$originalElement.append(this.$element);
 
             this.bindDomEvents();
+            this.bindCustomEvents();
+        },
+
+        bindCustomEvents: function(){
+
+            this.sandbox.on('husky.password.fields.' + this.options.instanceName + '.get.passwords', function(callback){
+
+                if(typeof callback === 'function'){
+                    var password1 = this.sandbox.dom.val('#'+this.options.ids.inputPassword1),
+                        password2 = this.sandbox.dom.val('#'+this.options.ids.inputPassword2);
+                    callback(password1, password2);
+                }
+
+            }.bind(this));
+
         },
 
         bindDomEvents: function() {
@@ -23475,7 +23578,7 @@ define('__component__$password-fields@husky',[], function() {
                 '                </div>',
                 '            </div>',
                 '            <div class="grid-row">',
-                '                <input class="form-element" type="text" id="', this.options.ids.inputPassword1, '"/>',
+                '                <input class="form-element" value="',this.options.values.inputPassword1,'" type="text" id="', this.options.ids.inputPassword1, '"/>',
                 '            </div>',
                 '        </div>',
                 '        <div class="grid-col-6">',
@@ -23483,7 +23586,7 @@ define('__component__$password-fields@husky',[], function() {
                 '                <label>', this.options.labels.inputPassword2, '</label>',
                 '            </div>',
                 '            <div class="grid-row">',
-                '                <input class="form-element" type="text" id="', this.options.ids.inputPassword2, '"/>',
+                '                <input class="form-element" value="',this.options.values.inputPassword2,'" type="text" id="', this.options.ids.inputPassword2, '"/>',
                 '            </div>',
                 '        </div>',
                 '    </div>',
