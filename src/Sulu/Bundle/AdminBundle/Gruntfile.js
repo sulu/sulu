@@ -192,14 +192,14 @@ module.exports = function(grunt) {
         'clean:dist',
         'copy:build',
         'useminPrepare',
-        'requirejs',
-        'concat',
+        // FIXME 'requirejs',
+        // FIXME 'concat',
         'compass:dev',
         'cssmin',
         //'rev',    FIXME: use rev as soon as usemin can handle it correctly
-        'usemin',
-        'copy:buildResult',
-        'replace:buildResult',
+        // FIXME 'usemin',
+        // FIXME 'copy:buildResult',
+        // FIXME 'replace:buildResult',
         'clean:build',
         'publish'
     ]);
