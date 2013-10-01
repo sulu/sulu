@@ -18,9 +18,7 @@ define([
 
         model: Role,
 
-        url: function() {
-            return 'security/api/roles/list';
-        },
+        url: '/security/api/roles',
 
         parse: function(resp) {
             return resp.items;
