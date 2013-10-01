@@ -50,11 +50,21 @@ define(function() {
 
             // init navigation
             this.sandbox.on('navigation.item.content.show', function(event) {
-                // 45px margin to navigation at start
-                $('#content').css('margin-left', (event.data.navWidth + 45) + "px");
+                this.navigationSizeChanged(event);
 
-                this.sandbox.emit('sulu.router.navigate', event.item.get('action'));
+                if (!!event.item.action) {
+                    this.sandbox.emit('sulu.router.navigate', event.item.action);
+                }
             }.bind(this));
+
+            this.sandbox.on('navigation.size.changed', function(event) {
+                this.navigationSizeChanged(event);
+            }.bind(this));
+        },
+
+        navigationSizeChanged: function(event) {
+            // 45px margin to navigation at start
+            $('#content').css('margin-left', (event.data.navWidth + 45) + "px");
         }
     };
 });
