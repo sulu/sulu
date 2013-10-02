@@ -3,6 +3,7 @@ sulu_security:
     resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
     prefix: /api
 
+
 sulu_security.template.role.form:
      path: /template/role/form
      defaults:

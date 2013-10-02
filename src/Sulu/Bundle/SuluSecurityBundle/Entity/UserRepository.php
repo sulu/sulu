@@ -24,7 +24,7 @@ class UserRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findRolesOfUser($id)
+    public function findUserAndRolesOfUser($id)
     {
 
         $dql = 'SELECT user, userRoles, role, contact

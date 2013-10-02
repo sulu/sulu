@@ -217,22 +217,22 @@ class RoleController extends RestController implements ClassResourceInterface
      */
     protected function addPermission(Role $role, $permissionData)
     {
-        $permissionEntityName = 'SuluSecurityBundle:Permission';
-        $em = $this->getDoctrine()->getManager();
+            $permissionEntityName = 'SuluSecurityBundle:Permission';
+            $em = $this->getDoctrine()->getManager();
 
-        if (isset($permissionData['id'])) {
-            throw new EntityIdAlreadySetException($permissionEntityName, $permissionData['id']);
-        }
+            if (isset($permissionData['id'])) {
+                throw new EntityIdAlreadySetException($permissionEntityName, $permissionData['id']);
+            }
 
-        $permission = new Permission();
-        $permission->setContext($permissionData['context']);
-        $permission->setPermissions(
-            $this->get('sulu_security.mask_converter')
-                ->convertPermissionsToNumber($permissionData['permissions'])
-        );
-        $permission->setRole($role);
-        $em->persist($permission);
-        $role->addPermission($permission);
+            $permission = new Permission();
+            $permission->setContext($permissionData['context']);
+            $permission->setPermissions(
+                $this->get('sulu_security.mask_converter')
+                    ->convertPermissionsToNumber($permissionData['permissions'])
+            );
+            $permission->setRole($role);
+            $em->persist($permission);
+            $role->addPermission($permission);
 
         return true;
     }

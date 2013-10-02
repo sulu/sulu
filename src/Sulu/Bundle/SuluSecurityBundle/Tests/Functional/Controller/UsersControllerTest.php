@@ -13,13 +13,12 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
-
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 
@@ -39,6 +38,32 @@ class UsersControllerTest extends DatabaseTestCase
     {
         $this->setUpSchema();
 
+        $contact = new Contact();
+        $contact->setFirstName('Max');
+        $contact->setLastName('Mustermann');
+        $contact->setCreated(new DateTime());
+        $contact->setChanged(new DateTime());
+        self::$em->persist($contact);
+
+        $emailType = new EmailType();
+        $emailType->setName('Private');
+        self::$em->persist($emailType);
+
+        $email = new Email();
+        $email->setEmail('max.mustermann@muster.at');
+        $email->setEmailType($emailType);
+        self::$em->persist($email);
+
+        $contact = new Contact();
+        $contact->setFirstName("Max");
+        $contact->setLastName("Muster");
+        $contact->setCreated(new DateTime());
+        $contact->setChanged(new DateTime());
+        $contact->addEmail($email);
+        self::$em->persist($contact);
+
+        self::$em->flush();
+
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
@@ -53,23 +78,6 @@ class UsersControllerTest extends DatabaseTestCase
         $role2->setCreated(new DateTime());
         self::$em->persist($role2);
 
-        $emailType = new EmailType();
-        $emailType->setName('Private');
-        self::$em->persist($emailType);
-
-        $email = new Email();
-        $email->setEmail('max.mustermann@muster.at');
-        $email->setEmailType($emailType);
-        self::$em->persist($email);
-
-
-        $contact = new Contact();
-        $contact->setFirstName("Max");
-        $contact->setLastName("Muster");
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
-        $contact->addEmail($email);
-        self::$em->persist($contact);
 
         $user = new User();
         $user->setUsername('admin');
@@ -119,6 +127,13 @@ class UsersControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
@@ -198,7 +213,9 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'salt' => 'salt',
+                'contact' => array(
+                    'id' => 1
+                ),
                 'userRoles' => array(
                     array(
                         'role' => array(
@@ -219,9 +236,8 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('salt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -236,9 +252,8 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('salt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -312,7 +327,9 @@ class UsersControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'salt' => 'newsalt',
+                'contact' => array(
+                    'id' => 1
+                ),
                 'userRoles' => array(
                     array(
                         'id' => 1,
@@ -335,9 +352,8 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('newsalt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -352,9 +368,8 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals('verysecurepassword', $response->password);
+        $this->assertEquals(1, $response->contact->id);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals('newsalt', $response->salt);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
@@ -371,7 +386,6 @@ class UsersControllerTest extends DatabaseTestCase
             '/security/api/users/1',
             array(
                 'username' => 'manager',
-                'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'userRoles' => array(
                     array(
@@ -393,10 +407,10 @@ class UsersControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertContains('salt', $response->message);
+        $this->assertContains('password', $response->message);
     }
 
-    public function testGetUserRoles(){
+    public function testGetUserAndRolesByUser(){
 
         $client = static::createClient();
 
@@ -420,7 +434,7 @@ class UsersControllerTest extends DatabaseTestCase
 
     }
 
-    public function testGetNotExistingUserRoles(){
+    public function testGetUserAndRolesByUserNotExisting(){
         $client = static::createClient();
 
         $client->request(
