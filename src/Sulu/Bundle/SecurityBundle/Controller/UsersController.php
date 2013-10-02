@@ -309,3 +309,4 @@ class UsersController extends RestController implements ClassResourceInterface
         return $encoder->encodePassword($password, $salt);
     }
 }
+

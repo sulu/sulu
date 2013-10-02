@@ -7,6 +7,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
         <field name="username" type="string" column="username" length="60" unique="true"/>
         <field name="password" type="string" column="password" length="128"/>
         <field name="locale" type="string" column="locale" length="60"/>
@@ -17,6 +18,6 @@
             <join-column name="idContacts" referenced-column-name="id"/>
         </one-to-one>
 
-        <one-to-many target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user" field="userRoles"/>
+        <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user"/>
     </entity>
 </doctrine-mapping>
