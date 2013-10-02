@@ -66,9 +66,9 @@ class RolesControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
         );
 
         self::$tool->dropSchema(self::$entities);
