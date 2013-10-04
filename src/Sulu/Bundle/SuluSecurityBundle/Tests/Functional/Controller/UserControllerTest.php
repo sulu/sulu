@@ -417,42 +417,6 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertContains('password', $response->message);
     }
 
-    public function testGetUserAndRolesByUser(){
-
-        $client = static::createClient();
-
-        $client->request(
-            'GET',
-            '/security/api/users/1/roles'
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-        $this->assertEquals('1', $response->id);
-        $this->assertEquals('admin', $response->username);
-        $this->assertEquals('securepassword', $response->password);
-
-        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
-        $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
-        $this->assertEquals('Role2', $response->userRoles[1]->role->name);
-        $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
-
-    }
-
-    public function testGetUserAndRolesByUserNotExisting(){
-        $client = static::createClient();
-
-        $client->request(
-            'GET',
-            '/security/api/users/1324/roles'
-        );
-
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
-
-    }
-
     public function testGetUserAndRolesByContact()
     {
 

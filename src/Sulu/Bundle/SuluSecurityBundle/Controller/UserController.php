@@ -272,34 +272,6 @@ class UserController extends RestController implements ClassResourceInterface
         }
     }
 
-    /**
-     * Returns roles for a specific user
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getRolesAction($id)
-    {
-        try {
-            if ($this->isValidId($id)) {
-
-                $find = function ($id) {
-                    return $this->getDoctrine()
-                        ->getRepository($this->entityName)
-                        ->findUserAndRolesOfUser($id);
-                };
-
-                $view = $this->responseGetById($id, $find);
-
-            } else {
-                throw new RestException("Invalid id - id must be an integer and greater than 0!");
-            }
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
-        }
-
-        return $this->handleView($view);
-
-    }
 
     /***
      * Checks if the id is valid
