@@ -56,7 +56,8 @@ class UserRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function findUserByContact($id){
+    public function findUserByContact($id)
+    {
 
         $dql = 'SELECT user, userRoles, role
 				FROM SuluSecurityBundle:User user
@@ -74,7 +75,7 @@ class UserRepository extends EntityRepository
 
         $result = $query->getArrayResult();
 
-        if(sizeof($result) > 0) {
+        if (sizeof($result) > 0) {
             return $result[0];
         } else {
             return null;

@@ -359,29 +359,26 @@ class UserController extends RestController implements ClassResourceInterface
      * Returns a user with a specific contact id or all users
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction() {
-
+    public function cgetAction()
+    {
         $contactId = $this->getRequest()->get('contactId');
 
-        if($contactId != null) {
+        if ($contactId != null) {
 
             $user = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->findUserByContact($contactId);
 
-            $view = $this->view($user, 200);
+            if ($user == null) {
+                $view = $this->view(null, 404);
+            } else {
+                $view = $this->view($user, 200);
+            }
 
         } else {
 
-            //        $response = array(
-//            'total' => count($convertedRoles),
-//            'items' => $convertedRoles
-//        );
-
             $view = $this->responseList();
         }
-
-//
         return $this->handleView($view);
     }
 }
