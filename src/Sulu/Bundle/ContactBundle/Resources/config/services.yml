@@ -1,8 +1,11 @@
 parameters:
     sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
+    sulu_contact.content_pool.class: Sulu\Bundle\ContactBundle\ContentPool\ContentPool
 
 services:
     sulu_contact.admin:
         class: %sulu_contact.admin.class%
         tags:
         - { name: sulu.admin }
+    sulu_contact.content_pool:
+        class: %sulu_contact.content_pool.class%
