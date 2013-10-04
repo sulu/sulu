@@ -264,7 +264,6 @@ class User implements UserInterface, Serializable
         return $this->privateKey;
     }
 
-
     /**
      * Returns just the default symfony user role, so that the user get recognized as authenticated by symfony
      *
@@ -313,4 +312,3 @@ class User implements UserInterface, Serializable
         list ($this->id) = unserialize($serialized);
     }
 }
-
