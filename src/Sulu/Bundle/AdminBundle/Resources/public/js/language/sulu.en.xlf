@@ -78,6 +78,14 @@
         <source>translate.package.details.addElement</source>
         <target>Add element</target>
       </trans-unit>
+      <trans-unit id="ebee6be3618fa603188921cf16eedb1c" resname="public.delete">
+        <source>public.delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="6603511ae852ff46c20147528150e4b1" resname="translate.package.settings.title">
+        <source>translate.package.settings.title</source>
+        <target>Title</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
