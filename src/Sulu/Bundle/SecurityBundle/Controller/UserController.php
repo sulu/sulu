@@ -24,7 +24,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
  * Makes the users accessible through a rest api
  * @package Sulu\Bundle\SecurityBundle\Controller
  */
-class UsersController extends RestController implements ClassResourceInterface
+class UserController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluSecurityBundle:User';
     protected $roleEntityName = 'SuluSecurityBundle:Role';
@@ -355,32 +355,33 @@ class UsersController extends RestController implements ClassResourceInterface
 
     }
 
-// .../users?contactId=1 --> ein spezifischer
-// .../users --> alle
-
     /**
      * Returns a user with a specific contact id or all users
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction() {
 
-//        $roles = $this->getDoctrine()
-//            ->getRepository($this->entityName)
-//            ->findAll();
-//
-//        $convertedRoles = [];
-//        foreach($roles as $role) {
-//            array_push($convertedRoles, $this->convertRole($role));
-//        }
-//
-//        $response = array(
+        $contactId = $this->getRequest()->get('contactId');
+
+        if($contactId != null) {
+
+            $user = $this->getDoctrine()
+                ->getRepository($this->entityName)
+                ->findUserByContact($contactId);
+
+            $view = $this->view($user, 200);
+
+        } else {
+
+            //        $response = array(
 //            'total' => count($convertedRoles),
 //            'items' => $convertedRoles
 //        );
+
+            $view = $this->responseList();
+        }
+
 //
-//        $view = $this->view($response, 200);
-//
-//        return $this->handleView($view);
+        return $this->handleView($view);
     }
 }
-

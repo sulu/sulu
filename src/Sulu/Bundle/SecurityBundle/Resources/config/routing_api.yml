@@ -4,4 +4,4 @@ sulu_security.roles:
 
 sulu_security.users:
     type: rest
-    resource: Sulu\Bundle\SecurityBundle\Controller\UsersController
+    resource: Sulu\Bundle\SecurityBundle\Controller\UserController

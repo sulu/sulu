@@ -22,7 +22,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 
-class UsersControllerTest extends DatabaseTestCase
+class UserControllerTest extends DatabaseTestCase
 {
     /**
      * @var array
@@ -443,6 +443,64 @@ class UsersControllerTest extends DatabaseTestCase
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+    }
+
+    public function testGetUserAndRolesByContact(){
+
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/security/api/users?contactId=1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+    }
+
+    public function testGetUserAndRolesByContactNotExisting(){
+
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/security/api/users?contactId=1234'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('1', $response->id);
+        $this->assertEquals('admin', $response->username);
+        $this->assertEquals('securepassword', $response->password);
+
+        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
+        $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
+        $this->assertEquals('Role2', $response->userRoles[1]->role->name);
+        $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
+
+    }
+
+    public function testGetUserAndRolesWithoutParam(){
+
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/security/api/users'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->total));
+        $this->assertEquals('admin', $response->items[0]->username);
+        $this->assertEquals('securepassword', $response->items[0]->password);
+        $this->assertEquals('de', $response->items[0]->locale);
 
     }
 }
