@@ -126,7 +126,7 @@ define([
 
         loadUserRoles: function() {
 
-            var userId,
+            var userId = 1,
                 user;
 
             // TODO when security bundle is registered return also user with contact
