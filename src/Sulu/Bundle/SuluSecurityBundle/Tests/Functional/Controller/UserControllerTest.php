@@ -54,13 +54,13 @@ class UserControllerTest extends DatabaseTestCase
         $email->setEmailType($emailType);
         self::$em->persist($email);
 
-        $contact = new Contact();
-        $contact->setFirstName("Max");
-        $contact->setLastName("Muster");
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
-        $contact->addEmail($email);
-        self::$em->persist($contact);
+        $contact1 = new Contact();
+        $contact1->setFirstName("Max");
+        $contact1->setLastName("Muster");
+        $contact1->setCreated(new DateTime());
+        $contact1->setChanged(new DateTime());
+        $contact1->addEmail($email);
+        self::$em->persist($contact1);
 
         self::$em->flush();
 
@@ -84,7 +84,7 @@ class UserControllerTest extends DatabaseTestCase
         $user->setPassword('securepassword');
         $user->setSalt('salt');
         $user->setLocale('de');
-        $user->setContact($contact);
+        $user->setContact($contact1);
         self::$em->persist($user);
 
         self::$em->flush();
@@ -208,7 +208,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/security/api/users',
+            '/security/api/user',
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
@@ -232,6 +232,10 @@ class UserControllerTest extends DatabaseTestCase
                 )
             )
         );
+
+       // TODO ???
+       // post_user why user and not users?
+       // You have requested a non-existent service &quot;security.encoder_factory&quot;. (500 Internal Server Error)
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -267,7 +271,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/security/api/users',
+            '/security/api/user',
             array(
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
@@ -348,6 +352,9 @@ class UserControllerTest extends DatabaseTestCase
                 )
             )
         );
+
+        // TODO ???
+        // You have requested a non-existent service &quot;security.encoder_factory&quot;. (500 Internal Server Error)
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -446,28 +453,14 @@ class UserControllerTest extends DatabaseTestCase
 
     }
 
-    public function testGetUserAndRolesByContact(){
+    public function testGetUserAndRolesByContact()
+    {
 
         $client = static::createClient();
 
         $client->request(
             'GET',
-            '/security/api/users?contactId=1'
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
-
-    }
-
-    public function testGetUserAndRolesByContactNotExisting(){
-
-        $client = static::createClient();
-
-        $client->request(
-            'GET',
-            '/security/api/users?contactId=1234'
+            '/security/api/users?contactId=2'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -485,7 +478,23 @@ class UserControllerTest extends DatabaseTestCase
 
     }
 
-    public function testGetUserAndRolesWithoutParam(){
+    public function testGetUserAndRolesByContactNotExisting()
+    {
+
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/security/api/users?contactId=1234'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testGetUserAndRolesWithoutParam()
+    {
 
         $client = static::createClient();
 
