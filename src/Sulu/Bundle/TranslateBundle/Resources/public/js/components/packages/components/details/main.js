@@ -281,12 +281,19 @@ define([], function() {
                     $translation = this.sandbox.dom.find('.translation-value', $item),
                     $length = this.sandbox.dom.find('.length-value', $item),
                     $frontend = this.sandbox.dom.find('.frontend-value', $item),
-                    $backend = this.sandbox.dom.find('.backend-value', $item);
+                    $backend = this.sandbox.dom.find('.backend-value', $item),
+                    $pointer = this.sandbox.dom.find('.show-options', $item);
+
+                this.sandbox.dom.toggleClass($pointer, 'icon-arrow-right');
+                this.sandbox.dom.toggleClass($pointer, 'icon-arrow-down');
 
                 this.sandbox.dom.append('#codes', $item);
                 this.sandbox.dom.removeClass($additionOptions, 'hidden');
                 this.sandbox.dom.$($code).prop('readonly', false);
                 this.sandbox.dom.$($translation).prop('readonly', false);
+
+                // FIXME abstract
+                $(window).scrollTop($item.offset().top);
 
                 this.sandbox.form.addField(form, $code);
                 this.sandbox.form.addField(form, $translation);

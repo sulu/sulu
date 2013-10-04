@@ -43,7 +43,7 @@ define([], function() {
                         {
                             'id': 1,
                             'type':'delete',
-                            'name': 'Delete'
+                            'name': this.sandbox.translate('public.delete')
                         }
                     ]
                 }
@@ -61,7 +61,7 @@ define([], function() {
                     },
                     removeRow: false,
                     tableHead: [
-                        {content: 'Name'}
+                        {content: this.sandbox.translate('public.name')}
                     ]
                 }
             }]);

@@ -65,7 +65,7 @@
         <h1><%= packageName %></h1>
     </div>
     <div class="grid-col-6 pull-right">
-        <p class="grid-col-5 align-right m-right-10 bold grey">Language catalogue:</p>
+        <p class="grid-col-5 align-right m-right-10 bold grey"><%= translate('translate.package.catalogues') %>:</p>
 
         <div id="languageCatalogue" class="grid-col-6"></div>
     </div>
@@ -79,9 +79,9 @@
 
             <thead>
                 <tr>
-                    <th width="20%">Key</th>
-                    <th width="37%">Translation</th>
-                    <th width="37%">Suggestion</th>
+                    <th width="20%"><%= translate('translate.package.details.key') %></th>
+                    <th width="37%"><%= translate('translate.package.details.translation') %></th>
+                    <th width="37%"><%= translate('translate.package.details.suggestion') %></th>
 
                     <th width="6%"></th>
                 </tr>
@@ -96,7 +96,7 @@
                     </td>
                     <td>
                         <textarea class="form-element vertical translation-value" readonly data-validation-max-length="20"></textarea>
-                        <small class="grey letter-info">Maximum length: <span class="length-info">20</span></small>
+                        <small class="grey letter-info"><%= translate('translate.package.details.maxLength') %>: <span class="length-info">20</span></small>
                     </td>
                     <td><p class="grey suggestion-value"></p></td>
                     <td><p class="icon-remove m-left-5 code-remove pointer"></p></td>
@@ -105,19 +105,19 @@
                     <td colspan="4">
                         <div class="grid-row">
                             <div class="grid-col-3">
-                                <span>Length</span>
+                                <span><%= translate('translate.package.details.length') %></span>
                                 <input class="form-element length-value" value="20" data-validation-required="true"
                                        data-type="decimal" data-validation-min="0" type="number" min="0"/>
                             </div>
                             <div class="grid-col-2 m-top-35">
                                 <input name="frontend" type="checkbox" class="custom-checkbox frontend-value">
                                 <span class="custom-checkbox-icon"></span>
-                                <span class="m-left-5">Frontend</span>
+                                <span class="m-left-5"><%= translate('translate.package.details.frontend') %></span>
                             </div>
                             <div class="grid-col-2  m-top-35">
                                 <input name="backend" type="checkbox" class="custom-checkbox backend-value">
                                 <span class="custom-checkbox-icon"></span>
-                                <span class="m-left-5">Backend</span>
+                                <span class="m-left-5"><%= translate('translate.package.details.backend') %></span>
                             </div>
                         </div>
                     </td>
@@ -128,8 +128,8 @@
 
 
         <div class="grid-row m-top-15 m-bottom-10">
-            <div class="grid-col-2" id="code-add">
-                <span class="icon-add"></span><span class="control-label">[Add element]</span>
+            <div class="grid-col-4" id="code-add">
+                <span class="icon-add"></span><span class="control-label"><%= translate('translate.package.details.addElement') %></span>
             </div>
         </div>
 
