@@ -7,11 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontact/model/contact', '/contact/navigation/content'], function(Contact, contentNavigation) {
+define([
+    'sulucontact/model/contact',
+    'text!/contact/navigation/content'
+], function(Contact, contentNavigation) {
 
     'use strict';
 
-    console.log(contentNavigation);
+    console.log('contentNavigation',contentNavigation);
 
 
 
@@ -79,11 +82,10 @@ define(['sulucontact/model/contact', '/contact/navigation/content'], function(Co
             renderForm: function() {
 
                 // show navigation submenu
-                this.getTabs(this.options.id, function(navigation) {
-                    sandbox.emit('navigation.item.column.show', {
-                        data: navigation
-                    });
-                })
+
+                sandbox.emit('navigation.item.column.show', {
+                    data: this.getTabs(this.options.id)
+                });
 
 
                 // load data and show form
@@ -178,8 +180,9 @@ define(['sulucontact/model/contact', '/contact/navigation/content'], function(Co
             },
 
 
+            // TODO: this function must be globally available (for every related main function)
             // Navigation
-            getTabs: function(id, callbackFunction) {
+            getTabs: function(id) {
                 //TODO Simplify this task for bundle developer?
                 var cssId = id || 'new',
 
@@ -209,67 +212,23 @@ define(['sulucontact/model/contact', '/contact/navigation/content'], function(Co
                     });
                 }
 
+                var contents = JSON.parse(contentNavigation);
 
-                // TODO: cache content navigation
-
-                sandbox.util.ajax({
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    context: this,
-                    type: "GET",
-                    url: '/contact/api/contacts/contentNavigation',
-
-                    success: function(response) {
-                        for (var i=0;i<response.length;i++) {
-
-                            navigation.sub.items.push({
-                                'title': response[i].title,
-                                'action': 'contacts/contacts/edit:' + cssId + '/' + response[i].url,
-                                'hasSub': false,
-                                'type': 'content',
-                                'id': 'contacts-permission-' + cssId
-                            })
-
-                            // list all accounts
-                            this.sandbox.mvc.routes.push({
-                                route: 'contacts/accounts/edit::id/' + response[i].url,
-                                callback: function(){
-                                    this.html('<div data-aura-component="' + response[i].component + '" data-aura-display="'+response[i].display+'"/>');
-                                }
-                            });
-                        }
-                        callbackFunction(navigation);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        sandbox.logger.log("error during get request: " + textStatus, errorThrown);
+                for (var i = 0; i<contents.length; i++) {
+                    // contact must be set before optional tabs can be opened
+                    if (!!id) {
+                        console.log("element",contents[i]);
+                        navigation.sub.items.push({
+                            'title': contents[i].title,
+                            'action': 'contacts/contacts/edit:' + cssId + '/' + contents[i].url,
+                            'hasSub': false,
+                            'type': 'content',
+                            'id': 'contacts-'+contents[i].url+'-' + cssId
+                        });
                     }
-                });
+                }
 
-                /*
-
-                 navigation.sub.items.push({
-                 'title': 'Permissions',
-                 'action': 'contacts/contacts/edit:' + cssId + '/permissions',
-                 'hasSub': false,
-                 'type': 'content',
-                 'id': 'contacts-permission-' + cssId
-                 });
-
-                 navigation.sub.items.push({
-                 'title': 'Settings',
-                 'action': 'contacts/contacts/edit:' + cssId + '/settings',
-                 'hasSub': false,
-                 'type': 'content',
-                 'id': 'contacts-settings-' + cssId
-                 });
-                 */
-
-                // do not return before all data is loaded
-
-
-//            return navigation;
+                return navigation;
             }
         }
 

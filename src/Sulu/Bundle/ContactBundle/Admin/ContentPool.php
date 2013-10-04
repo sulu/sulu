@@ -1,5 +1,4 @@
 <?php
-
 namespace Sulu\Bundle\ContactBundle\Admin;
 
 // TODO: this file does not belong here
@@ -22,5 +21,17 @@ class ContentPool {
 
     public function getContents() {
         return $this->contents;
+    }
+
+    public function toArray() {
+        $contentArray = array();
+        /* @var \Hx\Bundle\UserBundle\Services\ContentManager $content */
+        foreach ($this->contents as $content) {
+            $contentArray[] =  array(
+                "title" => $content->getTitle(),
+                "url" => $content->getUrl()
+            );
+        }
+        return $contentArray;
     }
 }
