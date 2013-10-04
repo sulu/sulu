@@ -234,8 +234,7 @@ class UserControllerTest extends DatabaseTestCase
         );
 
        // TODO ???
-       // post_user why user and not users?
-       // You have requested a non-existent service &quot;security.encoder_factory&quot;. (500 Internal Server Error)
+       // post_user route why user and not users?
 
         $response = json_decode($client->getResponse()->getContent());
 

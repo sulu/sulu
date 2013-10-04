@@ -59,12 +59,7 @@ define([
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             var userModel = User.findOrCreate(data);
-            if(!!data.id) {
-                userModel.url = '/security/api/users/' + data.id;
-            } else {
-                userModel.url = '/security/api/users';
-                userModel.set('contact', Contact.findOrCreate({id: this.contact.id}));
-            }
+            userModel.url = '/security/api/users';
 
             userModel.save(null, {
                 success: function() {
@@ -84,20 +79,20 @@ define([
         // render form and load data
 
         renderForm: function() {
-
+            RelationalStore.reset();
             this.user = null;
             this.contact = null;
 
             if (!!this.options.id) {
-                this.loadContactData(this.options.id);
+                this.loadContactData();
             } else {
                 // TODO error message
                 this.sandbox.logger.log('error: form not accessible without contact id');
             }
         },
 
-        loadContactData: function(id) {
-            var contact = Contact.findOrCreate({id: id});
+        loadContactData: function() {
+            var contact = Contact.findOrCreate({id: this.options.id});
             contact.fetch({
                 success: function(contactModel) {
                     this.contact = contactModel;
@@ -115,7 +110,7 @@ define([
             roles.fetch({
                 success: function(rolesCollection) {
                     this.roles = rolesCollection;
-                    this.loadUserRoles();
+                    this.loadUser();
                 }.bind(this),
                 error: function() {
                     // TODO error message
@@ -124,40 +119,30 @@ define([
 
         },
 
-        loadUserRoles: function() {
+        loadUser: function() {
 
-            var userId = 1,
-                user;
-
-            // TODO when security bundle is registered return also user with contact
-            // userId = contact.get('user').get('id');
-
-            if (!!userId) {
-
-                user = User.findOrCreate({id: userId});
-                user.url = '/security/api/users/' + userId + '/roles';
-                user.fetch({
-                    success: function(userModel) {
-                        this.user = userModel;
-                        this.startComponent();
-                    }.bind(this),
-                    error: function() {
-                        // TODO error message
-                    }
-                });
-            } else {
-                // new user
-                this.user = new User();
-                this.startComponent();
-            }
-
+            var user = new User();
+            user.url = '/security/api/users?contactId=' + this.options.id;
+            user.fetch({
+                success: function(userModel) {
+                    this.user = userModel;
+                    this.startComponent();
+                }.bind(this),
+                error: function() {
+                    this.startComponent();
+                }.bind(this)
+            });
         },
 
         startComponent: function() {
 
             var data = {};
             data.contact = this.contact.toJSON();
-            data.user = this.user.toJSON();
+
+            if(!!this.user) {
+                data.user = this.user.toJSON();
+            }
+
             data.roles = this.roles.toJSON();
 
             this.sandbox.start([
