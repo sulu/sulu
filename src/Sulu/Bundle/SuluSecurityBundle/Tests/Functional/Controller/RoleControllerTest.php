@@ -47,6 +47,8 @@ class RolesControllerTest extends DatabaseTestCase
         $role2->setChanged(new DateTime());
         self::$em->persist($role2);
 
+        self::$em->flush();
+
         $permission1 = new Permission();
         $permission1->setRole($role);
         $permission1->setContext('context1');
