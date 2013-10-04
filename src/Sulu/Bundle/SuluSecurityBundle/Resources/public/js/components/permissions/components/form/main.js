@@ -99,6 +99,7 @@ define(['text!/security/template/permission/form'], function(Template) {
 
 
 
+
         // ---
         // Form
 
@@ -112,6 +113,13 @@ define(['text!/security/template/permission/form'], function(Template) {
         },
 
         initializePasswordFields: function() {
+
+            var pass = '';
+
+            if(!!this.user) {
+                pass = this.user.password;
+            }
+
             this.sandbox.start([
                 {
                     name: 'password-fields@husky',
@@ -119,8 +127,8 @@ define(['text!/security/template/permission/form'], function(Template) {
                         instanceName: "instance1",
                         el: '#password-component',
                         values: {
-                            inputPassword1: this.user.password,
-                            inputPassword2: this.user.password
+                            inputPassword1: pass,
+                            inputPassword2: pass
                         }
                     }
                 }
@@ -152,14 +160,22 @@ define(['text!/security/template/permission/form'], function(Template) {
         save: function() {
             // FIXME  Use datamapper instead
 
+            var id = '',
+                data;
+
+            if(!!this.user) {
+                id = this.user.id;
+            }
+
             if (this.sandbox.form.validate(this.formId)) {
 
                 this.sandbox.logger.log('validation succeeded');
                 this.getPassword();
-                var data = {
-                    id: this.user.id,
+                data = {
+                    id: id,
                     username: this.sandbox.dom.val('#username'),
-                    password: this.password
+                    password: this.password,
+                    contact: this.contact
                 };
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
@@ -185,22 +201,16 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         initializeRoles: function() {
 
-            // TODO
-
             var $permissionsContainer = this.sandbox.dom.$('#permissions-grid'),
                 $table = this.sandbox.dom.createElement('<table/>', {class: 'table'}),
                 $tableHeader = this.prepareTableHeader(),
-            //$tableRows = this.prepareTableContent(),
-                $tmp;
+                $tableRows = this.prepareTableContent(),
+                $tmp = this.sandbox.dom.append($table, $tableHeader);
 
             //this.sandbox.dom.empty($permissionsContainer);
             // TODO clear div before - add empty() to jquery extension when everything merged
 
-
-            $tmp = this.sandbox.dom.append($table, $tableHeader);
-
-            // TODO test - multiple permissions?
-            //$tmp = this.sandbox.dom.append($tmp, $tableRows);
+            $tmp = this.sandbox.dom.append($tmp, $tableRows);
             this.sandbox.dom.html($permissionsContainer,$tmp);
 
             // TODO start ddms
@@ -215,11 +225,58 @@ define(['text!/security/template/permission/form'], function(Template) {
                 tableContent = [];
 
             this.sandbox.util.each(this.roles, function(index, value){
-                tableContent.push(this.template.tableRow(value.id, value.name, value.permissions));
+                tableContent.push(this.prepareTableRow(value));
             }.bind(this));
 
             return this.sandbox.dom.append($tableBody, tableContent.join(''));
+        },
 
+
+        prepareTableRow: function(role){
+
+            var $tableRow,
+                $permissions = [];
+
+            // TODO why multiple permissions?
+
+            this.sandbox.util.each(role.permissions[0].permissions, function(index, value){
+                $permissions.push(this.preparePermission(index, value));
+            }.bind(this));
+
+            $tableRow = this.template.tableRow(role.id, role.name);
+            $tableRow = this.sandbox.dom.append($tableRow,  $permissions.join(''));
+
+            return $tableRow;
+        },
+
+        preparePermission: function(permissionName, isActive) {
+
+            var className,
+                active = false;
+
+            if (!!isActive) {
+                active = 'is-active';
+            }
+
+            if (permissionName === 'add') {
+                className = 'add';
+            } else if (permissionName === 'archive') {
+                className = 'circle-ok';
+            } else if (permissionName === 'delete') {
+                className = 'remove';
+            } else if (permissionName === 'edit') {
+                className = 'edit';
+            } else if (permissionName === 'live') {
+                className = 'search';
+            } else if (permissionName === 'security') {
+                className = 'settings';
+            } else if (permissionName === 'view') {
+                className = 'building';
+            } else {
+                className = 'unknown';
+            }
+
+            return this.template.permission(this.sandbox, className, active);
         },
 
         template: {
@@ -236,35 +293,27 @@ define(['text!/security/template/permission/form'], function(Template) {
                 ].join('');
 
             },
-            tableRow: function(id, title, permissions) {
-
-                this.sandbox.util.each(permissions, function(index,value){
-                    // TODO
-                });
+            tableRow: function(id, title) {
 
                 var $row = [
                     '<tr data-id=\"',id,'\">',
                         '<td><input type="checkbox" /></td>',
                         '<td>',title,'</td>',
-                        '<td class=\"languageSelector\"></td>',
-                        '<td><span class="icon-add"></span></td>',
-                        '<td><span class="icon-edit"></span></td>',
-                        '<td><span class="icon-search is-active"></span></td>',
-                        '<td><span class="icon-remove"></span></td>',
-                        '<td><span class="icon-settings"></span></td>',
-                        '<td><span class="icon-circle-ok is-active"></span></td>',
-                        '<td><span class="icon-building"></span></td>',
+                        '<td class="languageSelector"></td>',
                     '</tr>'
                 ].join('');
 
 
                 return $row;
+            },
+            permission:function(sandbox, iconName, isActive){
+
+                var template = '<td><span class="icon-<%= iconName %> <%= (!!isActive) ? isActive : \'\' %>"></span></td>';
+                return sandbox.template.parse(template, {iconName: iconName, isActive: isActive});
+
             }
         }
 
 
     };
 });
-
-
-
