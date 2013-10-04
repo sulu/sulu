@@ -8,9 +8,8 @@
  */
 
 define([
-    'text!/contact/template/contact/list',
     'mvc/relationalstore'
-], function(listTemplate, RelationalStore) {
+], function(RelationalStore) {
 
     'use strict';
 
@@ -21,6 +20,8 @@ define([
 
         view: true,
 
+        templates: ['/contact/template/contact/list'],
+
         initialize: function() {
             sandbox = this.sandbox;
             this.render();
@@ -30,10 +31,7 @@ define([
 
             RelationalStore.reset(); //FIXME really necessary?
 
-
-            var template = this.sandbox.template.parse(listTemplate);
-            this.sandbox.dom.html(this.$el, template);
-
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/contact/template/contact/list'));
 
             // dropdown - showing options
             this.sandbox.start([{
@@ -48,7 +46,7 @@ define([
                         {
                             'id': 1,
                             'type':'delete',
-                            'name': 'Delete'
+                            'name': this.sandbox.translate('public.delete')
                         }
                     ]
                 }
@@ -67,10 +65,10 @@ define([
                     removeRow: false,
                     tableHead: [
 
-                        {content: 'Title'},
-                        {content: 'Firstname'},
-                        {content: 'Lastname'},
-                        {content: 'Position'}
+                        {content: this.sandbox.translate('contact.contacts.contactTitle')},
+                        {content: this.sandbox.translate('contact.contacts.firstName')},
+                        {content: this.sandbox.translate('contact.contacts.lastName')},
+                        {content: this.sandbox.translate('contact.contacts.position')}
                     ],
                     excludeFields: ['id']
                 }

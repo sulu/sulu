@@ -43,7 +43,7 @@
         <hr class="divider"/>
 
         {% block emails %}
-            <h2>Email</h2>
+            <h2><%=translate('public.email')%></h2>
 
             <div class="grid-row" id="emails" data-mapper-property="emails" data-type="array">
                 <div class="grid-col-6 floating email-item">
@@ -76,14 +76,14 @@
 
             <div class="grid-row">
                 <div id="addEmail" data-target-id="emails">
-                    <span class="icon-add"></span><span class="control-label">Add email</span>
+                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.contacts.details.addEmail')%></span>
                 </div>
             </div>
         {% endblock %}
         <hr class="divider"/>
 
         {% block phones %}
-            <h2>Phone</h2>
+            <h2><%=translate('public.phone')%></h2>
 
             <div class="grid-row" id="phones" data-mapper-property="phones" data-type="array">
                 <div class="grid-col-6 floating phone-item">
@@ -116,7 +116,7 @@
 
             <div class="grid-row">
                 <div id="addPhone" data-target-id="phones">
-                    <span class="icon-add"></span><span class="control-label">Add phone number</span>
+                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.contacts.details.addPhone')%></span>
                 </div>
             </div>
         {% endblock %}
@@ -125,11 +125,11 @@
         {% block addresses %}
             <div class="grid-row">
                 <div class="grid-col-10">
-                    <h2>Address</h2>
+                    <h2><%=translate('public.address')%></h2>
                 </div>
                 <div class="grid-col-2 align-right m-top-10">
                     <div id="addAddress" data-target-id="addresses">
-                        <span class="icon-add"></span><span class="control-label">Add address</span>
+                        <span class="icon-add"></span><span class="control-label"><%=translate('contact.contacts.details.addAddress')%></span>
                     </div>
                 </div>
             </div>
@@ -163,43 +163,43 @@
                     </div>
                     <div class="grid-row">
                         <div class="grid-col-6">
-                            <label>Street</label>
+                            <label><%=translate('contact.contacts.details.street')%></label>
                             <input class="form-element street-value"
                                    data-mapper-property="street"/>
                         </div>
                         <div class="grid-col-2">
-                            <label>Number</label>
+                            <label><%=translate('contact.contacts.details.number')%></label>
                             <input class="form-element number-value"
                                    data-mapper-property="number"/>
                         </div>
                         <div class="grid-col-4">
-                            <label>House, Floor, etc.</label>
+                            <label><%=translate('contact.contacts.details.additional')%></label>
                             <input class="form-element addition-value"
                                    data-mapper-property="addition"/>
                         </div>
                     </div>
                     <div class="grid-row">
                         <div class="grid-col-2">
-                            <label>Zip</label>
+                            <label><%=translate('contact.contacts.details.zip')%></label>
                             <input class="form-element zip-value"
                                    data-mapper-property="zip"/>
                         </div>
                         <div class="grid-col-4">
-                            <label>City</label>
+                            <label><%=translate('contact.contacts.details.city')%></label>
                             <input class="form-element city-value"
                                    data-mapper-property="city"/>
                         </div>
                         <div class="grid-col-2">
-                            <label>State</label>
+                            <label><%=translate('contact.contacts.details.state')%></label>
                             <input class="form-element state-value"
                                    data-mapper-property="state"/>
                         </div>
                         <div class="grid-col-4">
-                            <label>Country</label>
+                            <label><%=translate('contact.contacts.details.country')%></label>
 
                             <select class="country-value form-element" data-mapper-property="country" data-type="select">
                                 {% for country in countries %}
-                                    <option value="{{ country.id }}">{{ country.name }}</option>
+                                    <option value="{{ country.id }}"><%=translate('{{ country.name }}')%></option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -212,7 +212,8 @@
 </form>
 
 {% block dialog %}
-    <div id="dialog"></div>{% endblock %}
+    <div id="dialog"></div>
+{% endblock %}
 
 {% block data %}
     <script type="text/javascript">
