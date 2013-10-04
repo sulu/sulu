@@ -19,37 +19,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class UserRepository extends EntityRepository
 {
-    /**
-     * Returns roles for a specific user (includes permissions and email)
-     * @param $id
-     * @return array
-     */
-    public function findUserAndRolesOfUser($id)
-    {
-
-        $dql = 'SELECT user, userRoles, role, contact
-				FROM SuluSecurityBundle:User user
-                    LEFT JOIN user.userRoles userRoles
-                    LEFT JOIN userRoles.role role
-                    LEFT JOIN user.contact contact
-				WHERE user.id = :userId';
-
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setParameters(
-                array(
-                    'userId' => $id
-                )
-            );
-
-        $result = $query->getArrayResult();
-
-        if(sizeof($result) > 0) {
-            return $result[0];
-        } else {
-            return null;
-        }
-    }
 
     /**
      * Searches for a user with a specific contact id
