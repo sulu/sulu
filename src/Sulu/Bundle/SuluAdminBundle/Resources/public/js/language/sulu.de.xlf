@@ -78,6 +78,122 @@
         <source>translate.package.details.addElement</source>
         <target>Element Hinzufügen</target>
       </trans-unit>
+      <trans-unit id="ebee6be3618fa603188921cf16eedb1c" resname="public.delete">
+        <source>public.delete</source>
+        <target>Löschen</target>
+      </trans-unit>
+      <trans-unit id="6603511ae852ff46c20147528150e4b1" resname="translate.package.settings.title">
+        <source>translate.package.settings.title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="2745c23db7c8055c84ecba422b39e8e6" resname="contact.contacts.title">
+        <source>contact.contacts.title</source>
+        <target>Kontakt</target>
+      </trans-unit>
+      <trans-unit id="bce12aa0a40b4a95a3bfc133a6bf286f" resname="contact.contacts.contactTitle">
+        <source>contact.contacts.contactTitle</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="b24511ddcc2d8dd9a49c68974cab6566" resname="contact.contacts.firstName">
+        <source>contact.contacts.firstName</source>
+        <target>Vorname</target>
+      </trans-unit>
+      <trans-unit id="d981f062a65f15748ceda92a2fa42466" resname="contact.contacts.lastName">
+        <source>contact.contacts.lastName</source>
+        <target>Lastname</target>
+      </trans-unit>
+      <trans-unit id="03b430a05634e102e66cdadae27d1e70" resname="contact.contacts.position">
+        <source>contact.contacts.position</source>
+        <target>Position</target>
+      </trans-unit>
+      <trans-unit id="df7167eb3863f47cc66e7541f97cbd68" resname="contact.contacts.company">
+        <source>contact.contacts.company</source>
+        <target>Unternehmen</target>
+      </trans-unit>
+      <trans-unit id="08e3a608b7a9725bfeb955112fb7874f" resname="contact.contacts.details.addEmail">
+        <source>contact.contacts.details.addEmail</source>
+        <target>E-Mail hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="e95821a29fc36411446e0dbce1ef8104" resname="contact.contacts.details.addPhone">
+        <source>contact.contacts.details.addPhone</source>
+        <target>Telefon hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="fcee0d0b63d3b2f5049f61ace893fb92" resname="contact.contacts.details.addAddress">
+        <source>contact.contacts.details.addAddress</source>
+        <target>Addresse hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="715a7941fd9b0eaa4187983952b1700c" resname="contact.contacts.details.street">
+        <source>contact.contacts.details.street</source>
+        <target>Straße</target>
+      </trans-unit>
+      <trans-unit id="aea048053def846f514a8667e9d44877" resname="contact.contacts.details.number">
+        <source>contact.contacts.details.number</source>
+        <target>Nummer</target>
+      </trans-unit>
+      <trans-unit id="4b8c137d0c85530b25e8456808a16703" resname="contact.contacts.details.additional">
+        <source>contact.contacts.details.additional</source>
+        <target>Haus, Stock, etc.</target>
+      </trans-unit>
+      <trans-unit id="4e2f1e3fafe176748c48cf9dbe0cccec" resname="contact.contacts.details.zip">
+        <source>contact.contacts.details.zip</source>
+        <target>Postleitzahl</target>
+      </trans-unit>
+      <trans-unit id="93740ec3525ddabe74ea7029cdf66fa6" resname="contact.contacts.details.city">
+        <source>contact.contacts.details.city</source>
+        <target>Stadt</target>
+      </trans-unit>
+      <trans-unit id="ff2856fe113673d2e467c04175bc0e49" resname="contact.contacts.details.state">
+        <source>contact.contacts.details.state</source>
+        <target>Staat</target>
+      </trans-unit>
+      <trans-unit id="32b1152baee9b16fb320cd1165065b58" resname="contact.contacts.details.country">
+        <source>contact.contacts.details.country</source>
+        <target>Land</target>
+      </trans-unit>
+      <trans-unit id="7a842ee77239dc1f4f19f06e46a89125" resname="public.email">
+        <source>public.email</source>
+        <target>E-Mail</target>
+      </trans-unit>
+      <trans-unit id="0b5526f6b188d3fa7c6bfb36813bb77f" resname="public.phone">
+        <source>public.phone</source>
+        <target>Telefon</target>
+      </trans-unit>
+      <trans-unit id="f87ae60abcd8be768e4315c9bb0497a5" resname="public.address">
+        <source>public.address</source>
+        <target>Adresse</target>
+      </trans-unit>
+      <trans-unit id="21739fb59ce76aa58404d9fc613ba40d" resname="email.home">
+        <source>email.home</source>
+        <target>Persöhnlich</target>
+      </trans-unit>
+      <trans-unit id="9c0bd43954c93c8e2cbfe94ecdd649c7" resname="email.work">
+        <source>email.work</source>
+        <target>Geschäftlich</target>
+      </trans-unit>
+      <trans-unit id="1eddecabfe3e3149071096c39a2069b1" resname="phone.home">
+        <source>phone.home</source>
+        <target>Persöhnlich</target>
+      </trans-unit>
+      <trans-unit id="2ae8f62c2530b4303646d95f70bfa62e" resname="phone.work">
+        <source>phone.work</source>
+        <target>Geschäftlich</target>
+      </trans-unit>
+      <trans-unit id="e7f59f60cc850de26922b29a1dcc3826" resname="address.home">
+        <source>address.home</source>
+        <target>Persöhnlich</target>
+      </trans-unit>
+      <trans-unit id="4b006ce36bf3e4f6bb24fd13e8dc29a9" resname="address.work">
+        <source>address.work</source>
+        <target>Geschäftlich</target>
+      </trans-unit>
+      <trans-unit id="a6287b824eeb3893ce4ef15ee503f47d" resname="country.austria">
+        <source>country.austria</source>
+        <target>Österreich</target>
+      </trans-unit>
+      <trans-unit id="78faa530839099878354d0f97c165f67" resname="country.germany">
+        <source>country.germany</source>
+        <target>Deutschland</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
