@@ -354,4 +354,33 @@ class UsersController extends RestController implements ClassResourceInterface
         return $encoder->encodePassword($password, $salt);
 
     }
+
+// .../users?contactId=1 --> ein spezifischer
+// .../users --> alle
+
+    /**
+     * Returns a user with a specific contact id or all users
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAction() {
+
+//        $roles = $this->getDoctrine()
+//            ->getRepository($this->entityName)
+//            ->findAll();
+//
+//        $convertedRoles = [];
+//        foreach($roles as $role) {
+//            array_push($convertedRoles, $this->convertRole($role));
+//        }
+//
+//        $response = array(
+//            'total' => count($convertedRoles),
+//            'items' => $convertedRoles
+//        );
+//
+//        $view = $this->view($response, 200);
+//
+//        return $this->handleView($view);
+    }
 }
+
