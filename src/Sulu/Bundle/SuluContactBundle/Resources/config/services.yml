@@ -1,6 +1,6 @@
 parameters:
     sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
-    sulu_contact.content_pool.class: Sulu\Bundle\ContactBundle\ContentPool\ContentPool
+    sulu_contact.content_pool.class: Sulu\Bundle\ContactBundle\Admin\ContentPool
 
 services:
     sulu_contact.admin:
