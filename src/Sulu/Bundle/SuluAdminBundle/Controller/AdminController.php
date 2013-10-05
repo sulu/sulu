@@ -26,7 +26,7 @@ class AdminController extends Controller
             /** @var UserDataInterface $userData */
             $userData = $this->get($serviceId);
             if ($userData->isLoggedIn() && $userData->isAdminUser()) {
-                $user['username']   = $userData->getUserName();
+                $user['username'] = $userData->getUserName();
                 $user['logout'] = $userData->getLogoutLink();
             }
         }
