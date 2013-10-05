@@ -104,7 +104,7 @@ define(['sulucontact/model/contact'], function(Contact) {
                             }.bind(this)
                         });
                     }
-                });
+                }.bind(this));
             }, this);
 
             // save contact
@@ -143,7 +143,7 @@ define(['sulucontact/model/contact'], function(Contact) {
                     buttonCancelText: "Don't do it",
                     buttonSubmitText: "Do it, I understand"
                 }
-            });
+            }.bind(this));
 
             // submit -> delete
            this.sandbox.once('husky.dialog.submit', function() {
@@ -165,19 +165,19 @@ define(['sulucontact/model/contact'], function(Contact) {
             var cssId = id || 'new',
 
             // TODO translate
-                navigation = {
-                    'title': 'Contact',
-                    'header': {
-                        'displayOption':'link',
-                        'action':'contacts/contacts'
-                    },
-                    'hasSub': 'true',
-                    'displayOption':'content',
-                    //TODO id mandatory?
-                    'sub': {
-                        'items': []
-                    }
-                };
+            navigation = {
+                'title': 'Contact',
+                'header': {
+                    'displayOption':'link',
+                    'action':'contacts/contacts'
+                },
+                'hasSub': 'true',
+                'displayOption':'content',
+                //TODO id mandatory?
+                'sub': {
+                    'items': []
+                }
+            };
 
             if (!!id) {
                 navigation.sub.items.push({
@@ -188,23 +188,23 @@ define(['sulucontact/model/contact'], function(Contact) {
                     'selected': true,
                     'id': 'contacts-details-' + cssId
                 });
+
+                navigation.sub.items.push({
+                    'title': 'Permissions',
+                    'action': 'contacts/contacts/edit:' + cssId + '/permissions',
+                    'hasSub': false,
+                    'type': 'content',
+                    'id': 'contacts-permission-' + cssId
+                });
+
+                navigation.sub.items.push({
+                    'title': 'Settings',
+                    'action': 'contacts/contacts/edit:' + cssId + '/settings',
+                    'hasSub': false,
+                    'type': 'content',
+                    'id': 'contacts-settings-' + cssId
+                });
             }
-
-            navigation.sub.items.push({
-                'title': 'Permissions',
-                'action': 'contacts/contacts/edit:' + cssId + '/permissions',
-                'hasSub': false,
-                'type': 'content',
-                'id': 'contacts-permission-' + cssId
-            });
-
-            navigation.sub.items.push({
-                'title': 'Settings',
-                'action': 'contacts/contacts/edit:' + cssId + '/settings',
-                'hasSub': false,
-                'type': 'content',
-                'id': 'contacts-settings-' + cssId
-            });
 
             return navigation;
         }

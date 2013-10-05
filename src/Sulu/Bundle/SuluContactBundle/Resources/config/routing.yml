@@ -7,7 +7,7 @@ contact_form:
     defaults: { _controller: SuluContactBundle:Template:contactForm }
 
 account_form:
-    pattern: /template/account/form
+    pattern: /template/account/form.html
     defaults: { _controller: SuluContactBundle:Template:accountForm }
 
 contact_list:
@@ -15,5 +15,5 @@ contact_list:
     defaults: { _controller: SuluContactBundle:Template:contactList }
 
 account_list:
-    pattern: /template/account/list
+    pattern: /template/account/list.html
     defaults: { _controller: SuluContactBundle:Template:accountList }

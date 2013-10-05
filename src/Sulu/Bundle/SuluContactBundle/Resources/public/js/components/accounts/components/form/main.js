@@ -24,7 +24,7 @@ define([], function() {
 
             view: true,
 
-            templates: ['/contact/template/contact/form'],
+            templates: ['/contact/template/account/form'],
 
             initialize: function() {
                 currentType = currentState = '';
@@ -34,7 +34,7 @@ define([], function() {
             },
 
             render: function() {
-                this.$el.html(this.renderTemplate('/contact/template/contact/form'));
+                this.$el.html(this.renderTemplate('/contact/template/account/form'));
 
                 emailItem = this.$el.find('#emails .email-item:first');
                 phoneItem = this.$el.find('#phones .phone-item:first');
@@ -42,7 +42,11 @@ define([], function() {
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
-                var data = this.initData();
+                var data = this.initData(),
+                    excludeItem = [];
+                if (!!this.options.data.id) {
+                    excludeItem.push({id: this.options.data.id});
+                }
 
                 this.sandbox.start([
                     {
@@ -50,7 +54,8 @@ define([], function() {
                         options: {
                             el: '#company',
                             url: '/contact/api/accounts/list?searchFields=id,name',
-                            value: data.account
+                            value: !!data.parent ? data.parent : null,
+                            excludeItems: excludeItem
                         }
                     }
                 ]);
@@ -65,6 +70,11 @@ define([], function() {
                 var formObject = this.sandbox.form.create(form);
                 formObject.initialized.then(function() {
                     this.sandbox.form.setData(form, data);
+
+                    if (!!data.urls[0]) {
+                        this.sandbox.dom.val('#url', data.urls[0].url);
+                    }
+
                     this.sandbox.start(form);
 
                     this.sandbox.form.addConstraint(form, '#emails .email-item:first input.email-value', 'required', {required: true});
@@ -109,13 +119,7 @@ define([], function() {
             bindCustomEvents: function() {
                 // delete contact
                 this.sandbox.on('husky.button.delete.click', function() {
-                    this.sandbox.emit('sulu.contacts.contacts.delete', this.options.data.id);
-                }, this);
-
-                // contact saved
-                this.sandbox.on('sulu.contacts.contacts.saved', function(id) {
-                    this.options.data.id = id;
-                    this.setHeaderBar(true);
+                    this.sandbox.emit('sulu.contacts.accounts.delete', this.options.data.id);
                 }, this);
 
                 // contact saved
@@ -154,25 +158,33 @@ define([], function() {
                 }
             },
 
-
             submit: function() {
                 this.sandbox.logger.log('save Model');
 
                 if (this.sandbox.form.validate(form)) {
                     var data = this.sandbox.form.getData(form);
 
+                    data.urls = [
+                        {
+                            url: this.sandbox.dom.val('#url'),
+                            urlType: {
+                                id: defaults.urlType.id
+                            }
+                        }
+                    ];
+
                     if (data.id === '') {
                         delete data.id;
                     }
 
                     // FIXME auto complete in mapper
-                    data.account = {
+                    data.parent = {
                         id: this.sandbox.dom.data('#company .name-value', 'id')
                     };
 
                     this.sandbox.logger.log('data', data);
 
-                    this.sandbox.emit('sulu.contacts.contacts.save', data);
+                    this.sandbox.emit('sulu.contacts.accounts.save', data);
                 }
             },
 
@@ -279,7 +291,6 @@ define([], function() {
                     currentState = changeState;
                 }
             },
-
 
             listenForChange: function() {
                 this.sandbox.dom.on('#contact-form', 'change', function() {

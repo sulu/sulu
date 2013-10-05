@@ -13,9 +13,6 @@ define([
 
     'use strict';
 
-    var sandbox;
-
-
     return {
 
         view: true,
@@ -23,7 +20,6 @@ define([
         templates: ['/contact/template/contact/list'],
 
         initialize: function() {
-            sandbox = this.sandbox;
             this.render();
         },
 
