@@ -202,18 +202,37 @@ define(['text!/security/template/permission/form'], function(Template) {
         initializeRoles: function() {
 
             var $permissionsContainer = this.sandbox.dom.$('#permissions-grid'),
-                $table = this.sandbox.dom.createElement('<table/>', {class: 'table'}),
+                $table = this.sandbox.dom.createElement('<table/>', {class: 'table matrix', id: 'rolesTable'}),
                 $tableHeader = this.prepareTableHeader(),
-                $tableRows = this.prepareTableContent(),
-                $tmp = this.sandbox.dom.append($table, $tableHeader);
+                $tableContent = this.prepareTableContent(),
+                $tmp = this.sandbox.dom.append($table, $tableHeader),
+                rows;
 
             //this.sandbox.dom.empty($permissionsContainer);
             // TODO clear div before - add empty() to jquery extension when everything merged
 
-            $tmp = this.sandbox.dom.append($tmp, $tableRows);
+            $tmp = this.sandbox.dom.append($tmp, $tableContent);
             this.sandbox.dom.html($permissionsContainer,$tmp);
 
-            // TODO start ddms
+            rows = this.sandbox.dom.find('tbody tr', '#rolesTable');
+
+            this.sandbox.util.each(rows, function(index,value){
+
+                var $element = this.sandbox.dom.find('.languageSelector', value);
+
+                this.sandbox.start([
+                    {
+                        name: 'dropdown-multiple-select@husky',
+                        options: {
+                            el: $element,
+                            instanceName: 'ddms'+index,
+                            defaultLabel: 'Please choose ...',
+                            value: 'name',
+                            data: ['Deutsch', 'English', 'Spanish', 'Italienisch']
+                        }
+                    }
+                ]);
+            }.bind(this));
         },
 
         prepareTableHeader: function() {
@@ -228,7 +247,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                 tableContent.push(this.prepareTableRow(value));
             }.bind(this));
 
-            return this.sandbox.dom.append($tableBody, tableContent.join(''));
+            return this.sandbox.dom.append($tableBody, tableContent);
         },
 
 
@@ -244,19 +263,21 @@ define(['text!/security/template/permission/form'], function(Template) {
             }.bind(this));
 
             $tableRow = this.template.tableRow(role.id, role.name);
-            $tableRow = this.sandbox.dom.append($tableRow,  $permissions.join(''));
+            $tableRow = this.sandbox.dom.append($tableRow,  $permissions);
 
-            return $tableRow;
+            return $tableRow[0];
         },
 
         preparePermission: function(permissionName, isActive) {
 
             var className,
-                active = false;
+                active = '';
 
             if (!!isActive) {
                 active = 'is-active';
             }
+
+            // TODO correct icons
 
             if (permissionName === 'add') {
                 className = 'add';
@@ -276,7 +297,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                 className = 'unknown';
             }
 
-            return this.template.permission(this.sandbox, className, active);
+            return this.template.permission(className, active);
         },
 
         template: {
@@ -284,10 +305,10 @@ define(['text!/security/template/permission/form'], function(Template) {
                 return [
                     '<thead>',
                         '<tr>' +
-                            '<th><input id=\'selectAll\' type=\'checkbox\'/></th>',
-                            '<th>',thLabel1,'</th>',
-                            '<th>',thLabel2,'</th>',
-                            '<th colspan=\'7\'>',thLabel3,'</th>',
+                            '<th width="5%"><input id="selectAll" type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></th>',
+                            '<th width="30%">',thLabel1,'</th>',
+                            '<th width="45%">',thLabel2,'</th>',
+                            '<th width="20%" colspan=\'7\'>',thLabel3,'</th>',
                         '</tr>',
                     '</thead>'
                 ].join('');
@@ -297,19 +318,19 @@ define(['text!/security/template/permission/form'], function(Template) {
 
                 var $row = [
                     '<tr data-id=\"',id,'\">',
-                        '<td><input type="checkbox" /></td>',
+                        '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
                         '<td>',title,'</td>',
-                        '<td class="languageSelector"></td>',
+                        '<td><div class="languageSelector"></div></td>',
                     '</tr>'
                 ].join('');
 
 
                 return $row;
             },
-            permission:function(sandbox, iconName, isActive){
+            permission:function(iconName, isActive){
 
-                var template = '<td><span class="icon-<%= iconName %> <%= (!!isActive) ? isActive : \'\' %>"></span></td>';
-                return sandbox.template.parse(template, {iconName: iconName, isActive: isActive});
+                return '<td><span class="icon-'+iconName+' '+isActive+'"></span></td>';
+
 
             }
         }
