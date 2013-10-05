@@ -17317,6 +17317,7 @@ define('type/default',[],function() {
                     }
                 }
             },
+
             defaultInterface = {
                 name: name,
 
@@ -17514,6 +17515,7 @@ define('type/email',[
         var defaults = {
                 regExp: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))){2,6}$/i
             },
+
             typeInterface = {
                 validate: function() {
                     var val = this.$el.val();
@@ -17554,6 +17556,7 @@ define('type/url',[
         var defaults = {
                 regExp: /^(https?|s?ftp|git):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
             },
+
             typeInterface = {
                 validate: function() {
                     var val = this.$el.val();
@@ -17599,6 +17602,7 @@ define('type/label',[
                 label: 'name',
                 translate: true
             },
+
             typeInterface = {
                 setValue: function(value) {
                     if (!!value[this.options.label]) {
@@ -17655,6 +17659,7 @@ define('type/select',[
                 id: 'id',
                 label: 'name'
             },
+
             typeInterface = {
                 setValue: function(value) {
                     this.$el.val(value[this.options.id]);
@@ -17729,11 +17734,11 @@ define('validator/default',[],function() {
                 }.bind(this));
             },
 
-            fieldRemoved: function(element) {
+            fieldRemoved: function() {
                 // do nothing
             },
 
-            fieldAdded: function(element) {
+            fieldAdded: function() {
                 // do nothing
             }
         };
@@ -17905,8 +17910,10 @@ define('validator/required',[
                         // check there is at least one required value
                         if ('object' === typeof val) {
                             for (i in val) {
-                                if (this.validate(val[i])) {
-                                    return true;
+                                if (val.hasOwnProperty(i)) {
+                                    if (this.validate(val[i])) {
+                                        return true;
+                                    }
                                 }
                             }
                             return false;
@@ -18016,7 +18023,7 @@ define('validator/unique',[
                 },
 
                 fieldAdded: function(element) {
-                    if (element.$el != this.$el && isElementRelated(element, this.data.unique)) {
+                    if (element.$el !== this.$el && isElementRelated(element, this.data.unique)) {
                         Util.debug('field added', this.$el);
                         relatedElements.push(element);
                     }
@@ -18123,7 +18130,7 @@ define('validator/equal',[
                 },
 
                 fieldAdded: function(element) {
-                    if (element.$el != this.$el && isElementRelated(element, this.data.equal)) {
+                    if (element.$el !== this.$el && isElementRelated(element, this.data.equal)) {
                         relatedElements.push(element);
                     }
                 },
