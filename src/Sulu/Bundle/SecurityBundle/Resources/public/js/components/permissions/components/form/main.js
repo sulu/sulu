@@ -94,7 +94,6 @@ define(['text!/security/template/permission/form'], function(Template) {
                 this.setHeaderBar(false);
             }.bind(this), "input");
 
-            //TODO ddms
         },
 
 
@@ -240,6 +239,8 @@ define(['text!/security/template/permission/form'], function(Template) {
 
             if (this.sandbox.form.validate(this.formId)) {
 
+
+
                 this.sandbox.logger.log('validation succeeded');
                 this.getPassword();
                 data = {
@@ -247,23 +248,39 @@ define(['text!/security/template/permission/form'], function(Template) {
                     username: this.sandbox.dom.val('#username'),
                     password: this.password,
                     contact: this.contact,
-                    roles: this.selectedRoles
-                    //TODO values from ddms
+                    rolesAndConfig: this.getSelectedRolesAndLanguages()
                 };
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
             }
         },
 
+        getSelectedRolesAndLanguages: function(){
+            var $tr,
+                data = [],
+                config;
+
+            this.sandbox.util.each(this.selectedRoles, function(index,value) {
+                $tr = this.sandbox.dom.find('#languageSelector'+value);
+
+                config = {};
+                config.roleId = value;
+
+                this.sandbox.emit('husky.dropdown.multiple.select.languageSelector'+value+'.getChecked', function(selected){
+                    config.selection = selected;
+                });
+
+                data.push(config);
+
+            }.bind(this));
+
+            return data;
+
+        },
+
         getPassword: function(){
             this.sandbox.emit('husky.password.fields.instance1.get.passwords', function(password1, password2){
-                if(password1 === password2) {
-                    this.password = password1;
-                } else {
-                    this.sandbox.logger.log("invalid passwords");
-                    this.password = null;
-                    // TODO error message
-                }
+                this.password = password1;
             }.bind(this));
         },
 
@@ -282,9 +299,6 @@ define(['text!/security/template/permission/form'], function(Template) {
                 $tableContent = this.prepareTableContent(),
                 $tmp = this.sandbox.dom.append($table, $tableHeader),
                 rows;
-
-            //this.sandbox.dom.empty($permissionsContainer);
-            // TODO clear div before - add empty() to jquery extension when everything merged
 
             $tmp = this.sandbox.dom.append($tmp, $tableContent);
             this.sandbox.dom.html($permissionsContainer,$tmp);
@@ -366,7 +380,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                 active = 'is-active';
             }
 
-            // TODO correct icons
+            // TODO get the correct icons
 
             if (permissionName === 'add') {
                 className = 'add';
