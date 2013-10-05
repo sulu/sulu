@@ -1,11 +1,11 @@
 parameters:
     sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
-    sulu_contact.content_pool.class: Sulu\Bundle\ContactBundle\Admin\ContentPool
+    sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\ContentNavigation
 
 services:
     sulu_contact.admin:
         class: %sulu_contact.admin.class%
         tags:
         - { name: sulu.admin }
-    sulu_contact.content_pool:
-        class: %sulu_contact.content_pool.class%
+    sulu_contact.admin.content_navigation:
+        class: %sulu_contact.admin.content_navigation.class%

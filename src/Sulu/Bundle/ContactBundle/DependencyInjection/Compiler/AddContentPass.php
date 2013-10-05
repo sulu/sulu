@@ -14,28 +14,28 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Add all services with the tag "sulu.contact" to the the content list
+ * Add all services with the tag "sulu.contact.content_navigation" to the the content navigation
  *
  * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
  */
 class AddContentPass implements CompilerPassInterface
 {
 
-    const ADMIN_TAG = 'sulu.contact';
+    const CONTENT_NAVIGATION_TAG = 'sulu.contact.admin.content_navigation';
+    const CONTENT_NAVIGATION_SERVICE = 'sulu_contact.admin.content_navigation';
 
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $pool = $container->getDefinition('sulu_contact.content_pool');
+        $contentNavigation = $container->getDefinition(self::CONTENT_NAVIGATION_SERVICE);
 
-        $taggedServices = $container->findTaggedServiceIds(self::ADMIN_TAG);
-
+        $taggedServices = $container->findTaggedServiceIds(self::CONTENT_NAVIGATION_TAG);
 
         foreach ($taggedServices as $id => $attributes) {
-            $content = $container->getDefinition($id);
-            $pool->addMethodCall('addContent', array($content));
+            $navigation = $container->getDefinition($id);
+            $contentNavigation->addMethodCall('addNavigationItem', array($navigation));
         }
     }
 }
