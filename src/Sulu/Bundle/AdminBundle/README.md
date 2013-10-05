@@ -15,3 +15,14 @@ All files will be copied to the correct location after you have edited them.
 ###Building a production version
 With the command `grunt build` you can build a new production version. All files will be optimized, and saved in a new location.
 That is `Resources/public/dist` for javascript and css, and a new template, which uses the optimized files in `Resources/views/Admin/index.html.dist.twig`.
+
+
+
+### PHP Unit Testing
+
+    phpunit
+
+
+### PHP Mess Detector
+
+    phpmd . xml codesize,controversial,design,unusedcode --exclude vendor,Tests
