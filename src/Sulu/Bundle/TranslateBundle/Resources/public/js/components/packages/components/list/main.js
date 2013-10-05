@@ -13,7 +13,6 @@ define([], function() {
 
     var sandbox;
 
-
     return {
 
         view: true,
@@ -47,7 +46,8 @@ define([], function() {
                         }
                     ]
                 }
-            }]);
+            }
+            ]);
 
             // datagrid
             this.sandbox.start([{
@@ -72,7 +72,7 @@ define([], function() {
             }, this);
 
 
-            this.sandbox.on('husky.dropdown.options.clicked',  function() {
+            this.sandbox.on('husky.dropdown.options.clicked', function() {
                 this.sandbox.emit('husky.dropdown.options.toggle');
             }, this);
 
@@ -83,7 +83,7 @@ define([], function() {
                         this.sandbox.emit('sulu.translate.packages.delete', ids);
                     }.bind(this));
                 }
-            },this);
+            }, this);
 
             // add button in headerbar
             this.sandbox.emit('husky.header.button-type', 'add');

@@ -48,9 +48,11 @@ class CodesController extends RestController
         $catalogueId = $this->getRequest()->get('catalogueId');
         $packageId = $this->getRequest()->get('packageId');
         if ($catalogueId != null) {
+            // TODO Add limit, offset & sorting for find by filter catalogue
             $codes = $repository->findByCatalogue($catalogueId);
         } else {
             if ($packageId != null) {
+                // TODO Add limit, offset & sorting for find by filter package
                 $codes = $repository->findByPackage($packageId);
             } else {
                 $codes = $repository->findGetAll($limit, $offset, $sorting);
@@ -61,6 +63,7 @@ class CodesController extends RestController
             'total' => count($codes),
             'items' => $codes
         );
+
         $view = $this->view($response, 200);
 
         return $this->handleView($view);
