@@ -25,8 +25,8 @@ define(function() {
                         '*actions': 'defaultAction'
                     },
 
-                    defaultAction: function(action) {
-                        // We have no matching route,
+                    defaultAction: function() {
+                        // We have no matching route
                     }
                 });
 

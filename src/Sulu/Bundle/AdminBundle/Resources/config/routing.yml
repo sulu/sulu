@@ -11,3 +11,18 @@ sulu_admin.routes:
     path: /bundles
     defaults:
         _controller: SuluAdminBundle:Admin:bundles
+
+sulu_admin.contexts:
+    path: /contexts
+    defaults:
+        _controller: SuluAdminBundle:Admin:contexts
+
+sulu_admin.login:
+    path: /login
+    defaults: { _controller: SuluAdminBundle:Security:login }
+
+sulu_admin.login_check:
+    path: /login_check
+
+logout:
+    path: /logout
