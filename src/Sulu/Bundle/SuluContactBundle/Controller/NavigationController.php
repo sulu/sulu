@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Sulu\Bundle\ContactBundle\Admin\ContentPool;
+use Sulu\Bundle\ContactBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class NavigationController extends Controller
 {
 
-    const SERVICE_NAME = 'sulu_contact.content_pool';
+    const SERVICE_NAME = 'sulu_contact.admin.content_navigation';
 
     /**
      * Lists all the contacts or filters the contacts by parameters
@@ -30,12 +30,22 @@ class NavigationController extends Controller
 
         // TODO: get type of content (contact / account ...)
 
-        /** @var ContentPool $pool*/
+        /** @var ContentNavigation $contentNavigation */
         if ($this->has(self::SERVICE_NAME)) {
-            $pool = $this->get(self::SERVICE_NAME);
+            $contentNavigation = $this->get(self::SERVICE_NAME);
         }
 
-        return new Response(json_encode($pool->toArray()));
+        return new Response(json_encode(
+            array_merge(
+                array(
+                    array(
+                        'title' => 'Details',
+                        'action' => 'details'
+                    )
+                ),
+                $contentNavigation->toArray()
+            )
+        ));
     }
 
 

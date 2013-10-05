@@ -14,10 +14,6 @@ define([
 
     'use strict';
 
-    console.log('contentNavigation',contentNavigation);
-
-
-
     // FIXME: remove function for hiding global vars
     return (function() {
 
@@ -201,7 +197,7 @@ define([
                     };
 
 
-                if (!!id) {
+               /* if (!!id) {
                     navigation.sub.items.push({
                         'title': 'Details',
                         'action': 'contacts/contacts/edit:' + cssId + '/details',
@@ -210,20 +206,19 @@ define([
                             '',
                         'id': 'contacts-details-' + cssId
                     });
-                }
+                }*/
 
                 var contents = JSON.parse(contentNavigation);
 
-                for (var i = 0; i<contents.length; i++) {
+                for (var i = 0; i < contents.length; i++) {
                     // contact must be set before optional tabs can be opened
                     if (!!id) {
-                        console.log("element",contents[i]);
                         navigation.sub.items.push({
                             'title': contents[i].title,
-                            'action': 'contacts/contacts/edit:' + cssId + '/' + contents[i].url,
+                            'action': 'contacts/contacts/edit:' + cssId + '/' + contents[i].action,
                             'hasSub': false,
                             'type': 'content',
-                            'id': 'contacts-'+contents[i].url+'-' + cssId
+                            'id': 'contacts-' + contents[i].url + '-' + cssId
                         });
                     }
                 }
