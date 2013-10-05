@@ -76,7 +76,7 @@
 
             <div class="grid-row">
                 <div id="addEmail" data-target-id="emails">
-                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.contacts.details.addEmail')%></span>
+                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addEmail')%></span>
                 </div>
             </div>
         {% endblock %}
@@ -116,7 +116,7 @@
 
             <div class="grid-row">
                 <div id="addPhone" data-target-id="phones">
-                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.contacts.details.addPhone')%></span>
+                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addPhone')%></span>
                 </div>
             </div>
         {% endblock %}
@@ -129,7 +129,7 @@
                 </div>
                 <div class="grid-col-4 align-right m-top-10">
                     <div id="addAddress" data-target-id="addresses">
-                        <span class="icon-add"></span><span class="control-label"><%=translate('contact.contacts.details.addAddress')%></span>
+                        <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addAddress')%></span>
                     </div>
                 </div>
             </div>
@@ -163,39 +163,39 @@
                     </div>
                     <div class="grid-row">
                         <div class="grid-col-6">
-                            <label><%=translate('contact.contacts.details.street')%></label>
+                            <label><%=translate('contact.address.street')%></label>
                             <input class="form-element street-value"
                                    data-mapper-property="street"/>
                         </div>
                         <div class="grid-col-2">
-                            <label><%=translate('contact.contacts.details.number')%></label>
+                            <label><%=translate('contact.address.number')%></label>
                             <input class="form-element number-value"
                                    data-mapper-property="number"/>
                         </div>
                         <div class="grid-col-4">
-                            <label><%=translate('contact.contacts.details.additional')%></label>
+                            <label><%=translate('contact.address.additional')%></label>
                             <input class="form-element addition-value"
                                    data-mapper-property="addition"/>
                         </div>
                     </div>
                     <div class="grid-row">
                         <div class="grid-col-2">
-                            <label><%=translate('contact.contacts.details.zip')%></label>
+                            <label><%=translate('contact.address.zip')%></label>
                             <input class="form-element zip-value"
                                    data-mapper-property="zip"/>
                         </div>
                         <div class="grid-col-4">
-                            <label><%=translate('contact.contacts.details.city')%></label>
+                            <label><%=translate('contact.address.city')%></label>
                             <input class="form-element city-value"
                                    data-mapper-property="city"/>
                         </div>
                         <div class="grid-col-2">
-                            <label><%=translate('contact.contacts.details.state')%></label>
+                            <label><%=translate('contact.address.state')%></label>
                             <input class="form-element state-value"
                                    data-mapper-property="state"/>
                         </div>
                         <div class="grid-col-4">
-                            <label><%=translate('contact.contacts.details.country')%></label>
+                            <label><%=translate('contact.address.country')%></label>
 
                             <select class="country-value form-element" data-mapper-property="country" data-type="select">
                                 {% for country in countries %}
