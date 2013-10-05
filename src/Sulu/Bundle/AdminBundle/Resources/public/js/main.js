@@ -45,7 +45,7 @@ require(['husky'], function(Husky) {
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 
         app.use(function(app) {
-            window.App = app.sandboxes.create();
+            window.App = app.sandboxes.create('app-sandbox');
         });
 
         app.start();
