@@ -7,3 +7,4 @@ sulu_security.template.role.form:
      path: /template/role/form
      defaults:
          _controller: SuluSecurityBundle:Template:roleForm
+

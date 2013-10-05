@@ -16,13 +16,16 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Serializable;
+use Symfony\Bridge\Doctrine\Tests\Security\User\EntityUserProviderTest;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
  *
  * @ExclusionPolicy("all")
  */
-class User
+class User implements UserInterface, Serializable
 {
     /**
      * @var string
@@ -61,7 +64,6 @@ class User
 
     /**
      * @var string
-     * @Expose
      */
     private $salt;
 
@@ -88,14 +90,14 @@ class User
     public function setUsername($username)
     {
         $this->username = $username;
-    
+
         return $this;
     }
 
     /**
      * Get username
      *
-     * @return string 
+     * @return string
      */
     public function getUsername()
     {
@@ -111,14 +113,14 @@ class User
     public function setPassword($password)
     {
         $this->password = $password;
-    
+
         return $this;
     }
 
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -134,14 +136,14 @@ class User
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -151,7 +153,7 @@ class User
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -167,14 +169,14 @@ class User
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact = null)
     {
         $this->contact = $contact;
-    
+
         return $this;
     }
 
     /**
      * Get contact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     public function getContact()
     {
@@ -190,7 +192,7 @@ class User
     public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles)
     {
         $this->userRoles[] = $userRoles;
-    
+
         return $this;
     }
 
@@ -225,14 +227,14 @@ class User
     public function setSalt($salt)
     {
         $this->salt = $salt;
-    
+
         return $this;
     }
 
     /**
      * Get salt
      *
-     * @return string 
+     * @return string
      */
     public function getSalt()
     {
@@ -248,17 +250,62 @@ class User
     public function setPrivateKey($privateKey)
     {
         $this->privateKey = $privateKey;
-    
+
         return $this;
     }
 
     /**
      * Get privateKey
      *
-     * @return string 
+     * @return string
      */
     public function getPrivateKey()
     {
         return $this->privateKey;
+    }
+
+    /**
+     * Returns just the default symfony user role, so that the user get recognized as authenticated by symfony
+     *
+     * @return array The user roles
+     */
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    /**
+     * Removes the password of the user
+     *
+     * @return void
+     */
+    public function eraseCredentials()
+    {
+        $this->setPassword('');
+    }
+
+    /**
+     * Serializes the user just with the id, as it is enough
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string The string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize(
+            array(
+                $this->id
+            )
+        );
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        list ($this->id) = unserialize($serialized);
     }
 }
