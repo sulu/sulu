@@ -137,6 +137,7 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         bindDOMEvents: function() {
 
+
         },
 
         bindCustomEvents: function() {
@@ -216,16 +217,16 @@ define(['text!/security/template/permission/form'], function(Template) {
 
             rows = this.sandbox.dom.find('tbody tr', '#rolesTable');
 
-            this.sandbox.util.each(rows, function(index,value){
 
-                var $element = this.sandbox.dom.find('.languageSelector', value);
+            this.sandbox.util.each(rows, function(index,value){
+                var id = this.sandbox.dom.data(value,'id');
 
                 this.sandbox.start([
                     {
                         name: 'dropdown-multiple-select@husky',
                         options: {
-                            el: $element,
-                            instanceName: 'ddms'+index,
+                            el: '#languageSelector'+id,
+                            instanceName: 'languageSelector'+id,
                             defaultLabel: 'Please choose ...',
                             value: 'name',
                             data: ['Deutsch', 'English', 'Spanish', 'Italienisch']
@@ -320,7 +321,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                     '<tr data-id=\"',id,'\">',
                         '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
                         '<td>',title,'</td>',
-                        '<td><div class="languageSelector"></div></td>',
+                        '<td id="languageSelector',id,'"></td>',
                     '</tr>'
                 ].join('');
 
