@@ -275,7 +275,7 @@ class UsersController extends RestController implements ClassResourceInterface
      */
     private function getContact($id)
     {
-        $contact =  $this->getDoctrine()
+        $contact = $this->getDoctrine()
             ->getRepository($this->contactEntityName)
             ->find($id);
 
@@ -309,4 +309,3 @@ class UsersController extends RestController implements ClassResourceInterface
         return $encoder->encodePassword($password, $salt);
     }
 }
-
