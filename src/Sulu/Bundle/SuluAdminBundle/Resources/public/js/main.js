@@ -7,17 +7,35 @@
  * with this source code in the file LICENSE.
  */
 
-require(['husky'], function (Husky) {
+require.config({
+    paths: {
+        'cultures': 'vendor/globalize/cultures'
+    }
+});
+
+require(['husky'], function(Husky) {
 
     'use strict';
 
-    var app = new Husky({debug: { enable: true }});
+    // TODO get language from user
+    var language = 'de', app;
+
+    require(['text!/admin/bundles', 'text!language/sulu.' + language + '.json'], function(text, messagesText) {
+        var bundles = JSON.parse(text),
+            messages = JSON.parse(messagesText);
+
+        app = new Husky({
+            debug: {
+                enable: true
+            },
+            culture: {
+                name: language,
+                messages: messages
+            }
+        });
 
 
-    require(['text!/admin/bundles'], function (text) {
-        var bundles = JSON.parse(text);
-
-        bundles.forEach(function (bundle) {
+        bundles.forEach(function(bundle) {
             app.use('/bundles/' + bundle + '/js/main.js');
         }.bind(this));
 
@@ -26,10 +44,9 @@ require(['husky'], function (Husky) {
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 
         app.use(function(app) {
-            window.App = app.sandboxes.create();
+            window.App = app.sandboxes.create('app-sandbox');
         });
 
         app.start();
     });
-
 });

@@ -1,6 +1,8 @@
 (function() {
 
-    define(['vendor/backbone-relational/backbone-relational'], function(RelationalModel) {
+    'use strict';
+
+    define(['vendor/backbone-relational/backbone-relational'], function() {
 
         return {
 
@@ -8,8 +10,7 @@
 
             initialize: function(app) {
                 var core = app.core,
-                    sandbox = app.sandbox,
-                    _ = app.sandbox.util._;
+                    sandbox = app.sandbox;
 
                 core.mvc.relationalModel = Backbone.RelationalModel;
 
@@ -21,8 +22,8 @@
                     return sandbox.mvc.relationalModel;
                 });
 
-                sandbox.mvc.HasMany  = Backbone.HasMany;
-                sandbox.mvc.HasOne   = Backbone.HasOne;
+                sandbox.mvc.HasMany = Backbone.HasMany;
+                sandbox.mvc.HasOne = Backbone.HasOne;
 
                 define('mvc/hasmany', function() {
                     return sandbox.mvc.HasMany;
@@ -41,6 +42,6 @@
                 });
 
             }
-        }
+        };
     });
 })();

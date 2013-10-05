@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use Sulu\Bundle\AdminBundle\UserData\UserDataInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,10 +19,24 @@ class AdminController extends Controller
 {
     public function indexAction()
     {
+        // get userdata
+        $serviceId = $this->container->getParameter('user_data_service');
+        $user = array();
+        if ($this->has($serviceId)) {
+            /** @var UserDataInterface $userData */
+            $userData = $this->get($serviceId);
+            if ($userData->isLoggedIn() && $userData->isAdminUser()) {
+                $user['username'] = $userData->getUserName();
+                $user['logout'] = $userData->getLogoutLink();
+            }
+        }
+
+        // render template
         return $this->render(
             'SuluAdminBundle:Admin:index.html.twig',
             array(
-                'name' => $this->container->getParameter('name')
+                'name' => $this->container->getParameter('name'),
+                'user' => $user
             )
         );
     }
