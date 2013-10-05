@@ -18,7 +18,8 @@ require(['husky'], function(Husky) {
     'use strict';
 
     // TODO get language from user
-    var language = 'de', app;
+    var language = 'de',
+        app;
 
     require(['text!/admin/bundles', 'text!language/sulu.' + language + '.json'], function(text, messagesText) {
         var bundles = JSON.parse(text),

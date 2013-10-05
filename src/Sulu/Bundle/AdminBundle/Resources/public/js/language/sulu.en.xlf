@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext">
+    <body>
+      <trans-unit id="fbf4558377419fbed4a73a4ba3fdf006" resname="public.name">
+        <source>public.name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="e4b14069a8a085ede200b7f5acb2d39e" resname="public.edit">
+        <source>public.edit</source>
+        <target>Edit</target>
+      </trans-unit>
+      <trans-unit id="a10bd71863ade53bc0e1bd8822e8bdbc" resname="header.add">
+        <source>header.add</source>
+        <target>Add</target>
+      </trans-unit>
+      <trans-unit id="4190dab27f368a8a2e5f4f20f8aec708" resname="header.save">
+        <source>header.save</source>
+        <target>Save</target>
+      </trans-unit>
+      <trans-unit id="307fb80b1557fd5a20078b81d3315516" resname="header.saved">
+        <source>header.saved</source>
+        <target>Saved</target>
+      </trans-unit>
+      <trans-unit id="732b6d11a1ea5b3a2155a4b9e7340af4" resname="header.delete">
+        <source>header.delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="77bd83ff9256e9f3a39136fc93557c51" resname="navigation.list">
+        <source>navigation.list</source>
+        <target>Back to list</target>
+      </trans-unit>
+      <trans-unit id="9055acd6577ed6a6fb7c625afcaff86f" resname="translate.package.title">
+        <source>translate.package.title</source>
+        <target>Package</target>
+      </trans-unit>
+      <trans-unit id="a0ff6dd7ef4022e0b90d8176c6ed89b0" resname="translate.package.catalogues">
+        <source>translate.package.catalogues</source>
+        <target>Language Catalogues</target>
+      </trans-unit>
+      <trans-unit id="b0a7a12cf626e2af8f2d747e10805dda" resname="translate.package.settings.locale">
+        <source>translate.package.settings.locale</source>
+        <target>Locale</target>
+      </trans-unit>
+      <trans-unit id="effc1e2fb2feae3c2dd8cb28cce0e0fa" resname="translate.package.settings.addCatalogue">
+        <source>translate.package.settings.addCatalogue</source>
+        <target>Add Catalogue</target>
+      </trans-unit>
+      <trans-unit id="364906a0b1507d380e04114b14ab6ccf" resname="translate.package.details.key">
+        <source>translate.package.details.key</source>
+        <target>Key</target>
+      </trans-unit>
+      <trans-unit id="f4bbd008d107977776f2c941372ac49d" resname="translate.package.details.translation">
+        <source>translate.package.details.translation</source>
+        <target>Translation</target>
+      </trans-unit>
+      <trans-unit id="88e1528289c61505fab3bf4918c63940" resname="translate.package.details.suggestion">
+        <source>translate.package.details.suggestion</source>
+        <target>Suggestion</target>
+      </trans-unit>
+      <trans-unit id="2390c5e7e1e39575faf1d4560233b254" resname="translate.package.details.maxLength">
+        <source>translate.package.details.maxLength</source>
+        <target>Maximum length</target>
+      </trans-unit>
+      <trans-unit id="ff58c981a4179edc0054ab79f2139419" resname="translate.package.details.length">
+        <source>translate.package.details.length</source>
+        <target>Length</target>
+      </trans-unit>
+      <trans-unit id="2c54260ae1ff88b98bc26f899039de1b" resname="translate.package.details.frontend">
+        <source>translate.package.details.frontend</source>
+        <target>Frontend</target>
+      </trans-unit>
+      <trans-unit id="e5c1b1c082cab176cde2b5128281eee3" resname="translate.package.details.backend">
+        <source>translate.package.details.backend</source>
+        <target>Backend</target>
+      </trans-unit>
+      <trans-unit id="5302353bfd4da5508f093bb893147557" resname="translate.package.details.addElement">
+        <source>translate.package.details.addElement</source>
+        <target>Add element</target>
+      </trans-unit>
+      <trans-unit id="ebee6be3618fa603188921cf16eedb1c" resname="public.delete">
+        <source>public.delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="6603511ae852ff46c20147528150e4b1" resname="translate.package.settings.title">
+        <source>translate.package.settings.title</source>
+        <target>Title</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
