@@ -83,7 +83,9 @@ define([
             // optionsmenu clicked
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
                 if (event.type === "delete") {
-                    this.sandbox.emit('sulu.contacts.contacts.delete');
+                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                        this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+                    }.bind(this));
                 }
             },this);
 

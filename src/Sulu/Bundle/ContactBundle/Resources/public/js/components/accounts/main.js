@@ -76,7 +76,6 @@ define(['sulucontact/model/account'], function(Account) {
 
         },
 
-
         renderForm: function() {
 
             // show navigation submenu
