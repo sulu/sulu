@@ -149,8 +149,41 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         },
 
-        selectAll: function(){
-           // TODO
+        selectAll: function(checkbox) {
+
+            var $checkboxes = this.sandbox.dom.find('tr td:first-child() input[type="checkbox"]', '#rolesTable'),
+                roleId;
+
+            if (this.selectedRoles.length === this.roles.length) {
+
+                this.sandbox.dom.removeClass(checkbox, 'is-selected');
+                this.sandbox.dom.prop(checkbox, 'checked', false);
+
+                this.sandbox.util.each($checkboxes, function(index, value) {
+                    this.sandbox.dom.removeClass(value, 'is-selected');
+                    this.sandbox.dom.prop(value, 'checked', false);
+                }.bind(this));
+                this.selectedRoles = [];
+                this.sandbox.logger.log(this.selectedRoles, 'selected roles');
+            } else {
+
+                this.sandbox.dom.addClass(checkbox, 'is-selected');
+                this.sandbox.dom.prop(checkbox, 'checked', true);
+
+                this.sandbox.util.each($checkboxes, function(index, value) {
+                    roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(value)), 'id');
+
+                    if(this.selectedRoles.indexOf(roleId) < 0) {
+                        this.selectedRoles.push(roleId);
+                    }
+
+                    this.sandbox.dom.addClass(value, 'is-selected');
+                    this.sandbox.dom.prop(value, 'checked', true);
+
+                }.bind(this));
+
+                this.sandbox.logger.log(this.selectedRoles, 'selected roles');
+            }
         },
 
         selectItem: function($element) {
@@ -284,8 +317,6 @@ define(['text!/security/template/permission/form'], function(Template) {
             this.sandbox.util.each(this.user.userRoles, function(index,value) {
                 this.selectedRoles.push(value.role.id);
             }.bind(this));
-
-            this.sandbox.logger.log(roleIds, "role ids");
         },
 
         prepareTableHeader: function() {
@@ -315,7 +346,12 @@ define(['text!/security/template/permission/form'], function(Template) {
                 $permissions.push(this.preparePermission(index, value));
             }.bind(this));
 
-            $tableRow = this.template.tableRow(role.id, role.name);
+            if (this.selectedRoles.indexOf(role.id) >= 0) {
+                $tableRow = this.template.tableRow(role.id, role.name, true);
+            } else {
+                $tableRow = this.template.tableRow(role.id, role.name, false);
+            }
+
             $tableRow = this.sandbox.dom.append($tableRow,  $permissions);
 
             return $tableRow[0];
@@ -367,20 +403,27 @@ define(['text!/security/template/permission/form'], function(Template) {
                 ].join('');
 
             },
-            tableRow: function(id, title) {
+            tableRow: function(id, title, selected) {
 
-                // TODO icons
-                // TODO select all
-                //TODO abhaengig von den rollen des users rendern
+                var $row;
 
-                var $row = [
-                    '<tr data-id=\"',id,'\">',
+                if (!!selected) {
+                    $row = [
+                        '<tr data-id=\"', id, '\">',
+                        '<td><input type="checkbox" class="custom-checkbox is-selected" checked/><span class="custom-checkbox-icon"></span></td>',
+                        '<td>', title, '</td>',
+                        '<td id="languageSelector', id, '"></td>',
+                        '</tr>'
+                    ].join('');
+                } else {
+                    $row = [
+                        '<tr data-id=\"', id, '\">',
                         '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
-                        '<td>',title,'</td>',
-                        '<td id="languageSelector',id,'"></td>',
-                    '</tr>'
-                ].join('');
-
+                        '<td>', title, '</td>',
+                        '<td id="languageSelector', id, '"></td>',
+                        '</tr>'
+                    ].join('');
+                }
 
                 return $row;
             },
