@@ -52,21 +52,44 @@ define([], function() {
                     }
                 ]);
 
-                tmp = this.sandbox.form.create(form);
+                this.createForm(data);
 
-                // FIXME when everything is loaded
-                setTimeout(function() {
+                this.bindDomEvents();
+                this.bindCustomEvents();
+            },
+
+            createForm: function(data) {
+                var formObject = this.sandbox.form.create(form);
+                formObject.initialized.then(function() {
                     this.sandbox.form.setData(form, data);
                     this.sandbox.start(form);
 
                     this.sandbox.form.addConstraint(form, '#emails .email-item:first input.email-value', 'required', {required: true});
                     this.sandbox.dom.addClass('#emails .email-item:first label span:first', 'required');
-                }.bind(this), 10);
+                }.bind(this));
 
-
-                this.bindDomEvents();
-                this.bindCustomEvents();
-
+                this.sandbox.form.addArrayFilter(form, 'emails', function(email) {
+                    if (email.id === "") {
+                        delete email.id;
+                    }
+                    return email.email !== "";
+                });
+                this.sandbox.form.addArrayFilter(form, 'phones', function(phone) {
+                    if (phone.id === "") {
+                        delete phone.id;
+                    }
+                    return phone.phone !== "";
+                });
+                this.sandbox.form.addArrayFilter(form, 'addresses', function(address) {
+                    if (address.id === "") {
+                        delete address.id;
+                    }
+                    return address.street !== "" &&
+                        address.number !== "" &&
+                        address.zip !== "" &&
+                        address.city !== "" &&
+                        address.state !== "";
+                });
             },
 
             bindDomEvents: function() {
@@ -135,28 +158,6 @@ define([], function() {
                 if (this.sandbox.form.validate(form)) {
                     var data = this.sandbox.form.getData(form);
 
-                    data.emails = this.sandbox.util._.filter(data.emails, function(email) {
-                        if (email.id === "") {
-                            delete email.id;
-                        }
-                        return email.email !== "";
-                    });
-                    data.phones = this.sandbox.util._.filter(data.phones, function(phone) {
-                        if (phone.id === "") {
-                            delete phone.id;
-                        }
-                        return phone.phone !== "";
-                    });
-                    data.addresses = this.sandbox.util._.filter(data.addresses, function(address) {
-                        if (address.id === "") {
-                            delete address.id;
-                        }
-                        return address.street !== "" &&
-                            address.number !== "" &&
-                            address.zip !== "" &&
-                            address.city !== "" &&
-                            address.state !== "";
-                    });
                     if (data.id === '') {
                         delete data.id;
                     }
