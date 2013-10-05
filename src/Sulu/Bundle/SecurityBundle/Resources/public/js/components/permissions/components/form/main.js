@@ -20,6 +20,7 @@ define(['text!/security/template/permission/form'], function(Template) {
         initialize: function() {
 
             this.formId = '#permissions-form';
+            this.selectedRoles = [];
 
             if(!!this.options.data) {
                 this.user = this.options.data.user;
@@ -137,6 +138,40 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         bindDOMEvents: function() {
 
+            this.sandbox.dom.on('#rolesTable', 'click', function(event){
+                var id = this.sandbox.dom.attr(event.currentTarget, 'id');
+                if(id === 'selectAll'){
+                    this.selectAll(event.currentTarget);
+                } else {
+                    this.selectItem(event.currentTarget);
+                }
+            }.bind(this), 'input[type="checkbox"]');
+
+        },
+
+        selectAll: function(){
+           // TODO
+        },
+
+        selectItem: function($element) {
+
+            var roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent($element)), 'id'),
+                index = this.selectedRoles.indexOf(roleId);
+
+            if (index >= 0) {
+                this.sandbox.dom.removeClass($element, 'is-selected');
+                this.sandbox.dom.prop($element, 'checked', false);
+                this.selectedRoles.splice(index,1);
+
+                this.sandbox.logger.log(roleId, "role deselected");
+            } else {
+                this.sandbox.dom.addClass($element, 'is-selected');
+                this.sandbox.dom.prop($element, 'checked', true);
+                this.selectedRoles.push(roleId);
+
+                this.sandbox.logger.log(roleId, "role selected");
+
+            }
 
         },
 
@@ -168,6 +203,8 @@ define(['text!/security/template/permission/form'], function(Template) {
                 id = this.user.id;
             }
 
+
+
             if (this.sandbox.form.validate(this.formId)) {
 
                 this.sandbox.logger.log('validation succeeded');
@@ -176,7 +213,9 @@ define(['text!/security/template/permission/form'], function(Template) {
                     id: id,
                     username: this.sandbox.dom.val('#username'),
                     password: this.password,
-                    contact: this.contact
+                    contact: this.contact,
+                    roles: this.selectedRoles
+                    //TODO values from ddms
                 };
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
@@ -201,6 +240,8 @@ define(['text!/security/template/permission/form'], function(Template) {
         // Grid with roles and permissions
 
         initializeRoles: function() {
+
+            this.getSelectRolesOfUser();
 
             var $permissionsContainer = this.sandbox.dom.$('#permissions-grid'),
                 $table = this.sandbox.dom.createElement('<table/>', {class: 'table matrix', id: 'rolesTable'}),
@@ -234,6 +275,17 @@ define(['text!/security/template/permission/form'], function(Template) {
                     }
                 ]);
             }.bind(this));
+
+
+
+        },
+
+        getSelectRolesOfUser: function(){
+            this.sandbox.util.each(this.user.userRoles, function(index,value) {
+                this.selectedRoles.push(value.role.id);
+            }.bind(this));
+
+            this.sandbox.logger.log(roleIds, "role ids");
         },
 
         prepareTableHeader: function() {
@@ -316,6 +368,10 @@ define(['text!/security/template/permission/form'], function(Template) {
 
             },
             tableRow: function(id, title) {
+
+                // TODO icons
+                // TODO select all
+                //TODO abhaengig von den rollen des users rendern
 
                 var $row = [
                     '<tr data-id=\"',id,'\">',
