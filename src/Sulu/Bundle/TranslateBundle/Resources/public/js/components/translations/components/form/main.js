@@ -13,6 +13,7 @@ define([
 ], function(formTemplate, RelationalStore) {
 
     'use strict';
+
     var codesToDelete = [],
         codesForm = '#codes-form';
 
@@ -80,7 +81,7 @@ define([
             }.bind(this));
 
             // automatic resize of textareas
-            this.sandbox.dom.on('#codes-form', 'keyup', function(event){
+            this.sandbox.dom.on('#codes-form', 'keyup', function(event) {
 
                 // TODO test it and do it on startup
                 //var TEXTAREA_LINE_HEIGHT = 13,
@@ -95,12 +96,12 @@ define([
             }.bind(this), 'textarea');
 
             // automatic resize of textareas
-            this.sandbox.dom.on('#codes-form', 'keyup', function(event){
+            this.sandbox.dom.on('#codes-form', 'keyup', function(event) {
                 this.updateLengthConstraint(event);
             }.bind(this), '.input-length');
 
             // selected catalogue changed
-            this.sandbox.on('select.catalogues.item.changed', function(catalogueId){
+            this.sandbox.on('select.catalogues.item.changed', function(catalogueId) {
                 this.sandbox.emit('sulu.translate.catalogue.changed', catalogueId);
             }, this);
         },
@@ -120,10 +121,10 @@ define([
             this.sandbox.dom.remove($tr);
             this.sandbox.dom.remove($trOptions);
 
-            if(!!id) {
+            if (!!id) {
 
                 this.sandbox.util.each(this.options.data.translations, function(key, value) {
-                    if(parseInt(value.id,10) === parseInt(id,10)) {
+                    if (parseInt(value.id, 10) === parseInt(id, 10)) {
                         codesToDelete.push(value.code.id);
                         return false;
                     }
@@ -132,19 +133,19 @@ define([
 
         },
 
-        updateLengthConstraint: function(event){
+        updateLengthConstraint: function(event) {
 
             var newMinLength = this.sandbox.dom.val(event.currentTarget),
                 $tr = this.sandbox.dom.prev(
-                                    this.sandbox.dom.parent(
-                                        this.sandbox.dom.parent(
-                                            this.sandbox.dom.parent(
-                                                this.sandbox.dom.parent(event.currentTarget))))),
-                $translationField = this.sandbox.dom.find('.textarea-translation',$tr),
-                $translationFieldInfo = this.sandbox.dom.find('.letter-info',$tr);
+                    this.sandbox.dom.parent(
+                        this.sandbox.dom.parent(
+                            this.sandbox.dom.parent(
+                                this.sandbox.dom.parent(event.currentTarget))))),
+                $translationField = this.sandbox.dom.find('.textarea-translation', $tr),
+                $translationFieldInfo = this.sandbox.dom.find('.letter-info', $tr);
 
-            this.sandbox.dom.text($translationFieldInfo, "[Max. "+newMinLength+" chars]");
-            this.sandbox.form.updateConstraint(codesForm,$translationField, 'maxLength',{maxLength: newMinLength});
+            this.sandbox.dom.text($translationFieldInfo, "[Max. " + newMinLength + " chars]");
+            this.sandbox.form.updateConstraint(codesForm, $translationField, 'maxLength', {maxLength: newMinLength});
         },
 
         addRow: function(event) {
@@ -158,13 +159,13 @@ define([
 
             var $addedRow = this.sandbox.dom.next($lastRow, 'tr'),
                 $addedOptionsRow = this.sandbox.dom.next($addedRow, 'tr'),
-                $codeField = this.sandbox.dom.find('.input-code',$addedRow),
-                $translationField = this.sandbox.dom.find('.textarea-translation',$addedRow),
-                $lengthField = this.sandbox.dom.find('.input-length',$addedOptionsRow);
+                $codeField = this.sandbox.dom.find('.input-code', $addedRow),
+                $translationField = this.sandbox.dom.find('.textarea-translation', $addedRow),
+                $lengthField = this.sandbox.dom.find('.input-length', $addedOptionsRow);
 
-            this.sandbox.form.addField(codesForm,$codeField);
-            this.sandbox.form.addField(codesForm,$translationField);
-            this.sandbox.form.addField(codesForm,$lengthField);
+            this.sandbox.form.addField(codesForm, $codeField);
+            this.sandbox.form.addField(codesForm, $translationField);
+            this.sandbox.form.addField(codesForm, $lengthField);
         },
 
         initVisibilityOptions: function() {
@@ -186,31 +187,31 @@ define([
             rowTemplate: function() {
                 return [
                     '<tr>',
-                        '<td width="20%">',
-                            '<input class="form-element input-code" value="" data-validation-unique="name" data-validation-required="true"/>',
-                        '</td>',
-                        '<td width="37%">',
-                            '<textarea class="form-element vertical textarea-translation" data-validation-max-length="50"></textarea>',
-                            '<small class="grey letter-info">[Max. 50 chars]</small>',
-                        '</td>',
-                        '<td width="37%">',
-                            '<p class="grey"></p>',
-                        '</td>',
-                        '<td width="6%">',
-                            '<p class="icon-remove m-left-5 pointer"></p>',
-                        '</td>',
+                    '<td width="20%">',
+                    '<input class="form-element input-code" value="" data-validation-unique="name" data-validation-required="true"/>',
+                    '</td>',
+                    '<td width="37%">',
+                    '<textarea class="form-element vertical textarea-translation" data-validation-max-length="50"></textarea>',
+                    '<small class="grey letter-info">[Max. 50 chars]</small>',
+                    '</td>',
+                    '<td width="37%">',
+                    '<p class="grey"></p>',
+                    '</td>',
+                    '<td width="6%">',
+                    '<p class="icon-remove m-left-5 pointer"></p>',
+                    '</td>',
                     '</tr>',
                     '<tr class="additional-options">',
-                        '<td colspan="4">',
-                            '<div class="grid-row">',
-                                '<div class="grid-col-3">',
-                                    '<span>Length</span>',
-                                    '<input class="form-element input-length" value="50"  data-validation-required="true" data-type="decimal" data-validation-min="0" type="number" min="0"/>',
-                                '</div>',
-                                '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkbox-frontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
-                                '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkbox-backend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
-                            '</div>',
-                        '</td>',
+                    '<td colspan="4">',
+                    '<div class="grid-row">',
+                    '<div class="grid-col-3">',
+                    '<span>Length</span>',
+                    '<input class="form-element input-length" value="50"  data-validation-required="true" data-type="decimal" data-validation-min="0" type="number" min="0"/>',
+                    '</div>',
+                    '<div class="grid-col-2 m-top-35"><input type="checkbox" class="custom-checkbox checkbox-frontend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>',
+                    '<div class="grid-col-2  m-top-35"><input type="checkbox" class="custom-checkbox checkbox-backend"><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>',
+                    '</div>',
+                    '</td>',
                     '</tr>'].join('');
             }
         },
@@ -230,87 +231,87 @@ define([
 
         submit: function() {
 
-            if(this.sandbox.form.validate(codesForm)) {
+            if (this.sandbox.form.validate(codesForm)) {
 
-            var updatedTranslations = [],
-                $rows = this.sandbox.dom.find('table tbody tr', '#codes-form');
+                var updatedTranslations = [],
+                    $rows = this.sandbox.dom.find('table tbody tr', '#codes-form');
 
-            for (var i = 0; i < $rows.length;) {
+                for (var i = 0; i < $rows.length;) {
 
-                var $translation = $rows[i],
-                    $options = $rows[i + 1],
-                    id = $($rows[i]).data('id'),
+                    var $translation = $rows[i],
+                        $options = $rows[i + 1],
+                        id = $($rows[i]).data('id'),
 
-                    newCode = this.sandbox.dom.val(this.sandbox.dom.find('.input-code',$translation)),
-                    newTranslation = this.sandbox.dom.val(this.sandbox.dom.find('.textarea-translation',$translation)),
+                        newCode = this.sandbox.dom.val(this.sandbox.dom.find('.input-code', $translation)),
+                        newTranslation = this.sandbox.dom.val(this.sandbox.dom.find('.textarea-translation', $translation)),
 
-                    newLength = this.sandbox.dom.val(this.sandbox.dom.find('.input-length',$options)),
-                    newFrontend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-frontend',$options),':checked'),
-                    newBackend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-backend',$options),':checked'),
+                        newLength = this.sandbox.dom.val(this.sandbox.dom.find('.input-length', $options)),
+                        newFrontend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-frontend', $options), ':checked'),
+                        newBackend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-backend', $options), ':checked'),
 
-                    translationModel = null;
+                        translationModel = null;
 
-                // get data of existing translation and code and compare with version in form
-                if (!!id) {
+                    // get data of existing translation and code and compare with version in form
+                    if (!!id) {
 
-                    this.sandbox.util.each(this.options.data.translations, function(key, value) {
-                        if (parseInt(value.id,10) === parseInt(id,10)) {
-                            translationModel = value;
-                            return false;
+                        this.sandbox.util.each(this.options.data.translations, function(key, value) {
+                            if (parseInt(value.id, 10) === parseInt(id, 10)) {
+                                translationModel = value;
+                                return false;
+                            }
+                        });
+
+
+                        if (!!translationModel) {
+
+                            var currentCode = translationModel.code.code,
+                                currentTranslation = translationModel.value,
+                                currentLength = translationModel.code.length,
+                                currentFrontend = translationModel.code.frontend,
+                                currentBackend = translationModel.code.backend;
+
+                            if (newCode !== currentCode ||
+                                newTranslation !== currentTranslation ||
+                                newLength !== currentLength ||
+                                newFrontend !== currentFrontend ||
+                                newBackend !== currentBackend) {
+
+                                translationModel.code.code = newCode;
+                                translationModel.value = newTranslation;
+                                translationModel.code.length = newLength;
+                                translationModel.code.frontend = newFrontend;
+                                translationModel.code.backend = newBackend;
+
+                                updatedTranslations.push(translationModel);
+                            }
                         }
-                    });
 
+                        // TODO else errormessage
 
-                    if (!!translationModel) {
+                    } else {
 
-                        var currentCode = translationModel.code.code,
-                            currentTranslation = translationModel.value,
-                            currentLength = translationModel.code.length,
-                            currentFrontend = translationModel.code.frontend,
-                            currentBackend = translationModel.code.backend;
+                        // new translation and new code
+                        if (newCode !== undefined && newCode !== "") {
 
-                        if (newCode !== currentCode ||
-                            newTranslation !== currentTranslation ||
-                            newLength !== currentLength ||
-                            newFrontend !== currentFrontend ||
-                            newBackend !== currentBackend) {
+                            var codeModel = {};
+                            codeModel.code = newCode;
+                            codeModel.length = newLength;
+                            codeModel.frontend = newFrontend;
+                            codeModel.backend = newBackend;
 
-                            translationModel.code.code = newCode;
+                            translationModel = {};
                             translationModel.value = newTranslation;
-                            translationModel.code.length = newLength;
-                            translationModel.code.frontend = newFrontend;
-                            translationModel.code.backend = newBackend;
 
+                            translationModel.code = codeModel;
                             updatedTranslations.push(translationModel);
                         }
                     }
+                    i = i + 2;
 
-                    // TODO else errormessage
-
-                } else {
-
-                    // new translation and new code
-                    if (newCode !== undefined && newCode !== "") {
-
-                        var codeModel = {};
-                        codeModel.code = newCode;
-                        codeModel.length = newLength;
-                        codeModel.frontend = newFrontend;
-                        codeModel.backend = newBackend;
-
-                        translationModel = {};
-                        translationModel.value = newTranslation;
-
-                        translationModel.code = codeModel;
-                        updatedTranslations.push(translationModel);
-                    }
                 }
-                i = i + 2;
 
-            }
-
-            this.sandbox.emit('sulu.translate.translations.save', updatedTranslations, codesToDelete);
-            codesToDelete = [];
+                this.sandbox.emit('sulu.translate.translations.save', updatedTranslations, codesToDelete);
+                codesToDelete = [];
             }
         }
 

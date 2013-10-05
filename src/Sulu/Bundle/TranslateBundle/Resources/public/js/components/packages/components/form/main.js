@@ -71,7 +71,7 @@ define([
 
             var packageModel = null,
                 catalogues = [],
-                template = null;
+                template;
 
             this.cataloguesToDelete = [];
 
@@ -201,7 +201,7 @@ define([
 
                 if (!this.options.data) {
                     this.options.data = {};
-                    this.options.data.id;
+                    this.options.data.id = null;
                 }
 
                 this.options.data.name = this.sandbox.dom.val('#name');

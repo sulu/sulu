@@ -15,9 +15,12 @@ require.config({
 
 define({
 
-    name: "Sulu Translate Bundle",
+    name: 'Sulu Translate Bundle',
 
-    initialize: function (app) {
+    initialize: function(app) {
+
+        'use strict';
+
         var sandbox = app.sandbox;
 
         app.components.addSource('sulutranslate', '/bundles/sulutranslate/js/components');
@@ -25,7 +28,7 @@ define({
         // list all translation packages
         sandbox.mvc.routes.push({
                 route: 'settings/translate',
-                callback: function(){
+                callback: function() {
                     this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="list"/>');
                 }
             }
@@ -34,7 +37,7 @@ define({
         // show form for new translation package
         sandbox.mvc.routes.push({
                 route: 'settings/translate/add',
-                callback: function(){
+                callback: function() {
                     this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="form"/>');
                 }
             }
@@ -43,8 +46,8 @@ define({
         // show form for editing a translation package
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/settings',
-                callback: function(id){
-                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
+                callback: function(id) {
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="form" data-aura-id="' + id + '"/>');
                 }
             }
         );
@@ -52,8 +55,8 @@ define({
         // show form for editing codes
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details',
-                callback: function(id){
-                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="'+id+'"/>');
+                callback: function(id) {
+                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="' + id + '"/>');
                 }
             }
         );
@@ -61,13 +64,10 @@ define({
         // show form for editing codes for catalogue
         sandbox.mvc.routes.push({
                 route: 'settings/translate/edit::id/details::catalogueId',
-                callback: function(id,catalogueId){
-                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="'+id+'" data-aura-catalogue="'+catalogueId+'"/>');
+                callback: function(id, catalogueId) {
+                    this.html('<div data-aura-component="translations@sulutranslate" data-aura-display="form" data-aura-id="' + id + '" data-aura-catalogue="' + catalogueId + '"/>');
                 }
             }
         );
-
-
     }
-
 });

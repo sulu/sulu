@@ -7,8 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel'], function(RelationalModel) {
-    return RelationalModel({
+define(['mvc/relationalmodel'], function(relationalModel) {
+
+    'use strict';
+
+    return relationalModel({
         urlRoot: '/translate/api/catalogues',
         defaults: {
             id: null,
@@ -17,4 +20,5 @@ define(['mvc/relationalmodel'], function(RelationalModel) {
             translations: []
         }
     });
+
 });

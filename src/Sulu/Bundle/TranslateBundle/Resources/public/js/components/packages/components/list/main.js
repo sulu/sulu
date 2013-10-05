@@ -16,24 +16,24 @@ define([
 
     var sandbox,
 
-    bindListener = function(){
-        sandbox.off('husky.datagrid.items.selected',deletePackages);
-        sandbox.on('husky.datagrid.items.selected', deletePackages);
-    },
+        bindListener = function() {
+            sandbox.off('husky.datagrid.items.selected', deletePackages);
+            sandbox.on('husky.datagrid.items.selected', deletePackages);
+        },
 
-    deletePackages = function(ids){
+        deletePackages = function(ids) {
 
-        //unbindListener();
+            //unbindListener();
 
-        if (ids.length === 0) {
-            // no items selected
-            sandbox.logger.log("no ids in array");
-            sandbox.emit('husky.header.button-state', 'standard');
-        } else if (ids.length > 0) {
-            sandbox.emit('sulu.translate.packages.delete', ids, false);
-        }
+            if (ids.length === 0) {
+                // no items selected
+                sandbox.logger.log("no ids in array");
+                sandbox.emit('husky.header.button-state', 'standard');
+            } else if (ids.length > 0) {
+                sandbox.emit('sulu.translate.packages.delete', ids, false);
+            }
 
-    };
+        };
 
 //    unbindListener =  function(){
 //        sandbox.off('husky.datagrid.items.selected',deletePackages);
@@ -62,7 +62,7 @@ define([
 
         },
 
-        initDatagrid: function(){
+        initDatagrid: function() {
 
             this.sandbox.start([
                 {
@@ -79,7 +79,7 @@ define([
                             {content: 'Title'}
                         ],
                         excludeFields: ['id']
-                }}
+                    }}
             ]);
 
             this.sandbox.on('husky.datagrid.item.click', function(item) {
@@ -88,30 +88,32 @@ define([
 
         },
 
-        initDropDown: function(){
+        initDropDown: function() {
 
-            this.sandbox.start([{
-                name: 'dropdown@husky',
-                options: {
-                    el: '#options-dropdown',
-                    trigger: '.dropdown-toggle',
-                    setParentDropDown: true,
-                    instanceName: 'options',
-                    alignment: 'right',
-                    data: [
-                        {
-                            'id': 1,
-                            'type':'delete',
-                            'name': 'Delete'
-                        }
-                    ]
+            this.sandbox.start([
+                {
+                    name: 'dropdown@husky',
+                    options: {
+                        el: '#options-dropdown',
+                        trigger: '.dropdown-toggle',
+                        setParentDropDown: true,
+                        instanceName: 'options',
+                        alignment: 'right',
+                        data: [
+                            {
+                                'id': 1,
+                                'type': 'delete',
+                                'name': 'Delete'
+                            }
+                        ]
+                    }
                 }
-            }]);
+            ]);
 
 
-            this.sandbox.on('husky.dropdown.options.clicked',  function() {
+            this.sandbox.on('husky.dropdown.options.clicked', function() {
                 this.sandbox.emit('husky.dropdown.options.toggle');
-            },this);
+            }, this);
 
             bindListener();
 
@@ -123,7 +125,7 @@ define([
                     this.sandbox.emit('husky.header.button-state', 'disable');
                     this.sandbox.emit('husky.datagrid.items.get-selected');
                 }
-            },this);
+            }, this);
 
         },
 
@@ -131,11 +133,10 @@ define([
 
             this.sandbox.emit('husky.header.button-type', 'add');
 
-            this.sandbox.on('husky.button.add.click', function(){
+            this.sandbox.on('husky.button.add.click', function() {
                 this.sandbox.emit('sulu.translate.package.new');
             }, this);
         }
-
 
     };
 });

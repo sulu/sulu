@@ -11,8 +11,12 @@ define([
     'mvc/relationalmodel',
     'sulutranslate/model/catalogue',
     'sulutranslate/components/translations/models/code',
-    'mvc/hasone'], function(RelationalModel, Catalogue, Code, HasOne) {
-    return RelationalModel({
+    'mvc/hasone'
+], function(relationalModel, Catalogue, Code, HasOne) {
+
+    'use strict';
+
+    return relationalModel({
         urlRoot: '/translate/api/translation',
         defaults: {
             id: null,

@@ -88,11 +88,11 @@ define([
         bindCustomEvents: function() {
 
             // selected catalogue in select-field changed
-            this.sandbox.on('sulu.translate.catalogue.changed', function(catalogueId){
+            this.sandbox.on('sulu.translate.catalogue.changed', function(catalogueId) {
 
                 selectedCatalogue = catalogues.get(catalogueId);
-                if(!!selectedCatalogue) {
-                    this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageModel.get('id') + '/details:'+catalogueId);
+                if (!!selectedCatalogue) {
+                    this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageModel.get('id') + '/details:' + catalogueId);
                 } else {
                     // TODO
                     console.log("error - unknown catalogue")
@@ -154,7 +154,7 @@ define([
                         }
 
                         // when id for catalogue in url
-                        if(!!this.options.catalogue) {
+                        if (!!this.options.catalogue) {
                             selectedCatalogue = catalogues.get(this.options.catalogue);
                         } else {
                             selectedCatalogue = defaultCatalogue;
@@ -172,7 +172,6 @@ define([
                     // TODO errormessage
                 }.bind(this)
             });
-
 
 
         },
@@ -212,13 +211,13 @@ define([
                     success: function() {
                         console.log("deleted code");
                     },
-                    error: function(){
+                    error: function() {
                         // TODO errormessage/-handling
                     }
                 });
             }.bind(this));
 
-            if(updatedTranslations.length > 0) {
+            if (updatedTranslations.length > 0) {
                 translations.save(this.sandbox, updatedTranslations);
             }
 

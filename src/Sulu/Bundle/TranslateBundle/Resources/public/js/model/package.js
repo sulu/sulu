@@ -7,8 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', 'sulutranslate/model/catalogue'], function(RelationalModel,HasMany, Catalogue) {
-    return RelationalModel({
+define(['mvc/relationalmodel', 'mvc/hasmany', 'sulutranslate/model/catalogue'], function(relationalModel, HasMany, Catalogue) {
+
+    'use strict';
+
+    return relationalModel({
         urlRoot: '/translate/api/packages',
         idAttribute: 'id',
         defaults: {
@@ -25,4 +28,5 @@ define(['mvc/relationalmodel', 'mvc/hasmany', 'sulutranslate/model/catalogue'], 
             }
         ]
     });
+
 });

@@ -23,6 +23,7 @@ class PackageNotFoundException extends Exception
 
     public function __construct($packageId)
     {
+        $this->packageId = $packageId;
         parent::__construct();
     }
 

@@ -14,18 +14,19 @@ define([
 ], function(Package, Catalogue, RelationalStore) {
 
     'use strict';
+
     var packageIdsDelete,
         navigateToList,
         sandbox,
 
-        // TODO refactor this.sandbox vs sandbox
+    // TODO refactor this.sandbox vs sandbox
 
         delPackagesSubmit = function() {
             sandbox.emit('husky.dialog.hide');
 
             RelationalStore.reset();
 
-            if(navigateToList) {
+            if (navigateToList) {
 
                 var packageModel = new Package({id: packageIdsDelete[0]});
                 packageModel.destroy({
@@ -37,12 +38,11 @@ define([
                     }
                 });
 
-                sandbox.emit('husky.datagrid.row.remove',packageIdsDelete[0]);
+                sandbox.emit('husky.datagrid.row.remove', packageIdsDelete[0]);
 
             } else {
 
-                var clone = packageIdsDelete.slice(0);
-                sandbox.util.each(clone, function(index,value) {
+                sandbox.util.each(packageIdsDelete.slice(0), function(index, value) {
 
                     var packageModel = new Package({id: value});
                     packageModel.destroy({
@@ -51,7 +51,7 @@ define([
                         }
                     });
 
-                    sandbox.emit('husky.datagrid.row.remove',value);
+                    sandbox.emit('husky.datagrid.row.remove', value);
 
                 }.bind(this));
 
@@ -67,12 +67,12 @@ define([
             unbindDialogListener();
         },
 
-        bindDialogListener = function(){
+        bindDialogListener = function() {
             sandbox.on('husky.dialog.submit', delPackagesSubmit);
             sandbox.on('husky.dialog.cancel', hideDialog);
         },
 
-        unbindDialogListener = function(){
+        unbindDialogListener = function() {
             sandbox.off('husky.dialog.submit', delPackagesSubmit);
             sandbox.off('husky.dialog.cancel', hideDialog);
         };
@@ -109,8 +109,8 @@ define([
             }, this);
 
             // save
-            this.sandbox.on('sulu.translate.package.save', function(data,cataloguesToDelete) {
-                this.savePackage(data,cataloguesToDelete);
+            this.sandbox.on('sulu.translate.package.save', function(data, cataloguesToDelete) {
+                this.savePackage(data, cataloguesToDelete);
             }, this);
 
             // delete packages
@@ -155,7 +155,7 @@ define([
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             this.sandbox.util.each(cataloguesToDelete, function(id) {
-                var cat = new Catalogue({id:cataloguesToDelete[id]});
+                var cat = new Catalogue({id: cataloguesToDelete[id]});
                 cat.destroy({
                     success: function() {
                     }
@@ -177,7 +177,7 @@ define([
 
         },
 
-        deletePackages: function(packageIds, navigate){
+        deletePackages: function(packageIds, navigate) {
             packageIdsDelete = packageIds;
             navigateToList = navigate;
 
@@ -190,7 +190,7 @@ define([
                         'This operation you are about to do will delete data. <br /> This is not undoable!',
                         '</p>',
                         '<p>',
-                        ' Please think about it and accept or decline.',
+                        'Please think about it and accept or decline.',
                         '</p>'
                     ].join('')
                 },
