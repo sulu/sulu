@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Sulu\Bundle\ContactBundle\Admin\ContentNavigation;
+use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,18 +35,6 @@ class NavigationController extends Controller
             $contentNavigation = $this->get(self::SERVICE_NAME);
         }
 
-        return new Response(json_encode(
-            array_merge(
-                array(
-                    array(
-                        'title' => 'Details',
-                        'action' => 'details'
-                    )
-                ),
-                $contentNavigation->toArray()
-            )
-        ));
+        return new Response(json_encode($contentNavigation->toArray('contact')));
     }
-
-
 }
