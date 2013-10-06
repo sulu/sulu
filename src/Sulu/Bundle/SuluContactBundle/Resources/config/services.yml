@@ -1,6 +1,6 @@
 parameters:
     sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
-    sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\ContentNavigation
+    sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation
 
 services:
     sulu_contact.admin:
