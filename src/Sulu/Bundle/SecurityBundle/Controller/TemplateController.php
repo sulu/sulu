@@ -14,11 +14,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class TemplateController extends Controller
 {
 
-    public function roleformAction()
+    public function roleFormAction()
     {
         $pool = $this->get('sulu_admin.admin_pool');
         $contexts = $pool->getSecurityContexts();
         $systems = array_keys($contexts);
+
         return $this->render('SuluSecurityBundle:Template:role.form.html.twig', array('systems' => $systems));
     }
 }
