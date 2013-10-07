@@ -76,7 +76,10 @@ class UserController extends RestController implements ClassResourceInterface
             $user->setContact($this->getContact($this->getRequest()->get('contact')['id']));
             $user->setUsername($this->getRequest()->get('username'));
             $user->setSalt($this->generateSalt());
-            $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+
+            if($this->getRequest()->get('password') != "") {
+                $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+            }
             $user->setLocale($this->getRequest()->get('locale'));
 
             $em->persist($user);
@@ -125,7 +128,11 @@ class UserController extends RestController implements ClassResourceInterface
             $user->setContact($this->getContact($this->getRequest()->get('contact')['id']));
             $user->setUsername($this->getRequest()->get('username'));
             $user->setSalt($this->generateSalt());
-            $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+
+            if($this->getRequest()->get('password') != "") {
+                $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+            }
+
             $user->setLocale($this->getRequest()->get('locale'));
 
             if (!$this->processUserRoles($user)) {
@@ -262,9 +269,9 @@ class UserController extends RestController implements ClassResourceInterface
         if ($this->getRequest()->get('username') == null) {
             throw new MissingArgumentException($this->entityName, 'username');
         }
-        if ($this->getRequest()->get('password') == null) {
-            throw new MissingArgumentException($this->entityName, 'password');
-        }
+//        if ($this->getRequest()->get('password') == null) {
+//            throw new MissingArgumentException($this->entityName, 'password');
+//        }
         if ($this->getRequest()->get('locale') == null) {
             throw new MissingArgumentException($this->entityName, 'locale');
         }

@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Repository for the User, implementing some additional functions
@@ -27,7 +28,7 @@ class UserRepository extends EntityRepository
      */
     public function findUserByContact($id)
     {
-
+        try {
         $dql = 'SELECT user, userRoles, role
 				FROM SuluSecurityBundle:User user
                     LEFT JOIN user.userRoles userRoles
@@ -42,11 +43,11 @@ class UserRepository extends EntityRepository
                 )
             );
 
-        $result = $query->getArrayResult();
+        $result = $query->getSingleResult();
 
-        if (sizeof($result) > 0) {
-            return $result[0];
-        } else {
+        return $result;
+
+        } catch (NoResultException $ex) {
             return null;
         }
 
