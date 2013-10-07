@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 05. Okt 2013 um 17:04
+-- Erstellungszeit: 07. Okt 2013 um 09:55
 -- Server Version: 5.5.32
 -- PHP-Version: 5.4.20-1+debphp.org~quantal+1
 
@@ -87,7 +87,15 @@ INSERT INTO `tr_codes` (`id`, `code`, `backend`, `frontend`, `length`, `idLocati
 (53, 'contact.accounts.title', 1, 0, 20, NULL, 1),
 (54, 'contact.accounts.name', 1, 0, 20, NULL, 1),
 (55, 'contact.accounts.website', 1, 0, 20, NULL, 1),
-(56, 'contact.accounts.company', 1, 0, 40, NULL, 1);
+(56, 'contact.accounts.company', 1, 0, 40, NULL, 1),
+(57, 'security.roles.title', 1, 0, 30, NULL, 1),
+(58, 'security.roles.name', 1, 0, 20, NULL, 1),
+(59, 'security.roles.system', 1, 0, 20, NULL, 1),
+(60, 'security.roles.godMode', 1, 0, 20, NULL, 1),
+(61, 'security.roles.godModeDescription', 1, 0, 30, NULL, 1),
+(62, 'security.roles.section', 1, 0, 20, NULL, 1),
+(63, 'security.roles.permissions', 1, 0, 20, NULL, 1),
+(64, 'security.roles.all', 1, 0, 20, NULL, 1);
 
 --
 -- Daten für Tabelle `tr_packages`
@@ -153,6 +161,14 @@ INSERT INTO `tr_translations` (`value`, `idCatalogues`, `idCodes`) VALUES
 ('Name', 3, 54),
 ('Internetseite', 3, 55),
 ('Übergeordnetes Unternehmen', 3, 56),
+('Rollen & Berechtigungen', 3, 57),
+('Titel', 3, 58),
+('System', 3, 59),
+('Gott Modus', 3, 60),
+('Das ist der Gott Modus', 3, 61),
+('Sektion', 3, 62),
+('Berechtigungen', 3, 63),
+('Alle', 3, 64),
 ('Name', 4, 4),
 ('Edit', 4, 6),
 ('Add', 4, 7),
