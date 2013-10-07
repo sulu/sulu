@@ -129,8 +129,8 @@ define([
             }.bind(this));
 
             userModel.save(null, {
-                success: function() {
-                    this.sandbox.emit('sulu.router.navigate', '/contacts/contacts/edit:'+userModel.get('contact').get('id')+'/permissions');
+                success: function(model) {
+                    this.sandbox.emit('sulu.router.navigate', '/contacts/contacts/edit:'+model.get('contact').get('id')+'/permissions');
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
