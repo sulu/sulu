@@ -73,7 +73,10 @@ class PermissionVoter implements VoterInterface
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         // if not our attribute or class, we can't decide
-        if (!$this->supportsClass(get_class($token->getUser())) || !$this->supportsAttribute($attributes)) {
+        if (!is_object($token->getUser()) ||
+            !$this->supportsClass(get_class($token->getUser())) ||
+            !$this->supportsAttribute($attributes)
+        ) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
