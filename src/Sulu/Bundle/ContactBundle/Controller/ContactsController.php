@@ -105,7 +105,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             function ($id) {
                 return $this->getDoctrine()
                     ->getRepository('SuluContactBundle:Contact')
-                    ->find($id);
+                    ->findArray($id);
             }
         );
 
