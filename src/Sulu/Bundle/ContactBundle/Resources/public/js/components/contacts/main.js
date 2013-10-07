@@ -23,16 +23,16 @@ define(['sulucontact/model/contact'], function(Contact) {
             }
         },
 
-        getModel: function(id) {
-            // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
-            var packageModel = Contact.findOrCreate(id);
-            if (!packageModel) {
-                packageModel = new Contact({
-                    id: id
-                });
-            }
-            return packageModel;
-        },
+//        getModel: function(id) {
+//            // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
+//            var packageModel = Contact.findOrCreate(id);
+//            if (!packageModel) {
+//                packageModel = new Contact({
+//                    id: id
+//                });
+//            }
+//            return packageModel;
+//        },
 
         renderList: function() {
 
@@ -62,7 +62,8 @@ define(['sulucontact/model/contact'], function(Contact) {
                     if (wasConfirmed) {
                        this.sandbox.emit('husky.header.button-state', 'loading-add-button');
                         ids.forEach(function(id) {
-                            var contact = this.getModel(id);
+                            //var contact = this.getModel(id);
+                            var contact = new Contact({id:id});
                             contact.destroy({
                                 success: function() {
                                    this.sandbox.emit('husky.datagrid.row.remove', id);
@@ -86,7 +87,8 @@ define(['sulucontact/model/contact'], function(Contact) {
             // load data and show form
             var contact;
             if (!!this.options.id) {
-                contact = this.getModel(this.options.id);
+                contact = new Contact({id:this.options.id});
+                //contact = this.getModel(this.options.id);
                 contact.fetch({
                     success: function(model) {
                        this.sandbox.start([
@@ -108,7 +110,7 @@ define(['sulucontact/model/contact'], function(Contact) {
             this.sandbox.on('sulu.contacts.contacts.delete', function(id) {
                 this.confirmDeleteDialog(function(wasConfirmed) {
                     if(wasConfirmed) {
-                        contact = this.getModel(id);
+                        //contact = this.getModel(id);
                         this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
                         contact.destroy({
                             success: function() {
