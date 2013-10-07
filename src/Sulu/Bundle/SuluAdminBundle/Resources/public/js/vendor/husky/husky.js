@@ -20639,7 +20639,7 @@ define('__component__$navigation@husky',['jquery'], function($) {
             sandbox.util.ajax({
                 url: params.url,
                 success: function(data) {
-                    sandbox.logger.log('load', params);
+                    sandbox.logger.log('data loaded', data);
 
                     this.data = data;
 
@@ -23107,7 +23107,7 @@ define('__component__$matrix@husky',[],function() {
                 }
 
                 //add all link
-                sandbox.dom.html($tdAll, 'All');
+                sandbox.dom.html($tdAll, '<span class="pointer">'+this.options.captions.all+'</span>');
                 sandbox.dom.append($tr, $tdAll);
 
                 sandbox.dom.append($tbody, $tr);
