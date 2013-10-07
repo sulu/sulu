@@ -66,49 +66,67 @@ define([
                 roles.fetch({
                     success: function(rolesCollection) {
                         this.roles = rolesCollection;
-                        this.buildUserAndRoles(data);
+                        this.buildUserAndRolesForSave(data);
                     }.bind(this),
                     error: function() {
                         // TODO error message
                     }
                 });
             } else {
-                this.buildUserAndRoles(data);
+                this.buildUserAndRolesForSave(data);
             }
         },
 
-        buildUserAndRoles: function(data) {
+        buildUserAndRolesForSave: function(data) {
 
             var userModel = User.findOrCreate(data.user);
 
-            if(!!data.user.id) { // PUT
-                userModel.url = '/security/api/users/'+data.user.id;
+            if (!!data.user.id) { // PUT
+                userModel.url = '/security/api/users/' + data.user.id;
             } else { // POST
                 userModel.url = '/security/api/user';
             }
 
-            this.sandbox.util.each(data.rolesAndConfig, function(index,value){
+            // prepare deselected roles
+            this.sandbox.util.each(data.deselectedRoles, function(index, value) {
+                var userRole;
+
+                if (userModel.get('userRoles').length > 0) {
+
+                    userRole = userModel.get('userRoles').findWhere(
+                        {
+                            role: this.roles.get(value)
+                        }
+                    );
+                    if (!!userRole) {
+                        userModel.get('userRoles').remove(userRole);
+                    }
+                }
+
+            }.bind(this));
+
+
+            // prepare selected roles
+            this.sandbox.util.each(data.selectedRolesAndConfig, function(index, value) {
                 var userRole = new UserRole(),
                     tmp;
 
-                if(userModel.get('userRoles').length > 0) {
+                if (userModel.get('userRoles').length > 0) {
 
                     tmp = userModel.get('userRoles').findWhere(
                         {
                             role: this.roles.get(value.roleId)
                         }
                     );
-                    if(!!tmp) {
+                    if (!!tmp) {
                         userRole = tmp;
                     }
                 }
 
-                userRole.set('role',this.roles.get(value.roleId));
+                userRole.set('role', this.roles.get(value.roleId));
                 userRole.set('locales', JSON.stringify(value.selection));
                 userModel.get('userRoles').add(userRole);
             }.bind(this));
-
-//            userModel.set('userRoles', userRoles);
 
             userModel.save(null, {
                 success: function() {

@@ -21,6 +21,7 @@ define(['text!/security/template/permission/form'], function(Template) {
 
             this.formId = '#permissions-form';
             this.selectedRoles = [];
+            this.deselectedRoles = [];
 
             if(!!this.options.data) {
                 this.user = this.options.data.user;
@@ -194,6 +195,10 @@ define(['text!/security/template/permission/form'], function(Template) {
                 this.sandbox.dom.prop($element, 'checked', false);
                 this.selectedRoles.splice(index,1);
 
+                if(this.deselectedRoles.indexOf(roleId) < 0) {
+                    this.deselectedRoles.push(roleId);
+                }
+
                 this.sandbox.logger.log(roleId, "role deselected");
             } else {
                 this.sandbox.dom.addClass($element, 'is-selected');
@@ -240,7 +245,8 @@ define(['text!/security/template/permission/form'], function(Template) {
                         contact: this.contact
                     },
 
-                    rolesAndConfig: this.getSelectedRolesAndLanguages()
+                    selectedRolesAndConfig: this.getSelectedRolesAndLanguages(),
+                    deselectedRoles: this.deselectedRoles
                 };
 
                 if(!!this.user && !!this.user.id) {
