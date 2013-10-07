@@ -94,6 +94,16 @@ define(['text!/security/template/permission/form'], function(Template) {
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
             }.bind(this), 'input');
+
+            this.sandbox.util.each(this.roles, function(index, value) {
+                this.sandbox.on('husky.dropdown.multiple.select.languageSelector'+value.id+'.selected.item', function(){
+                    this.setHeaderBar(false);
+                }, this);
+                this.sandbox.on('husky.dropdown.multiple.select.languageSelector'+value.id+'.deselected.item', function(){
+                    this.setHeaderBar(false);
+                }, this);
+            }.bind(this));
+
         },
 
 
@@ -325,9 +335,6 @@ define(['text!/security/template/permission/form'], function(Template) {
                     }
                 ]);
             }.bind(this));
-
-
-
         },
 
         getSelectRolesOfUser: function(){
