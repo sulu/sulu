@@ -18,8 +18,7 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './userRole', 'sulucontact/model/c
         defaults:  {
                 username: '',
                 password: '',
-                salt: '$a7T', // serverside requirement?
-                locale: 'en', // serverside requirement?
+                locale: 'en',
                 contact: [],
                 userRoles: []
 
