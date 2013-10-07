@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\AdminBundle\DependencyInjection\Compiler;
 
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -35,8 +36,10 @@ abstract class ContentNavigationPass implements CompilerPassInterface
             $taggedServices = $container->findTaggedServiceIds(self::$tag);
 
             foreach ($taggedServices as $id => $attributes) {
+                /** @var ContentNavigationInterface $navigation */
                 $navigation = $container->getDefinition($id);
-                $contentNavigation->addMethodCall('addNavigationItem', array($navigation));
+
+                $contentNavigation->addMethodCall('addNavigation', array($navigation));
             }
         }
     }

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(function(History) {
 
     'use strict';
 
@@ -60,6 +60,11 @@ define(function() {
             this.sandbox.on('navigation.size.changed', function(event) {
                 this.navigationSizeChanged(event);
             }.bind(this));
+
+            // return current url
+            this.sandbox.on('navigation.url', function(callbackFunction) {
+               callbackFunction(this.sandbox.mvc.history.fragment);
+            }, this);
         },
 
         navigationSizeChanged: function(event) {
