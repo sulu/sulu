@@ -10,7 +10,8 @@
 define([
     'sulucontact/model/contact',
     'text!/contact/navigation/content'
-], function(Contact, contentNavigation) {
+
+], function(Contact, ContentNavigation, History) {
 
     'use strict';
 
@@ -79,9 +80,12 @@ define([
 
                 // show navigation submenu
 
-                sandbox.emit('navigation.item.column.show', {
-                    data: this.getTabs(this.options.id)
+                this.getTabs(this.options.id, function(navigation) {
+                    sandbox.emit('navigation.item.column.show', {
+                        data: navigation
+                    });
                 });
+
 
 
                 // load data and show form
@@ -178,7 +182,7 @@ define([
 
             // TODO: this function must be globally available (for every related main function)
             // Navigation
-            getTabs: function(id) {
+            getTabs: function(id, callback) {
                 //TODO Simplify this task for bundle developer?
                 var cssId = id || 'new',
 
@@ -196,34 +200,32 @@ define([
                         }
                     };
 
+                var contents = JSON.parse(ContentNavigation);
 
-               /* if (!!id) {
-                    navigation.sub.items.push({
-                        'title': 'Details',
-                        'action': 'contacts/contacts/edit:' + cssId + '/details',
-                        'hasSub': false,
-                        'type': '' +
-                            '',
-                        'id': 'contacts-details-' + cssId
-                    });
-                }*/
+                this.sandbox.emit('navigation.url', function(url) {
+                    this.sandbox.util.foreach(contents, function(content) {
+                        if (id) {
+                            // TODO: FIXIT: ugly removal
+                            var strSearch = 'edit:'+id;
+                            url = url.substr(0,url.indexOf(strSearch)+strSearch.length);
+                        }
+                        if (id || content.displayOptions.indexOf('new')>=0) {
+                            // contact must be set before optional tabs can be opened
+                            navigation.sub.items.push({
+                                'title': content.title,
+                                'action': url +'/'+ content.action,
+                                'hasSub': false,
+                                'type': 'content',
+                                'displayOption': 'content',
+                                'id': 'contacts-' + content.id + '-' + cssId
+                            });
+                        }
+                    })
 
-                var contents = JSON.parse(contentNavigation);
+                    console.log("NAVIGATION", navigation);
 
-                for (var i = 0; i < contents.length; i++) {
-                    // contact must be set before optional tabs can be opened
-                    if (!!id) {
-                        navigation.sub.items.push({
-                            'title': contents[i].title,
-                            'action': 'contacts/contacts/edit:' + cssId + '/' + contents[i].action,
-                            'hasSub': false,
-                            'type': 'content',
-                            'id': 'contacts-' + contents[i].url + '-' + cssId
-                        });
-                    }
-                }
-
-                return navigation;
+                    callback(navigation);
+                }.bind(this));
             }
         }
 
