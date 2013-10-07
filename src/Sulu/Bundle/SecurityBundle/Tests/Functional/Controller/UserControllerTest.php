@@ -92,13 +92,13 @@ class UserControllerTest extends DatabaseTestCase
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
-        $userRole1->setLocale('de');
+        $userRole1->setLocale(json_encode(array('de', 'en')));
         self::$em->persist($userRole1);
 
         $userRole2 = new UserRole();
         $userRole2->setRole($role2);
         $userRole2->setUser($user);
-        $userRole2->setLocale('de');
+        $userRole2->setLocale(json_encode(array('de', 'en')));
         self::$em->persist($userRole2);
 
         $permission1 = new Permission();
@@ -127,13 +127,6 @@ class UserControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
@@ -468,7 +461,6 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('admin', $response->items[0]->username);
         $this->assertEquals('securepassword', $response->items[0]->password);
         $this->assertEquals('de', $response->items[0]->locale);
-
     }
 
     public function testPutWithRemovedRoles()
