@@ -275,7 +275,7 @@ class UsersController extends RestController implements ClassResourceInterface
      */
     private function getContact($id)
     {
-        $contact =  $this->getDoctrine()
+        $contact = $this->getDoctrine()
             ->getRepository($this->contactEntityName)
             ->find($id);
 
