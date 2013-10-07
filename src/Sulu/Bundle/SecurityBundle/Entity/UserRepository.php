@@ -34,11 +34,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $dql = '
             SELECT u, ur, r, p
-            FROM SuluSecurityBundle:User u
-            LEFT JOIN u.userRoles ur
-            LEFT JOIN ur.role r
-            LEFT JOIN r.permissions p
-            WHERE u.username = :username';
+                FROM SuluSecurityBundle:User u
+                    LEFT JOIN u.userRoles ur
+                    LEFT JOIN ur.role r
+                    LEFT JOIN r.permissions p
+                WHERE u.username = :username';
 
         $query = $this->getEntityManager()->createQuery($dql);
 
@@ -64,7 +64,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$this->supportsClass(get_class($user))) {
+        $class = get_class($user);
+        if (!$this->supportsClass($class)) {
             throw new UnsupportedUserException(
                 sprintf(
                     'Instance of "%s" are not supported.',

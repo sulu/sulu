@@ -56,14 +56,14 @@ class UserRole
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -90,14 +90,14 @@ class UserRole
     public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getUser()
     {
@@ -113,14 +113,14 @@ class UserRole
     public function setRole(\Sulu\Bundle\SecurityBundle\Entity\Role $role)
     {
         $this->role = $role;
-    
+
         return $this;
     }
 
     /**
      * Get role
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Role 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\Role
      */
     public function getRole()
     {
