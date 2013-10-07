@@ -7,17 +7,18 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!/security/template/role/form'], function(Template) {
+define([], function() {
 
     'use strict';
 
-    var sandbox,
-        permissions = ['view', 'add', 'edit', 'delete', 'archive', 'live', 'security'],
+    var permissions = ['view', 'add', 'edit', 'delete', 'archive', 'live', 'security'],
         permissionData,
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         formSelector = '#role-form',
-        loadedContexts;
+        loadedContexts,
+        currentType,
+        currentState;
 
     return {
 
@@ -25,8 +26,10 @@ define(['text!/security/template/role/form'], function(Template) {
 
         view: true,
 
+        templates: ['/security/template/role/form'],
+
         initialize: function() {
-            sandbox = this.sandbox;
+            currentType = currentState = '';
             permissionData = this.options.data.permissions;
 
             this.initializeHeader();
@@ -36,42 +39,45 @@ define(['text!/security/template/role/form'], function(Template) {
 
             this.bindDOMEvents();
             this.bindCustomEvents();
+
+            this.setHeaderBar(true);
+            this.listenForChange();
         },
 
         bindDOMEvents: function() {
-            sandbox.dom.on(this.$el, 'change', this.initializeMatrix.bind(this), '#system');
-            sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
+            this.sandbox.dom.on(this.$el, 'change', this.initializeMatrix.bind(this), '#system');
+            this.sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
         },
 
         bindCustomEvents: function() {
-            sandbox.on('husky.matrix.changed', function(data) {
+            this.sandbox.on('husky.matrix.changed', function(data) {
                 this.changePermission(data);
             }.bind(this));
         },
 
         initializeHeader: function() {
             if (!!this.options.data.id) {
-                sandbox.emit('husky.header.button-type', 'saveDelete');
+                this.sandbox.emit('husky.header.button-type', 'saveDelete');
             } else {
-                sandbox.emit('husky.header.button-type', 'save');
+                this.sandbox.emit('husky.header.button-type', 'save');
             }
 
-            sandbox.on('husky.button.save.click', function() {
+            this.sandbox.on('husky.button.save.click', function() {
                 this.save();
             }.bind(this));
 
-            sandbox.on('husky.button.delete.click', function() {
-                sandbox.emit('sulu.roles.delete', sandbox.dom.val('#id'));
+            this.sandbox.on('husky.button.delete.click', function() {
+                this.sandbox.emit('sulu.role.delete', this.sandbox.dom.val('#id'));
             }.bind(this));
         },
 
         initializeValidation: function() {
-            sandbox.form.create(formSelector);
+            this.sandbox.form.create(formSelector);
         },
 
         initializeMatrix: function() {
             // create new matrix div, and stop old matrix
-            var $matrix = sandbox.dom.createElement('<div id="matrix" class="loading"/>'),
+            var $matrix = this.sandbox.dom.createElement('<div id="matrix" class="loading"/>'),
                 contextHeadlines, matrixData,
 
             // create required data for matrix
@@ -97,12 +103,12 @@ define(['text!/security/template/role/form'], function(Template) {
                     }
                 };
 
-            sandbox.stop(matrixSelector);
-            sandbox.dom.append(matrixContainerSelector, $matrix);
+            this.sandbox.stop(matrixSelector);
+            this.sandbox.dom.append(matrixContainerSelector, $matrix);
 
             // load all the contexts from the selected module
-            sandbox.util.ajax({
-                url: '/admin/contexts?system=' + sandbox.dom.val('#system')
+            this.sandbox.util.ajax({
+                url: '/admin/contexts?system=' + this.sandbox.dom.val('#system')
             })
                 .done(function(data) {
                     data = JSON.parse(data);
@@ -116,15 +122,16 @@ define(['text!/security/template/role/form'], function(Template) {
 
                             data[module].forEach(createMatrixData);
 
-                            sandbox.start([
+                            this.sandbox.start([
                                 {
                                     name: 'matrix@husky',
                                     options: {
                                         el: matrixSelector,
                                         captions: {
                                             general: module,
-                                            type: 'Section',
-                                            horizontal: 'Permissions',
+                                            type: this.sandbox.translate('security.roles.section'),
+                                            horizontal: this.sandbox.translate('security.roles.permissions'),
+                                            all: this.sandbox.translate('security.roles.all'),
                                             vertical: contextHeadlines
                                         },
                                         values: {
@@ -136,17 +143,17 @@ define(['text!/security/template/role/form'], function(Template) {
                                 }
                             ]);
 
-                            sandbox.dom.removeClass($matrix, 'loading');
+                            this.sandbox.dom.removeClass($matrix, 'loading');
                         }
                     }
-                });
+                }.bind(this));
         },
 
         setGod: function() {
-            if (!!sandbox.dom.is('#god', ':checked')) {
-                sandbox.emit('husky.matrix.set-all');
+            if (!!this.sandbox.dom.is('#god', ':checked')) {
+                this.sandbox.emit('husky.matrix.set-all');
             } else {
-                sandbox.emit('husky.matrix.unset-all');
+                this.sandbox.emit('husky.matrix.unset-all');
             }
         },
 
@@ -154,14 +161,14 @@ define(['text!/security/template/role/form'], function(Template) {
             if (typeof(data.value) === 'string') {
                 this.setPermission(data.section, data.value, data.activated);
             } else {
-                sandbox.dom.each(data.value, function(key, value) {
+                this.sandbox.dom.each(data.value, function(key, value) {
                     this.setPermission(data.section, value, data.activated);
                 }.bind(this));
             }
 
             if (!data.activated) {
                 // unset god status as soon as one permission is removed
-                sandbox.dom.attr('#god', { checked: false });
+                this.sandbox.dom.attr('#god', { checked: false });
             }
         },
 
@@ -192,21 +199,58 @@ define(['text!/security/template/role/form'], function(Template) {
         },
 
         save: function() {
-            if (!!sandbox.form.validate(formSelector)) {
+            if (!!this.sandbox.form.validate(formSelector)) {
                 // FIXME  Use datamapper instead
                 var data = {
-                    id: sandbox.dom.val('#id'),
-                    name: sandbox.dom.val('#name'),
-                    system: sandbox.dom.val('#system'),
+                    id: this.sandbox.dom.val('#id'),
+                    name: this.sandbox.dom.val('#name'),
+                    system: this.sandbox.dom.val('#system'),
                     permissions: permissionData
                 };
 
-                sandbox.emit('sulu.roles.save', data);
+                this.sandbox.emit('sulu.roles.save', data);
             }
         },
 
         render: function() {
-            sandbox.dom.html(this.$el, sandbox.template.parse(Template, {data: this.options.data}));
+            this.$el.html(this.renderTemplate('/security/template/role/form', {data: this.options.data}));
+        },
+
+        // @var Bool saved - defines if saved state should be shown
+        setHeaderBar: function(saved) {
+
+            var changeType, changeState,
+                ending = (!!this.options.data && !!this.options.data.id) ? 'Delete' : '';
+
+            changeType = 'save' + ending;
+
+            if (saved) {
+                if (ending === '') {
+                    changeState = 'hide';
+                } else {
+                    changeState = 'standard';
+                }
+            } else {
+                changeState = 'dirty';
+            }
+
+            if (currentType !== changeType) {
+                this.sandbox.emit('husky.header.button-type', changeType);
+                currentType = changeType;
+            }
+            if (currentState !== changeState) {
+                this.sandbox.emit('husky.header.button-state', changeState);
+                currentState = changeState;
+            }
+        },
+
+        listenForChange: function() {
+            this.sandbox.dom.on('#role-form', 'change', function() {
+                this.setHeaderBar(false);
+            }.bind(this), "select, input");
+            this.sandbox.dom.on('#role-form', 'keyup', function() {
+                this.setHeaderBar(false);
+            }.bind(this), "input");
         }
     };
 });
