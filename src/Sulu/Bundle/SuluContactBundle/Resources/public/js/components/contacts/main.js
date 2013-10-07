@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontact/model/contact'], function(Contact) {
+define([
+    'sulucontact/model/contact',
+    'text!/contact/navigation/content'
+], function(Contact, contentNavigation) {
 
     'use strict';
 
@@ -85,7 +88,7 @@ define(['sulucontact/model/contact'], function(Contact) {
             });
 
             // load data and show form
-            var contact;
+            var contact = new Contact();
             if (!!this.options.id) {
                 contact = new Contact({id:this.options.id});
                 //contact = this.getModel(this.options.id);
@@ -100,14 +103,13 @@ define(['sulucontact/model/contact'], function(Contact) {
                     }.bind(this)
                 });
             } else {
-                contact = new Contact();
                 this.sandbox.start([
                     {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: contact.toJSON()}}
                 ]);
             }
 
             // delete contact
-            this.sandbox.on('sulu.contacts.contacts.delete', function(id) {
+            this.sandbox.on('sulu.contacts.contacts.delete', function() {
                 this.confirmDeleteDialog(function(wasConfirmed) {
                     if(wasConfirmed) {
                         //contact = this.getModel(id);
@@ -146,7 +148,9 @@ define(['sulucontact/model/contact'], function(Contact) {
          */
         confirmDeleteDialog : function(callbackFunction) {
             // check if callback is a function
-            if ( !!callbackFunction && typeof(callbackFunction)!=='function') { throw 'callback is not a function'; }
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
 
             // show dialog
            this.sandbox.emit('sulu.dialog.confirmation.show', {
@@ -163,13 +167,17 @@ define(['sulucontact/model/contact'], function(Contact) {
             // submit -> delete
            this.sandbox.once('husky.dialog.submit', function() {
                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) { callbackFunction(true); }
+               if (!!callbackFunction) {
+                   callbackFunction(true);
+               }
            }.bind(this));
 
             // cancel
            this.sandbox.once('husky.dialog.cancel', function() {
                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) { callbackFunction(false); }
+               if (!!callbackFunction) {
+                   callbackFunction(false);
+               }
            }.bind(this));
         },
 
@@ -183,42 +191,55 @@ define(['sulucontact/model/contact'], function(Contact) {
             navigation = {
                 'title': 'Contact',
                 'header': {
-                    'displayOption':'link',
-                    'action':'contacts/contacts'
+                    'displayOption': 'link',
+                    'action': 'contacts/contacts'
                 },
                 'hasSub': 'true',
-                'displayOption':'content',
+                'displayOption': 'content',
                 //TODO id mandatory?
                 'sub': {
                     'items': []
                 }
-            };
+            }, contents, i;
 
             if (!!id) {
-                navigation.sub.items.push({
-                    'title': 'Details',
-                    'action': 'contacts/contacts/edit:' + cssId+ '/details',
-                    'hasSub': false,
-                    'type': 'content',
-                    'selected': true,
-                    'id': 'contacts-details-' + cssId
-                });
+//                navigation.sub.items.push({
+//                    'title': 'Details',
+//                    'action': 'contacts/contacts/edit:' + cssId+ '/details',
+//                    'hasSub': false,
+//                    'type': 'content',
+//                    'selected': true,
+//                    'id': 'contacts-details-' + cssId
+//                });
+//
+//                navigation.sub.items.push({
+//                    'title': 'Permissions',
+//                    'action': 'contacts/contacts/edit:' + cssId + '/permissions',
+//                    'hasSub': false,
+//                    'type': 'content',
+//                    'id': 'contacts-permission-' + cssId
+//                });
+//
+//                navigation.sub.items.push({
+//                    'title': 'Settings',
+//                    'action': 'contacts/contacts/edit:' + cssId + '/settings',
+//                    'hasSub': false,
+//                    'type': 'content',
+//                    'id': 'contacts-settings-' + cssId
+//                });
 
-                navigation.sub.items.push({
-                    'title': 'Permissions',
-                    'action': 'contacts/contacts/edit:' + cssId + '/permissions',
-                    'hasSub': false,
-                    'type': 'content',
-                    'id': 'contacts-permission-' + cssId
-                });
+                contents = JSON.parse(contentNavigation);
 
-                navigation.sub.items.push({
-                    'title': 'Settings',
-                    'action': 'contacts/contacts/edit:' + cssId + '/settings',
-                    'hasSub': false,
-                    'type': 'content',
-                    'id': 'contacts-settings-' + cssId
-                });
+                for (i = 0; i < contents.length; i++) {
+                    // contact must be set before optional tabs can be opened
+                    navigation.sub.items.push({
+                        'title': contents[i].title,
+                        'action': 'contacts/contacts/edit:' + cssId + '/' + contents[i].action,
+                        'hasSub': false,
+                        'type': 'content',
+                        'id': 'contacts-' + contents[i].url + '-' + cssId
+                    });
+                }
             }
 
             return navigation;
