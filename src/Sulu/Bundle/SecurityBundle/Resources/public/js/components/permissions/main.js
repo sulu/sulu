@@ -88,10 +88,24 @@ define([
             }
 
             this.sandbox.util.each(data.rolesAndConfig, function(index,value){
-               var userRole = new UserRole();
-               userRole.set('role',this.roles.get(value.roleId));
-               userRole.set('locales', JSON.stringify(value.selection));
-               userModel.get('userRoles').add(userRole);
+                var userRole = new UserRole(),
+                    tmp;
+
+                if(userModel.get('userRoles').length > 0) {
+
+                    tmp = userModel.get('userRoles').findWhere(
+                        {
+                            role: this.roles.get(value.roleId)
+                        }
+                    );
+                    if(!!tmp) {
+                        userRole = tmp;
+                    }
+                }
+
+                userRole.set('role',this.roles.get(value.roleId));
+                userRole.set('locales', JSON.stringify(value.selection));
+                userModel.get('userRoles').add(userRole);
             }.bind(this));
 
 //            userModel.set('userRoles', userRoles);
