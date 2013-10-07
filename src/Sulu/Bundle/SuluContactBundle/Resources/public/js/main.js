@@ -49,6 +49,16 @@ define({
             }
         });
 
+        // show form for editing a contact
+        sandbox.mvc.routes.push({
+            route: 'contacts/contacts/edit::id/details',
+            callback: function(id){
+                this.html(
+                    '<div data-aura-component="contacts@sulucontact" data-aura-display="form" data-aura-id="' +id + '"/>'
+                );
+            }
+        });
+
         // list all accounts
         sandbox.mvc.routes.push({
             route: 'contacts/accounts',
