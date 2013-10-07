@@ -350,9 +350,6 @@ class UserControllerTest extends DatabaseTestCase
             )
         );
 
-        // TODO ???
-        // You have requested a non-existent service &quot;security.encoder_factory&quot;. (500 Internal Server Error)
-
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
