@@ -60,7 +60,7 @@ class Role
     public function __construct()
     {
     }
-    
+
     /**
      * Set name
      *
@@ -70,14 +70,14 @@ class Role
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -93,14 +93,14 @@ class Role
     public function setSystem($system)
     {
         $this->system = $system;
-    
+
         return $this;
     }
 
     /**
      * Get system
      *
-     * @return string 
+     * @return string
      */
     public function getSystem()
     {
@@ -116,14 +116,14 @@ class Role
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -139,14 +139,14 @@ class Role
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -156,7 +156,7 @@ class Role
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -172,7 +172,7 @@ class Role
     public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
@@ -195,7 +195,7 @@ class Role
     public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
@@ -218,7 +218,7 @@ class Role
     public function addPermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions)
     {
         $this->permissions[] = $permissions;
-    
+
         return $this;
     }
 
@@ -235,7 +235,7 @@ class Role
     /**
      * Get permissions
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPermissions()
     {
@@ -251,7 +251,7 @@ class Role
     public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\Role $userRoles)
     {
         $this->userRoles[] = $userRoles;
-    
+
         return $this;
     }
 
@@ -268,7 +268,7 @@ class Role
     /**
      * Get userRoles
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUserRoles()
     {
