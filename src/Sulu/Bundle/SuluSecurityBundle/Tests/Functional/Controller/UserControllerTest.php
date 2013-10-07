@@ -470,4 +470,82 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('de', $response->items[0]->locale);
 
     }
+
+    public function testPutWithRemovedRoles()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'PUT',
+            '/security/api/users/1',
+            array(
+                'username' => 'manager',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                ),
+                'userRoles' => array(
+                    array(
+                        'id' => 1,
+                        'role' => array(
+                            'id' => 1
+                        ),
+                        'locales' => array('de', 'en')
+                    ),
+                    array(
+                        'id' => 2,
+                        'role' => array(
+                            'id' => 2
+                        ),
+                        'locales' => array('en')
+                    ),
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('manager', $response->username);
+        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals('en', $response->locale);
+        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
+        $this->assertEquals('de', $response->userRoles[0]->locales[0]);
+        $this->assertEquals('en', $response->userRoles[0]->locales[1]);
+        $this->assertEquals('Role2', $response->userRoles[1]->role->name);
+        $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+
+        $client->request(
+            'PUT',
+            '/security/api/users/1',
+            array(
+                'username' => 'manager',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => 1
+                ),
+                'userRoles' => array(
+                    array(
+                        'id' => 1,
+                        'role' => array(
+                            'id' => 1
+                        ),
+                        'locales' => array('de', 'en')
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('manager', $response->username);
+        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals('en', $response->locale);
+        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
+        $this->assertEquals('de', $response->userRoles[0]->locales[0]);
+        $this->assertEquals('en', $response->userRoles[0]->locales[1]);
+
+        $this->assertEquals(1, sizeof($response->userRoles));
+    }
 }
