@@ -130,7 +130,7 @@ define([
 
             userModel.save(null, {
                 success: function() {
-                    this.sandbox.emit('sulu.router.navigate', '/contacts/contacts');
+                    this.sandbox.emit('sulu.router.navigate', '/contacts/contacts/edit:'+userModel.get('contact').get('id')+'/permissions');
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
