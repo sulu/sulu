@@ -58,8 +58,15 @@ define([
         save: function(data) {
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
-            var userModel = User.findOrCreate(data);
-            userModel.url = '/security/api/users';
+            var userModel = User.findOrCreate(data.user);
+
+            if(!!data.user.id) { // PUT
+                userModel.url = '/security/api/users/'+data.user.id;
+            } else { // POST
+                userModel.url = '/security/api/user';
+            }
+
+            // TODO roles and config
 
             userModel.save(null, {
                 success: function() {
@@ -129,6 +136,7 @@ define([
                     this.startComponent();
                 }.bind(this),
                 error: function() {
+                    // TODO check status code
                     this.startComponent();
                 }.bind(this)
             });

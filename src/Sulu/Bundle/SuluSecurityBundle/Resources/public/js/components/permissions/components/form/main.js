@@ -89,11 +89,10 @@ define(['text!/security/template/permission/form'], function(Template) {
 
             this.sandbox.dom.on(this.formId, 'change', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "select, input");
+            }.bind(this), 'select, input');
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "input");
-
+            }.bind(this), 'input');
         },
 
 
@@ -228,28 +227,25 @@ define(['text!/security/template/permission/form'], function(Template) {
         save: function() {
             // FIXME  Use datamapper instead
 
-            var id = '',
-                data;
-
-            if(!!this.user) {
-                id = this.user.id;
-            }
-
-
+            var data;
 
             if (this.sandbox.form.validate(this.formId)) {
-
-
 
                 this.sandbox.logger.log('validation succeeded');
                 this.getPassword();
                 data = {
-                    id: id,
-                    username: this.sandbox.dom.val('#username'),
-                    password: this.password,
-                    contact: this.contact,
+                    user : {
+                        username: this.sandbox.dom.val('#username'),
+                        password: this.password,
+                        contact: this.contact
+                    },
+
                     rolesAndConfig: this.getSelectedRolesAndLanguages()
                 };
+
+                if(!!this.user && !!this.user.id) {
+                    data.user.id = this.user.id;
+                }
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
             }
@@ -279,7 +275,7 @@ define(['text!/security/template/permission/form'], function(Template) {
         },
 
         getPassword: function(){
-            this.sandbox.emit('husky.password.fields.instance1.get.passwords', function(password1, password2){
+            this.sandbox.emit('husky.password.fields.instance1.get.passwords', function(password1){
                 this.password = password1;
             }.bind(this));
         },
@@ -328,9 +324,11 @@ define(['text!/security/template/permission/form'], function(Template) {
         },
 
         getSelectRolesOfUser: function(){
-            this.sandbox.util.each(this.user.userRoles, function(index,value) {
-                this.selectedRoles.push(value.role.id);
-            }.bind(this));
+            if(!!this.user && !!this.user.userRoles) {
+                this.sandbox.util.each(this.user.userRoles, function(index,value) {
+                    this.selectedRoles.push(value.role.id);
+                }.bind(this));
+            }
         },
 
         prepareTableHeader: function() {
@@ -351,14 +349,7 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         prepareTableRow: function(role){
 
-            var $tableRow,
-                $permissions = [];
-
-            // TODO why multiple permissions?
-
-            this.sandbox.util.each(role.permissions[0].permissions, function(index, value){
-                $permissions.push(this.preparePermission(index, value));
-            }.bind(this));
+            var $tableRow;
 
             if (this.selectedRoles.indexOf(role.id) >= 0) {
                 $tableRow = this.template.tableRow(role.id, role.name, true);
@@ -366,9 +357,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                 $tableRow = this.template.tableRow(role.id, role.name, false);
             }
 
-            $tableRow = this.sandbox.dom.append($tableRow,  $permissions);
-
-            return $tableRow[0];
+            return $tableRow;
         },
 
         preparePermission: function(permissionName, isActive) {
@@ -411,7 +400,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                             '<th width="5%"><input id="selectAll" type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></th>',
                             '<th width="30%">',thLabel1,'</th>',
                             '<th width="45%">',thLabel2,'</th>',
-                            '<th width="20%" colspan=\'7\'>',thLabel3,'</th>',
+                            '<th width="20%">',thLabel3,'</th>',
                         '</tr>',
                     '</thead>'
                 ].join('');
@@ -427,6 +416,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                         '<td><input type="checkbox" class="custom-checkbox is-selected" checked/><span class="custom-checkbox-icon"></span></td>',
                         '<td>', title, '</td>',
                         '<td id="languageSelector', id, '"></td>',
+                        '<td></td>',
                         '</tr>'
                     ].join('');
                 } else {
@@ -435,17 +425,12 @@ define(['text!/security/template/permission/form'], function(Template) {
                         '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
                         '<td>', title, '</td>',
                         '<td id="languageSelector', id, '"></td>',
+                        '<td></td>',
                         '</tr>'
                     ].join('');
                 }
 
                 return $row;
-            },
-            permission:function(iconName, isActive){
-
-                return '<td><span class="icon-'+iconName+' '+isActive+'"></span></td>';
-
-
             }
         }
 
