@@ -65,6 +65,9 @@ define([], function() {
                 var formObject = this.sandbox.form.create(form);
                 formObject.initialized.then(function() {
                     this.sandbox.form.setData(form, data);
+
+                    this.sandbox.dom.find('#emails .email-item:first .remove-email').remove();
+
                     this.sandbox.start(form);
 
                     this.sandbox.form.addConstraint(form, '#emails .email-item:first input.email-value', 'required', {required: true});
