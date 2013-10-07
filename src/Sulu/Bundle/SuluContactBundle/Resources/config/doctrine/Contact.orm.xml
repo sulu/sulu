@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\ContactBundle\Entity\Contact" table="co_contacts">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Contact" table="co_contacts" repository-class="Sulu\Bundle\ContactBundle\Entity\ContactRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
