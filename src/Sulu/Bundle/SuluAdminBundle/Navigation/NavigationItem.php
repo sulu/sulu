@@ -72,15 +72,35 @@ class NavigationItem implements \Iterator
     protected $position;
 
     /**
+     * The type of the content (if $type="content")
+     * @var string
+     */
+    protected $contentType;
+
+    /**
+     * Defines when items should be shown
+     * @var array
+     */
+    protected $displayOptions;
+
+
+    /**
      * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
+     * @param array $displayOptions if null -> default is array('new', 'edit')
      */
-    function __construct($name, $parent = null)
+    function __construct($name, $parent = null, array $displayOptions = null)
     {
         $this->name = $name;
 
         if ($parent != null) {
             $parent->addChild($this);
+        }
+
+        if ($displayOptions != null) {
+            $this->displayOptions = $displayOptions;
+        } else {
+            $this->displayOptions = array('new','edit');
         }
     }
 
@@ -227,6 +247,58 @@ class NavigationItem implements \Iterator
     public function getHeaderTitle()
     {
         return $this->headerTitle;
+    }
+
+    /**
+     * Sets the type of the content (if contentnavigation)
+     * @param string $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * Returns the type of the content (if contentnavigation)
+     * @return string
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * Sets when item should be shown
+     * @param array $displayOptions
+     */
+    public function setDisplayOptions($displayOptions)
+    {
+        $this->displayOptions = $displayOptions;
+    }
+
+    /**
+     * Returns when to show item
+     * @return array
+     */
+    public function getDisplayOptions()
+    {
+        return $this->displayOptions;
+    }
+
+    /**
+     * @param int $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 
     /**
@@ -398,6 +470,8 @@ class NavigationItem implements \Iterator
             'action' => $this->getAction(),
             'hasSub' => $this->hasChildren(),
             'type' => $this->getType(),
+            'contentType' => $this->getContentType(),
+            'displayOptions' => $this->getDisplayOptions(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
