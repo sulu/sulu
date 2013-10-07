@@ -301,6 +301,7 @@ define(['text!/security/template/permission/form'], function(Template) {
 
             rows = this.sandbox.dom.find('tbody tr', '#rolesTable');
 
+            // TODO get element for dropdown from portal
 
             this.sandbox.util.each(rows, function(index,value){
                 var id = this.sandbox.dom.data(value,'id');
