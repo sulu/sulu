@@ -210,6 +210,38 @@
         <source>contact.accounts.company</source>
         <target>Übergeordnetes Unternehmen</target>
       </trans-unit>
+      <trans-unit id="5637f41956c2f7c9c1fbf0728db058cc" resname="security.roles.title">
+        <source>security.roles.title</source>
+        <target>Rollen &amp; Berechtigungen</target>
+      </trans-unit>
+      <trans-unit id="ae201470bf51b79a16ef61543d22b1df" resname="security.roles.name">
+        <source>security.roles.name</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="37a1d19f7da5a16c77f7d87b2609ec53" resname="security.roles.system">
+        <source>security.roles.system</source>
+        <target>System</target>
+      </trans-unit>
+      <trans-unit id="ad4157632cc1c2a49777905f21888c34" resname="security.roles.godMode">
+        <source>security.roles.godMode</source>
+        <target>Gott Modus</target>
+      </trans-unit>
+      <trans-unit id="28cf83ef8f64bc60c4d3f4f12a6de93c" resname="security.roles.godModeDescription">
+        <source>security.roles.godModeDescription</source>
+        <target>Das ist der Gott Modus</target>
+      </trans-unit>
+      <trans-unit id="7bfc288be43d60933cc73693762f7bbf" resname="security.roles.section">
+        <source>security.roles.section</source>
+        <target>Sektion</target>
+      </trans-unit>
+      <trans-unit id="01692babbb244c70554f6be226a8b8d4" resname="security.roles.permissions">
+        <source>security.roles.permissions</source>
+        <target>Berechtigungen</target>
+      </trans-unit>
+      <trans-unit id="aa9d596361fe589c984464479c6198cb" resname="security.roles.all">
+        <source>security.roles.all</source>
+        <target>Alle</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
