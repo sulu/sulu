@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
@@ -30,18 +31,27 @@ abstract class ContentNavigation
         $this->navigation[] = $navigationItem;
     }
 
+
+    public function addNavigation(ContentNavigationInterface $navigation)
+    {
+        $this->navigation = array_merge(
+            $this->navigation,
+            $navigation->getNavigationItems()
+        );
+    }
+
     public function getNavigation()
     {
         return $this->navigation;
     }
 
-    public function toArray($type = null)
+    public function toArray($contentType = null)
     {
         $navigation = array();
 
         /** @var $navigationItem NavigationItem */
         foreach ($this->navigation as $navigationItem) {
-            if (null === $type || $navigationItem->getType() == $type) {
+            if (null === $contentType || $navigationItem->getContentType() == $contentType) {
                 $navigation[] = $navigationItem->toArray();
             }
         }
