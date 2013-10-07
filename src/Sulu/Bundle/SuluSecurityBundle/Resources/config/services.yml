@@ -11,6 +11,7 @@ parameters:
     sulu_security.admin.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin
     sulu_security.mask_converter.class: Sulu\Bundle\SecurityBundle\Permission\MaskConverter
     sulu_security.salt_generator.class: Sulu\Bundle\SecurityBundle\Permission\SaltGenerator
+    sulu_security.permission_voter.class: Sulu\Bundle\SecurityBundle\Permission\PermissionVoter
 
 services:
     sulu_security.admin:
@@ -24,3 +25,10 @@ services:
 
     sulu_security.salt_generator:
         class: %sulu_security.salt_generator.class%
+
+    sulu_security.permission_voter:
+        class: %sulu_security.permission_voter.class%
+        arguments: [%permissions%]
+        public: false
+        tags:
+            - { name: security.voter }
