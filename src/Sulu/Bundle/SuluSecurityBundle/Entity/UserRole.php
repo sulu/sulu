@@ -35,7 +35,6 @@ class UserRole
 
     /**
      * @var \Sulu\Bundle\SecurityBundle\Entity\User
-     * @Expose
      */
     private $user;
 
