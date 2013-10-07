@@ -124,12 +124,14 @@ define([
                 }
 
                 userRole.set('role', this.roles.get(value.roleId));
-                userRole.set('locales', JSON.stringify(value.selection));
+                userRole.set('locales', value.selection);
                 userModel.get('userRoles').add(userRole);
             }.bind(this));
 
             userModel.save(null, {
                 success: function(model) {
+                    // TODO set inside form
+                    this.sandbox.emit('husky.header.button-state', 'standard');
                     this.sandbox.emit('sulu.router.navigate', '/contacts/contacts/edit:'+model.get('contact').get('id')+'/permissions');
                 }.bind(this),
                 error: function() {

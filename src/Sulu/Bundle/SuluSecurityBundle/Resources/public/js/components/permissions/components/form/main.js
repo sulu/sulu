@@ -91,6 +91,7 @@ define(['text!/security/template/permission/form'], function(Template) {
             this.sandbox.dom.on(this.formId, 'change', function() {
                 this.setHeaderBar(false);
             }.bind(this), 'select, input');
+
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
             }.bind(this), 'input');
@@ -124,22 +125,12 @@ define(['text!/security/template/permission/form'], function(Template) {
 
         initializePasswordFields: function() {
 
-            var pass = '';
-
-            if(!!this.user) {
-                pass = this.user.password;
-            }
-
             this.sandbox.start([
                 {
                     name: 'password-fields@husky',
                     options: {
                         instanceName: "instance1",
-                        el: '#password-component',
-                        values: {
-                            inputPassword1: pass,
-                            inputPassword2: pass
-                        }
+                        el: '#password-component'
                     }
                 }
             ]);
@@ -227,12 +218,12 @@ define(['text!/security/template/permission/form'], function(Template) {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
-            this.sandbox.on('sulu.user.permissions.save', function(id, data) {
-                if (!this.options.data.id) {
-                    this.options.data = data;
-                }
-                this.setHeaderBar(true);
-            }, this);
+//            this.sandbox.on('sulu.user.permissions.save', function(data) {
+//                if (!this.options.data.id) {
+//                    this.options.data = data;
+//                }
+//                this.setHeaderBar(true);
+//            }, this);
 
             this.sandbox.on('husky.button.save.click', function() {
                 this.save();
@@ -251,7 +242,6 @@ define(['text!/security/template/permission/form'], function(Template) {
                 data = {
                     user : {
                         username: this.sandbox.dom.val('#username'),
-                        password: this.password,
                         contact: this.contact
                     },
 
@@ -261,6 +251,10 @@ define(['text!/security/template/permission/form'], function(Template) {
 
                 if(!!this.user && !!this.user.id) {
                     data.user.id = this.user.id;
+                }
+
+                if(!!this.password && this.password !== '') {
+                    data.user.password = this.password;
                 }
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
@@ -320,7 +314,8 @@ define(['text!/security/template/permission/form'], function(Template) {
             // TODO get element for dropdown from portal
 
             this.sandbox.util.each(rows, function(index,value){
-                var id = this.sandbox.dom.data(value,'id');
+                var id = this.sandbox.dom.data(value,'id'),
+                    preSelectedValues = this.getUserRoleLocalesWithRoleId(id);
 
                 this.sandbox.start([
                     {
@@ -330,11 +325,31 @@ define(['text!/security/template/permission/form'], function(Template) {
                             instanceName: 'languageSelector'+id,
                             defaultLabel: 'Please choose ...',
                             value: 'name',
-                            data: ['Deutsch', 'English', 'Spanish', 'Italienisch']
+                            data: ["Deutsch", "English", "Spanish", "Italienisch"],
+                            preSelectedElements: preSelectedValues
                         }
                     }
                 ]);
             }.bind(this));
+        },
+
+        getUserRoleLocalesWithRoleId:function(id){
+
+            var locales;
+            if(!!this.user && this.user.userRoles) {
+                this.sandbox.util.each(this.user.userRoles, function(index,value){
+                    if(value.role.id === id) {
+                        locales = value.locales;
+                        return false;
+                    }
+                }.bind(this));
+            }
+
+            if(!!locales) {
+                return locales;
+            } else {
+                return [];
+            }
         },
 
         getSelectRolesOfUser: function(){
