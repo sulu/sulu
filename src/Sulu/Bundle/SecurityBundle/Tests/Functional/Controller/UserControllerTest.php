@@ -233,8 +233,6 @@ class UserControllerTest extends DatabaseTestCase
             )
         );
 
-       // TODO ???
-       // post_user route why user and not users?
 
         $response = json_decode($client->getResponse()->getContent());
 
