@@ -45,8 +45,11 @@ define(function() {
         bindCustomEvents: function() {
             // listening for navigation events
             this.sandbox.on('sulu.router.navigate', function(route) {
+                // reset store for cleaning environment
+                this.sandbox.mvc.Store.reset();
+
                 router.navigate(route, {trigger: true});
-            });
+            }.bind(this));
 
             // init navigation
             this.sandbox.on('navigation.item.content.show', function(event) {
