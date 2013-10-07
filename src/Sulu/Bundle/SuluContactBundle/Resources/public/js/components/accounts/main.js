@@ -23,16 +23,16 @@ define(['sulucontact/model/account'], function(Account) {
             }
         },
 
-        getModel: function(id) {
-            // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
-            var packageModel = Account.findOrCreate(id);
-            if (!packageModel) {
-                packageModel = new Account({
-                    id: id
-                });
-            }
-            return packageModel;
-        },
+//        getModel: function(id) {
+//            // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
+//            var packageModel = Account.findOrCreate(id);
+//            if (!packageModel) {
+//                packageModel = new Account({
+//                    id: id
+//                });
+//            }
+//            return packageModel;
+//        },
 
         renderList: function() {
 
@@ -62,7 +62,7 @@ define(['sulucontact/model/account'], function(Account) {
                     if (wasConfirmed) {
                         this.sandbox.emit('husky.header.button-state', 'loading-add-button');
                         ids.forEach(function(id) {
-                            var account = this.getModel(id);
+                            var account = new Account({id: id});
                             account.destroy({
                                 success: function() {
                                     this.sandbox.emit('husky.datagrid.row.remove', id);
@@ -86,7 +86,8 @@ define(['sulucontact/model/account'], function(Account) {
             // load data and show form
             var account;
             if (!!this.options.id) {
-                account = this.getModel(this.options.id);
+                account = new Account({id: this.options.id});
+                //account = this.getModel(this.options.id);
                 account.fetch({
                     success: function(model) {
                         this.sandbox.start([
@@ -105,10 +106,10 @@ define(['sulucontact/model/account'], function(Account) {
             }
 
             // delete contact
-            this.sandbox.on('sulu.contacts.accounts.delete', function(id) {
+            this.sandbox.on('sulu.contacts.accounts.delete', function() {
                 this.confirmDeleteDialog(function(wasConfirmed) {
                     if (wasConfirmed) {
-                        account = this.getModel(id);
+                        //account = this.getModel(id);
                         this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
                         account.destroy({
                             success: function() {
@@ -121,11 +122,11 @@ define(['sulucontact/model/account'], function(Account) {
 
             // save contact
             this.sandbox.on('sulu.contacts.accounts.save', function(data) {
-                if (!!data.id) {
-                    account = this.getModel(data.id);
-                } else {
-                    account = new Account();
-                }
+//                if (!!data.id) {
+//                    account = this.getModel(data.id);
+//                } else {
+//                    account = new Account();
+//                }
                 this.sandbox.emit('husky.header.button-state', 'loading-save-button');
                 account.set(data);
                 account.save(null, {
