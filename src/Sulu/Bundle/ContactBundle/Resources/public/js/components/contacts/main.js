@@ -83,9 +83,11 @@ define([
         renderForm: function() {
 
             // show navigation submenu
-           this.sandbox.emit('navigation.item.column.show', {
-                data: this.getTabs(this.options.id)
-            });
+            this.getTabs(this.options.id, function(navigation) {
+                this.sandbox.emit('navigation.item.column.show', {
+                    data: navigation
+                });
+            }.bind(this));
 
             // load data and show form
             var contact = new Contact();
@@ -183,7 +185,7 @@ define([
 
 
         // Navigation
-        getTabs: function(id) {
+        getTabs: function(id, callback) {
             //TODO Simplify this task for bundle developer?
             var cssId = id || 'new',
 
@@ -200,49 +202,32 @@ define([
                 'sub': {
                     'items': []
                 }
-            }, contents, i;
+            }, contents = JSON.parse(contentNavigation);
 
-            if (!!id) {
-//                navigation.sub.items.push({
-//                    'title': 'Details',
-//                    'action': 'contacts/contacts/edit:' + cssId+ '/details',
-//                    'hasSub': false,
-//                    'type': 'content',
-//                    'selected': true,
-//                    'id': 'contacts-details-' + cssId
-//                });
-//
-//                navigation.sub.items.push({
-//                    'title': 'Permissions',
-//                    'action': 'contacts/contacts/edit:' + cssId + '/permissions',
-//                    'hasSub': false,
-//                    'type': 'content',
-//                    'id': 'contacts-permission-' + cssId
-//                });
-//
-//                navigation.sub.items.push({
-//                    'title': 'Settings',
-//                    'action': 'contacts/contacts/edit:' + cssId + '/settings',
-//                    'hasSub': false,
-//                    'type': 'content',
-//                    'id': 'contacts-settings-' + cssId
-//                });
+            this.sandbox.emit('navigation.url', function(url) {
+                this.sandbox.util.foreach(contents, function(content) {
+                    if (!!id) {
+                        // TODO: FIXIT: ugly removal
+                        var strSearch = 'edit:' + id;
+                        url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
+                    }
+                    if (!!id || content.displayOptions.indexOf('new') >= 0) {
+                        // contact must be set before optional tabs can be opened
+                        navigation.sub.items.push({
+                            'title': content.title,
+                            'action': url + '/' + content.action,
+                            'hasSub': false,
+                            'type': 'content',
+                            'displayOption': 'content',
+                            'id': 'contacts-' + content.id + '-' + cssId
+                        });
+                    }
+                }.bind(this));
 
-                contents = JSON.parse(contentNavigation);
-
-                for (i = 0; i < contents.length; i++) {
-                    // contact must be set before optional tabs can be opened
-                    navigation.sub.items.push({
-                        'title': contents[i].title,
-                        'action': 'contacts/contacts/edit:' + cssId + '/' + contents[i].action,
-                        'hasSub': false,
-                        'type': 'content',
-                        'id': 'contacts-' + contents[i].url + '-' + cssId
-                    });
+                if (typeof callback === 'function') {
+                    callback(navigation);
                 }
-            }
-
-            return navigation;
+            }.bind(this));
         }
 
     };

@@ -21,8 +21,10 @@ class SuluContactContentNavigation extends ContentNavigation
         parent::__construct();
 
         $details = new NavigationItem('Details');
-        $details->setType('contact');
+        // TODO: add new type  for contents
+        $details->setContentType('contact');
         $details->setAction('details');
+
 
         $this->addNavigationItem($details);
     }
