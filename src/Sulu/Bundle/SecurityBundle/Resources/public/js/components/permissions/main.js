@@ -13,8 +13,9 @@ define([
     'sulusecurity/models/role',
     'sulusecurity/models/permission',
     'sulucontact/model/contact',
-    './collections/roles'
-], function(RelationalStore, User, Role, Permission, Contact, Roles) {
+    './collections/roles',
+    './models/userRole'
+], function(RelationalStore, User, Role, Permission, Contact, Roles, UserRole) {
 
     'use strict';
 
@@ -58,6 +59,26 @@ define([
         save: function(data) {
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
+            var roles;
+
+            if(!!this.roles) {
+                roles = new Roles();
+                roles.fetch({
+                    success: function(rolesCollection) {
+                        this.roles = rolesCollection;
+                        this.buildUserAndRoles(data);
+                    }.bind(this),
+                    error: function() {
+                        // TODO error message
+                    }
+                });
+            } else {
+                this.buildUserAndRoles(data);
+            }
+        },
+
+        buildUserAndRoles: function(data) {
+
             var userModel = User.findOrCreate(data.user);
 
             if(!!data.user.id) { // PUT
@@ -66,7 +87,14 @@ define([
                 userModel.url = '/security/api/user';
             }
 
-            // TODO roles and config
+            this.sandbox.util.each(data.rolesAndConfig, function(index,value){
+               var userRole = new UserRole();
+               userRole.set('role',this.roles.get(value.roleId));
+               userRole.set('locales', JSON.stringify(value.selection));
+               userModel.get('userRoles').add(userRole);
+            }.bind(this));
+
+//            userModel.set('userRoles', userRoles);
 
             userModel.save(null, {
                 success: function() {
