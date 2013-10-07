@@ -163,8 +163,6 @@ define([], function() {
             },
 
             submit: function() {
-                this.sandbox.logger.log('save Model');
-
                 if (this.sandbox.form.validate(form)) {
                     var data = {},
                         $items = this.sandbox.dom.find('#catalogues .catalogue-item'),
@@ -219,7 +217,6 @@ define([], function() {
 
             // @var Bool saved - defines if saved state should be shown
             setHeaderBar: function(saved) {
-
                 var changeType, changeState,
                     ending = (!!this.options.data && !!this.options.data.id) ? 'Delete' : '';
 
@@ -249,6 +246,7 @@ define([], function() {
                 this.sandbox.dom.on(form, 'change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "select, input");
+
                 this.sandbox.dom.on(form, 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input");

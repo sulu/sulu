@@ -31,13 +31,11 @@ define([
 
             RelationalStore.reset();
 
-            console.log(catalogueIdToDelete, "packageIdsDelete");
 
             var catalogueModel = new Catalogue({id: catalogueIdToDelete});
             catalogueModel.destroy({
                 error: function() {
                     // TODO Output error message
-                    console.log("error when deleting packages");
                 }
             });
 
@@ -73,9 +71,7 @@ define([
 
             sandbox = this.sandbox;
 
-            if (this.options.display === 'list') {
-                // nothing to do
-            } else if (this.options.display === 'form') {
+            if (this.options.display === 'form') {
                 this.renderForm();
             } else {
                 throw 'display type wrong';
@@ -93,22 +89,19 @@ define([
                 selectedCatalogue = catalogues.get(catalogueId);
                 if (!!selectedCatalogue) {
                     this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageModel.get('id') + '/details:' + catalogueId);
-                } else {
-                    // TODO
-                    console.log("error - unknown catalogue")
-                }
+                } //TODO no catalogue
 
-            }, this);
+            }.bind(this));
 
             // save
             this.sandbox.on('sulu.translate.translations.save', function(updatedTranslations, codesToDelete) {
                 this.saveTranslations(updatedTranslations, codesToDelete);
-            }, this);
+            }.bind(this));
 
             // delete packages
             this.sandbox.on('sulu.translate.catalogue.delete', function(catalogueId) {
                 this.deleteCatalogue(catalogueId);
-            }, this);
+            }.bind(this));
 
         },
 
@@ -129,10 +122,7 @@ define([
                     }.bind(this)
                 });
 
-            } else {
-
-                // TODO error message
-            }
+            }  // TODO error message
         },
 
         loadCatalogues: function(packageId) {
@@ -161,11 +151,7 @@ define([
                         }
                         this.loadTranslations(selectedCatalogue.get('id'));
 
-                    } else {
-                        // TODO no catalogue exists
-                        console.log("no existing catalogue");
-                    }
-
+                    } // TODO no catalogue exists
                 }.bind(this),
 
                 error: function() {
@@ -200,16 +186,13 @@ define([
             });
         },
 
-
         saveTranslations: function(updatedTranslations, codesToDelete) {
-
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             this.sandbox.util.each(codesToDelete, function(index) {
                 var code = new Code({id: codesToDelete[index]});
                 code.destroy({
                     success: function() {
-                        console.log("deleted code");
                     },
                     error: function() {
                         // TODO errormessage/-handling

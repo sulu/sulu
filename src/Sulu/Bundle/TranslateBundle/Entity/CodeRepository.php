@@ -69,7 +69,7 @@ class CodeRepository extends EntityRepository
 
     public function findByCatalogueWithSuggestion($catalogueId)
     {
-        // FIXME !!! Don't use sub queries !!!
+        // FIXME Don't use sub queries
 
         $dqlDefaultCatalogue = 'SELECT ca2.id
                                 FROM Sulu\Bundle\TranslateBundle\Entity\Catalogue ca1

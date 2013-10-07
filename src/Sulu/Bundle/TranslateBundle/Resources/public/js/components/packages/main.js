@@ -35,18 +35,37 @@ define([
         bindCustomEvents: function() {
             // delete contact
             this.sandbox.on('sulu.translate.package.delete', function(id) {
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if (wasConfirmed) {
-                        var packageModel = this.getModel(id);
+                this.del(id);
+            }, this);
 
-                        this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
-                        packageModel.destroy({
-                            success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'settings/translate');
-                            }.bind(this)
-                        });
-                    }
-                }.bind(this));
+            // save the current package
+            this.sandbox.on('sulu.translate.package.save', function(data) {
+                this.save(data);
+            }, this);
+
+            // wait for navigation events
+            this.sandbox.on('sulu.translate.package.load', function(id) {
+                this.load(id);
+            }, this);
+
+            // add new contact
+            this.sandbox.on('sulu.translate.package.new', function() {
+                this.add();
+            }, this);
+
+            // save translations
+            this.sandbox.on('sulu.translate.translations.save', function(updatedTranslations, codesToDelete) {
+                this.saveTranslations(updatedTranslations, codesToDelete);
+            }, this);
+
+            // delete selected contacts
+            this.sandbox.on('sulu.translate.packages.delete', function(ids) {
+                this.delPackages(ids);
+            }, this);
+
+            // selected catalogue in select-field changed
+            this.sandbox.on('sulu.translate.catalogue.changed', function(packageId, catalogueId) {
+                this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageId + '/details:' + catalogueId);
             }, this);
         },
 
@@ -66,54 +85,22 @@ define([
             this.sandbox.start([
                 {name: 'packages/components/list@sulutranslate', options: { el: this.$el}}
             ]);
-
-            // wait for navigation events
-            this.sandbox.on('sulu.translate.package.load', function(id) {
-                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-                this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + id + '/settings');
-            }, this);
-
-            // add new contact
-            this.sandbox.on('sulu.translate.package.new', function() {
-                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-                this.sandbox.emit('sulu.router.navigate', 'settings/translate/add');
-            }, this);
-
-            // delete selected contacts
-            this.sandbox.on('sulu.translate.packages.delete', function(ids) {
-                if (ids.length < 1) {
-                    this.sandbox.emit('sulu.dialog.error.show', 'No package selected for Deletion');
-                    return;
-                }
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if (wasConfirmed) {
-                        this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-
-                        ids.forEach(function(id) {
-                            var packageModel = this.getModel(id);
-
-                            packageModel.destroy({
-                                success: function() {
-                                    this.sandbox.emit('husky.datagrid.row.remove', id);
-                                }.bind(this)
-                            });
-                        }.bind(this));
-                        this.sandbox.emit('husky.header.button-state', 'standard');
-                    }
-                });
-            }, this);
-
         },
 
         renderSettings: function() {
             var packageModel;
             if (!!this.options.id) {
-                 packageModel = this.getModel(this.options.id);
+                packageModel = this.getModel(this.options.id);
 
                 packageModel.fetch({
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'packages/components/settings@sulutranslate', options: { el: this.$el, data: model.toJSON()}}
+                            {
+                                name: 'packages/components/settings@sulutranslate',
+                                options: {
+                                    el: this.$el, data: model.toJSON()
+                                }
+                            }
                         ]);
                     }.bind(this),
                     error: function() {
@@ -123,32 +110,14 @@ define([
             } else {
                 packageModel = new Package();
                 this.sandbox.start([
-                    {name: 'packages/components/settings@sulutranslate', options: { el: this.$el, data: packageModel.toJSON()}}
+                    {
+                        name: 'packages/components/settings@sulutranslate',
+                        options: {
+                            el: this.$el, data: packageModel.toJSON()
+                        }
+                    }
                 ]);
             }
-
-            // save contact
-            this.sandbox.on('sulu.translate.package.save', function(data) {
-                var packageModel = new Package();
-                if (!!data.id) {
-                    packageModel = this.getModel(data.id);
-                }
-
-                this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-                packageModel.set(data);
-                packageModel.save(null, {
-                    // on success save contacts id
-                    success: function(response) {
-                        var model = response.toJSON();
-                        this.sandbox.emit('husky.header.button-state', 'standard');
-                        //this.sandbox.emit('sulu.translate.package.saved', model.id, model);
-                        this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + model.id + '/settings');
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while saving profile");
-                    }.bind(this)
-                });
-            }, this);
         },
 
         renderDetails: function() {
@@ -164,14 +133,52 @@ define([
                     }.bind(this)
                 });
             }
+        },
 
-            // save
-            this.sandbox.on('sulu.translate.translations.save', this.saveTranslations.bind(this));
+        add: function() {
+            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            this.sandbox.emit('sulu.router.navigate', 'settings/translate/add');
+        },
 
-            // selected catalogue in select-field changed
-            this.sandbox.on('sulu.translate.catalogue.changed', function(packageId, catalogueId) {
-                this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + packageId + '/details:' + catalogueId);
-            }, this);
+        load: function(id) {
+            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + id + '/settings');
+        },
+
+        save: function(data) {
+            var packageModel = new Package();
+            if (!!data.id) {
+                packageModel = this.getModel(data.id);
+            }
+
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            packageModel.set(data);
+            packageModel.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    this.sandbox.emit('sulu.translate.package.saved', model.id, model);
+                    this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + model.id + '/settings');
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
+        },
+
+        del: function(id) {
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    var packageModel = this.getModel(id);
+
+                    this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
+                    packageModel.destroy({
+                        success: function() {
+                            this.sandbox.emit('sulu.router.navigate', 'settings/translate');
+                        }.bind(this)
+                    });
+                }
+            }.bind(this));
         },
 
         loadCatalogues: function(packageModel) {
@@ -238,8 +245,30 @@ define([
                 this.translations.save(this.sandbox, updatedTranslations);
             }
 
-            this.sandbox.emit('husky.header.button-state', 'standard');
+            this.sandbox.emit('sulu.translate.translations.saved');
+        },
 
+        delPackages: function(ids) {
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show', 'No package selected for Deletion');
+                return;
+            }
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+
+                    ids.forEach(function(id) {
+                        var packageModel = this.getModel(id);
+
+                        packageModel.destroy({
+                            success: function() {
+                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                            }.bind(this)
+                        });
+                    }.bind(this));
+                    this.sandbox.emit('husky.header.button-state', 'standard');
+                }
+            });
         },
 
         /**

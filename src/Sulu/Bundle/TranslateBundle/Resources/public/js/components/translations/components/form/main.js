@@ -8,9 +8,8 @@
  */
 
 define([
-    'text!/translate/template/translation/form',
-    'mvc/relationalstore'
-], function(formTemplate, RelationalStore) {
+    'text!/translate/template/translation/form'
+], function(formTemplate) {
 
     'use strict';
 
@@ -23,9 +22,6 @@ define([
         view: true,
 
         initialize: function() {
-            this.sandbox.off(); // FIXME automate this call
-            RelationalStore.reset();
-
             this.initializeHeader();
             this.render();
         },
@@ -41,7 +37,8 @@ define([
 
             this.sandbox.dom.html(this.options.el, template);
 
-            this.initFormEvents();
+            this.bindDOMEvents();
+            this.bindCustomEvents();
             this.initSelectCatalogues();
             this.initVisibilityOptions();
 
@@ -62,8 +59,7 @@ define([
             ]);
         },
 
-        initFormEvents: function() {
-
+        bindDOMEvents: function() {
             // add row
             this.sandbox.dom.on('.add-code', 'click', function(event) {
                 this.addRow(event);
@@ -82,28 +78,20 @@ define([
 
             // automatic resize of textareas
             this.sandbox.dom.on('#codes-form', 'keyup', function(event) {
-
-                // TODO test it and do it on startup
-                //var TEXTAREA_LINE_HEIGHT = 13,
-                var textarea = event.currentTarget,
-                    newHeight = textarea.scrollHeight,
-                    currentHeight = textarea.clientHeight;
-
-                if (newHeight > currentHeight) {
-                    textarea.style.height = newHeight + 5 + 'px';
-                }
-
+                this.resizeTextArea(event.currentTarget);
             }.bind(this), 'textarea');
 
             // automatic resize of textareas
             this.sandbox.dom.on('#codes-form', 'keyup', function(event) {
                 this.updateLengthConstraint(event);
             }.bind(this), '.input-length');
+        },
 
+        bindCustomEvents: function() {
             // selected catalogue changed
             this.sandbox.on('select.catalogues.item.changed', function(catalogueId) {
                 this.sandbox.emit('sulu.translate.catalogue.changed', catalogueId);
-            }, this);
+            }.bind(this));
         },
 
         unlockFormElement: function(event) {
@@ -133,9 +121,19 @@ define([
 
         },
 
+        resizeTextArea: function(textarea) {
+            var newHeight = textarea.scrollHeight,
+                currentHeight = textarea.clientHeight;
+
+            if (newHeight > currentHeight) {
+                textarea.style.height = newHeight + 5 + 'px';
+            }
+        },
+
         updateLengthConstraint: function(event) {
 
             var newMinLength = this.sandbox.dom.val(event.currentTarget),
+            //FIXME use parents instead of parent with filter (currently husky is missing this method) or use ids
                 $tr = this.sandbox.dom.prev(
                     this.sandbox.dom.parent(
                         this.sandbox.dom.parent(
@@ -153,15 +151,14 @@ define([
             var $element = this.sandbox.dom.$(event.currentTarget),
                 sectionId = this.sandbox.dom.attr($element, 'data-target-element'),
                 $tbody = this.sandbox.dom.find('tbody', '#' + sectionId),
-                $lastRow = this.sandbox.dom.find('tr:last', $tbody);
-
-            this.sandbox.dom.append($tbody, this.templates.rowTemplate());
-
-            var $addedRow = this.sandbox.dom.next($lastRow, 'tr'),
+                $lastRow = this.sandbox.dom.find('tr:last', $tbody),
+                $addedRow = this.sandbox.dom.next($lastRow, 'tr'),
                 $addedOptionsRow = this.sandbox.dom.next($addedRow, 'tr'),
                 $codeField = this.sandbox.dom.find('.input-code', $addedRow),
                 $translationField = this.sandbox.dom.find('.textarea-translation', $addedRow),
                 $lengthField = this.sandbox.dom.find('.input-length', $addedOptionsRow);
+
+            this.sandbox.dom.append($tbody, this.templates.rowTemplate);
 
             this.sandbox.form.addField(codesForm, $codeField);
             this.sandbox.form.addField(codesForm, $translationField);
@@ -184,7 +181,7 @@ define([
         },
 
         templates: {
-            rowTemplate: function() {
+            rowTemplate: (function() {
                 return [
                     '<tr>',
                     '<td width="20%">',
@@ -213,7 +210,7 @@ define([
                     '</div>',
                     '</td>',
                     '</tr>'].join('');
-            }
+            })()
         },
 
         initializeHeader: function() {
@@ -234,41 +231,47 @@ define([
             if (this.sandbox.form.validate(codesForm)) {
 
                 var updatedTranslations = [],
-                    $rows = this.sandbox.dom.find('table tbody tr', '#codes-form');
+                    $rows = this.sandbox.dom.find('table tbody tr', '#codes-form'),
+                    i,
+                    $translation, $options, newCode, newTranslation, newLength, newFrontend, newBackend,
+                    translationModel, id, currentCode, currentTranslation, currentLength, currentFrontend,
+                    currentBackend, codeModel,
 
-                for (var i = 0; i < $rows.length;) {
+                    search = function(key, value) {
+                        if (parseInt(value.id, 10) === parseInt(id, 10)) {
+                            translationModel = value;
+                            return false;
+                        }
+                    };
 
-                    var $translation = $rows[i],
-                        $options = $rows[i + 1],
-                        id = $($rows[i]).data('id'),
+                for (i = 0; i < $rows.length;) {
 
-                        newCode = this.sandbox.dom.val(this.sandbox.dom.find('.input-code', $translation)),
-                        newTranslation = this.sandbox.dom.val(this.sandbox.dom.find('.textarea-translation', $translation)),
+                    $translation = $rows[i];
+                    $options = $rows[i + 1];
+                    id = $($rows[i]).data('id');
 
-                        newLength = this.sandbox.dom.val(this.sandbox.dom.find('.input-length', $options)),
-                        newFrontend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-frontend', $options), ':checked'),
-                        newBackend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-backend', $options), ':checked'),
+                    newCode = this.sandbox.dom.val(this.sandbox.dom.find('.input-code', $translation));
+                    newTranslation = this.sandbox.dom.val(this.sandbox.dom.find('.textarea-translation', $translation));
 
-                        translationModel = null;
+                    newLength = this.sandbox.dom.val(this.sandbox.dom.find('.input-length', $options));
+                    newFrontend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-frontend', $options), ':checked');
+                    newBackend = this.sandbox.dom.is(this.sandbox.dom.find('.checkbox-backend', $options), ':checked');
+
+                    translationModel = null;
 
                     // get data of existing translation and code and compare with version in form
                     if (!!id) {
 
-                        this.sandbox.util.each(this.options.data.translations, function(key, value) {
-                            if (parseInt(value.id, 10) === parseInt(id, 10)) {
-                                translationModel = value;
-                                return false;
-                            }
-                        });
+                        this.sandbox.util.each(this.options.data.translations, search);
 
 
                         if (!!translationModel) {
 
-                            var currentCode = translationModel.code.code,
-                                currentTranslation = translationModel.value,
-                                currentLength = translationModel.code.length,
-                                currentFrontend = translationModel.code.frontend,
-                                currentBackend = translationModel.code.backend;
+                            currentCode = translationModel.code.code;
+                            currentTranslation = translationModel.value;
+                            currentLength = translationModel.code.length;
+                            currentFrontend = translationModel.code.frontend;
+                            currentBackend = translationModel.code.backend;
 
                             if (newCode !== currentCode ||
                                 newTranslation !== currentTranslation ||
@@ -293,7 +296,7 @@ define([
                         // new translation and new code
                         if (newCode !== undefined && newCode !== "") {
 
-                            var codeModel = {};
+                            codeModel = {};
                             codeModel.code = newCode;
                             codeModel.length = newLength;
                             codeModel.frontend = newFrontend;

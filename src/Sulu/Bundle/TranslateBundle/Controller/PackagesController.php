@@ -203,16 +203,16 @@ class PackagesController extends RestController
     {
         $delete = function ($id) {
             $entityName = 'SuluTranslateBundle:Package';
-            $pkg = $this->getDoctrine()
+            $package = $this->getDoctrine()
                 ->getRepository($entityName)
                 ->find($id);
 
-            if (!$pkg) {
+            if (!$package) {
                 throw new EntityNotFoundException($entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
-            $em->remove($pkg);
+            $em->remove($package);
             $em->flush();
         };
 

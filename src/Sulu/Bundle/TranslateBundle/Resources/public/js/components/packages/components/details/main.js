@@ -66,8 +66,6 @@ define([], function() {
                 currentState = '';
                 this.codesToDelete = [];
 
-                this.sandbox.logger.log(this.options);
-
                 this.render();
                 this.setHeaderBar(true);
                 this.listenForChange();
@@ -149,9 +147,14 @@ define([], function() {
                     this.sandbox.emit('sulu.translate.package.delete', this.options.data.id);
                 }, this);
 
-                // contact saved
+                // save translations
                 this.sandbox.on('husky.button.save.click', function() {
                     this.submit();
+                }, this);
+
+                this.sandbox.on('sulu.translate.translations.saved', function() {
+                    this.setTabs();
+                    this.setHeaderBar(true);
                 }, this);
             },
 
@@ -183,15 +186,17 @@ define([], function() {
             },
 
             initSelectCatalogues: function() {
-
                 this.sandbox.start([
-                    {name: 'select@husky', options: {
-                        el: this.sandbox.dom.$('#languageCatalogue'),
-                        valueName: 'locale',
-                        instanceName: 'catalogues',
-                        selected: this.options.selectedCatalogue,
-                        data: this.options.data.catalogues
-                    }}
+                    {
+                        name: 'select@husky',
+                        options: {
+                            el: this.sandbox.dom.$('#languageCatalogue'),
+                            valueName: 'locale',
+                            instanceName: 'catalogues',
+                            selected: this.options.selectedCatalogue,
+                            data: this.options.data.catalogues
+                        }
+                    }
                 ]);
             },
 
@@ -213,8 +218,6 @@ define([], function() {
             },
 
             submit: function() {
-                this.sandbox.logger.log('save Model');
-
                 if (this.sandbox.form.validate(form)) {
                     var data = {},
                         $items = this.sandbox.dom.find('#codes .code-item'),
@@ -327,7 +330,6 @@ define([], function() {
 
             // @var Bool saved - defines if saved state should be shown
             setHeaderBar: function(saved) {
-
                 var changeType, changeState,
                     ending = (!!this.options.data && !!this.options.data.id) ? 'Delete' : '';
 
@@ -347,6 +349,7 @@ define([], function() {
                     this.sandbox.emit('husky.header.button-type', changeType);
                     currentType = changeType;
                 }
+
                 if (currentState !== changeState) {
                     this.sandbox.emit('husky.header.button-state', changeState);
                     currentState = changeState;
@@ -357,6 +360,7 @@ define([], function() {
                 this.sandbox.dom.on(form, 'change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "select, input, textarea");
+
                 this.sandbox.dom.on(form, 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input, textarea");
