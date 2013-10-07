@@ -41,6 +41,15 @@ class EmailType implements \JsonSerializable
     }
 
     /**
+     * To force id = 1 in load fixtures
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
