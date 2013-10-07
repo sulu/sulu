@@ -360,38 +360,6 @@ define(['text!/security/template/permission/form'], function(Template) {
             return $tableRow;
         },
 
-        preparePermission: function(permissionName, isActive) {
-
-            var className,
-                active = '';
-
-            if (!!isActive) {
-                active = 'is-active';
-            }
-
-            // TODO get the correct icons
-
-            if (permissionName === 'add') {
-                className = 'add';
-            } else if (permissionName === 'archive') {
-                className = 'circle-ok';
-            } else if (permissionName === 'delete') {
-                className = 'remove';
-            } else if (permissionName === 'edit') {
-                className = 'edit';
-            } else if (permissionName === 'live') {
-                className = 'search';
-            } else if (permissionName === 'security') {
-                className = 'settings';
-            } else if (permissionName === 'view') {
-                className = 'building';
-            } else {
-                className = 'unknown';
-            }
-
-            return this.template.permission(className, active);
-        },
-
         template: {
             tableHead: function(thLabel1, thLabel2, thLabel3) {
                 return [
