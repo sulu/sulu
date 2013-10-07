@@ -182,6 +182,7 @@ class UserController extends RestController implements ClassResourceInterface
 
         $delete = function ($userRole) use ($user) {
             $user->removeUserRole($userRole);
+            $this->getDoctrine()->getManager()->remove($userRole);
         };
 
         $update = function ($userRole, $userRoleData) {
