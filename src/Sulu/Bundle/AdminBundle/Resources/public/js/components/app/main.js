@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function(History) {
+define(function() {
 
     'use strict';
 
@@ -66,7 +66,7 @@ define(function(History) {
 
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
-               callbackFunction(this.sandbox.mvc.history.fragment);
+                callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
         },
 

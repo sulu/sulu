@@ -43,8 +43,7 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
             '',
             true,
             true,
-            true,
-            array('getCommands', 'getSecurityContexts')
+            true
         );
 
         $details = new NavigationItem('Details');
