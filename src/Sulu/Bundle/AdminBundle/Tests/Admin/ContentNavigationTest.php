@@ -75,14 +75,14 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
     public function testToArray()
     {
         $result = $this->contentNavigation1->toArray('contact');
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, sizeof($result['sub']['items']));
 
-        $this->assertEquals('Details', $result[0]['title']);
-        $this->assertEquals('details', $result[0]['action']);
-        $this->assertEquals('contact', $result[0]['contentType']);
+        $this->assertEquals('Details', $result['sub']['items'][0]['title']);
+        $this->assertEquals('details', $result['sub']['items'][0]['action']);
+        $this->assertEquals('contact', $result['sub']['items'][0]['contentType']);
 
-        $this->assertEquals('Permissions', $result[1]['title']);
-        $this->assertEquals('permissions', $result[1]['action']);
-        $this->assertEquals('contact', $result[1]['contentType']);
+        $this->assertEquals('Permissions', $result['sub']['items'][1]['title']);
+        $this->assertEquals('permissions', $result['sub']['items'][1]['action']);
+        $this->assertEquals('contact', $result['sub']['items'][1]['contentType']);
     }
 }
