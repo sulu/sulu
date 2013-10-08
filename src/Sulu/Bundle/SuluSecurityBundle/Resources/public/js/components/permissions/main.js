@@ -8,14 +8,13 @@
  */
 
 define([
-    'mvc/relationalstore',
     './models/user',
     'sulusecurity/models/role',
     'sulusecurity/models/permission',
     'sulucontact/model/contact',
     './collections/roles',
     './models/userRole'
-], function(RelationalStore, User, Role, Permission, Contact, Roles, UserRole) {
+], function(User, Role, Permission, Contact, Roles, UserRole) {
 
     'use strict';
 
@@ -133,7 +132,8 @@ define([
         // render form and load data
 
         renderForm: function() {
-            RelationalStore.reset();
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+
             this.user = null;
             this.contact = null;
 
