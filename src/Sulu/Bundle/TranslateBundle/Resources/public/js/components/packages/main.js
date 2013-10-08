@@ -157,8 +157,11 @@ define([
                 // on success save contacts id
                 success: function(response) {
                     var model = response.toJSON();
-                    this.sandbox.emit('sulu.translate.package.saved', model.id, model);
-                    this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + model.id + '/settings');
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.translate.package.saved', model.id, model);
+                    } else {
+                        this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + model.id + '/settings');
+                    }
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
@@ -245,7 +248,9 @@ define([
                 this.translations.save(this.sandbox, updatedTranslations);
             }
 
-            this.sandbox.emit('sulu.translate.translations.saved');
+            //FIXME try to get this formular working without page "refresh"
+            //this.sandbox.emit('sulu.translate.translations.saved');
+            this.sandbox.mvc.history.loadUrl(this.sandbox.mvc.history.fragment);
         },
 
         delPackages: function(ids) {

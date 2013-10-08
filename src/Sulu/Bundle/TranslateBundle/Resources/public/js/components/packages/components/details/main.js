@@ -47,6 +47,7 @@ define([], function() {
                         'id': 'translate-package-settings-' + this.options.data.id
                     });
 
+                    //TODO check if at least one catalogue exists
                     navigation.sub.items.push({
                         'title': 'Details',
                         'action': 'settings/translate/edit:' + this.options.data.id + '/details',
