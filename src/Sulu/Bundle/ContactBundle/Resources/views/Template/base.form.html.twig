@@ -76,7 +76,8 @@
 
             <div class="grid-row">
                 <div id="addEmail" data-target-id="emails">
-                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addEmail')%></span>
+                    <span class="icon-add"></span><span
+                            class="control-label"><%=translate('contact.form.addEmail')%></span>
                 </div>
             </div>
         {% endblock %}
@@ -116,7 +117,8 @@
 
             <div class="grid-row">
                 <div id="addPhone" data-target-id="phones">
-                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addPhone')%></span>
+                    <span class="icon-add"></span><span
+                            class="control-label"><%=translate('contact.form.addPhone')%></span>
                 </div>
             </div>
         {% endblock %}
@@ -197,7 +199,8 @@
                         <div class="grid-col-4">
                             <label><%=translate('contact.address.country')%></label>
 
-                            <select class="country-value form-element" data-mapper-property="country" data-type="select">
+                            <select class="country-value form-element" data-mapper-property="country"
+                                    data-type="select">
                                 {% for country in countries %}
                                     <option value="{{ country.id }}"><%=translate('{{ country.name }}')%></option>
                                 {% endfor %}
@@ -217,69 +220,31 @@
 
 {% block data %}
     <script type="text/javascript">
-        // FIXME don't use global vars !!!
+        (function() {
+            var defaults = {
+                emailType: {
+                    'id': {{ defaultEmailType.id }},
+                    'name': '{{ defaultEmailType.name }}'
+                },
+                phoneType: {
+                    'id': {{ defaultPhoneType.id }},
+                    'name': '{{ defaultPhoneType.name }}'
+                },
+                addressType: {
+                    'id': {{ defaultAddressType.id }},
+                    'name': '{{ defaultAddressType.name }}'
+                },
+                urlType: {
+                    'id': {{ defaultUrlType.id }},
+                    'name': '{{ defaultUrlType.name }}'
+                },
+                country: {
+                    'id': {{ defaultCountry.id }},
+                    'name': '{{ defaultCountry.name }}'
+                }
+            };
 
-        var addressTypes = [
-                    {% for type in addressTypes %}
-                    {
-                        'id':{{ type.id }},
-                        'name': '{{ type.name }}'
-                    },
-                    {% endfor %}
-                ],
-                phoneTypes = [
-                    {% for type in phoneTypes %}
-                    {
-                        'id':{{ type.id }},
-                        'name': '{{ type.name }}'
-                    },
-                    {% endfor %}
-                ],
-                emailTypes = [
-                    {% for type in emailTypes %}
-                    {
-                        'id':{{ type.id }},
-                        'name': '{{ type.name }}'
-                    },
-                    {% endfor %}
-                ],
-                urlTypes = [
-                    {% for type in urlTypes %}
-                    {
-                        'id':{{ type.id }},
-                        'name': '{{ type.name }}'
-                    },
-                    {% endfor %}
-                ],
-                countries = [
-                    {% for country in countries %}
-                    {
-                        'id':{{ country.id }},
-                        'name': '{{ country.name }}'
-                    },
-                    {% endfor %}
-                ],
-                defaults = {
-                    emailType: {
-                        'id': {{ defaultEmailType.id }},
-                        'name': '{{ defaultEmailType.name }}'
-                    },
-                    phoneType: {
-                        'id': {{ defaultPhoneType.id }},
-                        'name': '{{ defaultPhoneType.name }}'
-                    },
-                    addressType: {
-                        'id': {{ defaultAddressType.id }},
-                        'name': '{{ defaultAddressType.name }}'
-                    },
-                    urlType: {
-                        'id': {{ defaultUrlType.id }},
-                        'name': '{{ defaultUrlType.name }}'
-                    },
-                    country: {
-                        'id': {{ defaultCountry.id }},
-                        'name': '{{ defaultCountry.name }}'
-                    }
-                };
+            App.emit('sulu.contacts.set-defaults', defaults);
+        })();
     </script>
 {% endblock %}
