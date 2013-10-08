@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 
@@ -20,7 +21,7 @@ use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
  */
 class ContactRepository extends EntityRepository
 {
-    public function findArray($id)
+    public function findById($id)
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
@@ -47,11 +48,12 @@ class ContactRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->setParameter('id', $id);
 
-        $result = $query->getArrayResult();
-        if (sizeof($result) == 1) {
-            return $result[0];
-        } else {
-            throw new EntityNotFoundException('ContactBundle:Contact', $id);
+        try {
+            $contact = $query->getSingleResult();
+
+            return $contact;
+        } catch (NoResultException $nre) {
+            return null;
         }
     }
 

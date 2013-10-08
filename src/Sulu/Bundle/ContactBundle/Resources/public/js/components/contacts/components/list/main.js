@@ -7,9 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([
-    'mvc/relationalstore'
-], function(RelationalStore) {
+define(function() {
 
     'use strict';
 
@@ -24,9 +22,6 @@ define([
         },
 
         render: function() {
-
-            RelationalStore.reset(); //FIXME really necessary?
-
             this.sandbox.dom.html(this.$el, this.renderTemplate('/contact/template/contact/list'));
 
             // dropdown - showing options
