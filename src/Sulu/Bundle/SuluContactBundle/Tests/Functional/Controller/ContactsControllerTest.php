@@ -128,12 +128,12 @@ class ContactsControllerTest extends DatabaseTestCase
 		self::$tool = new SchemaTool(self::$em);
 
 		self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
@@ -876,7 +876,6 @@ class ContactsControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request('GET', '/contact/api/contacts/1');
 
-		$response = json_decode($client->getResponse()->getContent());
 		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 	}
 
