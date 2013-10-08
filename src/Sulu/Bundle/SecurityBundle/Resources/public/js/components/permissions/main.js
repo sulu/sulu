@@ -130,9 +130,7 @@ define([
 
             userModel.save(null, {
                 success: function(model) {
-                    // TODO set inside form
-                    this.sandbox.emit('husky.header.button-state', 'standard');
-                    this.sandbox.emit('sulu.router.navigate', '/contacts/contacts/edit:'+model.get('contact').get('id')+'/permissions');
+                    this.sandbox.emit('sulu.user.permissions.saved', model);
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");

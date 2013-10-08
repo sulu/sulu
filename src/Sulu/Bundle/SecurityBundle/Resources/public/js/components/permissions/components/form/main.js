@@ -11,6 +11,8 @@ define(['text!/security/template/permission/form'], function(Template) {
 
     'use strict';
 
+    // TODO field for selection of locale of user - currently default value of model
+
     return {
 
         name: 'Sulu Security Permissions Form',
@@ -218,12 +220,10 @@ define(['text!/security/template/permission/form'], function(Template) {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
-//            this.sandbox.on('sulu.user.permissions.save', function(data) {
-//                if (!this.options.data.id) {
-//                    this.options.data = data;
-//                }
-//                this.setHeaderBar(true);
-//            }, this);
+            this.sandbox.on('sulu.user.permissions.saved', function(model) {
+                this.user = model;
+                this.setHeaderBar(true);
+            }, this);
 
             this.sandbox.on('husky.button.save.click', function() {
                 this.save();
