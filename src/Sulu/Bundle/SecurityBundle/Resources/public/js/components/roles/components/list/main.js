@@ -14,30 +14,60 @@ define(function() {
     return {
         name: 'Sulu Security Role List',
 
+        templates: ['/security/template/role/list'],
+
         initialize: function() {
             this.initializeDataGrid();
             this.initializeHeader();
         },
 
         initializeDataGrid: function() {
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/security/template/role/list'));
+
+            // dropdown - showing options
+            this.sandbox.start([
+                {
+                    name: 'dropdown@husky',
+                    options: {
+                        el: '#options-dropdown',
+                        trigger: '.dropdown-toggle',
+                        setParentDropDown: true,
+                        instanceName: 'options',
+                        alignment: 'right',
+                        data: [
+                            {
+                                'id': 1,
+                                'type': 'delete',
+                                'name': this.sandbox.translate('public.delete')
+                            }
+                        ]
+                    }
+                }
+            ]);
+
+            // dropdown clicked
+            this.sandbox.on('husky.dropdown.options.item.click', function(event) {
+                if (event.type === "delete") {
+                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                        this.sandbox.emit('sulu.roles.delete', ids);
+                    }.bind(this));
+                }
+            }, this);
+
             this.sandbox.start([
                 {
                     name: 'datagrid@husky',
                     options: {
-                        el: this.$el,
+                        el: this.sandbox.dom.find('#roles-list'),
                         url: '/security/api/roles/list?fields=id,name,system',
                         selectItem: {
                             type: 'checkbox'
                         },
-                        pagination: true,
-                        paginationOptions: {
-                            pageSize: 10,
-                            showPages: 6
-                        },
+                        pagination: false,
                         removeRow: false,
                         tableHead: [
-                            {content: 'Name', width: "30%"},
-                            {content: 'System'}
+                            {content: this.sandbox.translate('security.roles.name'), width: "30%"},
+                            {content: this.sandbox.translate('security.roles.system')}
                         ],
                         excludeFields: ['id']
                     }
