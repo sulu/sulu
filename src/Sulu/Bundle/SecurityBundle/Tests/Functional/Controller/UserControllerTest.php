@@ -102,13 +102,13 @@ class UserControllerTest extends DatabaseTestCase
         self::$em->persist($userRole2);
 
         $permission1 = new Permission();
-        $permission1->setPermissions("Permission 1");
+        $permission1->setPermissions(122);
         $permission1->setRole($role1);
         $permission1->setContext("Context 1");
         self::$em->persist($permission1);
 
         $permission2 = new Permission();
-        $permission2->setPermissions("Permission 2");
+        $permission2->setPermissions(122);
         $permission2->setRole($role2);
         $permission2->setContext("Context 2");
         self::$em->persist($permission2);
