@@ -58,7 +58,7 @@ define([
 
         save: function(data) {
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-       
+
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);
 
