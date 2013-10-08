@@ -8,17 +8,18 @@
  */
 
 define([
-    'backbonerelational',
+    'mvc/relationalmodel',
+    'mvc/hasone',
     'sulucontact/model/urlType'
-], function(BackboneRelational, UrlType) {
-    return Backbone.RelationalModel.extend({
+], function(RelationalModel, HasOne, UrlType) {
+    return RelationalModel({
         defaults: {
             id: null,
             url: '',
             urlType: null
         }, relations: [
             {
-                type: Backbone.HasOne,
+                type: HasOne,
                 key: 'urlType',
                 relatedModel: UrlType
             }
