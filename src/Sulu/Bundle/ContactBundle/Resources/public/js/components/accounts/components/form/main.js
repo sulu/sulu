@@ -117,12 +117,18 @@ define([], function() {
             },
 
             bindCustomEvents: function() {
-                // delete contact
+                // delete account
                 this.sandbox.on('husky.button.delete.click', function() {
                     this.sandbox.emit('sulu.contacts.accounts.delete', this.options.data.id);
                 }, this);
 
-                // contact saved
+                // account saved
+                this.sandbox.on('sulu.contacts.accounts.saved', function(id) {
+                    this.options.data.id = id;
+                    this.setHeaderBar(true);
+                }, this);
+
+                // account saved
                 this.sandbox.on('husky.button.save.click', function() {
                     this.submit();
                 }, this);
