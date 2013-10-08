@@ -17,6 +17,8 @@ define([
     return {
 
         initialize: function() {
+            this.bindCustomEvents();
+
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
@@ -26,58 +28,100 @@ define([
             }
         },
 
-//        getModel: function(id) {
-//            // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
-//            var packageModel = Contact.findOrCreate(id);
-//            if (!packageModel) {
-//                packageModel = new Contact({
-//                    id: id
-//                });
-//            }
-//            return packageModel;
-//        },
+        bindCustomEvents: function() {
+            // delete contact
+            this.sandbox.on('sulu.contacts.contact.delete', function() {
+                this.del();
+            }, this);
 
-        renderList: function() {
-
-           this.sandbox.start([
-                {name: 'contacts/components/list@sulucontact', options: { el: this.$el}}
-            ]);
+            // save the current package
+            this.sandbox.on('sulu.contacts.contacts.save', function(data) {
+                this.save(data);
+            }, this);
 
             // wait for navigation events
-           this.sandbox.on('sulu.contacts.contacts.load', function(id) {
-               this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-               this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id);
+            this.sandbox.on('sulu.contacts.contacts.load', function(id) {
+                this.load(id);
             }, this);
 
             // add new contact
-           this.sandbox.on('sulu.contacts.contacts.new', function() {
-               this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-               this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add');
+            this.sandbox.on('sulu.contacts.contacts.new', function() {
+                this.add();
             }, this);
 
             // delete selected contacts
-           this.sandbox.on('sulu.contacts.contacts.delete', function(ids) {
-                if (ids.length<1) {
-                    this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
-                    return;
-                }
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if (wasConfirmed) {
-                       this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-                        ids.forEach(function(id) {
-                            //var contact = this.getModel(id);
-                            var contact = new Contact({id:id});
-                            contact.destroy({
-                                success: function() {
-                                   this.sandbox.emit('husky.datagrid.row.remove', id);
-                                }.bind(this)
-                            });
-                        }.bind(this));
-                        this.sandbox.emit('husky.header.button-state', 'standard');
-                    }
-                }.bind(this));
-           }, this);
+            this.sandbox.on('sulu.contacts.contacts.delete', function(ids) {
+                this.delContacts(ids);
+            }, this);
+        },
 
+        del: function() {
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if(wasConfirmed) {
+                    this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
+                    this.contact.destroy({
+                        success: function() {
+                            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
+                        }.bind(this)
+                    });
+                }
+            }.bind(this));
+        },
+
+        save: function(data) {
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            this.contact.set(data);
+            this.contact.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.contacts.contacts.saved', model.id);
+                    } else {
+                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id);
+                    }
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
+        },
+
+        load: function(id) {
+            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id);
+        },
+
+        add: function() {
+            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add');
+        },
+
+        delContacts: function(ids) {
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
+                return;
+            }
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                    ids.forEach(function(id) {
+                        var contact = new Contact({id: id});
+                        contact.destroy({
+                            success: function() {
+                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                            }.bind(this)
+                        });
+                    }.bind(this));
+                    this.sandbox.emit('husky.header.button-state', 'standard');
+                }
+            }.bind(this));
+        },
+
+        renderList: function() {
+            this.sandbox.start([
+                {name: 'contacts/components/list@sulucontact', options: { el: this.$el}}
+            ]);
         },
 
         renderForm: function() {
@@ -90,11 +134,11 @@ define([
             }.bind(this));
 
             // load data and show form
-            var contact = new Contact();
+            this.contact = new Contact();
             if (!!this.options.id) {
-                contact = new Contact({id:this.options.id});
+                this.contact = new Contact({id:this.options.id});
                 //contact = this.getModel(this.options.id);
-                contact.fetch({
+                this.contact.fetch({
                     success: function(model) {
                        this.sandbox.start([
                             {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
@@ -106,46 +150,10 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: contact.toJSON()}}
+                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: this.contact.toJSON()}}
                 ]);
             }
-
-            // delete contact
-            this.sandbox.on('sulu.contacts.contacts.delete', function() {
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if(wasConfirmed) {
-                        //contact = this.getModel(id);
-                        this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
-                        contact.destroy({
-                            success: function() {
-                               this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
-                            }.bind(this)
-                        });
-                    }
-                }.bind(this));
-            }, this);
-
-            // save contact
-           this.sandbox.on('sulu.contacts.contacts.save',function(data) {
-               this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-                contact.set(data);
-                contact.save(null, {
-                    // on success save contacts id
-                    success: function(response) {
-                        var model = response.toJSON();
-                        if (!!data.id) {
-                            this.sandbox.emit('sulu.contacts.contacts.saved', model.id);
-                        } else {
-                            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id);
-                        }
-                    }.bind(this),
-                    error: function() {
-                       this.sandbox.logger.log("error while saving profile");
-                    }.bind(this)
-                });
-            }, this);
         },
-
 
         /**
          * @var ids - array of ids to delete
