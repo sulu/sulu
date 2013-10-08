@@ -13,10 +13,61 @@ require.config({
     }
 });
 
-define(['sulutranslate/bundle'], function(Bundle) {
+define({
 
-    'use strict';
+    name: 'Sulu Translate Bundle',
 
-    Bundle.initialize();
+    initialize: function(app) {
 
+        'use strict';
+
+        var sandbox = app.sandbox;
+
+        app.components.addSource('sulutranslate', '/bundles/sulutranslate/js/components');
+
+        // list all translation packages
+        sandbox.mvc.routes.push({
+                route: 'settings/translate',
+                callback: function() {
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="list"/>');
+                }
+            }
+        );
+
+        // show form for new translation package
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/add',
+                callback: function() {
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="settings"/>');
+                }
+            }
+        );
+
+        // show form for editing a translation package
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/edit::id/settings',
+                callback: function(id) {
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="settings" data-aura-id="' + id + '"/>');
+                }
+            }
+        );
+
+        // show form for editing codes
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/edit::id/details',
+                callback: function(id) {
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="details" data-aura-id="' + id + '"/>');
+                }
+            }
+        );
+
+        // show form for editing codes for catalogue
+        sandbox.mvc.routes.push({
+                route: 'settings/translate/edit::id/details::catalogueId',
+                callback: function(id, catalogueId) {
+                    this.html('<div data-aura-component="packages@sulutranslate" data-aura-display="details" data-aura-id="' + id + '" data-aura-catalogue="' + catalogueId + '"/>');
+                }
+            }
+        );
+    }
 });

@@ -58,7 +58,8 @@ class CodeRepository extends EntityRepository
                     LEFT JOIN c.package p
                     LEFT JOIN p.catalogues ca
                     LEFT JOIN c.translations t WITH t.catalogue = ca
-                WHERE ca.id = :id';
+                WHERE ca.id = :id
+                    ORDER BY c.id';
 
         $query = $this->getEntityManager()
             ->createQuery($dql);
@@ -68,6 +69,8 @@ class CodeRepository extends EntityRepository
 
     public function findByCatalogueWithSuggestion($catalogueId)
     {
+        // FIXME Don't use sub queries
+
         $dqlDefaultCatalogue = 'SELECT ca2.id
                                 FROM Sulu\Bundle\TranslateBundle\Entity\Catalogue ca1
                                     LEFT JOIN ca1.package p1
@@ -97,7 +100,8 @@ class CodeRepository extends EntityRepository
                     LEFT JOIN c.package p
                     LEFT JOIN p.catalogues ca
                     LEFT JOIN c.translations t WITH t.catalogue = ca
-                WHERE p.id = :id';
+                WHERE p.id = :id
+                    ORDER BY c.id';
 
         $query = $this->getEntityManager()
             ->createQuery($dql);

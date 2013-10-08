@@ -1,22 +1,22 @@
 <style type="text/css">
 
-    /* TODO put css in husky / translate-css-file */
+        /* TODO put css in husky / translate-css-file */
 
     textarea {
-        font-size:inherit !important;
+        font-size: inherit !important;
     }
 
     textarea[readonly] {
         padding: 10px 0;
-        overflow:hidden;
+        overflow: hidden;
     }
 
     .grey {
-        color:grey;
+        color: grey;
     }
 
     .m-top-35 {
-        margin-top:35px !important;
+        margin-top: 35px !important;
     }
 
     .additional-options {
@@ -28,12 +28,12 @@
     }
 
     .absolute {
-        position:absolute
+        position: absolute
     }
 
-    .show-options{
-        bottom:-5px;
-        left:-15px;
+    .show-options {
+        bottom: -5px;
+        left: -15px;
     }
 
     .icon-arrow-right {
@@ -43,7 +43,6 @@
         border-width: 4px 0 4px 6px;
         border-color: transparent transparent transparent #000000;
     }
-
 
     .icon-arrow-down {
         width: 0px;
@@ -57,71 +56,80 @@
         vertical-align: top !important;
     }
 
-    /* TODO put css in husky / translate-css-file */
+        /* TODO put css in husky / translate-css-file */
 
 </style>
 
 <div class="grid-row m-bottom-20">
     <div class="grid-col-6 pull-left">
-        <h1><%= package.name %></h1>
+        <h1><%= packageName %></h1>
     </div>
     <div class="grid-col-6 pull-right">
-        <p class="grid-col-5 align-right m-right-10 bold grey">Language catalogue:</p>
+        <p class="grid-col-5 align-right m-right-10 bold grey"><%= translate('translate.package.catalogues') %>:</p>
+
         <div id="languageCatalogue" class="grid-col-6"></div>
     </div>
 </div>
 
 
-<form id="codes-form" data-validate="parsley">
+<form id="codes-form">
 
     <div class="grid-row">
-        <table class="table" id="section1">
+        <table class="table" id="codes">
 
             <thead>
                 <tr>
-                    <th width="20%">Key</th>
-                    <th width="37%">Translation</th>
-                    <th width="37%">Suggestion (<%= defaultCatalogue.locale %>)</th>
+                    <th width="30%"><%= translate('translate.package.details.key') %></th>
+                    <th width="32%"><%= translate('translate.package.details.translation') %></th>
+                    <th width="32%"><%= translate('translate.package.details.suggestion') %></th>
 
                     <th width="6%"></th>
                 </tr>
             </thead>
 
-            <tbody>
-                <% _.each(translations, function(item) { %>
-                <tr data-id="<%= item.id %>">
+            <tbody class="code-item">
+                <tr>
                     <td class="relative">
-                        <input class="form-element grey input-code" readonly value="<%= item.code.code %>" data-trigger="focusout" data-unique="true" data-required="true" />
+                        <input class="form-element grey code-value" readonly value=""
+                               data-validation-unique="name" data-validation-required="true"/>
                         <span class="show-options absolute pointer icon-arrow-right"></span>
                     </td>
                     <td>
-                        <textarea class="form-element vertical textarea-translation" data-minlength="0" data-maxlength="<%= item.code.length %>" data-trigger="focusout" readonly><%= (!!item.value) ? item.value : '' %></textarea>
-                        <small class="grey letter-info">[Max. <%= item.code.length %> chars]</small>
+                        <textarea class="form-element vertical translation-value" readonly data-validation-max-length="20"></textarea>
+                        <small class="grey letter-info"><%= translate('translate.package.details.maxLength') %>: <span class="length-info">20</span></small>
                     </td>
-                    <td><p class="grey"><%= item.suggestion %></p></td>
-                    <td><p class="icon-remove m-left-5"></p></td>
+                    <td><p class="grey suggestion-value"></p></td>
+                    <td><p class="icon-remove m-left-5 code-remove pointer"></p></td>
                 </tr>
                 <tr class="additional-options hidden">
                     <td colspan="4">
                         <div class="grid-row">
                             <div class="grid-col-3">
-                                <span>Length</span>
-                                <input class="form-element inputLength" value="<%= item.code.length %>" data-required="true" type="number" min="0" data-trigger="focusout"/>
+                                <span><%= translate('translate.package.details.length') %></span>
+                                <input class="form-element length-value" value="20" data-validation-required="true"
+                                       data-type="decimal" data-validation-min="0" type="number" min="0"/>
                             </div>
-                            <div class="grid-col-2 m-top-35"><input name="frontend" type="checkbox" class="custom-checkbox checkbox-frontend" <%= (item.code.frontend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Frontend</span></div>
-                            <div class="grid-col-2  m-top-35"><input name="backend" type="checkbox" class="custom-checkbox checkbox-backend" <%= (item.code.backend) ? 'checked' : '' %>><span class="custom-checkbox-icon"></span><span class="m-left-5">Backend</span></div>
+                            <div class="grid-col-2 m-top-35">
+                                <input name="frontend" type="checkbox" class="custom-checkbox frontend-value">
+                                <span class="custom-checkbox-icon"></span>
+                                <span class="m-left-5"><%= translate('translate.package.details.frontend') %></span>
+                            </div>
+                            <div class="grid-col-2  m-top-35">
+                                <input name="backend" type="checkbox" class="custom-checkbox backend-value">
+                                <span class="custom-checkbox-icon"></span>
+                                <span class="m-left-5"><%= translate('translate.package.details.backend') %></span>
+                            </div>
                         </div>
                     </td>
                 </tr>
-                <% }); %>
             </tbody>
 
         </table>
 
 
         <div class="grid-row m-top-15 m-bottom-10">
-            <div class="grid-col-2 add-code" data-target-element="section1">
-                <span class="icon-add"></span><span class="control-label">[Add element]</span>
+            <div class="grid-col-4" id="code-add">
+                <span class="icon-add"></span><span class="control-label"><%= translate('translate.package.details.addElement') %></span>
             </div>
         </div>
 

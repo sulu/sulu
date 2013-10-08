@@ -7,11 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define([
-    'backbonerelational',
-    'sulutranslate/model/translation'
-], function(BackboneRelational, Translation) {
-    return Backbone.RelationalModel.extend({
+define(['mvc/relationalmodel'], function(relationalModel) {
+
+    'use strict';
+
+    return relationalModel({
         urlRoot: '/translate/api/codes',
         defaults: {
             id: null,
@@ -22,4 +22,5 @@ define([
             package: null
         }
     });
+
 });

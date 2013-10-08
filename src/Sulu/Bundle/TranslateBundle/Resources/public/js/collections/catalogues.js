@@ -8,11 +8,11 @@
  */
 
 define([
-    'backbone',
-    'sulutranslate/model/catalogue'
-], function(Backbone, Catalogue) {
+    'mvc/collection',
+    'sulutranslate/models/catalogue'
+], function(Collection, Catalogue) {
 
-    return Backbone.Collection.extend({
+    return Collection({
 
         model: Catalogue,
 

@@ -8,10 +8,15 @@
  */
 
 define([
-    'backbonerelational',
-    'sulutranslate/model/catalogue',
-    'sulutranslate/model/code'], function(BackboneRelational, Catalogue, Code) {
-    return Backbone.RelationalModel.extend({
+    'mvc/relationalmodel',
+    'sulutranslate/models/catalogue',
+    'sulutranslate/models/code',
+    'mvc/hasone'
+], function(relationalModel, Catalogue, Code, HasOne) {
+
+    'use strict';
+
+    return relationalModel({
         urlRoot: '/translate/api/translation',
         defaults: {
             id: null,
@@ -21,7 +26,7 @@ define([
         },
         relations: [
             {
-                type: Backbone.HasOne,
+                type: HasOne,
                 key: 'catalogue',
                 relatedModel: Catalogue
             }

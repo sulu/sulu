@@ -48,9 +48,11 @@ class CodesController extends RestController
         $catalogueId = $this->getRequest()->get('catalogueId');
         $packageId = $this->getRequest()->get('packageId');
         if ($catalogueId != null) {
+            // TODO Add limit, offset & sorting for find by filter catalogue
             $codes = $repository->findByCatalogue($catalogueId);
         } else {
             if ($packageId != null) {
+                // TODO Add limit, offset & sorting for find by filter package
                 $codes = $repository->findByPackage($packageId);
             } else {
                 $codes = $repository->findGetAll($limit, $offset, $sorting);
@@ -61,6 +63,7 @@ class CodesController extends RestController
             'total' => count($codes),
             'items' => $codes
         );
+
         $view = $this->view($response, 200);
 
         return $this->handleView($view);
@@ -198,27 +201,27 @@ class CodesController extends RestController
             $code->setLocation($em->getReference($this->locationEntity, $location['id']));
 
             if ($translations != null && sizeof($translations) > 0) {
-                foreach ($translations as $translation) {
-                    /** @var Translation $t */
-                    $t = $translationRepository->findOneBy(
+                foreach ($translations as $translationData) {
+                    /** @var Translation $translation */
+                    $translation = $translationRepository->findOneBy(
                         array(
                             'code' => $code->getId(),
-                            'catalogue' => $translation['catalogue']['id']
+                            'catalogue' => $translationData['catalogue']['id']
                         )
                     );
 
-                    if ($t != null) {
-                        $t->setValue($translation['value']);
-                        $t->setCode($code);
-                        $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
+                    if ($translation != null) {
+                        $translation->setValue($translationData['value']);
+                        $translation->setCode($code);
+                        $translation->setCatalogue($em->getReference($this->catalogueEntity, $translationData['catalogue']['id']));
                     } else {
                         // Create a new Translation
-                        $t = new Translation();
-                        $t->setValue($translation['value']);
-                        $t->setCode($code);
-                        $code->addTranslation($t);
-                        $t->setCatalogue($em->getReference($this->catalogueEntity, $translation['catalogue']['id']));
-                        $em->persist($t);
+                        $translation = new Translation();
+                        $translation->setValue($translationData['value']);
+                        $translation->setCode($code);
+                        $code->addTranslation($translation);
+                        $translation->setCatalogue($em->getReference($this->catalogueEntity, $translationData['catalogue']['id']));
+                        $em->persist($translation);
                     }
                 }
             }

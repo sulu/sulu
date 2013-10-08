@@ -8,17 +8,19 @@
  */
 
 define([
-    'backbone',
-    'sulutranslate/model/code',
-    'sulutranslate/model/translation'
-], function(Backbone, Code, Translation) {
+    'mvc/collection',
+    'sulutranslate/models/code',
+    'sulutranslate/models/translation'
+], function(Collection, Code, Translation) {
 
-    return Backbone.Collection.extend({
+    'use strict';
+
+    return new Collection({
 
         model: Translation,
 
         url: function() {
-            return '/translate/api/catalogues/' + this.catalogueId + '/translations'
+            return '/translate/api/catalogues/' + this.catalogueId + '/translations';
         },
 
         initialize: function(options) {
@@ -29,9 +31,9 @@ define([
             return resp.items;
         },
 
-        save: function(translations) {
+        save: function(sandbox, translations, options) {
 
-            $.ajax({
+            sandbox.util.ajax({
 
                 headers: {
                     'Accept': 'application/json',
@@ -43,14 +45,19 @@ define([
                 data: JSON.stringify(translations),
 
                 success: function() {
-                    console.log("patch successful");
+                    if (!!options && !!options.success && typeof options.success === 'function') {
+                        options.success();
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    // log the error to the console
-                    console.log("error during patch: " + textStatus, errorThrown);
+                    if (!!options && !!options.error && typeof options.error === 'function') {
+                        options.error(jqXHR, textStatus, errorThrown);
+                    }
                 },
                 complete: function() {
-                    console.log("completed patch");
+                    if (!!options && !!options.complete && typeof options.complete === 'function') {
+                        options.complete();
+                    }
                 }
 
             });
