@@ -58,27 +58,7 @@ define([
 
         save: function(data) {
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-
-//            var roles;
-
-//            if(!!this.roles) {
-//                roles = new Roles();
-//                roles.fetch({
-//                    success: function(rolesCollection) {
-//                        this.roles = rolesCollection;
-//                        this.buildUserAndRolesForSave(data);
-//                    }.bind(this),
-//                    error: function() {
-//                        // TODO error message
-//                    }
-//                });
-//            } else {
-                this.buildUserAndRolesForSave(data);
-//            }
-        },
-
-        buildUserAndRolesForSave: function(data) {
-
+       
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);
 

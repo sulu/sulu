@@ -51,14 +51,14 @@ class Permission
     public function setContext($context)
     {
         $this->context = $context;
-    
+
         return $this;
     }
 
     /**
      * Get context
      *
-     * @return string 
+     * @return string
      */
     public function getContext()
     {
@@ -74,14 +74,14 @@ class Permission
     public function setPermissions($permissions)
     {
         $this->permissions = $permissions;
-    
+
         return $this;
     }
 
     /**
      * Get permissions
      *
-     * @return integer 
+     * @return integer
      */
     public function getPermissions()
     {
@@ -91,7 +91,7 @@ class Permission
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -107,14 +107,14 @@ class Permission
     public function setRole(\Sulu\Bundle\SecurityBundle\Entity\Role $role = null)
     {
         $this->role = $role;
-    
+
         return $this;
     }
 
     /**
      * Get role
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Role 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\Role
      */
     public function getRole()
     {
@@ -130,14 +130,14 @@ class Permission
     public function setModule($module)
     {
         $this->module = $module;
-    
+
         return $this;
     }
 
     /**
      * Get module
      *
-     * @return string 
+     * @return string
      */
     public function getModule()
     {

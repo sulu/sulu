@@ -27,4 +27,9 @@ class TemplateController extends Controller
     {
         return $this->render('SuluSecurityBundle:Template:permission.form.html.twig');
     }
+
+    public function roleListAction() {
+        return $this->render('SuluSecurityBundle:Template:role.list.html.twig');
+
+    }
 }
