@@ -133,8 +133,11 @@ define([
                     // on success save contacts id
                     success: function(response) {
                         var model = response.toJSON();
-                        this.sandbox.emit('husky.header.button-state', 'standard');
-                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id);
+                        if (!!data.id) {
+                            this.sandbox.emit('sulu.contacts.contacts.saved', model.id);
+                        } else {
+                            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id);
+                        }
                     }.bind(this),
                     error: function() {
                        this.sandbox.logger.log("error while saving profile");
