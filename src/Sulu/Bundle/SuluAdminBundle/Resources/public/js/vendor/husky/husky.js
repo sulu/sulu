@@ -20902,6 +20902,21 @@ define('__component__$navigation@husky',['jquery'], function($) {
 
             $element = $(event.currentTarget);
             $elementColumn = $element.parent().parent();
+            if ($element.hasClass('selected') && ($elementColumn.hasClass('collapsed') || ($elementColumn.data('columnId') === 0 && $elementColumn.parent().hasClass('show-content')))) {
+                event.stopPropagation();
+                $('#column-0')
+                    .removeClass('hide');
+
+                $('#column-1')
+                    .removeClass('collapsed')
+                    .parent().removeClass('show-content');
+
+                if ($elementColumn.data('columnId') === 0) {
+                    this.showFirstNavigationColumn(event);
+                }
+
+                return;
+            }
 
             elementId = $element.attr('id');
 
@@ -20979,6 +20994,23 @@ define('__component__$navigation@husky',['jquery'], function($) {
                             .removeClass('hide')
                             .removeClass('collapsed')
                             .parent().removeClass('show-content');
+                    }
+
+                    if($elementColumn.data('columnId') === 1){
+                        if($elementColumn.hasClass('content-column')){
+                            $('#column-0')
+                                .addClass('collapsed')
+                                .parent().addClass('show-content');
+                        }
+                        this.showNavigationColumns(event);
+                    }else if($elementColumn.data('columnId') === 2){
+                        if($elementColumn.hasClass('content-column')){
+                            $('#column-1')
+                                .addClass('collapsed')
+                                .parent().addClass('show-content');
+                            $('#column-0')
+                                .addClass('hide');
+                        }
                     }
 
                     sandbox.emit('navigation.item.content.show', {
@@ -21090,11 +21122,6 @@ define('__component__$navigation@husky',['jquery'], function($) {
         // TODO
         showColumn: function(params) {
             sandbox.logger.log('showColumn');
-
-            if (this.options.columnid !== params.id) {
-                this.options.columnid = params.id;
-                console.log('PARAMS ID ',params.id);
-            }
 
             var $showedColumn,
                 $column0,
@@ -21336,7 +21363,7 @@ define('__component__$header@husky',[], function() {
                     return [
                         '<div class="grid-row">',
                         '   <div class="grid-col-6 left">',
-                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-button-state="disable" data-aura-background="black" data-aura-icon-type="circle-ok" data-aura-text="',this.sandbox.translate('header.saved'),'"/>',
+                        '       <div id="save-button" data-aura-component="button@husky" data-aura-instance-name="save" data-aura-button-type="icon" data-aura-button-state="hide" data-aura-background="black" data-aura-icon-type="circle-ok" data-aura-text="',this.sandbox.translate('header.saved'),'"/>',
                         '   </div>',
                         '</div>'
                     ].join('');
@@ -21410,8 +21437,8 @@ define('__component__$header@husky',[], function() {
                         sandbox.emit('husky.button.delete.state', 'loading');
                     },
                     hide: function() {
-//                        sandbox.emit('husky.button.save.state', 'hide');
-//                        sandbox.emit('husky.button.delete.state', 'hide');
+                        sandbox.emit('husky.button.save.state', 'hide');
+                        sandbox.emit('husky.button.delete.state', 'hide');
                     }
                 }
             },
@@ -21438,6 +21465,9 @@ define('__component__$header@husky',[], function() {
                     },
                     'loading-add-button': function() {
                         sandbox.emit('husky.button.add.state', 'loading');
+                    },
+                    hide: function() {
+                        sandbox.emit('husky.button.add.state', 'hide');
                     }
                 }
             },
@@ -21457,7 +21487,6 @@ define('__component__$header@husky',[], function() {
             userName: null, // username to be shown in left side of header
             logoutUrl: null, // logout link
             userIconUrl: null // link to the icon in the left side
-
         };
 
     return {
@@ -21630,7 +21659,7 @@ define('__component__$button@husky',[], function() {
                     this.$el.off('click');
                 },
                 template: function(icon, text) {
-                    return '<div class="loading-content"><span class="icon-' + icon + ' pull-left block"></span><span class="m-left-5 bold pull-left m-top-2 block">' + text + '</span></div>';
+                    return '<div class="loading-content"><span class="icon-' + icon + ' pull-left block"></span><span class="p-left-5 bold pull-left block">' + text + '</span></div>';
                 },
                 reset: function() {
                     this.sandbox.dom.removeClass(this.$el, 'loading-black');
@@ -23735,6 +23764,8 @@ define('__component__$dropdown-multiple-select@husky',[], function() {
                     this.sandbox.util.each(items, function(index, value) {
                         if(this.options.preSelectedElements.indexOf(value) >= 0) {
                             this.sandbox.dom.append(this.$list, this.template.menuElement.call(this, value, this.options.valueName, 'checked'));
+                            this.selectedElements.push(value);
+                            this.selectedElementsValues.push(value);
                         } else {
                             this.sandbox.dom.append(this.$list, this.template.menuElement.call(this, value, this.options.valueName, ''));
                         }
@@ -23743,12 +23774,13 @@ define('__component__$dropdown-multiple-select@husky',[], function() {
                     this.sandbox.util.each(items, function(index, value) {
                         if(this.options.preSelectedElements.indexOf(value.id) >= 0) {
                             this.sandbox.dom.append(this.$list, this.template.menuElement.call(this, value, this.options.valueName, 'checked'));
+                            this.selectedElements.push((value.id).toString());
+                            this.selectedElementsValues.push(value[this.options.valueName]);
                         } else {
                             this.sandbox.dom.append(this.$list, this.template.menuElement.call(this, value, this.options.valueName, ''));
                         }
                     }.bind(this));
                 }
-                this.selectedElements = this.options.preSelectedElements;
                 this.changeLabel();
 
             } else {
