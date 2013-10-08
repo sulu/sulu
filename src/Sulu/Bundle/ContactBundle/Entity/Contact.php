@@ -73,12 +73,12 @@ class Contact
     private $activities;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
      */
     private $creator;
 
@@ -383,10 +383,10 @@ class Contact
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param \Sulu\Bundle\ContactBundle\Entity\UserInterface $changer
      * @return Contact
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(\Sulu\Bundle\ContactBundle\Entity\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -396,7 +396,7 @@ class Contact
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return \Sulu\Bundle\ContactBundle\Entity\UserInterface
      */
     public function getChanger()
     {
@@ -406,10 +406,10 @@ class Contact
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param \Sulu\Bundle\ContactBundle\Entity\UserInterface $creator
      * @return Contact
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(\Sulu\Bundle\ContactBundle\Entity\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -419,7 +419,7 @@ class Contact
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return \Sulu\Bundle\ContactBundle\Entity\UserInterface
      */
     public function getCreator()
     {

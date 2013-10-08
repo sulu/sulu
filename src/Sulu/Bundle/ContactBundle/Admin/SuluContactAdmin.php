@@ -27,13 +27,13 @@ class SuluContactAdmin extends Admin
         $people = new NavigationItem('People');
         $people->setIcon('parents');
         $people->setType('content');
-        $people->setAction('contacts/people');
+        $people->setAction('contacts/contacts');
         $contacts->addChild($people);
 
         $companies = new NavigationItem('Companies');
         $companies->setIcon('bank');
         $companies->setType('content');
-        $companies->setAction('contacts/companies');
+        $companies->setAction('contacts/accounts');
         $contacts->addChild($companies);
 
         $this->setNavigation(new Navigation($rootNavigationItem));

@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AddressType
  */
-class AddressType
+class AddressType implements \JsonSerializable
 {
     /**
      * @var string
@@ -38,6 +38,15 @@ class AddressType
     public function __construct()
     {
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * To force id = 1 in load fixtures
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -104,5 +113,20 @@ class AddressType
     public function getAddresses()
     {
         return $this->addresses;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->getId(),
+            'name' => $this->getName()
+        );
     }
 }

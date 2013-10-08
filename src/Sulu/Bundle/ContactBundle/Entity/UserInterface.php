@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of the Sulu CMS.
  *
@@ -7,11 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel'], function(RelationalModel) {
-    return RelationalModel({
-        defaults: {
-            id: null,
-            name: ''
-        }
-    });
-});
+namespace Sulu\Bundle\ContactBundle\Entity;
+
+/**
+ * UserInterface
+ */
+interface UserInterface
+{
+    public function getId();
+}
