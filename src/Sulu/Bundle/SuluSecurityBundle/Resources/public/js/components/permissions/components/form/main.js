@@ -368,7 +368,8 @@ define([], function() {
                         options: {
                             el: '#languageSelector'+id,
                             instanceName: 'languageSelector'+id,
-                            defaultLabel: 'Please choose ...',
+                            defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
+                            checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
                             data: ["Deutsch", "English", "Spanish", "Italienisch"],
                             preSelectedElements: preSelectedValues
