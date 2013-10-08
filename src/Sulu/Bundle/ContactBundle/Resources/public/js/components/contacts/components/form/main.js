@@ -112,7 +112,7 @@ define([], function() {
             bindCustomEvents: function() {
                 // delete contact
                 this.sandbox.on('husky.button.delete.click', function() {
-                    this.sandbox.emit('sulu.contacts.contacts.delete', this.options.data.id);
+                    this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
                 }, this);
 
                 // contact saved
