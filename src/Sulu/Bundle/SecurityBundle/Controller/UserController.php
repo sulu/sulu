@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\CoreBundle\Controller\Exception\InvalidArgumentException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\MissingArgumentException;
 use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
@@ -76,7 +77,13 @@ class UserController extends RestController implements ClassResourceInterface
             $user->setContact($this->getContact($this->getRequest()->get('contact')['id']));
             $user->setUsername($this->getRequest()->get('username'));
             $user->setSalt($this->generateSalt());
-            $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+
+            if($this->isValidPassword($this->getRequest()->get('password'))) {
+                $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+            } else {
+                throw new InvalidArgumentException($this->entityName, 'password');
+            }
+
             $user->setLocale($this->getRequest()->get('locale'));
 
             $em->persist($user);
@@ -99,6 +106,14 @@ class UserController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    private function isValidPassword($password) {
+        if(empty($password)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -266,9 +281,9 @@ class UserController extends RestController implements ClassResourceInterface
         if ($this->getRequest()->get('username') == null) {
             throw new MissingArgumentException($this->entityName, 'username');
         }
-//        if ($this->getRequest()->get('password') == null) {
-//            throw new MissingArgumentException($this->entityName, 'password');
-//        }
+        if ($this->getRequest()->get('password') === null) {
+            throw new MissingArgumentException($this->entityName, 'password');
+        }
         if ($this->getRequest()->get('locale') == null) {
             throw new MissingArgumentException($this->entityName, 'locale');
         }
