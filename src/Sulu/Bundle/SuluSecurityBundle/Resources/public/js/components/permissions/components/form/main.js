@@ -11,6 +11,8 @@ define([], function() {
 
     'use strict';
 
+    // TODO field for selection of locale of user - currently default value of backbone model
+
     return {
 
         name: 'Sulu Security Permissions Form',
@@ -24,6 +26,9 @@ define([], function() {
             this.formId = '#permissions-form';
             this.selectedRoles = [];
             this.deselectedRoles = [];
+
+            this.passwordField1Id = '#husky-password-fields-instance1-password1';
+            this.passwordField2Id = '#husky-password-fields-instance1-password2';
 
             if(!!this.options.data) {
                 this.user = this.options.data.user;
@@ -44,9 +49,16 @@ define([], function() {
             this.initializeHeaderbar();
 
             this.sandbox.form.create(this.formId);
+
         },
 
-
+        addConstraintsToPasswordFields: function() {
+            // TODO FIXME
+            setTimeout(function(){
+                this.sandbox.form.addConstraint(this.formId, this.passwordField1Id, 'required', {required: true});
+                this.sandbox.form.addConstraint(this.formId, this.passwordField2Id, 'required', {required: true});
+            }.bind(this), 10);
+        },
 
         // ---
         // Headerbar
@@ -137,10 +149,16 @@ define([], function() {
                             inputPassword1: this.sandbox.translate('security.permission.password'),
                             inputPassword2: this.sandbox.translate('security.permission.passwordRepeat'),
                             generateLabel: this.sandbox.translate('security.permission.generatePassword')
-                        }
+                        },
+                        validation: this.formId
                     }
                 }
             ]);
+
+            // set timeout
+            if(!this.user) {
+                this.addConstraintsToPasswordFields();
+            }
         },
 
         bindDOMEvents: function() {
@@ -225,12 +243,16 @@ define([], function() {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
-//            this.sandbox.on('sulu.user.permissions.save', function(data) {
-//                if (!this.options.data.id) {
-//                    this.options.data = data;
-//                }
-//                this.setHeaderBar(true);
-//            }, this);
+            this.sandbox.on('sulu.user.permissions.saved', function(model) {
+                this.user = model;
+
+                if(!!this.user.id && !!this.sandbox.form.element.hasConstraint(this.passwordField1Id, 'required')) {
+                    this.sandbox.form.deleteConstraint(this.formId, this.passwordField1Id, 'required');
+                    this.sandbox.form.deleteConstraint(this.formId, this.passwordField2Id, 'required');
+                }
+
+                this.setHeaderBar(true);
+            }, this);
 
             this.sandbox.on('husky.button.save.click', function() {
                 this.save();
@@ -242,10 +264,12 @@ define([], function() {
 
             var data;
 
-            if (this.sandbox.form.validate(this.formId)) {
+            this.getPassword();
+
+            if (this.sandbox.form.validate(this.formId) && this.isValidPassword()) {
 
                 this.sandbox.logger.log('validation succeeded');
-                this.getPassword();
+
                 data = {
                     user : {
                         username: this.sandbox.dom.val('#username'),
@@ -265,6 +289,21 @@ define([], function() {
                 }
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
+            }
+        },
+
+        isValidPassword: function(){
+
+             // TODO
+
+            if(!!this.user && !!this.user.id) { // existion user - does not have to set password
+                return true;
+            } else { // new user - should set password at least once and it should not be emptyx
+                if(!!this.password && this.password !== '') {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         },
 
@@ -318,7 +357,7 @@ define([], function() {
 
             rows = this.sandbox.dom.find('tbody tr', '#rolesTable');
 
-            // TODO get element for dropdown from portal
+            // TODO get elements for dropdown from portal
 
             this.sandbox.util.each(rows, function(index,value){
                 var id = this.sandbox.dom.data(value,'id'),
