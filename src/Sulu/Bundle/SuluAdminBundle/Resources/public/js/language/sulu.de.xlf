@@ -278,6 +278,14 @@
         <source>security.permission.role.permissions</source>
         <target>Berechtigungen</target>
       </trans-unit>
+      <trans-unit id="b0c24aad50f7c816c2e229ec47f754bc" resname="security.permission.role.chooseLanguage">
+        <source>security.permission.role.chooseLanguage</source>
+        <target>Sprache auswählen</target>
+      </trans-unit>
+      <trans-unit id="1cbc7d24ab0a482414bc0685517c236b" resname="security.permission.role.allLanguages">
+        <source>security.permission.role.allLanguages</source>
+        <target>Alle ausgewählt</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
