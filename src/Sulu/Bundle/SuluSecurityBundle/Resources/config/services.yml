@@ -1,8 +1,18 @@
 parameters:
+    permissions:
+        view: 64
+        add: 32
+        edit: 16
+        delete: 8
+        archive: 4
+        live: 2
+        security: 1
+
     sulu_security.admin.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin
     sulu_security.mask_converter.class: Sulu\Bundle\SecurityBundle\Permission\MaskConverter
     sulu_security.salt_generator.class: Sulu\Bundle\SecurityBundle\Permission\SaltGenerator
     sulu_security.admin.content_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation
+    sulu_security.permission_voter.class: Sulu\Bundle\SecurityBundle\Permission\PermissionVoter
 
 services:
     sulu_security.admin:
@@ -12,6 +22,7 @@ services:
 
     sulu_security.mask_converter:
         class: %sulu_security.mask_converter.class%
+        arguments: [%permissions%]
 
     sulu_security.salt_generator:
         class: %sulu_security.salt_generator.class%
@@ -20,3 +31,11 @@ services:
       class: %sulu_security.admin.content_navigation.class%
       tags:
       - { name: sulu.contact.admin.content_navigation }
+
+    sulu_security.permission_voter:
+        class: %sulu_security.permission_voter.class%
+        arguments: [%permissions%]
+        public: false
+        tags:
+            - { name: security.voter }
+

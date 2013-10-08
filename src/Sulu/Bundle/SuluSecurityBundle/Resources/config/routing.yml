@@ -4,7 +4,7 @@ sulu_security:
     prefix: /api
 
 sulu_security.template.role.form:
-     path: /template/role/form
+     path: /template/role/form.html
      defaults:
          _controller: SuluSecurityBundle:Template:roleform
 
@@ -13,3 +13,6 @@ sulu_security.template.permission.form:
      defaults:
          _controller: SuluSecurityBundle:Template:permissionform
 
+sulu_security.template.role.list:
+    pattern: /template/role/list.html
+    defaults: { _controller: SuluSecurityBundle:Template:roleList }

@@ -312,7 +312,7 @@ class UserController extends RestController implements ClassResourceInterface
      */
     private function getContact($id)
     {
-        $contact =  $this->getDoctrine()
+        $contact = $this->getDoctrine()
             ->getRepository($this->contactEntityName)
             ->find($id);
 
@@ -347,6 +347,7 @@ class UserController extends RestController implements ClassResourceInterface
 
     }
 
+
     /**
      * Returns a user with a specific contact id or all users
      * @return \Symfony\Component\HttpFoundation\Response
@@ -373,4 +374,5 @@ class UserController extends RestController implements ClassResourceInterface
         }
         return $this->handleView($view);
     }
+
 }

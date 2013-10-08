@@ -287,7 +287,7 @@ class User implements UserInterface, Serializable
     /**
      * Serializes the user just with the id, as it is enough
      * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
+     * @return string The string representation of the object or null
      */
     public function serialize()
     {
@@ -299,12 +299,9 @@ class User implements UserInterface, Serializable
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
      * Constructs the object
      * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
+     * @param string $serialized The string representation of the object.
      * @return void
      */
     public function unserialize($serialized)
