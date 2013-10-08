@@ -37,9 +37,9 @@ define([], function() {
                             'items': []
                         }
                     },
-                    firstId = this.sandbox.dom.data('#catalogues .catalogue-item:first', 'id');
+                    firstId = this.options.data.catalogues.length > 0 ? this.options.data.catalogues[0].id : null;
 
-                if (!!this.options.data.id && !!firstId) {
+                if (!!this.options.data.id) {
                     navigation.sub.items.push({
                         'title': 'Settings',
                         'action': 'settings/translate/edit:' + this.options.data.id + '/settings',
@@ -49,13 +49,15 @@ define([], function() {
                         'selected': true
                     });
 
-                    navigation.sub.items.push({
-                        'title': 'Details',
-                        'action': 'settings/translate/edit:' + this.options.data.id + '/details',
-                        'hasSub': false,
+                    if (!!firstId) {
+                        navigation.sub.items.push({
+                            'title': 'Details',
+                            'action': 'settings/translate/edit:' + this.options.data.id + '/details',
+                            'hasSub': false,
                         'type': 'content',
                         'id': 'translate-package-details-' + this.options.data.id
                     });
+                    }
                 }
 
                 return navigation;
@@ -111,9 +113,7 @@ define([], function() {
 
                 // contact saved
                 this.sandbox.on('sulu.translate.package.saved', function(id, data) {
-                    if (!this.options.data.id) {
-                        this.options.data = data;
-                    }
+                    this.options.data = data;
                     this.setTabs();
                     this.setHeaderBar(true);
                 }, this);

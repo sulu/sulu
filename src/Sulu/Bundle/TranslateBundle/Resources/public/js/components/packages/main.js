@@ -230,13 +230,24 @@ define([
 
         saveTranslations: function(updatedTranslations, codesToDelete) {
 
+            var dfd = new $.Deferred(),
+                promiseCounter = 0,
+                resolvePromise = function() {
+                    promiseCounter--;
+                    if (promiseCounter === 0) {
+                        dfd.resolve();
+                    }
+                };
+
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             this.sandbox.util.each(codesToDelete, function(index) {
+                promiseCounter++;
                 var code = new Code({id: codesToDelete[index]});
                 code.destroy({
                     success: function() {
                         this.sandbox.logger.log('Code deleted');
+                        resolvePromise();
                     }.bind(this),
                     error: function() {
                         // TODO errormessage/-handling
@@ -245,12 +256,18 @@ define([
             }.bind(this));
 
             if (updatedTranslations.length > 0) {
-                this.translations.save(this.sandbox, updatedTranslations);
+                promiseCounter++;
+                this.translations.save(this.sandbox, updatedTranslations, {
+                    success: function() {
+                        resolvePromise();
+                    }.bind(this)
+                });
             }
 
-            //FIXME try to get this formular working without page "refresh"
-            //this.sandbox.emit('sulu.translate.translations.saved');
-            this.sandbox.mvc.history.loadUrl(this.sandbox.mvc.history.fragment);
+            dfd.then(function() {
+                //FIXME try to get this formular working without page "refresh"
+                this.sandbox.mvc.history.loadUrl(this.sandbox.mvc.history.fragment);
+            }.bind(this));
         },
 
         delPackages: function(ids) {
