@@ -29,7 +29,7 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('sulu:user:create')
+            ->setName('sulu:security:user:create')
             ->setDescription('Create a user.')
             ->setDefinition(array(
                 new InputArgument('username', InputArgument::REQUIRED, 'The username'),
