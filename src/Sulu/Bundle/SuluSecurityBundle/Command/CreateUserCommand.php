@@ -68,8 +68,10 @@ class CreateUserCommand extends ContainerAwareCommand
         $em->flush();
 
         $contact = new Contact();
+        $contact->setTitle('');
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
+        $contact->setPosition('');
         $contact->addEmail($email);
         $contact->setCreated(new DateTime());
         $contact->setChanged(new DateTime());
@@ -88,6 +90,105 @@ class CreateUserCommand extends ContainerAwareCommand
 
         $em->persist($user);
         $em->flush();
+
+        $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
+    }
+
+
+    /**
+     * @see Command
+     */
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getArgument('username')) {
+            $username = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                'Please choose a username:',
+                function($username) {
+                    if (empty($username)) {
+                        throw new \Exception('Username can not be empty');
+                    }
+
+                    return $username;
+                }
+            );
+            $input->setArgument('username', $username);
+        }
+
+        if (!$input->getArgument('firstName')) {
+            $result = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                'Please choose a FirstName:',
+                function($username) {
+                    if (empty($username)) {
+                        throw new \Exception('FirstName can not be empty');
+                    }
+
+                    return $username;
+                }
+            );
+            $input->setArgument('firstName', $result);
+        }
+
+        if (!$input->getArgument('lastName')) {
+            $result = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                'Please choose a LastName:',
+                function($username) {
+                    if (empty($username)) {
+                        throw new \Exception('LastName can not be empty');
+                    }
+
+                    return $username;
+                }
+            );
+            $input->setArgument('lastName', $result);
+        }
+
+        if (!$input->getArgument('email')) {
+            $email = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                'Please choose an email:',
+                function($email) {
+                    if (empty($email)) {
+                        throw new \Exception('Email can not be empty');
+                    }
+
+                    return $email;
+                }
+            );
+            $input->setArgument('email', $email);
+        }
+
+        if (!$input->getArgument('locale')) {
+            $email = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                'Please choose an locale:',
+                function($email) {
+                    if (empty($email)) {
+                        throw new \Exception('Locale can not be empty');
+                    }
+
+                    return $email;
+                }
+            );
+            $input->setArgument('locale', $email);
+        }
+
+        if (!$input->getArgument('password')) {
+            $password = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                'Please choose a password:',
+                function($password) {
+                    if (empty($password)) {
+                        throw new \Exception('Password can not be empty');
+                    }
+
+                    return $password;
+                }
+            );
+            $input->setArgument('password', $password);
+        }
     }
 
     /**
