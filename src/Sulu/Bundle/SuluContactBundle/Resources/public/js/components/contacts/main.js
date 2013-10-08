@@ -10,7 +10,7 @@
 define([
     'sulucontact/model/contact',
     'text!/contact/navigation/content'
-], function(Contact, contentNavigation) {
+], function(Contact, ContentNavigation) {
 
     'use strict';
 
@@ -57,7 +57,7 @@ define([
 
         del: function() {
             this.confirmDeleteDialog(function(wasConfirmed) {
-                if(wasConfirmed) {
+                if (wasConfirmed) {
                     this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
                     this.contact.destroy({
                         success: function() {
@@ -136,16 +136,16 @@ define([
             // load data and show form
             this.contact = new Contact();
             if (!!this.options.id) {
-                this.contact = new Contact({id:this.options.id});
+                this.contact = new Contact({id: this.options.id});
                 //contact = this.getModel(this.options.id);
                 this.contact.fetch({
                     success: function(model) {
-                       this.sandbox.start([
+                        this.sandbox.start([
                             {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
                         ]);
                     }.bind(this),
                     error: function() {
-                       this.sandbox.logger.log("error while fetching contact");
+                        this.sandbox.logger.log("error while fetching contact");
                     }.bind(this)
                 });
             } else {
@@ -159,14 +159,14 @@ define([
          * @var ids - array of ids to delete
          * @var callback - callback function returns true or false if data got deleted
          */
-        confirmDeleteDialog : function(callbackFunction) {
+        confirmDeleteDialog: function(callbackFunction) {
             // check if callback is a function
             if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
                 throw 'callback is not a function';
             }
 
             // show dialog
-           this.sandbox.emit('sulu.dialog.confirmation.show', {
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
                 content: {
                     title: "Be careful!",
                     content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
@@ -178,68 +178,59 @@ define([
             });
 
             // submit -> delete
-           this.sandbox.once('husky.dialog.submit', function() {
-               this.sandbox.emit('husky.dialog.hide');
-               if (!!callbackFunction) {
-                   callbackFunction(true);
-               }
-           }.bind(this));
+            this.sandbox.once('husky.dialog.submit', function() {
+                this.sandbox.emit('husky.dialog.hide');
+                if (!!callbackFunction) {
+                    callbackFunction(true);
+                }
+            }.bind(this));
 
             // cancel
-           this.sandbox.once('husky.dialog.cancel', function() {
-               this.sandbox.emit('husky.dialog.hide');
-               if (!!callbackFunction) {
-                   callbackFunction(false);
-               }
-           }.bind(this));
+            this.sandbox.once('husky.dialog.cancel', function() {
+                this.sandbox.emit('husky.dialog.hide');
+                if (!!callbackFunction) {
+                    callbackFunction(false);
+                }
+            }.bind(this));
         },
 
 
         // Navigation
         getTabs: function(id, callback) {
             //TODO Simplify this task for bundle developer?
-            var cssId = id || 'new',
 
-            // TODO translate
-            navigation = {
-                'title': 'Contact',
-                'header': {
-                    'displayOption': 'link',
-                    'action': 'contacts/contacts'
-                },
-                'hasSub': 'true',
-                'displayOption': 'content',
-                //TODO id mandatory?
-                'sub': {
-                    'items': []
-                }
-            }, contents = JSON.parse(contentNavigation);
+            var navigation = JSON.parse(ContentNavigation),
+                hasNew, hasEdit;
 
+            // get url from backbone
             this.sandbox.emit('navigation.url', function(url) {
-                this.sandbox.util.foreach(contents, function(content) {
-                    if (!!id) {
-                        // TODO: FIXIT: ugly removal
-                        var strSearch = 'edit:' + id;
-                        url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
-                    }
-                    if (!!id || content.displayOptions.indexOf('new') >= 0) {
-                        // contact must be set before optional tabs can be opened
-                        navigation.sub.items.push({
-                            'title': content.title,
-                            'action': url + '/' + content.action,
-                            'hasSub': false,
-                            'type': 'content',
-                            'displayOption': 'content',
-                            'id': 'contacts-' + content.id + '-' + cssId
-                        });
+                var items = [];
+                // check action
+                this.sandbox.util.foreach(navigation.sub.items, function(content) {
+                    // check DisplayMode (new or edit) and show menu item or don't
+                    hasNew = content.displayOptions.indexOf('new') >= 0;
+                    hasEdit = content.displayOptions.indexOf('edit') >= 0;
+                    if ((!id && hasNew) || (id && hasEdit)) {
+                        content.action = this.parseActionUrl(content.action, url, id);
+                        items.push(content);
                     }
                 }.bind(this));
-
-                if (typeof callback === 'function') {
-                    callback(navigation);
-                }
+                navigation.sub.items = items;
+                callback(navigation);
             }.bind(this));
-        }
+        },
 
+        parseActionUrl: function(actionString, url, id) {
+            // if first char is '/' use absolute url
+            if (actionString.substr(0, 1) === '/') {
+                return actionString.substr(1, actionString.length);
+            }
+            // TODO: FIXIT: ugly removal
+            if (id) {
+                var strSearch = 'edit:' + id;
+                url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
+            }
+            return  url + '/' + actionString;
+        }
     };
 });
