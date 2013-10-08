@@ -16,6 +16,7 @@ class SuluSecurityContentNavigation implements ContentNavigationInterface
         $permissions->setContentType('contact');
         $permissions->setAction('permissions');
         $permissions->setDisplayOptions(array('edit'));
+        $permissions->setType('content');
 
         $this->navigation[] = $permissions;
     }
