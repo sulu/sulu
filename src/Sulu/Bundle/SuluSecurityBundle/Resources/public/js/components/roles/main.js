@@ -7,32 +7,48 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalstore', './models/role'], function(Store, Role) {
+define(['./models/role'], function(Role) {
 
     'use strict';
 
     var sandbox,
+        role,
         idDelete,
+        loading = 'delete',
 
     // callback for deleting a role after confirming
         delSubmit = function() {
             sandbox.emit('husky.dialog.hide');
-            sandbox.emit('husky.header.button-state', 'loading-delete-button');
+            sandbox.emit('husky.header.button-state', 'loading-' + loading + '-button');
 
-            Store.reset();
+            unbindDialogListener();
 
-            var role = new Role({id: idDelete});
+            if (typeof idDelete === 'number' || typeof idDelete === 'string') {
+                delSubmitOnce(idDelete, true);
+            } else {
+                idDelete.forEach(function(id) {
+                    delSubmitOnce(id, false);
+                });
+            }
+
+            sandbox.emit('husky.header.button-state', 'standard');
+        },
+
+        delSubmitOnce = function(id, navigate) {
+            role.set({id: id});
             role.destroy({
                 success: function() {
-                    sandbox.emit('sulu.router.navigate', 'settings/roles');
+                    if (!!navigate) {
+                        sandbox.emit('sulu.router.navigate', 'settings/roles');
+                    } else {
+                        sandbox.emit('husky.datagrid.row.remove', id);
+                    }
                 },
                 error: function() {
                     // TODO Output error message
                     sandbox.emit('husky.header.button-state', 'standard');
                 }
             });
-
-            unbindDialogListener();
         },
 
     // callback for aborting the deletion of a role
@@ -80,8 +96,14 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
                 this.save(data);
             }.bind(this));
 
-            sandbox.on('sulu.roles.delete', function(id) {
+            sandbox.on('sulu.role.delete', function(id) {
+                loading = 'delete';
                 this.del(id);
+            }.bind(this));
+
+            sandbox.on('sulu.roles.delete', function(ids) {
+                loading = 'add';
+                this.del(ids);
             }.bind(this));
         },
 
@@ -95,7 +117,6 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
         load: function(id) {
             sandbox.emit('husky.header.button-state', 'loading-add-button');
 
-            Store.reset();
 
             sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id);
         },
@@ -104,9 +125,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
         save: function(data) {
             sandbox.emit('husky.header.button-state', 'loading-save-button');
 
-            Store.reset();
-
-            var role = new Role(data);
+            role.set(data);
             role.save(null, {
                 success: function() {
                     sandbox.emit('sulu.router.navigate', 'settings/roles');
@@ -119,6 +138,7 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
         },
 
         // deletes the role with the id thrown with the sulu.role.delete event
+        // id cann be an array of ids or one id
         del: function(id) {
             //save id to delete it with other callback
             idDelete = id;
@@ -158,8 +178,9 @@ define(['mvc/relationalstore', './models/role'], function(Store, Role) {
         },
 
         renderForm: function() {
-            var role = new Role(),
-                component = {
+            role = new Role();
+
+            var component = {
                 name: 'roles/components/form@sulusecurity',
                 options: {
                     el: this.options.el,
