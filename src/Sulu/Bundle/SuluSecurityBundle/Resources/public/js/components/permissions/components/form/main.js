@@ -156,7 +156,7 @@ define([], function() {
             ]);
 
             // set timeout
-            if(!this.user) {
+            if(!this.user || !this.user.id) {
                 this.addConstraintsToPasswordFields();
             }
         },
@@ -266,7 +266,7 @@ define([], function() {
 
             this.getPassword();
 
-            if (this.sandbox.form.validate(this.formId) && this.isValidPassword()) {
+            if (this.sandbox.form.validate(this.formId)) {
 
                 this.sandbox.logger.log('validation succeeded');
 
@@ -294,11 +294,10 @@ define([], function() {
 
         isValidPassword: function(){
 
-             // TODO
 
             if(!!this.user && !!this.user.id) { // existion user - does not have to set password
                 return true;
-            } else { // new user - should set password at least once and it should not be emptyx
+            } else { // new user - should set password at least once and it should not be empty
                 if(!!this.password && this.password !== '') {
                     return true;
                 } else {

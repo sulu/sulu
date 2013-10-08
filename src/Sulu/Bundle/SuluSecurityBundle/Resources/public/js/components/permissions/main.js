@@ -59,47 +59,54 @@ define([
         save: function(data) {
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
-            var roles;
+//            var roles;
 
-            if(!!this.roles) {
-                roles = new Roles();
-                roles.fetch({
-                    success: function(rolesCollection) {
-                        this.roles = rolesCollection;
-                        this.buildUserAndRolesForSave(data);
-                    }.bind(this),
-                    error: function() {
-                        // TODO error message
-                    }
-                });
-            } else {
+//            if(!!this.roles) {
+//                roles = new Roles();
+//                roles.fetch({
+//                    success: function(rolesCollection) {
+//                        this.roles = rolesCollection;
+//                        this.buildUserAndRolesForSave(data);
+//                    }.bind(this),
+//                    error: function() {
+//                        // TODO error message
+//                    }
+//                });
+//            } else {
                 this.buildUserAndRolesForSave(data);
-            }
+//            }
         },
 
         buildUserAndRolesForSave: function(data) {
 
-            var userModel = User.findOrCreate(data.user);
+            this.user.set('username', data.user.username);
+            this.user.set('contact', this.contact);
+
+            if(!!data.user.password && data.user.password !== '') {
+                this.user.set('password', data.user.password);
+            } else {
+                this.user.set('password', '');
+            }
 
             if (!!data.user.id) { // PUT
-                userModel.url = '/security/api/users/' + data.user.id;
+                this.user.url = '/security/api/users/' + data.user.id;
             } else { // POST
-                userModel.url = '/security/api/user';
+                this.user.url = '/security/api/user';
             }
 
             // prepare deselected roles
             this.sandbox.util.each(data.deselectedRoles, function(index, value) {
                 var userRole;
 
-                if (userModel.get('userRoles').length > 0) {
+                if (this.user.get('userRoles').length > 0) {
 
-                    userRole = userModel.get('userRoles').findWhere(
+                    userRole = this.user.get('userRoles').findWhere(
                         {
                             role: this.roles.get(value)
                         }
                     );
                     if (!!userRole) {
-                        userModel.get('userRoles').remove(userRole);
+                        this.user.get('userRoles').remove(userRole);
                     }
                 }
 
@@ -111,9 +118,9 @@ define([
                 var userRole = new UserRole(),
                     tmp;
 
-                if (userModel.get('userRoles').length > 0) {
+                if (this.user.get('userRoles').length > 0) {
 
-                    tmp = userModel.get('userRoles').findWhere(
+                    tmp = this.user.get('userRoles').findWhere(
                         {
                             role: this.roles.get(value.roleId)
                         }
@@ -125,10 +132,10 @@ define([
 
                 userRole.set('role', this.roles.get(value.roleId));
                 userRole.set('locales', value.selection);
-                userModel.get('userRoles').add(userRole);
+                this.user.get('userRoles').add(userRole);
             }.bind(this));
 
-            userModel.save(null, {
+            this.user.save(null, {
                 success: function(model) {
                     this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
                 }.bind(this),
@@ -159,10 +166,9 @@ define([
         },
 
         loadContactData: function() {
-            var contact = Contact.findOrCreate({id: this.options.id});
-            contact.fetch({
-                success: function(contactModel) {
-                    this.contact = contactModel;
+            this.contact = Contact.findOrCreate({id: this.options.id});
+            this.contact.fetch({
+                success: function() {
                     this.loadRoles();
                 }.bind(this),
                 error: function() {
@@ -173,10 +179,9 @@ define([
         },
 
         loadRoles: function() {
-            var roles = new Roles();
-            roles.fetch({
-                success: function(rolesCollection) {
-                    this.roles = rolesCollection;
+            this.roles = new Roles();
+            this.roles.fetch({
+                success: function() {
                     this.loadUser();
                 }.bind(this),
                 error: function() {
@@ -188,11 +193,10 @@ define([
 
         loadUser: function() {
 
-            var user = new User();
-            user.url = '/security/api/users?contactId=' + this.options.id;
-            user.fetch({
-                success: function(userModel) {
-                    this.user = userModel;
+            this.user = new User();
+            this.user.url = '/security/api/users?contactId=' + this.options.id;
+            this.user.fetch({
+                success: function() {
                     this.startComponent();
                 }.bind(this),
                 error: function() {
