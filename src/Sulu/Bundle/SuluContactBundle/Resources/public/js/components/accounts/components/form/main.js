@@ -119,7 +119,7 @@ define([], function() {
             bindCustomEvents: function() {
                 // delete account
                 this.sandbox.on('husky.button.delete.click', function() {
-                    this.sandbox.emit('sulu.contacts.accounts.delete', this.options.data.id);
+                    this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
                 }, this);
 
                 // account saved

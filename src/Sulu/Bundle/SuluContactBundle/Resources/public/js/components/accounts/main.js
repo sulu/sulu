@@ -14,6 +14,8 @@ define(['sulucontact/model/account'], function(Account) {
     return {
 
         initialize: function() {
+            this.bindCustomEvents();
+
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
@@ -23,56 +25,102 @@ define(['sulucontact/model/account'], function(Account) {
             }
         },
 
-//        getModel: function(id) {
-//            // FIXME: fixed challenge Cannot instantiate more than one Backbone.RelationalModel with the same id per type!
-//            var packageModel = Account.findOrCreate(id);
-//            if (!packageModel) {
-//                packageModel = new Account({
-//                    id: id
-//                });
-//            }
-//            return packageModel;
-//        },
+        bindCustomEvents: function() {
+            // delete contact
+            this.sandbox.on('sulu.contacts.account.delete', function() {
+                this.del();
+            }, this);
+
+            // save the current package
+            this.sandbox.on('sulu.contacts.accounts.save', function(data) {
+                this.save(data);
+            }, this);
+
+            // wait for navigation events
+            this.sandbox.on('sulu.contacts.accounts.load', function(id) {
+                this.load(id);
+            }, this);
+
+            // add new contact
+            this.sandbox.on('sulu.contacts.accounts.new', function() {
+                this.add();
+            }, this);
+
+            // delete selected contacts
+            this.sandbox.on('sulu.contacts.accounts.delete', function(ids) {
+                this.delAccounts(ids);
+            }, this);
+        },
+
+        del: function() {
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    //account = this.getModel(id);
+                    this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
+                    this.account.destroy({
+                        success: function() {
+                            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
+                        }.bind(this)
+                    });
+                }
+            }.bind(this));
+        },
+
+        save: function(data) {
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            this.account.set(data);
+            this.account.save(null, {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.contacts.accounts.saved', model.id);
+                    } else {
+                        this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id);
+                    }
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
+        },
+
+        load: function(id) {
+            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id);
+        },
+
+        add: function() {
+            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
+        },
+
+        delAccounts: function(ids) {
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
+                return;
+            }
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                    ids.forEach(function(id) {
+                        var account = new Account({id: id});
+                        account.destroy({
+                            success: function() {
+                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                            }.bind(this)
+                        });
+                    }.bind(this));
+                    this.sandbox.emit('husky.header.button-state', 'standard');
+                }
+            }.bind(this));
+        },
 
         renderList: function() {
 
             this.sandbox.start([
                 {name: 'accounts/components/list@sulucontact', options: { el: this.$el}}
             ]);
-
-            // wait for navigation events
-            this.sandbox.on('sulu.contacts.accounts.load', function(id) {
-                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id);
-            }, this);
-
-            // add new contact
-            this.sandbox.on('sulu.contacts.accounts.new', function() {
-                this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
-            }, this);
-
-            // delete selected contacts
-            this.sandbox.on('sulu.contacts.accounts.delete', function(ids) {
-                if (ids.length < 1) {
-                    this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
-                    return;
-                }
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if (wasConfirmed) {
-                        this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-                        ids.forEach(function(id) {
-                            var account = new Account({id: id});
-                            account.destroy({
-                                success: function() {
-                                    this.sandbox.emit('husky.datagrid.row.remove', id);
-                                }.bind(this)
-                            });
-                        }.bind(this));
-                        this.sandbox.emit('husky.header.button-state', 'standard');
-                    }
-                }.bind(this));
-            }, this);
 
         },
 
@@ -84,11 +132,11 @@ define(['sulucontact/model/account'], function(Account) {
             });
 
             // load data and show form
-            var account;
+            this.account = new Account();
             if (!!this.options.id) {
-                account = new Account({id: this.options.id});
+                this.account = new Account({id: this.options.id});
                 //account = this.getModel(this.options.id);
-                account.fetch({
+                this.account.fetch({
                     success: function(model) {
                         this.sandbox.start([
                             {name: 'accounts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
@@ -99,53 +147,11 @@ define(['sulucontact/model/account'], function(Account) {
                     }.bind(this)
                 });
             } else {
-                account = new Account();
                 this.sandbox.start([
-                    {name: 'accounts/components/form@sulucontact', options: { el: this.$el, data: account.toJSON()}}
+                    {name: 'accounts/components/form@sulucontact', options: { el: this.$el, data: this.account.toJSON()}}
                 ]);
             }
-
-            // delete contact
-            this.sandbox.on('sulu.contacts.accounts.delete', function() {
-                this.confirmDeleteDialog(function(wasConfirmed) {
-                    if (wasConfirmed) {
-                        //account = this.getModel(id);
-                        this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
-                        account.destroy({
-                            success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
-                            }.bind(this)
-                        });
-                    }
-                }.bind(this));
-            }, this);
-
-            // save contact
-            this.sandbox.on('sulu.contacts.accounts.save', function(data) {
-//                if (!!data.id) {
-//                    account = this.getModel(data.id);
-//                } else {
-//                    account = new Account();
-//                }
-                this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-                account.set(data);
-                account.save(null, {
-                    // on success save contacts id
-                    success: function(response) {
-                        var model = response.toJSON();
-                        if (!!data.id) {
-                            this.sandbox.emit('sulu.contacts.accounts.saved', model.id);
-                        } else {
-                            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id);
-                        }
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while saving profile");
-                    }.bind(this)
-                });
-            }, this);
         },
-
 
         /**
          * @var ids - array of ids to delete
