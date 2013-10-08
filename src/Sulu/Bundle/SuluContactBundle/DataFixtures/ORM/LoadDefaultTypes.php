@@ -81,46 +81,14 @@ class LoadDefaultTypes implements FixtureInterface
         $urlType1->setName('url.home');
         $manager->persist($urlType1);
 
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class(new Country()));
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-
-        $this->loadCountries($manager);
-
         $manager->flush();
     }
 
-    private function loadCountries($manager)
+    /**
+     * {@inheritDoc}
+     */
+    public function getOrder()
     {
-        $i = 1;
-        $file = dirname(__FILE__) . '/../countries.xml';
-        $doc = new DOMDocument();
-        $doc->load($file);
-
-        $xpath = new DOMXpath($doc);
-        $elements = $xpath->query("/Countries/Country");
-
-        if (!is_null($elements)) {
-            /** @var $element DOMNode */
-            foreach ($elements as $element) {
-                $country = new Country();
-                $country->setId($i);
-                $children = $element->childNodes;
-                /** @var $child DOMNode */
-                foreach ($children as $child) {
-                    if (isset($child->nodeName)) {
-                        if ($child->nodeName == "Name") {
-                            $country->setName($child->nodeValue);
-                        }
-                        if ($child->nodeName == "Code") {
-                            $country->setCode($child->nodeValue);
-                        }
-                    }
-                }
-                $manager->persist($country);
-
-                $i++;
-            }
-        }
+        return 2;
     }
 }
