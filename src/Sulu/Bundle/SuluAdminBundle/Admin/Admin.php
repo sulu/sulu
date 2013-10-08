@@ -13,6 +13,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 
 /**
  * Defines all the required information from a bundle's admin class.
+ *
  * @package Sulu\Bundle\AdminBundle\Admin
  */
 abstract class Admin
