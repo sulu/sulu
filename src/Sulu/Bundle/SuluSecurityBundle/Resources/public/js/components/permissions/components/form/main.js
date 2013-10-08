@@ -7,13 +7,15 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!/security/template/permission/form'], function(Template) {
+define([], function() {
 
     'use strict';
 
     return {
 
         name: 'Sulu Security Permissions Form',
+
+        templates: ['/security/template/permission/form'],
 
         view: true,
 
@@ -120,7 +122,7 @@ define(['text!/security/template/permission/form'], function(Template) {
                 email = this.contact.emails[0].email;
             }
 
-            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(Template, {user: this.user, email: email}));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/security/template/permission/form', {user: !!this.user ? this.user : null, email: email}));
         },
 
         initializePasswordFields: function() {
@@ -130,7 +132,12 @@ define(['text!/security/template/permission/form'], function(Template) {
                     name: 'password-fields@husky',
                     options: {
                         instanceName: "instance1",
-                        el: '#password-component'
+                        el: '#password-component',
+                        labels:{
+                            inputPassword1: this.sandbox.translate('security.permission.password'),
+                            inputPassword2: this.sandbox.translate('security.permission.passwordRepeat'),
+                            generateLabel: this.sandbox.translate('security.permission.generatePassword')
+                        }
                     }
                 }
             ]);
@@ -361,7 +368,11 @@ define(['text!/security/template/permission/form'], function(Template) {
         },
 
         prepareTableHeader: function() {
-            return this.template.tableHead('Title', 'Languages', 'Permissions');
+            return this.template.tableHead(
+                this.sandbox.translate('security.permission.role.title'),
+                this.sandbox.translate('security.permission.role.language'),
+                this.sandbox.translate('security.permission.role.permissions')
+            );
         },
 
         prepareTableContent: function() {
