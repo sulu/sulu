@@ -17,7 +17,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Console\Command\Command;
 
-class AdminPoolTest extends \PHPUnit_Framework_TestCase
+class ContentNavigationTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
