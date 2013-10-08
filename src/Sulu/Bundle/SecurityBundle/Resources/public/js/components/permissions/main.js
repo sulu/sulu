@@ -130,7 +130,7 @@ define([
 
             userModel.save(null, {
                 success: function(model) {
-                    this.sandbox.emit('sulu.user.permissions.saved', model);
+                    this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
