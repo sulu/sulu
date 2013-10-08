@@ -242,6 +242,42 @@
         <source>security.roles.all</source>
         <target>Alle</target>
       </trans-unit>
+      <trans-unit id="564c871c3fda868b7f35e81724359618" resname="security.permission.title">
+        <source>security.permission.title</source>
+        <target>Benutzername &amp; Passwort</target>
+      </trans-unit>
+      <trans-unit id="d1dc8a9e6998e85b5dbd655d00c40567" resname="security.permission.username">
+        <source>security.permission.username</source>
+        <target>Benutzername</target>
+      </trans-unit>
+      <trans-unit id="1c6ee1fe132b430a6577ba498fb8cf6f" resname="security.permission.password">
+        <source>security.permission.password</source>
+        <target>Passwort</target>
+      </trans-unit>
+      <trans-unit id="2d8a20af61e1b0e697a5d14721fcb4c9" resname="security.permission.passwordRepeat">
+        <source>security.permission.passwordRepeat</source>
+        <target>Passwort wiederholen</target>
+      </trans-unit>
+      <trans-unit id="bd6071cc375280e4ef2f080de41d62f0" resname="security.permission.email">
+        <source>security.permission.email</source>
+        <target>Primäre E-Mail-Adresse</target>
+      </trans-unit>
+      <trans-unit id="335eed3524bda024ac06455fc22da0e1" resname="security.permission.titlePermissions">
+        <source>security.permission.titlePermissions</source>
+        <target>Sulu Berechtigungen</target>
+      </trans-unit>
+      <trans-unit id="291bcdd38b7826cf6a0e3db88bdd0c2b" resname="security.permission.role.title">
+        <source>security.permission.role.title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="263162515a9c2bff928e4bedf2cf6e84" resname="security.permission.role.language">
+        <source>security.permission.role.language</source>
+        <target>Sprache</target>
+      </trans-unit>
+      <trans-unit id="eeada25e40399fda100459d5fc309eec" resname="security.permission.role.permissions">
+        <source>security.permission.role.permissions</source>
+        <target>Berechtigungen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
