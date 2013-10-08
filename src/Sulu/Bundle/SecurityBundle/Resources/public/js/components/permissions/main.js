@@ -91,7 +91,6 @@ define([
 
             }.bind(this));
 
-
             // prepare selected roles
             this.sandbox.util.each(data.selectedRolesAndConfig, function(index, value) {
                 var userRole = new UserRole(),
@@ -123,11 +122,7 @@ define([
                 }.bind(this)
 
             });
-
         },
-
-
-
 
         // render form and load data
 
@@ -172,7 +167,6 @@ define([
         },
 
         loadUser: function() {
-
             this.user = new User();
             this.user.url = '/security/api/users?contactId=' + this.options.id;
             this.user.fetch({
@@ -187,7 +181,6 @@ define([
         },
 
         startComponent: function() {
-
             var data = {};
             data.contact = this.contact.toJSON();
 
@@ -205,11 +198,7 @@ define([
                         data: data
                     }}
             ]);
-
         },
-
-
-
 
         // dialog
 
@@ -251,6 +240,5 @@ define([
                 }
             }.bind(this));
         }
-
     };
 });

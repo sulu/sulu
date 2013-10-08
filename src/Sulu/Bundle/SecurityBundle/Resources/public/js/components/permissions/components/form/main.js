@@ -60,7 +60,6 @@ define([], function() {
             }.bind(this), 10);
         },
 
-        // ---
         // Headerbar
 
         initializeHeaderbar: function(){
@@ -121,11 +120,6 @@ define([], function() {
 
         },
 
-
-
-
-
-        // ---
         // Form
 
         render: function() {
@@ -293,16 +287,10 @@ define([], function() {
         },
 
         isValidPassword: function(){
-
-
             if(!!this.user && !!this.user.id) { // existion user - does not have to set password
                 return true;
             } else { // new user - should set password at least once and it should not be empty
-                if(!!this.password && this.password !== '') {
-                    return true;
-                } else {
-                    return false;
-                }
+                return !!this.password && this.password !== '';
             }
         },
 
@@ -335,9 +323,6 @@ define([], function() {
             }.bind(this));
         },
 
-
-
-        // ---
         // Grid with roles and permissions
 
         initializeRoles: function() {
@@ -480,7 +465,5 @@ define([], function() {
                 return $row;
             }
         }
-
-
     };
 });

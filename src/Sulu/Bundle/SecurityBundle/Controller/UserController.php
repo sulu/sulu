@@ -108,12 +108,13 @@ class UserController extends RestController implements ClassResourceInterface
         return $this->handleView($view);
     }
 
+    /**
+     * Checks if the given password is a valid one
+     * @param $password The password to check
+     * @return bool True if the password is valid, otherwise false
+     */
     private function isValidPassword($password) {
-        if(empty($password)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !empty($password);
     }
 
     /**
