@@ -21,6 +21,8 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        resolve_target_entities:
+            Sulu\Bundle\ContactBundle\Entity\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
 
 monolog:
     handlers:
