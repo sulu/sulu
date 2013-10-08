@@ -528,102 +528,122 @@ table {
   margin-top: 5px !important;
 }
 
-/* line 59, ../scss/utilities.scss */
+/* line 58, ../scss/utilities.scss */
+.p-top-5 {
+  padding-top: 5px !important;
+}
+
+/* line 62, ../scss/utilities.scss */
 .m-bottom-5 {
   margin-bottom: 5px !important;
 }
 
-/* line 63, ../scss/utilities.scss */
+/* line 65, ../scss/utilities.scss */
+.p-bottom-5 {
+  padding-bottom: 5px !important;
+}
+
+/* line 69, ../scss/utilities.scss */
 .m-right-5 {
   margin-right: 5px !important;
 }
 
-/* line 67, ../scss/utilities.scss */
+/* line 72, ../scss/utilities.scss */
+.p-right-5 {
+  padding-right: 5px !important;
+}
+
+/* line 76, ../scss/utilities.scss */
 .m-left-5 {
   margin-left: 5px !important;
 }
 
-/* line 72, ../scss/utilities.scss */
+/* line 79, ../scss/utilities.scss */
+.p-left-5 {
+  padding-left: 5px !important;
+}
+
+/* line 84, ../scss/utilities.scss */
 .m-top-10 {
   margin-top: 10px !important;
 }
 
-/* line 76, ../scss/utilities.scss */
+/* line 88, ../scss/utilities.scss */
 .m-bottom-10 {
   margin-bottom: 10px !important;
 }
 
-/* line 80, ../scss/utilities.scss */
+/* line 92, ../scss/utilities.scss */
 .m-right-10 {
   margin-right: 10px !important;
 }
 
-/* line 84, ../scss/utilities.scss */
+/* line 96, ../scss/utilities.scss */
 .m-left-10 {
   margin-left: 10px !important;
 }
 
-/* line 89, ../scss/utilities.scss */
+/* line 101, ../scss/utilities.scss */
 .m-top-15 {
   margin-top: 15px !important;
 }
 
-/* line 93, ../scss/utilities.scss */
+/* line 105, ../scss/utilities.scss */
 .m-bottom-15 {
   margin-bottom: 15px !important;
 }
 
-/* line 97, ../scss/utilities.scss */
+/* line 109, ../scss/utilities.scss */
 .m-right-15 {
   margin-right: 15px !important;
 }
 
-/* line 101, ../scss/utilities.scss */
+/* line 113, ../scss/utilities.scss */
 .m-left-15 {
   margin-left: 15px !important;
 }
 
-/* line 106, ../scss/utilities.scss */
+/* line 118, ../scss/utilities.scss */
 .m-top-20 {
   margin-top: 20px !important;
 }
 
-/* line 110, ../scss/utilities.scss */
+/* line 122, ../scss/utilities.scss */
 .m-bottom-20 {
   margin-bottom: 20px !important;
 }
 
-/* line 114, ../scss/utilities.scss */
+/* line 126, ../scss/utilities.scss */
 .m-right-20 {
   margin-right: 20px !important;
 }
 
-/* line 118, ../scss/utilities.scss */
+/* line 130, ../scss/utilities.scss */
 .m-left-20 {
   margin-left: 20px !important;
 }
 
-/* line 123, ../scss/utilities.scss */
+/* line 135, ../scss/utilities.scss */
 .m-top-30 {
   margin-top: 30px !important;
 }
 
-/* line 127, ../scss/utilities.scss */
+/* line 139, ../scss/utilities.scss */
 .m-bottom-30 {
   margin-bottom: 30px !important;
 }
 
-/* line 131, ../scss/utilities.scss */
+/* line 143, ../scss/utilities.scss */
 .m-right-30 {
   margin-right: 30px !important;
 }
 
-/* line 135, ../scss/utilities.scss */
+/* line 147, ../scss/utilities.scss */
 .m-left-30 {
   margin-left: 30px !important;
 }
 
-/* line 143, ../scss/utilities.scss */
+/* line 155, ../scss/utilities.scss */
 .m-height-25 {
   height: 25px !important;
 }
