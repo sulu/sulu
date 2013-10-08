@@ -21091,6 +21091,11 @@ define('__component__$navigation@husky',['jquery'], function($) {
         showColumn: function(params) {
             sandbox.logger.log('showColumn');
 
+            if (this.options.columnid !== params.id) {
+                this.options.columnid = params.id;
+                console.log('PARAMS ID ',params.id);
+            }
+
             var $showedColumn,
                 $column0,
                 $column1,
