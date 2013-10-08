@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function(History) {
+define(function() {
 
     'use strict';
 
@@ -45,8 +45,11 @@ define(function(History) {
         bindCustomEvents: function() {
             // listening for navigation events
             this.sandbox.on('sulu.router.navigate', function(route) {
+                // reset store for cleaning environment
+                this.sandbox.mvc.Store.reset();
+
                 router.navigate(route, {trigger: true});
-            });
+            }.bind(this));
 
             // init navigation
             this.sandbox.on('navigation.item.content.show', function(event) {
@@ -63,7 +66,7 @@ define(function(History) {
 
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
-               callbackFunction(this.sandbox.mvc.history.fragment);
+                callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
         },
 

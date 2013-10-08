@@ -60,7 +60,7 @@
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
 }
 
-/* normalize.css v2.1.2 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.2 | MIT License | git.io/normalize */
 /* ==========================================================================
    HTML5 display definitions
    ========================================================================== */
@@ -4241,15 +4241,11 @@ a.btn-black {
 }
 /* line 5, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-label {
-  background: #ccc;
+  background: #cccccc;
   padding: 10px;
   border-radius: 6px;
 }
-/* line 10, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-label.dropdown-open {
-  background: #999 !important;
-}
-/* line 15, ../scss/modules/dropdown-multiple-select.scss */
+/* line 11, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list {
   width: 100%;
   /*display: inline-block;*/
@@ -4260,8 +4256,9 @@ a.btn-black {
   margin-top: 20px;
   background-color: #FFF;
   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25);
+  z-index: 95;
 }
-/* line 27, ../scss/modules/dropdown-multiple-select.scss */
+/* line 24, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list::after, .husky-dropdown-multiple-select .dropdown-list::before {
   content: "";
   display: block;
@@ -4274,7 +4271,7 @@ a.btn-black {
   border-right: 10px solid transparent;
   border-bottom: 10px solid #FFF;
 }
-/* line 41, ../scss/modules/dropdown-multiple-select.scss */
+/* line 38, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list::before {
   top: -11px;
   left: 4px;
@@ -4282,27 +4279,27 @@ a.btn-black {
   border-right: 11px solid transparent;
   border-bottom: 11px solid #ccc;
 }
-/* line 50, ../scss/modules/dropdown-multiple-select.scss */
+/* line 47, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list.dropdown-align-right {
   left: auto !important;
   right: 0;
 }
-/* line 54, ../scss/modules/dropdown-multiple-select.scss */
+/* line 51, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::after, .husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::before {
   left: auto !important;
   right: 5px;
 }
-/* line 60, ../scss/modules/dropdown-multiple-select.scss */
+/* line 57, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 65, ../scss/modules/dropdown-multiple-select.scss */
+/* line 62, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list > ul > li {
   padding: 5px 10px;
 }
-/* line 69, ../scss/modules/dropdown-multiple-select.scss */
+/* line 66, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list > ul > li:hover, .husky-dropdown-multiple-select .dropdown-list > ul > li.hover {
   background-color: #ccc;
   cursor: pointer;
