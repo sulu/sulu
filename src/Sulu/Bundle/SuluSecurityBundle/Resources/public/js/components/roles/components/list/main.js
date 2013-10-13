@@ -14,7 +14,7 @@ define(function() {
     return {
         name: 'Sulu Security Role List',
 
-        templates: ['/security/template/role/list'],
+        templates: ['/admin/security/template/role/list'],
 
         initialize: function() {
             this.initializeDataGrid();
@@ -22,7 +22,7 @@ define(function() {
         },
 
         initializeDataGrid: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/security/template/role/list'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/role/list'));
 
             // dropdown - showing options
             this.sandbox.start([
@@ -59,7 +59,7 @@ define(function() {
                     name: 'datagrid@husky',
                     options: {
                         el: this.sandbox.dom.find('#roles-list'),
-                        url: '/security/api/roles/list?fields=id,name,system',
+                        url: '/admin/api/security/roles/list?fields=id,name,system',
                         selectItem: {
                             type: 'checkbox'
                         },

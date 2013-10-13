@@ -68,9 +68,9 @@ define([
             }
 
             if (!!data.user.id) { // PUT
-                this.user.url = '/security/api/users/' + data.user.id;
+                this.user.url = '/admin/api/security/users/' + data.user.id;
             } else { // POST
-                this.user.url = '/security/api/user';
+                this.user.url = '/admin/api/security/users';
             }
 
             // prepare deselected roles
@@ -168,7 +168,7 @@ define([
 
         loadUser: function() {
             this.user = new User();
-            this.user.url = '/security/api/users?contactId=' + this.options.id;
+            this.user.url = '/admin/api/security/users?contactId=' + this.options.id;
             this.user.fetch({
                 success: function() {
                     this.startComponent();

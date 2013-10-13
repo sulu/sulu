@@ -17,7 +17,7 @@ define([], function() {
 
         name: 'Sulu Security Permissions Form',
 
-        templates: ['/security/template/permission/form'],
+        templates: ['/admin/security/template/permission/form'],
 
         view: true,
 
@@ -128,7 +128,7 @@ define([], function() {
                 email = this.contact.emails[0].email;
             }
 
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/security/template/permission/form', {user: !!this.user ? this.user : null, email: email}));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {user: !!this.user ? this.user : null, email: email}));
         },
 
         initializePasswordFields: function() {

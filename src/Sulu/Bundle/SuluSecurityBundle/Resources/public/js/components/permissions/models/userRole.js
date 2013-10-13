@@ -16,7 +16,7 @@ define([
     'use strict';
 
     return relationalModel({
-        urlRoot: '/security/api/roles',
+        urlRoot: '/admin/api/security/roles',
 
         defaults: function() {
             return {

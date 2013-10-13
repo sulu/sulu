@@ -100,7 +100,7 @@ class RolesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/security/api/roles/list');
+        $client->request('GET', '/api/security/roles/list');
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -113,7 +113,7 @@ class RolesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/security/api/roles/1');
+        $client->request('GET', '/api/security/roles/1');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu Administrator', $response->name);
@@ -143,7 +143,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/security/api/role',
+            '/api/security/roles',
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
@@ -200,7 +200,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/security/api/roles/3'
+            '/api/security/roles/3'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -232,7 +232,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/security/api/roles/1',
+            '/api/security/roles/1',
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
@@ -310,7 +310,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/security/api/roles/1'
+            '/api/security/roles/1'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -348,7 +348,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/security/api/roles/10',
+            '/api/security/roles/10',
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
@@ -367,7 +367,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/security/api/roles'
+            '/api/security/roles'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -377,7 +377,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'DELETE',
-            '/security/api/roles/1'
+            '/api/security/roles/1'
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
@@ -385,7 +385,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/security/api/roles'
+            '/api/security/roles'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -399,7 +399,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'DELETE',
-            '/security/api/roles/10'
+            '/api/security/roles/10'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -413,7 +413,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/security/api/roles'
+            '/api/security/roles'
         );
 
         $response = json_decode($client->getResponse()->getContent());

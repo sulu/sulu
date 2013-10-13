@@ -26,7 +26,7 @@ define([], function() {
 
         view: true,
 
-        templates: ['/security/template/role/form'],
+        templates: ['/admin/security/template/role/form'],
 
         initialize: function() {
             currentType = currentState = '';
@@ -213,7 +213,7 @@ define([], function() {
         },
 
         render: function() {
-            this.$el.html(this.renderTemplate('/security/template/role/form', {data: this.options.data}));
+            this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.options.data}));
         },
 
         // @var Bool saved - defines if saved state should be shown
