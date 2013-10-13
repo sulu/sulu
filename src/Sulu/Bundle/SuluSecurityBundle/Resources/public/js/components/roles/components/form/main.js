@@ -251,6 +251,9 @@ define([], function() {
             this.sandbox.dom.on('#role-form', 'keyup', function() {
                 this.setHeaderBar(false);
             }.bind(this), "input");
+            this.sandbox.on('husky.matrix.changed', function() {
+                this.setHeaderBar(false);
+            }.bind(this));
         }
     };
 });
