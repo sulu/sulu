@@ -13,7 +13,7 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './userRole', 'sulucontact/model/c
 
     return new RelationalModel({
 
-        urlRoot: '/security/api/users',
+        urlRoot: '/admin/api/security/users',
 
         defaults:  {
                 username: '',
