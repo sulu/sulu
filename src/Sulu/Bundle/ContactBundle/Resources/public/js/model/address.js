@@ -14,7 +14,7 @@ define([
     'sulucontact/model/addressType'
 ], function(RelationalModel, HasOne, Country, AddressType) {
     return RelationalModel({
-        urlRoot: '/contact/api/addresses',
+        urlRoot: '/admin/api/contact/addresses',
         defaults: {
             id: null,
             street: '',

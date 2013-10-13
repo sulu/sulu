@@ -17,7 +17,7 @@ define([
 
         view: true,
 
-        templates: ['/contact/template/account/list'],
+        templates: ['/admin/contact/template/account/list'],
 
         initialize: function() {
             this.render();
@@ -27,7 +27,7 @@ define([
 
             RelationalStore.reset(); //FIXME really necessary?
 
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/contact/template/account/list'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
             // dropdown - showing options
             this.sandbox.start([{
@@ -53,7 +53,7 @@ define([
                 name: 'datagrid@husky',
                 options: {
                     el: this.sandbox.dom.find('#companies-list', this.$el),
-                    url: '/contact/api/accounts/list?fields=id,name',
+                    url: '/admin/api/contact/accounts/list?fields=id,name',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'

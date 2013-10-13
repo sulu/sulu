@@ -9,7 +9,7 @@
 
 define([
     'sulucontact/model/contact',
-    'text!/contact/navigation/content'
+    'text!/admin/contact/navigation/content'
 ], function(Contact, ContentNavigation) {
 
     'use strict';

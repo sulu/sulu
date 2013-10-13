@@ -152,7 +152,7 @@ class ContactsControllerTest extends DatabaseTestCase
 	public function testGetById()
 	{
 		$client = static::createClient();
-		$client->request('GET', '/contact/api/contacts/1');
+		$client->request('GET', '/api/contact/contacts/1');
 
 		$response = json_decode($client->getResponse()->getContent());
 
@@ -178,7 +178,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/contact/api/contacts',
+			'/api/contact/contacts',
 			array(
 				'firstName' => 'Erika',
 				'lastName' => 'Mustermann',
@@ -263,7 +263,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Note 1', $response->notes[0]->value);
 		$this->assertEquals('Note 2', $response->notes[1]->value);
 
-		$client->request('GET', '/contact/api/contacts/' . $response->id);
+		$client->request('GET', '/api/contact/contacts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(2, $response->id);
@@ -290,7 +290,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/contact/api/contacts',
+			'/api/contact/contacts',
 			array(
 				'firstName' => 'Erika',
 				'lastName' => 'Mustermann',
@@ -376,7 +376,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Note 1', $response->notes[0]->value);
 		$this->assertEquals('Note 2', $response->notes[1]->value);
 
-		$client->request('GET', '/contact/api/contacts/' . $response->id);
+		$client->request('GET', '/api/contact/contacts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(2, $response->id);
@@ -404,7 +404,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/contact/api/contacts',
+			'/api/contact/contacts',
 			array(
 				'firstName' => 'Erika',
 				'lastName' => 'Mustermann',
@@ -420,7 +420,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
 
-		$client->request('GET', '/contact/api/contacts/' . $response->id);
+		$client->request('GET', '/api/contact/contacts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(2, $response->id);
@@ -436,7 +436,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/contact/api/contacts',
+			'/api/contact/contacts',
 			array(
 				'firstName' => 'Erika',
 				'lastName' => 'Mustermann',
@@ -456,7 +456,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('MSc', $response->title);
 		$this->assertEquals('Manager', $response->position);
 
-		$client->request('GET', '/contact/api/contacts/' . $response->id);
+		$client->request('GET', '/api/contact/contacts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(2, $response->id);
@@ -472,7 +472,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'PUT',
-			'/contact/api/contacts/1',
+			'/api/contact/contacts/1',
 			array(
 				'firstName' => 'John',
 				'lastName' => 'Doe',
@@ -566,7 +566,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Note 1_1', $response->notes[0]->value);
 		$this->assertEquals(1, count($response->notes));
 
-		$client->request('GET', '/contact/api/contacts/' . $response->id);
+		$client->request('GET', '/api/contact/contacts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals('John', $response->firstName);
@@ -593,7 +593,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'PUT',
-			'/contact/api/contacts/1',
+			'/api/contact/contacts/1',
 			array(
 				'firstName' => 'John',
 				'lastName' => 'Doe',
@@ -667,7 +667,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'PUT',
-			'/contact/api/contacts/1',
+			'/api/contact/contacts/1',
 			array(
 				'firstName' => 'John',
 				'lastName' => 'Doe',
@@ -742,7 +742,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'PUT',
-			'/contact/api/contacts/1',
+			'/api/contact/contacts/1',
 			array(
 				'firstName' => 'John',
 				'lastName' => 'Doe',
@@ -822,7 +822,7 @@ class ContactsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'PUT',
-			'/contact/api/contacts/10',
+			'/api/contact/contacts/10',
 			array(
 				'firstName' => 'John'
 			)
@@ -834,7 +834,7 @@ class ContactsControllerTest extends DatabaseTestCase
 	public function testGetList()
 	{
 		$client = static::createClient();
-		$client->request('GET', '/contact/api/contacts/list');
+		$client->request('GET', '/api/contact/contacts/list');
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(1, $response->total);
@@ -848,7 +848,7 @@ class ContactsControllerTest extends DatabaseTestCase
 	public function testGetListFields()
 	{
 		$client = static::createClient();
-		$client->request('GET', '/contact/api/contacts/list?fields=id,firstName,lastName');
+		$client->request('GET', '/api/contact/contacts/list?fields=id,firstName,lastName');
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(1, $response->total);
@@ -857,7 +857,7 @@ class ContactsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Mustermann', $response->items[0]->lastName);
 
 		$client = static::createClient();
-		$client->request('GET', '/contact/api/contacts/list?fields=id,firstName');
+		$client->request('GET', '/api/contact/contacts/list?fields=id,firstName');
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(1, $response->total);
@@ -869,12 +869,12 @@ class ContactsControllerTest extends DatabaseTestCase
 	public function testDelete()
 	{
 		$client = static::createClient();
-		$client->request('DELETE', '/contact/api/contacts/1');
+		$client->request('DELETE', '/api/contact/contacts/1');
 
 		$this->assertEquals(204, $client->getResponse()->getStatusCode());
 
 		$client = static::createClient();
-		$client->request('GET', '/contact/api/contacts/1');
+		$client->request('GET', '/api/contact/contacts/1');
 
 		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 	}
@@ -882,11 +882,11 @@ class ContactsControllerTest extends DatabaseTestCase
 	public function testDeleteNotExisting()
 	{
 		$client = static::createClient();
-		$client->request('DELETE', '/contact/api/contacts/4711');
+		$client->request('DELETE', '/api/contact/contacts/4711');
 
 		$this->assertEquals(404, $client->getResponse()->getStatusCode());
 
-		$client->request('GET', '/contact/api/contacts/list');
+		$client->request('GET', '/api/contact/contacts/list');
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals(1, $response->total);
