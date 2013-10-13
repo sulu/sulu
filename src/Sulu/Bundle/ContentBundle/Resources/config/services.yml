@@ -1,0 +1,8 @@
+parameters:
+    sulu_content.admin.class: Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin
+
+services:
+    sulu_content.admin:
+        class: %sulu_content.admin.class%
+        tags:
+        - { name: sulu.admin }
