@@ -17,7 +17,7 @@ define([], function() {
 
         view: true,
 
-        templates: ['/translate/template/package/list'],
+        templates: ['/admin/translate/template/package/list'],
 
         initialize: function() {
             sandbox = this.sandbox;
@@ -26,7 +26,7 @@ define([], function() {
 
         render: function() {
 
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/translate/template/package/list'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/translate/template/package/list'));
 
 
             // dropdown - showing options
@@ -56,7 +56,7 @@ define([], function() {
                     name: 'datagrid@husky',
                     options: {
                         el: this.sandbox.dom.find('#package-list', this.$el),
-                        url: '/translate/api/packages',
+                        url: '/admin/api/translate/packages',
                         pagination: false,
                         selectItem: {
                             type: 'checkbox'

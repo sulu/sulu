@@ -20,7 +20,7 @@ define([], function() {
 
             view: true,
 
-            templates: ['/translate/template/translation/form'],
+            templates: ['/admin/translate/template/translation/form'],
 
             getTabs: function() {
                 // TODO translate
@@ -74,7 +74,7 @@ define([], function() {
 
             render: function() {
 
-                this.$el.html(this.renderTemplate('/translate/template/translation/form', {packageName: this.options.data.name}));
+                this.$el.html(this.renderTemplate('/admin/translate/template/translation/form', {packageName: this.options.data.name}));
 
                 codeItem = this.$el.find('#codes .code-item:first');
                 codeItem.remove();

@@ -20,7 +20,7 @@ define([], function() {
 
             view: true,
 
-            templates: ['/translate/template/package/form'],
+            templates: ['/admin/translate/template/package/form'],
 
             getTabs: function() {
                 // TODO translate
@@ -75,7 +75,7 @@ define([], function() {
 
             render: function() {
 
-                this.$el.html(this.renderTemplate('/translate/template/package/form'));
+                this.$el.html(this.renderTemplate('/admin/translate/template/package/form'));
 
                 catalogueItem = this.$el.find('#catalogues .catalogue-item:first');
                 catalogueItem.remove();

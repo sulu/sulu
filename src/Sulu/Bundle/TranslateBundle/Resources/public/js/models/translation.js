@@ -17,7 +17,7 @@ define([
     'use strict';
 
     return relationalModel({
-        urlRoot: '/translate/api/translation',
+        urlRoot: '/admin/api/translate/translation',
         defaults: {
             id: null,
             value: '',

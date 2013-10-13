@@ -127,7 +127,7 @@ class TranslationsControllerTest extends DatabaseTestCase
     public function testGetAllWithSuggestions()
     {
         $client = static::createClient();
-        $client->request('GET', '/translate/api/catalogues/2/translations');
+        $client->request('GET', '/api/translate/catalogues/2/translations');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
@@ -177,12 +177,12 @@ class TranslationsControllerTest extends DatabaseTestCase
             )
         );
         $client = static::createClient();
-        $client->request('PATCH', '/translate/api/catalogues/1/translations', $request);
+        $client->request('PATCH', '/api/translate/catalogues/1/translations', $request);
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
         $client = static::createClient();
-        $client->request('GET', '/translate/api/catalogues/1/translations');
+        $client->request('GET', '/api/translate/catalogues/1/translations');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 

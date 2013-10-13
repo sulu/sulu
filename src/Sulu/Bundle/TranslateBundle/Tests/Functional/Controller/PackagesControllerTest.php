@@ -80,7 +80,7 @@ class PackagesControllerTest extends DatabaseTestCase
     public function testGetAll()
     {
         $client = static::createClient();
-        $client->request('GET', '/translate/api/packages');
+        $client->request('GET', '/api/translate/packages');
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -94,28 +94,28 @@ class PackagesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/translate/api/packages?sortBy=name&sortOrder=asc');
+        $client->request('GET', '/api/translate/packages?sortBy=name&sortOrder=asc');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Global', $response->items[0]->name);
         $this->assertEquals('Portal', $response->items[1]->name);
         $this->assertEquals('Sulu', $response->items[2]->name);
 
-        $client->request('GET', '/translate/api/packages?sortBy=name&sortOrder=desc');
+        $client->request('GET', '/api/translate/packages?sortBy=name&sortOrder=desc');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Global', $response->items[2]->name);
         $this->assertEquals('Portal', $response->items[1]->name);
         $this->assertEquals('Sulu', $response->items[0]->name);
 
-        $client->request('GET', '/translate/api/packages?sortBy=id&sortOrder=asc');
+        $client->request('GET', '/api/translate/packages?sortBy=id&sortOrder=asc');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu', $response->items[0]->name);
         $this->assertEquals('Global', $response->items[1]->name);
         $this->assertEquals('Portal', $response->items[2]->name);
 
-        $client->request('GET', '/translate/api/packages?sortBy=id&sortOrder=desc');
+        $client->request('GET', '/api/translate/packages?sortBy=id&sortOrder=desc');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu', $response->items[2]->name);
@@ -128,7 +128,7 @@ class PackagesControllerTest extends DatabaseTestCase
         $pageSize = 2;
 
         $client = static::createClient();
-        $client->request('GET', '/translate/api/packages?pageSize=' . $pageSize);
+        $client->request('GET', '/api/translate/packages?pageSize=' . $pageSize);
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals($pageSize, count($response->items));
@@ -136,7 +136,7 @@ class PackagesControllerTest extends DatabaseTestCase
         $this->assertEquals('Sulu', $response->items[0]->name);
         $this->assertEquals('Global', $response->items[1]->name);
 
-        $client->request('GET', '/translate/api/packages?pageSize=' . $pageSize . '&page=2');
+        $client->request('GET', '/api/translate/packages?pageSize=' . $pageSize . '&page=2');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, count($response->items)); // only 1 item remaining
@@ -148,7 +148,7 @@ class PackagesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/translate/api/packages?fields=name');
+        $client->request('GET', '/api/translate/packages?fields=name');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu', $response->items[0]->name);
@@ -159,7 +159,7 @@ class PackagesControllerTest extends DatabaseTestCase
         $this->assertFalse(isset($response->items[1]->id));
         $this->assertFalse(isset($response->items[2]->id));
 
-        $client->request('GET', '/translate/api/packages?fields=name,id');
+        $client->request('GET', '/api/translate/packages?fields=name,id');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu', $response->items[0]->name);
@@ -173,7 +173,7 @@ class PackagesControllerTest extends DatabaseTestCase
     public function testGetId()
     {
         $client = static::createClient();
-        $client->request('GET', '/translate/api/packages/1');
+        $client->request('GET', '/api/translate/packages/1');
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -188,7 +188,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/translate/api/packages',
+            '/api/translate/packages',
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
@@ -203,7 +203,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Portal', $response->name);
 
-        $client->request('GET', '/translate/api/packages/' . $response->id);
+        $client->request('GET', '/api/translate/packages/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('EN', $response->catalogues[0]->locale);
@@ -217,7 +217,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/translate/api/packages',
+            '/api/translate/packages',
             array(
                 'name' => 'Portal'
             )
@@ -229,7 +229,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/translate/api/packages/' . $response->id
+            '/api/translate/packages/' . $response->id
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -243,7 +243,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/translate/api/packages',
+            '/api/translate/packages',
             array()
         );
 
@@ -256,7 +256,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/translate/api/packages/1',
+            '/api/translate/packages/1',
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
@@ -277,7 +277,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/translate/api/packages/1',
+            '/api/translate/packages/1',
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
@@ -302,7 +302,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/translate/api/packages/1',
+            '/api/translate/packages/1',
             array(
                 'name' => 'Portal'
             )
@@ -315,7 +315,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/translate/api/packages'
+            '/api/translate/packages'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -330,7 +330,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/translate/api/packages/10',
+            '/api/translate/packages/10',
             array('name' => 'Portal')
         );
 
@@ -343,7 +343,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/translate/api/packages/1',
+            '/api/translate/packages/1',
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
@@ -356,7 +356,7 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/translate/api/packages/1'
+            '/api/translate/packages/1'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -369,7 +369,7 @@ class PackagesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('DELETE', '/translate/api/packages/1');
+        $client->request('DELETE', '/api/translate/packages/1');
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
     }
@@ -379,11 +379,11 @@ class PackagesControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
 
-        $client->request('DELETE', '/translate/api/packages/4711');
+        $client->request('DELETE', '/api/translate/packages/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
         // there still have to be 3 packages
-        $client->request('GET', '/translate/api/packages');
+        $client->request('GET', '/api/translate/packages');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(3, $response->total);
     }
