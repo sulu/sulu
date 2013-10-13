@@ -9,7 +9,7 @@
 
 define(['mvc/relationalmodel'], function(RelationalModel) {
     return RelationalModel({
-        urlRoot: '/contact/api/phoneTypes',
+        urlRoot: '/admin/api/contact/phoneTypes',
         defaults: {
             id: null,
             name: ''

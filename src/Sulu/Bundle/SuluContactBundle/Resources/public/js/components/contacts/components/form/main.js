@@ -24,7 +24,7 @@ define([], function() {
 
             view: true,
 
-            templates: ['/contact/template/contact/form'],
+            templates: ['/admin/contact/template/contact/form'],
 
             initialize: function() {
                 currentType = currentState = '';
@@ -34,7 +34,7 @@ define([], function() {
             },
 
             render: function() {
-                this.$el.html(this.renderTemplate('/contact/template/contact/form'));
+                this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
 
                 emailItem = this.$el.find('#emails .email-item:first');
                 phoneItem = this.$el.find('#phones .phone-item:first');
@@ -49,7 +49,7 @@ define([], function() {
                         name: 'auto-complete@husky',
                         options: {
                             el: '#company',
-                            url: '/contact/api/accounts/list?searchFields=id,name',
+                            url: '/admin/api/contact/accounts/list?searchFields=id,name',
                             value: data.account
                         }
                     }
