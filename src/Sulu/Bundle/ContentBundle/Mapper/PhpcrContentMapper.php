@@ -10,9 +10,31 @@
 namespace Sulu\Bundle\ContentBundle\Mapper;
 
 
-class PhpcrContentMapper implements ContentMapperInterface
+class PhpcrContentMapper extends ContentMapper
 {
     public function save($data)
+    {
+        $template = $this->readTemplate(''); //TODO Set correct file
+        $session = $this->getSession(); //TODO Get session in a better way
+        $root = $session->getRootNode();
+        $node = $root->addNode('cmf/contents/' . $data['title']); //TODO check better way to generate title
+
+        // go through every property in the template
+        foreach ($template['properties'] as $property) {
+            $type = $this->getType($property['type'], null);
+
+            if (isset($type['phpcr-type'])) {
+                // save the simple content types as properties
+                $node->setProperty($property['name'], $data[$property['name']]);
+            } else {
+                // save the data using a complex content type
+            }
+        }
+
+        $session->save();
+    }
+
+    public function saveOld($data)
     {
         $session = $this->getSession();
         $root = $session->getRootNode();
