@@ -13,7 +13,6 @@
         <property name="article" type="textArea"/>
 
         <property name="pages" type="smartContentSelection" mandatory="false"/>
-
     </properties>
 
 </template>
