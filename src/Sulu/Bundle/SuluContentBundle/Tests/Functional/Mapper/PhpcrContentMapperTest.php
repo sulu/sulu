@@ -16,6 +16,9 @@ use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 
 class PhpcrContentMapperTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var PhpcrContentMapper
+     */
     protected $mapper;
 
     /**
@@ -33,11 +36,15 @@ class PhpcrContentMapperTest extends \PHPUnit_Framework_TestCase
         $repository = $factory->getRepository($parameters);
         $credentials = new \PHPCR\SimpleCredentials('admin','admin');
         $this->session = $repository->login($credentials, 'default');
-    }
 
-    public function tearDown()
-    {
         NodeHelper::purgeWorkspace($this->session);
+        $this->session->save();
+
+        $cmf = $this->session->getRootNode()->addNode('cmf');
+        $cmf->addNode('routes');
+        $cmf->addNode('contents');
+
+        $this->session->save();
     }
 
     public function testSave()
@@ -54,7 +61,7 @@ class PhpcrContentMapperTest extends \PHPUnit_Framework_TestCase
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
 
-        $content = $route->getProperty('content')->getNode();
+        $content = $route->getPropertyValue('content');
 
         $this->assertEquals($content->getProperty('title')->getString(), 'Testtitle');
         $this->assertEquals($content->getProperty('article')->getString(), 'Test');
