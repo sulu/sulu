@@ -59,9 +59,13 @@ class PhpcrContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->mapper->save($data);
 
         $root = $this->session->getRootNode();
+        /*
         $route = $root->getNode('cmf/routes/de/test');
 
         $content = $route->getPropertyValue('content');
+        */
+
+        $content = $root->getNode('cmf/contents/Testtitle');
 
         $this->assertEquals($content->getProperty('title')->getString(), 'Testtitle');
         $this->assertEquals($content->getProperty('article')->getString(), 'Test');
