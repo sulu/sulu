@@ -9,15 +9,23 @@
 
 namespace Sulu\Bundle\ContentBundle\Mapper;
 
-
+/**
+ * Maps the content to PHPCR
+ * @package Sulu\Bundle\ContentBundle\Mapper
+ */
 class PhpcrContentMapper extends ContentMapper
 {
+    /**
+     * Saves the given data from a template to PHPCR
+     * @param $data The data to be saved
+     */
     public function save($data)
     {
         $template = $this->readTemplate(''); //TODO Set correct file
         $session = $this->getSession(); //TODO Get session in a better way
         $root = $session->getRootNode();
         $node = $root->addNode('cmf/contents/' . $data['title']); //TODO check better way to generate title
+        $node->addMixin('mix:referenceable');
 
         // go through every property in the template
         foreach ($template['properties'] as $property) {
@@ -26,54 +34,23 @@ class PhpcrContentMapper extends ContentMapper
             if (isset($type['phpcr-type'])) {
                 // save the simple content types as properties
                 $node->setProperty($property['name'], $data[$property['name']]);
-            } else {
-                // save the data using a complex content type
             }
         }
 
         $session->save();
-    }
 
-    public function saveOld($data)
-    {
-        $session = $this->getSession();
-        $root = $session->getRootNode();
+        foreach ($template['properties'] as $property) {
+            $type = $this->getType($property['type'], null);
 
-        $parentPath = 'cmf/contents';
-        if (isset($data['parent'])) {
-            $parentPath .= $data['parent'];
-        }
-
-        if ($root->hasNode($parentPath)) {
-            $parentNode = $root->getNode($parentPath);
-
-            // Add content
-            $contentNode = $parentNode->addNode($data['title']);
-            $contentNode->addMixin('mix:referenceable');
-            $contentNode->setProperty('title', $data['title']);
-            $contentNode->setProperty('article', $data['article']);
-            
-            $session->save();
-
-            // Add routes
-            $routePath = 'cmf/routes' . $data['url'];
-            $routePath = explode('/', $routePath);
-            $routeNode = $session->getRootNode();
-
-            foreach ($routePath as $path) {
-                if ($path != '') {
-                    if ($routeNode->hasNode($path)) {
-                        $routeNode = $routeNode->getNode($path);
-                    } else {
-                        $routeNode = $routeNode->addNode($path, 'nt:unstructured');
-                    }
-                }
+            if (!isset($type['phpcr-type'])) {
+                // save the data using a complex content type
+                $contentTypeClass = 'Sulu\\Bundle\\ContentBundle\\ContentType\\' . ucfirst($type['name']); //TODO make path extendable (service?)
+                $contentType = new $contentTypeClass();
+                $contentType->save($node, $data[$property['name']]);
             }
-
-            $routeNode->setProperty('content', $contentNode);
-
-            $session->save();
         }
+
+        $session->save();
     }
 
     /**
