@@ -10,16 +10,18 @@
 
 namespace Sulu\Bundle\ContentBundle\ContentType;
 
-
 use PHPCR\NodeInterface;
 
+/**
+ * Handles the storage of a resource locator of a node
+ * @package Sulu\Bundle\ContentBundle\ContentType
+ */
 class ResourceLocator implements ContentTypeInterface
 {
-
     public function save(NodeInterface $node, $data)
     {
         $session = $node->getSession();
-        $routePath = 'cmf/routes/'.$data;
+        $routePath = 'cmf/routes/'.$data; //TODO configure path
         $routePath = explode('/', $routePath);
         $routeNode = $session->getRootNode();
 

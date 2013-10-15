@@ -21,7 +21,5 @@
         </property>
 
         <property name="internalLinks" type="internalLinkSelection" minOccurs="0" maxOccurs="2"/>
-
     </properties>
-
 </template>
