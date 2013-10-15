@@ -18,5 +18,10 @@ use PHPCR\NodeInterface;
  */
 interface ContentTypeInterface
 {
+    /**
+     * Saves the data of a complex data type
+     * @param NodeInterface $node The node containing this complex data type
+     * @param $data mixed The data to save for this data type (differs from type to type)
+     */
     public function save(NodeInterface $node, $data);
 }

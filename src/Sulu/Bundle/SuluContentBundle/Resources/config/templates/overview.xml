@@ -14,5 +14,4 @@
 
         <property name="pages" type="smartContentSelection" mandatory="false"/>
     </properties>
-
 </template>

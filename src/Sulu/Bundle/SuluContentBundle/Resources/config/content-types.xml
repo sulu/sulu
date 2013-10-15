@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
 
 <types>
-
     <!-- simple content types -->
     <type name="textLine" phpcr-type="string"/>
     <type name="textArea" phpcr-type="string"/>
@@ -40,6 +39,4 @@
             <property name="internalLinks" type="internalLink" minOccurs="0" maxOccurs="1"/>
         </properties>
     </type>
-
-
 </types>
