@@ -62,8 +62,6 @@ class SuluBundleGenerator extends BundleGenerator
         // Public Files
         // Main: /Resources/public/js/main.js
         $this->renderFile('sulu/public/main.js.twig', $dir . '/Resources/public/js/main.js', $parameters);
-        // Main: /Resources/public/js/bundle.js
-        $this->renderFile('sulu/public/bundle.js.twig', $dir . '/Resources/public/js/bundle.js', $parameters);
 
         // Travis Files
         // /.travis.yml
@@ -84,14 +82,17 @@ class SuluBundleGenerator extends BundleGenerator
             $this->getFileSystem()->mkdir($dir . '/Entity');
             $this->getFileSystem()->touch($dir . '/Entity/.empty');
             $this->getFileSystem()->mkdir($dir . '/Tests');
-            $this->getFileSystem()->mkdir($dir . '/Tests/Controller');
-            $this->getFileSystem()->touch($dir . '/Tests/Controller/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Tests/Functional');
+            $this->getFileSystem()->mkdir($dir . '/Tests/Functional/Controller');
+            $this->getFileSystem()->touch($dir . '/Tests/Functional/Controller/.empty');
             $this->getFileSystem()->mkdir($dir . '/Resources/doc');
             $this->getFileSystem()->touch($dir . '/Resources/doc/index.rst');
             $this->getFileSystem()->mkdir($dir . '/Resources/views');
             $this->getFileSystem()->touch($dir . '/Resources/views/.empty');
-            $this->getFileSystem()->mkdir($dir . '/Resources/public/js/controller');
-            $this->getFileSystem()->touch($dir . '/Resources/public/js/controller/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Resources/public/js/collections');
+            $this->getFileSystem()->touch($dir . '/Resources/public/js/collections/.empty');
+            $this->getFileSystem()->mkdir($dir . '/Resources/public/js/components');
+            $this->getFileSystem()->touch($dir . '/Resources/public/js/components/.empty');
             $this->getFileSystem()->mkdir($dir . '/Resources/public/js/model');
             $this->getFileSystem()->touch($dir . '/Resources/public/js/model/.empty');
             $this->renderFile('bundle/messages.fr.xlf', $dir . '/Resources/translations/messages.fr.xlf', $parameters);
