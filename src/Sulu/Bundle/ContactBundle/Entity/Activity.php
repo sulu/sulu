@@ -11,6 +11,9 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+
+
 
 /**
  * Activity
@@ -59,21 +62,25 @@ class Activity
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @Exclude
      */
     private $changer;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @Exclude
      */
     private $creator;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\ActivityStatus
+     *
      */
     private $activityStatus;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @Exclude
      */
     private $contact;
 
