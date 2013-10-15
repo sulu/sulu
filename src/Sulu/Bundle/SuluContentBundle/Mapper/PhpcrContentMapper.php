@@ -38,6 +38,7 @@ class PhpcrContentMapper extends ContentMapper
             }
         }
 
+        //TODO Implement this save in a more performant way
         $session->save();
 
         foreach ($template['properties'] as $property) {
@@ -52,6 +53,19 @@ class PhpcrContentMapper extends ContentMapper
         }
 
         $session->save();
+    }
+
+    /**
+     * Reads the data from the given path
+     * @param $path
+     * @return mixed
+     */
+    public function read($path)
+    {
+        $session = $this->getSession(); //TODO get session in a better way
+        $contentPath ='/cmf/contents' . $path;
+
+        $contentNode = $session->getNode($contentPath);
     }
 
     /**
