@@ -35,19 +35,25 @@ class RoleController extends RestController implements ClassResourceInterface
 
         $roles = $this->getDoctrine()
             ->getRepository($this->entityName)
-            ->findAll();
+            ->findAllRoles();
 
-        $convertedRoles = [];
-        foreach ($roles as $role) {
-            array_push($convertedRoles, $this->convertRole($role));
+        if ($roles != null) {
+            $convertedRoles = [];
+            foreach ($roles as $role) {
+                array_push($convertedRoles, $this->convertRole($role));
+            }
+
+            $response = array(
+                'total' => count($convertedRoles),
+                'items' => $convertedRoles
+            );
+
+            $view = $this->view($response, 200);
+
+
+        } else {
+            $view = $this->view(null, 404);
         }
-
-        $response = array(
-            'total' => count($convertedRoles),
-            'items' => $convertedRoles
-        );
-
-        $view = $this->view($response, 200);
 
         return $this->handleView($view);
     }

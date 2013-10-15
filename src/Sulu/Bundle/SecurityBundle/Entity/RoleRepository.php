@@ -23,9 +23,9 @@ class RoleRepository extends EntityRepository
 {
 
     /**
-     * Searches for a user with a specific contact id
+     * Searches for a role with a specific id
      * @param $id
-     * @return array
+     * @return role
      */
     public function findRoleById($id)
     {
@@ -41,6 +41,30 @@ class RoleRepository extends EntityRepository
             $query->setParameter('roleId', $id);
 
             return $query->getSingleResult();
+
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Searches for all roles
+     * @return array
+     */
+    public function findAllRoles()
+    {
+        try {
+
+            $qb = $this->createQueryBuilder('role')
+                ->leftJoin('role.permissions', 'permissions')
+                ->addSelect('permissions');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+            $result = $query->getResult();
+
+            return $result;
 
         } catch (NoResultException $ex) {
             return null;
