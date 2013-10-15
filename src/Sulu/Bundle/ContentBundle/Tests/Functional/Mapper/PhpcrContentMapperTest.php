@@ -48,6 +48,12 @@ class PhpcrContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->session->save();
     }
 
+    public function tearDown()
+    {
+        NodeHelper::purgeWorkspace($this->session);
+        $this->session->save();
+    }
+
     public function testSave()
     {
         $data = array(
@@ -64,7 +70,23 @@ class PhpcrContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $content = $route->getPropertyValue('content');
 
-        $this->assertEquals($content->getProperty('title')->getString(), 'Testtitle');
-        $this->assertEquals($content->getProperty('article')->getString(), 'Test');
+        $this->assertEquals( 'Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals( 'Test', $content->getProperty('article')->getString());
+    }
+
+    public function testRead()
+    {
+        $data = array(
+            'language' => 'de',
+            'title' => 'Testtitle',
+            'url' => '/de/test',
+            'article' => 'Test'
+        );
+
+        $this->mapper->save($data);
+
+        $result = $this->mapper->read('/Testtitle');
+
+        $this->assertEquals('Test', $result['article']);
     }
 }

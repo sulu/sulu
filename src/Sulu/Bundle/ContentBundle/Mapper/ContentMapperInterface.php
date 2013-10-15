@@ -12,5 +12,16 @@ namespace Sulu\Bundle\ContentBundle\Mapper;
 
 interface ContentMapperInterface
 {
+    /**
+     * Saves the given data in the content storage
+     * @param $data array Representation of the data to save
+     */
     public function save($data);
+
+    /**
+     * Reads the data from the given path
+     * @param $path
+     * @return mixed
+     */
+    public function read($path);
 }

@@ -111,17 +111,20 @@ abstract class ContentMapper implements ContentMapperInterface
                 'title' => array(
                     'name' => 'title',
                     'type' => 'textLine',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'multilingual' => true
                 ),
                 'url' => array(
                     'name' => 'url',
                     'type' => 'resourceLocator',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'multilingual' => true
                 ),
                 'article' => array(
                     'name' => 'article',
                     'type' => 'textArea',
-                    'mandatory' => false
+                    'mandatory' => false,
+                    'multilingual' => true
                 )
             )
         );
