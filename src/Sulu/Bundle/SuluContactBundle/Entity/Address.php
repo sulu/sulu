@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\SerializerBundle\Annotation\Exclude;
+
 
 /**
  * Address
@@ -64,11 +66,13 @@ class Address
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $contacts;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $accounts;
 

@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+
 
 /**
  * Account
@@ -59,16 +61,19 @@ class Account
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @Exclude
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @Exclude
      */
     private $creator;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @Exclude
      */
     private $children;
 
