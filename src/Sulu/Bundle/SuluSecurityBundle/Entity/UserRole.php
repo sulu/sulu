@@ -30,6 +30,7 @@ class UserRole
 
     /**
      * @var string
+     * @Expose
      */
     private $locale;
 
