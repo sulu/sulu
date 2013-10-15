@@ -13,10 +13,24 @@ require.config({
     }
 });
 
-define(['{{ extensionalias }}/bundle'], function (Bundle) {
+define({
 
-    'use strict';
+    name: "{{ bundle }}",
 
-    Bundle.initialize();
+    initialize: function(app) {
 
+        'use strict';
+
+        var sandbox = app.sandbox;
+
+        app.components.addSource('{{ extensionalias }}', '/bundles/{{ extensionalias }}/js/components');
+
+        // Example: list all contacts
+        // sandbox.mvc.routes.push({
+        //     route: 'contacts/contacts',
+        //    callback: function(){
+        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
+        //     }
+        // });
+    }
 });

@@ -194,7 +194,7 @@ EOT
             $d = str_replace('\\', '/', $d);
             $d = str_replace('/bundle/', '/', $d);
             $d = str_replace('bundle', '', $d);
-            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')) . '/vendor/' . $d . '-bundle/';
+            $dir = dirname(dirname($this->getContainer()->getParameter('kernel.root_dir'))) . '/vendor/' . $d . '-bundle/';
 
             $output->writeln(array(
                 '',
