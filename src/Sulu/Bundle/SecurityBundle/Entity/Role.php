@@ -11,49 +11,60 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * Role
+ * @ExclusionPolicy("all");
  */
 class Role
 {
     /**
      * @var string
+     * @Expose
      */
     private $name;
 
     /**
      * @var string
+     * @Expose
      */
     private $system;
 
     /**
      * @var \DateTime
+     * @Expose
      */
     private $created;
 
     /**
      * @var \DateTime
+     * @Expose
      */
     private $changed;
 
     /**
      * @var integer
+     * @Expose
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @Expose
      */
     private $creator;
 
     /**
      * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @Expose
      */
     private $changer;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Expose
      */
     private $permissions;
 
