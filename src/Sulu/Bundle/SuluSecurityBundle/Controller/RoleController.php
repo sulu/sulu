@@ -71,7 +71,7 @@ class RoleController extends RestController implements ClassResourceInterface
             /** @var Role $role */
             $role = $this->getDoctrine()
                 ->getRepository($this->entityName)
-                ->find($id);
+                ->findRoleById($id);
 
             return $this->convertRole($role);
         };
