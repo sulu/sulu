@@ -69,6 +69,11 @@ define(function() {
                     }
                 }
             });
+
+            this.sandbox.once('husky.dialog.cancel', function() {
+                this.sandbox.emit('husky.dialog.hide');
+            }.bind(this));
+
         },
 
         showOkDialog: function(title,message) {
