@@ -19,8 +19,8 @@ class AdminController extends Controller
 {
     public function indexAction()
     {
-        // get userdata
-        $serviceId = $this->container->getParameter('user_data_service');
+        // get user data
+        $serviceId = $this->container->getParameter('sulu_admin.user_data_service');
         $user = array();
         if ($this->has($serviceId)) {
             /** @var UserDataInterface $userData */
@@ -35,7 +35,7 @@ class AdminController extends Controller
         return $this->render(
             'SuluAdminBundle:Admin:index.html.twig',
             array(
-                'name' => $this->container->getParameter('name'),
+                'name' => $this->container->getParameter('sulu_admin.name'),
                 'user' => $user
             )
         );
