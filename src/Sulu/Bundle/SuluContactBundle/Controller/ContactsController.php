@@ -18,9 +18,9 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
-use Sulu\Bundle\CoreBundle\Controller\RestController;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RestController;
 
 /**
  * Makes contacts available through a REST API
