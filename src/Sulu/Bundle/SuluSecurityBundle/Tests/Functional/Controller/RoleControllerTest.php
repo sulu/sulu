@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
-use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
+use Sulu\Component\Testing\DatabaseTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 

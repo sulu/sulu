@@ -14,7 +14,7 @@ use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
+use Sulu\Component\Testing\DatabaseTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
