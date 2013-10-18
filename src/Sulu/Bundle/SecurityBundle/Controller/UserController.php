@@ -11,12 +11,11 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\CoreBundle\Controller\Exception\InvalidArgumentException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\MissingArgumentException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
-use Sulu\Bundle\CoreBundle\Controller\RestController;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Component\Config\Definition\Exception\Exception;

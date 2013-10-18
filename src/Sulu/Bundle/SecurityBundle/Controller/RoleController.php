@@ -12,10 +12,10 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
-use Sulu\Bundle\CoreBundle\Controller\RestController;
+use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Symfony\Component\HttpFoundation\Request;
