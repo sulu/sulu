@@ -30,8 +30,8 @@ class SuluAdminExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('name', $config['name']);
-        $container->setParameter('user_data_service', $config['user_data_service']);
+        $container->setParameter($this->getAlias() . '.name', $config['name']);
+        $container->setParameter($this->getAlias() . '.user_data_service', $config['user_data_service']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
