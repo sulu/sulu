@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Mapper;
 use Sulu\Bundle\ContentBundle\Mapper\PhpcrContentMapper;
 use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
 
-class PhpcrContentMapperTest extends \PHPUnit_TestCase
+class PhpcrContentMapperTest extends \PHPUnit_Framework_TestCase
 {
     protected $mapper;
 
