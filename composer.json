@@ -1,5 +1,5 @@
 {
-    "name": "sulu/core-bundle",
+    "name": "sulu/sulu",
     "type": "library",
     "description": "Symfony bundle that provides basic core functionality",
     "license": "MIT",
