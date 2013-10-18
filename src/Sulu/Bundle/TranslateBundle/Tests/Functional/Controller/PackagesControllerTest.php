@@ -12,7 +12,7 @@ namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
-use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
+use Sulu\Component\Testing\DatabaseTestCase;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Tools\SchemaTool;

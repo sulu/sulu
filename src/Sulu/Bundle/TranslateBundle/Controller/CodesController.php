@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
-use Sulu\Bundle\CoreBundle\Controller\RestController;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;

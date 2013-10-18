@@ -11,10 +11,10 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
-use Sulu\Bundle\CoreBundle\Controller\Exception\RestException;
-use Sulu\Bundle\CoreBundle\Controller\RestController;
+use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 

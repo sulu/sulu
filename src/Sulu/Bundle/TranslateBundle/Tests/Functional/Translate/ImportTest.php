@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Translate;
 
-use Sulu\Bundle\CoreBundle\Tests\DatabaseTestCase;
+use Sulu\Component\Testing\DatabaseTestCase;
 use Sulu\Bundle\TranslateBundle\Translate\Import;
 
 class ImportTest extends DatabaseTestCase
