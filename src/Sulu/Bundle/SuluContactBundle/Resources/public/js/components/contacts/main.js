@@ -89,7 +89,7 @@ define([
 
         load: function(id) {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id);
+            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
         },
 
         add: function() {
@@ -212,6 +212,9 @@ define([
                     hasEdit = content.displayOptions.indexOf('edit') >= 0;
                     if ((!id && hasNew) || (id && hasEdit)) {
                         content.action = this.parseActionUrl(content.action, url, id);
+                        if (content.action === url) {
+                            content.selected = true;
+                        }
                         items.push(content);
                     }
                 }.bind(this));
