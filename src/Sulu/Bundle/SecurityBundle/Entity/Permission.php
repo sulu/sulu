@@ -11,24 +11,30 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * Permission
+ * @ExclusionPolicy("all");
  */
 class Permission
 {
     /**
      * @var string
+     * @Expose
      */
     private $context;
 
     /**
      * @var integer
+     * @Expose
      */
     private $permissions;
 
     /**
      * @var integer
+     * @Expose
      */
     private $id;
 
@@ -39,6 +45,7 @@ class Permission
 
     /**
      * @var string
+     * @Expose
      */
     private $module;
 

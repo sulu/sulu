@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 
 /**
  * Repository for the User, implementing some additional functions
@@ -34,28 +35,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findUserByContact($id)
     {
         try {
-        $dql = 'SELECT user, userRoles, role
-				FROM SuluSecurityBundle:User user
-                    LEFT JOIN user.userRoles userRoles
-                    LEFT JOIN userRoles.role role
-				WHERE user.contact = :contactId';
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setParameters(
-                array(
-                    'contactId' => $id
-                )
-            );
+            $qb = $this->createQueryBuilder('user')
+                ->leftJoin('user.userRoles', 'userRoles')
+                ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.contact', 'contact')
+                ->leftJoin('contact.emails', 'emails')
+                ->addSelect('userRoles')
+                ->addSelect('role')
+                ->addSelect('contact')
+                ->addSelect('emails')
+                ->where('user.contact=:contactId');
 
-        $result = $query->getSingleResult();
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('contactId', $id);
 
-        return $result;
+            return $query->getSingleResult();
 
         } catch (NoResultException $ex) {
             return null;
         }
-
     }
 
     /**
