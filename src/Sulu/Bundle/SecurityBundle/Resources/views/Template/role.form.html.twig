@@ -8,11 +8,11 @@
     <% } %>
     <div class="grid-row">
         <div class="grid-col-6">
-            <label class="required"><%=translate('security.roles.name')%></label>
+            <label for="name" class="required"><%=translate('security.roles.name')%></label>
             <input class="form-element" type="text" id="name" value="<%= data.name %>" data-validation-required="true"/>
         </div>
         <div class="grid-col-6">
-            <label class="required"><%=translate('security.roles.system')%></label>
+            <label for="system" class="required"><%=translate('security.roles.system')%></label>
             <select id="system" class="form-element">
                 {% for system in systems %}
                     <option value="{{ system }}">{{ system }}</option>
@@ -24,11 +24,10 @@
     <hr class="divider" />
 
     <div class="grid-row">
-        <label><%=translate('security.roles.godMode')%></label>
-
+        <label for="god"><%=translate('security.roles.godMode')%></label>
         <input class="form-element custom-checkbox" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
         <span class="custom-checkbox-icon"></span>
-        <%=translate('security.roles.godModeDescription')%>
+        <label for="god" class="inline"><%=translate('security.roles.godModeDescription')%></label>
     </div>
 
     <hr class="divider" />

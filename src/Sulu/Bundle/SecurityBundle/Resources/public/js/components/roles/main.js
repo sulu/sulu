@@ -12,6 +12,7 @@ define(['sulusecurity/models/role'], function(Role) {
 
     'use strict';
 
+    // FIXME move to this.*
     var sandbox,
         role,
         idDelete,
@@ -129,7 +130,7 @@ define(['sulusecurity/models/role'], function(Role) {
             role.set(data);
             role.save(null, {
                 success: function() {
-                    sandbox.emit('sulu.router.navigate', 'settings/roles');
+                    sandbox.emit('husky.header.button-state', 'standard');
                 },
                 error: function() {
                     sandbox.emit('sulu.dialog.error.show', 'An error occured during saving the role!');

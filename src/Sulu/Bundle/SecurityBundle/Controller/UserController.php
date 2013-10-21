@@ -51,7 +51,7 @@ class UserController extends RestController implements ClassResourceInterface
         $find = function ($id) {
             return $this->getDoctrine()
                 ->getRepository($this->entityName)
-                ->find($id);
+                ->findUserById($id);
         };
 
         $view = $this->responseGetById($id, $find);
@@ -126,7 +126,7 @@ class UserController extends RestController implements ClassResourceInterface
         /** @var User $user */
         $user = $this->getDoctrine()
             ->getRepository($this->entityName)
-            ->find($id);
+            ->findUserById($id);
 
         try {
             if (!$user) {
@@ -174,7 +174,7 @@ class UserController extends RestController implements ClassResourceInterface
         $delete = function ($id) {
             $user = $this->getDoctrine()
                 ->getRepository($this->entityName)
-                ->find($id);
+                ->findUserById($id);
 
             if (!$user) {
                 throw new EntityNotFoundException($this->entityName, $id);
@@ -220,7 +220,7 @@ class UserController extends RestController implements ClassResourceInterface
      * @param User $user
      * @param $userRoleData
      * @return bool
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function addUserRole(User $user, $userRoleData)
     {
@@ -228,7 +228,7 @@ class UserController extends RestController implements ClassResourceInterface
 
         $role = $this->getDoctrine()
             ->getRepository($this->roleEntityName)
-            ->find($userRoleData['role']['id']);
+            ->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
             throw new EntityNotFoundException($this->roleEntityName, $userRoleData['role']['id']);
@@ -250,13 +250,13 @@ class UserController extends RestController implements ClassResourceInterface
      * @param UserRole $userRole
      * @param $userRoleData
      * @return bool
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function updateUserRole(UserRole $userRole, $userRoleData)
     {
         $role = $this->getDoctrine()
             ->getRepository($this->roleEntityName)
-            ->find($userRoleData['role']['id']);
+            ->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
             throw new EntityNotFoundException($this->roleEntityName, $userRole['role']['id']);
@@ -274,7 +274,7 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Checks if all the arguments are given, and throws an exception if one is missing
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\MissingArgumentException
+     * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      */
     private function checkArguments()
     {
@@ -297,7 +297,7 @@ class UserController extends RestController implements ClassResourceInterface
      * Checks if the id is valid
      * @param $id
      * @return bool
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\RestException
+     * @throws \Sulu\Component\Rest\Exception\RestException
      */
     private function isValidId($id)
     {
@@ -314,7 +314,7 @@ class UserController extends RestController implements ClassResourceInterface
     {
         $contact = $this->getDoctrine()
             ->getRepository($this->contactEntityName)
-            ->find($id);
+            ->findById($id);
 
         if (!$contact) {
             throw new EntityNotFoundException($this->contactEntityName, $id);

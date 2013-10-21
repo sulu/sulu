@@ -17,6 +17,8 @@ define([], function() {
         matrixSelector = '#matrix',
         formSelector = '#role-form',
         loadedContexts,
+
+    // FIXME move to this.*
         currentType,
         currentState;
 
@@ -47,6 +49,14 @@ define([], function() {
         bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'change', this.initializeMatrix.bind(this), '#system');
             this.sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
+
+            // submit on enter
+            this.sandbox.dom.keypress(formSelector, function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    this.save();
+                }
+            }.bind(this));
         },
 
         bindCustomEvents: function() {
