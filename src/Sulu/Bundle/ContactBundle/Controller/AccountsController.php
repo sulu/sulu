@@ -45,7 +45,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             function ($id) {
                 return $this->getDoctrine()
                     ->getRepository($this->entityName)
-                    ->find($id);
+                    ->findAccountById($id);
             }
         );
 
