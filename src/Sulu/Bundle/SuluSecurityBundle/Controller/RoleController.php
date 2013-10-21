@@ -52,7 +52,7 @@ class RoleController extends RestController implements ClassResourceInterface
 
 
         } else {
-            $view = $this->view(null, 404);
+            $view = $this->view(array(), 200);
         }
 
         return $this->handleView($view);
