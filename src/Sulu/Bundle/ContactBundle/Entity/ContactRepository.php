@@ -97,13 +97,21 @@ class ContactRepository extends EntityRepository
         return $query->getArrayResult();
     }
 
-    public function findBasicById($criteria = array())
-    {
-        $qb = $this->createQueryBuilder('c');
 
-        // if needed add where statements
-        if (is_array($criteria) && sizeof($criteria) > 0) {
-            $qb = $this->addWhere($qb, $criteria);
+    /**
+     * Searches for contacts with a specific account and the ability to exclude a certain contact
+     * @param $accountId
+     * @param null $excludeContactId
+     * @return array
+     */
+    public function findByAccountId($accountId, $excludeContactId = null ) {
+        $qb = $this->createQueryBuilder('c')
+            ->join('c.account','a', 'WITH', 'a.id = :accountId')
+            ->setParameter('accountId', $accountId);
+
+        if (!is_null($excludeContactId)) {
+            $qb->where('c.id != :excludeId')
+                ->setParameter('excludeId', $excludeContactId);
         }
 
         $query = $qb->getQuery();
