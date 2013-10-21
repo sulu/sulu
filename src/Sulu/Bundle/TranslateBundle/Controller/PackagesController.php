@@ -47,7 +47,7 @@ class PackagesController extends RestController
         $find = function ($id) {
             return $this->getDoctrine()
                 ->getRepository($this->entityName)
-                ->find($id);
+                ->getPackageById($id);
         };
 
         $view = $this->responseGetById($id, $find);
