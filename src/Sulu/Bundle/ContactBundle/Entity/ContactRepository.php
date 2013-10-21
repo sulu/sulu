@@ -15,6 +15,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Doctrine\ORM\Query;
 
 /**
  * Repository for the Codes, implementing some additional functions
@@ -65,6 +66,60 @@ class ContactRepository extends EntityRepository
         }
     }
 
+    public function findByIdAndDelete($id)
+    {
+        // create basic query
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.activities', 'activities')
+            ->leftJoin('activities.activityStatus', 'activityStatus')
+            ->leftJoin('u.addresses', 'addresses')
+            ->leftJoin('addresses.contacts', 'addressContacts')
+            ->leftJoin('addresses.accounts', 'addressAccounts')
+            ->leftJoin('addresses.country', 'country')
+            ->leftJoin('addresses.addressType', 'addressType')
+            ->leftJoin('u.locales', 'locales')
+            ->leftJoin('u.emails', 'emails')
+            ->leftJoin('emails.contacts', 'emailsContacts')
+            ->leftJoin('emails.accounts', 'emailsAccounts')
+            ->leftJoin('emails.emailType', 'emailType')
+            ->leftJoin('u.notes', 'notes')
+            ->leftJoin('u.phones', 'phones')
+            ->leftJoin('phones.contacts', 'phonesContacts')
+            ->leftJoin('phones.accounts', 'phonesAccounts')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->addSelect('account')
+            ->addSelect('activities')
+            ->addSelect('activityStatus')
+            ->addSelect('locales')
+            ->addSelect('emails')
+            ->addSelect('emailType')
+            ->addSelect('phones')
+            ->addSelect('phoneType')
+            ->addSelect('addresses')
+            ->addSelect('country')
+            ->addSelect('addressType')
+            ->addSelect('emailsContacts')
+            ->addSelect('phonesContacts')
+            ->addSelect('addressContacts')
+            ->addSelect('emailsAccounts')
+            ->addSelect('phonesAccounts')
+            ->addSelect('addressAccounts')
+            ->addSelect('notes')
+            ->where('u.id=:id');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('id', $id);
+
+        try {
+            $contact = $query->getSingleResult();
+
+            return $contact;
+        } catch (NoResultException $nre) {
+            return null;
+        }
+    }
 
     /**
      * Searches Entities by where clauses, pagination and sorted
