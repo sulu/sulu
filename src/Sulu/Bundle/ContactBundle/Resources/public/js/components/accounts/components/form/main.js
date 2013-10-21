@@ -11,8 +11,8 @@ define([], function() {
 
     'use strict';
 
-    // FIXME: anonymous function for private vars
     return (function() {
+        // FIXME move to this.*
         var form = '#contact-form',
             emailItem,
             phoneItem,

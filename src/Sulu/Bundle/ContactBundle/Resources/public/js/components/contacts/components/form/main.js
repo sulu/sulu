@@ -54,7 +54,7 @@ define([], function() {
                             el: '#company',
                             url: '/admin/api/contact/accounts/list?searchFields=id,name',
                             value: data.account,
-                            instanceName:'companyInput'
+                            instanceName:'company-input'
                         }
                     }
                 ]);
