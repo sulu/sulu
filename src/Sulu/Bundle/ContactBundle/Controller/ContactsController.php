@@ -55,7 +55,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             $entityName = 'SuluContactBundle:Contact';
             $contact = $this->getDoctrine()
                 ->getRepository($entityName)
-                ->findById($id);
+                ->findByIdAndDelete($id);
 
             if (!$contact) {
                 throw new EntityNotFoundException($entityName, $id);
