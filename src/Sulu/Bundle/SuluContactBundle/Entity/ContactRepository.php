@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Doctrine\ORM\Query;
 
 /**
  * Repository for the Codes, implementing some additional functions
@@ -52,6 +53,7 @@ class ContactRepository extends EntityRepository
             ->where('u.id=:id');
 
         $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('id', $id);
 
         try {
