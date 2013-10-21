@@ -580,4 +580,18 @@ class Contact
     {
         return $this->phones;
     }
+
+    public function toArray() {
+        return array(
+            'id'            => $this->getLastName(),
+            'firstName'     => $this->getFirstName(),
+            'middleName'    => $this->getMiddleName(),
+            'lastName'      => $this->getLastName(),
+            'title'         => $this->getTitle(),
+            'position'      => $this->getPosition(),
+            'birthday'      => $this->getBirthday(),
+            'created'       => $this->getCreated(),
+            'changed'       => $this->getChanged()
+        );
+    }
 }

@@ -12,8 +12,8 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
 
 /**
  * Repository for the Codes, implementing some additional functions
@@ -21,19 +21,31 @@ use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
  */
 class ContactRepository extends EntityRepository
 {
+    /**
+     * find a contact by id
+     * @param $id
+     * @return mixed|null
+     */
     public function findById($id)
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.emails', 'emails')
-            ->leftJoin('emails.emailType', 'emailType')
-            ->leftJoin('u.phones', 'phones')
-            ->leftJoin('phones.phoneType', 'phoneType')
+            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.activities', 'activities')
+            ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.addresses', 'addresses')
             ->leftJoin('addresses.country', 'country')
             ->leftJoin('addresses.addressType', 'addressType')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.locales', 'locales')
+            ->leftJoin('u.emails', 'emails')
+            ->leftJoin('emails.emailType', 'emailType')
             ->leftJoin('u.notes', 'notes')
+            ->leftJoin('u.phones', 'phones')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->addSelect('account')
+            ->addSelect('activities')
+            ->addSelect('activityStatus')
+            ->addSelect('locales')
             ->addSelect('emails')
             ->addSelect('emailType')
             ->addSelect('phones')
@@ -41,11 +53,71 @@ class ContactRepository extends EntityRepository
             ->addSelect('addresses')
             ->addSelect('country')
             ->addSelect('addressType')
-            ->addSelect('account')
             ->addSelect('notes')
             ->where('u.id=:id');
 
         $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('id', $id);
+
+        try {
+            $contact = $query->getSingleResult();
+
+            return $contact;
+        } catch (NoResultException $nre) {
+            return null;
+        }
+    }
+
+    /**
+     * find a contact by id to delete
+     * @param $id
+     * @return mixed|null
+     */
+    public function findByIdAndDelete($id)
+    {
+        // create basic query
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.activities', 'activities')
+            ->leftJoin('activities.activityStatus', 'activityStatus')
+            ->leftJoin('u.addresses', 'addresses')
+            ->leftJoin('addresses.contacts', 'addressContacts')
+            ->leftJoin('addresses.accounts', 'addressAccounts')
+            ->leftJoin('addresses.country', 'country')
+            ->leftJoin('addresses.addressType', 'addressType')
+            ->leftJoin('u.locales', 'locales')
+            ->leftJoin('u.emails', 'emails')
+            ->leftJoin('emails.contacts', 'emailsContacts')
+            ->leftJoin('emails.accounts', 'emailsAccounts')
+            ->leftJoin('emails.emailType', 'emailType')
+            ->leftJoin('u.notes', 'notes')
+            ->leftJoin('u.phones', 'phones')
+            ->leftJoin('phones.contacts', 'phonesContacts')
+            ->leftJoin('phones.accounts', 'phonesAccounts')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->addSelect('account')
+            ->addSelect('activities')
+            ->addSelect('activityStatus')
+            ->addSelect('locales')
+            ->addSelect('emails')
+            ->addSelect('emailType')
+            ->addSelect('phones')
+            ->addSelect('phoneType')
+            ->addSelect('addresses')
+            ->addSelect('country')
+            ->addSelect('addressType')
+            ->addSelect('emailsContacts')
+            ->addSelect('phonesContacts')
+            ->addSelect('addressContacts')
+            ->addSelect('emailsAccounts')
+            ->addSelect('phonesAccounts')
+            ->addSelect('addressAccounts')
+            ->addSelect('notes')
+            ->where('u.id=:id');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('id', $id);
 
         try {
@@ -83,6 +155,28 @@ class ContactRepository extends EntityRepository
         // if needed add where statements
         if (is_array($where) && sizeof($where) > 0) {
             $qb = $this->addWhere($qb, $where);
+        }
+
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+
+    /**
+     * Searches for contacts with a specific account and the ability to exclude a certain contact
+     * @param $accountId
+     * @param null $excludeContactId
+     * @return array
+     */
+    public function findByAccountId($accountId, $excludeContactId = null ) {
+        $qb = $this->createQueryBuilder('c')
+            ->join('c.account','a', 'WITH', 'a.id = :accountId')
+            ->setParameter('accountId', $accountId);
+
+        if (!is_null($excludeContactId)) {
+            $qb->where('c.id != :excludeId')
+                ->setParameter('excludeId', $excludeContactId);
         }
 
         $query = $qb->getQuery();
