@@ -18,8 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Bundle\TranslateBundle\Translate\Export;
 
 /**
- * The command to execute an export on the console
- * @package Sulu\Bundle\TranslateBundle\Command
+ * Create <app-dir>/<kernel>/cache and <app-dir>/<kernel>/logs
+ *
+ * @package Sulu\Bundle\CoreBundle\Command
  */
 class InstallKernelCommand extends ContainerAwareCommand
 {
@@ -51,9 +52,13 @@ class InstallKernelCommand extends ContainerAwareCommand
 
         if (!is_dir($cacheDir)) {
             mkdir($cacheDir);
+        } else {
+            $output->writeLn('Directory ' . $cacheDir . ' already exists');
         }
         if (!is_dir($logDir)) {
             mkdir($logDir);
+        } else {
+            $output->writeLn('Directory ' . $logDir . ' already exists');
         }
     }
 }

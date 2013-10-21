@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
+use Sulu\Component\Util\DirectoryUtils;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,8 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Bundle\TranslateBundle\Translate\Export;
 
 /**
- * The command to execute an export on the console
- * @package Sulu\Bundle\TranslateBundle\Command
+ * Copy <app-dir>/Resources/public to <web-dir>
+ *
+ * @package Sulu\Bundle\CoreBundle\Command
  */
 class InstallResourcesCommand extends ContainerAwareCommand
 {
@@ -46,37 +48,6 @@ class InstallResourcesCommand extends ContainerAwareCommand
 
         $output->writeln('Copy ' . $resourceDir . ' to ' . $webDir);
 
-        $this->copyr($resourceDir, $webDir);
-    }
-
-    protected function copyr($source, $dest)
-    {
-        // Simple copy for a file
-        if (is_file($source)) {
-            return copy($source, $dest);
-        }
-
-        // Make destination directory
-        if (!is_dir($dest)) {
-            mkdir($dest);
-        }
-
-        // Loop through the folder
-        $dir = dir($source);
-        while (false !== $entry = $dir->read()) {
-            // Skip pointers
-            if ($entry == '.' || $entry == '..') {
-                continue;
-            }
-
-            // Deep copy directories
-            if ($dest !== $source.'/'.$entry) {
-                $this->copyr($source.'/'.$entry, $dest.'/'.$entry);
-            }
-        }
-
-        // Clean up
-        $dir->close();
-        return true;
+        DirectoryUtils::copyRecursive($resourceDir, $webDir);
     }
 }
