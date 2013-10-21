@@ -182,7 +182,7 @@ define(['sulucontact/model/account'], function(Account) {
             });
         },
 
-        showConfirmDeleteDialog: function(response, id, callbackFunction) {
+        showConfirmDeleteDialog: function(values, id, callbackFunction) {
             // check if callback is a function
             if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
                 throw 'callback is not a function';
@@ -197,8 +197,7 @@ define(['sulucontact/model/account'], function(Account) {
                         buttonSubmitText: 'Delete'
                     };
                 },
-                params = defaults(),
-                values = JSON.parse(response);
+                params = defaults();
 
             // TODO set template in husky
 
@@ -231,26 +230,23 @@ define(['sulucontact/model/account'], function(Account) {
                     values.numContacts > 3 ? ['<p>and <strong>', parseInt(values.numContacts, 10) - values.contacts.length, '</strong> more.</p>'].join('') : '',
                     '<p>Would you like to delete them with the selected company?</p>',
                     '<p>',
-                    '<label for="delete-contacts">Delete all ', parseInt(values.numContacts, 10), ' related contacts.</label>',
                     '<input type="checkbox" id="delete-contacts" />',
+                    '<label for="delete-contacts">Delete all ', parseInt(values.numContacts, 10), ' related contacts.</label>',
                     '</p>'
                 ].join('');
             }
 
             // show dialog
             this.sandbox.emit('sulu.dialog.confirmation.show', {
-                templateType: params.templateType,
-                data: {
-                    content: {
-                        title: params.title,
-                        content: params.content
-                    },
-                    footer: {
-                        buttonCancelText: params.buttonCancelText,
-                        buttonSubmitText: params.buttonSubmitText
-                    }
+                content: {
+                    title: params.title,
+                    content: params.content
+                },
+                footer: {
+                    buttonCancelText: params.buttonCancelText,
+                    buttonSubmitText: params.buttonSubmitText
                 }
-            });
+            }, params.templateType);
 
             // submit -> delete
             this.sandbox.once('husky.dialog.submit', function() {
