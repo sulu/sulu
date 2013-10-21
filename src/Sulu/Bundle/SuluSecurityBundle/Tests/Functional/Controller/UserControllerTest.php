@@ -132,12 +132,10 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
 
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
@@ -147,6 +145,8 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account')
         );
 
         self::$tool->dropSchema(self::$entities);

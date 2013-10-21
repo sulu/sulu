@@ -408,13 +408,10 @@ class RolesControllerTest extends DatabaseTestCase
         $this->assertContains('10', $response->message);
     }
 
-    public function testGetAll(){
+    public function testGetAllRoles(){
         $client = static::createClient();
 
-        $client->request(
-            'GET',
-            '/api/security/roles'
-        );
+        $client->request('GET', '/api/security/roles');
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
