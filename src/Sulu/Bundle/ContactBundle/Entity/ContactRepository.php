@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
  * Repository for the Codes, implementing some additional functions
