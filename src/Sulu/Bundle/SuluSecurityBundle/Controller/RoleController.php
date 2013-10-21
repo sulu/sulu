@@ -35,19 +35,25 @@ class RoleController extends RestController implements ClassResourceInterface
 
         $roles = $this->getDoctrine()
             ->getRepository($this->entityName)
-            ->findAll();
+            ->findAllRoles();
 
-        $convertedRoles = [];
-        foreach ($roles as $role) {
-            array_push($convertedRoles, $this->convertRole($role));
+        if ($roles != null) {
+            $convertedRoles = [];
+            foreach ($roles as $role) {
+                array_push($convertedRoles, $this->convertRole($role));
+            }
+
+            $response = array(
+                'total' => count($convertedRoles),
+                'items' => $convertedRoles
+            );
+
+            $view = $this->view($response, 200);
+
+
+        } else {
+            $view = $this->view(array(), 200);
         }
-
-        $response = array(
-            'total' => count($convertedRoles),
-            'items' => $convertedRoles
-        );
-
-        $view = $this->view($response, 200);
 
         return $this->handleView($view);
     }
@@ -71,7 +77,7 @@ class RoleController extends RestController implements ClassResourceInterface
             /** @var Role $role */
             $role = $this->getDoctrine()
                 ->getRepository($this->entityName)
-                ->find($id);
+                ->findRoleById($id);
 
             return $this->convertRole($role);
         };
@@ -128,7 +134,7 @@ class RoleController extends RestController implements ClassResourceInterface
         /** @var Role $role */
         $role = $this->getDoctrine()
             ->getRepository($this->entityName)
-            ->find($id);
+            ->findRoleById($id);
 
         try {
             if (!$role) {
@@ -169,7 +175,7 @@ class RoleController extends RestController implements ClassResourceInterface
         $delete = function ($id) {
             $role = $this->getDoctrine()
                 ->getRepository($this->entityName)
-                ->find($id);
+                ->findRoleById($id);
 
             if (!$role) {
                 throw new EntityNotFoundException($this->entityName, $id);
@@ -214,7 +220,7 @@ class RoleController extends RestController implements ClassResourceInterface
      * @param Role $role
      * @param $permissionData
      * @return bool
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
     protected function addPermission(Role $role, $permissionData)
     {

@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 
 /**
  * Repository for the User, implementing some additional functions
@@ -25,6 +26,31 @@ use Doctrine\ORM\QueryBuilder;
  */
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
+
+    public function findUserById($id){
+        try {
+
+            $qb = $this->createQueryBuilder('user')
+                ->leftJoin('user.userRoles', 'userRoles')
+                ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.contact', 'contact')
+                ->leftJoin('contact.emails', 'emails')
+                ->addSelect('userRoles')
+                ->addSelect('role')
+                ->addSelect('contact')
+                ->addSelect('emails')
+                ->where('user.id=:userId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('userId', $id);
+
+            return $query->getSingleResult();
+
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 
     /**
      * Searches for a user with a specific contact id
@@ -34,28 +60,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findUserByContact($id)
     {
         try {
-        $dql = 'SELECT user, userRoles, role
-				FROM SuluSecurityBundle:User user
-                    LEFT JOIN user.userRoles userRoles
-                    LEFT JOIN userRoles.role role
-				WHERE user.contact = :contactId';
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setParameters(
-                array(
-                    'contactId' => $id
-                )
-            );
+            $qb = $this->createQueryBuilder('user')
+                ->leftJoin('user.userRoles', 'userRoles')
+                ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.contact', 'contact')
+                ->leftJoin('contact.emails', 'emails')
+                ->addSelect('userRoles')
+                ->addSelect('role')
+                ->addSelect('contact')
+                ->addSelect('emails')
+                ->where('user.contact=:contactId');
 
-        $result = $query->getSingleResult();
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('contactId', $id);
 
-        return $result;
+            return $query->getSingleResult();
 
         } catch (NoResultException $ex) {
             return null;
         }
-
     }
 
     /**
@@ -71,18 +96,23 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $dql = '
-            SELECT u, ur, r, p
-                FROM SuluSecurityBundle:User u
-                    LEFT JOIN u.userRoles ur
-                    LEFT JOIN ur.role r
-                    LEFT JOIN r.permissions p
-                WHERE u.username = :username';
 
-        $query = $this->getEntityManager()->createQuery($dql);
+        $qb = $this->createQueryBuilder('user')
+            ->leftJoin('user.userRoles', 'userRoles')
+            ->leftJoin('userRoles.role', 'role')
+            ->leftJoin('role.permissions', 'permissions')
+            ->addSelect('userRoles')
+            ->addSelect('role')
+            ->addSelect('permissions')
+            ->where('user.username=:username');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('username', $username);
+
 
         try {
-            $user = $query->setParameter('username', $username)->getSingleResult();
+            return $query->getSingleResult();
         } catch (NoResultException $nre) {
             $message = sprintf(
                 'Unable to find an SuluSecurityBundle:User object identified by %s',
@@ -91,7 +121,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             throw new UsernameNotFoundException($message, 0, $nre);
         }
 
-        return $user;
     }
 
     /**

@@ -127,7 +127,6 @@ define([
         // render form and load data
 
         renderForm: function() {
-            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
 
             this.user = null;
             this.contact = null;
