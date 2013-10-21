@@ -1,67 +1,9 @@
-<style type="text/css">
-
-        /* TODO put css in husky / translate-css-file */
-
-    textarea {
-        font-size: inherit !important;
-    }
-
-    textarea[readonly] {
-        padding: 10px 0;
-        overflow: hidden;
-    }
-
-    .grey {
-        color: grey;
-    }
-
-    .additional-options {
-        background: #f8f8f8;
-    }
-
-    .relative {
-        position: relative;
-    }
-
-    .absolute {
-        position: absolute
-    }
-
-    .show-options {
-        bottom: -5px;
-        left: -15px;
-    }
-
-    .icon-arrow-right {
-        width: 0px;
-        height: 0px;
-        border-style: solid;
-        border-width: 4px 0 4px 6px;
-        border-color: transparent transparent transparent #000000;
-    }
-
-    .icon-arrow-down {
-        width: 0px;
-        height: 0px;
-        border-style: solid;
-        border-width: 6px 4px 0 4px;
-        border-color: #000000 transparent transparent transparent;
-    }
-
-    .table tbody td {
-        vertical-align: top !important;
-    }
-
-        /* TODO put css in husky / translate-css-file */
-
-</style>
-
 <div class="grid-row m-bottom-20">
     <div class="grid-col-6 pull-left">
         <h1><%= packageName %></h1>
     </div>
     <div class="grid-col-6 pull-right">
-        <label for="catalogues" class="grid-col-5 align-right m-right-10 bold grey"><%= translate('translate.package.catalogues') %>:</label>
+        <label for="catalogues" class="grid-col-5 align-right m-top-15 m-right-10 bold grey label-small"><%= translate('translate.package.catalogues') %>:</label>
         <div id="languageCatalogue" class="grid-col-6"></div>
     </div>
 </div>
@@ -100,18 +42,18 @@
                     <td colspan="4">
                         <div class="grid-row">
                             <div class="grid-col-3">
-                                <label for="length-0"><%= translate('translate.package.details.length') %></label>
+                                <label for="length-0" class="label-small"><%= translate('translate.package.details.length') %></label>
                                 <input id="length-0" class="form-element length-value" value="20" data-validation-required="true"
                                        data-type="decimal" data-validation-min="0" type="number" min="0"/>
                             </div>
                             <div class="grid-col-3 m-top-30">
-                                <label for="frontend-0" class="m-left-5"><%= translate('translate.package.details.frontend') %>
+                                <label for="frontend-0" class="m-left-5 label-small"><%= translate('translate.package.details.frontend') %>
                                 <input id="frontend-0" name="frontend" type="checkbox" class="custom-checkbox frontend-value">
                                 <span class="custom-checkbox-icon"></span>
                                 </label>
                             </div>
                             <div class="grid-col-3  m-top-30">
-                                <label for="backend-0" class="m-left-5"><%= translate('translate.package.details.backend') %>
+                                <label for="backend-0" class="m-left- label-small"><%= translate('translate.package.details.backend') %>
                                 <input id="backend-0" name="backend" type="checkbox" class="custom-checkbox backend-value">
                                 <span class="custom-checkbox-icon"></span>
                                 </label>
