@@ -12,6 +12,7 @@ define(['sulusecurity/models/role'], function(Role) {
 
     'use strict';
 
+    // FIXME move to this.*
     var sandbox,
         role,
         idDelete,
