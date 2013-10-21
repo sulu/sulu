@@ -18,26 +18,25 @@ class SuluScriptHandler extends ScriptHandler
     /**
      * @param $event CommandEvent A instance
      */
-    public static function installAppAssets(CommandEvent $event)
+    public static function installApp(CommandEvent $event)
     {
         $options = parent::getOptions($event);
         $appDir = $options['symfony-app-dir'];
         $webDir = $options['symfony-web-dir'];
 
-        $symlink = '';
-        if ($options['symfony-assets-install'] == 'symlink') {
-            $symlink = '--symlink ';
-        } elseif ($options['symfony-assets-install'] == 'relative') {
-            $symlink = '--symlink --relative ';
-        }
+        $dir = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))));
 
-        if (!is_dir($webDir)) {
-            echo 'The symfony-web-dir (' . $webDir . ') specified in composer.json was not found in ' . getcwd(
-                ) . ', can not install assets.' . PHP_EOL;
-
-            return;
-        }
-
-        parent::executeCommand($event, $appDir, 'assets:install ' . $symlink . escapeshellarg($webDir));
+        parent::executeCommand(
+            $event,
+            $appDir,
+            'sulu:install:resources ' . escapeshellarg($dir . '/' . $appDir) . ' ' . escapeshellarg(
+                $dir . '/' . $webDir
+            )
+        );
+        parent::executeCommand(
+            $event,
+            $appDir,
+            'sulu:install:kernel ' . escapeshellarg($dir . '/' . $appDir) . ' website'
+        );
     }
 }
