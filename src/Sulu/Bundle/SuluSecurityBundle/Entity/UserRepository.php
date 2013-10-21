@@ -71,18 +71,23 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $dql = '
-            SELECT u, ur, r, p
-                FROM SuluSecurityBundle:User u
-                    LEFT JOIN u.userRoles ur
-                    LEFT JOIN ur.role r
-                    LEFT JOIN r.permissions p
-                WHERE u.username = :username';
 
-        $query = $this->getEntityManager()->createQuery($dql);
+        $qb = $this->createQueryBuilder('user')
+            ->leftJoin('user.userRoles', 'userRoles')
+            ->leftJoin('userRoles.role', 'role')
+            ->leftJoin('role.permissions', 'permissions')
+            ->addSelect('userRoles')
+            ->addSelect('role')
+            ->addSelect('permissions')
+            ->where('user.username=:username');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('username', $username);
+
 
         try {
-            $user = $query->setParameter('username', $username)->getSingleResult();
+            return $query->getSingleResult();
         } catch (NoResultException $nre) {
             $message = sprintf(
                 'Unable to find an SuluSecurityBundle:User object identified by %s',
@@ -91,7 +96,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             throw new UsernameNotFoundException($message, 0, $nre);
         }
 
-        return $user;
     }
 
     /**
