@@ -14,8 +14,6 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Doctrine\ORM\Query;
 
 /**
  * Repository for the Codes, implementing some additional functions
@@ -23,6 +21,11 @@ use Doctrine\ORM\Query;
  */
 class ContactRepository extends EntityRepository
 {
+    /**
+     * find a contact by id
+     * @param $id
+     * @return mixed|null
+     */
     public function findById($id)
     {
         // create basic query
@@ -66,6 +69,11 @@ class ContactRepository extends EntityRepository
         }
     }
 
+    /**
+     * find a contact by id to delete
+     * @param $id
+     * @return mixed|null
+     */
     public function findByIdAndDelete($id)
     {
         // create basic query
