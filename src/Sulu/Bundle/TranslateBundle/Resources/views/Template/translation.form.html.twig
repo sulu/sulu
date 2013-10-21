@@ -15,10 +15,6 @@
         color: grey;
     }
 
-    .m-top-35 {
-        margin-top: 35px !important;
-    }
-
     .additional-options {
         background: #f8f8f8;
     }
@@ -65,8 +61,7 @@
         <h1><%= packageName %></h1>
     </div>
     <div class="grid-col-6 pull-right">
-        <p class="grid-col-5 align-right m-right-10 bold grey"><%= translate('translate.package.catalogues') %>:</p>
-
+        <label for="catalogues" class="grid-col-5 align-right m-right-10 bold grey"><%= translate('translate.package.catalogues') %>:</label>
         <div id="languageCatalogue" class="grid-col-6"></div>
     </div>
 </div>
@@ -105,19 +100,21 @@
                     <td colspan="4">
                         <div class="grid-row">
                             <div class="grid-col-3">
-                                <span><%= translate('translate.package.details.length') %></span>
-                                <input class="form-element length-value" value="20" data-validation-required="true"
+                                <label for="length-0"><%= translate('translate.package.details.length') %></label>
+                                <input id="length-0" class="form-element length-value" value="20" data-validation-required="true"
                                        data-type="decimal" data-validation-min="0" type="number" min="0"/>
                             </div>
-                            <div class="grid-col-2 m-top-35">
-                                <input name="frontend" type="checkbox" class="custom-checkbox frontend-value">
+                            <div class="grid-col-3 m-top-30">
+                                <label for="frontend-0" class="m-left-5"><%= translate('translate.package.details.frontend') %>
+                                <input id="frontend-0" name="frontend" type="checkbox" class="custom-checkbox frontend-value">
                                 <span class="custom-checkbox-icon"></span>
-                                <span class="m-left-5"><%= translate('translate.package.details.frontend') %></span>
+                                </label>
                             </div>
-                            <div class="grid-col-2  m-top-35">
-                                <input name="backend" type="checkbox" class="custom-checkbox backend-value">
+                            <div class="grid-col-3  m-top-30">
+                                <label for="backend-0" class="m-left-5"><%= translate('translate.package.details.backend') %>
+                                <input id="backend-0" name="backend" type="checkbox" class="custom-checkbox backend-value">
                                 <span class="custom-checkbox-icon"></span>
-                                <span class="m-left-5"><%= translate('translate.package.details.backend') %></span>
+                                </label>
                             </div>
                         </div>
                     </td>
