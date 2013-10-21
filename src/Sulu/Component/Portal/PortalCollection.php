@@ -25,12 +25,28 @@ class PortalCollection implements \IteratorAggregate
     private $portals;
 
     /**
+     * Contains all the resources, which where used to build this collection.
+     * Is required by the Symfony CacheConfig-Component.
+     * @var array
+     */
+    private $resources;
+
+    /**
      * Adds the portal with its unique key as array key to the collection
      * @param Portal $portal The portal to add
      */
     public function add(Portal $portal)
     {
         $this->portals[$portal->getKey()] = $portal;
+    }
+
+    /**
+     * Returns the resources used to build this collection
+     * @return array The resources build to use this collection
+     */
+    public function getResources()
+    {
+        return $this->resources;
     }
 
     /**
@@ -43,5 +59,23 @@ class PortalCollection implements \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->portals);
+    }
+
+    /**
+     * Returns the content of these portals as array
+     * @return array
+     */
+    public function toArray()
+    {
+        $portals = array();
+
+        foreach($this->portals as $portal) {
+            $portalData = array();
+            $portalData['name'] = $portal->getName();
+            $portalData['key'] = $portal->getKey();
+            $portals[] = $portalData;
+        }
+
+        return $portals;
     }
 }
