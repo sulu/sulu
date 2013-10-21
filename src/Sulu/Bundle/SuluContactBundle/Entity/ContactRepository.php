@@ -30,6 +30,49 @@ class ContactRepository extends EntityRepository
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.addresses', 'addresses')
+            ->leftJoin('addresses.country', 'country')
+            ->leftJoin('addresses.addressType', 'addressType')
+            ->leftJoin('u.locales', 'locales')
+            ->leftJoin('u.emails', 'emails')
+            ->leftJoin('emails.emailType', 'emailType')
+            ->leftJoin('u.notes', 'notes')
+            ->leftJoin('u.phones', 'phones')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->addSelect('account')
+            ->addSelect('activities')
+            ->addSelect('activityStatus')
+            ->addSelect('locales')
+            ->addSelect('emails')
+            ->addSelect('emailType')
+            ->addSelect('phones')
+            ->addSelect('phoneType')
+            ->addSelect('addresses')
+            ->addSelect('country')
+            ->addSelect('addressType')
+            ->addSelect('notes')
+            ->where('u.id=:id');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('id', $id);
+
+        try {
+            $contact = $query->getSingleResult();
+
+            return $contact;
+        } catch (NoResultException $nre) {
+            return null;
+        }
+    }
+
+    public function findByIdAndDelete($id)
+    {
+        // create basic query
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.activities', 'activities')
+            ->leftJoin('activities.activityStatus', 'activityStatus')
+            ->leftJoin('u.addresses', 'addresses')
             ->leftJoin('addresses.contacts', 'addressContacts')
             ->leftJoin('addresses.accounts', 'addressAccounts')
             ->leftJoin('addresses.country', 'country')
@@ -76,7 +119,6 @@ class ContactRepository extends EntityRepository
             return null;
         }
     }
-
 
     /**
      * Searches Entities by where clauses, pagination and sorted
