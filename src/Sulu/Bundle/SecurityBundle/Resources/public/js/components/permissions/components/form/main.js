@@ -292,8 +292,6 @@ define([], function() {
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
             }
-
-            //this.initializeHeaderbar();
         },
 
         isValidPassword: function(){
