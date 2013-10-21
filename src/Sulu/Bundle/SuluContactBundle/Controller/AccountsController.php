@@ -45,7 +45,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             function ($id) {
                 return $this->getDoctrine()
                     ->getRepository($this->entityName)
-                    ->find($id);
+                    ->findAccountById($id);
             }
         );
 
@@ -88,7 +88,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             if ($parentData != null && isset($parentData['id'])) {
                 $parent = $this->getDoctrine()
                     ->getRepository($this->entityName)
-                    ->find($parentData['id']);
+                    ->findAccountById($parentData['id']);
 
                 if (!$parent) {
                     throw new EntityNotFoundException($this->entityName, $parentData['id']);
@@ -152,7 +152,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * Edits the existing contact with the given id
      * @param integer $id The id of the contact to update
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     public function putAction($id)
     {
@@ -162,7 +162,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             /** @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository($accountEntity)
-                ->find($id);
+                ->findAccountById($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($accountEntity, $id);
@@ -176,7 +176,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
                 if ($parentData != null && isset($parentData['id'])) {
                     $parent = $this->getDoctrine()
                         ->getRepository($this->entityName)
-                        ->find($parentData['id']);
+                        ->findAccountById($parentData['id']);
 
                     if (!$parent) {
                         throw new EntityNotFoundException($this->entityName, $parentData['id']);
@@ -221,7 +221,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             /* @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository($entityName)
-                ->find($id);
+                ->findByIdAndDelete($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($entityName, $id);
@@ -284,8 +284,8 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * Adds URL to an account
      * @param Account $account
      * @param $urlData
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
     private function addUrl(Account $account, $urlData)
     {
@@ -315,7 +315,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Url $url The email object to update
      * @param string $entry The entry with the new data
      * @return bool True if successful, otherwise false
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function updateUrl(Url $url, $entry)
     {
@@ -369,8 +369,8 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * Adds an email address to an account
      * @param Account $account
      * @param $emailData
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
     private function addEmail(Account $account, $emailData)
     {
@@ -400,7 +400,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Email $email The email object to update
      * @param string $entry The entry with the new data
      * @return bool True if successful, otherwise false
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function updateEmail(Email $email, $entry)
     {
@@ -452,8 +452,8 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Account $account
      * @param $phoneData
      * @return bool
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
     private function addPhone(Account $account, $phoneData)
     {
@@ -485,7 +485,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Phone $phone The phone object to update
      * @param string $entry The entry with the new data
      * @return bool True if successful, otherwise false
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function updatePhone(Phone $phone, $entry)
     {
@@ -539,8 +539,8 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * Adds an address to an account
      * @param Account $account
      * @param $addressData
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
     private function addAddress(Account $account, $addressData)
     {
@@ -589,7 +589,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Address $address The phone object to update
      * @param mixed $entry The entry with the new data
      * @return bool True if successful, otherwise false
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     protected function updateAddress(Address $address, $entry)
     {
@@ -659,7 +659,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
      * @param Account $account
      * @param $noteData
      * @return bool
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityIdAlreadySetException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
     protected function addNote(Account $account, $noteData)
     {

@@ -18,7 +18,8 @@ define([], function() {
             phoneItem,
             addressItem,
             currentType,
-            currentState;
+            currentState,
+            addressCounter;
 
         return {
 
@@ -28,6 +29,8 @@ define([], function() {
 
             initialize: function() {
                 currentType = currentState = '';
+                addressCounter=1;
+                this.formId='#contact-form';
                 this.render();
                 this.setHeaderBar(true);
                 this.listenForChange();
@@ -50,7 +53,8 @@ define([], function() {
                         options: {
                             el: '#company',
                             url: '/admin/api/contact/accounts/list?searchFields=id,name',
-                            value: data.account
+                            value: data.account,
+                            instanceName:'company-input'
                         }
                     }
                 ]);
@@ -107,6 +111,13 @@ define([], function() {
 
                 this.sandbox.dom.on('#addAddress', 'click', this.addAddress.bind(this));
                 this.sandbox.dom.on('#addresses', 'click', this.removeAddress.bind(this), '.remove-address');
+
+                this.sandbox.dom.keypress(this.formId, function(event) {
+                    if (event.which === 13) {
+                        event.preventDefault();
+                        this.submit();
+                    }
+                }.bind(this));
             },
 
             bindCustomEvents: function() {
@@ -223,6 +234,10 @@ define([], function() {
 
             addAddress: function() {
                 var $item = addressItem.clone();
+
+                $item = this.setLabelsAndIdsForAddressItem($item);
+                addressCounter++;
+
                 this.sandbox.dom.append('#addresses', $item);
                 $(window).scrollTop($item.offset().top);
 
@@ -237,6 +252,26 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.country-value'));
 
                 this.sandbox.start($item);
+            },
+
+
+            setLabelsAndIdsForAddressItem: function($item){
+
+                var $labels = this.sandbox.dom.find('label[for]', $item),
+                    $inputs = this.sandbox.dom.find('input[type=text],select', $item);
+
+                this.sandbox.dom.each($inputs, function(index, value){
+
+                    var elementName = this.sandbox.dom.data(value, 'mapper-property');
+
+                    this.sandbox.logger.log(value, "value");
+
+                    this.sandbox.dom.attr($labels[index], {for: elementName+addressCounter.toString()});
+                    this.sandbox.dom.attr($inputs[index], {id: elementName+addressCounter.toString()});
+
+                }.bind(this));
+
+                return $item;
             },
 
             removeAddress: function(event) {
