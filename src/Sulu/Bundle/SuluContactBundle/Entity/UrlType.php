@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * UrlType
@@ -29,6 +30,7 @@ class UrlType implements \JsonSerializable
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $urls;
 

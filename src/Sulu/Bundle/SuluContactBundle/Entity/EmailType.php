@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+
 
 /**
  * EmailType
@@ -29,6 +31,7 @@ class EmailType implements \JsonSerializable
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $emails;
 
