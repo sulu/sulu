@@ -27,6 +27,31 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
 
+    public function findUserById($id){
+        try {
+
+            $qb = $this->createQueryBuilder('user')
+                ->leftJoin('user.userRoles', 'userRoles')
+                ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.contact', 'contact')
+                ->leftJoin('contact.emails', 'emails')
+                ->addSelect('userRoles')
+                ->addSelect('role')
+                ->addSelect('contact')
+                ->addSelect('emails')
+                ->where('user.id=:userId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('userId', $id);
+
+            return $query->getSingleResult();
+
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
     /**
      * Searches for a user with a specific contact id
      * @param $id
