@@ -28,6 +28,10 @@ define(function() {
             this.sandbox.on('sulu.dialog.error.show', function(message) {
                 this.showErrorDialog(message);
             }.bind(this));
+
+            this.sandbox.on('sulu.dialog.ok.show', function(title, message) {
+                this.showOkDialog(title, message);
+            }.bind(this));
         },
 
         createDialogElement: function() {
@@ -60,6 +64,28 @@ define(function() {
                     data: {
                         content: {
                             title: "An error occured!",
+                            content: message
+                        }
+                    }
+                }
+            });
+
+            this.sandbox.once('husky.dialog.cancel', function() {
+                this.sandbox.emit('husky.dialog.hide');
+            }.bind(this));
+
+        },
+
+        showOkDialog: function(title,message) {
+            this.createDialogElement();
+            this.startComponent({
+                name: 'dialog@husky',
+                options: {
+                    el: $dialog,
+                    templateType: 'okDialog',
+                    data: {
+                        content: {
+                            title: title,
                             content: message
                         }
                     }
