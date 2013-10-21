@@ -18,7 +18,8 @@ define([], function() {
             phoneItem,
             addressItem,
             currentType,
-            currentState;
+            currentState,
+            addressCounter;
 
         return {
 
@@ -28,6 +29,7 @@ define([], function() {
 
             initialize: function() {
                 currentType = currentState = '';
+                addressCounter=0;
                 this.render();
                 this.setHeaderBar(true);
                 this.listenForChange();
@@ -223,6 +225,11 @@ define([], function() {
 
             addAddress: function() {
                 var $item = addressItem.clone();
+
+                // TODO
+                //var $item = this.setLabelsAndIdsForAddressItem($item)
+                addressCounter++;
+
                 this.sandbox.dom.append('#addresses', $item);
                 $(window).scrollTop($item.offset().top);
 
@@ -237,6 +244,27 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.country-value'));
 
                 this.sandbox.start($item);
+            },
+
+
+            setLabelsAndIdsForAddressItem: function($item){
+
+                var $labels = this.sandbox.dom.find('label', $item),
+                    $inputs = this.sandbox.dom.find('input[type=text]', $item);
+
+
+                this.sandbox.dom.each($inputs, function(index, value){
+
+                    var elementName = this.sandbox.dom.data(value, 'mapper-property');
+
+                    this.sandbox.logger.log(value, "value");
+
+                    this.sandbox.dom.attr($labels[index], {for: elementName+addressCounter.toString()});
+                    this.sandbox.dom.attr($inputs[index], {id: elementName+addressCounter.toString()});
+
+                }.bind(this));
+
+                return $item;
             },
 
             removeAddress: function(event) {

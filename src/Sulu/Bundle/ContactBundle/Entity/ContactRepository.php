@@ -25,15 +25,22 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.emails', 'emails')
-            ->leftJoin('emails.emailType', 'emailType')
-            ->leftJoin('u.phones', 'phones')
-            ->leftJoin('phones.phoneType', 'phoneType')
+            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.activities', 'activities')
+            ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.addresses', 'addresses')
             ->leftJoin('addresses.country', 'country')
             ->leftJoin('addresses.addressType', 'addressType')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.locales', 'locales')
+            ->leftJoin('u.emails', 'emails')
+            ->leftJoin('emails.emailType', 'emailType')
             ->leftJoin('u.notes', 'notes')
+            ->leftJoin('u.phones', 'phones')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->addSelect('account')
+            ->addSelect('activities')
+            ->addSelect('activityStatus')
+            ->addSelect('locales')
             ->addSelect('emails')
             ->addSelect('emailType')
             ->addSelect('phones')
@@ -41,7 +48,6 @@ class ContactRepository extends EntityRepository
             ->addSelect('addresses')
             ->addSelect('country')
             ->addSelect('addressType')
-            ->addSelect('account')
             ->addSelect('notes')
             ->where('u.id=:id');
 
@@ -56,6 +62,7 @@ class ContactRepository extends EntityRepository
             return null;
         }
     }
+
 
     /**
      * Searches Entities by where clauses, pagination and sorted
@@ -83,6 +90,20 @@ class ContactRepository extends EntityRepository
         // if needed add where statements
         if (is_array($where) && sizeof($where) > 0) {
             $qb = $this->addWhere($qb, $where);
+        }
+
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    public function findBasicById($criteria = array())
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        // if needed add where statements
+        if (is_array($criteria) && sizeof($criteria) > 0) {
+            $qb = $this->addWhere($qb, $criteria);
         }
 
         $query = $qb->getQuery();
