@@ -227,7 +227,6 @@ define([], function() {
             addAddress: function() {
                 var $item = addressItem.clone();
 
-                // TODO
                 $item = this.setLabelsAndIdsForAddressItem($item);
                 addressCounter++;
 
