@@ -48,21 +48,21 @@ define(function() {
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
+                // navigate
                 router.navigate(route, {trigger: true});
+
+                // move to top
+                // FIXME abstract
+                $(window).scrollTop(0);
             }.bind(this));
 
             // init navigation
             this.sandbox.on('navigation.item.content.show', function(event) {
-//                this.navigationSizeChanged(event);
-
                 if (!!event.item.action) {
                     this.sandbox.emit('sulu.router.navigate', event.item.action);
                 }
             }.bind(this));
 
-//            this.sandbox.on('navigation.size.changed', function(event) {
-//                this.navigationSizeChanged(event);
-//            }.bind(this));
 
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
@@ -70,9 +70,5 @@ define(function() {
             }, this);
         }
 
-//        navigationSizeChanged: function(event) {
-//            // 45px margin to navigation at start
-//            $('#content').css('margin-left', (event.data.navWidth + 45) + "px");
-//        }
     };
 });
