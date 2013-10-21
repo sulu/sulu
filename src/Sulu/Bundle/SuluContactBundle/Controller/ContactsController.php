@@ -55,7 +55,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             $entityName = 'SuluContactBundle:Contact';
             $contact = $this->getDoctrine()
                 ->getRepository($entityName)
-                ->find($id);
+                ->findByIdAndDelete($id);
 
             if (!$contact) {
                 throw new EntityNotFoundException($entityName, $id);
@@ -144,7 +144,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
                 /** @var Account $parent */
                 $parent = $this->getDoctrine()
                     ->getRepository('SuluContactBundle:Account')
-                    ->find($parentData['id']);
+                    ->findAccountById($parentData['id']);
 
                 if (!$parent) {
                     throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
@@ -205,7 +205,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
             /** @var Contact $contact */
             $contact = $this->getDoctrine()
                 ->getRepository($contactEntity)
-                ->find($id);
+                ->findById($id);
 
             if (!$contact) {
                 throw new EntityNotFoundException($contactEntity, $id);
@@ -225,7 +225,7 @@ class ContactsController extends RestController implements ClassResourceInterfac
                     /** @var Account $parent */
                     $parent = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:Account')
-                        ->find($parentData['id']);
+                        ->findAccountById($parentData['id']);
 
                     if (!$parent) {
                         throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
