@@ -163,41 +163,41 @@
                     </div>
                     <div class="grid-row">
                         <div class="grid-col-6">
-                            <label><%=translate('contact.address.street')%></label>
-                            <input type="text" class="form-element street-value"
+                            <label for="street0"><%=translate('contact.address.street')%></label>
+                            <input id="street0" type="text" class="form-element street-value"
                                    data-mapper-property="street"/>
                         </div>
                         <div class="grid-col-2">
-                            <label><%=translate('contact.address.number')%></label>
-                            <input type="text" class="form-element number-value"
+                            <label for="number0"><%=translate('contact.address.number')%></label>
+                            <input id="number0" type="text" class="form-element number-value"
                                    data-mapper-property="number"/>
                         </div>
                         <div class="grid-col-4">
-                            <label><%=translate('contact.address.additional')%></label>
-                            <input type="text" class="form-element addition-value"
+                            <label for="addition0"><%=translate('contact.address.additional')%></label>
+                            <input id="addition0" type="text" class="form-element addition-value"
                                    data-mapper-property="addition"/>
                         </div>
                     </div>
                     <div class="grid-row">
                         <div class="grid-col-2">
-                            <label><%=translate('contact.address.zip')%></label>
-                            <input type="text" class="form-element zip-value"
+                            <label for="zip0"><%=translate('contact.address.zip')%></label>
+                            <input id="zip0" type="text" class="form-element zip-value"
                                    data-mapper-property="zip"/>
                         </div>
                         <div class="grid-col-4">
-                            <label><%=translate('contact.address.city')%></label>
-                            <input type="text" class="form-element city-value"
+                            <label for="city0"><%=translate('contact.address.city')%></label>
+                            <input id="city0" type="text" class="form-element city-value"
                                    data-mapper-property="city"/>
                         </div>
                         <div class="grid-col-2">
-                            <label><%=translate('contact.address.state')%></label>
-                            <input type="text" class="form-element state-value"
+                            <label for="state0"><%=translate('contact.address.state')%></label>
+                            <input id="state0" type="text" class="form-element state-value"
                                    data-mapper-property="state"/>
                         </div>
                         <div class="grid-col-4">
-                            <label><%=translate('contact.address.country')%></label>
+                            <label for="country0"><%=translate('contact.address.country')%></label>
 
-                            <select class="country-value form-element" data-mapper-property="country" data-type="select">
+                            <select id="country0" class="country-value form-element" data-mapper-property="country" data-type="select">
                                 {% for country in countries %}
                                     <option value="{{ country.id }}"><%=translate('{{ country.name }}')%></option>
                                 {% endfor %}

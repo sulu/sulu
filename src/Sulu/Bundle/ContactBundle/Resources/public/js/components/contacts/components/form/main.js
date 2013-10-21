@@ -29,7 +29,7 @@ define([], function() {
 
             initialize: function() {
                 currentType = currentState = '';
-                addressCounter=0;
+                addressCounter=1;
                 this.render();
                 this.setHeaderBar(true);
                 this.listenForChange();
@@ -227,7 +227,7 @@ define([], function() {
                 var $item = addressItem.clone();
 
                 // TODO
-                //var $item = this.setLabelsAndIdsForAddressItem($item)
+                $item = this.setLabelsAndIdsForAddressItem($item);
                 addressCounter++;
 
                 this.sandbox.dom.append('#addresses', $item);
@@ -249,9 +249,8 @@ define([], function() {
 
             setLabelsAndIdsForAddressItem: function($item){
 
-                var $labels = this.sandbox.dom.find('label', $item),
-                    $inputs = this.sandbox.dom.find('input[type=text]', $item);
-
+                var $labels = this.sandbox.dom.find('label[for]', $item),
+                    $inputs = this.sandbox.dom.find('input[type=text],select', $item);
 
                 this.sandbox.dom.each($inputs, function(index, value){
 
