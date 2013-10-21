@@ -53,26 +53,26 @@ define(function() {
 
             // init navigation
             this.sandbox.on('navigation.item.content.show', function(event) {
-                this.navigationSizeChanged(event);
+//                this.navigationSizeChanged(event);
 
                 if (!!event.item.action) {
                     this.sandbox.emit('sulu.router.navigate', event.item.action);
                 }
             }.bind(this));
 
-            this.sandbox.on('navigation.size.changed', function(event) {
-                this.navigationSizeChanged(event);
-            }.bind(this));
+//            this.sandbox.on('navigation.size.changed', function(event) {
+//                this.navigationSizeChanged(event);
+//            }.bind(this));
 
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
                 callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
-        },
-
-        navigationSizeChanged: function(event) {
-            // 45px margin to navigation at start
-            $('#content').css('margin-left', (event.data.navWidth + 45) + "px");
         }
+
+//        navigationSizeChanged: function(event) {
+//            // 45px margin to navigation at start
+//            $('#content').css('margin-left', (event.data.navWidth + 45) + "px");
+//        }
     };
 });
