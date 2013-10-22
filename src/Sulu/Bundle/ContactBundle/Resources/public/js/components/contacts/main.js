@@ -78,7 +78,7 @@ define([
                     if (!!data.id) {
                         this.sandbox.emit('sulu.contacts.contacts.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id);
+                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
