@@ -70,7 +70,7 @@ class ContactRepository extends EntityRepository
     }
 
     /**
-     * find a contact by id to delete
+     * find a contact by id and load additional infos to delete referenced entities
      * @param $id
      * @return mixed|null
      */
