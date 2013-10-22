@@ -5,20 +5,8 @@
       <generator strategy="IDENTITY"/>
     </id>
     <field name="name" type="string" column="name" length="60"/>
-    <one-to-many field="catalogues" target-entity="Sulu\Bundle\TranslateBundle\Entity\Catalogue" mapped-by="package">
-      <cascade>
-        <cascade-remove/>
-      </cascade>
-    </one-to-many>
-    <one-to-many field="locations" target-entity="Sulu\Bundle\TranslateBundle\Entity\Location" mapped-by="package">
-      <cascade>
-        <cascade-remove/>
-      </cascade>
-    </one-to-many>
-    <one-to-many field="codes" target-entity="Sulu\Bundle\TranslateBundle\Entity\Code" mapped-by="package">
-      <cascade>
-        <cascade-remove/>
-      </cascade>
-    </one-to-many>
+    <one-to-many field="catalogues" target-entity="Sulu\Bundle\TranslateBundle\Entity\Catalogue" mapped-by="package"/>
+    <one-to-many field="locations" target-entity="Sulu\Bundle\TranslateBundle\Entity\Location" mapped-by="package"/>
+    <one-to-many field="codes" target-entity="Sulu\Bundle\TranslateBundle\Entity\Code" mapped-by="package"/>
   </entity>
 </doctrine-mapping>

@@ -14,13 +14,13 @@
         <many-to-one field="catalogue" target-entity="Sulu\Bundle\TranslateBundle\Entity\Catalogue"
                      inversed-by="translations">
             <join-columns>
-                <join-column name="idCatalogues" referenced-column-name="id"/>
+                <join-column name="idCatalogues" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
 
         <many-to-one field="code" target-entity="Sulu\Bundle\TranslateBundle\Entity\Code" inversed-by="translations">
             <join-columns>
-                <join-column name="idCodes" referenced-column-name="id"/>
+                <join-column name="idCodes" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
     </entity>

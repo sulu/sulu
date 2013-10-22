@@ -6,14 +6,10 @@
     </id>
     <field name="locale" type="string" column="locale" length="60"/>
     <field name="isDefault" type="boolean" column="isDefault"/>
-    <one-to-many field="translations" target-entity="Sulu\Bundle\TranslateBundle\Entity\Translation" mapped-by="catalogue">
-      <cascade>
-        <cascade-remove/>
-      </cascade>
-    </one-to-many>
+    <one-to-many field="translations" target-entity="Sulu\Bundle\TranslateBundle\Entity\Translation" mapped-by="catalogue"/>
     <many-to-one field="package" target-entity="Sulu\Bundle\TranslateBundle\Entity\Package" inversed-by="catalogues">
       <join-columns>
-        <join-column name="idPackages" referenced-column-name="id" nullable="false"/>
+        <join-column name="idPackages" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
       </join-columns>
     </many-to-one>
   </entity>
