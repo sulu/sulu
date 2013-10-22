@@ -187,16 +187,13 @@ define(['sulucontact/model/account'], function(Account) {
                 throw 'callback is not a function';
             }
 
-            var defaults = function() {
-                    return {
-                        templateType: null,
-                        title: 'Warning!',
-                        content: 'Do you really want to delete the selected company? All data is going to be lost.',
-                        buttonCancelText: 'Cancel',
-                        buttonSubmitText: 'Delete'
-                    };
-                },
-                params = defaults();
+            var params = {
+                    templateType: null,
+                    title: 'Warning!',
+                    content: 'Do you really want to delete the selected company? All data is going to be lost.',
+                    buttonCancelText: 'Cancel',
+                    buttonSubmitText: 'Delete'
+                };
 
             // FIXME translation
 
@@ -300,16 +297,13 @@ define(['sulucontact/model/account'], function(Account) {
                 throw 'callback is not a function';
             }
 
-            var defaults = function() {
-                    return {
-                        templateType: null,
-                        title: 'Warning!',
-                        content: 'Do you really want to delete the selected companies? All data is going to be lost.',
-                        buttonCancelText: 'Cancel',
-                        buttonSubmitText: 'Delete'
-                    };
-                },
-                params = defaults();
+            var params = {
+                    templateType: null,
+                    title: 'Warning!',
+                    content: 'Do you really want to delete the selected companies? All data is going to be lost.',
+                    buttonCancelText: 'Cancel',
+                    buttonSubmitText: 'Delete'
+                };
 
             // FIXME translation
 
