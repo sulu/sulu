@@ -17,7 +17,7 @@ define([
     'sulucontact/model/url'
 ], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url) {
     return RelationalModel({
-        urlRoot: '/contact/api/accounts',
+        urlRoot: '/admin/api/contact/accounts',
         defaults: function() {
             return {
                 id: null,

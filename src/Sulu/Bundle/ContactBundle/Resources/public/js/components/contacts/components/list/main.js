@@ -15,14 +15,14 @@ define(function() {
 
         view: true,
 
-        templates: ['/contact/template/contact/list'],
+        templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
             this.render();
         },
 
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/contact/template/contact/list'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
             // dropdown - showing options
             this.sandbox.start([{
@@ -48,7 +48,7 @@ define(function() {
                 name: 'datagrid@husky',
                 options: {
                     el: this.sandbox.dom.find('#people-list', this.$el),
-                    url: '/contact/api/contacts/list?fields=id,title,firstName,lastName,position',
+                    url: '/admin/api/contact/contacts/list?fields=id,title,firstName,lastName,position',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'

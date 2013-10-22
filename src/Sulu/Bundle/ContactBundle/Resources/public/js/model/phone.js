@@ -13,7 +13,7 @@ define([
     'sulucontact/model/phoneType'
 ], function(RelationalModel, HasOne, PhoneType) {
     return RelationalModel({
-        urlRoot: '/contact/api/phones',
+        urlRoot: '/admin/api/contact/phones',
         defaults: {
             id: null,
             phone: '',
