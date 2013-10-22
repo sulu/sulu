@@ -78,7 +78,7 @@ define([
                     if (!!data.id) {
                         this.sandbox.emit('sulu.contacts.contacts.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id);
+                        this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
@@ -174,24 +174,22 @@ define([
                 footer: {
                     buttonCancelText: "Don't do it",
                     buttonSubmitText: "Do it, I understand"
+                },
+                callback: {
+                    submit: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(true);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
                 }
             });
-
-            // submit -> delete
-            this.sandbox.once('husky.dialog.submit', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(true);
-                }
-            }.bind(this));
-
-            // cancel
-            this.sandbox.once('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(false);
-                }
-            }.bind(this));
         },
 
 
