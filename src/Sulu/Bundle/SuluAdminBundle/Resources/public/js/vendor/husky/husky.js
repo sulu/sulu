@@ -1,6 +1,6 @@
 
 /** vim: et:ts=4:sw=4:sts=4
- * @license RequireJS 2.1.8 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
@@ -13,7 +13,7 @@ var requirejs, require, define;
 (function (global) {
     var req, s, head, baseElement, dataMain, src,
         interactiveScript, currentlyAddingScript, mainScript, subPath,
-        version = '2.1.8',
+        version = '2.1.9',
         commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
         cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g,
         jsSuffixRegExp = /\.js$/,
@@ -23,7 +23,7 @@ var requirejs, require, define;
         hasOwn = op.hasOwnProperty,
         ap = Array.prototype,
         apsp = ap.splice,
-        isBrowser = !!(typeof window !== 'undefined' && navigator && window.document),
+        isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document),
         isWebWorker = !isBrowser && typeof importScripts !== 'undefined',
         //PS3 indicates loaded and complete, but need to wait for complete
         //specifically. Sequence is 'loading', 'loaded', execution,
@@ -374,7 +374,6 @@ var requirejs, require, define;
         function hasPathFallback(id) {
             var pathConfig = getOwn(config.paths, id);
             if (pathConfig && isArray(pathConfig) && pathConfig.length > 1) {
-                removeScript(id);
                 //Pop off the first array value, since it failed, and
                 //retry
                 pathConfig.shift();
@@ -1465,6 +1464,8 @@ var requirejs, require, define;
                         var map = makeModuleMap(id, relMap, true),
                             mod = getOwn(registry, id);
 
+                        removeScript(id);
+
                         delete defined[id];
                         delete urlFetched[map.url];
                         delete undefEvents[id];
@@ -1610,7 +1611,7 @@ var requirejs, require, define;
 
                     //Join the path parts together, then figure out if baseUrl is needed.
                     url = syms.join('/');
-                    url += (ext || (/\?/.test(url) || skipExt ? '' : '.js'));
+                    url += (ext || (/^data\:|\?/.test(url) || skipExt ? '' : '.js'));
                     url = (url.charAt(0) === '/' || url.match(/^[\w\+\.\-]+:/) ? '' : config.baseUrl) + url;
                 }
 
@@ -1919,7 +1920,7 @@ var requirejs, require, define;
     }
 
     //Look for a data-main script attribute, which could also adjust the baseUrl.
-    if (isBrowser) {
+    if (isBrowser && !cfg.skipDataMain) {
         //Figure out baseUrl. Get it from the script tag with require.js in it.
         eachReverse(scripts(), function (script) {
             //Set the 'head' where we can append children by
@@ -20594,694 +20595,359 @@ define('husky',[
     return Husky;
 });
 
-define('__component__$navigation@husky',['jquery'], function($) {
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * Name: navigation
+ * Options:
+ *
+ * Provided Events:
+ *
+ * Used Events:
+ *
+ */
 
+define('husky_components/navigation/item',[],function() {
     
 
-    var sandbox;
+    var defaults = {
+            title: '',
+            hasSub: false
+        },
 
-    return {
+        render = function() {
+            prepareColumnItem.call(this);
 
-        view: true,
+            bindDomEvents.call(this);
+        },
 
-        initialize: function() {
-
-            sandbox = this.sandbox;
-            sandbox.logger.log('initialize', this);
-            sandbox.logger.log(arguments);
-
-            this.$navigation = $('<div/>', {
-                class: 'navigation'
-            });
-
-            this.currentColumnIdx = 0;
-
-            this.data = null;
-
-            this.columnHeader = null;
-            this.columnItems = null;
-
-            if (!!this.options.url) {
-                this.load({
-                    url: this.options.url,
-                    success: function() {
-                        this.prepareNavigation();
-                        this.render();
-                    }.bind(this)
-                });
+        prepareColumnItem = function() {
+            var columnItemClasses = ['navigation-column-item'];
+            // init classes
+            if (!!this.options.data.class) {
+                columnItemClasses.push(this.options.data.class);
             }
 
-        },
+            if (!!this.options.data.selected) {
+                columnItemClasses.push('selected');
+            }
 
-        load: function(params) {
-            sandbox.logger.log('load', params);
-
-            sandbox.util.ajax({
-                url: params.url,
-
-                success: function(data) {
-                    sandbox.logger.log('data loaded', data);
-
-                    this.data = data;
-
-                    this.columnHeader = this.data.header || null;
-                    this.columnItems = this.data.sub.items || null;
-
-                    this.setConfigs(data);
-
-                    if (typeof params.success === 'function') {
-                        params.success(this.data);
-                    }
-                }.bind(this)
-            });
-        },
-
-        setConfigs: function(params) {
-            this.configs = {
-                displayOption: params.displayOption || null
-            };
-        },
-
-        prepareNavigation: function() {
-            this.$navigationColumns = $('<ul/>', {
-                class: 'navigation-columns'
+            this.sandbox.dom.attr(this.$el, {
+                id: this.options.data.id,
+                class: columnItemClasses.join(' '),
+                title: this.options.data.title,
+                'data-has-sub': (!!this.options.data.hasSub) ? 'true' : 'false'
             });
 
-            this.$navigationColumns.append(this.prepareNavigationColumn());
-            this.$navigation.append(this.$navigationColumns);
-
-            return this;
+            // add icon
+            if (!!this.options.data.icon) {
+                this.$el.append(
+                    this.sandbox.dom.createElement('<span/>', {
+                        class: 'icon-' + this.options.data.icon
+                    })
+                );
+            }
+            // add title
+            this.$el.append(this.options.data.title);
         },
 
-        setNavigationSize: function() {
-            var $window = $(window),
-                $navigationSubColumnsCont = $('.navigation-sub-columns-container'),
-                $navigationSubColumns = $('.navigation-sub-columns'),
-                paddingRight = 100;
+        bindDomEvents = function() {
+            this.sandbox.dom.on(this.$el, 'click', clickItem.bind(this));
+        },
 
-            setTimeout(function() {
-                $navigationSubColumns.css({
-                    width: 'auto'
-                });
+        clickItem = function(event) {
+            this.sandbox.logger.log('click item', this.options.data);
 
-                $navigationSubColumnsCont.removeClass('scrolling');
+            event.stopPropagation();
 
-                if ($window.width() < this.$navigation.width() + paddingRight) {
-                    $navigationSubColumns.css({
-                        width: ($window.width() - paddingRight) - (this.$navigation.width() - $navigationSubColumns.width()),
-                        height: this.$navigation.height()
-                    });
-                    $navigationSubColumnsCont.addClass('scrolling');
-                } else {
-                    $navigationSubColumns.css({
-                        height: this.$navigation.height() + 5
-                    });
+            // emit click callback or event
+            if (!!this.options.clickCallback && typeof this.options.clickCallback === 'function') {
+                this.options.clickCallback(this.options.data);
+            } else {
+                this.sandbox.emit('husky.navigation.item.click', this.options.data);
+            }
+
+            // selected class
+            this.sandbox.dom.addClass(this.$el, 'selected');
+        };
+
+    return function() {
+        return {
+            render: function() {
+                render.call(this);
+            },
+
+            setOptions: function(options) {
+                if (!options) {
+                    throw('No options were defined!');
                 }
-            }.bind(this), 250);
-        },
+                this.options = this.sandbox.util.extend({}, defaults, options);
+                this.$el = this.options.$el;
+            },
 
-        prepareNavigationColumn: function() {
-            var $column, columnClasses;
+            loadingItem: function(onOff) {
+                if (onOff) {
+                    this.sandbox.dom.addClass(this.$el, 'is-loading');
+                } else {
+                    this.sandbox.dom.removeClass(this.$el, 'is-loading');
+                }
+            },
 
-            columnClasses = [' '];
+            selectItem: function(onOff) {
+                if (!!onOff) {
+                    this.sandbox.dom.addClass(this.$el, 'selected');
+                } else {
+                    this.sandbox.dom.removeClass(this.$el, 'selected');
+                }
+            }
+        };
+    };
+});
 
-            this.$navigationColumns.removeClass('show-content');
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * Name: navigation
+ * Options:
+ *
+ * Provided Events:
+ *
+ * Used Events:
+ *
+ */
 
-            if (this.configs.displayOption === 'content') {
-                // if the column is a content column
-                columnClasses.push('content-column');
-                this.$navigationColumns.addClass('show-content');
-            } else if (this.currentColumnIdx === 1) {
-                // if the column is the second column
-                columnClasses.push('second-column');
+define('husky_components/navigation/column',['husky_components/navigation/item'], function(NavigationItem) {
+    
+
+    var render = function() {
+            prepareColumn.call(this);
+
+            if (!!this.options.data.displayOption && this.options.data.displayOption === 'portals') {
+                renderPortals.call(this);
+            } else {
+                if (this.options.data.displayOption !== 'portal' && (this.sandbox.dom.data(this.$el, 'columnId') < 2 || !!this.options.data.displayOption)) {
+                    this.sandbox.dom.append(this.$el, prepareColumnHeader.call(this));
+                }
+
+                this.$columnItemsList = prepareColumnItems.call(this);
+                this.sandbox.dom.append(this.$el, this.$columnItemsList);
             }
 
-            $column = $('<li/>', {
-                'id': 'column-' + this.currentColumnIdx,
-                'data-column-id': this.currentColumnIdx,
-                'class': 'navigation-column' + ((columnClasses.length > 1) ? columnClasses.join(' ') : '')
-            });
-
-            if (!!this.columnHeader) {
-                $column.append(this.prepareColumnHeader());
-            }
-
-            $column.append(this.prepareColumnItems());
-
-            return $column;
+            bindDomEvents.call(this);
         },
 
-        prepareNavigationSubColumn: function() {
-            this.$navigationSubColumns = $('<ul/>', {
-                'class': 'navigation-sub-columns'
-            });
-
-            return this.$navigationSubColumns;
-        },
-
-        prepareColumnHeader: function() {
-            var $columnHeader;
-
-            $columnHeader = $('<div/>', {
+        renderPortals = function() {
+            var $columnHeader = this.sandbox.dom.createElement('<div/>', {
                 'class': 'navigation-column-header'
             });
 
-            if (this.columnHeader.displayOption === 'link') {
-                $columnHeader.html(this.template.columnHeaderLink({
-                    title: this.columnHeader.title,
-                    icon: this.columnHeader.icon,
-                    action: this.columnHeader.action
+            $columnHeader.html(template.columnHeaderPortal.call(this, {
+                title: this.options.data.sub.items[0].title,
+                logo: !!this.options.data.header ? this.options.data.header.logo : null
+            }));
+
+            this.sandbox.dom.append(this.$el, $columnHeader);
+
+            this.sandbox.start([
+                {
+                    name: 'dropdown@husky',
+                    options: {
+                        el: $columnHeader.find('#portal-header'),
+                        data: this.options.data.sub.items,
+                        alignment: 'right',
+                        instanceName: 'portalHeader',
+                        valueName: 'title',
+                        setParentDropDown: true,
+                        trigger: '.navigation-column-title, .dropdown-toggle',
+                        clickCallback: portalClick.bind(this)
+                    }
+                }
+            ]);
+
+            preparePortalsColumnList.call(this, this.options.data.sub.items[0]).then(function($columnItemsList) {
+                this.sandbox.dom.append(this.$el, $columnItemsList);
+            }.bind(this));
+        },
+
+        portalClick = function(item) {
+            if (!!this.locked) {
+                return;
+            }
+            this.sandbox.logger.log('item clicked', item);
+            this.sandbox.dom.text('#portal-header h2', item.title);
+            this.sandbox.dom.find('#' + this.id + ' .navigation-items').remove();
+
+            if (!!this.options.updateColumnCallback) {
+                this.options.updateColumnCallback(this.index, true);
+            }
+
+            preparePortalsColumnList.call(this, item).then(function($columnItemsList) {
+                this.sandbox.dom.append(this.$el, $columnItemsList);
+            }.bind(this));
+        },
+
+        preparePortalsColumnList = function(item) {
+            var $columnItemsList,
+                dfd = new this.sandbox.data.deferred();
+
+            if (!!item.hasSub && !!item.sub) {
+                $columnItemsList = prepareColumnItems.call(this, item);
+                dfd.resolve($columnItemsList);
+            } else {
+                this.locked = true;
+                this.sandbox.util.load(item.action)
+                    .then(function(data) {
+                        this.locked = false;
+                        $columnItemsList = prepareColumnItems.call(this, data);
+                        dfd.resolve($columnItemsList);
+                    }.bind(this));
+            }
+
+            return dfd.promise();
+        },
+
+        prepareColumnHeader = function() {
+            var $columnHeader = this.sandbox.dom.createElement('<div/>', {
+                'class': 'navigation-column-header'
+            });
+
+            if (this.options.data.header.displayOption === 'link') {
+                $columnHeader.html(template.columnHeaderLink.call(this, {
+                    title: this.options.data.header.title,
+                    icon: this.options.data.header.icon,
+                    action: this.options.data.header.action
                 }));
             } else {
-                $columnHeader.html(this.template.columnHeader({
-                    title: this.columnHeader.title,
-                    logo: this.columnHeader.logo
+                $columnHeader.html(template.columnHeader.call(this, {
+                    title: this.options.data.header.title,
+                    logo: this.options.data.header.logo || this.options.data.logo || null
                 }));
             }
 
             return $columnHeader;
         },
 
-        prepareColumnItems: function() {
-            var $columnItemsList, columnItems, columnItemClass,
-                columnItemClasses, columnItemUri, columnItemHasSub,
-                columnItemIcon, columnItemTitle, itemModel,
-                columnItemId;
+        bindDomEvents = function() {
+            // FIXME better solution
+            this.sandbox.dom.on('body', 'click', clickColumn.bind(this), '#' + this.id + '.collapsed');
+            this.sandbox.dom.on('body', 'click', clickColumn.bind(this), '#' + this.id + '.hide');
+        },
 
-            columnItems = [];
+        clickColumn = function() {
+            if (!!this.options.selectedClickCallback && typeof this.options.selectedClickCallback === 'function') {
+                this.options.selectedClickCallback(this.options.index);
+            } else {
+                this.sandbox.emit('husky.navigation.column.selected-click', this.options.index);
+            }
+        },
 
-            $columnItemsList = $('<ul/>', {
+        prepareColumn = function() {
+            var columnClasses = ['navigation-column'];
+
+            if (!!this.options.data && !!this.options.data.displayOption) {
+                // add a class that defines display-options
+                columnClasses.push(this.options.data.displayOption + '-column');
+            } else if (this.options.index === 0) {
+                // if the column is the second column
+                columnClasses.push('first-column');
+            } else if (this.options.index === 1) {
+                // if the column is the second column
+                columnClasses.push('second-column');
+            }
+
+            this.id = 'column-' + this.options.index;
+
+            this.sandbox.dom.attr(this.$el, {
+                'id': this.id,
+                'data-column-id': this.options.index,
+                'class': columnClasses.join(' ')
+            });
+        },
+
+        prepareColumnItems = function(data) {
+            if (!data) {
+                data = this.options.data;
+            }
+
+            var $columnItemsList = this.sandbox.dom.createElement('<ul/>', {
                 class: 'navigation-items'
             });
 
-            if (!!this.columnItems) {
-                if (!!this.itemsCollection) {
-                    delete this.itemsCollection;
-                }
-
-                this.itemsCollection = new this.collections.items();
-
-                this.columnItems.forEach(function(item) {
-
-                    itemModel = this.models.item(item);
-                    this.itemsCollection.add(itemModel);
-
-                    // prepare classes
-                    columnItemClasses = [];
-
-                    !!itemModel.get('class') && columnItemClasses.push(itemModel.get('class'));
-                    !!itemModel.get('selected') && columnItemClasses.push('selected');
-                    columnItemClasses.push('navigation-column-item');
-
-                    columnItemClass = ' class="' + columnItemClasses.join(' ') + '"';
-
-                    // prepare data-attributes
-                    columnItemHasSub = (!!itemModel.get('hasSub')) ? ' data-has-sub="true"' : '';
-
-                    // prepare title
-                    columnItemTitle = 'title="' + itemModel.get('title') + '"';
-
-                    // prepare icon
-                    columnItemIcon = (!!itemModel.get('icon')) ? '<span class="icon-' + itemModel.get('icon') + '"></span>' : '';
-
-                    // prepare id
-                    columnItemId = 'id="' + itemModel.get('id') + '"';
-
-                    columnItems.push(
-                        '<li ', columnItemId, columnItemTitle, columnItemClass, columnItemUri, columnItemHasSub, '>',
-                        columnItemIcon,
-                        itemModel.get('title'),
-                        '</li>'
-                    );
-                }.bind(this));
-
-                $columnItemsList.append(columnItems.join(''));
-            }
+            data.sub.items.forEach(function(item) {
+                $columnItemsList.append(prepareColumnItem.call(this, item));
+            }.bind(this));
 
             return $columnItemsList;
         },
 
-        addColumn: function() {
-            var $subColumns, $subColumnsContainer = $('.navigation-sub-columns-container');
+        prepareColumnItem = function(item) {
+            var $item = this.sandbox.dom.createElement('<li/>'),
+                navigationItem = new NavigationItem();
 
-            this.currentColumnIdx++;
-
-            // FIXME check if necessary
-            if (this.currentColumnIdx === 2 && !$subColumnsContainer.size()) {
-                $subColumns = $('<li/>', {
-                    'class': 'navigation-sub-columns-container'
-                });
-
-                $subColumns.append(this.prepareNavigationSubColumn());
-                this.$navigationColumns.append($subColumns);
-                $subColumnsContainer = $('.navigation-sub-columns-container');
-            }
-
-            if (!!$subColumnsContainer.size()) {
-                this.$navigationSubColumns.append(this.prepareNavigationColumn());
-                this.scrollToLastSubColumn();
-            } else {
-                this.$navigationColumns.append(this.prepareNavigationColumn());
-            }
-
-            this.setNavigationSize();
-        },
-
-        collapseFirstColumn: function() {
-            sandbox.logger.log('collapseFirstColumn');
-            var $firstColumn;
-
-            $firstColumn = $('#column-0');
-            $firstColumn.addClass('collapsed');
-        },
-
-        showNavigationColumns: function(event) {
-            var $firstColumn, $secondColumn, $element,
-                $target = $(event.target);
-
-            if ($target.hasClass('navigation-column-header')) {
-                return;
-            }
-
-            $element = $(event.target);
-            $firstColumn = $('#column-0');
-            $secondColumn = $('#column-1');
-
-            if (!$element.hasClass('content-column')) {
-                this.$navigationColumns.removeClass('show-content');
-            }
-
-            this.showContent = false;
-
-            if (!$element.hasClass('content-column') && !$element.hasClass('navigation-column-item') && !$element.is('span')) {
-                $firstColumn.removeClass('hide');
-                $secondColumn.removeClass('collapsed');
-
-                this.hideColumn();
-            } else {
-                $firstColumn.removeClass('hide');
-                $secondColumn.removeClass('collapsed');
-            }
-
-            this.setNavigationSize();
-        },
-
-        // lock selection during column loading
-        selectionLocked: true,
-
-        showContent: false,
-
-        // TODO: cleanup and simplify selectItem function
-        selectItem: function(event) {
-            sandbox.logger.log('selectItem');
-
-            var $element, $elementColumn, elementId,
-                itemModel;
-
-            this.showContent = false;
-
-            $element = $(event.currentTarget);
-            $elementColumn = $element.parent().parent();
-            if ($element.hasClass('selected') && ($elementColumn.hasClass('collapsed') || ($elementColumn.data('columnId') === 0 && $elementColumn.parent().hasClass('show-content')))) {
-                event.stopPropagation();
-                $('#column-0')
-                    .removeClass('hide');
-
-                $('#column-1')
-                    .removeClass('collapsed')
-                    .parent().removeClass('show-content');
-
-                if ($elementColumn.data('columnId') === 0) {
-                    this.showFirstNavigationColumn(event);
-                }
-
-                return;
-            }
-
-            elementId = $element.attr('id');
-
-            itemModel = this.itemsCollection.get(elementId);
-
-            this.currentColumnIdx = $elementColumn.data('column-id');
-
-            if (!!itemModel && this.selectionLocked) {
-                // reset all navigation items...
-                $elementColumn
-                    .find('.selected')
-                    .removeClass('selected');
-
-                // ... and add class to selected element
-                $element.addClass('selected');
-
-                sandbox.emit('navigation.item.selected', {
-                    item: itemModel,
-                    data: this.getNavigationData()
-                });
-
-                if (!!itemModel.get('hasSub')) {
-
-                    if (!itemModel.get('sub')) {
-                        this.selectionLocked = false;
-
-                        this.addLoader($element);
-                        this.updateColumns();
-
-                        this.load({
-                            url: itemModel.get('action'),
-                            success: function() {
-                                this.selectionLocked = true;
-
-                                this.addColumn();
-                                this.hideLoader($element);
-
-                                if (this.currentColumnIdx > 1) {
-                                    this.collapseFirstColumn();
-                                }
-
-                                sandbox.emit('navigation.item.sub.loaded', {
-                                    item: itemModel,
-                                    data: this.getNavigationData()
-                                });
-                            }.bind(this)
-                        });
-                    } else {
-                        this.setConfigs({});
-
-                        this.columnHeader = itemModel.get('header') || null;
-                        this.columnItems = itemModel.get('sub').items;
-                        this.updateColumns();
-                        this.addColumn();
-
-                        if (this.currentColumnIdx > 1) {
-                            this.collapseFirstColumn();
-                        }
-
-                        sandbox.emit('navigation.item.sub.show', {
-                            item: itemModel,
-                            data: this.getNavigationData()
-                        });
-                    }
-
-                } else if (itemModel.get('type') === 'content') {
-                    this.showContent = true;
-
-                    this.updateColumns();
-                    if ($elementColumn.data('columnId') !== 0) {
-                        this.collapseFirstColumn();
-                    } else {
-                        $('#column-1').remove();
-                        $('#column-0')
-                            .removeClass('hide')
-                            .removeClass('collapsed')
-                            .parent().removeClass('show-content');
-                    }
-
-                    if($elementColumn.data('columnId') === 1){
-                        if($elementColumn.hasClass('content-column')){
-                            $('#column-0')
-                                .addClass('collapsed')
-                                .parent().addClass('show-content');
-                        }
-                        this.showNavigationColumns(event);
-                    }else if($elementColumn.data('columnId') === 2){
-                        if($elementColumn.hasClass('content-column')){
-                            $('#column-1')
-                                .addClass('collapsed')
-                                .parent().addClass('show-content');
-                            $('#column-0')
-                                .addClass('hide');
-                        }
-                    }
-
-                    sandbox.emit('navigation.item.content.show', {
-                        item: itemModel,
-                        data: this.getNavigationData()
-                    });
-                }
-            }
-        },
-
-        headerLinkClick: function() {
-            var action = $('.navigation-header-link').data('action'),
-                $column0 = $('#column-0'),
-                $column1 = $('#column-1');
-
-            this.removeContentColumn();
-
-            $column0.parent().removeClass('show-content');
-            if ($column0.hasClass('hide') && $column1.hasClass('collapsed')) {
-                $column0.removeClass('hide');
-                $column0.addClass('collapsed');
-                $column1.removeClass('collapsed');
-            } else if ($column0.hasClass('collapsed')) {
-                $column0.removeClass('collapsed');
-            }
-
-            sandbox.emit('navigation.item.content.show', {
-                item: {
-                    action: action
-                },
-                data: this.getNavigationData()
+            navigationItem.sandbox = this.sandbox;
+            navigationItem.setOptions({
+                $el: $item,
+                data: item,
+                clickCallback: clickCallback.bind(this)
             });
+
+            navigationItem.render();
+            this.items[item.id] = navigationItem;
+
+            return $item;
         },
 
-        // remove old columns before loading new ones
-        updateColumns: function() {
-            $('.navigation-columns > li:gt(' + this.currentColumnIdx + ')').remove();
-            $('.navigation-column:gt(' + this.currentColumnIdx + ')').remove();
-        },
+        clickCallback = function(item) {
+            var itemId = '#' + item.id,
+                $item = this.sandbox.dom.find(itemId);
 
-        getNavigationWidth: function() {
-            var $columns = $('.navigation-column'),
-                width = 0,
-                $column = null;
+            item.columnIndex = this.options.index;
 
-            $.each($columns, function(idx, column) {
-                $column = $(column);
+            // reset selected item
+            this.sandbox.dom.removeClass('#' + this.id + ' .selected:not(' + itemId + ')', 'selected');
 
-                if (!this.$navigationColumns.hasClass('show-content')) {
-                    if (!$column.parent().parent().hasClass('navigation-sub-columns-container')) {
-                        if ($column.hasClass('collapsed')) {
-                            width += 50;
-                        } else if ($column.hasClass('content-column')) {
-                            width += 150;
-                        } else {
-                            width += 250;
-                        }
-                    }
-                } else {
-                    width = 200;
-                }
-
-            }.bind(this));
-
-            return width;
-        },
-
-        getNavigationData: function() {
-            return {
-                // TODO
-                navWidth: this.getNavigationWidth()
-            };
-        },
-
-        showFirstNavigationColumn: function(event) {
-            sandbox.logger.log('showFirstNavigationColumn');
-
-            var $element = $(event.target);
-
-            $('#column-0')
-                .removeClass('hide')
-                .removeClass('collapsed');
-
-            if (!$element.hasClass('navigation-column-item') && !$element.is('span')) {
-                this.currentColumnIdx = 1;
-                this.updateColumns();
-                $('#column-1')
-                    .find('.selected')
-                    .removeClass('selected');
-            }
-        },
-
-        removeContentColumn: function() {
-            var $contentColumn = this.$navigation.find('.content-column');
-            if ($contentColumn.length > 0) {
-                this.currentColumnIdx -= $contentColumn.length;
-                $contentColumn.remove();
-            }
-        },
-
-        removeSubColumns: function() {
-            var $subColumns = this.$navigation.find('.navigation-sub-columns-container');
-            if ($subColumns.length > 0) {
-                this.currentColumnIdx -= this.$navigation.find('.navigation-sub-columns').length;
-                $subColumns.remove();
-            }
-        },
-
-        // TODO
-        showColumn: function(params) {
-            sandbox.logger.log('showColumn');
-
-            var $showedColumn,
-                $column0,
-                $column1,
-                countCol0,
-                countCol1;
-
-            params = params || {};
-
-            if (!!params.data) {
-                if (!params.data.displayOption || params.data.displayOption === 'content') {
-                    this.removeContentColumn();
-                }
-                $column0 = $('#column-0');
-                $column1 = $('#column-1');
-                countCol0 = $column0.length;
-                countCol1 = $column1.length;
-
-                this.columnHeader = params.data.header || null;
-                this.columnItems = params.data.sub.items || null;
-
-                this.setConfigs(params.data);
-
-                // FIXME check if only special case
-                if (!(countCol0 === 1 && countCol1 === 0)) {
-                    $('#column-0').addClass('hide');
-                    $('#column-1').addClass('collapsed');
-                }
-
-                // FIXME check if necessary
-                // if (!!$showedColumn.size()) {
-                //     this.currentColumnIdx--;
-                //     $showedColumn.remove();
-                // }
-
-                this.showContent = true;
-
-                this.addColumn();
-
-                this.addedColumn = this.currentColumnIdx;
-                $showedColumn = $('#column-' + this.addedColumn);
-                //$showedColumn.find('ul.navigation-items li:first').addClass('selected');
-
-                sandbox.emit('navigation.size.changed', {
-                    data: this.getNavigationData()
-                });
-
+            if (!!this.options.selectedCallback && typeof this.options.selectedCallback === 'function') {
+                this.options.selectedCallback(this.options.index, item);
             } else {
-                sandbox.logger.error('showColumn', 'No data was defined!');
-            }
-        },
-
-        // TODO
-        hideColumn: function() {
-            var $showedColumn;
-            $showedColumn = $('#column-' + this.addedColumn);
-
-            if (!!$showedColumn.size()) {
-                $showedColumn.remove();
-
-                $('#column-0').removeClass('hide');
-                $('#column-1').removeClass('collapsed');
+                this.sandbox.emit('husky.navigation.column.item-selected', this.options.index, this.options.index, item);
             }
 
-            this.addedColumn = null;
-        },
-
-        // for normalized scrolling
-        scrollLocked: true,
-
-        scrollSubColumns: function(event) {
-            var direction = event.originalEvent.detail < 0 || event.originalEvent.wheelDelta > 0 ? 1 : -1,
-                scrollSpeed = 25,
-                scrollLeft = 0;
-
-            event.preventDefault();
-
-            if (this.scrollLocked) {
-                this.scrollLocked = false;
-
-                // normalize scrolling
-                setTimeout(function() {
-                    this.scrollLocked = true;
-
-                    if (direction < 0) {
-                        // left scroll
-                        scrollLeft = this.$navigationSubColumns.scrollLeft() + scrollSpeed;
-                        this.$navigationSubColumns.scrollLeft(scrollLeft);
-                    } else {
-                        // right scroll
-                        scrollLeft = this.$navigationSubColumns.scrollLeft() - scrollSpeed;
-                        this.$navigationSubColumns.scrollLeft(scrollLeft);
-                    }
-                }.bind(this), 25);
+            if (this.sandbox.dom.hasClass($item, 'selected') && this.sandbox.dom.hasClass(this.$el, 'collapsed')) {
+                // add a column to navigation
+                if (!!this.options.selectedClickCallback && typeof this.options.selectedClickCallback === 'function') {
+                    this.options.selectedClickCallback(this.options.index);
+                } else {
+                    this.sandbox.emit('husky.navigation.column.selected-click', this.options.index);
+                }
+            } else if (!!item.hasSub) {
+                // add a column to navigation
+                if (!!this.options.addColumnCallback && typeof this.options.addColumnCallback === 'function') {
+                    this.options.addColumnCallback(this.options.index, item);
+                } else {
+                    this.sandbox.emit('husky.navigation.column.add-column', this.options.index, item);
+                }
+            } else if (item.type === 'content') {
+                // show content
+                if (!!this.options.contentCallback && typeof this.options.contentCallback === 'function') {
+                    this.options.contentCallback(this.options.index, item);
+                } else {
+                    this.sandbox.emit('husky.navigation.column.show-content', this.options.index, this.options.data);
+                }
             }
         },
-
-        scrollToLastSubColumn: function() {
-            this.$navigationSubColumns.delay(250).animate({
-                'scrollLeft': 1000
-            }, 500);
-        },
-
-        bindEvents: function() {
-            // external events
-            sandbox.on('navigation.item.column.show', this.showColumn.bind(this));
-
-            // internal events
-        },
-
-        bindDOMEvents: function() {
-            sandbox.logger.log('bindDOMEvents');
-
-            this.$el.off();
-
-            $(window).on('resize load', this.setNavigationSize.bind(this));
-
-            this.$el.on('click', '.navigation-column-item', this.selectItem.bind(this));
-            this.$el.on('click', '.navigation-header-link', this.headerLinkClick.bind(this));
-            this.$el.on('click', '.navigation-column:eq(1)', this.showNavigationColumns.bind(this));
-            this.$el.on('click', '.navigation-column:eq(0).collapsed', this.showFirstNavigationColumn.bind(this));
-            this.$el.on('mousewheel DOMMouseScroll', '.navigation-sub-columns-container', this.scrollSubColumns.bind(this));
-        },
-
-        render: function() {
-            this.$el.html(this.$navigation);
-
-            this.bindEvents();
-            this.bindDOMEvents();
-        },
-
-        addLoader: function($elem) {
-            $elem.addClass('is-loading');
-        },
-
-        hideLoader: function($elem) {
-            $elem.removeClass('is-loading');
-        },
-
-        collections: {
-            items: function() {
-                return $.extend({}, sandbox.data.Collection);
-            }
-        },
-
-        models: {
-            item: function(data) {
-                var defaults = {
-                    // defaults
-                    title: '',
-                    hasSub: false
-                };
-
-                return $.extend({}, sandbox.data.Model, defaults, data);
-            }
-        },
-
-        template: {
+        template = {
             columnHeaderLink: function(data) {
-                data.title = data.title || sandbox.translate('navigation.list');
+                data.title = data.title || this.sandbox.translate('navigation.list');
                 data.icon = data.icon || 'list';
                 data.action = data.action || '';
 
@@ -21308,6 +20974,24 @@ define('__component__$navigation@husky',['jquery'], function($) {
                 ].join('');
             },
 
+            columnHeaderPortal: function(data) {
+                var titleTemplate;
+                data.title = data.title || '';
+                data.logo = data.logo || '';
+
+                if (!!data.logo) {
+                    titleTemplate = '<span class="navigation-column-logo"><img alt="' + data.title + '" src="' + data.logo + '"/></span>';
+                }
+
+                return [
+                    '<div id="portal-header">',
+                    titleTemplate,
+                    '   <h2 class="navigation-column-title pointer">', data.title, '</h2>',
+                    '   <span class="dropdown-toggle inline-block pointer"></span>',
+                    '</div>'
+                ].join('');
+            },
+
             // TODO: Remove search
             search: function(data) {
                 data = data || {};
@@ -21319,8 +21003,638 @@ define('__component__$navigation@husky',['jquery'], function($) {
                     '<input type="text" class="search" autofill="false" data-action="', data.action, '" placeholder="Search ..."/>' // TODO Translate
                 ].join('');
             }
+        };
+
+    return function() {
+        return {
+            render: function() {
+                this.items = {};
+
+                render.call(this);
+            },
+
+            setOptions: function(options) {
+                if (!options) {
+                    throw('No options were defined!');
+                }
+                this.options = options;
+                this.$el = this.options.$el;
+            },
+
+            show: function() {
+                this.sandbox.dom.removeClass(this.$el, 'hide collapsed');
+            },
+
+            collapse: function() {
+                this.sandbox.dom.removeClass(this.$el, 'hide');
+                this.sandbox.dom.addClass(this.$el, 'collapsed');
+            },
+
+            hide: function() {
+                this.sandbox.dom.addClass(this.$el, 'hide');
+                this.sandbox.dom.removeClass(this.$el, 'collapsed');
+            },
+
+            loadingItem: function(index, onOff) {
+                this.items[index].loadingItem(onOff);
+            },
+
+            selectItem: function(index, onOff) {
+                this.items[index].selectItem(onOff);
+            },
+
+            getSelectedItemId: function() {
+                return this.sandbox.dom.attr(this.$el, 'id');
+            },
+
+            isSubColumn: function() {
+                return this.options.index >= 2 && this.options.data.displayOption !== 'content';
+            },
+
+            isContentColumn: function() {
+                return this.options.data.displayOption === 'content';
+            },
+
+            getIndex: function() {
+                return this.options.index;
+            },
+
+            remove: function() {
+                this.sandbox.dom.remove(this.$el);
+            },
+
+            hasClass: function(className) {
+                return this.sandbox.dom.hasClass(this.$el, className);
+            }
+        };
+    };
+});
+
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * Name: navigation
+ * Options:
+ *
+ * Provided Events:
+ *
+ * Used Events:
+ *
+ */
+
+define('__component__$navigation@husky',['husky_components/navigation/column'], function(NavigationColumn) {
+
+    
+
+
+    var prepareFirstColumn = function(data) {
+            this.data = data;
+
+            this.options.data = data;
+
+            var $column = startColumn.call(this, 0, data);
+            this.sandbox.dom.append(this.$navigationColumns, $column);
+        },
+
+        startColumn = function(index, data) {
+            var $column = this.sandbox.dom.createElement('<li/>'),
+                navigationColumn = new NavigationColumn();
+
+            navigationColumn.sandbox = this.sandbox;
+
+            if (!data.header || !data.header.logo) {
+                if (!data.header) {
+                    data.header = {
+                        title: data.title
+                    };
+                }
+                data.header.logo = !!this.options.data.header && !!this.options.data.header.logo ? this.options.data.header.logo : null;
+            }
+
+            navigationColumn.setOptions({
+                $el: $column,
+                data: data,
+                index: index,
+                contentCallback: contentCallback.bind(this),
+                selectedCallback: selectedCallback.bind(this),
+                addColumnCallback: addColumnCallback.bind(this),
+                selectedClickCallback: selectedClickCallback.bind(this),
+                updateColumnCallback: updateColumns.bind(this)
+            });
+
+            navigationColumn.render();
+            this.columns[index] = navigationColumn;
+
+            return $column;
+        },
+
+        contentCallback = function(index, data) {
+            this.sandbox.logger.log('content', index, data);
+
+            if (index >= 1) {
+                // FIXME abstract
+                if (!$('#' + data.id).parent().parent().hasClass('content-column')) {
+                    updateColumns.call(this, 1, true);
+                }
+            } else {
+                updateColumns.call(this, 1, true);
+            }
+
+            hideSubColumns.call(this);
+
+            // TODO improvement for different sates
+
+            if (index === 0) { // first column click, display content
+
+                this.columns[0].show();
+                if (!!this.columns[1]) {
+                    this.columns[1].remove();
+                    delete this.columns[1];
+                }
+
+            } else if (index === 1) { // second column click, display content
+
+                this.columns[0].collapse();
+                if (!!this.columns[1]) {
+                    this.columns[1].show();
+                }
+
+            } else if (index >= 2) { // all other columns, display content
+
+                this.columns[0].hide();
+                if (!!this.columns[1]) {
+                    this.columns[1].collapse();
+                }
+
+            }
+
+            this.sandbox.emit('navigation.item.content.show', {
+                item: data,
+                data: getNavigationData.call(this)
+            });
+        },
+
+        updateColumns = function(index, removeSubColumns) {
+            if (!!removeSubColumns) {
+                hideSubColumns.call(this);
+            }
+
+            // loop thru all columns
+            for (var colIndex in this.columns) {
+                if (this.columns.hasOwnProperty(colIndex) && parseInt(colIndex, 10) > index) {
+                    if (!removeSubColumns || !this.columns[colIndex].isSubColumn()) { // delete only if flag not set or is not a subColumn
+                        this.columns[colIndex].remove(); // remove dom element
+                        delete this.columns[colIndex]; // delete index
+                    }
+                }
+            }
+
+            this.contentColumn = false;
+            this.contentColumnSelected = false;
+        },
+
+        selectedCallback = function(index, item) {
+            this.sandbox.emit('navigation.item.selected', {
+                item: item,
+                data: getNavigationData.call(this)
+            });
+        },
+
+        selectedClickCallback = function(index) {
+
+            if (isHiddenSubColumns.call(this) && !!this.columns[1] &&
+                this.sandbox.dom.data(this.$navigationSubColumns, 'parent') === this.columns[0].getSelectedItemId()) {
+                showSubColumns.call(this);
+            }
+
+            if (index === 0) { // first column click while is selected
+
+                this.columns[0].show();
+                this.columns[1].show();
+
+            } else if (index === 1) { // second column click while is selected
+
+                this.columns[0].collapse();
+                this.columns[1].show();
+
+            }
+        },
+
+        hideSubColumns = function() {
+            this.sandbox.dom.addClass('#' + this.id + ' .navigation-sub-columns .navigation-column', 'hide-portal');
+
+            this.sandbox.dom.css(this.$navigationSubColumns, 'display', 'none');
+        },
+
+        isHiddenSubColumns = function() {
+            return this.sandbox.dom.css(this.$navigationSubColumns, 'display') === 'none';
+        },
+
+        showSubColumns = function() {
+            scrollToLastSubColumn.call(this);
+            this.sandbox.dom.css(this.$navigationSubColumns, 'display', 'block');
+        },
+
+        addColumnCallback = function(index, item) {
+            if (!!this.locked) {
+                return;
+            }
+
+            if (index === 1) { // click on second column, check if subColumns can be shown
+                if (this.sandbox.dom.data(this.$navigationSubColumns, 'parent') === item.id && // subColumns belongs to clicked item
+                    isHiddenSubColumns.call(this) && // subColumns are hidden
+                    this.sandbox.dom.find('#' + this.id + ' .navigation-sub-columns-container .navigation-column').length > 0) { // and there are sum subColumns
+                    showSubColumns.call(this);
+
+                    this.columns[0].collapse();
+                    return;
+                }
+            }
+
+            if (!item.sub) { // sub items not present
+                if (!!item.action) { // url to load from is defined
+                    if (index < 1) { // click on second column and add a new column
+                        updateColumns.call(this, index, true);
+                    } else {
+
+                        this.columns[0].collapse();
+                        updateColumns.call(this, index, false);
+
+                    }
+
+                    this.columns[index].show();
+
+                    this.columns[item.columnIndex].loadingItem(item.id, true);
+                    this.locked = true;
+                    this.sandbox.util.load(item.action)
+                        .then(function(data) {
+                            this.locked = false;
+                            addColumn.call(this, index + 1, data, item.id);
+                            this.columns[item.columnIndex].loadingItem(item.id, false);
+                        }.bind(this))
+                        .fail(function() {
+                            this.locked = false;
+                            this.columns[item.columnIndex].loadingItem(item.id, false);
+                            this.sandbox.logger.error('Could not load data from action: ' + item.action);
+                        }.bind(this));
+                }
+            } else {
+                updateColumns.call(this, index, true);
+                addColumn.call(this, index + 1, item, item.id);
+            }
+        },
+
+        addColumn = function(index, data, subColumnParentId) {
+            var $column = startColumn.call(this, index, data);
+
+            if (data.displayOption !== 'content') {
+                removeContentColumn.call(this);
+            }
+
+            if (index >= 2 && data.displayOption !== 'content') { //
+                if (!this.$navigationSubColumns) {
+                    initSubColumns.call(this);
+                    this.sandbox.dom.data(this.$navigationSubColumns, 'parent', subColumnParentId);
+                } else {
+                    showSubColumns.call(this);
+                }
+                this.sandbox.dom.append(this.$navigationSubColumns, $column);
+                scrollToLastSubColumn.call(this);
+            } else {
+                this.sandbox.dom.insertAt(index, 'li.navigation-column:not(.portal-column)', this.$navigationColumns, $column);
+            }
+
+            setNavigationSize.call(this);
+        },
+
+        scrollToLastSubColumn = function() {
+            if (!!this.$navigationSubColumns) {
+                this.$navigationSubColumns.delay(250).animate({
+                    'scrollLeft': 1000
+                }, 500);
+            }
+        },
+
+        initSubColumns = function() {
+            this.$subColumns = this.sandbox.dom.createElement('<li/>', {
+                'class': 'navigation-sub-columns-container'
+            });
+            this.$navigationSubColumns = this.sandbox.dom.createElement('<ul/>', {
+                'class': 'navigation-sub-columns'
+            });
+            this.sandbox.dom.append(this.$subColumns, this.$navigationSubColumns);
+            this.sandbox.dom.append(this.$navigationColumns, this.$subColumns);
+        },
+
+        render = function() {
+            this.$el.html(this.$navigation);
+
+            bindDomEvents.call(this);
+            bindCustomEvents.call(this);
+        },
+
+        bindDomEvents = function() {
+            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize load', setNavigationSize.bind(this));
+            this.sandbox.dom.on('#' + this.id, 'click', headerLinkClick.bind(this), '.navigation-header-link');
+            this.sandbox.dom.on('#' + this.id, 'mousewheel DOMMouseScroll', scrollSubColumns.bind(this), '.navigation-sub-columns-container');
+        },
+
+        bindCustomEvents = function() {
+            // FIXME enable for reload navigation for route: this.sandbox.on('navigation.route', routeNavigation.bind(this));
+            this.sandbox.on('navigation.item.column.show', showColumn.bind(this));
+        },
+
+    // FIXME better solution? move to column
+        headerLinkClick = function() {
+            var action = this.sandbox.dom.data('#' + this.id + ' .navigation-header-link', 'action');
+
+            removeContentColumn.call(this);
+
+            // FIXME abstract these states
+            if (this.sandbox.dom.hasClass('#column-0', 'hide') &&
+                this.sandbox.dom.hasClass('#column-1', 'collapsed')) {
+
+                this.columns[0].collapse();
+                this.columns[1].show();
+
+            } else if (this.sandbox.dom.find('#column-1').length === 0) {
+
+                this.columns[0].show();
+
+            } else if (!this.sandbox.dom.hasClass('#column-0', 'collapsed') && !this.sandbox.dom.hasClass('#column-1', 'collapsed')) {
+
+                this.columns[0].collapse();
+
+            }
+
+            if (isHiddenSubColumns.call(this) && !!this.columns[1] &&
+                this.sandbox.dom.data(this.$navigationSubColumns, 'parent') === this.columns[0].getSelectedItemId()) {
+                showSubColumns.call(this);
+            }
+
+            this.sandbox.emit('navigation.item.content.show', {
+                item: {
+                    action: action
+                },
+                data: getNavigationData.call(this)
+            });
+        },
+
+        removeContentColumn = function() {
+            this.sandbox.dom.removeClass('#' + this.id, 'show-content');
+            var index = this.sandbox.dom.data('#' + this.id + ' .content-column', 'column-id');
+
+            if(!!index && !!this.columns[index]){
+                this.columns[index].remove();
+                delete this.columns[index];
+            }
+
+            this.contentColumn = false;
+            this.contentColumnSelected = false;
+        },
+
+        getCurrentIndex = function(contentColumn) {
+            var index, currentIndex = 0;
+
+            this.sandbox.util.foreach(this.columns, function(column) {
+                if (!!column && (!contentColumn || column.isContentColumn()) && !column.hasClass('hide-portal')) {
+                    index = column.getIndex();
+                    if (currentIndex < index) {
+                        currentIndex = index;
+                    }
+                }
+            }.bind(this));
+
+            return currentIndex;
+        },
+
+        showColumn = function(params) {
+            var currentIndex = getCurrentIndex.call(this, false);
+
+            if (!params.data.displayOption || params.data.displayOption === 'content') {
+                if (compareContentColumn.call(this, params)) {
+                    return;
+                }
+                removeContentColumn.call(this);
+                this.contentColumn = params;
+            }
+
+            if (this.sandbox.dom.find('#column-0').length === 1 &&
+                this.sandbox.dom.find('#column-1').length === 1) {
+
+                this.columns[0].hide();
+                this.columns[1].collapse();
+
+            } else {
+
+                this.columns[0].collapse();
+
+            }
+
+            addColumn.call(this, currentIndex + 1, params.data);
+
+            if (!!this.contentColumnSelected) {
+                this.columns[currentIndex + 1].selectItem(this.contentColumnSelected.id, true);
+            }
+
+            this.sandbox.dom.addClass('#' + this.id, 'show-content');
+
+            setTimeout(function() {
+                this.sandbox.emit('navigation.size.changed', {
+                    data: getNavigationData.call(this)
+                });
+            }.bind(this), 10);
+        },
+
+        compareContentColumn = function(params) {
+            this.contentColumnSelected = false;
+            if (!this.contentColumn) {
+                return false;
+            }
+
+            return compare.call(this, this.contentColumn, params, ['selected', 'logo', 'columnIndex']);
+        },
+
+        /**
+         * compares two objects
+         * exclude given properties
+         */
+        compare = function(obj1, obj2, excludeProperties) {
+            for (var p in obj1) {
+                if (!this.sandbox.util.contains(excludeProperties, p)) {
+                    if (obj1.hasOwnProperty(p) && obj2.hasOwnProperty(p)) {
+                        if (typeof obj1[p] === 'object') {
+                            if (!compare.call(this, obj1[p], obj2[p], excludeProperties)) {
+                                return false;
+                            }
+                        } else if (obj1[p] !== obj2[p]) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (p === 'selected' && !!obj2[p]) {
+                        this.contentColumnSelected = obj2;
+                    }
+                }
+            }
+            return true;
+        },
+
+        scrollSubColumns = function(event) {
+            var direction = event.originalEvent.detail < 0 || event.originalEvent.wheelDelta > 0 ? 1 : -1,
+                scrollSpeed = 25,
+                scrollLeft = 0;
+
+            event.preventDefault();
+
+            if (this.scrollLocked) {
+                this.scrollLocked = false;
+
+                // normalize scrolling
+                setTimeout(function() {
+                    this.scrollLocked = true;
+
+                    if (direction < 0) {
+                        // left scroll
+                        scrollLeft = this.$navigationSubColumns.scrollLeft() + scrollSpeed;
+                        this.$navigationSubColumns.scrollLeft(scrollLeft);
+                    } else {
+                        // right scroll
+                        scrollLeft = this.$navigationSubColumns.scrollLeft() - scrollSpeed;
+                        this.$navigationSubColumns.scrollLeft(scrollLeft);
+                    }
+                }.bind(this), 25);
+            }
+        },
+
+        setNavigationSize = function() {
+            var $window = this.sandbox.dom.$window,
+                $navigation = this.sandbox.dom.$('#' + this.id),
+                $navigationSubColumnsCont = this.sandbox.dom.$('#' + this.id + ' .navigation-sub-columns-container'),
+                $navigationSubColumns = this.sandbox.dom.$('#' + this.id + ' .navigation-sub-columns'),
+                paddingRight = 100;
+
+            setTimeout(function() {
+                this.sandbox.dom.css($navigationSubColumns, {
+                    width: 'auto'
+                });
+
+                $navigationSubColumnsCont.removeClass('scrolling');
+
+                if (this.sandbox.dom.width($window) < this.sandbox.dom.width($navigation) + paddingRight) {
+                    this.sandbox.dom.css($navigationSubColumns, {
+                        width: (this.sandbox.dom.width($window) - paddingRight) - this.sandbox.dom.width($navigation) - this.sandbox.dom.width($navigationSubColumns),
+                        height: this.sandbox.dom.height($navigation)
+                    });
+                    this.sandbox.dom.addClass($navigationSubColumnsCont, 'scrolling');
+                } else {
+                    this.sandbox.dom.css($navigationSubColumns, {
+                        height: $navigation.height() + 5
+                    });
+                }
+            }.bind(this), 250);
+        },
+
+        getNavigationData = function() {
+            return {
+                // TODO
+            };
+        },
+
+    // TODO
+        prepareRoute = function(params) {
+            var routes = params.route.split('/'),
+                route = '',
+                items = this.data.sub.items,
+                retItems = [],
+                i = 0,
+                j = 0;
+
+            for (i; i <= routes.length; i++) {
+                j = 0;
+                route = '';
+
+                for (j; j <= items.length; j++) {
+                    if (!!retItems.length) {
+                        route = routes.slice(0, retItems.length).join('/') + '/';
+                        this.sandbox.logger.log(route);
+                    }
+
+                    if (route + items[j].route === routes[i]) {
+                        retItems.push(items[j]);
+                        items = items[j].sub.items;
+                        break;
+                    }
+                }
+            }
+
+            return retItems;
+        },
+
+        /**
+         * TODO reanable for navigation update while routing
+         */
+        routeNavigation = function(params) {
+            var preparedRoute;
+            if (!params) {
+                throw('No params were defined!');
+            }
+            // FIXME update this.columns array
+            this.sandbox.dom.remove('.navigation-column:gt(0)');
+            preparedRoute = prepareRoute.call(this, params);
+
+            this.sandbox.logger.log(preparedRoute);
+        };
+
+    return  {
+        scrollLocked: true,
+
+        view: true,
+
+        // current content column
+        contentColumn: false,
+
+        // helper var for selected item
+        contentColumnSelected: false,
+
+        initialize: function() {
+            this.sandbox.logger.log('initialize');
+            this.sandbox.logger.log(arguments);
+
+            this.id = 'navigation';
+            this.sandbox.logger.log('id:', '#' + this.id);
+
+            // init container
+            this.$navigation = this.sandbox.dom.createElement('<div/>', {
+                class: 'navigation',
+                id: this.id
+            });
+            this.$navigationColumns = this.sandbox.dom.createElement('<ul/>', {
+                class: 'navigation-columns'
+            });
+            this.$navigation.append(this.$navigationColumns);
+
+            // init data
+            this.data = null;
+            this.columns = [];
+
+            // load Data
+            if (!!this.options.url) {
+                this.sandbox.util.load(this.options.url)
+                    .then(prepareFirstColumn.bind(this));
+
+                render.call(this);
+            }
         }
     };
+
 });
 
 /*
@@ -21547,12 +21861,12 @@ define('__component__$header@husky',[], function() {
 
         bindCustomEvents: function() {
             // move buttons
-            this.sandbox.on('navigation.item.content.show', function(item) {
-                this.moveButtons(item.data.navWidth);
-            }.bind(this));
-            this.sandbox.on('navigation.size.changed', function(item) {
-                this.moveButtons(item.data.navWidth);
-            }.bind(this));
+//            this.sandbox.on('navigation.item.content.show', function(item) {
+//                this.moveButtons(item.data.navWidth);
+//            }.bind(this));
+//            this.sandbox.on('navigation.size.changed', function(item) {
+//                this.moveButtons(item.data.navWidth);
+//            }.bind(this));
 
             this.sandbox.on('husky.header.move-buttons', this.moveButtons.bind(this));
 
@@ -21651,7 +21965,6 @@ define('__component__$button@husky',[], function() {
                     type.bindDomEvents.call(this);
                 },
                 bindDomEvents: function() {
-                    // FIXME if not events would be triggered multiple times
                     this.$el.off('click');
                     this.$el.on('click', this.clickEvent.bind(this));
                 },
@@ -21718,7 +22031,7 @@ define('__component__$button@husky',[], function() {
         },
 
         initialize: function() {
-            this.sandbox.logger.log('initialize', this);
+            this.sandbox.logger.log('initialize');
             this.sandbox.logger.log(arguments);
 
             // extend default options
@@ -22839,7 +23152,13 @@ define('__component__$dropdown@husky',['jquery'], function($) {
             this.options.data.forEach(function(item) {
                 if (item.id === id) {
                     sandbox.logger.log(this.name, 'item.click: ' + id, 'success');
-                    sandbox.emit(this.getEvent('item.click'), item, this.$el);
+
+                    if (!!this.options.clickCallback && typeof this.options.clickCallback === 'function') {
+                        this.options.clickCallback(item, this.$el);
+                    } else {
+                        sandbox.emit(this.getEvent('item.click'), item, this.$el);
+                    }
+
                     return false;
                 }
             }.bind(this));
@@ -23127,7 +23446,7 @@ define('__component__$matrix@husky',[],function() {
                 for (j = 0; j < this.options.values.horizontal.length; j++) {
                     $tdValue = sandbox.dom.createElement('<td class="value"/>');
                     $span = sandbox.dom.createElement(
-                        '<span class="icon-' + this.options.values.horizontal[j] + '"/>'
+                        '<span class="icon-' + this.options.values.horizontal[j] + ' pointer"/>'
                     );
                     sandbox.dom.data($span, 'value', this.options.values.horizontal[j]);
                     sandbox.dom.data($span, 'section', this.options.values.vertical[i]);
@@ -23152,6 +23471,7 @@ define('__component__$matrix@husky',[],function() {
         }
     };
 });
+
 /*****************************************************************************
  *
  *  Select
@@ -23207,7 +23527,7 @@ define('__component__$select@husky',[],function() {
                     (!!this.options.property && !!this.options.typeLabel) ? 'data-type-label="' + this.options.typeLabel + '" ' : ''
                 ].join(''),
                 selectHtml = [
-                    '<select class="select-value form-element" ', dataAttr, '/>'
+                    '<select id="',this.options.instanceName,'" class="select-value form-element" ', dataAttr, '/>'
                 ].join('');
 
             this.$select = $(selectHtml);
@@ -23322,12 +23642,13 @@ define('__component__$auto-complete@husky',[], function() {
     
 
     var defaults = {
-            url: '',            // url to load data
-            valueName: 'name',  // propertyName for value
-            minLength: 3,       // min length for request
-            keyControl: true,   // control with up/down key
-            value: null,        // value to display at start
-            excludeItems: []    // items to filter
+            url: '',                    // url to load data
+            valueName: 'name',          // propertyName for value
+            minLength: 3,               // min length for request
+            keyControl: true,           // control with up/down key
+            value: null,                // value to display at start
+            excludeItems: [],           // items to filter
+            instanceName: 'undefined'   // name of the component instance
         },
         successClass = 'husky-auto-complete-success',
         failClass = 'husky-auto-complete-error',
@@ -23379,7 +23700,7 @@ define('__component__$auto-complete@husky',[], function() {
         render: function() {
             this.$el.addClass('dropdown husky-auto-complete');
             // init form-element and dropdown menu
-            this.$valueField = $('<input type="text" autofill="false" class="name-value form-element husky-validate" data-id="' + this.getValueID() + '" value="' + this.getValueName() + '"/>');
+            this.$valueField = $('<input id="'+this.options.instanceName+'" type="text" autofill="false" class="name-value form-element husky-validate" data-id="' + this.getValueID() + '" value="' + this.getValueName() + '"/>');
             this.$dropDown = $('<div class="dropdown-menu" />');
             this.$dropDownList = $('<ul/>');
             this.$el.append(this.$valueField);
@@ -23897,7 +24218,7 @@ define('__component__$dropdown-multiple-select@husky',[], function() {
             basicStructure: function(defaultLabel) {
                 return [
                     '<div class="husky-dropdown-multiple-select">',
-                    '    <div class="grid-row dropdown-label">',
+                    '    <div class="grid-row dropdown-label pointer">',
                     '       <div class="grid-col-11 checkbox">',
                     '           <span id="', this.labelId, '">', defaultLabel, '</span>',
                     '       </div>',
@@ -23995,7 +24316,7 @@ define('__component__$password-fields@husky',[], function() {
     return {
 
         initialize: function() {
-            this.sandbox.logger.log('initialize', this);
+            this.sandbox.logger.log('initialize');
             this.sandbox.logger.log(arguments);
 
             // extend default options
@@ -24063,7 +24384,7 @@ define('__component__$password-fields@husky',[], function() {
                 '        <div class="grid-col-6">',
                 '            <div class="grid-row m-height-25">',
                 '                <div class="grid-col-6">',
-                '                    <label>', this.options.labels.inputPassword1, '</label>',
+                '                    <label for="',this.options.ids.inputPassword1,'">', this.options.labels.inputPassword1, '</label>',
                 '                </div>',
                 '                <div class="grid-col-6 align-right hidden" id="', this.options.ids.generateLabel, '">',
                 '                    <span class="icon-keys m-right-10"></span><span class="pointer">', this.options.labels.generateLabel, '</span>',
@@ -24075,7 +24396,7 @@ define('__component__$password-fields@husky',[], function() {
                 '        </div>',
                 '        <div class="grid-col-6">',
                 '            <div class="grid-row m-height-25">',
-                '                <label>', this.options.labels.inputPassword2, '</label>',
+                '                <label for="',this.options.ids.inputPassword2,'">', this.options.labels.inputPassword2, '</label>',
                 '            </div>',
                 '            <div class="grid-row">',
                 '                <input class="form-element" value="', this.options.values.inputPassword2, '" type="text" id="', this.options.ids.inputPassword2, '"', (!!this.options.validation ? 'data-validation-equal="' + this.options.instanceName + '"' : ''), '/>',
@@ -24427,11 +24748,24 @@ define('husky_extensions/collection',[],function() {
         });
     }
 
+    // add remove event for jquery
+    var initRemoveEvent = function() {
+        var ev = new $.Event('remove'),
+            orig = $.fn.remove;
+        $.fn.remove = function() {
+            $(this).trigger(ev);
+            return orig.apply(this, arguments);
+        };
+    };
+
     define('husky_extensions/jquery',['jquery'], {
 
         name: 'jQuery',
 
         initialize: function(app) {
+
+            initRemoveEvent();
+
             app.core.dom.window = window;
 
             app.core.dom.$window = $(window);
@@ -24457,6 +24791,18 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.append = function(selector, element) {
                 return $(selector).append(element);
+            };
+
+            app.core.dom.prepend = function(selector, element) {
+                return $(selector).prepend(element);
+            };
+
+            app.core.dom.before = function(selector, element) {
+                return $(selector).before(element);
+            };
+
+            app.core.dom.after = function(selector, element) {
+                return $(selector).after(element);
             };
 
             app.core.dom.css = function(selector, style, value) {
@@ -24580,13 +24926,29 @@ define('husky_extensions/collection',[],function() {
                 event.stopPropagation();
             };
 
-
             app.core.dom.hide = function(selector) {
                 return $(selector).hide();
             };
 
             app.core.dom.show = function(selector) {
                 return $(selector).show();
+            };
+
+            app.core.dom.keypress = function(selector, callback) {
+              $(selector).keypress(callback);
+            };
+
+            app.core.dom.insertAt = function(index, selector, $container, $item) {
+                if (index === 0) {
+                    app.core.dom.prepend($container, $item);
+                } else {
+                    var $before = app.core.dom.find(selector + ':nth-child(' + index + ')', $container);
+                    app.core.dom.after($before, $item);
+                }
+            };
+
+            app.core.dom.scrollTop = function(itemSelector) {
+                $(window).scrollTop($(itemSelector).offset().top);
             };
 
             app.core.util.ajax = $.ajax;
@@ -24773,6 +25135,33 @@ define('husky_extensions/util',[],function() {
                 for (var i = -1, length = array.length; ++i < length;) {
                     callbackValue( array[i]);
                 }
+            };
+
+            app.core.util.load = function(url) {
+                var deferred = new app.sandbox.data.deferred();
+
+                app.logger.log('load', url);
+
+                app.sandbox.util.ajax({
+                    url: url,
+
+                    success: function(data) {
+                        app.logger.log('data loaded', data);
+                        deferred.resolve(data);
+                    }.bind(this),
+
+                    error: function() {
+                        deferred.reject();
+                    }
+                });
+
+                app.sandbox.emit('husky.util.load.data');
+
+                return deferred.promise();
+            };
+
+            app.core.util.contains = function(list, value){
+                return _.contains(list, value);
             };
 
         }
