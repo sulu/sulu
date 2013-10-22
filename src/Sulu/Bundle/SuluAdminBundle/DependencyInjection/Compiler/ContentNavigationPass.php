@@ -22,18 +22,18 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 abstract class ContentNavigationPass implements CompilerPassInterface
 {
 
-    protected static $tag = null;
-    protected static $serviceName = null;
+    protected $tag = null;
+    protected $serviceName = null;
 
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container)
     {
-        if (null !== self::$tag && null !== self::$serviceName) {
-            $contentNavigation = $container->getDefinition(self::$serviceName);
+        if (null !== $this->tag && null !== $this->serviceName) {
+            $contentNavigation = $container->getDefinition($this->serviceName);
 
-            $taggedServices = $container->findTaggedServiceIds(self::$tag);
+            $taggedServices = $container->findTaggedServiceIds($this->tag);
 
             foreach ($taggedServices as $id => $attributes) {
                 /** @var ContentNavigationInterface $navigation */
