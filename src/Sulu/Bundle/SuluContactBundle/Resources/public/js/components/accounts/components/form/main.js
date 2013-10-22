@@ -37,6 +37,8 @@ define([], function() {
             },
 
             render: function() {
+                this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
+
                 this.$el.html(this.renderTemplate('/admin/contact/template/account/form'));
 
                 emailItem = this.$el.find('#emails .email-item:first');
@@ -68,6 +70,10 @@ define([], function() {
 
                 this.bindDomEvents();
                 this.bindCustomEvents();
+            },
+
+            setDefaults: function(defaultTypes) {
+                this.defaultTypes = defaultTypes;
             },
 
             createForm: function(data) {
@@ -150,16 +156,16 @@ define([], function() {
                 this.fillFields(contactJson.emails, 2, {
                     id: null,
                     email: '',
-                    emailType: defaults.emailType
+                    emailType: this.defaultTypes.emailType
                 });
                 this.fillFields(contactJson.phones, 2, {
                     id: null,
                     phone: '',
-                    phoneType: defaults.phoneType
+                    phoneType: this.defaultTypes.phoneType
                 });
                 this.fillFields(contactJson.addresses, 1, {
                     id: null,
-                    addressType: defaults.addressType
+                    addressType: this.defaultTypes.addressType
                 });
                 return contactJson;
             },
@@ -185,7 +191,7 @@ define([], function() {
                         {
                             url: this.sandbox.dom.val('#url'),
                             urlType: {
-                                id: defaults.urlType.id
+                                id: this.defaultTypes.urlType.id
                             }
                         }
                     ];
