@@ -22,8 +22,8 @@ class AddContentNavigationPass extends ContentNavigationPass
 
     public function __construct()
     {
-        self::$tag = 'sulu.contact.admin.content_navigation';
-        self::$serviceName = 'sulu_contact.admin.content_navigation';
+        $this->tag = 'sulu.contact.admin.content_navigation';
+        $this->serviceName = 'sulu_contact.admin.content_navigation';
     }
 
 }
