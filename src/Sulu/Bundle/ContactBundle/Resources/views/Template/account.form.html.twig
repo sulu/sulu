@@ -9,7 +9,7 @@
         </div>
         <div class="grid-col-10">
             <div class="grid-row">
-                <label class="required"><%=translate('contact.accounts.name')%></label>
+                <label for="name" class="required"><%=translate('contact.accounts.name')%></label>
                 <input class="form-element" type="text" id="name"
                        data-validation-required="true"
                        data-validation-min-length="3"
@@ -17,11 +17,11 @@
             </div>
             <div class="grid-row">
                 <div class="grid-col-7">
-                    <label><%=translate('contact.accounts.website')%></label>
+                    <label for="url"><%=translate('contact.accounts.website')%></label>
                     <input class="form-element" type="text" id="url" data-type="url"/>
                 </div>
                 <div class="grid-col-5">
-                    <label><%=translate('contact.accounts.company')%></label>
+                    <label for="companyInput"><%=translate('contact.accounts.company')%></label>
 
                     <div id="company"></div>
                 </div>
