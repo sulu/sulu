@@ -18,21 +18,25 @@ use Doctrine\ORM\NoResultException;
  * Repository for the Packages, implementing some additional functions
  * for querying objects
  */
-class PackageRepository extends EntityRepository
+class CatalogueRepository extends EntityRepository
 {
-    public function getPackageById($id)
+    public function getCatalogueById($id)
     {
         try {
-            $qb = $this->createQueryBuilder('package')
+
+            $qb = $this->createQueryBuilder('catalogue')
+                ->leftJoin('catalogue.package', 'package')
                 ->leftJoin('package.catalogues', 'catalogues')
+                ->addSelect('package')
                 ->addSelect('catalogues')
-                ->where('package.id=:packageId');
+                ->where('catalogue.id=:catalogueId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-            $query->setParameter('packageId', $id);
+            $query->setParameter('catalogueId', $id);
 
             return $query->getSingleResult();
+
         } catch (NoResultException $ex) {
             return null;
         }

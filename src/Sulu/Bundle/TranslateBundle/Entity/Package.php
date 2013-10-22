@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
 /**
@@ -42,6 +43,7 @@ class Package
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Expose
      */
     private $locations;
 
@@ -205,6 +207,7 @@ class Package
      *
      * @return array
      * @VirtualProperty
+     * @SerializedName("catalogues")
      * @Type("array")
      */
     public function getCatalogues()

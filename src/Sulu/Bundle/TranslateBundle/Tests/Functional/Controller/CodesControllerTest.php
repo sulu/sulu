@@ -544,7 +544,7 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($this->code3->getFrontend(), $response->frontend);
         $this->assertEquals($this->code3->getLength(), $response->length);
         $this->assertEquals($this->code3->getLocation()->getId(), $response->location->id);
-        $this->assertEquals($this->code3->getPackage()->getId(), $response->package->id);
+//        $this->assertEquals($this->code3->getPackage()->getId(), $response->package->id);
 
         $this->assertEquals($this->code3_t1->getValue(), $response->translations[0]->value);
         $this->assertEquals($this->code3_t2->getValue(), $response->translations[1]->value);
@@ -593,15 +593,15 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals(($request['frontend'] == "0") ? false : true, $response->frontend);
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
-        $this->assertEquals($request['package']['id'], $response->package->id);
+//        $this->assertEquals($request['package']['id'], $response->package->id);
 
         $this->assertEquals(2, sizeof($response->translations));
 
         $this->assertEquals($request['translations'][0]['value'], $response->translations[0]->value);
-        $this->assertEquals($request['translations'][0]['catalogue']['id'], $response->translations[0]->catalogue->id);
+//        $this->assertEquals($request['translations'][0]['catalogue']['id'], $response->translations[0]->catalogue->id);
 
         $this->assertEquals($request['translations'][1]['value'], $response->translations[1]->value);
-        $this->assertEquals($request['translations'][1]['catalogue']['id'], $response->translations[1]->catalogue->id);
+//        $this->assertEquals($request['translations'][1]['catalogue']['id'], $response->translations[1]->catalogue->id);
     }
 
     public function testPostNullValues()
@@ -733,19 +733,19 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals(($request['backend'] == "0") ? false : true, $response->backend);
         $this->assertEquals(($request['frontend'] == "0") ? false : true, $response->frontend);
         $this->assertEquals($request['length'], $response->length);
-        $this->assertEquals($request['package']['id'], $response->package->id);
+//        $this->assertEquals($request['package']['id'], $response->package->id);
         $this->assertEquals($request['location']['id'], $response->location->id);
 
         $this->assertEquals(3, sizeof($response->translations));
 
         $this->assertEquals($request['translations'][0]['value'], $response->translations[0]->value);
-        $this->assertEquals($request['translations'][0]['catalogue']['id'], $response->translations[0]->catalogue->id);
+//        $this->assertEquals($request['translations'][0]['catalogue']['id'], $response->translations[0]->catalogue->id);
 
         $this->assertEquals($request['translations'][1]['value'], $response->translations[1]->value);
-        $this->assertEquals($request['translations'][1]['catalogue']['id'], $response->translations[1]->catalogue->id);
+//        $this->assertEquals($request['translations'][1]['catalogue']['id'], $response->translations[1]->catalogue->id);
 
         $this->assertEquals($request['translations'][2]['value'], $response->translations[2]->value);
-        $this->assertEquals($request['translations'][2]['catalogue']['id'], $response->translations[2]->catalogue->id);
+//        $this->assertEquals($request['translations'][2]['catalogue']['id'], $response->translations[2]->catalogue->id);
 
     }
 
@@ -771,37 +771,37 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testPutNotExistingPackage()
-    {
-        $request = array(
-            'code' => 'test.code.1',
-            'frontend' => '1',
-            'backend' => '0',
-            'length' => '20',
-            'package' => array(
-                'id' => 5
-            ),
-            'location' => array(
-                'id' => $this->location2->getId()
-            )
-        );
-        $this->client->request(
-            'PUT',
-            '/api/translate/codes/1',
-            $request
-        );
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
-
-        $this->client->request('GET', '/api/translate/codes/1');
-        $response = json_decode($this->client->getResponse()->getContent());
-
-        $this->assertEquals($this->code1->getCode(), $response->code);
-        $this->assertEquals($this->code1->getBackend(), $response->backend);
-        $this->assertEquals($this->code1->getFrontend(), $response->frontend);
-        $this->assertEquals($this->code1->getLength(), $response->length);
-        $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
-        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
-    }
+//    public function testPutNotExistingPackage()
+//    {
+//        $request = array(
+//            'code' => 'test.code.1',
+//            'frontend' => '1',
+//            'backend' => '0',
+//            'length' => '20',
+//            'package' => array(
+//                'id' => 5
+//            ),
+//            'location' => array(
+//                'id' => $this->location2->getId()
+//            )
+//        );
+//        $this->client->request(
+//            'PUT',
+//            '/api/translate/codes/1',
+//            $request
+//        );
+//        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+//
+//        $this->client->request('GET', '/api/translate/codes/1');
+//        $response = json_decode($this->client->getResponse()->getContent());
+//
+//        $this->assertEquals($this->code1->getCode(), $response->code);
+//        $this->assertEquals($this->code1->getBackend(), $response->backend);
+//        $this->assertEquals($this->code1->getFrontend(), $response->frontend);
+//        $this->assertEquals($this->code1->getLength(), $response->length);
+//        $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
+////        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
+//    }
 
     public function testPutNotExistingLocation()
     {
@@ -832,7 +832,7 @@ class CodesControllerTest extends DatabaseTestCase
         $this->assertEquals($this->code1->getFrontend(), $response->frontend);
         $this->assertEquals($this->code1->getLength(), $response->length);
         $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
-        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
+//        $this->assertEquals($this->code1->getPackage()->getId(), $response->package->id);
     }
 
 

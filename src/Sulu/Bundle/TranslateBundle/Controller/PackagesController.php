@@ -107,7 +107,7 @@ class PackagesController extends RestController
         /** @var Package $package */
         $package = $this->getDoctrine()
             ->getRepository($this->entityName)
-            ->find($id);
+            ->getPackageById($id);
 
         try {
             if (!$package) {
@@ -205,7 +205,7 @@ class PackagesController extends RestController
             $entityName = 'SuluTranslateBundle:Package';
             $package = $this->getDoctrine()
                 ->getRepository($entityName)
-                ->find($id);
+                ->getPackageById($id);
 
             if (!$package) {
                 throw new EntityNotFoundException($entityName, $id);

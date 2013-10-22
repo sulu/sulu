@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
+use JMS\Serializer\Annotation\Exclude;
+
 /**
  * Code
  */
@@ -42,6 +44,7 @@ class Code
 
     /**
      * @var \Sulu\Bundle\TranslateBundle\Entity\Package
+     * @Exclude
      */
     private $package;
 

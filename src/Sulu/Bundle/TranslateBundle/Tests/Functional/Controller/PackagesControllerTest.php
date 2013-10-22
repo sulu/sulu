@@ -287,13 +287,13 @@ class PackagesControllerTest extends DatabaseTestCase
             )
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response1 = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('Portal', $response->name);
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(2, count($response->catalogues));
-        $this->assertContains('ES', $response->catalogues[0]->locale);
-        $this->assertContains('DE', $response->catalogues[1]->locale);
+        $this->assertEquals('Portal', $response1->name);
+        $this->assertEquals(1, $response1->id);
+        $this->assertEquals(2, count($response1->catalogues));
+        $this->assertContains('ES', $response1->catalogues[0]->locale);
+        $this->assertContains('DE', $response1->catalogues[1]->locale);
     }
 
     public function testPutWithoutLanguages()

@@ -12,6 +12,8 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Repository for the Codes, implementing some additional functions
@@ -19,6 +21,29 @@ use Doctrine\ORM\QueryBuilder;
  */
 class CodeRepository extends EntityRepository
 {
+
+    public function getCodeById($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('code')
+                ->leftJoin('code.translations', 'translations')
+                ->leftJoin('code.location', 'location')
+                ->leftJoin('code.package', 'package')
+                ->addSelect('translations')
+                ->addSelect('location')
+                ->addSelect('package')
+                ->where('code.id=:codeId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('codeId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
     /**
      * Searches Entities by where clauses, pagination and sorted
      * @param integer|null $limit Page size for Pagination

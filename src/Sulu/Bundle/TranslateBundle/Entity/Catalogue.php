@@ -27,7 +27,7 @@ class Catalogue
 
     /**
      * @var \Sulu\Bundle\TranslateBundle\Entity\Package
-     * @Expose
+
      */
     private $package;
 

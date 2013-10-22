@@ -31,7 +31,7 @@ class CataloguesController extends RestController
         $find = function ($id) {
             return $this->getDoctrine()
                 ->getRepository('SuluTranslateBundle:Catalogue')
-                ->find($id);
+                ->getCatalogueById($id);
         };
 
         $view = $this->responseGetById($id, $find);
@@ -78,7 +78,7 @@ class CataloguesController extends RestController
             $entityName = 'SuluTranslateBundle:Catalogue';
             $catalogue = $this->getDoctrine()
                 ->getRepository($entityName)
-                ->find($id);
+                ->getCatalogueById($id);
 
             if (!$catalogue) {
                 throw new EntityNotFoundException($entityName, $id);

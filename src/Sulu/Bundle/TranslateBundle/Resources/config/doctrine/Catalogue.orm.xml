@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Sulu\Bundle\TranslateBundle\Entity\Catalogue" table="tr_catalogues">
+  <entity name="Sulu\Bundle\TranslateBundle\Entity\Catalogue" table="tr_catalogues" repository-class="Sulu\Bundle\TranslateBundle\Entity\CatalogueRepository">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
