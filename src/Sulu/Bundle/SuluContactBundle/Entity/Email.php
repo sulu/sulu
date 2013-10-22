@@ -9,6 +9,8 @@
  */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
+use JMS\Serializer\Annotation\Exclude;
+
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,11 +36,13 @@ class Email
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $contacts;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $accounts;
 

@@ -11,54 +11,66 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Address
+ * @ExclusionPolicy("all");
  */
 class Address
 {
     /**
      * @var string
+     * @Expose
      */
     private $street;
 
     /**
      * @var string
+     * @Expose
      */
     private $number;
 
     /**
      * @var string
+     * @Expose
      */
     private $addition;
 
     /**
      * @var string
+     * @Expose
      */
     private $zip;
 
     /**
      * @var string
+     * @Expose
      */
     private $city;
 
     /**
      * @var string
+     * @Expose
      */
     private $state;
 
     /**
      * @var integer
+     * @Expose
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\AddressType
+     * @Expose
      */
     private $addressType;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Country
+     * @Expose
      */
     private $country;
 
