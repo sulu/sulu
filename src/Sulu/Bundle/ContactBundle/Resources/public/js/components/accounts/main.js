@@ -188,12 +188,12 @@ define(['sulucontact/model/account'], function(Account) {
             }
 
             var params = {
-                    templateType: null,
-                    title: 'Warning!',
-                    content: 'Do you really want to delete the selected company? All data is going to be lost.',
-                    buttonCancelText: 'Cancel',
-                    buttonSubmitText: 'Delete'
-                };
+                templateType: null,
+                title: 'Warning!',
+                content: 'Do you really want to delete the selected company? All data is going to be lost.',
+                buttonCancelText: 'Cancel',
+                buttonSubmitText: 'Delete'
+            };
 
             // FIXME translation
 
@@ -239,25 +239,35 @@ define(['sulucontact/model/account'], function(Account) {
                 footer: {
                     buttonCancelText: params.buttonCancelText,
                     buttonSubmitText: params.buttonSubmitText
+                },
+                callback: {
+                    submit: function() {
+                        var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // disable events
+                        this.sandbox.off('husky.dialog.cancel');
+                        this.sandbox.off('husky.dialog.submit');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(true, deleteContacts);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // disable events
+                        this.sandbox.off('husky.dialog.cancel');
+                        this.sandbox.off('husky.dialog.submit');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
                 }
             }, params.templateType);
-
-            // submit -> delete
-            this.sandbox.once('husky.dialog.submit', function() {
-                var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(true, deleteContacts);
-                }
-            }.bind(this));
-
-            // cancel
-            this.sandbox.once('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(false);
-                }
-            }.bind(this));
         },
 
         confirmMultipleDeleteDialog: function(ids, callbackFunction) {
@@ -298,12 +308,12 @@ define(['sulucontact/model/account'], function(Account) {
             }
 
             var params = {
-                    templateType: null,
-                    title: 'Warning!',
-                    content: 'Do you really want to delete the selected companies? All data is going to be lost.',
-                    buttonCancelText: 'Cancel',
-                    buttonSubmitText: 'Delete'
-                };
+                templateType: null,
+                title: 'Warning!',
+                content: 'Do you really want to delete the selected companies? All data is going to be lost.',
+                buttonCancelText: 'Cancel',
+                buttonSubmitText: 'Delete'
+            };
 
             // FIXME translation
 
@@ -341,25 +351,35 @@ define(['sulucontact/model/account'], function(Account) {
                 footer: {
                     buttonCancelText: params.buttonCancelText,
                     buttonSubmitText: params.buttonSubmitText
+                },
+                callback: {
+                    submit: function() {
+                        var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // disable events
+                        this.sandbox.off('husky.dialog.cancel');
+                        this.sandbox.off('husky.dialog.submit');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(true, deleteContacts);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // disable events
+                        this.sandbox.off('husky.dialog.cancel');
+                        this.sandbox.off('husky.dialog.submit');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
                 }
             }, params.templateType);
-
-            // submit -> delete
-            this.sandbox.once('husky.dialog.submit', function() {
-                var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(true, deleteContacts);
-                }
-            }.bind(this));
-
-            // cancel
-            this.sandbox.once('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(false);
-                }
-            }.bind(this));
         },
 
 
