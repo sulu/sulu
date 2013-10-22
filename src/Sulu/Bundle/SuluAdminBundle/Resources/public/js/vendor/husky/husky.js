@@ -21414,8 +21414,6 @@ define('__component__$navigation@husky',['husky_components/navigation/column'], 
         },
 
         showColumn = function(params) {
-            var currentIndex = getCurrentIndex.call(this, false);
-
             if (!params.data.displayOption || params.data.displayOption === 'content') {
                 if (compareContentColumn.call(this, params)) {
                     return;
@@ -21424,11 +21422,15 @@ define('__component__$navigation@husky',['husky_components/navigation/column'], 
                 this.contentColumn = params;
             }
 
+            var currentIndex = getCurrentIndex.call(this, false);
+
             if (this.sandbox.dom.find('#column-0').length === 1 &&
                 this.sandbox.dom.find('#column-1').length === 1) {
 
                 this.columns[0].hide();
-                this.columns[1].collapse();
+                if (!!this.columns[1]) {
+                    this.columns[1].collapse();
+                }
 
             } else {
 
@@ -23007,6 +23009,9 @@ define('__component__$dialog@husky',['jquery'], function($) {
             if (!!this.data.callback.cancel && typeof this.data.callback.cancel === 'function') {
                 this.data.callback.cancel();
             } else {
+                /**
+                 * @deprecated use callback functions
+                 */
                 sandbox.emit('husky.dialog.cancel');
             }
         },
@@ -23015,6 +23020,9 @@ define('__component__$dialog@husky',['jquery'], function($) {
             if (!!this.data.callback.submit && typeof this.data.callback.submit === 'function') {
                 this.data.callback.submit();
             } else {
+                /**
+                 * @deprecated use callback functions
+                 */
                 sandbox.emit('husky.dialog.submit');
             }
         }
