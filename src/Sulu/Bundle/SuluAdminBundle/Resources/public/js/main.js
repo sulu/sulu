@@ -21,7 +21,7 @@ require(['husky'], function(Husky) {
     var language = 'de',
         app;
 
-    require(['text!/admin/bundles', 'text!language/sulu.' + language + '.json'], function(text, messagesText) {
+    require(['text!/admin/bundles', 'text!/js/translations/sulu.' + language + '.json'], function(text, messagesText) {
         var bundles = JSON.parse(text),
             messages = JSON.parse(messagesText);
 
