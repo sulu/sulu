@@ -245,10 +245,6 @@ define(['sulucontact/model/account'], function(Account) {
                         var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
                         this.sandbox.emit('husky.dialog.hide');
 
-                        // disable events
-                        this.sandbox.off('husky.dialog.cancel');
-                        this.sandbox.off('husky.dialog.submit');
-
                         // call callback function
                         if (!!callbackFunction) {
                             callbackFunction(true, deleteContacts);
@@ -256,10 +252,6 @@ define(['sulucontact/model/account'], function(Account) {
                     }.bind(this),
                     cancel: function() {
                         this.sandbox.emit('husky.dialog.hide');
-
-                        // disable events
-                        this.sandbox.off('husky.dialog.cancel');
-                        this.sandbox.off('husky.dialog.submit');
 
                         // call callback function
                         if (!!callbackFunction) {
@@ -357,10 +349,6 @@ define(['sulucontact/model/account'], function(Account) {
                         var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
                         this.sandbox.emit('husky.dialog.hide');
 
-                        // disable events
-                        this.sandbox.off('husky.dialog.cancel');
-                        this.sandbox.off('husky.dialog.submit');
-
                         // call callback function
                         if (!!callbackFunction) {
                             callbackFunction(true, deleteContacts);
@@ -368,10 +356,6 @@ define(['sulucontact/model/account'], function(Account) {
                     }.bind(this),
                     cancel: function() {
                         this.sandbox.emit('husky.dialog.hide');
-
-                        // disable events
-                        this.sandbox.off('husky.dialog.cancel');
-                        this.sandbox.off('husky.dialog.submit');
 
                         // call callback function
                         if (!!callbackFunction) {
