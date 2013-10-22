@@ -21,8 +21,8 @@ define(function() {
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.dialog.confirmation.show', function(data) {
-                this.showConfirmationDialog(data);
+            this.sandbox.on('sulu.dialog.confirmation.show', function(data, templateType) {
+                this.showConfirmationDialog(data, templateType);
             }.bind(this));
 
             this.sandbox.on('sulu.dialog.error.show', function(message) {
@@ -43,12 +43,13 @@ define(function() {
             this.sandbox.start([component], { reset: true });
         },
 
-        showConfirmationDialog: function(data) {
+        showConfirmationDialog: function(data, templateType) {
             this.createDialogElement();
             this.startComponent({
                 name: 'dialog@husky',
                 options: {
                     el: $dialog,
+                    templateType: templateType,
                     data: data
                 }
             });
