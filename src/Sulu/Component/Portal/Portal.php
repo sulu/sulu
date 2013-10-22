@@ -81,5 +81,21 @@ class Portal
         return $this->name;
     }
 
+    /**
+     * Adds another language to this portal
+     * @param \Sulu\Component\Portal\Language $language The language to add
+     */
+    public function addLanguage($language)
+    {
+        $this->language[] = $language;
+    }
 
+    /**
+     * Returns the languages of this portal
+     * @return \Sulu\Component\Portal\Language[] The languages of this portal
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
 }

@@ -32,4 +32,58 @@ class Language {
      * @var boolean
      */
     private $fallback;
+
+    /**
+     * Sets the code of this language
+     * @param string $code The code of this language
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * Returns the code of this language
+     * @return string The code of this language
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Sets if this language is the fallback language
+     * @param boolean $fallback
+     */
+    public function setFallback($fallback)
+    {
+        $this->fallback = $fallback;
+    }
+
+    /**
+     * Returns true if this language is the fallback
+     * @return boolean True if this language is the fallback, otherwise false
+     */
+    public function getFallback()
+    {
+        return $this->fallback;
+    }
+
+    /**
+     * Sets if this language is the main language
+     * @param boolean $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    }
+
+    /**
+     * Returns true if this language is the main language
+     * @return boolean True if this language is the main language, otherwise false
+     */
+    public function getMain()
+    {
+        return $this->main;
+    }
 }
