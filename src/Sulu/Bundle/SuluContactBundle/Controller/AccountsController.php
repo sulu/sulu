@@ -221,7 +221,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
             /* @var Account $account */
             $account = $this->getDoctrine()
                 ->getRepository($entityName)
-                ->findByIdAndDelete($id);
+                ->findAccountByIdAndDelete($id);
 
             if (!$account) {
                 throw new EntityNotFoundException($entityName, $id);

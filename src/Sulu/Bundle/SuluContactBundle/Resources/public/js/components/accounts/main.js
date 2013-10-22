@@ -53,17 +53,19 @@ define(['sulucontact/model/account'], function(Account) {
         },
 
         del: function() {
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.confirmSingleDeleteDialog(function(wasConfirmed, removeContacts) {
                 if (wasConfirmed) {
-                    //account = this.getModel(id);
                     this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
                     this.account.destroy({
+                        data: {removeContacts: !!removeContacts},
+                        processData: true,
+
                         success: function() {
                             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
                         }.bind(this)
                     });
                 }
-            }.bind(this));
+            }.bind(this), this.options.id);
         },
 
         save: function(data) {
@@ -100,12 +102,15 @@ define(['sulucontact/model/account'], function(Account) {
                 this.sandbox.emit('sulu.dialog.error.show', 'No contacts selected for Deletion');
                 return;
             }
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.confirmMultipleDeleteDialog(ids, function(wasConfirmed, removeContacts) {
                 if (wasConfirmed) {
                     this.sandbox.emit('husky.header.button-state', 'loading-add-button');
                     ids.forEach(function(id) {
                         var account = new Account({id: id});
                         account.destroy({
+                            data: {removeContacts: !!removeContacts},
+                            processData: true,
+
                             success: function() {
                                 this.sandbox.emit('husky.datagrid.row.remove', id);
                             }.bind(this)
@@ -153,43 +158,212 @@ define(['sulucontact/model/account'], function(Account) {
             }
         },
 
-        /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
-         */
-        confirmDeleteDialog: function(callbackFunction) {
+        confirmSingleDeleteDialog: function(callbackFunction, id) {
+            var url = '/admin/api/contact/accounts/' + id + '/deleteinfo';
+
+            this.sandbox.util.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+
+                context: this,
+                type: 'GET',
+                url: url,
+
+                success: function(response) {
+                    this.showConfirmSingleDeleteDialog(response, id, callbackFunction);
+                }.bind(this),
+
+                error: function(jqXHR, textStatus, errorThrown) {
+                    this.sandbox.logger.error("error during get request: " + textStatus, errorThrown);
+                }.bind(this)
+            });
+        },
+
+        showConfirmSingleDeleteDialog: function(values, id, callbackFunction) {
             // check if callback is a function
             if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
                 throw 'callback is not a function';
             }
 
+            var params = {
+                templateType: null,
+                title: 'Warning!',
+                content: 'Do you really want to delete the selected company? All data is going to be lost.',
+                buttonCancelText: 'Cancel',
+                buttonSubmitText: 'Delete'
+            };
+
+            // FIXME translation
+
+            // sub-account exists => deletion is not allowed
+            if (parseInt(values.numChildren, 10) > 0) {
+                params.title = 'Warning! Sub-Companies detected!';
+
+                params.templateType = 'okDialog';
+                params.buttonCancelText = 'Ok';
+
+                params.content = [
+                    '<p>Existing sub-companies found:</p><ul>',
+                    this.template.dependencyListAccounts.call(this, values.children),
+                    '</ul>',
+                    values.numChildren > 3 ? ['<p>and <strong>', (parseInt(values.numChildren, 10) - values.children.length), '</strong> more.</p>'].join('') : '',
+                    '<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies or remove the relation.</p>'
+                ].join('');
+            }
+            // related contacts exist => show checkbox
+            else if (parseInt(values.numContacts, 10) > 0) {
+                params.title = 'Warning! Related contacts detected';
+
+                params.content = [
+                    '<p>Related contacts found:</p>',
+                    '<ul>',
+                    this.template.dependencyListContacts.call(this, values.contacts),
+                    '</ul>',
+                    values.numContacts > 3 ? ['<p>and <strong>', parseInt(values.numContacts, 10) - values.contacts.length, '</strong> more.</p>'].join('') : '',
+                    '<p>Would you like to delete them with the selected company?</p>',
+                    '<p>',
+                    '<input type="checkbox" id="delete-contacts" />',
+                    '<label for="delete-contacts">Delete all ', parseInt(values.numContacts, 10), ' related contacts.</label>',
+                    '</p>'
+                ].join('');
+            }
+
             // show dialog
             this.sandbox.emit('sulu.dialog.confirmation.show', {
                 content: {
-                    title: "Be careful!",
-                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
+                    title: params.title,
+                    content: params.content
                 },
                 footer: {
-                    buttonCancelText: "Don't do it",
-                    buttonSubmitText: "Do it, I understand"
-                }
-            });
+                    buttonCancelText: params.buttonCancelText,
+                    buttonSubmitText: params.buttonSubmitText
+                },
+                callback: {
+                    submit: function() {
+                        var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
+                        this.sandbox.emit('husky.dialog.hide');
 
-            // submit -> delete
-            this.sandbox.once('husky.dialog.submit', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(true);
-                }
-            }.bind(this));
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(true, deleteContacts);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
 
-            // cancel
-            this.sandbox.once('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction(false);
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
                 }
-            }.bind(this));
+            }, params.templateType);
+        },
+
+        confirmMultipleDeleteDialog: function(ids, callbackFunction) {
+
+            if (ids.length === 0) {
+                return;
+            } else if (ids.length === 1) {
+                this.confirmSingleDeleteDialog(callbackFunction, ids[0]);
+            } else {
+                var url = '/admin/api/contact/accounts/multipledeleteinfo';
+
+                this.sandbox.util.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+
+                    context: this,
+                    type: 'GET',
+                    url: url,
+                    data: {ids: ids},
+
+                    success: function(response) {
+                        this.showConfirmMultipleDeleteDialog(response, ids, callbackFunction);
+                    }.bind(this),
+
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        this.sandbox.logger.error("error during get request: " + textStatus, errorThrown);
+                    }.bind(this)
+                });
+            }
+        },
+
+        showConfirmMultipleDeleteDialog: function(values, ids, callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            var params = {
+                templateType: null,
+                title: 'Warning!',
+                content: 'Do you really want to delete the selected companies? All data is going to be lost.',
+                buttonCancelText: 'Cancel',
+                buttonSubmitText: 'Delete'
+            };
+
+            // FIXME translation
+
+            // sub-account exists => deletion is not allowed
+            if (parseInt(values.numChildren, 10) > 0) {
+                params.title = 'Warning! Sub-Companies detected!';
+
+                params.templateType = 'okDialog';
+                params.buttonCancelText = 'OK';
+
+                params.content = [
+                    '<p>One or more related sub-companies found.</p>',
+                    '<p>A company cannot be deleted as long it has sub-companies. Please delete the sub-companies or remove the relation.</p>'
+                ].join('');
+            }
+            // related contacts exist => show checkbox
+            else if (parseInt(values.numContacts, 10) > 0) {
+                params.title = 'Warning! Related contacts detected';
+
+                params.content = [
+                    '<p>One or more companies still have related contacts. Would you like to delete them with the selected companies?</p>',
+                    '<p>',
+                    '<input type="checkbox" id="delete-contacts" />',
+                    '<label for="delete-contacts">Delete all ', parseInt(values.numContacts, 10), ' related contacts.</label>',
+                    '</p>'
+                ].join('');
+            }
+
+            // show dialog
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: params.title,
+                    content: params.content
+                },
+                footer: {
+                    buttonCancelText: params.buttonCancelText,
+                    buttonSubmitText: params.buttonSubmitText
+                },
+                callback: {
+                    submit: function() {
+                        var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(true, deleteContacts);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
+                }
+            }, params.templateType);
         },
 
 
@@ -225,6 +399,17 @@ define(['sulucontact/model/account'], function(Account) {
             }
 
             return navigation;
+        },
+
+        template: {
+            dependencyListContacts: function(contacts) {
+                var list = "<% _.each(contacts, function(contact) { %> <li><%= contact.firstName %> <%= contact.lastName %></li> <% }); %>";
+                return this.sandbox.template.parse(list, {contacts: contacts});
+            },
+            dependencyListAccounts: function(accounts) {
+                var list = "<% _.each(accounts, function(account) { %> <li><%= account.name %></li> <% }); %>";
+                return this.sandbox.template.parse(list, {accounts: accounts});
+            }
         }
 
     };
