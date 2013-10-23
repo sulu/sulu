@@ -13,13 +13,15 @@
         <property name="article" type="textArea"/>
         <property name="gallery" type="imageSelection" multilingual="false"/>
 
-        <property name="documents" type="documentSelection" minOccurs="0" maxOccurs="1">
+        <property name="documents" type="documentSelection" minOccurs="0" maxOccurs="1"/>
+
+        <property name="internalLinks" type="internalLinkSelection" minOccurs="0" maxOccurs="2"/>
+
+        <property name="images" type="imageSelection" minOccurs="0" maxOccurs="2">
             <params>
                 <param name="minLinks" value="1"/>
                 <param name="maxLinks" value="10"/>
             </params>
         </property>
-
-        <property name="internalLinks" type="internalLinkSelection" minOccurs="0" maxOccurs="2"/>
     </properties>
 </template>
