@@ -44,7 +44,11 @@ abstract class ContentMapper implements ContentMapperInterface
             'name' => 'smartContentSelection'
         ),
         'imageSelection' => array(
-            'name' => 'smartContentSelection',
+            'params' => array(
+                'minImages' => 1,
+                'maxImages' => 10
+            ),
+            'name' => 'imageSelection',
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
@@ -53,8 +57,8 @@ abstract class ContentMapper implements ContentMapperInterface
                 'images' => array(
                     'name' => 'images',
                     'type' => 'image',
-                    'minOccurs' => 1,
-                    'maxOccurs' => 10
+                    'minOccurs' => '%minImages%',
+                    'maxOccurs' => '%maxImages%'
                 ),
 
             )
