@@ -81,6 +81,26 @@ class AccountRepository extends EntityRepository
         }
     }
 
+    /**
+     * finds all accounts but only selects given fields
+     * @param array $fields
+     * @return array
+     */
+    public function findAllSelect($fields = array()) {
+        $qb =$this->getEntityManager()
+            ->createQueryBuilder()
+            ->from($this->getEntityName(),'account');
+
+        foreach ($fields as $field) {
+            $qb->addSelect('account.'.$field.' AS '.$field);
+        }
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+        return $query->getArrayResult();
+    }
+
 
     /**
      * Get account by id to delete
