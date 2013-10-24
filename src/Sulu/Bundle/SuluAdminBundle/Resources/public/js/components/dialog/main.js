@@ -66,8 +66,14 @@ define(function() {
                         content: {
                             title: "An error occured!",
                             content: message
+                        },
+                        callback: {
+                            cancel: function () {
+                                this.sandbox.emit('husky.dialog.hide');
+                            }.bind(this)
                         }
                     }
+
                 }
             });
 
@@ -89,6 +95,11 @@ define(function() {
                             title: title,
                             content: message
                         }
+                    },
+                    callback: {
+                        cancel: function () {
+                            this.sandbox.emit('husky.dialog.hide');
+                        }.bind(this)
                     }
                 }
             });
