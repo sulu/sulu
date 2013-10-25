@@ -18,7 +18,7 @@ class PhpcrContentMapper extends ContentMapper
 {
     /**
      * Saves the given data from a template to PHPCR
-     * @param $data The data to be saved
+     * @param $data mixed The data to be saved
      */
     public function save($data)
     {
