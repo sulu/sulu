@@ -1,1 +1,10 @@
+<form id="content-form">
+    {% for property in template.properties %}
+        {% set type = types[property.type] %}
+        {% if type.template is defined %}
+            {% include type.template with {'property': property, 'type': type} %}
+        {% endif %}
+    {% endfor %}
+</form>
+
 {{ dump(template) }}
