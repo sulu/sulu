@@ -94,12 +94,12 @@ define(function() {
                         content: {
                             title: title,
                             content: message
+                        },
+                        callback: {
+                            cancel: function () {
+                                this.sandbox.emit('husky.dialog.hide');
+                            }.bind(this)
                         }
-                    },
-                    callback: {
-                        cancel: function () {
-                            this.sandbox.emit('husky.dialog.hide');
-                        }.bind(this)
                     }
                 }
             });
