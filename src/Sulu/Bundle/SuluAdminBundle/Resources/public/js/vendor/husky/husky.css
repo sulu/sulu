@@ -3185,6 +3185,11 @@ hr.divider {
   width: 100%;
 }
 
+/* line 145, ../scss/modules/grid.scss */
+.icon-remove {
+  cursor: pointer;
+}
+
 /* line 16, ../scss/modules/header.scss */
 .header {
   color: #999999;
