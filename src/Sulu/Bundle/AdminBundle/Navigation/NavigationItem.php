@@ -478,7 +478,7 @@ class NavigationItem implements \Iterator
         if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {
             $array['header'] = array(
                 'title' => $this->getHeaderTitle(),
-                'icon' => $this->getHeaderIcon()
+                'logo' => $this->getHeaderIcon()
             );
         }
 

@@ -22316,7 +22316,7 @@ define('__component__$datagrid@husky',[],function() {
             headData = this.options.tableHead || this.data.head;
 
             // add a checkbox to head row
-            if (!!this.options.selectItem) {
+            if (!!this.options.selectItem && this.options.selectItem.type) {
 
                 // default values
                 checkboxValues = [];
