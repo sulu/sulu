@@ -21,7 +21,12 @@ abstract class ContentMapper implements ContentMapperInterface
         ),
         'textArea' => array(
             'name' => 'textLine',
-            'phpcr-type' => 'string'
+            'template' => 'SuluContentBundle:Template:content-types/textArea.html.twig',
+            'phpcr-type' => 'string',
+            'params' => array(
+                'cols' => 10,
+                'rows' => 5
+            )
         ),
         'richTextEditor' => array(
             'name' => 'textLine',
@@ -40,7 +45,8 @@ abstract class ContentMapper implements ContentMapperInterface
             'phpcr-type' => 'reference'
         ),
         'resourceLocator' => array(
-            'name' => 'resourceLocator'
+            'name' => 'resourceLocator',
+            'template' => 'SuluContentBundle:Template:content-types/resourceLocator.html.twig'
         ),
         'smartContentSelection' => array(
             'name' => 'smartContentSelection'
