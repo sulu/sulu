@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use Sulu\Bundle\ContentBundle\Mapper\ContentMapper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller
@@ -17,40 +18,26 @@ class TemplateController extends Controller
     public function contentAction($key)
     {
         $template = $this->getTemplate($key);
+        $types = $this->getTypes();
 
-        return $this->render('SuluContentBundle:Template:content.html.twig', array('template' => $template));
+        return $this->render(
+            'SuluContentBundle:Template:content.html.twig',
+            array('template' => $template, 'types' => $types)
+        );
+    }
+
+    private function getTypes()
+    {
+        // TODO get Types
+        // perhaps? $this->get('content.parser.types')->get();
+        return ContentMapper::$types;
     }
 
     private function getTemplate($key)
     {
         // TODO get Template
-        // perhaps? $this->get('template.parser')->get($key);
-        return array(
-            'key' => 'overview',
-            'view' => 'page.html.twig',
-            'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifeTime' => 2400,
-            'properties' => array(
-                'title' => array(
-                    'name' => 'title',
-                    'type' => 'textLine',
-                    'mandatory' => true,
-                    'multilingual' => true
-                ),
-                'url' => array(
-                    'name' => 'url',
-                    'type' => 'resourceLocator',
-                    'mandatory' => true,
-                    'multilingual' => true
-                ),
-                'article' => array(
-                    'name' => 'article',
-                    'type' => 'textArea',
-                    'mandatory' => false,
-                    'multilingual' => true
-                )
-            )
-        );
+        // perhaps? $this->get('content.parser.template')->get($key);
+        return ContentMapper::$template;
     }
 
 }

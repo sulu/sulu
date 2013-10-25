@@ -12,9 +12,11 @@ namespace Sulu\Bundle\ContentBundle\Mapper;
 
 abstract class ContentMapper implements ContentMapperInterface
 {
-    private $types = array(
+    // TODO remove
+    public static $types = array(
         'textLine' => array(
             'name' => 'textLine',
+            'template' => 'SuluContentBundle:Template:content-types/textLine.html.twig',
             'phpcr-type' => 'string'
         ),
         'textArea' => array(
@@ -97,6 +99,35 @@ abstract class ContentMapper implements ContentMapperInterface
         )
     );
 
+    // TODO remove
+    public static $template = array(
+        'key' => 'overview',
+        'view' => 'page.html.twig',
+        'controller' => 'SuluContentBundle:Default:index',
+        'cacheLifeTime' => 2400,
+
+        'properties' => array(
+            'title' => array(
+                'name' => 'title',
+                'type' => 'textLine',
+                'mandatory' => true,
+                'multilingual' => true
+            ),
+            'url' => array(
+                'name' => 'url',
+                'type' => 'resourceLocator',
+                'mandatory' => true,
+                'multilingual' => true
+            ),
+            'article' => array(
+                'name' => 'article',
+                'type' => 'textArea',
+                'mandatory' => false,
+                'multilingual' => true
+            )
+        )
+    );
+
     /**
      * reads the template file and returns a representative array
      *
@@ -105,35 +136,7 @@ abstract class ContentMapper implements ContentMapperInterface
      */
     protected function readTemplate($file)
     {
-        $result = array(
-            'key' => 'overview',
-            'view' => 'page.html.twig',
-            'controller' => 'SuluContentBundle:Default:index',
-            'cacheLifeTime' => 2400,
-
-            'properties' => array(
-                'title' => array(
-                    'name' => 'title',
-                    'type' => 'textLine',
-                    'mandatory' => true,
-                    'multilingual' => true
-                ),
-                'url' => array(
-                    'name' => 'url',
-                    'type' => 'resourceLocator',
-                    'mandatory' => true,
-                    'multilingual' => true
-                ),
-                'article' => array(
-                    'name' => 'article',
-                    'type' => 'textArea',
-                    'mandatory' => false,
-                    'multilingual' => true
-                )
-            )
-        );
-
-        return $result;
+        return self::$template;
     }
 
     /**
@@ -145,7 +148,7 @@ abstract class ContentMapper implements ContentMapperInterface
      */
     protected function getType($name, $params)
     {
-        return $this->types[$name];
+        return self::$types[$name];
     }
 
     /**
@@ -155,7 +158,7 @@ abstract class ContentMapper implements ContentMapperInterface
      */
     protected function getTypes()
     {
-        return $this->types;
+        return self::$types;
     }
 
 }
