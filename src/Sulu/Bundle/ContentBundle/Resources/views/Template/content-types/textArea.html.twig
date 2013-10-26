@@ -1,2 +1,12 @@
-<label for="{{ property.name }}" class="pointer {{ (property.mandatory is defined and property.mandatory == true) ? 'required' : '' }}">{{ property.name }}</label>
-<textarea id="{{ property.name }}" cols="{{ params.cols }}" rows="{{ params.rows }}"></textarea>
+{% set mandatory = (property.mandatory is defined and property.mandatory == true) %}
+<label for="{{ property.name }}"
+       class="pointer {{ (mandatory) ? 'required' : '' }}">
+    {{ property.name }}
+</label>
+
+<textarea id="{{ property.name }}"
+          class="form-element"
+          data-mapper-property="{{ property.name }}"
+        {% if mandatory %}
+    data-validation-required="true"
+        {% endif %}></textarea>

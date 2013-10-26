@@ -1,10 +1,12 @@
 {# TODO add validation and mapper attributes for husky-validation #}
-<form id="content-form">
+<form id="content-form" class="grid">
     {% for property in template.properties %}
         {% set type = types[property.type] %}
-        {% set params = (type.params is defined) ? type.params : {} %} {# TODO Twig extension to merge params with template params #}
         {% if type.template is defined %}
-            {% include type.template with {'property': property, 'type': type, 'params': params} %}
+            {% set params = (type.params is defined) ? type.params : {} %} {# TODO Twig extension to merge params with template params #}
+            <div class="grid-row">
+                {% include type.template with {'property': property, 'type': type, 'params': params} %}
+            </div>
         {% endif %}
     {% endfor %}
 </form>
