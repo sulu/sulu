@@ -1,12 +1,26 @@
 {# TODO add validation and mapper attributes for husky-validation #}
 <form id="content-form" class="grid">
     {% for property in template.properties %}
+
+        {# get type for property #}
         {% set type = types[property.type] %}
+
+        {# include template if defined #}
         {% if type.template is defined %}
+            {# get params for template #}
             {% set params = (type.params is defined) ? type.params : {} %} {# TODO Twig extension to merge params with template params #}
-            <div class="grid-row">
-                {% include type.template with {'property': property, 'type': type, 'params': params} %}
-            </div>
+
+
+            {% if property.minOccurs is defined or property.maxOccurs is defined %}
+
+                {% include 'SuluContentBundle:Template:macros/array.html.twig' with {'property': property, 'type': type, 'params': params} %}
+
+            {% else %}
+
+                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'params': params} %}
+
+            {% endif %}
+
         {% endif %}
     {% endfor %}
 </form>
