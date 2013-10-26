@@ -116,6 +116,7 @@ define([
             }
         },
 
+        // TODO move to extension
         // Navigation
         getTabs: function(id, callback) {
             //TODO Simplify this task for bundle developer?
