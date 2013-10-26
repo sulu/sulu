@@ -1,3 +1,5 @@
 <div class="grid-row">
-    {% include type.template with {'property': property, 'type': type, 'params': params} %}
+    <label for="{{ property.id }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}">{{ property.name|capitalize }}</label>
+
+    {% include property.type.template %}
 </div>
