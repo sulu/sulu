@@ -22,11 +22,7 @@ abstract class ContentMapper implements ContentMapperInterface
         'textArea' => array(
             'name' => 'textLine',
             'template' => 'SuluContentBundle:Template:content-types/textArea.html.twig',
-            'phpcr-type' => 'string',
-            'params' => array(
-                'cols' => 10,
-                'rows' => 5
-            )
+            'phpcr-type' => 'string'
         ),
         'richTextEditor' => array(
             'name' => 'textLine',
