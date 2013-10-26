@@ -2,11 +2,15 @@
 <div id="{{ property.name }}"
      data-type="array"
      data-type-min="{{ property.minOccurs }}"
-     data-type-max="{{ property.maxOccurs }}">
+     data-type-max="{{ property.maxOccurs }}"
+     data-mapper-property="{{ property.name }}">
+
     {% for i in 1..property.minOccurs %}
-        {% set id = property.name ~ i %}
-        {% include property.type.template %}
+        <div class="{{ property.name }}-element">
+            {% include property.type.template with {'property': property|merge({'id': property.name ~ i})} only %}
+        </div>
     {% endfor %}
+
 </div>
 
 {% if needsAddButton(property) %}
