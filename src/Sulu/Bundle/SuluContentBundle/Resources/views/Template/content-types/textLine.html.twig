@@ -1,15 +1,7 @@
-{% set mandatory = (property.mandatory is defined and property.mandatory == true) %}
-
-{% if property.id is not defined %}
-    {% set property = property|merge({'id': property.name}) %}
-{% endif %}
-
-<label for="{{ property.id }}" class="pointer {{ (mandatory) ? 'required' : '' }}">{{ property.name }}</label>
-
 <input type="text"
        class="form-element"
        id="{{ property.id }}"
        data-mapper-property="{{ property.name }}"
-        {% if mandatory %}
+        {% if property.mandatory %}
     data-validation-required="true"
         {% endif %}/>
