@@ -13,6 +13,11 @@ namespace Sulu\Bundle\ContentBundle\Twig;
 
 use Sulu\Bundle\ContentBundle\Mapper\ContentMapper;
 
+/**
+ * Extension for content form generation
+ *
+ * @package Sulu\Bundle\ContentBundle\Twig
+ */
 class ContentExtension extends \Twig_Extension
 {
     /**
@@ -28,6 +33,11 @@ class ContentExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * Returns an array of possible function in this extension
+     *
+     * @return array
+     */
     public function getFunctions()
     {
         return array(
@@ -35,12 +45,23 @@ class ContentExtension extends \Twig_Extension
         );
     }
 
-
+    /**
+     * Return true if property is an array and needs an add button
+     *
+     * @param $property array
+     * @return bool
+     */
     public function needsAddButtonFunction($property)
     {
         return $property['maxOccurs'] > $property['minOccurs'];
     }
 
+    /**
+     * Returns property merged with default values
+     *
+     * @param $property array
+     * @return array
+     */
     public function propertyDefaultsFilter($property)
     {
         $property['type'] = $this->getType($property['type']);
@@ -55,11 +76,24 @@ class ContentExtension extends \Twig_Extension
         return array_merge($defaults, $property);
     }
 
+    /**
+     * Return if property is an array
+     *
+     * @param $property array
+     * @return bool
+     */
     public function isArrayFilter($property)
     {
         return $property['minOccurs'] > 1;
     }
 
+    /**
+     * Returns type default params merged with property params
+     *
+     * @param $type array
+     * @param $property array
+     * @return array
+     */
     private function getParams($type, $property)
     {
         // TODO merge with property params
@@ -76,6 +110,12 @@ class ContentExtension extends \Twig_Extension
         return 'content';
     }
 
+    /**
+     * Returns the type array for key
+     *
+     * @param $key string
+     * @return mixed
+     */
     private function getType($key)
     {
         // TODO get Types
