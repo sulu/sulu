@@ -31,6 +31,7 @@ class SuluContentContentNavigation extends ContentNavigation
         $details->setContentType('contact');
         $details->setAction('details');
         $details->setType('content');
+        $details->setDisplayOptions(array('edit'));
 
         $this->addNavigationItem($details);
     }
