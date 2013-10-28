@@ -14,6 +14,10 @@ use Sulu\Component\Portal\PortalCollection;
 use Sulu\Component\Portal\Portal;
 use Sulu\Component\Portal\Dumper\PhpPortalCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Finder\Finder;
 
 /**
  * This class is responsible for loading, reading and caching the portal configuration files
@@ -31,8 +35,14 @@ class PortalManager
      */
     private $options;
 
-    public function __construct($options = array())
+    /**
+     * @var LoaderInterface
+     */
+    private $loader;
+
+    public function __construct(LoaderInterface $loader, $options = array())
     {
+        $this->loader = $loader;
         $this->setOptions($options);
     }
 
@@ -94,6 +104,7 @@ class PortalManager
     public function setOptions($options)
     {
         $this->options = array(
+            'config_dir' => null,
             'cache_dir' => null,
             'debug' => false,
             'cache_class' => 'PortalCollectionCache',
@@ -108,22 +119,19 @@ class PortalManager
      * Builds the portal collection from the config
      * @return PortalCollection
      */
-    private function buildPortalCollection()
+    protected function buildPortalCollection()
     {
+        // Find portal configs with symfony finder
+        $finder = new Finder();
+        $finder->in($this->options['config_dir'])->files()->name('*.xml');
+
+        // Iterate over config files, and add a portal object for each config to the collection
         $collection = new PortalCollection();
 
-        //TODO add real portals from config
-        $portal = new Portal();
-        $portal->setName('Sulu');
-        $portal->setKey('sulu');
-
-        $collection->add($portal);
-
-        $portal = new Portal();
-        $portal->setName('Sulu2');
-        $portal->setKey('sulu2');
-
-        $collection->add($portal);
+        foreach ($finder as $file) {
+            $collection->add($this->loader->load($file->getRealPath()));
+            $collection->addResource(new FileResource($file->getRealPath()));
+        }
 
         return $collection;
     }

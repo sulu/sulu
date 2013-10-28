@@ -27,7 +27,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoad()
     {
-        $portal = $this->loader->load(__DIR__.'/../../../../Resources/DataFixtures/sulu.io.xml');
+        $portal = $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/sulu.io.xml');
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());

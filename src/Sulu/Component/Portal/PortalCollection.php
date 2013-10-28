@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Portal;
 
+use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
 
 /**
@@ -27,7 +28,7 @@ class PortalCollection implements \IteratorAggregate
     /**
      * Contains all the resources, which where used to build this collection.
      * Is required by the Symfony CacheConfig-Component.
-     * @var array
+     * @var FileResource[]
      */
     private $resources;
 
@@ -38,6 +39,14 @@ class PortalCollection implements \IteratorAggregate
     public function add(Portal $portal)
     {
         $this->portals[$portal->getKey()] = $portal;
+    }
+
+    /**
+     * Adds a new FileResource, which is required to determine if the cache is fresh
+     * @param FileResource $resource
+     */
+    public function addResource(FileResource $resource) {
+        $this->resources[] = $resource;
     }
 
     /**
