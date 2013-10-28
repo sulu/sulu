@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\PHPCR\Session;
+namespace Sulu\Component\PHPCR\SessionFactory;
 
 use PHPCR\SessionInterface;
 

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\PHPCR\Session;
+namespace Sulu\Component\PHPCR\SessionFactory;
 
 
 use PHPCR\CredentialsInterface;
@@ -17,7 +17,7 @@ use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 
-class SessionService implements SessionServiceInterface
+class SessionFactoryService implements SessionServiceInterface
 {
     /**
      * @var RepositoryFactoryInterface
@@ -44,7 +44,7 @@ class SessionService implements SessionServiceInterface
      */
     private $session;
 
-    function __construct($factoryClass, $url = 'http://localhost:8080/server', $user = 'admin', $password = 'admin')
+    function __construct($factoryClass, $url, $user, $password)
     {
         $this->parameters = array('jackalope.jackrabbit_uri' => $url);
         $this->factory = new $factoryClass();
@@ -61,6 +61,7 @@ class SessionService implements SessionServiceInterface
      */
     public function getSession($key = 'default')
     {
+        // TODO create session for key
         return $this->session;
     }
 }

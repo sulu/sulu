@@ -1,7 +1,10 @@
 parameters:
     sulu_core.list_rest_helper.class: Sulu\Component\Rest\Listing\ListRestHelper
     sulu_core.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
-    sulu_core.phpcr.session.factoryClass: Jackalope\RepositoryFactoryJackrabbit
+    phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
+    phpcr_url: http://localhost:8080/server
+    phpcr_username: admin
+    phpcr_password: admin
 
 services:
     sulu_core.list_rest_helper:
@@ -10,4 +13,4 @@ services:
         scope: request
     sulu_core.phpcr.session:
         class: %sulu_core.phpcr.session.class%
-        arguments: [%sulu_core.phpcr.session.factoryClass%]
+        arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
