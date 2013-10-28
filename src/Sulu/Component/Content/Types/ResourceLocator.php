@@ -90,4 +90,13 @@ class ResourceLocator extends ComplexContentType
     {
         return ContentTypeInterface::POST_SAVE;
     }
+
+    /**
+     * returns a template to render a form
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return 'SuluCoreBundle:content:types/resource_locator.html.twig';
+    }
 }

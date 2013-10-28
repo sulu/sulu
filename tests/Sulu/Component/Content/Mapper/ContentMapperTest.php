@@ -114,11 +114,11 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $resourceLocator->setContainer($this->container);
 
         $result = array(
-            'sulu_core.phpcr.session' => $this->sessionService,
-            'sulu_core.content.structure' => $this->structureFactoryMock,
-            'sulu_core.content.type.text_line' => new TextLine(),
-            'sulu_core.content.type.text_area' => new TextArea(),
-            'sulu_core.content.type.resource_locator' => $resourceLocator
+            'sulu.phpcr.session' => $this->sessionService,
+            'sulu.content.structure' => $this->structureFactoryMock,
+            'sulu.content.type.text_line' => new TextLine(),
+            'sulu.content.type.text_area' => new TextArea(),
+            'sulu.content.type.resource_locator' => $resourceLocator
         );
         $args = func_get_args();
 

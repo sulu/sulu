@@ -21,4 +21,13 @@ class TextLine extends SimpleContentType
     {
         parent::__construct('TextLine');
     }
+
+    /**
+     * returns a template to render a form
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return 'SuluCoreBundle:content:types/text_line.html.twig';
+    }
 }

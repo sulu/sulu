@@ -21,4 +21,13 @@ class TextArea extends SimpleContentType
     {
         parent::__construct('TextArea');
     }
+
+    /**
+     * returns a template to render a form
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return 'SuluCoreBundle:content:types/text_area.html.twig';
+    }
 }

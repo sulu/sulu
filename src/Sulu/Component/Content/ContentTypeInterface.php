@@ -43,4 +43,10 @@ interface ContentTypeInterface
      * @return mixed
      */
     public function set(NodeInterface $node, PropertyInterface $property);
+
+    /**
+     * returns a template to render a form
+     * @return string
+     */
+    public function getTemplate();
 }

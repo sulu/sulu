@@ -103,7 +103,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getStructure($key)
     {
-        return $this->container->get('sulu_core.content.structure')->getStructure($key);
+        return $this->container->get('sulu.content.structure')->getStructure($key);
     }
 
     /**
@@ -113,7 +113,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getContentType($name)
     {
-        return $this->container->get('sulu_core.content.type.' . $name);
+        return $this->container->get('sulu.content.type.' . $name);
     }
 
     /**
@@ -121,7 +121,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getSession()
     {
-        return $this->container->get('sulu_core.phpcr.session')->getSession();
+        return $this->container->get('sulu.phpcr.session')->getSession();
     }
 
     protected function getBasePath()
