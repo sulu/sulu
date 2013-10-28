@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Tests\Unit\Repository;
+namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\View\View;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;

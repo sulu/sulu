@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Tests\Unit\Repository;
+namespace Sulu\Component\Rest\Listing;
 
 use Sulu\Component\Rest\Listing\ListQueryBuilder;
 
