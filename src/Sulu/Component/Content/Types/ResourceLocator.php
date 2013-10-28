@@ -52,16 +52,15 @@ class ResourceLocator extends ComplexContentType
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @param $value
      * @return mixed
      */
-    public function set(NodeInterface $node, PropertyInterface $property, $value)
+    public function set(NodeInterface $node, PropertyInterface $property)
     {
         $session = $this->getSession();
         $data = $property->getValue();
 
         // create routepath
-        $routePath = $this->getBasePath() . '/' . $data; //TODO configure path
+        $routePath = ltrim($this->getBasePath(), '/') . '/' . $data; //TODO configure path
         $routePath = explode('/', $routePath);
 
         // get root node

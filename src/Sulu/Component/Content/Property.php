@@ -27,9 +27,9 @@ class Property implements PropertyInterface
         $name,
         $contentTypeName,
         $mandatory = false,
+        $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $multilingual = false,
         $params = array()
     ) {
         $this->contentTypeName = $contentTypeName;

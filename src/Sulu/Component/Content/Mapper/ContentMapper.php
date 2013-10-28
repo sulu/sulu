@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
 
-    private $basePath = '/cmf/content';
+    private $basePath = '/cmf/contents';
 
     /**
      * Saves the given data in the content storage
@@ -35,7 +35,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session = $this->getSession();
         $root = $session->getRootNode();
         $node = $root->addNode(
-            ltrim($this->getBasePath(), '/') . $data['title']
+            ltrim($this->getBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
         $node->addMixin('mix:referenceable');
 
@@ -54,6 +54,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         'value' => $value
                     );
                 } else {
+                    $property->setValue($value);
                     $type->set($node, $property, $value);
                 }
             }
@@ -62,8 +63,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session->save();
 
         foreach ($postSave as $post) {
-            $post['type']->set($node, $post['property'], $post['value']);
+            $post['property']->setValue($post['value']);
+            $post['type']->set($node, $post['property']);
         }
+
+        $session->save();
     }
 
     /**
@@ -99,8 +103,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getStructure($key)
     {
-        // TODO get structure
-        return null;
+        return $this->container->get('sulu_core.content.structure')->getStructure($key);
     }
 
     /**
@@ -110,8 +113,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getContentType($name)
     {
-        // TODO get content type
-        return null;
+        return $this->container->get('sulu_core.content.type.' . $name);
     }
 
     /**
