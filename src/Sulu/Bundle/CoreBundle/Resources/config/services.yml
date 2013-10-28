@@ -1,8 +1,13 @@
 parameters:
     sulu_core.list_rest_helper.class: Sulu\Component\Rest\Listing\ListRestHelper
+    sulu_core.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
+    phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
 
 services:
     sulu_core.list_rest_helper:
         class: %sulu_core.list_rest_helper.class%
         arguments: [@request, @doctrine.orm.entity_manager]
         scope: request
+    sulu_core.phpcr.session:
+        class: %sulu_core.phpcr.session.class%
+        arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
