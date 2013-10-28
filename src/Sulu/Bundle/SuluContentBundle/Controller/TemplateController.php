@@ -17,8 +17,8 @@ class TemplateController extends Controller
 {
     public function contentAction($key)
     {
-        $template = $this->getTemplate($key);
-        $types = $this->getTypes();
+        $template = $this->getTemplateDefinition($key);
+        $types = $this->getTypeDefinitions();
 
         return $this->render(
             'SuluContentBundle:Template:content.html.twig',
@@ -26,14 +26,14 @@ class TemplateController extends Controller
         );
     }
 
-    private function getTypes()
+    private function getTypeDefinitions()
     {
         // TODO get Types
         // perhaps? $this->get('content.parser.types')->get();
         return ContentMapper::$types;
     }
 
-    private function getTemplate($key)
+    private function getTemplateDefinition($key)
     {
         // TODO get Template
         // perhaps? $this->get('content.parser.template')->get($key);
