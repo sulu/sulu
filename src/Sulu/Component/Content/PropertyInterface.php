@@ -43,6 +43,11 @@ interface PropertyInterface
     public function getMaxOccurs();
 
     /**
+     * @return string
+     */
+    public function getContentTypeName();
+
+    /**
      * sets the value from property
      * @param $value mixed
      */

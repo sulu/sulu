@@ -18,17 +18,29 @@ class Property implements PropertyInterface
     private $multilingual;
     private $minOccurs;
     private $maxOccurs;
+    private $contentTypeName;
 
     private $params;
     private $value;
 
-    /**
-     * @param array $params params of property
-     */
-    function __construct($params = array())
-    {
+    function __construct(
+        $name,
+        $contentTypeName,
+        $mandatory = false,
+        $maxOccurs = 1,
+        $minOccurs = 1,
+        $multilingual = false,
+        $params = array()
+    ) {
+        $this->contentTypeName = $contentTypeName;
+        $this->mandatory = $mandatory;
+        $this->maxOccurs = $maxOccurs;
+        $this->minOccurs = $minOccurs;
+        $this->multilingual = $multilingual;
+        $this->name = $name;
         $this->params = $params;
     }
+
 
     /**
      * returns name of template
@@ -89,4 +101,11 @@ class Property implements PropertyInterface
         return $this->value;
     }
 
+    /**
+     * @return string
+     */
+    public function getContentTypeName()
+    {
+        return $this->contentTypeName;
+    }
 }
