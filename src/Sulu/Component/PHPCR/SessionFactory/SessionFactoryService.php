@@ -17,7 +17,7 @@ use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 
-class SessionFactoryService implements SessionServiceInterface
+class SessionFactoryService implements SessionFactoryInterface
 {
     /**
      * @var RepositoryFactoryInterface
@@ -51,7 +51,7 @@ class SessionFactoryService implements SessionServiceInterface
         $this->repository = $this->factory->getRepository($this->parameters);
         $this->credentials = new SimpleCredentials($user, $password);
 
-        $this->session = $this->repository->login($this->credentials);
+        $this->session = $this->repository->login($this->credentials, 'default');
     }
 
     /**

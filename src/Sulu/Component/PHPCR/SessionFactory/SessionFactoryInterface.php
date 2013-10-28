@@ -12,7 +12,7 @@ namespace Sulu\Component\PHPCR\SessionFactory;
 
 use PHPCR\SessionInterface;
 
-interface SessionServiceInterface
+interface SessionFactoryInterface
 {
     /**
      * returns a valid session to interact with a phpcr database
