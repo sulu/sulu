@@ -44,6 +44,15 @@ class Theme
     }
 
     /**
+     * Adds an exluded template to this theme instance
+     * @param $excludedTemplate The template to exclude
+     */
+    public function addExcludedTemplate($excludedTemplate)
+    {
+        $this->excludedTemplates[] = $excludedTemplate;
+    }
+
+    /**
      * Sets the excluded templates
      * @param array $excludedTemplates
      */

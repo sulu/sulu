@@ -8,7 +8,7 @@
 
     <languages>
         <language main="true">en</language>
-        <language fallback="en">de</language>
+        <language fallback="true">de</language>
     </languages>
 
     <theme>

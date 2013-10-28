@@ -10,7 +10,11 @@
 
 namespace Sulu\Component\Portal\Loader;
 
+use Sulu\Component\Portal\Environment;
+use Sulu\Component\Portal\Language;
 use Sulu\Component\Portal\Portal;
+use Sulu\Component\Portal\Theme;
+use Sulu\Component\Portal\Url;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
 
@@ -53,12 +57,75 @@ class XmlFileLoader extends FileLoader
      */
     private function parseXml($file)
     {
-        $xml = XmlUtils::loadFile($file);
+        $xmlDoc = XmlUtils::loadFile($file);
+        $xpath = new \DOMXPath($xmlDoc);
+        $xpath->registerNamespace('x', 'http://schemas.sulu.io/portal/portal');
 
         $portal = new Portal();
-        $portal->setName($xml->getElementsByTagName('name')->item(0)->nodeValue);
-        $portal->setKey($xml->getElementsByTagName('key')->item(0)->nodeValue);
+        // set simple properties
+        $portal->setName($xpath->query('/x:portal/x:name')->item(0)->nodeValue);
+        $portal->setKey($xpath->query('/x:portal/x:key')->item(0)->nodeValue);
+
+        // add languages
+        foreach ($xpath->query('/x:portal/x:languages/x:language') as $languageNode) {
+            /** @var \DOMNode $languageNode */
+            $language = new Language();
+            $language->setCode($languageNode->nodeValue);
+
+            // set the optional attributes
+            if ($languageNode->hasAttributes()) {
+                $mainNode = $languageNode->attributes->getNamedItem('main');
+                $language->setMain($this->convertBoolean($mainNode));
+
+                $fallbackNode = $languageNode->attributes->getNamedItem('fallback');
+                $language->setFallback($this->convertBoolean($fallbackNode));
+            }
+
+            $portal->addLanguage($language);
+        }
+
+        // set theme
+        $theme = new Theme();
+        $theme->setKey($xpath->query('/x:portal/x:theme/x:key')->item(0)->nodeValue);
+
+        foreach ($xpath->query('/x:portal/x:theme/x:excluded/x:template') as $templateNode) {
+            /** @var \DOMNode $templateNode */
+            $theme->addExcludedTemplate($templateNode->nodeValue);
+        }
+
+        $portal->setTheme($theme);
+
+        // set environments
+        foreach ($xpath->query('/x:portal/x:environments/x:environment') as $environmentNode) {
+            /** @var \DOMNode $environmentNode */
+            $environment = new Environment();
+            $environment->setType($environmentNode->attributes->getNamedItem('type')->nodeValue);
+
+            foreach ($xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
+                /** @var \DOMNode $urlNode */
+                $url = new Url();
+
+                $url->setUrl($urlNode->nodeValue);
+
+                // set optional nodes
+                $mainNode = $urlNode->attributes->getNamedItem('main');
+                $url->setMain($this->convertBoolean($mainNode));
+
+                $environment->addUrl($url);
+            }
+
+            $portal->addEnvironment($environment);
+        }
 
         return $portal;
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function convertBoolean($node)
+    {
+        return ($node) ? $node->nodeValue == 'true' : false;
     }
 }

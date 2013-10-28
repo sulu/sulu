@@ -82,6 +82,14 @@ class Portal
     }
 
     /**
+     * Adds the given language to the portal
+     * @param Language $language
+     */
+    public function addLanguage(Language $language) {
+        $this->languages[] = $language;
+    }
+
+    /**
      * Sets the languages to this portal
      * @param \Sulu\Component\Portal\Language $languages The language to add
      */
@@ -115,6 +123,15 @@ class Portal
     public function getTheme()
     {
         return $this->theme;
+    }
+
+    /**
+     * Adds an environment to this portal
+     * @param $environment The environment to add
+     */
+    public function addEnvironment($environment)
+    {
+        $this->environments[] = $environment;
     }
 
     /**

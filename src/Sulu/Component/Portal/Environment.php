@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Portal;
 
-
 class Environment
 {
     /**
@@ -21,7 +20,7 @@ class Environment
 
     /**
      * The urls for this environment
-     * @var Urls[]
+     * @var Url[]
      */
     private $urls;
 
@@ -44,8 +43,17 @@ class Environment
     }
 
     /**
+     * Adds a new url to this environment
+     * @param $url Url The url to add
+     */
+    public function addUrl(Url $url)
+    {
+        $this->urls[] = $url;
+    }
+
+    /**
      * Set the urls for this environment
-     * @param \Sulu\Component\Portal\Urls[] $urls
+     * @param \Sulu\Component\Portal\Url[] $urls
      */
     public function setUrls($urls)
     {
@@ -54,7 +62,7 @@ class Environment
 
     /**
      * Returns the urls for this environment
-     * @return \Sulu\Component\Portal\Urls[]
+     * @return \Sulu\Component\Portal\Url[]
      */
     public function getUrls()
     {
