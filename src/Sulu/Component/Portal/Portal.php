@@ -82,12 +82,12 @@ class Portal
     }
 
     /**
-     * Adds another language to this portal
-     * @param \Sulu\Component\Portal\Language $language The language to add
+     * Sets the languages to this portal
+     * @param \Sulu\Component\Portal\Language $languages The language to add
      */
-    public function addLanguage($language)
+    public function setLanguages($languages)
     {
-        $this->language[] = $language;
+        $this->languages = $languages;
     }
 
     /**
@@ -97,5 +97,41 @@ class Portal
     public function getLanguages()
     {
         return $this->languages;
+    }
+
+    /**
+     * Sets the theme for this portal
+     * @param \Sulu\Component\Portal\Theme $theme
+     */
+    public function setTheme(Theme $theme)
+    {
+        $this->theme = $theme;
+    }
+
+    /**
+     * Returns the theme for this portal
+     * @return \Sulu\Component\Portal\Theme
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * Sets the environments for this portal
+     * @param \Sulu\Component\Portal\Environment[] $environments
+     */
+    public function setEnvironments($environments)
+    {
+        $this->environments = $environments;
+    }
+
+    /**
+     * Returns the environment for this portal
+     * @return \Sulu\Component\Portal\Environment[]
+     */
+    public function getEnvironments()
+    {
+        return $this->environments;
     }
 }
