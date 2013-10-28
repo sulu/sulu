@@ -47,7 +47,7 @@ class PortalManager
     }
 
     /**
-     * Return the portal with the given key, or null, if it does not exist
+     * Returns the portal with the given key, or null, if it does not exist
      * @param $key The key to look for
      * @return null|Portal
      */
@@ -64,10 +64,31 @@ class PortalManager
     }
 
     /**
+     * Returns the portal for the given url, or null, if it does not exist
+     * @param $searchUrl The url to search for
+     * @return null|Portal
+     */
+    public function findByUrl($searchUrl)
+    {
+        foreach ($this->getPortals() as $portal) {
+            /** @var Portal $portal */
+            foreach ($portal->getEnvironments() as $environment) {
+                foreach ($environment->getUrls() as $url) {
+                    if ($url->getUrl() == $searchUrl) {
+                        return $portal;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the portals from the cache, or creates the cache.
      * @return PortalCollection
      */
-    private function getPortals()
+    public function getPortals()
     {
         if ($this->portals === null) {
             $class = $this->options['cache_class'];
@@ -79,7 +100,8 @@ class PortalManager
             if (!$cache->isFresh()) {
                 $portalCollection = $this->buildPortalCollection();
                 $dumper = new PhpPortalCollectionDumper($portalCollection);
-                $cache->write($dumper->dump(
+                $cache->write(
+                    $dumper->dump(
                         array(
                             'cache_class' => $class,
                             'base_class' => $this->options['base_class']

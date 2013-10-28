@@ -38,7 +38,7 @@ class PortalCollection implements \IteratorAggregate
      */
     public function add(Portal $portal)
     {
-        $this->portals[$portal->getKey()] = $portal;
+        $this->portals[] = $portal;
     }
 
     /**
@@ -57,6 +57,25 @@ class PortalCollection implements \IteratorAggregate
     public function getResources()
     {
         return $this->resources;
+    }
+
+    /**
+     * Returns the portal with the given index
+     * @param $index The index of the portal
+     * @return Portal
+     */
+    public function at($index)
+    {
+        return $this->portals[$index];
+    }
+
+    /**
+     * Returns the length of the collection
+     * @return int
+     */
+    public function length()
+    {
+        return count($this->portals);
     }
 
     /**
