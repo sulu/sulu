@@ -12,23 +12,39 @@ namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
 
-/**
- * ContentType
- */
-interface ContentTypeInterface
+abstract class SimpleContentType implements ContentTypeInterface
 {
+
+    private $name;
+
+    function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
     /**
      * reads the value for given property out of the database + sets the value of the property
      * @param NodeInterface $node
      * @param PropertyInterface $property
      * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property);
+    public function get(NodeInterface $node, PropertyInterface $property)
+    {
+        return $node->getPropertyValue($property->getName());
+    }
 
     /**
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
      */
-    public function set(NodeInterface $node, PropertyInterface $property);
+    public function set(NodeInterface $node, PropertyInterface $property)
+    {
+        $node->setProperty($property->getName(), $property->getValue());
+    }
 }

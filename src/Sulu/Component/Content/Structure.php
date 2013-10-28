@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Component\Content;
+
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 abstract class Structure implements StructureInterface

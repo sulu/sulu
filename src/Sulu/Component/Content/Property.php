@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Component\Content;
+
 class Property implements PropertyInterface
 {
 
