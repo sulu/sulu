@@ -17,6 +17,17 @@ use PHPCR\NodeInterface;
  */
 interface ContentTypeInterface
 {
+
+    const PRE_SAVE = 1;
+    const POST_SAVE = 2;
+
+    /**
+     * returns type of ContentType
+     * PRE_SAVE or POST_SAVE
+     * @return int
+     */
+    public function getType();
+
     /**
      * reads the value for given property out of the database + sets the value of the property
      * @param NodeInterface $node

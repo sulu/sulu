@@ -47,4 +47,14 @@ abstract class SimpleContentType implements ContentTypeInterface
     {
         $node->setProperty($property->getName(), $property->getValue());
     }
+
+    /**
+     * returns type of ContentType
+     * PRE_SAVE or POST_SAVE
+     * @return int
+     */
+    public function getType()
+    {
+        return ContentTypeInterface::PRE_SAVE;
+    }
 }

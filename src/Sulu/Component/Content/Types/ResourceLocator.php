@@ -11,9 +11,9 @@
 namespace Sulu\Component\Content\Types;
 
 
-use Jackalope\Property;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 
 class ResourceLocator extends ComplexContentType
@@ -78,5 +78,15 @@ class ResourceLocator extends ComplexContentType
         // TODO sulu:route mixin to search faster for route
         // $routeNode->addMixin('sulu:route');
         $routeNode->setProperty('content', $node);
+    }
+
+    /**
+     * returns type of ContentType
+     * PRE_SAVE or POST_SAVE
+     * @return int
+     */
+    public function getType()
+    {
+        return ContentTypeInterface::POST_SAVE;
     }
 }
