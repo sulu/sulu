@@ -7,8 +7,8 @@
         {# include template if defined #}
         {% if property.type.template is defined %}
 
-            {% if property|isArray %}
-                {% include 'SuluContentBundle:Template:macros/array.html.twig' with {'property': property} only %}
+            {% if property|isMultiple %}
+                {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property} only %}
             {% else %}
                 {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property} only %}
             {% endif %}

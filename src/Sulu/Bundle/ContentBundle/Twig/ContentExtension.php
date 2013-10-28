@@ -29,7 +29,7 @@ class ContentExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('propertyDefaults', array($this, 'propertyDefaultsFilter')),
-            new \Twig_SimpleFilter('isArray', array($this, 'isArrayFilter'))
+            new \Twig_SimpleFilter('isMultiple', array($this, 'isMultipleFilter'))
         );
     }
 
@@ -82,7 +82,7 @@ class ContentExtension extends \Twig_Extension
      * @param $property array
      * @return bool
      */
-    public function isArrayFilter($property)
+    public function isMultipleFilter($property)
     {
         return $property['minOccurs'] > 1;
     }
