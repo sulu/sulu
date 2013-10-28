@@ -32,7 +32,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->navigationItem = new NavigationItem('NavigationItem');
 
         $this->item1 = new NavigationItem('Root');
-        $this->item1->setHeaderIcon('icon');
+        $this->item1->setHeaderIcon('logo');
         $this->item1->setHeaderTitle('title');
         $this->item1->setAction('action');
         new NavigationItem('Portals', $this->item1);
@@ -150,7 +150,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Root', $array['title']);
         $this->assertTrue($array['hasSub']);
         $this->assertEquals('action', $array['action']);
-        $this->assertEquals('icon', $array['header']['icon']);
+        $this->assertEquals('logo', $array['header']['logo']);
         $this->assertEquals('title', $array['header']['title']);
 
         $this->assertEquals('Portals', $array['sub']['items'][0]['title']);
