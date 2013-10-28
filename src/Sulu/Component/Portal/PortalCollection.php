@@ -45,7 +45,8 @@ class PortalCollection implements \IteratorAggregate
      * Adds a new FileResource, which is required to determine if the cache is fresh
      * @param FileResource $resource
      */
-    public function addResource(FileResource $resource) {
+    public function addResource(FileResource $resource)
+    {
         $this->resources[] = $resource;
     }
 
@@ -78,10 +79,37 @@ class PortalCollection implements \IteratorAggregate
     {
         $portals = array();
 
-        foreach($this->portals as $portal) {
+        foreach ($this->portals as $portal) {
             $portalData = array();
             $portalData['name'] = $portal->getName();
             $portalData['key'] = $portal->getKey();
+
+            foreach ($portal->getLanguages() as $language) {
+                $languageData = array();
+                $languageData['code'] = $language->getCode();
+                $languageData['main'] = $language->isMain();
+                $languageData['fallback'] = $language->isFallback();
+
+                $portalData['languages'][] = $languageData;
+            }
+
+            $portalData['theme']['key'] = $portal->getTheme()->getKey();
+            $portalData['theme']['excludedTemplates'] = $portal->getTheme()->getExcludedTemplates();
+
+            foreach ($portal->getEnvironments() as $environment) {
+                $environmentData = array();
+                $environmentData['type'] = $environment->getType();
+
+                foreach ($environment->getUrls() as $url) {
+                    $urlData = array();
+                    $urlData['url'] = $url->getUrl();
+                    $urlData['main'] = $url->isMain();
+
+                    $environmentData['urls'][] = $urlData;
+                }
+                $portalData['environments'][] = $environmentData;
+            }
+
             $portals[] = $portalData;
         }
 

@@ -64,7 +64,7 @@ class Language {
      * Returns true if this language is the fallback
      * @return boolean True if this language is the fallback, otherwise false
      */
-    public function getFallback()
+    public function isFallback()
     {
         return $this->fallback;
     }
@@ -82,7 +82,7 @@ class Language {
      * Returns true if this language is the main language
      * @return boolean True if this language is the main language, otherwise false
      */
-    public function getMain()
+    public function isMain()
     {
         return $this->main;
     }

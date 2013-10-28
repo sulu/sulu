@@ -34,11 +34,11 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
-        $this->assertEquals(true, $portal->getLanguages()[0]->getMain());
-        $this->assertEquals(false, $portal->getLanguages()[0]->getFallback());
+        $this->assertEquals(true, $portal->getLanguages()[0]->isMain());
+        $this->assertEquals(false, $portal->getLanguages()[0]->isFallback());
         $this->assertEquals('de', $portal->getLanguages()[1]->getCode());
-        $this->assertEquals(false, $portal->getLanguages()[1]->getMain());
-        $this->assertEquals(true, $portal->getLanguages()[1]->getFallback());
+        $this->assertEquals(false, $portal->getLanguages()[1]->isMain());
+        $this->assertEquals(true, $portal->getLanguages()[1]->isFallback());
 
         $this->assertEquals('sulu', $portal->getTheme()->getKey());
         $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
