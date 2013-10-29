@@ -79,10 +79,10 @@ class ResourceLocator extends ComplexContentType
         $data = $property->getValue();
 
         // create routepath
-        $routePath = ltrim($this->getBasePath(), '/') . '/' . $data; //TODO configure path
+        $routePath = ltrim($this->getBasePath(), '/') . $data; //TODO configure path
 
         // check if route already exists
-        if ($session->nodeExists($routePath)) {
+        if ($session->nodeExists('/' . $routePath)) {
             $node = $session->getNode($routePath);
             if ($node->hasProperty('content') && $node->getPropertyValue('content') == $node) {
                 return;
