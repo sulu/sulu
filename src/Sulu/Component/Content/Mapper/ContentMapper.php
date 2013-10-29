@@ -69,6 +69,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         }
 
         $session->save();
+
+        return $structure;
     }
 
     /**
