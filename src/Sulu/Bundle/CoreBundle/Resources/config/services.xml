@@ -11,13 +11,11 @@
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
-        <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader
-        </parameter>
+        <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
 
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
-        <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator
-        </parameter>
+        <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
 
         <parameter key="sulu.content.template.default_path">%kernel.root_dir%/../Resources/templates</parameter>
     </parameters>
@@ -40,14 +38,15 @@
         <!-- content mapper -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
             <call method="setContainer">
-               <argument type="service" id="service_container"/>
+                <argument type="service" id="service_container"/>
             </call>
         </service>
 
         <!-- structure manager -->
-        <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%" public="false"/>
+        <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%"
+                 public="false"/>
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
-            <argument type="service" id="sulu.content.structure_manager.loader" />
+            <argument type="service" id="sulu.content.structure_manager.loader"/>
             <argument type="collection">
                 <argument key="template_dir">%sulu.content.template.default_path%</argument>
                 <argument key="cache_dir">%kernel.cache_dir%</argument>
