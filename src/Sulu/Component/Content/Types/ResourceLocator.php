@@ -97,6 +97,6 @@ class ResourceLocator extends ComplexContentType
      */
     public function getTemplate()
     {
-        return 'SuluCoreBundle:content:types/resource_locator.html.twig';
+        return 'SuluContentBundle:Template:content-types/resourceLocator.html.twig';
     }
 }

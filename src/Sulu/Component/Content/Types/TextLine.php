@@ -28,6 +28,6 @@ class TextLine extends SimpleContentType
      */
     public function getTemplate()
     {
-        return 'SuluCoreBundle:content:types/text_line.html.twig';
+        return 'SuluContentBundle:Template:content-types/textLine.html.twig';
     }
 }
