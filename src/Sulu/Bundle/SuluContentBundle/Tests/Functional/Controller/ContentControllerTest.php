@@ -63,7 +63,10 @@ class ContentControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals($data, $response);
+        $this->assertEquals('Testtitle', $response->title);
+        $this->assertEquals('Test', $response->article);
+        $this->assertEquals('/de/test', $response->url);
+        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
