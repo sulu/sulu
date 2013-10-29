@@ -132,24 +132,11 @@ define([
             this.contact = null;
 
             if (!!this.options.id) {
-                this.loadContactData();
+                this.loadRoles();
             } else {
                 // TODO error message
                 this.sandbox.logger.log('error: form not accessible without contact id');
             }
-        },
-
-        loadContactData: function() {
-            this.contact = Contact.findOrCreate({id: this.options.id});
-            this.contact.fetch({
-                success: function() {
-                    this.loadRoles();
-                }.bind(this),
-                error: function() {
-                    // TODO error message
-                }
-            });
-
         },
 
         loadRoles: function() {
@@ -170,6 +157,7 @@ define([
             this.user.url = '/admin/api/security/users?contactId=' + this.options.id;
             this.user.fetch({
                 success: function() {
+                    this.contact = this.user.get('contact').toJSON();
                     this.startComponent();
                 }.bind(this),
                 error: function() {
@@ -181,7 +169,7 @@ define([
 
         startComponent: function() {
             var data = {};
-            data.contact = this.contact.toJSON();
+            data.contact = this.contact;
 
             if(!!this.user) {
                 data.user = this.user.toJSON();
