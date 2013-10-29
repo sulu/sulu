@@ -7,6 +7,7 @@ use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\Finder\Finder;
 
 class ContentControllerTest extends WebTestCase
 {
@@ -57,7 +58,7 @@ class ContentControllerTest extends WebTestCase
         );
 
         $client = $this->createClient();
-        $client->request('POST', '/admin/api/content/contents?template=overview', $data);
+        $client->request('POST', '/api/content/contents?template=overview', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -109,10 +110,10 @@ class ContentControllerTest extends WebTestCase
 
     public function testGet()
     {
+        $client = $this->createClient();
         $data = $this->beforeTestGet();
 
-        $client = $this->createClient();
-        $client->request('GET', '/admin/api/content/contents/test1');
+        $client->request('GET', '/api/content/contents/test1');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -122,10 +123,10 @@ class ContentControllerTest extends WebTestCase
 
     public function testGetAll()
     {
+        $client = $this->createClient();
         $data = $this->beforeTestGet();
 
-        $client = $this->createClient();
-        $client->request('GET', '/admin/api/content/contents');
+        $client->request('GET', '/api/content/contents');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
