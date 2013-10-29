@@ -32,7 +32,6 @@ class TextArea extends SimpleContentType
      */
     public function getTemplate()
     {
-        //return 'SuluContentBundle:Template:content-types/textArea.html.twig';
         return $this->template;
     }
 }

@@ -1,7 +1,6 @@
 parameters:
     sulu_core.list_rest_helper.class: Sulu\Component\Rest\Listing\ListRestHelper
     sulu.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
-    phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
     sulu.content.mapper.class: Sulu\Component\Content\Mapper\ContentMapper
     sulu.content.structure_manager.class: Sulu\Component\Content\StructureManagerInterface
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
@@ -15,9 +14,10 @@ services:
         scope: request
     sulu.phpcr.session:
         class: %sulu.phpcr.session.class%
-        arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
+        arguments: [%sulu.phpcr.factory_class%, %sulu.phpcr.url%, %sulu.phpcr.username%, %sulu.phpcr.password%]
     sulu.content.mapper:
         class: %sulu.content.mapper.class%
+        arguments: [%sulu.content.base_path.content%]
         calls:
             - [ setContainer,[ @service_container ] ]
     sulu.content.structure_manager:
@@ -26,9 +26,11 @@ services:
             - [ setContainer,[ @service_container ] ]
     sulu.content.type.text_line:
         class: %sulu.content.type.text_line.class%
+        arguments: [%sulu.content.type.text_line.template%]
     sulu.content.type.text_area:
         class: %sulu.content.type.text_area.class%
+        arguments: [%sulu.content.type.text_area.template%]
     sulu.content.type.resource_locator:
         class: %sulu.content.type.resource_locator.class%
-        calls:
-            - [ setContainer,[ @service_container ] ]
+        arguments: [@sulu.phpcr.session, %sulu.content.type.resource_locator.template%, %sulu.content.base_path.route%]
+

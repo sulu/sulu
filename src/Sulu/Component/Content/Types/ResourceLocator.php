@@ -38,10 +38,11 @@ class ResourceLocator extends ComplexContentType
         return $this->sessionFactory->getSession();
     }
 
-    function __construct(SessionFactoryInterface $sessionFactory, $template)
+    function __construct(SessionFactoryInterface $sessionFactory, $template, $basePath)
     {
         $this->sessionFactory = $sessionFactory;
         $this->template = $template;
+        $this->basePath = $basePath;
     }
 
     /**
@@ -127,7 +128,6 @@ class ResourceLocator extends ComplexContentType
      */
     public function getTemplate()
     {
-        //'SuluContentBundle:Template:content-types/resourceLocator.html.twig'
         return $this->template;
     }
 }

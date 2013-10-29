@@ -110,7 +110,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function containerCallback()
     {
-        $resourceLocator = new ResourceLocator($this->sessionService, 'not in use');
+        $resourceLocator = new ResourceLocator($this->sessionService, 'not in use', '/cmf/routes');
 
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
