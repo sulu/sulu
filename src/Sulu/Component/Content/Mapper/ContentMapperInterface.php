@@ -28,8 +28,7 @@ interface ContentMapperInterface
      * Reads the data from the given path
      * @param $path string path to the content
      * @param $language string read data for given language
-     * @param $templateKey string name of template
      * @return StructureInterface
      */
-    public function read($path, $language, $templateKey = '');
+    public function read($path, $language);
 }

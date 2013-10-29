@@ -38,6 +38,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             ltrim($this->getBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
         $node->addMixin('mix:referenceable');
+        $node->setProperty('template', $templateKey);
 
         $postSave = array();
 
@@ -74,17 +75,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * Reads the data from the given path
      * @param $path string path to the content
      * @param $language string read data for given language
-     * @param $templateKey string name of template
      * @return StructureInterface
      */
-    public function read($path, $language, $templateKey = '')
+    public function read($path, $language)
     {
-        // TODO localice
-        $structure = $this->getStructure($templateKey); //TODO Set correct file
         $session = $this->getSession();
         $contentPath = $this->getBasePath() . $path;
-
         $contentNode = $session->getNode($contentPath);
+
+        $templateKey = $contentNode->getPropertyValue('template');
+
+        // TODO localice
+        $structure = $this->getStructure($templateKey); //TODO Set correct file
 
         // go through every property in the template
         /** @var PropertyInterface $property */
