@@ -1,5 +1,5 @@
 content_form:
-    pattern: /template/form/{key}
+    pattern: /template/form/{key}.html
     defaults: { _controller: SuluContentBundle:Template:content }
 
 sulu_content.content_navigation:
