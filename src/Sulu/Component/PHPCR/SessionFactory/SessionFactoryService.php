@@ -51,7 +51,7 @@ class SessionFactoryService implements SessionFactoryInterface
         $this->parameters = array('jackalope.jackrabbit_uri' => $options['url']);
         $this->factory = $factory;
         $this->repository = $this->factory->getRepository($this->parameters);
-        $this->credentials = new SimpleCredentials($options['user'], $options['password']);
+        $this->credentials = new SimpleCredentials($options['username'], $options['password']);
 
         $this->session = $this->repository->login($this->credentials, $options['workspace']);
     }
