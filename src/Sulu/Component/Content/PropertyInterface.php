@@ -15,7 +15,6 @@ namespace Sulu\Component\Content;
  */
 interface PropertyInterface
 {
-
     /**
      * returns name of template
      * @return string

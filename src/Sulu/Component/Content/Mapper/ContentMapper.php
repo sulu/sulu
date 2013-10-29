@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
-
     private $basePath = '/cmf/contents';
 
     /**
@@ -42,20 +41,19 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $postSave = array();
 
         // go through every property in the template
-        /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
+            /** @var PropertyInterface $property */
             if (isset($data[$property->getName()])) {
                 $type = $this->getContentType($property->getContentTypeName());
                 $value = $data[$property->getName()];
+                $property->setValue($value);
                 if ($type->getType() == ContentTypeInterface::POST_SAVE) {
                     $postSave[] = array(
                         'type' => $type,
-                        'property' => $property,
-                        'value' => $value
+                        'property' => $property
                     );
                 } else {
-                    $property->setValue($value);
-                    $type->set($node, $property, $value);
+                    $type->set($node, $property);
                 }
             }
         }
@@ -63,7 +61,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session->save();
 
         foreach ($postSave as $post) {
-            $post['property']->setValue($post['value']);
             $post['type']->set($node, $post['property']);
         }
 

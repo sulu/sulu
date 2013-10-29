@@ -18,7 +18,6 @@ use Sulu\Component\Content\PropertyInterface;
 
 class ResourceLocator extends ComplexContentType
 {
-
     private $basePath = '/cmf/routes';
 
     protected function getBasePath()

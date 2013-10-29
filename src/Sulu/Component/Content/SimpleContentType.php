@@ -14,7 +14,6 @@ use PHPCR\NodeInterface;
 
 abstract class SimpleContentType implements ContentTypeInterface
 {
-
     private $name;
 
     function __construct($name)

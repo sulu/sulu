@@ -12,7 +12,6 @@ namespace Sulu\Component\Content;
 
 class Property implements PropertyInterface
 {
-
     private $name;
     private $mandatory;
     private $multilingual;
