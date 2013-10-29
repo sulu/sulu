@@ -3,7 +3,7 @@ parameters:
     sulu_core.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
     phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
     sulu.content.mapper.class: Sulu\Component\Content\Mapper\ContentMapper
-    sulu.content.structure.class: Sulu\Component\Content\StructureFactoryInterface
+    sulu.content.structure_factory.class: Sulu\Component\Content\StructureFactoryInterface
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
     sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
     sulu.content.type.resource_locator.class: Sulu\Component\Content\Types\ResourceLocator
@@ -18,11 +18,17 @@ services:
         arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
     sulu.content.mapper:
         class: %sulu.content.mapper.class%
-    sulu.content.structure:
-        class: %sulu.content.structure.class%
+        calls:
+            - [ setContainer,[ @service_container ] ]
+    sulu.content.structure_factory:
+        class: %sulu.content.structure_factory.class%
+        calls:
+            - [ setContainer,[ @service_container ] ]
     sulu.content.type.text_line:
         class: %sulu.content.type.text_line.class%
     sulu.content.type.text_area:
         class: %sulu.content.type.text_area.class%
     sulu.content.type.resource_locator:
         class: %sulu.content.type.resource_locator.class%
+        calls:
+            - [ setContainer,[ @service_container ] ]
