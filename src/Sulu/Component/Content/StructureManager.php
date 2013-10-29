@@ -17,11 +17,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
+    /**
+     * @var \Symfony\Component\Config\Loader\LoaderInterface XML Loader to load templates
+     */
     private $loader;
+    /**
+     * @var string path to templates
+     */
+    private $defaultPath;
 
-    function __construct(LoaderInterface $loader)
+    /**
+     * @param LoaderInterface $loader XMLLoader to load xml templates
+     * @param string $defaultPath array with paths to search for templates
+     */
+    function __construct(LoaderInterface $loader, $defaultPath)
     {
         $this->loader = $loader;
+        $this->defaultPath = $defaultPath;
     }
 
     /**
