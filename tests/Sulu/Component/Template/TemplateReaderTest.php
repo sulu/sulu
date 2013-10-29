@@ -31,7 +31,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReadTemplate()
     {
         $template = array(
-            'key' => 'overview',
+            'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
@@ -39,27 +39,27 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
-                    'type' => 'textLine',
+                    'type' => 'text_line',
                     'mandatory' => true
                 ),
                 'url' => array(
                     'name' => 'url',
-                    'type' => 'resourceLocator',
+                    'type' => 'resource_locator',
                     'mandatory' => true
                 ),
                 'article' => array(
                     'name' => 'article',
-                    'type' => 'textArea',
+                    'type' => 'text_area',
                     'mandatory' => false
                 ),
                 'pages' => array(
                     'name' => 'pages',
-                    'type' => 'smartContentSelection',
+                    'type' => 'smart_content_selection',
                     'mandatory' => false
                 ),
                 'images' => array(
                     'name' => 'images',
-                    'type' => 'imageSelection',
+                    'type' => 'image_selection',
                     'minOccurs'=> 0,
                     'maxOccurs'=> 2,
                     'params' => array(
@@ -88,7 +88,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReadTypesEmptyProperties()
     {
         $template = array(
-            'key' => 'overview',
+            'key' => 'template',
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
