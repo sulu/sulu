@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\Content;
 
-interface StructureFactoryInterface
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+
+interface StructureFactoryInterface extends ContainerAwareInterface
 {
 
     /**
