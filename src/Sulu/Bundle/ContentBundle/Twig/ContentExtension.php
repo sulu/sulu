@@ -12,97 +12,77 @@ namespace Sulu\Bundle\ContentBundle\Twig;
 
 
 use Sulu\Bundle\ContentBundle\Mapper\ContentMapper;
+use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\PropertyInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Extension for content form generation
- *
  * @package Sulu\Bundle\ContentBundle\Twig
  */
-class ContentExtension extends \Twig_Extension
+class ContentExtension extends \Twig_Extension implements ContainerAwareInterface
 {
     /**
-     * Returns an array of possible filters in this extension
-     *
-     * @return array
+     * @var ContainerInterface
      */
-    public function getFilters()
-    {
-        return array(
-            new \Twig_SimpleFilter('propertyDefaults', array($this, 'propertyDefaultsFilter')),
-            new \Twig_SimpleFilter('isMultiple', array($this, 'isMultipleFilter'))
-        );
-    }
+    private $container;
 
     /**
      * Returns an array of possible function in this extension
-     *
      * @return array
      */
     public function getFunctions()
     {
         return array(
+            new \Twig_SimpleFunction('getType', array($this, 'getTypeFunction')),
             new \Twig_SimpleFunction('needsAddButton', array($this, 'needsAddButtonFunction'))
         );
     }
 
     /**
-     * Return true if property is an array and needs an add button
-     *
-     * @param $property array
-     * @return bool
+     * Returns an array of possible tests in this extension
+     * @return array
      */
-    public function needsAddButtonFunction($property)
+    public function getTests()
     {
-        return $property['maxOccurs'] > $property['minOccurs'];
+        return array(
+            new \Twig_SimpleTest('multiple', array($this, 'isMultipleTest'))
+        );
     }
 
     /**
-     * Returns property merged with default values
-     *
-     * @param $property array
-     * @return array
+     * Returns content type with given name
+     * @param $name string
+     * @return ContentTypeInterface
      */
-    public function propertyDefaultsFilter($property)
+    public function getTypeFunction($name)
     {
-        $property['type'] = $this->getType($property['type']);
-        $defaults = array(
-            'id' => $property['name'],
-            'mandatory' => false,
-            'minOccurs' => 1,
-            'maxOccurs' => (isset($property['minOccurs']) ? $property['minOccurs'] : 1),
-            'params' => $this->getParams($property['type'], $property)
-        );
+        return $this->container->get('sulu.content.type.' . $name);
+    }
 
-        return array_merge($defaults, $property);
+    /**
+     * Return true if property is an array and needs an add button
+     * @param $property PropertyInterface
+     * @return bool
+     */
+    public function needsAddButtonFunction(PropertyInterface $property)
+    {
+        return $property->getMaxOccurs() > $property->getMinOccurs();
     }
 
     /**
      * Return if property is an array
-     *
-     * @param $property array
+     * @param $property PropertyInterface
      * @return bool
      */
-    public function isMultipleFilter($property)
+    public function isMultipleTest( $property)
     {
-        return $property['minOccurs'] > 1;
-    }
-
-    /**
-     * Returns type default params merged with property params
-     *
-     * @param $type array
-     * @param $property array
-     * @return array
-     */
-    private function getParams($type, $property)
-    {
-        // TODO merge with property params
-        return (isset($type['params']) ? $type['param'] : array());
+        return $property->getMinOccurs() > 1;
     }
 
     /**
      * Returns the name of the extension.
-     *
      * @return string The extension name
      */
     public function getName()
@@ -111,15 +91,12 @@ class ContentExtension extends \Twig_Extension
     }
 
     /**
-     * Returns the type array for key
-     *
-     * @param $key string
-     * @return mixed
+     * Sets the Container.
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     * @api
      */
-    private function getType($key)
+    public function setContainer(ContainerInterface $container = null)
     {
-        // TODO get Types
-        // perhaps? $this->get('content.parser.types')->get()[$key];
-        return ContentMapper::$types[$key];
+        $this->container = $container;
     }
 }
