@@ -11,11 +11,14 @@
 namespace Sulu\Component\Content\Template;
 
 use Exception;
+use Gedmo\Exception\FeatureNotImplementedException;
 use Sulu\Component\Content\Template\Exceptions\InvalidXmlException;
 use Sulu\Component\Content\Template\Exceptions\InvalidArgumentException;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 
-class TemplateReader
+class TemplateReader implements LoaderInterface
 {
     private $nameKey = "name";
     private $propertiesKey = "properties";
@@ -34,7 +37,7 @@ class TemplateReader
      * @throws \Sulu\Component\Content\Template\Exceptions\InvalidArgumentException
      * @return array with found definitions of types
      */
-    public function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
+    private function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
     {
 
         $template = array();
@@ -166,4 +169,53 @@ class TemplateReader
         return $keyValue;
 
     }
+
+    /**
+     * Loads a resource.
+     *
+     * @param mixed $resource The resource
+     * @param string $type     The resource type
+     * @return array
+     */
+    public function load($resource, $type = null)
+    {
+       return $this->readTemplate($resource);
+    }
+
+    /**
+     * Returns true if this class supports the given resource.
+     *
+     * @param mixed $resource A resource
+     * @param string $type     The resource type
+     *
+     * @throws \Gedmo\Exception\FeatureNotImplementedException
+     * @return Boolean true if this class supports the given resource, false otherwise
+     */
+    public function supports($resource, $type = null)
+    {
+        throw new FeatureNotImplementedException();
+    }
+
+    /**
+     * Gets the loader resolver.
+     *
+     * @throws \Gedmo\Exception\FeatureNotImplementedException
+     * @return LoaderResolverInterface A LoaderResolverInterface instance
+     */
+    public function getResolver()
+    {
+        throw new FeatureNotImplementedException();
+    }
+
+    /**
+     * Sets the loader resolver.
+     *
+     * @param LoaderResolverInterface $resolver A LoaderResolverInterface instance
+     * @throws \Gedmo\Exception\FeatureNotImplementedException
+     */
+    public function setResolver(LoaderResolverInterface $resolver)
+    {
+        throw new FeatureNotImplementedException();
+    }
+
 }
