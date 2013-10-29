@@ -2,9 +2,6 @@ parameters:
     sulu_core.list_rest_helper.class: Sulu\Component\Rest\Listing\ListRestHelper
     sulu_core.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
     phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
-    phpcr_url: http://localhost:8080/server
-    phpcr_username: admin
-    phpcr_password: admin
     sulu.content.structure.class: Sulu\Component\Content\StructureFactoryInterface
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
     sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
