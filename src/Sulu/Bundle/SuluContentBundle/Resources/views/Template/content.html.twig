@@ -2,15 +2,15 @@
     {% for property in template.properties %}
 
         {# set defaults for property#}
-        {% set property = property|propertyDefaults %}
+        {% set type = getType(property.contentTypeName) %}
 
         {# include template if defined #}
-        {% if property.type.template is defined %}
+        {% if type.template is defined %}
 
-            {% if property|isMultiple %}
-                {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property} only %}
+            {% if property is multiple %}
+                {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'type': type} only %}
             {% else %}
-                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property} only %}
+                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'id': property.name} only %}
             {% endif %}
 
         {% endif %}

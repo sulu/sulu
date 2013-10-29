@@ -1,5 +1,5 @@
 <div class="grid-row">
-    <label for="{{ property.id }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}">{{ property.name|capitalize }}</label>
+    <label for="{{ id }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}">{{ property.name|capitalize }}</label>
 
-    {% include property.type.template %}
+    {% include type.template %}
 </div>
