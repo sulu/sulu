@@ -20,6 +20,6 @@ abstract class ComplexContentType extends ContainerAware implements ContentTypeI
      */
     protected function getSession()
     {
-        return  $this->container->get('sulu_core.phpcr.session')->getSession();
+        return  $this->container->get('sulu.phpcr.session')->getSession();
     }
 }
