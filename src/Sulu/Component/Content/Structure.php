@@ -14,7 +14,6 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 abstract class Structure implements StructureInterface, \JsonSerializable
 {
-
     private $key;
     private $view;
     private $controller;
@@ -113,11 +112,7 @@ abstract class Structure implements StructureInterface, \JsonSerializable
      */
     public function __get($property)
     {
-        if (isset($this->properties[$property])) {
-            return $this->getProperty($property)->getValue();
-        } else {
-            throw new NoSuchPropertyException();
-        }
+        return $this->getProperty($property)->getValue();
     }
 
     /**

@@ -17,9 +17,13 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TextArea extends SimpleContentType
 {
-    function __construct()
+    private $template;
+
+    function __construct($template)
     {
         parent::__construct('TextArea');
+
+        $this->template = $template;
     }
 
     /**
@@ -28,6 +32,6 @@ class TextArea extends SimpleContentType
      */
     public function getTemplate()
     {
-        return 'SuluContentBundle:Template:content-types/textArea.html.twig';
+        return $this->template;
     }
 }

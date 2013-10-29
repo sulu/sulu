@@ -17,7 +17,6 @@ use PHPCR\NodeInterface;
  */
 interface ContentTypeInterface
 {
-
     const PRE_SAVE = 1;
     const POST_SAVE = 2;
 

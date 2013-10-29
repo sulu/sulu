@@ -14,7 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 interface StructureManagerInterface extends ContainerAwareInterface
 {
-
     /**
      * returns a structure for given key
      * @param $key string

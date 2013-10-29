@@ -30,7 +30,23 @@ class SuluCoreExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        // PHPCR
+        $container->setParameter('sulu.phpcr.factory_class', $config['phpcr']['factory_class']);
+        $container->setParameter('sulu.phpcr.url', $config['phpcr']['url']);
+        $container->setParameter('sulu.phpcr.username', $config['phpcr']['username']);
+        $container->setParameter('sulu.phpcr.password', $config['phpcr']['password']);
+        $container->setParameter('sulu.phpcr.workspace', $config['phpcr']['workspace']);
+
+        // BasePATH
+        $container->setParameter('sulu.content.base_path.content', $config['base_path']['content']);
+        $container->setParameter('sulu.content.base_path.route', $config['base_path']['route']);
+
+        // Content Types
+        $container->setParameter('sulu.content.type.text_line.template', $config['content_types']['text_line']['template']);
+        $container->setParameter('sulu.content.type.text_area.template', $config['content_types']['text_area']['template']);
+        $container->setParameter('sulu.content.type.resource_locator.template', $config['content_types']['resource_locator']['template']);
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.yml');
     }
 }

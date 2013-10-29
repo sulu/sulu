@@ -15,8 +15,8 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 /**
  * Structure for template
  */
-interface StructureInterface {
-
+interface StructureInterface
+{
     /**
      * key of template definition
      * @return string

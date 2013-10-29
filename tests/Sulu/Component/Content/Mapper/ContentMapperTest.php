@@ -40,7 +40,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = $this->getContainerMock();
 
-        $this->mapper = new ContentMapper();
+        $this->mapper = new ContentMapper('/cmf/contents');
         $this->mapper->setContainer($this->container);
 
         $this->prepareSession();
@@ -110,14 +110,13 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function containerCallback()
     {
-        $resourceLocator = new ResourceLocator();
-        $resourceLocator->setContainer($this->container);
+        $resourceLocator = new ResourceLocator($this->sessionService, 'not in use', '/cmf/routes');
 
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
             'sulu.content.structure_manager' => $this->structureFactoryMock,
-            'sulu.content.type.text_line' => new TextLine(),
-            'sulu.content.type.text_area' => new TextArea(),
+            'sulu.content.type.text_line' => new TextLine('not in use'),
+            'sulu.content.type.text_area' => new TextArea('not in use'),
             'sulu.content.type.resource_locator' => $resourceLocator
         );
         $args = func_get_args();
