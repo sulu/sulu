@@ -3,7 +3,7 @@ parameters:
     sulu.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
     phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
     sulu.content.mapper.class: Sulu\Component\Content\Mapper\ContentMapper
-    sulu.content.structure_manager.class: Sulu\Component\Content\StructureFactoryInterface
+    sulu.content.structure_manager.class: Sulu\Component\Content\StructureManager
     sulu.content.structure_manager.loader.class: Sulu\Component\Content\Template\XMLLoader
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
     sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
