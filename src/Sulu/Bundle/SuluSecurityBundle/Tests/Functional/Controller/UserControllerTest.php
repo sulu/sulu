@@ -127,10 +127,6 @@ class UserControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
 
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
@@ -138,15 +134,20 @@ class UserControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account')
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
+
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission')
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -620,7 +621,7 @@ class UserControllerTest extends DatabaseTestCase
 
     }
 
-    public function testPostWitEmptyPassword()
+    public function testPostWithEmptyPassword()
     {
         $client = static::createClient();
 
@@ -657,7 +658,7 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('The "SuluSecurityBundle:User"-entity requires a valid "password"-argument', $response->message);
     }
 
-    public function testPutWitEmptyPassword()
+    public function testPutWithEmptyPassword()
     {
         $client = static::createClient();
 
