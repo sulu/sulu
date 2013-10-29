@@ -1,7 +1,6 @@
 <?php
 
-use Sulu\Component\Content\Structure
-use Sulu\Component\Content\Property
+use Sulu\Component\Content\Property;
 
 /**
  * {{ cache_class }}
@@ -13,26 +12,26 @@ class {{ cache_class }} extends {{ base_class }}
 {
     public function __construct()
     {
-        parent::__construct('{ content.key }}','{ content.view }}','{ content.controller }}','{ content.cacheLifetime }}');
+        parent::__construct('{{ content.key }}','{{ content.view }}','{{ content.controller }}','{{ content.cacheLifetime }}');
 
         {% for property in content.properties %}
         $this->add(new Property(
             '{{ property.name}}',
             '{{ property.type}}',
-            {{ property.mandatory  ? property.mandatory : false }},
-            {{ property.multilingual  ? property.multilingual : false }},
-            {{ property.maxOccurs  ? property.maxOccurs : 1 }},
-            {{ property.maxOccurs  ? property.maxOccurs : 1 }},
+            {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
+            {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
+            {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
+            {{ property.minOccurs is defined ? property.minOccurs : 1 }},
 
 
             {% if property.params %}
-                '{{ array( }}'
+                {{ 'array(' }}
                 {% for key,value in property.params %}
-                    {{ key '=>' value ',' }}
+                    '{{ key }}'=>'{{ value }}',
                 {% endfor %}
-                '{{ ) }}'
+                {{ ')' }}
             {% else %}
-                {{ array() }}
+                array()
             {% endif %}
 
         ));

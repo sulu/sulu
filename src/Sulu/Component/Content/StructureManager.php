@@ -45,7 +45,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key)
     {
-        $class = $this->options['cache_dir'] . $key;
+        $class = $this->options['cache_class_prefix'] . $key;
         $cache = new ConfigCache(
             $this->options['cache_dir'] . '/' . $class . '.php',
             $this->options['debug']
@@ -53,7 +53,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
         if (!$cache->isFresh()) {
 
-            $path = $this->options['template_dir'] . $key . ".xml";
+            $path = $this->options['template_dir'] . '/' . $key . ".xml";
             $templateReader = new TemplateReader();
             $result = $templateReader->load($path);
 
@@ -87,7 +87,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             'cache_dir' => null,
             'debug' => false,
             'cache_class_prefix' => 'Template_Structure_',
-            'base_class' => 'Structure.php'
+            'base_class' => 'Sulu\Component\Content\Structure'
         );
 
         // overwrite the default values with the given options

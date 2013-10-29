@@ -31,8 +31,23 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $cacheDir = __DIR__ . '/../../../../Resources/cache';
+        $cacheFile = $cacheDir . '/Template_Structure_template.php';
+
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir);
+        } else {
+            if (is_file($cacheFile)) {
+                unlink($cacheFile);
+            }
+        }
+
         $this->loader = new TemplateReader();
-        $this->structureManager = new StructureManager($this->loader, __DIR__ . '/../../../../Resources/Datafixtures/Template');
+        $this->structureManager = new StructureManager($this->loader,
+            array(
+                'template_dir' => __DIR__ . '/../../../../Resources/Datafixtures/Template',
+                'cache_dir' => $cacheDir
+            ));
     }
 
     public function testGetStructure()
