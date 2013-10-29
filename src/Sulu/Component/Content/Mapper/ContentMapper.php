@@ -20,6 +20,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
     private $basePath = '/cmf/contents';
 
+    public function __construct($basePath)
+    {
+        $this->basePath = $basePath;
+    }
+
     /**
      * Saves the given data in the content storage
      * @param $data array The data to be saved
