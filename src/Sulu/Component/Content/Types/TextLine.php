@@ -17,9 +17,13 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TextLine extends SimpleContentType
 {
-    function __construct()
+    private $template;
+
+    function __construct($template)
     {
         parent::__construct('TextLine');
+
+        $this->template = $template;
     }
 
     /**
@@ -28,6 +32,7 @@ class TextLine extends SimpleContentType
      */
     public function getTemplate()
     {
-        return 'SuluContentBundle:Template:content-types/textLine.html.twig';
+        //return 'SuluContentBundle:Template:content-types/textLine.html.twig';
+        return $this->template;
     }
 }

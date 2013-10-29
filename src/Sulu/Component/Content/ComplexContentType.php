@@ -13,13 +13,6 @@ namespace Sulu\Component\Content;
 use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
-abstract class ComplexContentType extends ContainerAware implements ContentTypeInterface
+abstract class ComplexContentType implements ContentTypeInterface
 {
-    /**
-     * @return SessionInterface
-     */
-    protected function getSession()
-    {
-        return  $this->container->get('sulu.phpcr.session')->getSession();
-    }
 }

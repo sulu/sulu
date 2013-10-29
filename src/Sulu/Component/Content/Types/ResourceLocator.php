@@ -15,14 +15,32 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
 class ResourceLocator extends ComplexContentType
 {
     private $basePath = '/cmf/routes';
+    /**
+     * @var SessionFactoryInterface
+     */
+    private $sessionFactory;
+
+    private $template;
 
     protected function getBasePath()
     {
         return $this->basePath;
+    }
+
+    protected function getSession()
+    {
+        return $this->sessionFactory->getSession();
+    }
+
+    function __construct(SessionFactoryInterface $sessionFactory, $template)
+    {
+        $this->sessionFactory = $sessionFactory;
+        $this->template = $template;
     }
 
     /**
@@ -96,6 +114,7 @@ class ResourceLocator extends ComplexContentType
      */
     public function getTemplate()
     {
-        return 'SuluContentBundle:Template:content-types/resourceLocator.html.twig';
+        //'SuluContentBundle:Template:content-types/resourceLocator.html.twig'
+        return $this->template;
     }
 }

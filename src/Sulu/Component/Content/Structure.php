@@ -112,7 +112,7 @@ abstract class Structure implements StructureInterface
      */
     public function __get($property)
     {
-        return $this->getProperty($property);
+        return $this->getProperty($property)->getValue();
     }
 
     /**
