@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Exceptions\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
@@ -69,6 +70,7 @@ class ResourceLocator extends ComplexContentType
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @throws \Sulu\Component\Content\Exceptions\ResourceLocatorAlreadyExistsException
      * @return mixed
      */
     public function set(NodeInterface $node, PropertyInterface $property)
@@ -78,6 +80,17 @@ class ResourceLocator extends ComplexContentType
 
         // create routepath
         $routePath = ltrim($this->getBasePath(), '/') . '/' . $data; //TODO configure path
+
+        // check if route already exists
+        if ($session->nodeExists($routePath)) {
+            $node = $session->getNode($routePath);
+            if ($node->hasProperty('content') && $node->getPropertyValue('content') == $node) {
+                return;
+            } else {
+                throw new ResourceLocatorAlreadyExistsException();
+            }
+        }
+
         $routePath = explode('/', $routePath);
 
         // get root node
