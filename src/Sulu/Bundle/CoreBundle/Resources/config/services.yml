@@ -8,6 +8,7 @@ parameters:
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
     sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
     sulu.content.type.resource_locator.class: Sulu\Component\Content\Types\ResourceLocator
+    sulu.content.template.default_path: %kernel.root_dir%/../Resources/templates
 
 services:
     sulu_core.list_rest_helper:
@@ -19,7 +20,7 @@ services:
         arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
     sulu.content.mapper:
         class: %sulu.content.mapper.class%
-        arguments: [%sulu.content.structure_manager.loader.class%]
+        arguments: [%sulu.content.structure_manager.loader.class%, %sulu.content.template.default_path%]
         calls:
             - [ setContainer,[ @service_container ] ]
     sulu.content.structure_manager:

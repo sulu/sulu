@@ -27,7 +27,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     public $structureFactoryMock;
     public $container;
     /**
-     * @var PhpcrContentMapper
+     * @var ContentMapper
      */
     protected $mapper;
 
