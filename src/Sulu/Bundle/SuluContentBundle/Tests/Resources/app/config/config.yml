@@ -32,3 +32,8 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
+
+parameters:
+    phpcr_url: http://localhost:8080/server
+    phpcr_username: admin
+    phpcr_password: admin

@@ -17,27 +17,17 @@ class TemplateController extends Controller
 {
     public function contentAction($key)
     {
-        $template = $this->getTemplateDefinition($key);
-        $types = $this->getTypeDefinitions();
+        $template = $this->getTemplateStructure($key);
 
         return $this->render(
             'SuluContentBundle:Template:content.html.twig',
-            array('template' => $template, 'types' => $types)
+            array('template' => $template)
         );
     }
 
-    private function getTypeDefinitions()
+    private function getTemplateStructure($key)
     {
-        // TODO get Types
-        // perhaps? $this->get('content.parser.types')->get();
-        return ContentMapper::$types;
-    }
-
-    private function getTemplateDefinition($key)
-    {
-        // TODO get Template
-        // perhaps? $this->get('content.parser.template')->get($key);
-        return ContentMapper::$template;
+        return $this->container->get('sulu.content.structure_factory')->getStructure($key);
     }
 
 }
