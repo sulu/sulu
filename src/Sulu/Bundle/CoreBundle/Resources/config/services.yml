@@ -2,6 +2,7 @@ parameters:
     sulu_core.list_rest_helper.class: Sulu\Component\Rest\Listing\ListRestHelper
     sulu_core.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
     phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
+    sulu.content.mapper.class: Sulu\Component\Content\Mapper\ContentMapper
     sulu.content.structure.class: Sulu\Component\Content\StructureFactoryInterface
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
     sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
@@ -15,6 +16,8 @@ services:
     sulu.phpcr.session:
         class: %sulu_core.phpcr.session.class%
         arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
+    sulu.content.mapper:
+        class: %sulu.content.mapper.class%
     sulu.content.structure:
         class: %sulu.content.structure.class%
     sulu.content.type.text_line:
