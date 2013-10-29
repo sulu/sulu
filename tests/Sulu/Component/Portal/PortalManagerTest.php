@@ -43,20 +43,16 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../Resources/DataFixtures',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/valid'
+                'cache_dir' => __DIR__ . '/../../../Resources/DataFixtures/Portal',
+                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Portal/valid'
             )
         );
     }
 
     public function tearDown()
     {
-        if (file_exists(__DIR__ . '/../../../Resources/DataFixtures/PortalCollectionCache.php')) {
-            unlink(__DIR__ . '/../../../Resources/DataFixtures/PortalCollectionCache.php');
-        }
-
-        if (file_exists(__DIR__ . '/../../../Resources/DataFixtures/PortalCollectionCache.php')) {
-            unlink(__DIR__ . '/../../../Resources/DataFixtures/PortalCollectionCache.php');
+        if (file_exists(__DIR__ . '/../../../Resources/DataFixtures/Portal/PortalCollectionCache.php')) {
+            unlink(__DIR__ . '/../../../Resources/DataFixtures/Portal/PortalCollectionCache.php');
         }
     }
 
@@ -250,8 +246,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../Resources/DataFixtures',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/both'
+                'cache_dir' => __DIR__ . '/../../../Resources/DataFixtures/Portal',
+                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Portal/both'
             )
         );
 
