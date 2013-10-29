@@ -72,12 +72,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->readTemplate("/home/mike/Workspaces/sulu/vendor/sulu/sulu/tests/Resources/Datafixtures/Template/template.xml");
+        $result = $templateReader->readTemplate(__DIR__."/../../../Resources/Datafixtures/Template/template.xml");
         $this->assertEquals($template, $result);
     }
 
     /**
-     * @expectedException Sulu\Component\Content\Template\Exceptions\InvalidArgumentException
+     * @expectedException \Sulu\Component\Content\Template\Exceptions\InvalidArgumentException
      */
     public function testReadTypesInvalidPath()
     {
@@ -97,17 +97,17 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->readTemplate("/home/mike/Workspaces/sulu/vendor/sulu/sulu/tests/Resources/Datafixtures/Template/template_missing_properties.xml");
+        $result = $templateReader->readTemplate(__DIR__."/../../../Resources/Datafixtures/Template/template_missing_properties.xml");
         $this->assertEquals($template, $result);
     }
 
     /**
-     * @expectedException Sulu\Component\Content\Template\Exceptions\InvalidXmlException
+     * @expectedException \Sulu\Component\Content\Template\Exceptions\InvalidXmlException
      */
     public function testReadTypesMissingMandatory()
     {
         $templateReader = new TemplateReader();
-        $templateReader->readTemplate("/home/mike/Workspaces/sulu/vendor/sulu/sulu/tests/Resources/Datafixtures/Template/template_missing_mandatory.xml");
+        $templateReader->readTemplate(__DIR__."/../../../Resources/Datafixtures/Template/template_missing_mandatory.xml");
     }
 
 
