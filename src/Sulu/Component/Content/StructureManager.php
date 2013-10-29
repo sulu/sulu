@@ -11,9 +11,14 @@
 namespace Sulu\Component\Content;
 
 
+use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
+use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Resource\FileResource;
 
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
@@ -21,19 +26,16 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @var \Symfony\Component\Config\Loader\LoaderInterface XML Loader to load templates
      */
     private $loader;
-    /**
-     * @var string path to templates
-     */
-    private $defaultPath;
 
     /**
      * @param LoaderInterface $loader XMLLoader to load xml templates
-     * @param string $defaultPath array with paths to search for templates
+     * @param array $options
+     * @internal param string $defaultPath array with paths to search for templates
      */
-    function __construct(LoaderInterface $loader, $defaultPath)
+    function __construct(LoaderInterface $loader, $options = array())
     {
         $this->loader = $loader;
-        $this->defaultPath = $defaultPath;
+        $this->setOptions($options);
     }
 
     /**
@@ -43,7 +45,52 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key)
     {
-        $result = $this->loader->load('');
-        // TODO: Implement getStructure() method.
+        $class = $this->options['cache_dir'] . $key;
+        $cache = new ConfigCache(
+            $this->options['cache_dir'] . '/' . $class . '.php',
+            $this->options['debug']
+        );
+
+        if (!$cache->isFresh()) {
+
+            $path = $this->options['template_dir'] . $key . ".xml";
+            $templateReader = new TemplateReader();
+            $result = $templateReader->load($path);
+
+            $resources[] = new FileResource($path);
+
+            $dumper = new PHPTemplateDumper($result);
+            $cache->write(
+                $dumper->dump(
+                    array(
+                        'cache_class' => $class,
+                        'base_class' => $this->options['base_class']
+                    )
+                ),
+
+                $resources
+            );
+        }
+
+        require_once($cache);
+        return new $class();
+    }
+
+    /**
+     * Sets the options for the manager
+     * @param $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = array(
+            'template_dir' => null,
+            'cache_dir' => null,
+            'debug' => false,
+            'cache_class_prefix' => 'Template_Structure_',
+            'base_class' => 'Structure.php'
+        );
+
+        // overwrite the default values with the given options
+        $this->options = array_merge($this->options, $options);
     }
 }

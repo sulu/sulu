@@ -193,6 +193,7 @@ class TemplateReader implements LoaderInterface
      */
     public function supports($resource, $type = null)
     {
+        // TODO
         throw new FeatureNotImplementedException();
     }
 
