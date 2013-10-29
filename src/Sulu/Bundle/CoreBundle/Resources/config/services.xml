@@ -28,11 +28,16 @@
         </service>
 
         <!-- phpcr session -->
+        <service id="sulu.session.factory" class="%phpcr_factoryClass%"
+                 public="false"/>
         <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
-            <argument type="string" id="%phpcr_factoryClass%"/>
-            <argument type="string" id="%phpcr_url%"/>
-            <argument type="string" id="%phpcr_username%"/>
-            <argument type="string" id="%phpcr_password%"/>
+            <argument type="service" id="sulu.session.factory"/>
+            <argument type="collection">
+                <argument key="url">%phpcr_url%</argument>
+                <argument key="username">%phpcr_username%</argument>
+                <argument key="password">%phpcr_password%</argument>
+                <argument key="workspace">%phpcr_workspace%</argument>
+            </argument>
         </service>
 
         <!-- content mapper -->
