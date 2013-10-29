@@ -4,6 +4,7 @@ parameters:
     phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
     sulu.content.mapper.class: Sulu\Component\Content\Mapper\ContentMapper
     sulu.content.structure_manager.class: Sulu\Component\Content\StructureFactoryInterface
+    sulu.content.structure_manager.loader.class: Sulu\Component\Content\Template\XMLLoader
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
     sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
     sulu.content.type.resource_locator.class: Sulu\Component\Content\Types\ResourceLocator
@@ -18,6 +19,7 @@ services:
         arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
     sulu.content.mapper:
         class: %sulu.content.mapper.class%
+        arguments: [%sulu.content.structure_manager.loader.class%]
         calls:
             - [ setContainer,[ @service_container ] ]
     sulu.content.structure_manager:
