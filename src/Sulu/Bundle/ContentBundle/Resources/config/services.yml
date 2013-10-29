@@ -15,5 +15,7 @@ services:
         class: %sulu_content.admin.content_navigation.class%
     sulu_content.twig_extension:
         class: %sulu_content.twig_extension.class%
+        calls:
+            - [ setContainer,[ @service_container ] ]
         tags:
             - { name: twig.extension }
