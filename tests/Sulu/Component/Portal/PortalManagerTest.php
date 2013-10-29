@@ -60,7 +60,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
     {
         $portals = $this->portalManager->getPortals();
 
-        $portal = $portals->at(0);
+        $portal = $portals->get('massiveart');
 
         $this->assertEquals('Massive Art', $portal->getName());
         $this->assertEquals('massiveart', $portal->getKey());
@@ -91,7 +91,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('massiveart.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
         $this->assertEquals(true, $portal->getEnvironments()[0]->getUrls()[0]->isMain());
 
-        $portal = $portals->at(1);
+        $portal = $portals->get('sulu_io');
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
@@ -255,7 +255,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $portals->length());
 
-        $portal = $portals->at(0);
+        $portal = $portals->get('massiveart');
 
         $this->assertEquals('Massive Art', $portal->getName());
         $this->assertEquals('massiveart', $portal->getKey());
@@ -286,7 +286,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('massiveart.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
         $this->assertEquals(true, $portal->getEnvironments()[0]->getUrls()[0]->isMain());
 
-        $portal = $portals->at(1);
+        $portal = $portals->get('sulu_io');
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
