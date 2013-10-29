@@ -10,15 +10,36 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
+use ReflectionMethod;
+use Sulu\Bundle\ContentBundle\Controller\TemplateController;
+use Sulu\Component\Content\Property;
+use Sulu\Component\Content\Types\ResourceLocator;
+use Sulu\Component\Content\Types\TextArea;
+use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @property SessionFactoryService sessionService
+ * @property mixed structureMock
+ */
 class TemplateControllerTest extends WebTestCase
 {
-    public function testContent()
-    {
-        $client = static::createClient();
+    public $structureFactoryMock;
+    public $container;
 
-        $crawler = $client->request('GET', '/content');
+    protected function setUp()
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+    }
+
+    public function testContentForm()
+    {
     }
 
 }
