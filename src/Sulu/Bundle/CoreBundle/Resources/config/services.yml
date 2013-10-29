@@ -5,12 +5,24 @@ parameters:
     phpcr_url: http://localhost:8080/server
     phpcr_username: admin
     phpcr_password: admin
+    sulu.content.structure.class: Sulu\Component\Content\StructureFactoryInterface
+    sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
+    sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
+    sulu.content.type.resource_locator.class: Sulu\Component\Content\Types\ResourceLocator
 
 services:
     sulu_core.list_rest_helper:
         class: %sulu_core.list_rest_helper.class%
         arguments: [@request, @doctrine.orm.entity_manager]
         scope: request
-    sulu_core.phpcr.session:
+    sulu.phpcr.session:
         class: %sulu_core.phpcr.session.class%
         arguments: [%phpcr_factoryClass%, %phpcr_url%, %phpcr_username%, %phpcr_password%]
+    sulu.content.structure:
+        class: %sulu.content.structure.class%
+    sulu.content.type.text_line:
+        class: %sulu.content.type.text_line.class%
+    sulu.content.type.text_area:
+        class: %sulu.content.type.text_area.class%
+    sulu.content.type.resource_locator:
+        class: %sulu.content.type.resource_locator.class%
