@@ -2,12 +2,8 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
     <parameters>
-        <parameter key="sulu_core.list_rest_helper.class">Sulu\Component\Rest\Listing\ListRestHelper</parameter>
-        <parameter key="sulu.phpcr.session.class">Sulu\Component\PHPCR\SessionFactory\SessionFactoryService</parameter>
-
-        <parameter key="phpcr_factoryClass">Jackalope\RepositoryFactoryJackrabbit</parameter>
-
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
@@ -16,29 +12,9 @@
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
-
-        <parameter key="sulu.content.template.default_path">%kernel.root_dir%/../Resources/templates</parameter>
     </parameters>
 
     <services>
-
-        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" scope="request">
-            <argument type="service" id="request"/>
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-        </service>
-
-        <!-- phpcr session -->
-        <service id="sulu.session.factory" class="%phpcr_factoryClass%"
-                 public="false"/>
-        <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
-            <argument type="service" id="sulu.session.factory"/>
-            <argument type="collection">
-                <argument key="url">%phpcr_url%</argument>
-                <argument key="username">%phpcr_username%</argument>
-                <argument key="password">%phpcr_password%</argument>
-                <argument key="workspace">%phpcr_workspace%</argument>
-            </argument>
-        </service>
 
         <!-- content mapper -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
@@ -64,15 +40,20 @@
         </service>
 
         <!-- simple content types -->
-        <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%"/>
-        <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%"/>
+        <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
+            <argument>%sulu.content.type.text_line.template%</argument>
+        </service>
+        <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
+            <argument>%sulu.content.type.text_area.template%</argument>
+        </service>
 
         <!-- complex content types -->
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument>%sulu.content.type.resource_locator.template%</argument>
+            <argument>%sulu.content.base_path.route%</argument>
         </service>
 
     </services>
+
 </container>

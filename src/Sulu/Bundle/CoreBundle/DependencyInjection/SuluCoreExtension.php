@@ -38,15 +38,20 @@ class SuluCoreExtension extends Extension
         $container->setParameter('sulu.phpcr.workspace', $config['phpcr']['workspace']);
 
         // BasePATH
-        $container->setParameter('sulu.content.base_path.content', $config['base_path']['content']);
-        $container->setParameter('sulu.content.base_path.route', $config['base_path']['route']);
+        $container->setParameter('sulu.content.base_path.content', $config['content']['base_path']['content']);
+        $container->setParameter('sulu.content.base_path.route', $config['content']['base_path']['route']);
 
         // Content Types
-        $container->setParameter('sulu.content.type.text_line.template', $config['content_types']['text_line']['template']);
-        $container->setParameter('sulu.content.type.text_area.template', $config['content_types']['text_area']['template']);
-        $container->setParameter('sulu.content.type.resource_locator.template', $config['content_types']['resource_locator']['template']);
+        $container->setParameter('sulu.content.type.text_line.template', $config['content']['types']['text_line']['template']);
+        $container->setParameter('sulu.content.type.text_area.template', $config['content']['types']['text_area']['template']);
+        $container->setParameter('sulu.content.type.resource_locator.template', $config['content']['types']['resource_locator']['template']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
+        // Template
+        $container->setParameter('sulu.content.template.default_path', $config['content']['templates']['default_path']);
+
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('content.xml');
+        $loader->load('phpcr.xml');
+        $loader->load('rest.xml');
     }
 }
