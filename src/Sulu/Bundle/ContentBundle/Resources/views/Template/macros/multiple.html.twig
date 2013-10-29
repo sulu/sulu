@@ -8,7 +8,7 @@
     {% for i in 1..property.minOccurs %}
         <div class="{{ property.name }}-element grid-row">
             <div class="grid-col-11">
-            {% include property.type.template with {'property': property|merge({'id': property.name ~ i})} only %}
+                {% include type.template with {'property': property, 'type': type, 'id': property.name ~ i} only %}
             </div>
             <div class="grid-col-1 m-top-15">
                 <div class="mapper-remove-{{ property.name }} pointer" data-mapper-remove="{{ property.name }}">
