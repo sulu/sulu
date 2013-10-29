@@ -12,7 +12,7 @@ namespace Sulu\Component\Content;
 
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
-abstract class Structure implements StructureInterface
+abstract class Structure implements StructureInterface, \JsonSerializable
 {
 
     private $key;
@@ -151,4 +151,24 @@ abstract class Structure implements StructureInterface
             return isset($this->$property);
         }
     }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        $result = array();
+
+        /** @var PropertyInterface $property */
+        foreach($this->getProperties() as $property){
+            $result[$property->getName()] = $property->getValue();
+        }
+
+        return $result;
+    }
+
 }
