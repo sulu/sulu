@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Portal;
 
+use Psr\Log\LoggerInterface;
 use Sulu\Component\Portal\PortalCollection;
 use Sulu\Component\Portal\Portal;
 use Sulu\Component\Portal\Dumper\PhpPortalCollectionDumper;
@@ -40,9 +41,15 @@ class PortalManager
      */
     private $loader;
 
-    public function __construct(LoaderInterface $loader, $options = array())
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = array())
     {
         $this->loader = $loader;
+        $this->logger = $logger;
         $this->setOptions($options);
     }
 
@@ -151,8 +158,14 @@ class PortalManager
         $collection = new PortalCollection();
 
         foreach ($finder as $file) {
-            $collection->add($this->loader->load($file->getRealPath()));
-            $collection->addResource(new FileResource($file->getRealPath()));
+            try {
+                $collection->add($this->loader->load($file->getRealPath()));
+                $collection->addResource(new FileResource($file->getRealPath()));
+            } catch (\InvalidArgumentException $iae) {
+                $this->logger->warning(
+                    'The file "' . $file->getRealPath() . '" does not match the schema and was skipped'
+                );
+            }
         }
 
         return $collection;
