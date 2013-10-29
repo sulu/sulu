@@ -4,7 +4,9 @@ namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Client;
 
 class ContentControllerTest extends WebTestCase
 {
@@ -74,16 +76,64 @@ class ContentControllerTest extends WebTestCase
 
     private function beforeTestGet()
     {
+        $data = array(
+            array(
+                'title' => 'test1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'test2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test2',
+                'article' => 'Test'
+            )
+        );
 
+        /** @var ContentMapperInterface $mapper */
+        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+
+        foreach ($data as $d) {
+            $mapper->save($d, 'en');
+        }
+
+        return $data;
     }
 
     public function testGet()
     {
-        $this->beforeTestGet();
+        $data = $this->beforeTestGet();
+
+        $client = $this->createClient();
+        $client->request('GET', '/admin/api/content/contents/test1');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($data[0], $response);
     }
 
     public function testGetAll()
     {
+        $data = $this->beforeTestGet();
 
+        $client = $this->createClient();
+        $client->request('GET', '/admin/api/content/contents');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response['total']);
+        $this->assertEquals(2, sizeof($response['items']));
+
+        $this->assertEquals($data[0], $response['items'][0]);
+        $this->assertEquals($data[1], $response['items'][1]);
     }
 }
