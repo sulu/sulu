@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_core.list_rest_helper.class">Sulu\Component\Rest\Listing\ListRestHelper</parameter>
-        <parameter key="sulu.phpcr.session.class">Sulu\Component\PHPCR\Session\SessionService</parameter>
+        <parameter key="sulu.phpcr.session.class">Sulu\Component\PHPCR\SessionFactory\SessionFactoryService</parameter>
 
         <parameter key="phpcr_factoryClass">Jackalope\RepositoryFactoryJackrabbit</parameter>
 
