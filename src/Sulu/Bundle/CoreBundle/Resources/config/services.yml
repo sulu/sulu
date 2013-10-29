@@ -3,7 +3,7 @@ parameters:
     sulu.phpcr.session.class: Sulu\Component\PHPCR\Session\SessionService
     phpcr_factoryClass: Jackalope\RepositoryFactoryJackrabbit
     sulu.content.mapper.class: Sulu\Component\Content\Mapper\ContentMapper
-    sulu.content.structure_factory.class: Sulu\Component\Content\StructureFactoryInterface
+    sulu.content.structure_manager.class: Sulu\Component\Content\StructureFactoryInterface
     sulu.content.type.text_line.class: Sulu\Component\Content\Types\TextLine
     sulu.content.type.text_area.class: Sulu\Component\Content\Types\TextArea
     sulu.content.type.resource_locator.class: Sulu\Component\Content\Types\ResourceLocator
@@ -20,8 +20,8 @@ services:
         class: %sulu.content.mapper.class%
         calls:
             - [ setContainer,[ @service_container ] ]
-    sulu.content.structure_factory:
-        class: %sulu.content.structure_factory.class%
+    sulu.content.structure_manager:
+        class: %sulu.content.structure_manager.class%
         calls:
             - [ setContainer,[ @service_container ] ]
     sulu.content.type.text_line:

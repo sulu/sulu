@@ -103,7 +103,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getStructure($key)
     {
-        return $this->container->get('sulu.content.structure_factory')->getStructure($key);
+        return $this->container->get('sulu.content.structure_manager')->getStructure($key);
     }
 
     /**

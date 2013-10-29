@@ -93,7 +93,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->structureFactoryMock = $this->getMock('\Sulu\Component\Content\StructureFactoryInterface');
+        $this->structureFactoryMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
         $this->structureFactoryMock->expects($this->any())
             ->method('getStructure')
             ->will($this->returnValue($this->structureMock));
@@ -115,7 +115,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
-            'sulu.content.structure_factory' => $this->structureFactoryMock,
+            'sulu.content.structure_manager' => $this->structureFactoryMock,
             'sulu.content.type.text_line' => new TextLine(),
             'sulu.content.type.text_area' => new TextArea(),
             'sulu.content.type.resource_locator' => $resourceLocator
