@@ -12,6 +12,7 @@ parameters:
     sulu_security.mask_converter.class: Sulu\Bundle\SecurityBundle\Permission\MaskConverter
     sulu_security.salt_generator.class: Sulu\Bundle\SecurityBundle\Permission\SaltGenerator
     sulu_security.admin.content_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation
+    sulu_security.admin.roles_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation
     sulu_security.permission_voter.class: Sulu\Bundle\SecurityBundle\Permission\PermissionVoter
 
 services:
@@ -31,6 +32,9 @@ services:
       class: %sulu_security.admin.content_navigation.class%
       tags:
       - { name: sulu.contact.admin.content_navigation }
+
+    sulu_security.admin.roles_navigation:
+      class: %sulu_security.admin.roles_navigation.class%
 
     sulu_security.permission_voter:
         class: %sulu_security.permission_voter.class%
