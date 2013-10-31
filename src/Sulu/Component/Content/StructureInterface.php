@@ -15,7 +15,7 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 /**
  * Structure for template
  */
-interface StructureInterface
+interface StructureInterface extends \JsonSerializable
 {
     /**
      * key of template definition
@@ -54,4 +54,10 @@ interface StructureInterface
      * @return array
      */
     public function getProperties();
+
+    /**
+     * returns an array of property value pairs
+     * @return array
+     */
+    public function toArray();
 }

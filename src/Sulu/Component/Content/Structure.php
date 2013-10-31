@@ -12,7 +12,7 @@ namespace Sulu\Component\Content;
 
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
-abstract class Structure implements StructureInterface, \JsonSerializable
+abstract class Structure implements StructureInterface
 {
     /**
      * @var string
@@ -160,6 +160,15 @@ abstract class Structure implements StructureInterface, \JsonSerializable
         } else {
             return isset($this->$property);
         }
+    }
+
+    /**
+     * returns an array of property value pairs
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->jsonSerialize();
     }
 
     /**
