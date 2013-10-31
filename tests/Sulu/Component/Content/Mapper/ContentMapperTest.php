@@ -31,16 +31,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    public $structureMock;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    public $structureFactoryMock;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
     public $container;
 
     /**
@@ -84,49 +74,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'workspace' => 'default'
         ));
 
-        $this->structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
-            array('overview', 'asdf', 'asdf', 2400)
-        );
-
-        $method = new ReflectionMethod(
-            get_class($this->structureMock), 'add'
-        );
-
-        $method->setAccessible(true);
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('title', 'text_line')
-            )
-        );
-
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('tags', 'text_line', false, false, 2, 10)
-            )
-        );
-
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('url', 'resource_locator')
-            )
-        );
-
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('article', 'text_area')
-            )
-        );
-
-        $this->structureFactoryMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
-        $this->structureFactoryMock->expects($this->any())
-            ->method('getStructure')
-            ->will($this->returnValue($this->structureMock));
-
         $containerMock = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
         $containerMock->expects($this->any())
             ->method('get')
@@ -137,13 +84,62 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         return $containerMock;
     }
 
+    public function getStrucktureManager(){
+
+
+        $structureMock = $this->getMockForAbstractClass(
+            '\Sulu\Component\Content\Structure',
+            array('overview', 'asdf', 'asdf', 2400)
+        );
+
+        $method = new ReflectionMethod(
+            get_class($structureMock), 'add'
+        );
+
+        $method->setAccessible(true);
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('title', 'text_line')
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('tags', 'text_line', false, false, 2, 10)
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('url', 'resource_locator')
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('article', 'text_area')
+            )
+        );
+
+        $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
+        $structureManagerMock->expects($this->any())
+            ->method('getStructure')
+            ->will($this->returnValue($structureMock));
+
+        return $structureManagerMock;
+    }
+
     public function containerCallback()
     {
         $resourceLocator = new ResourceLocator($this->sessionService, 'not in use', '/cmf/routes');
 
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
-            'sulu.content.structure_manager' => $this->structureFactoryMock,
+            'sulu.content.structure_manager' => $this->getStrucktureManager(),
             'sulu.content.type.text_line' => new TextLine('not in use'),
             'sulu.content.type.text_area' => new TextArea('not in use'),
             'sulu.content.type.resource_locator' => $resourceLocator
