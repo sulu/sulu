@@ -1,8 +1,21 @@
 parameters:
     sulu_content.admin.class: Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin
+    sulu_content.mapper.class: Sulu\Bundle\ContentBundle\Mapper\ContentMapper
+    sulu_content.twig_extension.class: Sulu\Bundle\ContentBundle\Twig\ContentExtension
+    sulu_content.admin.content_navigation.class: Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation
 
 services:
     sulu_content.admin:
         class: %sulu_content.admin.class%
         tags:
         - { name: sulu.admin }
+    sulu_content.mapper:
+        class: %sulu_content.mapper.class%
+    sulu_content.admin.content_navigation:
+        class: %sulu_content.admin.content_navigation.class%
+    sulu_content.twig_extension:
+        class: %sulu_content.twig_extension.class%
+        calls:
+            - [ setContainer,[ @service_container ] ]
+        tags:
+            - { name: twig.extension }
