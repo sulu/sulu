@@ -1,0 +1,31 @@
+<h2>{{ property.name|capitalize }}</h2>
+<div id="{{ property.name }}"
+     data-type="array"
+     data-type-min="{{ property.minOccurs }}"
+     data-type-max="{{ property.maxOccurs }}"
+     data-mapper-property="{{ property.name }}">
+
+    {% for i in 1..property.minOccurs %}
+        <div class="{{ property.name }}-element grid-row">
+            <div class="grid-col-11">
+                {% include type.template with {'property': property, 'type': type, 'id': property.name ~ i} only %}
+            </div>
+            <div class="grid-col-1 m-top-15">
+                <div class="mapper-remove-{{ property.name }} pointer" data-mapper-remove="{{ property.name }}">
+                    <span class="icon-remove"></span>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% if needsAddButton(property) %}
+    <div id="mapper-add-{{ property.name }}" class="pointer" data-mapper-add="{{ property.name }}">
+
+    <span class="icon-add"></span> add {{ property.name }} (<span
+                id="current-counter-{{ property.name }}">{{ property.minOccurs }}</span> von {{ property.maxOccurs }})
+    </div>
+{% endif %}
+
+<hr class="divider"/>
