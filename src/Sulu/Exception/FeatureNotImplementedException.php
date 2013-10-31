@@ -8,10 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Exceptions;
+namespace Sulu\Exception;
 
+use Exception;
 
-class ResourceLocatorAlreadyExistsException extends \Exception
+class FeatureNotImplementedException extends Exception
 {
 
 }

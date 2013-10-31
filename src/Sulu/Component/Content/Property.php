@@ -113,7 +113,7 @@ class Property implements PropertyInterface
 
     /**
      * sets the value from property
-     * @param $value mixed
+     * @param mixed $value
      */
     public function setValue($value)
     {
@@ -135,5 +135,13 @@ class Property implements PropertyInterface
     public function getContentTypeName()
     {
         return $this->contentTypeName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
     }
 }

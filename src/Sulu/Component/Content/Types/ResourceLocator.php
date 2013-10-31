@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Exceptions\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
@@ -71,7 +71,7 @@ class ResourceLocator extends ComplexContentType
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @throws \Sulu\Component\Content\Exceptions\ResourceLocatorAlreadyExistsException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      * @return mixed
      */
     public function set(NodeInterface $node, PropertyInterface $property)

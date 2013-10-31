@@ -10,10 +10,11 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use Jackalope\RepositoryFactoryJackrabbit;
 use Jackalope\Session;
+use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Mapper\PhpcrContentMapper;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\TextArea;
@@ -22,12 +23,28 @@ use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 
 class ContentMapperTest extends \PHPUnit_Framework_TestCase
 {
-    public $sessionService;
-    public $structureMock;
-    public $structureFactoryMock;
-    public $container;
     /**
-     * @var PhpcrContentMapper
+     * @var SessionFactoryService
+     */
+    public $sessionService;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    public $structureMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    public $structureFactoryMock;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    public $container;
+
+    /**
+     * @var ContentMapper
      */
     protected $mapper;
 
@@ -55,9 +72,17 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->session->save();
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     private function getContainerMock()
     {
-        $this->sessionService = new SessionFactoryService('\Jackalope\RepositoryFactoryJackrabbit', 'http://localhost:8080/server', 'admin', 'admin');
+        $this->sessionService = new SessionFactoryService(new RepositoryFactoryJackrabbit(), array(
+            'url' => 'http://localhost:8080/server',
+            'username' => 'admin',
+            'password' => 'admin',
+            'workspace' => 'default'
+        ));
 
         $this->structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
@@ -67,6 +92,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $method = new ReflectionMethod(
             get_class($this->structureMock), 'add'
         );
+
         $method->setAccessible(true);
         $method->invokeArgs(
             $this->structureMock,
@@ -74,18 +100,21 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 new Property('title', 'text_line')
             )
         );
+
         $method->invokeArgs(
             $this->structureMock,
             array(
                 new Property('tags', 'text_line', false, false, 2, 10)
             )
         );
+
         $method->invokeArgs(
             $this->structureMock,
             array(
                 new Property('url', 'resource_locator')
             )
         );
+
         $method->invokeArgs(
             $this->structureMock,
             array(
@@ -126,11 +155,10 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     private function prepareSession()
     {
-        $factoryclass = '\Jackalope\RepositoryFactoryJackrabbit';
         $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
-        $factory = new $factoryclass();
+        $factory = new RepositoryFactoryJackrabbit();
         $repository = $factory->getRepository($parameters);
-        $credentials = new \PHPCR\SimpleCredentials('admin', 'admin');
+        $credentials = new SimpleCredentials('admin', 'admin');
         $this->session = $repository->login($credentials, 'default');
     }
 

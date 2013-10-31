@@ -3,7 +3,7 @@
 
     <testsuites>
         <testsuite name="Sulu Test Suite">
-            <directory suffix="Test.php">./Tests</directory>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
 
