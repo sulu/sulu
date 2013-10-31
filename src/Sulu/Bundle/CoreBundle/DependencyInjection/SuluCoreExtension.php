@@ -51,6 +51,7 @@ class SuluCoreExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('content.xml');
+        $loader->load('portal.xml');
         $loader->load('phpcr.xml');
         $loader->load('rest.xml');
     }
