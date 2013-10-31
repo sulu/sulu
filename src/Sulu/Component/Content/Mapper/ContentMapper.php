@@ -93,7 +93,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     public function read($path, $language)
     {
         $session = $this->getSession();
-        $contentPath = $this->getBasePath() . $path;
+        $contentPath = $this->getBasePath() . (strpos($path, '/') === 0 ? '' : '/') . $path;
         $contentNode = $session->getNode($contentPath);
 
         $templateKey = $contentNode->getPropertyValue('template'); // TODO add namespace ??? sulu:template
