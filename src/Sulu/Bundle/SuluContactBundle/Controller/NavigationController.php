@@ -25,7 +25,7 @@ class NavigationController extends Controller
      * Special function for lists
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contentAction()
+    public function contactAction()
     {
 
         // TODO: get type of content (contact / account ...)
@@ -36,5 +36,23 @@ class NavigationController extends Controller
         }
 
         return new Response(json_encode($contentNavigation->toArray('contact')));
+    }
+
+    /**
+     * Lists all the contacts or filters the contacts by parameters
+     * Special function for lists
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function accountAction()
+    {
+
+        // TODO: get type of content (contact / account ...)
+
+        /** @var ContentNavigation $contentNavigation */
+        if ($this->has(self::SERVICE_NAME)) {
+            $contentNavigation = $this->get(self::SERVICE_NAME);
+        }
+
+        return new Response(json_encode($contentNavigation->toArray('account')));
     }
 }
