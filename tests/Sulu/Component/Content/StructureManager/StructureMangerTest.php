@@ -51,6 +51,13 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             ));
     }
 
+    public function tearDown()
+    {
+        if (file_exists(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php')) {
+            unlink(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php');
+        }
+    }
+
     public function testGetStructure()
     {
         /** @var StructureInterface $structure */
