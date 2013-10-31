@@ -21,6 +21,9 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected $controller;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     protected $mockedObject;
 
     public function setUp()
@@ -244,4 +247,5 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(400, $view->getStatusCode());
     }
+
 }

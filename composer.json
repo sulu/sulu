@@ -13,7 +13,11 @@
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "1.0.*"
+        "symfony/framework-bundle": "2.3.*",
+        "sensio/distribution-bundle": "2.3.*",
+        "friendsofsymfony/rest-bundle": "1.0.*",
+        "jms/serializer-bundle": "@dev",
+        "jackalope/jackalope-jackrabbit": "1.0.*"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
