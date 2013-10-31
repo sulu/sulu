@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <portal xmlns="http://schemas.sulu.io/portal/portal"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://schemas.sulu.io/portal/portal http://schemas.sulu.io/portal/portal.xsd">
+        xsi:schemaLocation="http://schemas.sulu.io/portal/portal http://schemas.sulu.io/portal/portal-1.0.xsd">
 
     <name>Massive Art</name>
     <key>massiveart</key>

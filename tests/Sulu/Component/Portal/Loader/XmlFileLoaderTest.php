@@ -60,10 +60,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testLoadInvalid()
     {
-        $portal = $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Portal/invalid/massiveart.xml');
+        $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Portal/invalid/massiveart.xml');
     }
 }

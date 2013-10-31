@@ -20,7 +20,7 @@ use Symfony\Component\Config\Util\XmlUtils;
 
 class XmlFileLoader extends FileLoader
 {
-    const SCHEME_PATH = '/schema/portal/portal.xsd';
+    const SCHEME_PATH = '/schema/portal/portal-1.0.xsd';
 
     /**
      * Loads a portal from a xml file
