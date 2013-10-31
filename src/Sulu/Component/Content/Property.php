@@ -136,4 +136,12 @@ class Property implements PropertyInterface
     {
         return $this->contentTypeName;
     }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
 }

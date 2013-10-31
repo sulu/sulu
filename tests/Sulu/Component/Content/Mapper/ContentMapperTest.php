@@ -27,7 +27,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     public $structureFactoryMock;
     public $container;
     /**
-     * @var PhpcrContentMapper
+     * @var ContentMapper
      */
     protected $mapper;
 
@@ -57,7 +57,12 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     private function getContainerMock()
     {
-        $this->sessionService = new SessionFactoryService('\Jackalope\RepositoryFactoryJackrabbit', 'http://localhost:8080/server', 'admin', 'admin');
+        $this->sessionService = new SessionFactoryService(new \Jackalope\RepositoryFactoryJackrabbit(), array(
+            'url' => 'http://localhost:8080/server',
+            'username' => 'admin',
+            'password' => 'admin',
+            'workspace' => 'default'
+        ));
 
         $this->structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',

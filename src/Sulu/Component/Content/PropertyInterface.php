@@ -47,6 +47,11 @@ interface PropertyInterface
     public function getContentTypeName();
 
     /**
+     * @return array
+     */
+    public function getParams();
+
+    /**
      * sets the value from property
      * @param $value mixed
      */
