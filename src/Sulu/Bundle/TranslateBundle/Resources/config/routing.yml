@@ -1,3 +1,7 @@
+sulu_translate.content_navigation:
+    path: /navigation/content
+    defaults: { _controller: SuluTranslateBundle:Navigation:content }
+
 sulu_translate.template.catalogue.form:
     path: /template/package/form.html
     defaults:
