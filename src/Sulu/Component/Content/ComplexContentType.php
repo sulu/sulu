@@ -12,4 +12,17 @@ namespace Sulu\Component\Content;
 
 abstract class ComplexContentType implements ContentTypeInterface
 {
+    /**
+     * magic getter for twig templates
+     * @param $property
+     * @return null
+     */
+    public function __get($property)
+    {
+        if (method_exists($this, 'get' . ucfirst($property))) {
+            return $this->{'get' . ucfirst($property)}();
+        } else {
+            return null;
+        }
+    }
 }

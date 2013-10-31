@@ -127,7 +127,11 @@ abstract class Structure implements StructureInterface
      */
     public function __get($property)
     {
-        return $this->getProperty($property)->getValue();
+        if (method_exists($this, 'get' . ucfirst($property))) {
+            return $this->{'get' . ucfirst($property)}();
+        } else {
+            return $this->getProperty($property)->getValue();
+        }
     }
 
     /**
