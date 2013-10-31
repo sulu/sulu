@@ -13,7 +13,7 @@ namespace Sulu\Component\Content;
 use PHPCR\NodeInterface;
 
 /**
- * ContentType
+ * Content type definition
  */
 interface ContentTypeInterface
 {
@@ -28,7 +28,7 @@ interface ContentTypeInterface
     public function getType();
 
     /**
-     * reads the value for given property out of the database + sets the value of the property
+     * reads the value for given property from the node + sets the value of the property
      * @param NodeInterface $node
      * @param PropertyInterface $property
      * @return mixed

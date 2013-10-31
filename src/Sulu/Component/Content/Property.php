@@ -12,14 +12,44 @@ namespace Sulu\Component\Content;
 
 class Property implements PropertyInterface
 {
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var bool
+     */
     private $mandatory;
+
+    /**
+     * @var bool
+     */
     private $multilingual;
+
+    /**
+     * @var int
+     */
     private $minOccurs;
+
+    /**
+     * @var int
+     */
     private $maxOccurs;
+
+    /**
+     * @var string
+     */
     private $contentTypeName;
 
+    /**
+     * @var array
+     */
     private $params;
+
+    /**
+     * @var mixed
+     */
     private $value;
 
     function __construct(
@@ -39,7 +69,6 @@ class Property implements PropertyInterface
         $this->name = $name;
         $this->params = $params;
     }
-
 
     /**
      * returns name of template

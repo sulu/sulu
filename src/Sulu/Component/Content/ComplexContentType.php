@@ -10,9 +10,6 @@
 
 namespace Sulu\Component\Content;
 
-use PHPCR\SessionInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
-
 abstract class ComplexContentType implements ContentTypeInterface
 {
 }
