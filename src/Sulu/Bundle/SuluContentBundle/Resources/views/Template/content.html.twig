@@ -4,15 +4,10 @@
         {# set defaults for property#}
         {% set type = getType(property.contentTypeName) %}
 
-        {# include template if defined #}
-        {% if type.template is defined %}
-
-            {% if property is multiple %}
-                {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'type': type} only %}
-            {% else %}
-                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'id': property.name} only %}
-            {% endif %}
-
+        {% if property is multiple %}
+            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'type': type} only %}
+        {% else %}
+            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'id': property.name} only %}
         {% endif %}
     {% endfor %}
 </form>
