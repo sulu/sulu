@@ -10,8 +10,7 @@
     <services>
 
         <!-- phpcr session -->
-        <service id="sulu.session.factory" class="%sulu.phpcr.factory_class%"
-                 public="false"/>
+        <service id="sulu.session.factory" class="%sulu.phpcr.factory_class%" public="false"/>
         <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
             <argument type="service" id="sulu.session.factory"/>
             <argument type="collection">

@@ -37,7 +37,7 @@ class SuluCoreExtension extends Extension
         $container->setParameter('sulu.phpcr.password', $config['phpcr']['password']);
         $container->setParameter('sulu.phpcr.workspace', $config['phpcr']['workspace']);
 
-        // BasePATH
+        // Base Path
         $container->setParameter('sulu.content.base_path.content', $config['content']['base_path']['content']);
         $container->setParameter('sulu.content.base_path.route', $config['content']['base_path']['route']);
 

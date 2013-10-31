@@ -14,9 +14,24 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 abstract class Structure implements StructureInterface, \JsonSerializable
 {
+    /**
+     * @var string
+     */
     private $key;
+
+    /**
+     * @var string
+     */
     private $view;
+
+    /**
+     * @var string
+     */
     private $controller;
+
+    /**
+     * @var int
+     */
     private $cacheLifeTime;
 
     private $properties = array();
@@ -27,7 +42,7 @@ abstract class Structure implements StructureInterface, \JsonSerializable
      * @param $controller string
      * @param $cacheLifeTime int
      */
-    public function __construct($key, $view, $controller, $cacheLifeTime)
+    public function __construct($key, $view, $controller, $cacheLifeTime = 604800)
     {
         $this->key = $key;
         $this->view = $view;

@@ -18,6 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
+    /**
+     * @var string
+     */
     private $basePath = '/cmf/contents';
 
     public function __construct($basePath)
@@ -34,7 +37,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     public function save($data, $language, $templateKey = '')
     {
-        // TODO localice
+        // TODO localize
         $structure = $this->getStructure($templateKey); //TODO Set correct file
         $session = $this->getSession();
         $root = $session->getRootNode();
@@ -64,10 +67,16 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             }
         }
 
+        // save node now
         $session->save();
 
+        // post save content types
         foreach ($postSave as $post) {
-            $post['type']->set($node, $post['property']);
+            /** @var ContentTypeInterface $type */
+            $type = $post['type'];
+            /** @var PropertyInterface $property */
+            $property = $post['property'];
+            $type->set($node, $property);
         }
 
         $session->save();
@@ -89,7 +98,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $templateKey = $contentNode->getPropertyValue('template');
 
-        // TODO localice
+        // TODO localize
         $structure = $this->getStructure($templateKey); //TODO Set correct file
 
         // go through every property in the template
@@ -130,6 +139,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         return $this->container->get('sulu.phpcr.session')->getSession();
     }
 
+    /**
+     * @return string
+     */
     protected function getBasePath()
     {
         return $this->basePath;
