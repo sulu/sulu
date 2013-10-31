@@ -34,7 +34,20 @@ abstract class Structure implements StructureInterface
      */
     private $cacheLifeTime;
 
+    /**
+     * @var array
+     */
     private $properties = array();
+
+    /**
+     * @var int
+     */
+    private $index;
+
+    /**
+     * @var string
+     */
+    private $path;
 
     /**
      * @param $key string
@@ -93,6 +106,42 @@ abstract class Structure implements StructureInterface
     public function getCacheLifeTime()
     {
         return $this->cacheLifeTime;
+    }
+
+    /**
+     * id of node
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->index;
+    }
+
+    /**
+     * sets id of node
+     * @param $id
+     */
+    public function setId($id)
+    {
+        $this->index = $id;
+    }
+
+    /**
+     * path of node
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * sets path of node
+     * @param $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 
     /**
@@ -184,7 +233,10 @@ abstract class Structure implements StructureInterface
      */
     public function jsonSerialize()
     {
-        $result = array();
+        $result = array(
+            'id' => $this->index,
+            'path' => $this->path
+        );
 
         /** @var PropertyInterface $property */
         foreach ($this->getProperties() as $property) {

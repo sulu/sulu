@@ -18,6 +18,30 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 interface StructureInterface extends \JsonSerializable
 {
     /**
+     * id of node
+     * @return int
+     */
+    public function getId();
+
+    /**
+     * sets id of node
+     * @param $id
+     */
+    public function setId($id);
+
+    /**
+     * path of node
+     * @return string
+     */
+    public function getPath();
+
+    /**
+     * sets path of node
+     * @param $path
+     */
+    public function setPath($path);
+
+    /**
      * key of template definition
      * @return string
      */

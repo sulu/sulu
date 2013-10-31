@@ -41,6 +41,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure = $this->getStructure($templateKey); //TODO Set correct file
         $session = $this->getSession();
         $root = $session->getRootNode();
+        /** @var NodeInterface $node */
         $node = $root->addNode(
             ltrim($this->getBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
@@ -48,6 +49,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('template', $templateKey); // TODO add namespace ??? sulu:template
 
         $postSave = array();
+
+        $structure->setId($node->getIndex());
+        // TODO right path
+        $structure->setPath($data['title']);
 
         // go through every property in the template
         foreach ($structure->getProperties() as $property) {
@@ -100,6 +105,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         // TODO localize
         $structure = $this->getStructure($templateKey); //TODO Set correct file
+
+        $structure->setId($contentNode->getPropertyValue('jcr:uuid'));
+        // TODO right path
+        $structure->setPath($path);
 
         // go through every property in the template
         /** @var PropertyInterface $property */
