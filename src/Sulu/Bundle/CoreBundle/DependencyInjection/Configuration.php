@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('factory_class')
-                            ->defaultValue('\Jackalope\RepositoryFactoryJackrabbit')
+                            ->defaultValue('Jackalope\RepositoryFactoryJackrabbit')
                         ->end()
                         ->scalarNode('url')
                             ->defaultValue('http://localhost:8080/server')
