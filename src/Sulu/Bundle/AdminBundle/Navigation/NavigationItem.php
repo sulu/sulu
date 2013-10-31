@@ -482,6 +482,7 @@ class NavigationItem implements \Iterator
             );
         }
 
+
         foreach ($this->getChildren() as $key => $child) {
             /** @var NavigationItem $child */
             $array['sub']['items'][$key] = $child->toArray();
