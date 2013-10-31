@@ -14,7 +14,8 @@ namespace Sulu\Component\Portal;
  * The language of a portal
  * @package Sulu\Component\Portal
  */
-class Language {
+class Language
+{
     /**
      * The code of the language
      * @var string

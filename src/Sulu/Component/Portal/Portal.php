@@ -127,7 +127,7 @@ class Portal
 
     /**
      * Adds an environment to this portal
-     * @param $environment The environment to add
+     * @param $environment Environment The environment to add
      */
     public function addEnvironment($environment)
     {

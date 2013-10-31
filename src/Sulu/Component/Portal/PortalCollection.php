@@ -61,7 +61,7 @@ class PortalCollection implements \IteratorAggregate
 
     /**
      * Returns the portal with the given index
-     * @param $index The index of the portal
+     * @param $key string The index of the portal
      * @return Portal
      */
     public function get($key)

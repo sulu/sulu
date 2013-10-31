@@ -15,10 +15,10 @@ use Sulu\Component\Portal\PortalCollection;
 use Sulu\Component\Portal\Portal;
 use Sulu\Component\Portal\Dumper\PhpPortalCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * This class is responsible for loading, reading and caching the portal configuration files
@@ -55,7 +55,7 @@ class PortalManager
 
     /**
      * Returns the portal with the given key, or null, if it does not exist
-     * @param $key The key to look for
+     * @param $key string The key to look for
      * @return null|Portal
      */
     public function findByKey($key)
@@ -72,7 +72,7 @@ class PortalManager
 
     /**
      * Returns the portal for the given url, or null, if it does not exist
-     * @param $searchUrl The url to search for
+     * @param $searchUrl string The url to search for
      * @return null|Portal
      */
     public function findByUrl($searchUrl)
@@ -118,7 +118,7 @@ class PortalManager
                 );
             }
 
-            require_once($cache);
+            require_once $cache;
 
             $this->portals = new $class();
         }
@@ -158,6 +158,7 @@ class PortalManager
         $collection = new PortalCollection();
 
         foreach ($finder as $file) {
+            /** @var SplFileInfo $file */
             try {
                 $collection->add($this->loader->load($file->getRealPath()));
                 $collection->addResource(new FileResource($file->getRealPath()));

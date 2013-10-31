@@ -45,7 +45,7 @@ class Theme
 
     /**
      * Adds an exluded template to this theme instance
-     * @param $excludedTemplate The template to exclude
+     * @param $excludedTemplate string The template to exclude
      */
     public function addExcludedTemplate($excludedTemplate)
     {
