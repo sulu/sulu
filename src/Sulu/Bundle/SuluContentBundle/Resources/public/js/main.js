@@ -18,7 +18,7 @@ define({
 
     name: "Sulu Content Bundle",
 
-    initialize: function (app) {
+    initialize: function(app) {
 
         'use strict';
 
@@ -30,16 +30,26 @@ define({
         // list all contacts
         sandbox.mvc.routes.push({
             route: 'content/content',
-            callback: function(){
+            callback: function() {
                 this.html('<div data-aura-component="content@sulucontent" data-aura-display="list"/>');
             }
         });
 
-        // show form for new contacts
+        // show form for new content
         sandbox.mvc.routes.push({
             route: 'content/content/add',
-            callback: function(){
+            callback: function() {
                 this.html('<div data-aura-component="content@sulucontent" data-aura-display="form"/>');
+            }
+        });
+
+        // show form for editing a content
+        sandbox.mvc.routes.push({
+            route: 'content/content/edit::path/details',
+            callback: function(path) {
+                this.html(
+                    '<div data-aura-component="content@sulucontent" data-aura-display="form" data-aura-path="' + path + '"/>'
+                );
             }
         });
     }
