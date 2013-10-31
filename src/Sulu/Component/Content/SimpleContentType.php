@@ -37,7 +37,10 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        return $node->getPropertyValue($property->getName());
+        $value = $node->getPropertyValue($property->getName());
+        $property->setValue($value);
+
+        return $value;
     }
 
     /**
