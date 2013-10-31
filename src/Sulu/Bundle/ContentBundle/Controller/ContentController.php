@@ -26,7 +26,8 @@ class ContentController extends RestController implements ClassResourceInterface
             $path,
             function ($path) {
                 // TODO language
-                return $this->getMapper()->read($path, 'en');
+                $content = $this->getMapper()->read('/' . $path, 'en');
+                return $content->toArray();
             }
         );
 
@@ -36,16 +37,15 @@ class ContentController extends RestController implements ClassResourceInterface
     public function cgetAction()
     {
         $result = array();
-        $basePath = '/cmf/contents';
+        $basePath = $this->getBasePath();
 
         // FIXME make it better
         $session = $this->getSession();
-        $root = $session->getRootNode();
-        $contents = $root->getNode($basePath);
+        $contents = $session->getNode($basePath);
 
         /** @var NodeInterface $node */
         foreach ($contents as $node) {
-            $result[] = $this->getMapper()->read(str_replace('/cmf/contents', '', $node->getPath()), 'en');
+            $result[] = $this->getMapper()->read(str_replace('/cmf/contents', '', $node->getPath()), 'en')->toArray();
         }
 
         return $this->handleView(
@@ -63,12 +63,13 @@ class ContentController extends RestController implements ClassResourceInterface
         // TODO language
         $key = $this->getRequest()->get('template');
         $structure = $this->getMapper()->save($this->getRequest()->request->all(), 'en', $key);
-        $view = $this->view($structure->jsonSerialize(), 200);
+        $view = $this->view($structure->toArray(), 200);
 
         return $this->handleView($view);
     }
 
     /**
+     * return content mapper
      * @return ContentMapperInterface
      */
     protected function getMapper()
@@ -77,10 +78,19 @@ class ContentController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * returns phpcr session
      * @return SessionInterface
      */
     protected function getSession()
     {
-        return $this->container->get('sulu.phpcr.session')->getSession;
+        return $this->container->get('sulu.phpcr.session')->getSession();
+    }
+
+    /**
+     * return base content path
+     * @return string
+     */
+    protected function getBasePath(){
+        return $this->container->getParameter('sulu.content.base_path.content');
     }
 }

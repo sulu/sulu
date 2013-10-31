@@ -105,7 +105,7 @@ class ContentControllerTest extends WebTestCase
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
         foreach ($data as $d) {
-            $mapper->save($d, 'en');
+            $mapper->save($d, 'en', 'overview');
         }
 
         return $data;
@@ -121,7 +121,10 @@ class ContentControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals($data[0], $response);
+        $this->assertEquals($data[0]['title'], $response->title);
+        $this->assertEquals($data[0]['tags'], $response->tags);
+        $this->assertEquals($data[0]['url'], $response->url);
+        $this->assertEquals($data[0]['article'], $response->article);
     }
 
     public function testGetAll()
@@ -134,10 +137,17 @@ class ContentControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response['total']);
-        $this->assertEquals(2, sizeof($response['items']));
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, sizeof($response->items));
 
-        $this->assertEquals($data[0], $response['items'][0]);
-        $this->assertEquals($data[1], $response['items'][1]);
+        $this->assertEquals($data[0]['title'], $response->items[0]->title);
+        $this->assertEquals($data[0]['tags'], $response->items[0]->tags);
+        $this->assertEquals($data[0]['url'], $response->items[0]->url);
+        $this->assertEquals($data[0]['article'], $response->items[0]->article);
+
+        $this->assertEquals($data[1]['title'], $response->items[1]->title);
+        $this->assertEquals($data[1]['tags'], $response->items[1]->tags);
+        $this->assertEquals($data[1]['url'], $response->items[1]->url);
+        $this->assertEquals($data[1]['article'], $response->items[1]->article);
     }
 }
