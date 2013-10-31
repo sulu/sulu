@@ -27,7 +27,7 @@ class TemplateController extends Controller
 
     private function getTemplateStructure($key)
     {
-        return $this->container->get('sulu.content.structure_factory')->getStructure($key);
+        return $this->container->get('sulu.content.structure_manager')->getStructure($key);
     }
 
 }
