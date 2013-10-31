@@ -1,3 +1,7 @@
+sulu_security.roles_navigation:
+    path: /navigation/roles
+    defaults: { _controller: SuluSecurityBundle:Navigation:roles }
+
 sulu_security.template.role.form:
      path: /template/role/form.html
      defaults:

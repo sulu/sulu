@@ -52,6 +52,16 @@ define(function() {
                 }
             });
 
+            // show form for editing a role
+            sandbox.mvc.routes.push({
+                route: 'settings/roles/edit::id/details',
+                callback: function(id) {
+                    this.html(
+                        '<div data-aura-component="roles@sulusecurity" data-aura-display="form" data-aura-id="' + id + '"/>'
+                    );
+                }
+            });
+
             // show form for editing permissions for a contact
             sandbox.mvc.routes.push({
                 route: 'contacts/contacts/edit::id/permissions',
