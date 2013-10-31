@@ -174,7 +174,7 @@ abstract class Structure implements StructureInterface, \JsonSerializable
         $result = array();
 
         /** @var PropertyInterface $property */
-        foreach($this->getProperties() as $property){
+        foreach ($this->getProperties() as $property) {
             $result[$property->getName()] = $property->getValue();
         }
 

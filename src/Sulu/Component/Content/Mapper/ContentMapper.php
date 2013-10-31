@@ -45,7 +45,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             ltrim($this->getBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
         $node->addMixin('mix:referenceable');
-        $node->setProperty('template', $templateKey);
+        $node->setProperty('template', $templateKey); // TODO add namespace ??? sulu:template
 
         $postSave = array();
 
@@ -70,7 +70,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // save node now
         $session->save();
 
-        // post save content types
+        // set post save content types properties
         foreach ($postSave as $post) {
             /** @var ContentTypeInterface $type */
             $type = $post['type'];
@@ -96,7 +96,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $contentPath = $this->getBasePath() . $path;
         $contentNode = $session->getNode($contentPath);
 
-        $templateKey = $contentNode->getPropertyValue('template');
+        $templateKey = $contentNode->getPropertyValue('template'); // TODO add namespace ??? sulu:template
 
         // TODO localize
         $structure = $this->getStructure($templateKey); //TODO Set correct file

@@ -16,16 +16,20 @@ use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
     /**
-     * @var \Symfony\Component\Config\Loader\LoaderInterface XML Loader to load templates
+     * @var LoaderInterface XML Loader to load templates
      */
     private $loader;
+
+    /**
+     * @var array
+     */
+    private $options;
 
     /**
      * @param LoaderInterface $loader XMLLoader to load xml templates
@@ -41,11 +45,11 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     /**
      * returns a structure for given key
      * @param $key string
-     * @return mixed
+     * @return StructureInterface
      */
     public function getStructure($key)
     {
-        $class = $this->options['cache_class_prefix'] . $key;
+        $class = $this->options['cache_class_prefix'] . ucfirst($key);
         $cache = new ConfigCache(
             $this->options['cache_dir'] . '/' . $class . '.php',
             $this->options['debug']
@@ -67,12 +71,12 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                         'base_class' => $this->options['base_class']
                     )
                 ),
-
                 $resources
             );
         }
 
-        require_once($cache);
+        require_once $cache;
+
         return new $class();
     }
 

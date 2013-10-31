@@ -19,7 +19,7 @@
 
     <xs:complexType name="propertiesType">
         <xs:sequence>
-            <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 

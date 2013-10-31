@@ -11,22 +11,11 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Xml;
 
 use Sulu\Component\Content\Template\TemplateReader;
-use Sulu\Component\Content\Template\Exceptions\InvalidArgumentException;
-use Sulu\Component\Content\Template\Exceptions\InvalidXmlException;
+use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
+use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 
 class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 {
-
-
-    public function setUp()
-    {
-
-    }
-
-    public function tearDown()
-    {
-
-    }
 
     public function testReadTemplate()
     {
@@ -35,7 +24,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
-
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
@@ -60,8 +48,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 'images' => array(
                     'name' => 'images',
                     'type' => 'image_selection',
-                    'minOccurs'=> 0,
-                    'maxOccurs'=> 2,
+                    'minOccurs' => 0,
+                    'maxOccurs' => 2,
                     'params' => array(
                         'minLinks' => 1,
                         'maxLinks' => 10
@@ -72,17 +60,17 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__."/../../../Resources/Datafixtures/Template/template.xml");
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/Datafixtures/Template/template.xml');
         $this->assertEquals($template, $result);
     }
 
     /**
-     * @expectedException \Sulu\Component\Content\Template\Exceptions\InvalidArgumentException
+     * @expectedException \Sulu\Component\Content\Template\Exception\InvalidArgumentException
      */
     public function testReadTypesInvalidPath()
     {
         $templateReader = new TemplateReader();
-        $templateReader->load("");
+        $templateReader->load('');
     }
 
     public function testReadTypesEmptyProperties()
@@ -92,23 +80,23 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => 2400,
-
             'properties' => array()
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__."/../../../Resources/Datafixtures/Template/template_missing_properties.xml");
+        $result = $templateReader->load(
+            __DIR__ . '/../../../Resources/Datafixtures/Template/template_missing_properties.xml'
+        );
         $this->assertEquals($template, $result);
     }
 
     /**
-     * @expectedException \Sulu\Component\Content\Template\Exceptions\InvalidXmlException
+     * @expectedException \Sulu\Component\Content\Template\Exception\InvalidXmlException
      */
     public function testReadTypesMissingMandatory()
     {
         $templateReader = new TemplateReader();
-        $templateReader->load(__DIR__."/../../../Resources/Datafixtures/Template/template_missing_mandatory.xml");
+        $templateReader->load(__DIR__ . '/../../../Resources/Datafixtures/Template/template_missing_mandatory.xml');
     }
-
 
 }

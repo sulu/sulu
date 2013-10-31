@@ -44,7 +44,7 @@ class SessionFactoryService implements SessionFactoryInterface
      */
     private $session;
 
-    function __construct($factory, $options)
+    function __construct(RepositoryFactoryInterface $factory, $options)
     {
         $this->options = $this->getOptions($options);
 
@@ -64,6 +64,7 @@ class SessionFactoryService implements SessionFactoryInterface
             'password' => 'admin',
             'workspace' => 'default'
         );
+
         return array_merge($defaults, $options);
     }
 

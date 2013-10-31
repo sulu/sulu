@@ -24,6 +24,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
      * @var LoaderInterface
      */
     public $loader;
+
     /**
      * @var StructureManagerInterface
      */

@@ -11,30 +11,51 @@
 namespace Sulu\Component\Content\Template;
 
 use Exception;
-use Gedmo\Exception\FeatureNotImplementedException;
-use Sulu\Component\Content\Template\Exceptions\InvalidXmlException;
-use Sulu\Component\Content\Template\Exceptions\InvalidArgumentException;
+use Sulu\Exception\FeatureNotImplementedException;
+use Sulu\Component\Content\Template\Exception\InvalidXmlException;
+use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 
 class TemplateReader implements LoaderInterface
 {
-    private $nameKey = "name";
-    private $propertiesKey = "properties";
-    private $paramsKey = "params";
+    /**
+     * @var string
+     */
+    private $nameKey = 'name';
 
-    private $pathToProperties = "/x:template/x:properties/x:property";
-    private $pathToParams = "x:params/x:param";
+    /**
+     * @var string
+     */
+    private $propertiesKey = 'properties';
 
+    /**
+     * @var string
+     */
+    private $paramsKey = 'params';
+
+    /**
+     * @var string
+     */
+    private $pathToProperties = '/x:template/x:properties/x:property';
+
+    /**
+     * @var string
+     */
+    private $pathToParams = 'x:params/x:param';
+
+    /**
+     * @var \DOMDocument
+     */
     private $xmlDocument;
 
     /**
-     * Reades all types from the given path
+     * Reads all types from the given path
      * @param $path string path to file with type definitions
      * @param $mandatoryNodes array with key of mandatory node names
-     * @throws \Sulu\Component\Content\Template\Exceptions\InvalidXmlException
-     * @throws \Sulu\Component\Content\Template\Exceptions\InvalidArgumentException
+     * @throws \Sulu\Component\Content\Template\Exception\InvalidXmlException
+     * @throws \Sulu\Component\Content\Template\Exception\InvalidArgumentException
      * @return array with found definitions of types
      */
     private function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
@@ -43,31 +64,32 @@ class TemplateReader implements LoaderInterface
         $template = array();
         $this->xmlDocument = new \DOMDocument();
 
-        try{
+        try {
             $this->xmlDocument->load($path);
 
             if (!empty($mandatoryNodes)) {
                 $template = $this->getMandatoryNodes($mandatoryNodes);
             }
 
-            /** @var \DOMElement $node */
-            /** @var \DOMNodeList $nodes */
             $template[$this->propertiesKey] = array();
             $xpath = new \DOMXPath($this->xmlDocument);
             $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
 
+            /** @var \DOMNodeList $nodes */
             $nodes = $xpath->query($this->pathToProperties);
 
             foreach ($nodes as $node) {
+                /** @var \DOMNode $node */
                 $attributes = $this->getAllAttributesOfNode($node);
                 $name = $attributes[$this->nameKey];
                 $params = $this->getChildrenOfNode($node, $this->pathToParams);
                 $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
             }
-        } catch(InvalidXmlException $ex) {
+
+        } catch (InvalidXmlException $ex) {
             throw $ex;
-        } catch(Exception $ex) {
-            throw new InvalidArgumentException("Path is invalid: " + $path);
+        } catch (Exception $ex) {
+            throw new InvalidArgumentException('Path is invalid: ' . $path);
         }
 
         return $template;
@@ -77,19 +99,18 @@ class TemplateReader implements LoaderInterface
      * Get values of mandatory fields
      * @param $mandatoryNodes
      * @throws InvalidXmlException
-     * @return array with mandatoryfields-keys and -values
+     * @return array with mandatory field-keys and -values
      */
     private function getMandatoryNodes($mandatoryNodes)
     {
         $mandatoryFields = array();
 
-        /** @var \DOMDocument $xmlDocument */
         foreach ($mandatoryNodes as $node) {
             try {
                 $value = $this->xmlDocument->getElementsByTagName($node)->item(0)->nodeValue;
                 $mandatoryFields[$node] = $value;
             } catch (Exception $ex) {
-                throw new InvalidXmlException("Missing or empty mandatory node in xml!");
+                throw new InvalidXmlException('Missing or empty mandatory node in xml!');
             }
         }
 
@@ -98,10 +119,10 @@ class TemplateReader implements LoaderInterface
 
     /**
      * Returns attributes form a node
-     * @param $node
+     * @param \DOMNode $node
      * @return array
      */
-    private function getAllAttributesOfNode($node)
+    private function getAllAttributesOfNode(\DOMNode $node)
     {
         $attributes = array();
 
@@ -110,12 +131,16 @@ class TemplateReader implements LoaderInterface
             for ($i = 0; $i < $node->attributes->length; $i++) {
                 $value = $node->attributes->item($i)->nodeValue;
 
-                if(is_numeric($value)) {
+                if (is_numeric($value)) {
                     $value = $value + 0;
-                } else if ($value === "true") {
-                    $value = true;
-                } else if ($value === "false") {
-                    $value = false;
+                } else {
+                    if ($value === 'true') {
+                        $value = true;
+                    } else {
+                        if ($value === 'false') {
+                            $value = false;
+                        }
+                    }
                 }
 
                 $attributes[$node->attributes->item($i)->nodeName] = $value;
@@ -127,26 +152,29 @@ class TemplateReader implements LoaderInterface
 
     /**
      * Returns an array with all the attributes from the children of a node
-     * @param $node
+     * @param \DOMNode $node
      * @param $path
      * @return array
      * @internal param $paramsTag
      */
-    private function getChildrenOfNode($node, $path) {
+    private function getChildrenOfNode(\DOMNode $node, $path)
+    {
 
         $keyValue = array();
 
-        /** @var \DOMElement $node */
-        if($node->hasChildNodes()) {
+        if ($node->hasChildNodes()) {
 
             $keyValue[$this->paramsKey] = array();
             $xpath = new \DOMXPath($this->xmlDocument);
             $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
 
-            $children = $xpath->query($path,$node);
+            $children = $xpath->query($path, $node);
 
-            foreach($children as $child){
-                $keyValue[$this->paramsKey] = array_merge($keyValue[$this->paramsKey], $this->getAttributesAsKeyValuePairs($child));
+            foreach ($children as $child) {
+                $keyValue[$this->paramsKey] = array_merge(
+                    $keyValue[$this->paramsKey],
+                    $this->getAttributesAsKeyValuePairs($child)
+                );
             }
         }
 
@@ -155,18 +183,19 @@ class TemplateReader implements LoaderInterface
 
     /**
      * Returns attributes as key value pairs (e.g. for params)
-     * @param $node
+     * @param \DOMNode $node
      * @return array
      */
-    private function getAttributesAsKeyValuePairs($node) {
+    private function getAttributesAsKeyValuePairs(\DOMNode $node)
+    {
 
-        $keyValue = array();
+        $keyValues = array();
 
         if ($node->hasAttributes()) {
-            $keyValue[$node->attributes->item(0)->nodeValue] = $node->attributes->item(1)->nodeValue;
+            $keyValues[$node->attributes->item(0)->nodeValue] = $node->attributes->item(1)->nodeValue;
         }
 
-        return $keyValue;
+        return $keyValues;
 
     }
 
@@ -174,12 +203,12 @@ class TemplateReader implements LoaderInterface
      * Loads a resource.
      *
      * @param mixed $resource The resource
-     * @param string $type     The resource type
+     * @param string $type The resource type
      * @return array
      */
     public function load($resource, $type = null)
     {
-       return $this->readTemplate($resource);
+        return $this->readTemplate($resource);
     }
 
     /**
@@ -188,7 +217,7 @@ class TemplateReader implements LoaderInterface
      * @param mixed $resource A resource
      * @param string $type     The resource type
      *
-     * @throws \Gedmo\Exception\FeatureNotImplementedException
+     * @throws \Sulu\Exception\FeatureNotImplementedException
      * @return Boolean true if this class supports the given resource, false otherwise
      */
     public function supports($resource, $type = null)
@@ -200,7 +229,7 @@ class TemplateReader implements LoaderInterface
     /**
      * Gets the loader resolver.
      *
-     * @throws \Gedmo\Exception\FeatureNotImplementedException
+     * @throws \Sulu\Exception\FeatureNotImplementedException
      * @return LoaderResolverInterface A LoaderResolverInterface instance
      */
     public function getResolver()
@@ -212,7 +241,7 @@ class TemplateReader implements LoaderInterface
      * Sets the loader resolver.
      *
      * @param LoaderResolverInterface $resolver A LoaderResolverInterface instance
-     * @throws \Gedmo\Exception\FeatureNotImplementedException
+     * @throws \Sulu\Exception\FeatureNotImplementedException
      */
     public function setResolver(LoaderResolverInterface $resolver)
     {

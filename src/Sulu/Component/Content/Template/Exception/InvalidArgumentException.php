@@ -1,6 +1,4 @@
 <?php
-
-namespace Sulu\Component\Content\Template\Exceptions;
 /*
 * This file is part of the Sulu CMS.
 *
@@ -10,14 +8,16 @@ namespace Sulu\Component\Content\Template\Exceptions;
 * with this source code in the file LICENSE.
 */
 
+namespace Sulu\Component\Content\Template\Exception;
+
+
 use Exception;
 
 class InvalidArgumentException extends Exception
 {
-    public function __construct($message = "")
+    public function __construct($message = '')
     {
-        $msg = "The given path is invalid!";
-        parent::__construct($msg +" "+$message);
+        $msg = 'The given path is invalid!';
+        parent::__construct($msg . ' ' . $message);
     }
 }
-
