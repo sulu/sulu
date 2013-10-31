@@ -87,5 +87,15 @@ define({
                 );
             }
         });
+
+        //show for for editing an account
+        sandbox.mvc.routes.push({
+            route: 'contacts/accounts/edit::id/details',
+            callback: function(id){
+                this.html(
+                    '<div data-aura-component="accounts@sulucontact" data-aura-display="form" data-aura-id="' +id + '"/>'
+                );
+            }
+        });
     }
 });

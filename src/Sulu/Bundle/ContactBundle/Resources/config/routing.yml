@@ -1,6 +1,10 @@
-sulu_admin.navigation:
-    path: /navigation/content
-    defaults: { _controller: SuluContactBundle:Navigation:content }
+navigation_contact:
+    path: /navigation/contact
+    defaults: { _controller: SuluContactBundle:Navigation:contact }
+
+navigation_account:
+    path: /navigation/account
+    defaults: { _controller: SuluContactBundle:Navigation:account }
 
 contact_form:
     pattern: /template/contact/form.html
