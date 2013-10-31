@@ -40,7 +40,7 @@ define([], function() {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-
+                this.sandbox.form.setData(this.formId, data);
             }.bind(this));
         },
 
@@ -60,7 +60,7 @@ define([], function() {
             }, this);
 
             // contact saved
-            this.sandbox.on('sulu.content.content.saved', function(id) {
+            this.sandbox.on('sulu.content.content.saved', function(path) {
                 this.setHeaderBar(true);
             }, this);
 

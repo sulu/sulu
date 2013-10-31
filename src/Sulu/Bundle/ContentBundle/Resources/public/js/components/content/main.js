@@ -63,6 +63,24 @@ define([
 
         save: function(data) {
             // TODO save
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            this.content.set(data);
+
+            // TODO select template
+            this.content.saveTemplate(null, 'overview', {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.content.content.saved', model.id);
+                    } else {
+                        this.sandbox.emit('sulu.router.navigate', 'content/content/edit:' + model.path + '/details');
+                    }
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
         },
 
         load: function(id) {
@@ -88,7 +106,7 @@ define([
         renderForm: function() {
 
             // show navigation submenu
-            this.getTabs(this.options.id, function(navigation) {
+            this.getTabs(this.options.path, function(navigation) {
                 this.sandbox.emit('navigation.item.column.show', {
                     data: navigation
                 });
@@ -96,8 +114,8 @@ define([
 
             // load data and show form
             this.content = new Content();
-            if (!!this.options.id) {
-                this.content = new Content({id: this.options.id});
+            if (!!this.options.path) {
+                this.content = new Content({id: this.options.path});
                 //contact = this.getModel(this.options.id);
                 this.content.fetch({
                     success: function(model) {
