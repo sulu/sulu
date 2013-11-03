@@ -4,8 +4,10 @@ php:
   - 5.5
   - 5.4
 
+env:
+  - DB=mysql
+
 before_script:
-<<<<<<< HEAD
   - composer self-update
   - composer update
   - ./bin/jackrabbit.sh
