@@ -56,8 +56,13 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->session->save();
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
-        $cmf->addNode('routes');
-        $cmf->addNode('contents');
+        $cmf->addMixin('mix:referenceable');
+
+        $routes = $cmf->addNode('routes');
+        $routes->addMixin('mix:referenceable');
+
+        $contents = $cmf->addNode('contents');
+        $contents->addMixin('mix:referenceable');
 
         $this->session->save();
     }
