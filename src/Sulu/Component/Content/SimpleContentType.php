@@ -12,9 +12,13 @@ namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
 
+/**
+ * Simple implementation of ContentTypes
+ */
 abstract class SimpleContentType implements ContentTypeInterface
 {
     /**
+     * name of content type
      * @var string
      */
     private $name;
@@ -31,19 +35,22 @@ abstract class SimpleContentType implements ContentTypeInterface
 
     /**
      * reads the value for given property out of the database + sets the value of the property
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
+     * @param NodeInterface $node to get data
+     * @param PropertyInterface $property to set data
      * @return mixed
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        return $node->getPropertyValue($property->getName());
+        $value = $node->getPropertyValue($property->getName());
+        $property->setValue($value);
+
+        return $value;
     }
 
     /**
      * save the value from given property
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
+     * @param NodeInterface $node to set data
+     * @param PropertyInterface $property property to get data
      * @return mixed
      */
     public function set(NodeInterface $node, PropertyInterface $property)
@@ -59,5 +66,19 @@ abstract class SimpleContentType implements ContentTypeInterface
     public function getType()
     {
         return ContentTypeInterface::PRE_SAVE;
+    }
+
+    /**
+     * magic getter for twig templates
+     * @param $property string name of property
+     * @return null
+     */
+    public function __get($property)
+    {
+        if (method_exists($this, 'get' . ucfirst($property))) {
+            return $this->{'get' . ucfirst($property)}();
+        } else {
+            return null;
+        }
     }
 }

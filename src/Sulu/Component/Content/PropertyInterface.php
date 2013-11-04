@@ -22,31 +22,37 @@ interface PropertyInterface
     public function getName();
 
     /**
+     * returns mandatory
      * @return bool
      */
     public function isMandatory();
 
     /**
+     * returns multilingual
      * @return bool
      */
     public function isMultilingual();
 
     /**
+     * return min occurs
      * @return int
      */
     public function getMinOccurs();
 
     /**
+     * return max occurs
      * @return int
      */
     public function getMaxOccurs();
 
     /**
+     * returns name of content type
      * @return string
      */
     public function getContentTypeName();
 
     /**
+     * parameter of property
      * @return array
      */
     public function getParams();
