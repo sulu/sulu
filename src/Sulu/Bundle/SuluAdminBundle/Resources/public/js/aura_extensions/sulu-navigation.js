@@ -38,8 +38,8 @@
                                 // check action
                                 app.sandbox.util.foreach(navigation.sub.items, function (content) {
                                     // check DisplayMode (new or edit) and show menu item or don't
-                                    hasNew = content.displayOptions.indexOf('new') >= 0;
-                                    hasEdit = content.displayOptions.indexOf('edit') >= 0;
+                                    hasNew = content.contentDisplay.indexOf('new') >= 0;
+                                    hasEdit = content.contentDisplay.indexOf('edit') >= 0;
                                     if ((!id && hasNew) || (id && hasEdit)) {
                                         content.action = this.parseActionUrl(content.action, url, id);
                                         if (content.action === url) {
