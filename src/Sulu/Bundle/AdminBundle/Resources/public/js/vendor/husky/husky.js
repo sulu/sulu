@@ -20635,8 +20635,6 @@ define('husky_components/navigation/item',[],function() {
 
             if (!!this.options.data.selected) {
                 columnItemClasses.push('selected');
-                this.options.column.addSelected();
-                this.sandbox.dom.addClass(this.sandbox.dom.parent(this.$el,'ul'),'item-selected');
             }
 
             this.sandbox.dom.attr(this.$el, {
@@ -20676,8 +20674,6 @@ define('husky_components/navigation/item',[],function() {
 
             // selected class
             this.sandbox.dom.addClass(this.$el, 'selected');
-
-            this.sandbox.dom.addClass(this.sandbox.dom.parent(this.$el,'ul'), 'item-selected');
         };
 
     return function() {
@@ -20743,7 +20739,7 @@ define('husky_components/navigation/column',['husky_components/navigation/item']
                     this.sandbox.dom.append(this.$el, prepareColumnHeader.call(this));
                 }
 
-                prepareColumnItems.call(this);
+                this.$columnItemsList = prepareColumnItems.call(this);
                 this.sandbox.dom.append(this.$el, this.$columnItemsList);
             }
 
@@ -20883,13 +20879,15 @@ define('husky_components/navigation/column',['husky_components/navigation/item']
                 data = this.options.data;
             }
 
-            this.$columnItemsList = this.sandbox.dom.createElement('<ul/>', {
+            var $columnItemsList = this.sandbox.dom.createElement('<ul/>', {
                 class: 'navigation-items'
             });
 
             data.sub.items.forEach(function(item) {
-                this.$columnItemsList.append(prepareColumnItem.call(this, item));
+                $columnItemsList.append(prepareColumnItem.call(this, item));
             }.bind(this));
+
+            return $columnItemsList;
         },
 
         prepareColumnItem = function(item) {
@@ -20900,7 +20898,6 @@ define('husky_components/navigation/column',['husky_components/navigation/item']
             navigationItem.setOptions({
                 $el: $item,
                 data: item,
-                column: this,
                 clickCallback: clickCallback.bind(this)
             });
 
@@ -21068,10 +21065,6 @@ define('husky_components/navigation/column',['husky_components/navigation/item']
 
             hasClass: function(className) {
                 return this.sandbox.dom.hasClass(this.$el, className);
-            },
-
-            addSelected: function(){
-                this.sandbox.dom.addClass(this.$columnItemsList,'item-selected');
             }
         };
     };
@@ -21166,14 +21159,12 @@ define('__component__$navigation@husky',['husky_components/navigation/column'], 
 
             } else if (index === 1) { // second column click, display content
 
-                console.log('asdfasdfasdfasdf',index, data);
                 this.columns[0].collapse();
                 if (!!this.columns[1]) {
                     this.columns[1].show();
                 }
 
             } else if (index >= 2) { // all other columns, display content
-
 
                 this.columns[0].hide();
                 if (!!this.columns[1]) {
@@ -24932,10 +24923,6 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.prev = function(selector, filter) {
                 return $(selector).prev(filter);
-            };
-
-            app.core.dom.closest = function(selector, filter) {
-                return $(selector).closest(filter);
             };
 
             app.core.dom.text = function(selector, value) {
