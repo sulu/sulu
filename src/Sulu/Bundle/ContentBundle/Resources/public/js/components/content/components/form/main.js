@@ -60,7 +60,7 @@ define([], function() {
             }, this);
 
             // contact saved
-            this.sandbox.on('sulu.content.contents.saved', function(path) {
+            this.sandbox.on('sulu.content.contents.saved', function(id) {
                 this.setHeaderBar(true);
             }, this);
 
@@ -71,8 +71,7 @@ define([], function() {
         },
 
         initData: function() {
-            var contentJson = this.options.data;
-            return contentJson;
+            return this.options.data;
         },
 
         submit: function() {

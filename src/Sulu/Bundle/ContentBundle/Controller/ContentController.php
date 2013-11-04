@@ -20,13 +20,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ContentController extends RestController implements ClassResourceInterface
 {
-    public function getAction($path)
+    /**
+     * returns a content item with given UUID as JSON String
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAction($id)
     {
         $view = $this->responseGetById(
-            $path,
-            function ($path) {
+            $id,
+            function ($id) {
                 // TODO language
-                $content = $this->getMapper()->read('/' . $path, 'en');
+                $content = $this->getMapper()->read($id, 'en');
+
                 return $content->toArray();
             }
         );
@@ -34,6 +40,10 @@ class ContentController extends RestController implements ClassResourceInterface
         return $this->handleView($view);
     }
 
+    /**
+     * returns all content items as JSON String
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function cgetAction()
     {
         $result = array();
@@ -58,6 +68,10 @@ class ContentController extends RestController implements ClassResourceInterface
         );
     }
 
+    /**
+     * Updates a content item and returns result as JSON String
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function postAction()
     {
         // TODO language

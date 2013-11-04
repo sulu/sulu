@@ -72,7 +72,7 @@ define([
                     if (!!data.id) {
                         this.sandbox.emit('sulu.content.content.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'content/content/edit:' + model.path + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
@@ -83,12 +83,12 @@ define([
 
         load: function(id) {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'content/content/edit:' + id + '/details');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + id + '/details');
         },
 
         add: function() {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'content/content/add');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/add');
         },
 
         delContents: function(ids) {
@@ -164,7 +164,7 @@ define([
         renderForm: function() {
 
             // show navigation submenu
-            this.getTabs(this.options.path, function(navigation) {
+            this.getTabs(this.options.id, function(navigation) {
                 this.sandbox.emit('navigation.item.column.show', {
                     data: navigation
                 });
@@ -172,8 +172,8 @@ define([
 
             // load data and show form
             this.content = new Content();
-            if (!!this.options.path) {
-                this.content = new Content({id: this.options.path});
+            if (!!this.options.id) {
+                this.content = new Content({id: this.options.id});
                 //contact = this.getModel(this.options.id);
                 this.content.fetch({
                     success: function(model) {

@@ -29,7 +29,7 @@ define({
 
         // list all contacts
         sandbox.mvc.routes.push({
-            route: 'content/content',
+            route: 'content/contents',
             callback: function() {
                 this.html('<div data-aura-component="content@sulucontent" data-aura-display="list"/>');
             }
@@ -37,7 +37,7 @@ define({
 
         // show form for new content
         sandbox.mvc.routes.push({
-            route: 'content/content/add',
+            route: 'content/contents/add',
             callback: function() {
                 this.html('<div data-aura-component="content@sulucontent" data-aura-display="form"/>');
             }
@@ -45,10 +45,10 @@ define({
 
         // show form for editing a content
         sandbox.mvc.routes.push({
-            route: 'content/content/edit::path/details',
-            callback: function(path) {
+            route: 'content/contents/edit::id/details',
+            callback: function(id) {
                 this.html(
-                    '<div data-aura-component="content@sulucontent" data-aura-display="form" data-aura-path="' + path + '"/>'
+                    '<div data-aura-component="content@sulucontent" data-aura-display="form" data-aura-id="' + id + '"/>'
                 );
             }
         });

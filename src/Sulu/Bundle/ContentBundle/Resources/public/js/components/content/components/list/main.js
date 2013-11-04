@@ -56,12 +56,12 @@ define(function() {
                     removeRow: false,
                     tableHead: [
 
-                        {content: "Pfad"},
-                        {content: "Titel"},
-                        {content: "Url"},
-                        {content: "Tags"}
+                        {content: this.sandbox.translate('content.contents.title')},
+                        {content: this.sandbox.translate('contact.contacts.url')},
+                        {content: this.sandbox.translate('contact.contacts.tags')}
+
                     ],
-                    excludeFields: ['id','article']
+                    excludeFields: ['id','article','path']
                 }
             }]);
 
