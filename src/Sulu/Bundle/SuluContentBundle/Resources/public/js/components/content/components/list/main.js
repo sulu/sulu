@@ -7,8 +7,6 @@
  * with this source code in the file LICENSE.
  */
 
-// TODO change to content (this is contact)
-
 define(function() {
 
     'use strict';
@@ -17,14 +15,14 @@ define(function() {
 
         view: true,
 
-        templates: ['/admin/contact/template/contact/list'],
+        templates: ['/admin/content/template/content/list'],
 
         initialize: function() {
             this.render();
         },
 
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/list'));
 
             // dropdown - showing options
             this.sandbox.start([{
@@ -49,8 +47,8 @@ define(function() {
             this.sandbox.start([{
                 name: 'datagrid@husky',
                 options: {
-                    el: this.sandbox.dom.find('#people-list', this.$el),
-                    url: '/admin/api/contact/contacts/list?fields=id,title,firstName,lastName,position',
+                    el: this.sandbox.dom.find('#content-list', this.$el),
+                    url: '/admin/api/content/contents',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'
@@ -58,18 +56,18 @@ define(function() {
                     removeRow: false,
                     tableHead: [
 
-                        {content: this.sandbox.translate('contact.contacts.contactTitle')},
-                        {content: this.sandbox.translate('contact.contacts.firstName')},
-                        {content: this.sandbox.translate('contact.contacts.lastName')},
-                        {content: this.sandbox.translate('contact.contacts.position')}
+                        {content: "Pfad"},
+                        {content: "Titel"},
+                        {content: "Url"},
+                        {content: "Tags"}
                     ],
-                    excludeFields: ['id']
+                    excludeFields: ['id','article']
                 }
             }]);
 
             // navigate to edit contact
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.contacts.contacts.load', item);
+            this.sandbox.on('husky.datagrid.item.click', function(id) {
+                this.sandbox.emit('sulu.content.contents.load', id);
             }, this);
 
 
@@ -81,7 +79,7 @@ define(function() {
             this.sandbox.on('husky.dropdown.options.item.click', function(event) {
                 if (event.type === "delete") {
                     this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                        this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+                        this.sandbox.emit('sulu.content.contents.delete', ids);
                     }.bind(this));
                 }
             },this);
@@ -90,7 +88,8 @@ define(function() {
             this.sandbox.emit('husky.header.button-type', 'add');
 
             this.sandbox.on('husky.button.add.click', function() {
-                this.sandbox.emit('sulu.contacts.contacts.new');
+                this.sandbox.logger.log("clicked");
+                this.sandbox.emit('sulu.content.contents.new');
             }, this);
         }
     };
