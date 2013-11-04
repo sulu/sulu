@@ -68,10 +68,10 @@ abstract class Structure implements StructureInterface
     private $created;
 
     /**
-     * datetime of last modified
+     * datetime of last changed
      * @var DateTime
      */
-    private $modified;
+    private $changed;
 
     /**
      * @param $key string
@@ -188,21 +188,21 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * returns modified DateTime
+     * returns changed DateTime
      * @return DateTime
      */
-    public function getModified()
+    public function getChanged()
     {
-        return $this->modified;
+        return $this->changed;
     }
 
     /**
-     * sets modified datetime
+     * sets changed datetime
      * @param DateTime $modified
      */
-    public function setModified(DateTime $modified)
+    public function setChanged(DateTime $changed)
     {
-        return $this->modified = $modified;
+        return $this->changed = $changed;
     }
 
     /**
@@ -295,7 +295,10 @@ abstract class Structure implements StructureInterface
     public function jsonSerialize()
     {
         $result = array(
-            'id' => $this->uuid
+            'id' => $this->uuid,
+            'creator' => $this->creator,
+            'created' => $this->created,
+            'changed' => $this->changed
         );
 
         /** @var PropertyInterface $property */

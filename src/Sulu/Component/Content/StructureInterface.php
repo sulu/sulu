@@ -55,16 +55,16 @@ interface StructureInterface extends \JsonSerializable
     public function setCreated(DateTime $created);
 
     /**
-     * returns modified DateTime
+     * returns changed DateTime
      * @return DateTime
      */
-    public function getModified();
+    public function getChanged();
 
     /**
-     * sets modified datetime
-     * @param DateTime $modified
+     * sets changed datetime
+     * @param DateTime $changed
      */
-    public function setModified(DateTime $modified);
+    public function setChanged(DateTime $changed);
 
     /**
      * key of template definition

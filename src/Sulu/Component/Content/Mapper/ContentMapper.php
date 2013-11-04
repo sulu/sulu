@@ -51,19 +51,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->addMixin('mix:referenceable');
         $node->setProperty('template', $templateKey); // TODO namespace ??? sulu:template
 
+        $dateTime = new \DateTime();
+
         // if is new node
-        if($node->getIdentifier() == null || is_empty($node->getIdentifier())){
-            /** @var \Sulu\Bundle\SecurityBundle\Entity\User $user */
+        if ($node->getIdentifier() == null) {
             $user = $this->container->get('security.context')->getToken()->getUser();
-            $node->setProperty('creator',$user->getId());
-            $node->setProperty('created',new \DateTime());
+            $node->setProperty('creator', $user->getId());
+            $node->setProperty('created', $dateTime);
         }
 
-        $node->setProperty('changed',new \DateTime());
+        $node->setProperty('changed', $dateTime);
 
         $postSave = array();
-
-        $structure->setId($node->getIndex());
 
         // go through every property in the template
         foreach ($structure->getProperties() as $property) {
@@ -97,7 +96,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $session->save();
 
-        $structure->setId($node->getPropertyValue('jcr:uuid'));
+        $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+        $structure->setCreator($node->getPropertyValue('creator'));
+        $structure->setCreated($node->getPropertyValue('created'));
+        $structure->setChanged($node->getPropertyValue('changed'));
 
         return $structure;
     }
@@ -118,7 +120,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // TODO localize
         $structure = $this->getStructure($templateKey);
 
-        $structure->setId($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setCreator($contentNode->getPropertyValue('creator'));
+        $structure->setCreated($contentNode->getPropertyValue('created'));
+        $structure->setChanged($contentNode->getPropertyValue('changed'));
 
         // go through every property in the template
         /** @var PropertyInterface $property */

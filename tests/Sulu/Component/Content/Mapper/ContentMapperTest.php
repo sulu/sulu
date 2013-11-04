@@ -228,15 +228,15 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        $this->mapper->save($data, 'de', 'overview');
+        $structure = $this->mapper->save($data, 'de', 'overview');
 
-        $content = $this->mapper->read('/Testtitle', 'de');
+        $content = $this->mapper->read($structure->getUuid(), 'de');
 
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals('Test', $content->article);
         $this->assertEquals('/de/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
-        $this->assertEquals('/Testtitle', $content->path);
+        $this->assertEquals(1, $content->creator);
     }
 }
 
