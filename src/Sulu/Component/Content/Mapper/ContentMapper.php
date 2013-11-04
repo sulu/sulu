@@ -52,14 +52,17 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('template', $templateKey); // TODO namespace ??? sulu:template
 
         $dateTime = new \DateTime();
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $userId = $user->getId();
 
         // if is new node
         if ($node->getIdentifier() == null) {
-            $user = $this->container->get('security.context')->getToken()->getUser();
-            $node->setProperty('creator', $user->getId());
+
+            $node->setProperty('creator', $userId);
             $node->setProperty('created', $dateTime);
         }
 
+        $node->setProperty('changer', $userId);
         $node->setProperty('changed', $dateTime);
 
         $postSave = array();
@@ -98,6 +101,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
         $structure->setCreator($node->getPropertyValue('creator'));
+        $structure->setChanger($node->getPropertyValue('changer'));
         $structure->setCreated($node->getPropertyValue('created'));
         $structure->setChanged($node->getPropertyValue('changed'));
 
@@ -122,6 +126,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setCreator($contentNode->getPropertyValue('creator'));
+        $structure->setChanger($contentNode->getPropertyValue('changer'));
         $structure->setCreated($contentNode->getPropertyValue('created'));
         $structure->setChanged($contentNode->getPropertyValue('changed'));
 

@@ -62,6 +62,12 @@ abstract class Structure implements StructureInterface
     private $creator;
 
     /**
+     * user id of changer
+     * @var int
+     */
+    private $changer;
+
+    /**
      * datetime of creation
      * @var DateTime
      */
@@ -167,6 +173,24 @@ abstract class Structure implements StructureInterface
     public function setCreator($userId)
     {
         $this->creator = $userId;
+    }
+
+    /**
+     * returns user id of changer
+     * @return int
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * sets user id of changer
+     * @param $userId int id of changer
+     */
+    public function setChanger($userId)
+    {
+        $this->changer = $userId;
     }
 
     /**
@@ -297,6 +321,7 @@ abstract class Structure implements StructureInterface
         $result = array(
             'id' => $this->uuid,
             'creator' => $this->creator,
+            'changer' => $this->changer,
             'created' => $this->created,
             'changed' => $this->changed
         );

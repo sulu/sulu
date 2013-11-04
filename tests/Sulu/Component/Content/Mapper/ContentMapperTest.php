@@ -214,6 +214,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Test', $content->getProperty('article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
         $this->assertEquals(1, $content->getPropertyValue('creator'));
+        $this->assertEquals(1, $content->getPropertyValue('changer'));
     }
 
     public function testRead()
@@ -237,6 +238,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
     }
 }
 

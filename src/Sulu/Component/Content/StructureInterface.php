@@ -43,6 +43,18 @@ interface StructureInterface extends \JsonSerializable
     public function setCreator($userId);
 
     /**
+     * returns user id of changer
+     * @return int
+     */
+    public function getChanger();
+
+    /**
+     * sets user id of changer
+     * @param $userId int id of changer
+     */
+    public function setChanger($userId);
+
+    /**
      * return created datetime
      * @return DateTime
      */
