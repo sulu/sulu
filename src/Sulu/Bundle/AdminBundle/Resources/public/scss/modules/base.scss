@@ -8,7 +8,27 @@
 #content {
   width: 800px;
   margin-left: 300px;
-  margin-top: 100px;
+  margin-top: 111px;
+
+  h2.mainheadline {
+    margin-top: 35px;
+  }
+
+}
+
+
+// Control elements
+/*----------------------------------------*/
+.control-label {
+  padding-left: 5px;
+  padding-right: 5px;
+  cursor: pointer;
+}
+
+// font family Helvetica / Arial for user generated content
+/*----------------------------------------*/
+input, select {
+  font-family: Helvetica, Arial;
 }
 
 

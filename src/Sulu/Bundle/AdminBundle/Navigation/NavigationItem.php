@@ -87,15 +87,15 @@ class NavigationItem implements \Iterator
      * Defines when items should be shown
      * @var array
      */
-    protected $displayOptions;
+    protected $contentDisplay;
 
 
     /**
      * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
-     * @param array $displayOptions if null -> default is array('new', 'edit')
+     * @param array $contentDisplay if null -> default is array('new', 'edit')
      */
-    function __construct($name, $parent = null, array $displayOptions = null)
+    function __construct($name, $parent = null, array $contentDisplay = null)
     {
         $this->name = $name;
 
@@ -103,10 +103,10 @@ class NavigationItem implements \Iterator
             $parent->addChild($this);
         }
 
-        if ($displayOptions != null) {
-            $this->displayOptions = $displayOptions;
+        if ($contentDisplay != null) {
+            $this->contentDisplay = $contentDisplay;
         } else {
-            $this->displayOptions = array('new','edit');
+            $this->contentDisplay = array('new','edit');
         }
     }
 
@@ -293,20 +293,20 @@ class NavigationItem implements \Iterator
 
     /**
      * Sets when item should be shown
-     * @param array $displayOptions
+     * @param array $contentDisplay
      */
-    public function setDisplayOptions($displayOptions)
+    public function setContentDisplay($contentDisplay)
     {
-        $this->displayOptions = $displayOptions;
+        $this->contentDisplay = $contentDisplay;
     }
 
     /**
      * Returns when to show item
      * @return array
      */
-    public function getDisplayOptions()
+    public function getContentDisplay()
     {
-        return $this->displayOptions;
+        return $this->contentDisplay;
     }
 
     /**
@@ -497,8 +497,12 @@ class NavigationItem implements \Iterator
             'hasSub' => $this->hasChildren(),
             'type' => $this->getType(),
             'contentType' => $this->getContentType(),
+<<<<<<< HEAD
+            'contentDisplay' => $this->getContentDisplay(),
+=======
             'displayOption' => $this->getDisplayOption(),
             'displayOptions' => $this->getDisplayOptions(),
+>>>>>>> 71b29ef0baeb9e5eb06bb76d3cb3db47f0ff719f
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
@@ -508,6 +512,7 @@ class NavigationItem implements \Iterator
                 'logo' => $this->getHeaderIcon()
             );
         }
+
 
         foreach ($this->getChildren() as $key => $child) {
             /** @var NavigationItem $child */
