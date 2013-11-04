@@ -3309,18 +3309,18 @@ hr.divider {
 }
 
 @-moz-keyframes foldOut {
-  /* line 42, ../scss/modules/navigation.scss */
+  /* line 43, ../scss/modules/navigation.scss */
   0% {
     -moz-transform: rotate3d(0, 1, 0, 100deg);
     transform: rotate3d(0, 1, 0, 100deg);
   }
 
-  /* line 45, ../scss/modules/navigation.scss */
+  /* line 46, ../scss/modules/navigation.scss */
   50% {
     box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0);
   }
 
-  /* line 48, ../scss/modules/navigation.scss */
+  /* line 49, ../scss/modules/navigation.scss */
   100% {
     -moz-transform: rotate3d(0, 1, 0, 0deg);
     transform: rotate3d(0, 1, 0, 0deg);
@@ -3329,18 +3329,18 @@ hr.divider {
 }
 
 @-webkit-keyframes foldOut {
-  /* line 42, ../scss/modules/navigation.scss */
+  /* line 43, ../scss/modules/navigation.scss */
   0% {
     -webkit-transform: rotate3d(0, 1, 0, 100deg);
     transform: rotate3d(0, 1, 0, 100deg);
   }
 
-  /* line 45, ../scss/modules/navigation.scss */
+  /* line 46, ../scss/modules/navigation.scss */
   50% {
     box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0);
   }
 
-  /* line 48, ../scss/modules/navigation.scss */
+  /* line 49, ../scss/modules/navigation.scss */
   100% {
     -webkit-transform: rotate3d(0, 1, 0, 0deg);
     transform: rotate3d(0, 1, 0, 0deg);
@@ -3349,18 +3349,18 @@ hr.divider {
 }
 
 @-o-keyframes foldOut {
-  /* line 42, ../scss/modules/navigation.scss */
+  /* line 43, ../scss/modules/navigation.scss */
   0% {
     -o-transform: rotate3d(0, 1, 0, 100deg);
     transform: rotate3d(0, 1, 0, 100deg);
   }
 
-  /* line 45, ../scss/modules/navigation.scss */
+  /* line 46, ../scss/modules/navigation.scss */
   50% {
     box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0);
   }
 
-  /* line 48, ../scss/modules/navigation.scss */
+  /* line 49, ../scss/modules/navigation.scss */
   100% {
     -o-transform: rotate3d(0, 1, 0, 0deg);
     transform: rotate3d(0, 1, 0, 0deg);
@@ -3369,18 +3369,18 @@ hr.divider {
 }
 
 @-ms-keyframes foldOut {
-  /* line 42, ../scss/modules/navigation.scss */
+  /* line 43, ../scss/modules/navigation.scss */
   0% {
     -ms-transform: rotate3d(0, 1, 0, 100deg);
     transform: rotate3d(0, 1, 0, 100deg);
   }
 
-  /* line 45, ../scss/modules/navigation.scss */
+  /* line 46, ../scss/modules/navigation.scss */
   50% {
     box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0);
   }
 
-  /* line 48, ../scss/modules/navigation.scss */
+  /* line 49, ../scss/modules/navigation.scss */
   100% {
     -ms-transform: rotate3d(0, 1, 0, 0deg);
     transform: rotate3d(0, 1, 0, 0deg);
@@ -3389,24 +3389,24 @@ hr.divider {
 }
 
 @keyframes foldOut {
-  /* line 42, ../scss/modules/navigation.scss */
+  /* line 43, ../scss/modules/navigation.scss */
   0% {
     transform: rotate3d(0, 1, 0, 100deg);
   }
 
-  /* line 45, ../scss/modules/navigation.scss */
+  /* line 46, ../scss/modules/navigation.scss */
   50% {
     box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0);
   }
 
-  /* line 48, ../scss/modules/navigation.scss */
+  /* line 49, ../scss/modules/navigation.scss */
   100% {
     transform: rotate3d(0, 1, 0, 0deg);
     box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25);
   }
 }
 
-/* line 56, ../scss/modules/navigation.scss */
+/* line 57, ../scss/modules/navigation.scss */
 .navigation,
 .navigation ul {
   margin: 0;
@@ -3414,7 +3414,7 @@ hr.divider {
   list-style: none;
 }
 
-/* line 62, ../scss/modules/navigation.scss */
+/* line 63, ../scss/modules/navigation.scss */
 .navigation {
   height: 100%;
   padding: 50px 5px 50px 0;
@@ -3423,12 +3423,12 @@ hr.divider {
   left: 0;
   z-index: 95;
 }
-/* line 72, ../scss/modules/navigation.scss */
+/* line 73, ../scss/modules/navigation.scss */
 .navigation.show-content {
   width: 210px !important;
 }
 
-/* line 77, ../scss/modules/navigation.scss */
+/* line 78, ../scss/modules/navigation.scss */
 .navigation-columns {
   -webkit-perspective: 700px;
   -moz-perspective: 700px;
@@ -3438,21 +3438,21 @@ hr.divider {
   height: 100%;
   white-space: nowrap;
 }
-/* line 84, ../scss/modules/navigation.scss */
+/* line 85, ../scss/modules/navigation.scss */
 .navigation-columns.show-content .navigation-column {
   width: 0;
   border-right: 0;
 }
-/* line 91, ../scss/modules/navigation.scss */
+/* line 92, ../scss/modules/navigation.scss */
 .navigation-columns.show-content > .navigation-column:first-child, .navigation-columns.show-content > .navigation-column.second-column {
   width: 50px;
 }
-/* line 94, ../scss/modules/navigation.scss */
+/* line 95, ../scss/modules/navigation.scss */
 .navigation-columns.show-content > .navigation-column:first-child .navigation-column-item::before, .navigation-columns.show-content > .navigation-column.second-column .navigation-column-item::before {
   display: none;
 }
 
-/* line 103, ../scss/modules/navigation.scss */
+/* line 104, ../scss/modules/navigation.scss */
 .navigation-column {
   -webkit-transition: width 0.4s ease-in-out;
   -moz-transition: width 0.4s ease-in-out;
@@ -3493,139 +3493,159 @@ hr.divider {
   background-color: white;
   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25);
 }
-/* line 124, ../scss/modules/navigation.scss */
+/* line 125, ../scss/modules/navigation.scss */
 .navigation-column.second-column, .navigation-column.portals-column {
   border-right: 0;
   background-color: #e0e0e0;
 }
-/* line 131, ../scss/modules/navigation.scss */
-.navigation-column.second-column .navigation-column-item:hover, .navigation-column.second-column .navigation-column-item.selected, .navigation-column.second-column .navigation-column-item.selected:hover, .navigation-column.portals-column .navigation-column-item:hover, .navigation-column.portals-column .navigation-column-item.selected, .navigation-column.portals-column .navigation-column-item.selected:hover {
+/* line 130, ../scss/modules/navigation.scss */
+.navigation-column.second-column .navigation-column-item:hover, .navigation-column.portals-column .navigation-column-item:hover {
   color: white;
   background-color: #333333;
 }
 /* line 136, ../scss/modules/navigation.scss */
-.navigation-column.second-column .navigation-column-item:hover, .navigation-column.portals-column .navigation-column-item:hover {
-  background-color: rgba(51, 51, 51, 0.5);
-}
-/* line 141, ../scss/modules/navigation.scss */
 .navigation-column.second-column .navigation-column-item.is-loading::before, .navigation-column.portals-column .navigation-column-item.is-loading::before {
   background: url("../img/loader_black.gif") no-repeat center center !important;
 }
-/* line 148, ../scss/modules/navigation.scss */
+/* line 145, ../scss/modules/navigation.scss */
+.navigation-column.second-column .item-selected .navigation-column-item.selected, .navigation-column.second-column .item-selected .navigation-column-item.selected:hover, .navigation-column.portals-column .item-selected .navigation-column-item.selected, .navigation-column.portals-column .item-selected .navigation-column-item.selected:hover {
+  color: white;
+  background-color: #333333;
+}
+/* line 149, ../scss/modules/navigation.scss */
+.navigation-column.second-column .item-selected .navigation-column-item.selected a, .navigation-column.second-column .item-selected .navigation-column-item.selected:hover a, .navigation-column.portals-column .item-selected .navigation-column-item.selected a, .navigation-column.portals-column .item-selected .navigation-column-item.selected:hover a {
+  color: black;
+}
+/* line 153, ../scss/modules/navigation.scss */
+.navigation-column.second-column .item-selected .navigation-column-item:hover, .navigation-column.portals-column .item-selected .navigation-column-item:hover {
+  color: black;
+  background-color: rgba(51, 51, 51, 0.1);
+}
+/* line 161, ../scss/modules/navigation.scss */
 .navigation-column.content-column {
   width: 200px !important;
   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25) !important;
 }
-/* line 151, ../scss/modules/navigation.scss */
+/* line 164, ../scss/modules/navigation.scss */
 .navigation-column.content-column .navigation-column-item {
   width: 100%;
 }
-/* line 156, ../scss/modules/navigation.scss */
+/* line 169, ../scss/modules/navigation.scss */
 .navigation-column.collapsed {
   width: 50px;
 }
-/* line 160, ../scss/modules/navigation.scss */
+/* line 173, ../scss/modules/navigation.scss */
 .navigation-column.collapsed .navigation-column-item::before {
   display: none;
 }
-/* line 166, ../scss/modules/navigation.scss */
+/* line 179, ../scss/modules/navigation.scss */
 .navigation-column.hide {
   width: 10px !important;
 }
-/* line 170, ../scss/modules/navigation.scss */
+/* line 183, ../scss/modules/navigation.scss */
 .navigation-column.hide .navigation-column-header,
 .navigation-column.hide .navigation-items {
   display: none !important;
 }
 
-/* line 176, ../scss/modules/navigation.scss */
+/* line 189, ../scss/modules/navigation.scss */
 .first-column {
   width: 250px;
 }
 
-/* line 181, ../scss/modules/navigation.scss */
+/* line 194, ../scss/modules/navigation.scss */
 .navigation-sub-columns .navigation-column:not(.content-column) {
   width: 250px;
 }
-/* line 184, ../scss/modules/navigation.scss */
+/* line 197, ../scss/modules/navigation.scss */
 .navigation-sub-columns .navigation-column:not(.content-column) .navigation-column-item {
   width: 249px;
 }
 
-/* line 192, ../scss/modules/navigation.scss */
+/* line 205, ../scss/modules/navigation.scss */
 .navigation-columns > .navigation-column:first-child {
   border-right: 0;
   color: #999999;
   background-color: #333333;
 }
-/* line 197, ../scss/modules/navigation.scss */
+/* line 210, ../scss/modules/navigation.scss */
 .navigation-columns > .navigation-column:first-child a {
   color: #999999;
 }
-/* line 201, ../scss/modules/navigation.scss */
+/* line 214, ../scss/modules/navigation.scss */
 .navigation-columns > .navigation-column:first-child .navigation-column-title {
   color: #fff;
 }
-/* line 208, ../scss/modules/navigation.scss */
-.navigation-columns > .navigation-column:first-child .navigation-column-item:hover, .navigation-columns > .navigation-column:first-child .navigation-column-item.selected, .navigation-columns > .navigation-column:first-child .navigation-column-item.selected:hover {
+/* line 219, ../scss/modules/navigation.scss */
+.navigation-columns > .navigation-column:first-child .navigation-column-item:hover {
   color: black;
   background-color: white;
 }
-/* line 212, ../scss/modules/navigation.scss */
-.navigation-columns > .navigation-column:first-child .navigation-column-item:hover a, .navigation-columns > .navigation-column:first-child .navigation-column-item.selected a, .navigation-columns > .navigation-column:first-child .navigation-column-item.selected:hover a {
+/* line 223, ../scss/modules/navigation.scss */
+.navigation-columns > .navigation-column:first-child .navigation-column-item:hover a {
   color: black;
 }
-/* line 216, ../scss/modules/navigation.scss */
-.navigation-columns > .navigation-column:first-child .navigation-column-item:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+/* line 232, ../scss/modules/navigation.scss */
+.navigation-columns > .navigation-column:first-child .item-selected .navigation-column-item.selected, .navigation-columns > .navigation-column:first-child .item-selected .navigation-column-item.selected:hover {
+  color: black;
+  background-color: white;
+}
+/* line 236, ../scss/modules/navigation.scss */
+.navigation-columns > .navigation-column:first-child .item-selected .navigation-column-item.selected a, .navigation-columns > .navigation-column:first-child .item-selected .navigation-column-item.selected:hover a {
+  color: black;
+}
+/* line 240, ../scss/modules/navigation.scss */
+.navigation-columns > .navigation-column:first-child .item-selected .navigation-column-item:hover {
+  color: #999999;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* line 224, ../scss/modules/navigation.scss */
+/* line 250, ../scss/modules/navigation.scss */
 .navigation-column-header {
   width: 100%;
   height: 100px;
   padding: 30px 20px 30px 10px;
 }
-/* line 229, ../scss/modules/navigation.scss */
+/* line 255, ../scss/modules/navigation.scss */
 .navigation-column-header .navigation-header-link {
   margin-left: 10px;
 }
-/* line 231, ../scss/modules/navigation.scss */
+/* line 257, ../scss/modules/navigation.scss */
 .navigation-column-header .navigation-header-link [class^="icon-"] {
   position: relative;
   top: 3px;
 }
-/* line 237, ../scss/modules/navigation.scss */
+/* line 263, ../scss/modules/navigation.scss */
 .navigation-column-header #portal-header {
   width: 100%;
 }
-/* line 240, ../scss/modules/navigation.scss */
+/* line 266, ../scss/modules/navigation.scss */
 .navigation-column-header #portal-header .dropdown-toggle::after {
   top: -7px;
 }
-/* line 244, ../scss/modules/navigation.scss */
+/* line 270, ../scss/modules/navigation.scss */
 .navigation-column-header #portal-header .dropdown-menu {
   width: 100%;
 }
-/* line 248, ../scss/modules/navigation.scss */
+/* line 274, ../scss/modules/navigation.scss */
 .navigation-column-header #portal-header .dropdown-menu::after, .navigation-column-header #portal-header .dropdown-menu::before {
   display: none;
 }
 
-/* line 257, ../scss/modules/navigation.scss */
+/* line 283, ../scss/modules/navigation.scss */
 .navigation-column:not(#column-0) .navigation-column-logo {
   display: none;
 }
-/* line 260, ../scss/modules/navigation.scss */
+/* line 286, ../scss/modules/navigation.scss */
 .navigation-column:not(#column-0) .navigation-column-title {
   padding-left: 40px;
 }
-/* line 265, ../scss/modules/navigation.scss */
+/* line 291, ../scss/modules/navigation.scss */
 .navigation-column:not(#column-0).collapsed .navigation-column-logo {
   display: block;
 }
 
-/* line 271, ../scss/modules/navigation.scss */
+/* line 297, ../scss/modules/navigation.scss */
 .navigation-column-title {
   display: inline-block;
   margin-left: 40px;
@@ -3636,26 +3656,26 @@ hr.divider {
   color: #9B9B9B;
 }
 
-/* line 281, ../scss/modules/navigation.scss */
+/* line 307, ../scss/modules/navigation.scss */
 .navigation-column-logo {
   display: inline-block;
   width: 26px;
   height: 26px;
   margin-right: 15px;
 }
-/* line 287, ../scss/modules/navigation.scss */
+/* line 313, ../scss/modules/navigation.scss */
 .navigation-column-logo + .navigation-column-title {
   padding-left: 0;
   position: relative;
   top: -2px;
 }
 
-/* line 294, ../scss/modules/navigation.scss */
+/* line 320, ../scss/modules/navigation.scss */
 .navigation-items {
   overflow: hidden;
 }
 
-/* line 298, ../scss/modules/navigation.scss */
+/* line 324, ../scss/modules/navigation.scss */
 .navigation-column-item {
   padding: 0 10px;
   width: 199px;
@@ -3668,24 +3688,20 @@ hr.divider {
   cursor: pointer;
   font-size: 18px;
 }
-/* line 310, ../scss/modules/navigation.scss */
+/* line 336, ../scss/modules/navigation.scss */
 .navigation-column-item:hover {
-  background-color: rgba(224, 224, 224, 0.5);
-}
-/* line 315, ../scss/modules/navigation.scss */
-.navigation-column-item.selected, .navigation-column-item.selected:hover {
   background-color: #e0e0e0;
 }
-/* line 319, ../scss/modules/navigation.scss */
+/* line 340, ../scss/modules/navigation.scss */
 .navigation-column-item::before {
-  content: "\E174";
+  content: "\E224";
   display: inline-block;
   float: right;
   font-size: 12px;
   font-family: "Glyphicons";
   font-weight: normal;
 }
-/* line 329, ../scss/modules/navigation.scss */
+/* line 350, ../scss/modules/navigation.scss */
 .navigation-column-item.is-loading::before {
   content: "";
   display: inline-block;
@@ -3696,17 +3712,17 @@ hr.divider {
   top: 16px;
   background: url("../img/loader_grey.gif") no-repeat center center;
 }
-/* line 341, ../scss/modules/navigation.scss */
+/* line 362, ../scss/modules/navigation.scss */
 .navigation-column-item[data-has-children="true"] {
   font-weight: bold;
 }
-/* line 345, ../scss/modules/navigation.scss */
+/* line 366, ../scss/modules/navigation.scss */
 .navigation-column-item a {
   display: inline-block;
   width: 100%;
   text-decoration: none;
 }
-/* line 351, ../scss/modules/navigation.scss */
+/* line 372, ../scss/modules/navigation.scss */
 .navigation-column-item [class*="icon-"] {
   display: inline-block;
   margin: 0 20px 0 5px;
@@ -3715,32 +3731,41 @@ hr.divider {
   font-size: 16px;
   font-family: "Glyphicons";
 }
-/* line 359, ../scss/modules/navigation.scss */
+/* line 380, ../scss/modules/navigation.scss */
 .navigation-column-item [class*="icon-"]::after {
   display: block;
 }
 
-/* line 365, ../scss/modules/navigation.scss */
+/* line 389, ../scss/modules/navigation.scss */
+.item-selected .navigation-column-item.selected, .item-selected .navigation-column-item.selected:hover {
+  background-color: #e0e0e0;
+}
+/* line 393, ../scss/modules/navigation.scss */
+.item-selected .navigation-column-item:hover {
+  background-color: rgba(224, 224, 224, 0.3);
+}
+
+/* line 399, ../scss/modules/navigation.scss */
 .first-column .navigation-column-item {
   width: 249px;
 }
 
-/* line 369, ../scss/modules/navigation.scss */
+/* line 403, ../scss/modules/navigation.scss */
 .navigation-sub-columns-container {
   display: inline-block;
   height: 100%;
 }
-/* line 373, ../scss/modules/navigation.scss */
+/* line 407, ../scss/modules/navigation.scss */
 .navigation-sub-columns-container.scrolling {
   box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25) !important;
 }
-/* line 375, ../scss/modules/navigation.scss */
+/* line 409, ../scss/modules/navigation.scss */
 .navigation-sub-columns-container.scrolling .navigation-sub-columns {
   padding-bottom: 0 !important;
   padding-right: 0 !important;
 }
 
-/* line 382, ../scss/modules/navigation.scss */
+/* line 416, ../scss/modules/navigation.scss */
 .navigation-sub-columns {
   -webkit-perspective: 900px;
   -moz-perspective: 900px;
@@ -3758,11 +3783,11 @@ hr.divider {
   max-width: 700px;
 }
 
-/* line 398, ../scss/modules/navigation.scss */
+/* line 432, ../scss/modules/navigation.scss */
 .navigation-column-item[data-has-sub="true"]::before {
   content: "\E224";
 }
-/* line 403, ../scss/modules/navigation.scss */
+/* line 437, ../scss/modules/navigation.scss */
 .navigation-column-item.is-loading::before {
   content: "";
 }
