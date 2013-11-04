@@ -20,8 +20,6 @@
                          * @param callback - returns parsed navigation element
                          */
                         getContentTabs: function (contentNavigation, id, callback) {
-                            //TODO Simplify this task for bundle developer?
-
                             var navigation, hasNew, hasEdit;
 
                             try {
@@ -49,7 +47,15 @@
                                     }
                                 }.bind(this));
                                 navigation.sub.items = items;
-                                callback(navigation);
+
+                                // if callback isset call it
+                                if (!!callback && typeof callback === 'function') {
+                                    callback(navigation);
+                                } else { // else emit event "navigation.item.column.show"
+                                    app.sandbox.emit('navigation.item.column.show', {
+                                        data: navigation
+                                    });
+                                }
                             }.bind(this));
                         },
 
