@@ -12,10 +12,9 @@ namespace Sulu\Component\Util;
 
 /**
  * Utility functions of UUID
- *
  * @package Sulu\Component\Util
  */
-class UUIDUtils
+class UuidUtils
 {
     /**
      * checks if given string is a valid UUID
