@@ -12,6 +12,8 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Repository for the Codes, implementing some additional functions
@@ -19,6 +21,33 @@ use Doctrine\ORM\QueryBuilder;
  */
 class CodeRepository extends EntityRepository
 {
+    /**
+     * returns code with given ID
+     * @param $id
+     * @return Code|null
+     */
+    public function getCodeById($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('code')
+                ->leftJoin('code.translations', 'translations')
+                ->leftJoin('code.location', 'location')
+                ->leftJoin('code.package', 'package')
+                ->addSelect('translations')
+                ->addSelect('location')
+                ->addSelect('package')
+                ->where('code.id=:codeId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('codeId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
     /**
      * Searches Entities by where clauses, pagination and sorted
      * @param integer|null $limit Page size for Pagination
@@ -51,6 +80,11 @@ class CodeRepository extends EntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * returns array of codes filtered by catalogue
+     * @param $catalogueId
+     * @return array
+     */
     public function findByCatalogue($catalogueId)
     {
         $dql = 'SELECT c, t
@@ -67,6 +101,11 @@ class CodeRepository extends EntityRepository
         return $query->setParameter('id', $catalogueId)->getArrayResult();
     }
 
+    /**
+     * returns array of codes filtered by catalogue with the suggestion of default language
+     * @param $catalogueId
+     * @return array
+     */
     public function findByCatalogueWithSuggestion($catalogueId)
     {
         // FIXME Don't use sub queries
@@ -93,6 +132,11 @@ class CodeRepository extends EntityRepository
             ->getArrayResult();
     }
 
+    /**
+     * returns a array of codes filtered by package
+     * @param $packageId
+     * @return array
+     */
     public function findByPackage($packageId)
     {
         $dql = 'SELECT c, t

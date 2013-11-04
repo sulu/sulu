@@ -30,8 +30,8 @@ class CataloguesController extends RestController
     {
         $find = function ($id) {
             return $this->getDoctrine()
-                ->getRepository('SuluTranslateBundle:Catalogue')
-                ->find($id);
+                ->getRepository($this->entityName)
+                ->getCatalogueById($id);
         };
 
         $view = $this->responseGetById($id, $find);
@@ -45,13 +45,13 @@ class CataloguesController extends RestController
      */
     public function getCataloguesAction()
     {
-        // Already in use - change calls
+        // FIXME: Already in use - change calls
         $view = $this->responseList();
 
         return $this->handleView($view);
     }
 
-    /*
+    /**
      * Returns a list of catalogues from a specific package
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -75,13 +75,12 @@ class CataloguesController extends RestController
     public function deleteCatalogueAction($id)
     {
         $delete = function ($id) {
-            $entityName = 'SuluTranslateBundle:Catalogue';
             $catalogue = $this->getDoctrine()
-                ->getRepository($entityName)
-                ->find($id);
+                ->getRepository($this->entityName)
+                ->getCatalogueById($id);
 
             if (!$catalogue) {
-                throw new EntityNotFoundException($entityName, $id);
+                throw new EntityNotFoundException($this->entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();

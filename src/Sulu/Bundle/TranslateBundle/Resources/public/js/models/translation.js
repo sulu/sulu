@@ -30,12 +30,6 @@ define([
                 key: 'catalogue',
                 relatedModel: Catalogue
             }
-//            },
-//            {
-//                type: Backbone.HasOne,
-//                key: 'code',
-//                relatedModel: Code
-//            }
         ]
     });
 });

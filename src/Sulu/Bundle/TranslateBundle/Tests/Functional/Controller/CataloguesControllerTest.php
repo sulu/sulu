@@ -107,9 +107,9 @@ class CataloguesControllerTest extends DatabaseTestCase
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
 
-        //$client->request('GET', '/api/translate/catalogues/1');
-        //$response = json_decode($client->getResponse()->getContent());
-        //$this->assertEquals('404', $client->getResponse()->getStatusCode());
+        $client->request('GET', '/api/translate/catalogues/1');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
 
     public function testDeleteByIdNotExisting()

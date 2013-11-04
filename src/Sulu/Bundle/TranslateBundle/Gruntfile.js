@@ -62,6 +62,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('publish', [
+        'compass',
         'clean:public',
         'copy:public'
     ]);
