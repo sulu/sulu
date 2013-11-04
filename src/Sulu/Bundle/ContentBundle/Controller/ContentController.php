@@ -46,6 +46,7 @@ class ContentController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
+        // TODO uuid of parent?
         $result = array();
         $basePath = $this->getBasePath();
 
@@ -55,7 +56,8 @@ class ContentController extends RestController implements ClassResourceInterface
 
         /** @var NodeInterface $node */
         foreach ($contents as $node) {
-            $result[] = $this->getMapper()->read(str_replace('/cmf/contents', '', $node->getPath()), 'en')->toArray();
+            // TODO language
+            $result[] = $this->getMapper()->read($node->getPropertyValue('jcr:uuid'), 'en')->toArray();
         }
 
         return $this->handleView(
