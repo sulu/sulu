@@ -14,17 +14,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller
 {
-    public function packageformAction()
+    public function packageFormAction()
     {
         return $this->render('SuluTranslateBundle:Template:package.form.html.twig', array());
     }
 
-    public function translationformAction()
+    public function translationFormAction()
     {
         return $this->render('SuluTranslateBundle:Template:translation.form.html.twig', array());
     }
 
-    public function packagelistAction()
+    public function packageListAction()
     {
         return $this->render('SuluTranslateBundle:Template:package.list.html.twig', array());
     }

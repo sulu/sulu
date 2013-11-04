@@ -18,6 +18,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class TranslationRepository extends EntityRepository
 {
+    /**
+     * returns translation with given code and catalogue
+     * @param $codeId
+     * @param $catalogueId
+     * @return null
+     */
     public function getTranslation($codeId, $catalogueId)
     {
         $dql = 'SELECT tr
@@ -44,6 +50,15 @@ class TranslationRepository extends EntityRepository
         }
     }
 
+    /**
+     * find translation with a few filters
+     * @param $packageId
+     * @param $locale
+     * @param null $backend
+     * @param null $frontend
+     * @param null $location
+     * @return array
+     */
     public function findFiltered($packageId, $locale, $backend = null, $frontend = null, $location = null)
     {
         $dql = 'SELECT tr

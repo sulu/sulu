@@ -21,7 +21,11 @@ use Doctrine\ORM\NoResultException;
  */
 class CodeRepository extends EntityRepository
 {
-
+    /**
+     * returns code with given ID
+     * @param $id
+     * @return Code|null
+     */
     public function getCodeById($id)
     {
         try {
@@ -76,6 +80,11 @@ class CodeRepository extends EntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * returns array of codes filtered by catalogue
+     * @param $catalogueId
+     * @return array
+     */
     public function findByCatalogue($catalogueId)
     {
         $dql = 'SELECT c, t
@@ -92,6 +101,11 @@ class CodeRepository extends EntityRepository
         return $query->setParameter('id', $catalogueId)->getArrayResult();
     }
 
+    /**
+     * returns array of codes filtered by catalogue with the suggestion of default language
+     * @param $catalogueId
+     * @return array
+     */
     public function findByCatalogueWithSuggestion($catalogueId)
     {
         // FIXME Don't use sub queries
@@ -118,6 +132,11 @@ class CodeRepository extends EntityRepository
             ->getArrayResult();
     }
 
+    /**
+     * returns a array of codes filtered by package
+     * @param $packageId
+     * @return array
+     */
     public function findByPackage($packageId)
     {
         $dql = 'SELECT c, t

@@ -20,6 +20,11 @@ use Doctrine\ORM\NoResultException;
  */
 class PackageRepository extends EntityRepository
 {
+    /**
+     * returns a package with given ID
+     * @param $id
+     * @return Package|null
+     */
     public function getPackageById($id)
     {
         try {

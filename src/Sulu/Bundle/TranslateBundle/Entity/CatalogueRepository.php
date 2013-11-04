@@ -15,11 +15,16 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Repository for the Packages, implementing some additional functions
+ * Repository for the Catalogues, implementing some additional functions
  * for querying objects
  */
 class CatalogueRepository extends EntityRepository
 {
+    /**
+     * returns a catalogue with given ID
+     * @param $id
+     * @return Catalogue|null
+     */
     public function getCatalogueById($id)
     {
         try {
