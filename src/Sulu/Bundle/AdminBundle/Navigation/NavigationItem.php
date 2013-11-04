@@ -78,6 +78,12 @@ class NavigationItem implements \Iterator
     protected $contentType;
 
     /**
+     * Describes how the navigation item should be shown in husky
+     * @var string
+     */
+    protected $displayOption;
+
+    /**
      * Defines when items should be shown
      * @var array
      */
@@ -268,6 +274,24 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     * Sets the display option
+     * @param string $displayOption
+     */
+    public function setDisplayOption($displayOption)
+    {
+        $this->displayOption = $displayOption;
+    }
+
+    /**
+     * Returns the display option
+     * @return string
+     */
+    public function getDisplayOption()
+    {
+        return $this->displayOption;
+    }
+
+    /**
      * Sets when item should be shown
      * @param array $displayOptions
      */
@@ -323,6 +347,8 @@ class NavigationItem implements \Iterator
         $new->setHeaderIcon($this->getHeaderIcon());
         $new->setHeaderTitle($this->getHeaderTitle());
         $new->setId($this->getId());
+        $new->setDisplayOption($this->getDisplayOption());
+        $new->setDisplayOptions($this->getDisplayOptions());
 
         return $new;
     }
@@ -471,6 +497,7 @@ class NavigationItem implements \Iterator
             'hasSub' => $this->hasChildren(),
             'type' => $this->getType(),
             'contentType' => $this->getContentType(),
+            'displayOption' => $this->getDisplayOption(),
             'displayOptions' => $this->getDisplayOptions(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
