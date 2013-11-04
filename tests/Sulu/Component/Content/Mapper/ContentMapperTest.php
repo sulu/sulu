@@ -20,6 +20,9 @@ use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class ContentMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -146,11 +149,31 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'sulu.content.structure_manager' => $this->getStrucktureManager(),
             'sulu.content.type.text_line' => new TextLine('not in use'),
             'sulu.content.type.text_area' => new TextArea('not in use'),
-            'sulu.content.type.resource_locator' => $resourceLocator
+            'sulu.content.type.resource_locator' => $resourceLocator,
+            'security.context' => $this->getSecurityContextMock()
         );
         $args = func_get_args();
 
         return $result[$args[0]];
+    }
+
+    private function getSecurityContextMock(){
+        $userMock = $this->getMock('\Sulu\Component\Content\Mapper\UserInterface');
+        $userMock->expects($this->any())
+            ->method('getId')
+            ->will($this->returnValue(1));
+
+        $tokenMock = $this->getMock('\Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $tokenMock->expects($this->any())
+            ->method('getUser')
+            ->will($this->returnValue($userMock));
+
+        $securityMock = $this->getMock('\Symfony\Component\Security\Core\SecurityContextInterface');
+        $securityMock->expects($this->any())
+            ->method('getToken')
+            ->will($this->returnValue($tokenMock));
+
+        return $securityMock;
     }
 
     private function prepareSession()
@@ -190,6 +213,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals(1, $content->getPropertyValue('creator'));
     }
 
     public function testRead()
@@ -214,4 +238,13 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals('/Testtitle', $content->path);
     }
+}
+
+/**
+ * TODO
+ * Class UserInterface
+ * @package Sulu\Component\Content\Mapper
+ */
+interface UserInterface{
+    public function getId();
 }

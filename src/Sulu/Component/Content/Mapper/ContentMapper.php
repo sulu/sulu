@@ -15,7 +15,7 @@ use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Util\UUIDUtils;
+use Sulu\Component\Util\UuidUtils;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
@@ -49,6 +49,16 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         ); //TODO check better way to generate title, tree?
         $node->addMixin('mix:referenceable');
         $node->setProperty('template', $templateKey); // TODO namespace ??? sulu:template
+
+        // if is new node
+        if($node->getIdentifier() == null || is_empty($node->getIdentifier())){
+            /** @var \Sulu\Bundle\SecurityBundle\Entity\User $user */
+            $user = $this->container->get('security.context')->getToken()->getUser();
+            $node->setProperty('creator',$user->getId());
+            $node->setProperty('created',new \DateTime());
+        }
+
+        $node->setProperty('changed',new \DateTime());
 
         $postSave = array();
 
