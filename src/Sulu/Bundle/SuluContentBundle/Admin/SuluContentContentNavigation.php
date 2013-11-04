@@ -22,9 +22,9 @@ class SuluContentContentNavigation extends ContentNavigation
 
         $this->setName('Content');
         $this->setHeader(array(
-            'title'         => 'back to contacts',
+            'title'         => 'back to contents',
             'displayOption' => 'link',
-            'action'        => 'content/content'
+            'action'        => 'content/contents'
         ));
 
         $details = new NavigationItem('Details');
