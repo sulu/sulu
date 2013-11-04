@@ -269,7 +269,7 @@ class NavigationItem implements \Iterator
 
     /**
      * Sets when item should be shown
-     * @param array $displayOptions
+     * @param array $contentDisplay
      */
     public function setContentDisplay($contentDisplay)
     {
