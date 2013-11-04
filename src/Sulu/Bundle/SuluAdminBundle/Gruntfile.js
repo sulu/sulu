@@ -190,7 +190,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
-        'copy:build',
+        // FIXME 'copy:build',
         'useminPrepare',
         // FIXME 'requirejs',
         // FIXME 'concat',
