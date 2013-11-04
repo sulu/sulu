@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\Content;
 
+/**
+ * base class of complex content types
+ */
 abstract class ComplexContentType implements ContentTypeInterface
 {
     /**

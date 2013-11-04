@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
     /**
+     * base path to save the content
      * @var string
      */
     private $basePath = '/cmf/contents';
@@ -53,8 +54,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $postSave = array();
 
         $structure->setId($node->getIndex());
-        // TODO right path
-        $structure->setPath($data['title']);
 
         // go through every property in the template
         foreach ($structure->getProperties() as $property) {
@@ -95,19 +94,14 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
     /**
      * Reads the data from the given path
-     * @param $id string uuid or path to the content
+     * @param $id string uuid to the content
      * @param $language string read data for given language
      * @return StructureInterface
      */
     public function read($id, $language)
     {
         $session = $this->getSession();
-        if (UUIDUtils::isUUID($id)) {
-            $contentNode = $session->getNodeByIdentifier($id);
-        } else {
-            $path = $this->getBasePath() . (strpos($id, '/') === 0 ? '' : '/') . $id;
-            $contentNode = $session->getNode($path);
-        }
+        $contentNode = $session->getNodeByIdentifier($id);
 
         $templateKey = $contentNode->getPropertyValue('template'); // TODO namespace ??? sulu:template
 
@@ -115,8 +109,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure = $this->getStructure($templateKey);
 
         $structure->setId($contentNode->getPropertyValue('jcr:uuid'));
-        // TODO right path
-        $structure->setPath($id);
 
         // go through every property in the template
         /** @var PropertyInterface $property */

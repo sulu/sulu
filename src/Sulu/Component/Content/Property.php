@@ -10,44 +10,55 @@
 
 namespace Sulu\Component\Content;
 
+/**
+ * Property of Structure generated from Structure Manager to map a template
+ */
 class Property implements PropertyInterface
 {
     /**
+     * name of property
      * @var string
      */
     private $name;
 
     /**
+     * is property mandatory
      * @var bool
      */
     private $mandatory;
 
     /**
+     * is property multilingual
      * @var bool
      */
     private $multilingual;
 
     /**
+     * min occurs of property value
      * @var int
      */
     private $minOccurs;
 
     /**
+     * max occurs of property value
      * @var int
      */
     private $maxOccurs;
 
     /**
+     * name of content type
      * @var string
      */
     private $contentTypeName;
 
     /**
+     * parameter of property to merge with parameter of content type
      * @var array
      */
     private $params;
 
     /**
+     * value of property
      * @var mixed
      */
     private $value;
@@ -80,6 +91,7 @@ class Property implements PropertyInterface
     }
 
     /**
+     * returns mandatory
      * @return bool
      */
     public function isMandatory()
@@ -88,6 +100,7 @@ class Property implements PropertyInterface
     }
 
     /**
+     * returns multilingual
      * @return bool
      */
     public function isMultilingual()
@@ -96,6 +109,7 @@ class Property implements PropertyInterface
     }
 
     /**
+     * return min occurs
      * @return int
      */
     public function getMinOccurs()
@@ -104,6 +118,7 @@ class Property implements PropertyInterface
     }
 
     /**
+     * return max occurs
      * @return int
      */
     public function getMaxOccurs()
@@ -130,6 +145,7 @@ class Property implements PropertyInterface
     }
 
     /**
+     * returns name of content type
      * @return string
      */
     public function getContentTypeName()
@@ -138,6 +154,7 @@ class Property implements PropertyInterface
     }
 
     /**
+     * parameter of property
      * @return array
      */
     public function getParams()

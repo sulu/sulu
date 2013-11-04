@@ -13,6 +13,9 @@ namespace Sulu\Component\Content\Mapper;
 
 use Sulu\Component\Content\StructureInterface;
 
+/**
+ * Interface of ContentMapper
+ */
 interface ContentMapperInterface
 {
     /**

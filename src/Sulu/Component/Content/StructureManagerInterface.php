@@ -12,6 +12,9 @@ namespace Sulu\Component\Content;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
+/**
+ * Interface of StructureManager
+ */
 interface StructureManagerInterface extends ContainerAwareInterface
 {
     /**
