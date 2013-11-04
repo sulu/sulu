@@ -20,6 +20,9 @@ use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class ContentMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,16 +30,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
      * @var SessionFactoryService
      */
     public $sessionService;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    public $structureMock;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    public $structureFactoryMock;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -66,8 +59,13 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->session->save();
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
-        $cmf->addNode('routes');
-        $cmf->addNode('contents');
+        $cmf->addMixin('mix:referenceable');
+
+        $routes = $cmf->addNode('routes');
+        $routes->addMixin('mix:referenceable');
+
+        $contents = $cmf->addNode('contents');
+        $contents->addMixin('mix:referenceable');
 
         $this->session->save();
     }
@@ -84,49 +82,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'workspace' => 'default'
         ));
 
-        $this->structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
-            array('overview', 'asdf', 'asdf', 2400)
-        );
-
-        $method = new ReflectionMethod(
-            get_class($this->structureMock), 'add'
-        );
-
-        $method->setAccessible(true);
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('title', 'text_line')
-            )
-        );
-
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('tags', 'text_line', false, false, 2, 10)
-            )
-        );
-
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('url', 'resource_locator')
-            )
-        );
-
-        $method->invokeArgs(
-            $this->structureMock,
-            array(
-                new Property('article', 'text_area')
-            )
-        );
-
-        $this->structureFactoryMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
-        $this->structureFactoryMock->expects($this->any())
-            ->method('getStructure')
-            ->will($this->returnValue($this->structureMock));
-
         $containerMock = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
         $containerMock->expects($this->any())
             ->method('get')
@@ -137,20 +92,88 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         return $containerMock;
     }
 
+    public function getStrucktureManager()
+    {
+        $structureMock = $this->getMockForAbstractClass(
+            '\Sulu\Component\Content\Structure',
+            array('overview', 'asdf', 'asdf', 2400)
+        );
+
+        $method = new ReflectionMethod(
+            get_class($structureMock), 'add'
+        );
+
+        $method->setAccessible(true);
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('title', 'text_line')
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('tags', 'text_line', false, false, 2, 10)
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('url', 'resource_locator')
+            )
+        );
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                new Property('article', 'text_area')
+            )
+        );
+
+        $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
+        $structureManagerMock->expects($this->any())
+            ->method('getStructure')
+            ->will($this->returnValue($structureMock));
+
+        return $structureManagerMock;
+    }
+
     public function containerCallback()
     {
         $resourceLocator = new ResourceLocator($this->sessionService, 'not in use', '/cmf/routes');
 
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
-            'sulu.content.structure_manager' => $this->structureFactoryMock,
+            'sulu.content.structure_manager' => $this->getStrucktureManager(),
             'sulu.content.type.text_line' => new TextLine('not in use'),
             'sulu.content.type.text_area' => new TextArea('not in use'),
-            'sulu.content.type.resource_locator' => $resourceLocator
+            'sulu.content.type.resource_locator' => $resourceLocator,
+            'security.context' => $this->getSecurityContextMock()
         );
         $args = func_get_args();
 
         return $result[$args[0]];
+    }
+
+    private function getSecurityContextMock(){
+        $userMock = $this->getMock('\Sulu\Component\Content\Mapper\UserInterface');
+        $userMock->expects($this->any())
+            ->method('getId')
+            ->will($this->returnValue(1));
+
+        $tokenMock = $this->getMock('\Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $tokenMock->expects($this->any())
+            ->method('getUser')
+            ->will($this->returnValue($userMock));
+
+        $securityMock = $this->getMock('\Symfony\Component\Security\Core\SecurityContextInterface');
+        $securityMock->expects($this->any())
+            ->method('getToken')
+            ->will($this->returnValue($tokenMock));
+
+        return $securityMock;
     }
 
     private function prepareSession()
@@ -164,7 +187,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        NodeHelper::purgeWorkspace($this->session);
+        //NodeHelper::purgeWorkspace($this->session);
         $this->session->save();
     }
 
@@ -190,6 +213,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals(1, $content->getPropertyValue('creator'));
+        $this->assertEquals(1, $content->getPropertyValue('changer'));
     }
 
     public function testRead()
@@ -204,13 +229,24 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        $this->mapper->save($data, 'overview');
+        $structure = $this->mapper->save($data, 'de', 'overview');
 
-        $content = $this->mapper->read('/Testtitle', 'de', 'overview');
+        $content = $this->mapper->read($structure->getUuid(), 'de');
 
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals('Test', $content->article);
         $this->assertEquals('/de/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
     }
+}
+
+/**
+ * TODO
+ * Class UserInterface
+ * @package Sulu\Component\Content\Mapper
+ */
+interface UserInterface{
+    public function getId();
 }

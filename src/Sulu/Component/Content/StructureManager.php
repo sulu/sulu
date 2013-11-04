@@ -19,6 +19,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
+/**
+ * generates subclasses of structure to match template definitions.
+ * this classes will be cached in Symfony cache
+ */
 class StructureManager extends ContainerAware implements StructureManagerInterface
 {
     /**

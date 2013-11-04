@@ -10,13 +10,74 @@
 
 namespace Sulu\Component\Content;
 
+use DateTime;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
  * Structure for template
  */
-interface StructureInterface
+interface StructureInterface extends \JsonSerializable
 {
+    /**
+     * id of node
+     * @return int
+     */
+    public function getUuid();
+
+    /**
+     * sets id of node
+     * @param $uuid
+     */
+    public function setUuid($uuid);
+
+    /**
+     * returns id of creator
+     * @return int
+     */
+    public function getCreator();
+
+    /**
+     * sets user id of creator
+     * @param $userId int id of creator
+     */
+    public function setCreator($userId);
+
+    /**
+     * returns user id of changer
+     * @return int
+     */
+    public function getChanger();
+
+    /**
+     * sets user id of changer
+     * @param $userId int id of changer
+     */
+    public function setChanger($userId);
+
+    /**
+     * return created datetime
+     * @return DateTime
+     */
+    public function getCreated();
+
+    /**
+     * sets created datetime
+     * @param DateTime $created
+     */
+    public function setCreated(DateTime $created);
+
+    /**
+     * returns changed DateTime
+     * @return DateTime
+     */
+    public function getChanged();
+
+    /**
+     * sets changed datetime
+     * @param DateTime $changed
+     */
+    public function setChanged(DateTime $changed);
+
     /**
      * key of template definition
      * @return string
@@ -54,4 +115,10 @@ interface StructureInterface
      * @return array
      */
     public function getProperties();
+
+    /**
+     * returns an array of property value pairs
+     * @return array
+     */
+    public function toArray();
 }

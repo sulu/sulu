@@ -10,15 +10,18 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Util\UuidUtils;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
     /**
+     * base path to save the content
      * @var string
      */
     private $basePath = '/cmf/contents';
@@ -35,17 +38,32 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param $templateKey string name of template
      * @return StructureInterface
      */
-    public function save($data, $language, $templateKey = '')
+    public function save($data, $language, $templateKey)
     {
         // TODO localize
-        $structure = $this->getStructure($templateKey); //TODO Set correct file
+        $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
         $root = $session->getRootNode();
+        /** @var NodeInterface $node */
         $node = $root->addNode(
             ltrim($this->getBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
         $node->addMixin('mix:referenceable');
-        $node->setProperty('template', $templateKey); // TODO add namespace ??? sulu:template
+        $node->setProperty('template', $templateKey); // TODO namespace ??? sulu:template
+
+        $dateTime = new \DateTime();
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $userId = $user->getId();
+
+        // if is new node
+        if ($node->getIdentifier() == null) {
+
+            $node->setProperty('creator', $userId);
+            $node->setProperty('created', $dateTime);
+        }
+
+        $node->setProperty('changer', $userId);
+        $node->setProperty('changed', $dateTime);
 
         $postSave = array();
 
@@ -81,25 +99,36 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $session->save();
 
+        $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+        $structure->setCreator($node->getPropertyValue('creator'));
+        $structure->setChanger($node->getPropertyValue('changer'));
+        $structure->setCreated($node->getPropertyValue('created'));
+        $structure->setChanged($node->getPropertyValue('changed'));
+
         return $structure;
     }
 
     /**
      * Reads the data from the given path
-     * @param $path string path to the content
+     * @param $id string uuid to the content
      * @param $language string read data for given language
      * @return StructureInterface
      */
-    public function read($path, $language)
+    public function read($id, $language)
     {
         $session = $this->getSession();
-        $contentPath = $this->getBasePath() . $path;
-        $contentNode = $session->getNode($contentPath);
+        $contentNode = $session->getNodeByIdentifier($id);
 
-        $templateKey = $contentNode->getPropertyValue('template'); // TODO add namespace ??? sulu:template
+        $templateKey = $contentNode->getPropertyValue('template'); // TODO namespace ??? sulu:template
 
         // TODO localize
-        $structure = $this->getStructure($templateKey); //TODO Set correct file
+        $structure = $this->getStructure($templateKey);
+
+        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setCreator($contentNode->getPropertyValue('creator'));
+        $structure->setChanger($contentNode->getPropertyValue('changer'));
+        $structure->setCreated($contentNode->getPropertyValue('created'));
+        $structure->setChanged($contentNode->getPropertyValue('changed'));
 
         // go through every property in the template
         /** @var PropertyInterface $property */

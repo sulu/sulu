@@ -13,6 +13,9 @@ namespace Sulu\Component\Content\Mapper;
 
 use Sulu\Component\Content\StructureInterface;
 
+/**
+ * Interface of ContentMapper
+ */
 interface ContentMapperInterface
 {
     /**
@@ -22,13 +25,13 @@ interface ContentMapperInterface
      * @param $templateKey string name of template
      * @return StructureInterface
      */
-    public function save($data, $language, $templateKey = '');
+    public function save($data, $language, $templateKey);
 
     /**
      * Reads the data from the given path
-     * @param $path string path to the content
+     * @param $id string uuid or path to the content
      * @param $language string read data for given language
      * @return StructureInterface
      */
-    public function read($path, $language);
+    public function read($id, $language);
 }
