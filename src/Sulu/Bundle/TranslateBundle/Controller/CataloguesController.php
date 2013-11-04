@@ -76,7 +76,7 @@ class CataloguesController extends RestController
     {
         $delete = function ($id) {
             $catalogue = $this->getDoctrine()
-                ->getRepository($entityName)
+                ->getRepository($this->entityName)
                 ->getCatalogueById($id);
 
             if (!$catalogue) {
