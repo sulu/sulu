@@ -30,4 +30,9 @@ class TemplateController extends Controller
         return $this->container->get('sulu.content.structure_manager')->getStructure($key);
     }
 
+    public function listAction()
+    {
+        return $this->render('SuluContentBundle:Template:list.html.twig');
+    }
+
 }

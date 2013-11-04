@@ -102,7 +102,7 @@ class ContentControllerTest extends WebTestCase
         );
 
         /** @var ContentMapperInterface $mapper */
-        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+       $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
         foreach ($data as $d) {
             $mapper->save($d, 'en', 'overview');
