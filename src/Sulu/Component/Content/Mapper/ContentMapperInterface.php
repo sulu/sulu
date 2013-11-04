@@ -22,7 +22,7 @@ interface ContentMapperInterface
      * @param $templateKey string name of template
      * @return StructureInterface
      */
-    public function save($data, $language, $templateKey = '');
+    public function save($data, $language, $templateKey);
 
     /**
      * Reads the data from the given path

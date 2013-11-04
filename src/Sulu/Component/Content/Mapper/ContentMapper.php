@@ -37,7 +37,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param $templateKey string name of template
      * @return StructureInterface
      */
-    public function save($data, $language, $templateKey = '')
+    public function save($data, $language, $templateKey)
     {
         // TODO localize
         $structure = $this->getStructure($templateKey);

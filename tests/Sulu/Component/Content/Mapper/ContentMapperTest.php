@@ -84,9 +84,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         return $containerMock;
     }
 
-    public function getStrucktureManager(){
-
-
+    public function getStrucktureManager()
+    {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
             array('overview', 'asdf', 'asdf', 2400)
@@ -160,7 +159,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        NodeHelper::purgeWorkspace($this->session);
+        //NodeHelper::purgeWorkspace($this->session);
         $this->session->save();
     }
 
@@ -200,9 +199,9 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        $this->mapper->save($data, 'overview');
+        $this->mapper->save($data, 'de', 'overview');
 
-        $content = $this->mapper->read('/Testtitle', 'de', 'overview');
+        $content = $this->mapper->read('/Testtitle', 'de');
 
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals('Test', $content->article);
