@@ -35,6 +35,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->item1->setHeaderIcon('logo');
         $this->item1->setHeaderTitle('title');
         $this->item1->setAction('action');
+        $this->item1->setDisplayOption('dropdown');
         new NavigationItem('Portals', $this->item1);
         new NavigationItem('Settings', $this->item1);
         $this->item2 = new NavigationItem('Root');
@@ -129,6 +130,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->item1->getHeaderIcon(), $copy->getHeaderIcon());
         $this->assertEquals($this->item1->getHeaderTitle(), $copy->getHeaderTitle());
         $this->assertEquals($this->item1->getId(), $copy->getId());
+        $this->assertEquals($this->item1->getDisplayOption(), $copy->getDisplayOption());
     }
 
     public function testIterator()
