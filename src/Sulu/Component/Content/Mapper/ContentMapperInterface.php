@@ -26,9 +26,9 @@ interface ContentMapperInterface
 
     /**
      * Reads the data from the given path
-     * @param $path string path to the content
+     * @param $id string uuid or path to the content
      * @param $language string read data for given language
      * @return StructureInterface
      */
-    public function read($path, $language);
+    public function read($id, $language);
 }
