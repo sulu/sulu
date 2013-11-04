@@ -30,35 +30,33 @@ define([
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.content.content.delete', function() {
+            this.sandbox.on('sulu.content.contents.delete', function() {
                 this.del();
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.content.save', function(data) {
+            this.sandbox.on('sulu.content.contents.save', function(data) {
                 this.save(data);
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.content.load', function(id) {
+            this.sandbox.on('sulu.content.contents.load', function(id) {
                 this.load(id);
             }, this);
 
             // add new contact
-            this.sandbox.on('sulu.content.content.new', function() {
+            this.sandbox.on('sulu.content.contents.new', function() {
                 this.add();
             }, this);
 
             // delete selected contacts
-            this.sandbox.on('sulu.content.content.delete', function(ids) {
-                this.delContent(ids);
+            this.sandbox.on('sulu.content.contents.delete', function(ids) {
+                this.delContents(ids);
             }, this);
         },
 
         del: function() {
-            this.confirmDeleteDialog(function(wasConfirmed) {
-                // TODO Delete
-            }.bind(this));
+           // TODO Delete
         },
 
         save: function(data) {
@@ -93,8 +91,68 @@ define([
             this.sandbox.emit('sulu.router.navigate', 'content/content/add');
         },
 
-        delContent: function(ids) {
-            // TODO delete list
+        delContents: function(ids) {
+
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show','No contents selected for deletion!');
+                return;
+            }
+
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                    ids.forEach(function(id) {
+                        var content = new Content({id: id});
+                        content.destroy({
+                            success: function() {
+                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                            }.bind(this),
+                            error: function(){
+                               // TODO error message
+                            }
+                        });
+                    }.bind(this));
+                    this.sandbox.emit('husky.header.button-state', 'standard');
+                }
+            }.bind(this));
+
+        },
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmDeleteDialog: function(callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            // show dialog
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: "Be careful!",
+                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
+                },
+                footer: {
+                    buttonCancelText: "Don't do it",
+                    buttonSubmitText: "Do it, I understand"
+                },
+                callback: {
+                    submit: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(true);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
+                }
+            });
         },
 
         renderList: function() {

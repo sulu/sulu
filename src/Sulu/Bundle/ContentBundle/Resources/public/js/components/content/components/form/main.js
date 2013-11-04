@@ -56,11 +56,11 @@ define([], function() {
         bindCustomEvents: function() {
             // delete contact
             this.sandbox.on('husky.button.delete.click', function() {
-                this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
+                this.sandbox.emit('sulu.content.contents.delete', this.options.data.id);
             }, this);
 
             // contact saved
-            this.sandbox.on('sulu.content.content.saved', function(path) {
+            this.sandbox.on('sulu.content.contents.saved', function(path) {
                 this.setHeaderBar(true);
             }, this);
 
@@ -83,7 +83,7 @@ define([], function() {
 
                 this.sandbox.logger.log('data', data);
 
-                this.sandbox.emit('sulu.content.content.save', data);
+                this.sandbox.emit('sulu.content.contents.save', data);
             }
         },
 
