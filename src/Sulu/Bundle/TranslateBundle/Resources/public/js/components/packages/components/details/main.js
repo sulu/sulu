@@ -26,6 +26,7 @@ define([], function() {
                 currentType = '';
                 currentState = '';
                 this.codesToDelete = [];
+                this.codesCounter=1;
 
                 this.render();
                 this.setHeaderBar(true);
@@ -89,6 +90,14 @@ define([], function() {
                 this.sandbox.on('select.catalogues.item.changed', function(catalogueId) {
                     this.sandbox.emit('sulu.translate.catalogue.changed', this.options.data.id, catalogueId);
                 }, this);
+
+
+                this.sandbox.dom.keypress(form, function(event) {
+                    if (event.which === 13) {
+                        event.preventDefault();
+                        this.submit();
+                    }
+                }.bind(this));
 
             },
 
@@ -238,6 +247,15 @@ define([], function() {
                     $backend = this.sandbox.dom.find('.backend-value', $item),
                     $pointer = this.sandbox.dom.find('.show-options', $item);
 
+                this.sandbox.dom.attr(this.sandbox.dom.prev($length,'label'), {for: 'length-'+this.codesCounter.toString()});
+                this.sandbox.dom.attr($length, {id: 'length-'+this.codesCounter.toString()});
+
+                this.sandbox.dom.attr(this.sandbox.dom.parent($frontend), {for: 'frontent-'+this.codesCounter.toString()});
+                this.sandbox.dom.attr($frontend, {id: 'frontent-'+this.codesCounter.toString()});
+
+                this.sandbox.dom.attr(this.sandbox.dom.parent($backend), {for: 'backend-'+this.codesCounter.toString()});
+                this.sandbox.dom.attr($backend, {id: 'backend-'+this.codesCounter.toString()});
+
                 this.sandbox.dom.toggleClass($pointer, 'icon-arrow-right');
                 this.sandbox.dom.toggleClass($pointer, 'icon-arrow-down');
 
@@ -254,6 +272,8 @@ define([], function() {
                 this.sandbox.form.addField(form, $length);
                 this.sandbox.form.addField(form, $frontend);
                 this.sandbox.form.addField(form, $backend);
+
+                this.codesCounter++;
             },
 
             removeCode: function(event) {

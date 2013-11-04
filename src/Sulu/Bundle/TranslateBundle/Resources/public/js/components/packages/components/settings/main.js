@@ -25,6 +25,7 @@ define([], function() {
             initialize: function() {
                 currentType = '';
                 currentState = '';
+                this.formId='#package-form';
                 this.form = false;
 
                 this.render();
@@ -51,6 +52,13 @@ define([], function() {
             bindDomEvents: function() {
                 this.sandbox.dom.on('#catalogue-add', 'click', this.addCatalogue.bind(this));
                 this.sandbox.dom.on('#catalogues', 'click', this.removeCatalogue.bind(this), '.catalogue-remove');
+
+                this.sandbox.dom.keypress(this.formId, function(event) {
+                    if (event.which === 13) {
+                        event.preventDefault();
+                        this.submit();
+                    }
+                }.bind(this));
             },
 
             bindCustomEvents: function() {

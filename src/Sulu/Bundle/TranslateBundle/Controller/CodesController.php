@@ -103,7 +103,7 @@ class CodesController extends RestController
         $find = function ($id) {
             return $this->getDoctrine()
                 ->getRepository($this->codeEntity)
-                ->find($id);
+                ->getCodeById($id);
         };
 
         $view = $this->responseGetById($id, $find);
@@ -176,7 +176,7 @@ class CodesController extends RestController
         /** @var Code $code */
         $code = $this->getDoctrine()
             ->getRepository($this->codeEntity)
-            ->find($id);
+            ->getCodeById($id);
 
         $c = $this->getRequest()->get('code');
         $backend = $this->getRequest()->get('backend');
@@ -243,7 +243,7 @@ class CodesController extends RestController
         $delete = function ($id) {
             $code = $this->getDoctrine()
                 ->getRepository($this->codeEntity)
-                ->find($id);
+                ->getCodeById($id);
 
             if (!$code) {
                 throw new EntityNotFoundException($this->codeEntity, $id);

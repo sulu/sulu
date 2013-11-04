@@ -157,11 +157,11 @@ class TranslationsController extends RestController implements ClassResourceInte
         /** @var Code $code */
         $code = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Code')
-            ->find($item['id']);
+            ->getCodeById($item['id']);
         /** @var Catalogue $catalogue */
         $catalogue = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Catalogue')
-            ->find($catalogueId);
+            ->getCatalogueById($catalogueId);
 
         $translation = new Translation();
         $translation->setCode($code);
@@ -183,7 +183,7 @@ class TranslationsController extends RestController implements ClassResourceInte
         /** @var Catalogue $catalogue */
         $catalogue = $this->getDoctrine()
             ->getRepository('SuluTranslateBundle:Catalogue')
-            ->find($catalogueId);
+            ->getCatalogueById($catalogueId);
 
         $code = new Code();
         $code->setCode($item['code']['code']);

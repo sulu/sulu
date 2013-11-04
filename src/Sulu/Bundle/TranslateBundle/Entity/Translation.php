@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Translation
@@ -29,6 +30,7 @@ class Translation
 
     /**
      * @var \Sulu\Bundle\TranslateBundle\Entity\Catalogue
+     * @Exclude
      */
     private $catalogue;
 
