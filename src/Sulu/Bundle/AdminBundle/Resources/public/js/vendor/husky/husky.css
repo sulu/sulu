@@ -3020,6 +3020,18 @@ h5 {
   display: inline-block;
 }
 
+/* line 200, ../scss/modules/icons.scss */
+.icon-items::after {
+  content: "\e319";
+  display: inline-block;
+}
+
+/* line 207, ../scss/modules/icons.scss */
+.icon-star::after {
+  content: "\e050";
+  display: inline-block;
+}
+
 /* line 8, ../scss/modules/core.scss */
 * {
   -webkit-box-sizing: border-box;
