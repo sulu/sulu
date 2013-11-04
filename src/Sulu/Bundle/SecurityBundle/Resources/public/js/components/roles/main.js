@@ -11,7 +11,7 @@
 define([
     'sulusecurity/models/role',
     'text!/admin/security/navigation/roles'
-    ], function(Role, ContentNavigation) {
+], function(Role, ContentNavigation) {
 
     'use strict';
 
