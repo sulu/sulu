@@ -24,7 +24,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * This class is responsible for loading, reading and caching the portal configuration files
  * @package Sulu\Bundle\CoreBundle\Portal
  */
-class PortalManager
+class PortalManager implements PortalManagerInterface
 {
     /**
      * @var PortalCollection
