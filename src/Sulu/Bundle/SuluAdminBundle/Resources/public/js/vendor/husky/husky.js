@@ -24093,8 +24093,6 @@ define('__component__$dropdown-multiple-select@husky',[], function() {
 
         // generate dropDown with given items
         generateDropDown: function(items) {
-            // remove all elements
-            this.sandbox.dom.remove(this.$list, 'li');
 
             if (items.length > 0) {
 
@@ -24915,6 +24913,10 @@ define('husky_extensions/collection',[],function() {
                 return $(selector).parent(filter);
             };
 
+            app.core.dom.parents = function(selector, filter) {
+                return $(selector).parents(filter);
+            };
+
             app.core.dom.next = function(selector, filter) {
                 return $(selector).next(filter);
             };
@@ -25147,10 +25149,17 @@ define('husky_extensions/util',[],function() {
                 return s;
             };
 
-            // cool guy loop implementation of foreach: http://jsperf.com/loops3/2
+            /**
+             * cool guy loop implementation of foreach: http://jsperf.com/loops3/2
+             * returns -> callback(value, index)
+             */
             app.core.util.foreach = function(array, callbackValue) {
-                for (var i = -1, length = array.length; ++i < length;) {
-                    callbackValue( array[i]);
+                if (array.length && array.length > 0) {
+                    for (var i = -1, length = array.length; ++i < length;) {
+                        callbackValue( array[i], i);
+                    }
+                } else {
+                    app.sandbox.logger.log('error at util.foreach: no array given');
                 }
             };
 
