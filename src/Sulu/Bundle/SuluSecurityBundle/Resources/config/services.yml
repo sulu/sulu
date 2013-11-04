@@ -14,6 +14,7 @@ parameters:
     sulu_security.admin.content_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation
     sulu_security.admin.roles_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation
     sulu_security.permission_voter.class: Sulu\Bundle\SecurityBundle\Permission\PermissionVoter
+    sulu_security.services.user_data_handler.class: Sulu\Bundle\SecurityBundle\Services\UserDataHandler
 
 services:
     sulu_security.admin:
@@ -35,6 +36,10 @@ services:
 
     sulu_security.admin.roles_navigation:
       class: %sulu_security.admin.roles_navigation.class%
+
+    user.services.user_data:
+      class: %sulu_security.services.user_data_handler.class%
+      arguments: [@service_container]
 
     sulu_security.permission_voter:
         class: %sulu_security.permission_voter.class%
