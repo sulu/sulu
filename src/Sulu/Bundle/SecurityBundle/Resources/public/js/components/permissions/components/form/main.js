@@ -123,12 +123,13 @@ define([], function() {
         // Form
 
         render: function() {
-            var email = "";
+            var email = "",
+                headline;
             if(!!this.contact.emails && this.contact.emails.length > 0) {
                 email = this.contact.emails[0].email;
             }
 
-            var headline = this.contact ? this.contact.firstName+' '+this.contact.lastName : this.sandbox.translate('security.permission.title');
+            headline = this.contact ? this.contact.firstName+' '+this.contact.lastName : this.sandbox.translate('security.permission.title');
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {user: !!this.user ? this.user : null, email: email, headline: headline}));
         },
 
