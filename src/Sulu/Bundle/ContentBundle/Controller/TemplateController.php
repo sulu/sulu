@@ -29,5 +29,4 @@ class TemplateController extends Controller
     {
         return $this->container->get('sulu.content.structure_manager')->getStructure($key);
     }
-
 }

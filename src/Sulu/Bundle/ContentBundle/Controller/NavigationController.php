@@ -27,9 +27,6 @@ class NavigationController extends Controller
      */
     public function contentAction()
     {
-
-        // TODO: get type of content (contact / account ...)
-
         /** @var ContentNavigation $contentNavigation */
         if ($this->has(self::SERVICE_NAME)) {
             $contentNavigation = $this->get(self::SERVICE_NAME);

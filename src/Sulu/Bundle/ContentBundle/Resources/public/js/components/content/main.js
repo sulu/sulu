@@ -98,7 +98,6 @@ define([
             this.content = new Content();
             if (!!this.options.id) {
                 this.content = new Content({id: this.options.id});
-                //contact = this.getModel(this.options.id);
                 this.content.fetch({
                     success: function(model) {
                         this.sandbox.start([
@@ -150,7 +149,7 @@ define([
             if (actionString.substr(0, 1) === '/') {
                 return actionString.substr(1, actionString.length);
             }
-            // TODO: FIXIT: ugly removal
+            // FIXME: ugly removal
             if (id) {
                 var strSearch = 'edit:' + id;
                 url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
