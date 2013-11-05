@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Tests\Unit\Repository;
+namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\View\View;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -21,6 +21,9 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected $controller;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     protected $mockedObject;
 
     public function setUp()
@@ -244,4 +247,5 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(400, $view->getStatusCode());
     }
+
 }

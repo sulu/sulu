@@ -1,8 +1,0 @@
-parameters:
-    sulu_core.list_rest_helper.class: Sulu\Component\Rest\Listing\ListRestHelper
-
-services:
-    sulu_core.list_rest_helper:
-        class: %sulu_core.list_rest_helper.class%
-        arguments: [@request, @doctrine.orm.entity_manager]
-        scope: request

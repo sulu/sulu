@@ -6,3 +6,8 @@
 # IDEs
 .idea/*
 *.iml
+
+# Jackrabbit
+/bin/jackrabbit-standalone*
+/bin/jackrabbit/*
+
