@@ -62,7 +62,8 @@ class ContentController extends RestController implements ClassResourceInterface
     {
         // TODO language
         $key = $this->getRequest()->get('template');
-        $structure = $this->getMapper()->save($this->getRequest()->request->all(), 'en', $key);
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $structure = $this->getMapper()->save($this->getRequest()->request->all(), 'en', $key, $userId);
         $view = $this->view($structure->toArray(), 200);
 
         return $this->handleView($view);
