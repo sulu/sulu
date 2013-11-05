@@ -241,12 +241,3 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $content->changer);
     }
 }
-
-/**
- * TODO
- * Class UserInterface
- * @package Sulu\Component\Content\Mapper
- */
-interface UserInterface{
-    public function getId();
-}
