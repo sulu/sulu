@@ -158,7 +158,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     private function getSecurityContextMock(){
-        $userMock = $this->getMock('\Sulu\Component\Content\Mapper\UserInterface');
+        $userMock = $this->getMock('\Sulu\Component\Security\UserInterface');
         $userMock->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));
@@ -203,7 +203,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        $this->mapper->save($data, 'de', 'overview');
+        $this->mapper->save($data, 'overview', 'de', 1);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
@@ -229,7 +229,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        $structure = $this->mapper->save($data, 'de', 'overview');
+        $structure = $this->mapper->save($data, 'overview', 'de', 1);
 
         $content = $this->mapper->read($structure->getUuid(), 'de');
 
@@ -240,13 +240,4 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
-}
-
-/**
- * TODO
- * Class UserInterface
- * @package Sulu\Component\Content\Mapper
- */
-interface UserInterface{
-    public function getId();
 }
