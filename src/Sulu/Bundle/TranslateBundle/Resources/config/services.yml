@@ -2,6 +2,7 @@ parameters:
     sulu_translate.admin.class: Sulu\Bundle\TranslateBundle\Admin\SuluTranslateAdmin
     sulu_translate.import.class: Sulu\Bundle\TranslateBundle\Translate\Import
     sulu_translate.export.class: Sulu\Bundle\TranslateBundle\Translate\Export
+    sulu_translate.admin.content_navigation.class: Sulu\Bundle\TranslateBundle\Admin\SuluTranslateContentNavigation
 
 services:
     sulu_translate.admin:
@@ -14,3 +15,5 @@ services:
     sulu_translate.export:
         class: %sulu_translate.export.class%
         arguments: ["@doctrine.orm.entity_manager"]
+    sulu_translate.admin.content_navigation:
+        class: %sulu_translate.admin.content_navigation.class%

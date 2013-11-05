@@ -22,46 +22,6 @@ define([], function() {
 
             templates: ['/admin/translate/template/translation/form'],
 
-            getTabs: function() {
-                // TODO translate
-                var navigation = {
-                    'title': 'Package',
-                    'displayOption': 'content',
-                    'header': {
-                        'displayOption': 'link',
-                        'action': 'settings/translate'
-                    },
-                    'hasSub': 'true',
-                    //TODO id mandatory?
-                    'sub': {
-                        'items': []
-                    }
-                };
-
-                if (!!this.options.data.id) {
-                    navigation.sub.items.push({
-                        'title': 'Settings',
-                        'action': 'settings/translate/edit:' + this.options.data.id + '/settings',
-                        'hasSub': false,
-                        'type': 'content',
-                        'id': 'translate-package-settings-' + this.options.data.id
-                    });
-
-                    //TODO check if at least one catalogue exists
-                    navigation.sub.items.push({
-                        'title': 'Details',
-                        'action': 'settings/translate/edit:' + this.options.data.id + '/details',
-                        'hasSub': false,
-                        'type': 'content',
-                        'id': 'translate-package-details-' + this.options.data.id,
-                        'selected': true
-                    });
-
-                }
-
-                return navigation;
-            },
-
             initialize: function() {
                 currentType = '';
                 currentState = '';
@@ -86,20 +46,10 @@ define([], function() {
 
                 this.sandbox.form.create(form);
 
-                this.setTabs();
-
                 this.bindDomEvents();
                 this.bindCustomEvents();
             },
 
-            setTabs: function() {
-                var tabs = this.getTabs();
-                if (!!tabs) {
-                    this.sandbox.emit('navigation.item.column.show', {
-                        data: tabs
-                    });
-                }
-            },
 
             bindDomEvents: function() {
                 this.sandbox.dom.on('#code-add', 'click', this.addCode.bind(this));
