@@ -1,0 +1,3 @@
+sulu_content.content:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\ContentController

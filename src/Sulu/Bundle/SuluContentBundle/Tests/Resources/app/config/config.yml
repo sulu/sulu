@@ -1,3 +1,6 @@
+imports:
+    - { resource: security.yml }
+
 framework:
     secret: secret
     router: { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -32,3 +35,9 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
+parameters:
+    phpcr_url: http://localhost:8080/server
+    phpcr_username: admin
+    phpcr_password: admin
+    phpcr_workspace: default
+    sulu.content.template.default_path: %kernel.root_dir%/../Datafixtures/Template
