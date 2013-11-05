@@ -14,6 +14,10 @@ namespace Sulu\Component\Testing;
 use Sulu\Component\Security\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
+/**
+ * A user which contains only an id for testing purposes
+ * @package Sulu\Component\Testing
+ */
 class TestUser implements UserInterface
 {
 

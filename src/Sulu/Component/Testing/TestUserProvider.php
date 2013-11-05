@@ -16,6 +16,10 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * An UserProvider which returns always the same user for testing purposes
+ * @package Sulu\Component\Testing
+ */
 class TestUserProvider implements UserProviderInterface
 {
     /**
