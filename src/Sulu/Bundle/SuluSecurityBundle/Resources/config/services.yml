@@ -39,7 +39,7 @@ services:
 
     user.services.user_data:
       class: %sulu_security.services.user_data_handler.class%
-      arguments: [@service_container]
+      arguments: [@security.context, @router]
 
     sulu_security.permission_voter:
         class: %sulu_security.permission_voter.class%
