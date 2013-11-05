@@ -126,15 +126,10 @@
 
         {% block addresses %}
             <div class="grid-row">
-                <div class="grid-col-8">
-                    <h2><%=translate('public.address')%></h2>
-                </div>
-                <div class="grid-col-4 align-right m-top-10">
-                    <div id="addAddress" data-target-id="addresses">
-                        <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addAddress')%></span>
-                    </div>
-                </div>
+                <div class="grid-col-4"><h2><%=translate('public.address')%></h2></div>
+                <div class="grid-col-8"></div>
             </div>
+
 
             <div id="addresses" data-mapper-property="addresses" data-type="array">
                 <div class="address-item m-bottom-10">
@@ -206,6 +201,11 @@
                             </select>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="grid-row m-bottom-20">
+                <div id="addAddress" data-target-id="addresses">
+                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addAddress')%></span>
                 </div>
             </div>
         {% endblock %}
