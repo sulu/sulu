@@ -1,0 +1,29 @@
+/* line 2, ../scss/modules/utility.scss */
+#contact-form img.logo {
+  padding-top: 30px;
+  max-height: 140px;
+}
+/* line 7, ../scss/modules/utility.scss */
+#contact-form .control-label {
+  padding-left: 5px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+/* line 15, ../scss/modules/utility.scss */
+#contact-form div.remove-email,
+#contact-form div.remove-phone,
+#contact-form div.remove-address {
+  display: none;
+}
+/* line 21, ../scss/modules/utility.scss */
+#contact-form #phones div:hover > div.remove-phone,
+#contact-form #addresses div:hover > div.remove-address,
+#contact-form #emails div:hover > div.remove-email {
+  display: block;
+}
+/* line 27, ../scss/modules/utility.scss */
+#contact-form #emails .husky-validate-success label::after,
+#contact-form #phones .husky-validate-success label::after,
+#contact-form #addresses .husky-validate-success label::after {
+  content: "";
+}
