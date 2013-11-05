@@ -73,6 +73,8 @@ class ContentControllerTest extends WebTestCase
         $this->assertEquals('Test', $response->article);
         $this->assertEquals('/de/test', $response->url);
         $this->assertEquals(array('tag1', 'tag2'), $response->tags);
+        $this->assertEquals(1, $response->creator);
+        $this->assertEquals(1, $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
@@ -82,6 +84,8 @@ class ContentControllerTest extends WebTestCase
         $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals(1, $content->getPropertyValue('creator'));
+        $this->assertEquals(1, $content->getPropertyValue('changer'));
     }
 
     private function beforeTestGet()
@@ -110,8 +114,8 @@ class ContentControllerTest extends WebTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
-        foreach ($data as $d) {
-            $mapper->save($d, 'en', 'overview', 1);
+        for ($i = 0; $i < count($data); $i++) {
+            $data[$i] = $mapper->save($data[$i], 'en', 'overview', 1)->toArray();
         }
 
         return $data;
@@ -128,7 +132,7 @@ class ContentControllerTest extends WebTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('GET', '/api/content/contents/test1');
+        $client->request('GET', '/api/content/contents/' . $data[0]['id']);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());

@@ -20,13 +20,10 @@ security:
         strategy: affirmative
 
     encoders:
-        Sulu\Component\Testing\TestUser:
-            algorithm: sha512
-            iterations: 5000
-            encode_as_base64: false
+        Sulu\Component\Testing\TestUser: plaintext
 
     providers:
-        test:
+        testprovider:
             id: test_user_provider
 
     firewalls:
