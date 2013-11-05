@@ -41,9 +41,9 @@ define([], function() {
 
                 this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
 
-                emailItem = this.$el.find('#emails .email-item:first');
-                phoneItem = this.$el.find('#phones .phone-item:first');
-                addressItem = this.$el.find('#addresses .address-item:first');
+                emailItem = this.$el.find('#emails .emails-item:first');
+                phoneItem = this.$el.find('#phones .phones-item:first');
+                addressItem = this.$el.find('#addresses .addresses-item:first');
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
@@ -76,12 +76,14 @@ define([], function() {
                 formObject.initialized.then(function() {
                     this.sandbox.form.setData(form, data);
 
-                    this.sandbox.dom.find('#emails .email-item:first .remove-email').remove();
-
                     this.sandbox.start(form);
 
-                    this.sandbox.form.addConstraint(form, '#emails .email-item:first input.email-value', 'required', {required: true});
-                    this.sandbox.dom.addClass('#emails .email-item:first label span:first', 'required');
+                    // FIXME after setData (solution with deffered)
+                    setTimeout(function() {
+                        this.sandbox.form.addConstraint(form, '#emails .emails-item:first input.email-value', 'required', {required: true});
+                        this.sandbox.dom.find('#emails .emails-item:first .remove-email').remove();
+                        this.sandbox.dom.addClass('#emails .emails-item:first label span:first', 'required');
+                    }.bind(this), 100);
                 }.bind(this));
 
                 this.sandbox.form.addArrayFilter(form, 'emails', function(email) {
