@@ -161,8 +161,23 @@ define([
                     this.startComponent();
                 }.bind(this),
                 error: function() {
-                    // TODO check status code
+                    // no user with contact id found - user has to be created
+                    // TODO check status code to be sure
+                    this.loadContact();
+                }.bind(this)
+            });
+        },
+
+        loadContact: function() {
+            this.contact = new Contact({id: this.options.id});
+            this.contact.fetch({
+                success: function() {
+                    this.contact = this.contact.toJSON();
                     this.startComponent();
+                }.bind(this),
+                error: function() {
+                    // TODO error message
+                    this.sandbox.logger.log("failed to load contact");
                 }.bind(this)
             });
         },
@@ -208,24 +223,22 @@ define([
                 footer: {
                     buttonCancelText: "Don't do it",
                     buttonSubmitText: "Do it, I understand"
+                },
+                callback: {
+                    submit: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(true);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
                 }
             });
-
-            // submit -> delete
-            this.sandbox.once('husky.dialog.submit', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction.call(this, true);
-                }
-            }.bind(this));
-
-            // cancel
-            this.sandbox.once('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction.call(this, false);
-                }
-            }.bind(this));
         }
     };
 });
