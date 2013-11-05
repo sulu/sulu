@@ -20,13 +20,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ContentController extends RestController implements ClassResourceInterface
 {
-    public function getAction($path)
+    public function getAction($uuid)
     {
         $view = $this->responseGetById(
-            $path,
-            function ($path) {
+            $uuid,
+            function ($uuid) {
                 // TODO language
-                $content = $this->getMapper()->read('/' . $path, 'en');
+                $content = $this->getMapper()->read($uuid, 'en');
                 return $content->toArray();
             }
         );
@@ -45,7 +45,7 @@ class ContentController extends RestController implements ClassResourceInterface
 
         /** @var NodeInterface $node */
         foreach ($contents as $node) {
-            $result[] = $this->getMapper()->read(str_replace('/cmf/contents', '', $node->getPath()), 'en')->toArray();
+            $result[] = $this->getMapper()->read($node->getIdentifier(), 'en')->toArray();
         }
 
         return $this->handleView(
