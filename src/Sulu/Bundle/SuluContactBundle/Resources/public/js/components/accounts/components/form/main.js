@@ -87,8 +87,12 @@ define([], function() {
 
                     this.sandbox.start(form);
 
-                    this.sandbox.form.addConstraint(form, '#emails .email-item:first input.email-value', 'required', {required: true});
-                    this.sandbox.dom.addClass('#emails .email-item:first label span:first', 'required');
+                    // FIXME after setData (solution with deffered)
+                    setTimeout(function() {
+                        this.sandbox.form.addConstraint(form, '#emails .emails-item:first input.email-value', 'required', {required: true});
+                        this.sandbox.dom.find('#emails .emails-item:first .remove-email').remove();
+                        this.sandbox.dom.addClass('#emails .emails-item:first label span:first', 'required');
+                    }.bind(this), 100);
                 }.bind(this));
 
                 this.sandbox.form.addArrayFilter(form, 'emails', function(email) {
