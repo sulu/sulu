@@ -348,7 +348,6 @@ class NavigationItem implements \Iterator
         $new->setHeaderTitle($this->getHeaderTitle());
         $new->setId($this->getId());
         $new->setDisplayOption($this->getDisplayOption());
-        $new->setDisplayOptions($this->getDisplayOptions());
 
         return $new;
     }
@@ -497,12 +496,8 @@ class NavigationItem implements \Iterator
             'hasSub' => $this->hasChildren(),
             'type' => $this->getType(),
             'contentType' => $this->getContentType(),
-<<<<<<< HEAD
             'contentDisplay' => $this->getContentDisplay(),
-=======
             'displayOption' => $this->getDisplayOption(),
-            'displayOptions' => $this->getDisplayOptions(),
->>>>>>> 71b29ef0baeb9e5eb06bb76d3cb3db47f0ff719f
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
