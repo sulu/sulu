@@ -1,4 +1,4 @@
-<h1>
+<h1 class="p-top-10">
     <%=translate('security.roles.title')%>
 </h1>
 
@@ -9,11 +9,11 @@
     <div class="grid-row">
         <div class="grid-col-6">
             <label for="name" class="required"><%=translate('security.roles.name')%></label>
-            <input class="form-element" type="text" id="name" value="<%= data.name %>" data-validation-required="true"/>
+            <input class="form-element input-large" type="text" id="name" value="<%= data.name %>" data-validation-required="true"/>
         </div>
         <div class="grid-col-6">
             <label for="system" class="required"><%=translate('security.roles.system')%></label>
-            <select id="system" class="form-element">
+            <select id="system" class="form-element input-large">
                 {% for system in systems %}
                     <option value="{{ system }}">{{ system }}</option>
                 {% endfor %}
