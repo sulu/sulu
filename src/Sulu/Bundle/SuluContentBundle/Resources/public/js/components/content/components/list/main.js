@@ -88,7 +88,6 @@ define(function() {
             this.sandbox.emit('husky.header.button-type', 'add');
 
             this.sandbox.on('husky.button.add.click', function() {
-                this.sandbox.logger.log("clicked");
                 this.sandbox.emit('sulu.content.contents.new');
             }, this);
         }
