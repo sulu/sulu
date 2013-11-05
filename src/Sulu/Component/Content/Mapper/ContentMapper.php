@@ -36,9 +36,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param $data array The data to be saved
      * @param $language string Save data for given language
      * @param $templateKey string name of template
+     * @param $userId int The id of the user who saves
      * @return StructureInterface
      */
-    public function save($data, $language, $templateKey)
+    public function save($data, $language, $templateKey, $userId)
     {
         // TODO localize
         $structure = $this->getStructure($templateKey);
@@ -52,8 +53,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('template', $templateKey); // TODO namespace ??? sulu:template
 
         $dateTime = new \DateTime();
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $userId = $user->getId();
 
         // if is new node
         if ($node->getIdentifier() == null) {

@@ -23,9 +23,10 @@ interface ContentMapperInterface
      * @param $data array The data to be saved
      * @param $language string Save data for given language
      * @param $templateKey string name of template
+     * @param $userId int The id of the user who saves
      * @return StructureInterface
      */
-    public function save($data, $language, $templateKey);
+    public function save($data, $language, $templateKey, $userId);
 
     /**
      * Reads the data from the given path
