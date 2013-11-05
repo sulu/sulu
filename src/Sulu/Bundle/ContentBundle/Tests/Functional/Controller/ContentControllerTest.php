@@ -57,7 +57,13 @@ class ContentControllerTest extends WebTestCase
             'article' => 'Test'
         );
 
-        $client = $this->createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request('POST', '/api/content/contents?template=overview', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -105,7 +111,7 @@ class ContentControllerTest extends WebTestCase
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
         foreach ($data as $d) {
-            $mapper->save($d, 'en', 'overview');
+            $mapper->save($d, 'en', 'overview', 1);
         }
 
         return $data;
@@ -113,7 +119,13 @@ class ContentControllerTest extends WebTestCase
 
     public function testGet()
     {
-        $client = $this->createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $data = $this->beforeTestGet();
 
         $client->request('GET', '/api/content/contents/test1');
@@ -129,7 +141,13 @@ class ContentControllerTest extends WebTestCase
 
     public function testGetAll()
     {
-        $client = $this->createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $data = $this->beforeTestGet();
 
         $client->request('GET', '/api/content/contents');
