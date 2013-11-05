@@ -5,22 +5,25 @@ namespace Sulu\Bundle\SecurityBundle\Services;
 use Sulu\Bundle\AdminBundle\UserData\UserDataInterface;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 
 class UserDataHandler implements UserDataInterface
 {
 
-    protected $container;
     protected $security;
+    protected $router;
 
     /**
-     * @param ContainerInterface $container
+     * @param SecurityContextInterface $security
+     * @param RouterInterface $router
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContextInterface $security, RouterInterface $router)
     {
-        $this->container = $container;
-        $this->security = $container->get('security.context');
+        $this->security = $security;
+        $this->router = $router;
     }
 
     /**
@@ -68,7 +71,7 @@ class UserDataHandler implements UserDataInterface
      */
     public function getLogoutLink()
     {
-        return "http://".$this->container->get('router')->getContext()->getHost().'/admin/logout';
+        return "http://".$this->router->getContext()->getHost().'/admin/logout';
     }
 
 
@@ -83,11 +86,11 @@ class UserDataHandler implements UserDataInterface
      */
     protected function getUser()
     {
-        if (!$this->container->has('security.context')) {
+        if (!$this->security) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
 
-        if (null === $token = $this->container->get('security.context')->getToken()) {
+        if (null === $token = $this->security->getToken()) {
             return null;
         }
 

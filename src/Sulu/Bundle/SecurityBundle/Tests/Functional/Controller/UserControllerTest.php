@@ -707,7 +707,8 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testUserDataHandler() {
 
-//        $this->get('sulu_admin.user_data_service');
+//        $this->createClient();
+//        self::$kernel->getContainer()->get('sulu_admin.user_data_service');
 
         // TODO: implement test cases
 
