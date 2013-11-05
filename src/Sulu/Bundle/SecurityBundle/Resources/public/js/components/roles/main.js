@@ -8,7 +8,10 @@
  */
 
 
-define(['sulusecurity/models/role'], function(Role) {
+define([
+    'sulusecurity/models/role',
+    'text!/admin/security/navigation/roles'
+], function(Role, ContentNavigation) {
 
     'use strict';
 
@@ -120,7 +123,7 @@ define(['sulusecurity/models/role'], function(Role) {
             sandbox.emit('husky.header.button-state', 'loading-add-button');
 
 
-            sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id);
+            sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id + '/details');
         },
 
         // saves the data, which is thrown together with a sulu.roles.save event
@@ -180,6 +183,14 @@ define(['sulusecurity/models/role'], function(Role) {
         },
 
         renderForm: function() {
+
+            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
+                this.sandbox.emit('navigation.item.column.show', {
+                    data: navigation
+                });
+            }.bind(this));
+
+
             role = new Role();
 
             var component = {
@@ -202,5 +213,6 @@ define(['sulusecurity/models/role'], function(Role) {
                 sandbox.start([component]);
             }
         }
+
     };
 });

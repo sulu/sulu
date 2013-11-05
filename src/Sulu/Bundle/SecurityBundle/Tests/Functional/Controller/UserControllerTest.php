@@ -703,4 +703,14 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
     }
+
+
+    public function testUserDataHandler() {
+
+//        $this->createClient();
+//        self::$kernel->getContainer()->get('sulu_admin.user_data_service');
+
+        // TODO: implement test cases
+
+    }
 }
