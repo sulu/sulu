@@ -1,0 +1,30 @@
+#contact-form {
+  img.logo {
+    padding-top: 30px;
+    max-height: 140px;
+  }
+
+  .control-label {
+    padding-left: 5px;
+    padding-right: 10px;
+    cursor: pointer;
+  }
+
+  div.remove-email,
+  div.remove-phone,
+  div.remove-address {
+    display: none;
+  }
+
+  #phones div:hover > div.remove-phone,
+  #addresses div:hover > div.remove-address,
+  #emails div:hover > div.remove-email {
+    display: block;
+  }
+
+  #emails .husky-validate-success label::after,
+  #phones .husky-validate-success label::after,
+  #addresses .husky-validate-success label::after {
+    content: "";
+  }
+}
