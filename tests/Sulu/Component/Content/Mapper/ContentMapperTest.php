@@ -203,7 +203,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        $this->mapper->save($data, 'de', 'overview', 1);
+        $this->mapper->save($data, 'overview', 'de', 1);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
@@ -229,7 +229,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        $structure = $this->mapper->save($data, 'de', 'overview', 1);
+        $structure = $this->mapper->save($data, 'overview', 'de', 1);
 
         $content = $this->mapper->read($structure->getUuid(), 'de');
 
