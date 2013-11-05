@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use Sulu\Bundle\ContactBundle\Controller\ContactsController;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\RestController;
@@ -20,20 +21,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ContentController extends RestController implements ClassResourceInterface
 {
+
     /**
      * returns a content item with given UUID as JSON String
-     * @param $id
+     * @param $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction($id)
+
+    public function getAction($uuid)
     {
         $view = $this->responseGetById(
-            $id,
-            function ($id) {
+            $uuid,
+            function ($uuid) {
                 // TODO language
-                $content = $this->getMapper()->read($id, 'en');
-
-                return $content->toArray();
+                $content = $this->getMapper()->read($uuid, 'en');
+                $result = $content->toArray();
+                $result['creator'] = $this->getContactByUserId($result['creator']);
+                $result['changer'] = $this->getContactByUserId($result['changer']);
+                return $result;
             }
         );
 
@@ -56,8 +61,10 @@ class ContentController extends RestController implements ClassResourceInterface
 
         /** @var NodeInterface $node */
         foreach ($contents as $node) {
-            // TODO language
-            $result[] = $this->getMapper()->read($node->getPropertyValue('jcr:uuid'), 'en')->toArray();
+            $tmp = $this->getMapper()->read($node->getIdentifier(), 'en')->toArray();
+            $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
+            $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
+            $result[] = $tmp;
         }
 
         return $this->handleView(
@@ -70,6 +77,21 @@ class ContentController extends RestController implements ClassResourceInterface
         );
     }
 
+    private function getContactByUserId($id) {
+
+        // Todo performance issue
+        // Todo solve as service
+        $user = $this->getDoctrine()->getRepository('SuluSecurityBundle:User')->find($id);
+
+        if($user !== null) {
+            $contact = $user->getContact();
+            return $contact->getFirstname()." ".$contact->getLastname();
+        } else {
+            return "";
+        }
+
+    }
+
     /**
      * Updates a content item and returns result as JSON String
      * @return \Symfony\Component\HttpFoundation\Response
@@ -78,8 +100,13 @@ class ContentController extends RestController implements ClassResourceInterface
     {
         // TODO language
         $key = $this->getRequest()->get('template');
-        $structure = $this->getMapper()->save($this->getRequest()->request->all(), 'en', $key);
-        $view = $this->view($structure->toArray(), 200);
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $structure = $this->getMapper()->save($this->getRequest()->request->all(), $key, 'en', $userId);
+        $result = $structure->toArray();
+        $result['creator'] = $this->getContactByUserId($result['creator']);
+        $result['changer'] = $this->getContactByUserId($result['changer']);
+        $view = $this->view($result, 200);
+
 
         return $this->handleView($view);
     }
