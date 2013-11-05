@@ -12,8 +12,7 @@ class NavigationController extends Controller
     const SERVICE_NAME = 'sulu_translate.admin.content_navigation';
 
     /**
-     * Lists all the contacts or filters the contacts by parameters GET['type']
-     * Special function for lists
+     * returns navigation by parameters GET['type']
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function contentAction()
