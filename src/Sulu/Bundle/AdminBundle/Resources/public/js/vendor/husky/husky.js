@@ -23680,7 +23680,7 @@ define('__component__$matrix@husky',[],function() {
         prepareTableBody: function() {
             var $tbody = sandbox.dom.createElement('<tbody/>'),
                 i, $tr, $tdHead, $tdAll,
-                j, $tdValue, $span;
+                j, $tdValue, $span, title;
 
             for (i = 0; i < this.options.captions.vertical.length; i++) {
                 $tr = sandbox.dom.createElement('<tr/>');
@@ -23700,8 +23700,14 @@ define('__component__$matrix@husky',[],function() {
                 // insert values of matrix
                 for (j = 0; j < this.options.values.horizontal.length; j++) {
                     $tdValue = sandbox.dom.createElement('<td class="value"/>');
+
+                    if (this.options.values.titles) {
+                        title = 'title="' + this.options.values.titles[j] + '"';
+                    } else {
+                        title = '';
+                    }
                     $span = sandbox.dom.createElement(
-                        '<span class="icon-' + this.options.values.horizontal[j] + ' pointer"/>'
+                        '<span ' + title + ' class="icon-' + this.options.values.horizontal[j] + ' pointer"/>'
                     );
                     sandbox.dom.data($span, 'value', this.options.values.horizontal[j]);
                     sandbox.dom.data($span, 'section', this.options.values.vertical[i]);
@@ -23716,7 +23722,7 @@ define('__component__$matrix@husky',[],function() {
                 }
 
                 //add all link
-                sandbox.dom.html($tdAll, '<span class="pointer">'+this.options.captions.all+'</span>');
+                sandbox.dom.html($tdAll, '<span class="pointer">' + this.options.captions.all + '</span>');
                 sandbox.dom.append($tr, $tdAll);
 
                 sandbox.dom.append($tbody, $tr);
@@ -24838,6 +24844,19 @@ define('husky_extensions/collection',[],function() {
                     }
                     var translation = Globalize.localize(key, app.config.culture.name);
                     return !!translation ? translation : key;
+                };
+
+                /**
+                 * function calls this.sandbox.translate for an array of keys and returns an array of translations
+                 * @param array
+                 * @returns {Array}
+                 */
+                app.sandbox.translateArray = function(array) {
+                    var translations = [];
+                    app.sandbox.util.foreach(array, function(key) {
+                        translations.push(app.sandbox.translate(key));
+                    }.bind(this));
+                    return translations;
                 };
 
                 app.setLanguage = function(cultureName, messages) {
