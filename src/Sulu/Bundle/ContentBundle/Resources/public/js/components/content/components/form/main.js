@@ -40,7 +40,7 @@ define([], function() {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-
+                this.sandbox.form.setData(this.formId, data);
             }.bind(this));
         },
 
@@ -56,11 +56,11 @@ define([], function() {
         bindCustomEvents: function() {
             // delete contact
             this.sandbox.on('husky.button.delete.click', function() {
-                this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
+                this.sandbox.emit('sulu.content.contents.delete', this.options.data.id);
             }, this);
 
             // contact saved
-            this.sandbox.on('sulu.content.content.saved', function(id) {
+            this.sandbox.on('sulu.content.contents.saved', function(id) {
                 this.setHeaderBar(true);
             }, this);
 
@@ -71,8 +71,7 @@ define([], function() {
         },
 
         initData: function() {
-            var contentJson = this.options.data;
-            return contentJson;
+            return this.options.data;
         },
 
         submit: function() {
@@ -83,7 +82,7 @@ define([], function() {
 
                 this.sandbox.logger.log('data', data);
 
-                this.sandbox.emit('sulu.content.content.save', data);
+                this.sandbox.emit('sulu.content.contents.save', data);
             }
         },
 

@@ -5,3 +5,7 @@ sulu_content.content_form:
 sulu_content.content_navigation:
     path: /navigation/content
     defaults: { _controller: SuluContentBundle:Navigation:content }
+
+sulu_content.content_list:
+    pattern: /template/content/list.html
+    defaults: { _controller: SuluContentBundle:Template:list }
