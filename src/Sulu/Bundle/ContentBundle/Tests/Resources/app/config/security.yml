@@ -1,0 +1,31 @@
+# Configuration file for security in the test environment
+# Grants access to every User
+# DO NOT USE IN PRODUCTION ENVIRONMENT
+
+parameters:
+    sulu.test_user_provider.class: Sulu\Component\Testing\TestUserProvider
+    sulu.test_voter.class: Sulu\Component\Testing\TestVoter
+
+services:
+    test_user_provider:
+        class: "%sulu.test_user_provider.class%"
+    test_voter:
+        class: "%sulu.test_voter.class%"
+        public: false
+        tags:
+            - { name: security.voter }
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Component\Testing\TestUser: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:
