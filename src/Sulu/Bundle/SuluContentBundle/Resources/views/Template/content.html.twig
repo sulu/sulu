@@ -1,0 +1,13 @@
+<form id="content-form" class="grid">
+    {% for property in template.properties %}
+
+        {# set defaults for property#}
+        {% set type = getType(property.contentTypeName) %}
+
+        {% if property is multiple %}
+            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'type': type} only %}
+        {% else %}
+            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'id': property.name} only %}
+        {% endif %}
+    {% endfor %}
+</form>
