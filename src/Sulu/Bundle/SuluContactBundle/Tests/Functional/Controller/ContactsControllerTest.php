@@ -127,6 +127,9 @@ class ContactsControllerTest extends DatabaseTestCase
 		self::$tool = new SchemaTool(self::$em);
 
 		self::$entities = array(
+
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
 			self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
