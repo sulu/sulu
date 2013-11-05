@@ -12,8 +12,15 @@ define([], function() {
     'use strict';
 
     var permissions = ['view', 'add', 'edit', 'delete', 'archive', 'live', 'security'],
-        permissionTitles = ['security.permissions.view', 'security.permissions.add', 'security.permissions.edit', 'security.permissions.delete',
-            'security.permissions.archive', 'security.permissions.live', 'security.permissions.security'],
+        permissionTitles = [
+            'security.permissions.view',
+            'security.permissions.add',
+            'security.permissions.edit',
+            'security.permissions.delete',
+            'security.permissions.archive',
+            'security.permissions.live',
+            'security.permissions.security'
+        ],
         permissionData,
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
