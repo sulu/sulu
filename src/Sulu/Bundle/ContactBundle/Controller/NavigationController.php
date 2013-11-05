@@ -15,14 +15,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 
+/**
+ * Class NavigationController
+ * @package Sulu\Bundle\ContactBundle\Controller
+ */
 class NavigationController extends Controller
 {
 
     const SERVICE_NAME = 'sulu_contact.admin.content_navigation';
 
     /**
-     * Lists all the contacts or filters the contacts by parameters
-     * Special function for lists
+     * returns navigation for contact
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function contactAction()
@@ -39,8 +42,7 @@ class NavigationController extends Controller
     }
 
     /**
-     * Lists all the contacts or filters the contacts by parameters
-     * Special function for lists
+     * returns navigation for account
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function accountAction()
