@@ -39,7 +39,7 @@ class TestUser implements UserInterface
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        return array('ROLE_USER');
     }
 
     /**
@@ -52,7 +52,7 @@ class TestUser implements UserInterface
      */
     public function getPassword()
     {
-        // TODO: Implement getPassword() method.
+        return 'test';
     }
 
     /**
@@ -64,7 +64,7 @@ class TestUser implements UserInterface
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
@@ -74,7 +74,7 @@ class TestUser implements UserInterface
      */
     public function getUsername()
     {
-        // TODO: Implement getUsername() method.
+        return 'test';
     }
 
     /**
