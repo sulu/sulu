@@ -158,7 +158,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     private function getSecurityContextMock(){
-        $userMock = $this->getMock('\Sulu\Component\Content\Mapper\UserInterface');
+        $userMock = $this->getMock('\Sulu\Component\Security\UserInterface');
         $userMock->expects($this->any())
             ->method('getId')
             ->will($this->returnValue(1));
