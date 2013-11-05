@@ -30,53 +30,129 @@ define([
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.content.content.delete', function() {
+            this.sandbox.on('sulu.content.contents.delete', function() {
                 this.del();
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.content.save', function(data) {
+            this.sandbox.on('sulu.content.contents.save', function(data) {
                 this.save(data);
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.content.load', function(id) {
+            this.sandbox.on('sulu.content.contents.load', function(id) {
                 this.load(id);
             }, this);
 
             // add new contact
-            this.sandbox.on('sulu.content.content.new', function() {
+            this.sandbox.on('sulu.content.contents.new', function() {
                 this.add();
             }, this);
 
             // delete selected contacts
-            this.sandbox.on('sulu.content.content.delete', function(ids) {
-                this.delContent(ids);
+            this.sandbox.on('sulu.content.contents.delete', function(ids) {
+                this.delContents(ids);
             }, this);
         },
 
         del: function() {
-            this.confirmDeleteDialog(function(wasConfirmed) {
-                // TODO Delete
-            }.bind(this));
+           // TODO Delete
         },
 
         save: function(data) {
             // TODO save
+            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            this.content.set(data);
+
+            // TODO select template
+            this.content.saveTemplate(null, 'overview', {
+                // on success save contacts id
+                success: function(response) {
+                    var model = response.toJSON();
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.content.content.saved', model.id);
+                    } else {
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
+                    }
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
         },
 
         load: function(id) {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'content/content/edit:' + id + '/details');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + id + '/details');
         },
 
         add: function() {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'content/content/add');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/add');
         },
 
-        delContent: function(ids) {
-            // TODO delete list
+        delContents: function(ids) {
+
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show','No contents selected for deletion!');
+                return;
+            }
+
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                    ids.forEach(function(id) {
+                        var content = new Content({id: id});
+                        content.destroy({
+                            success: function() {
+                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                            }.bind(this),
+                            error: function(){
+                               // TODO error message
+                            }
+                        });
+                    }.bind(this));
+                    this.sandbox.emit('husky.header.button-state', 'standard');
+                }
+            }.bind(this));
+
+        },
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmDeleteDialog: function(callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            // show dialog
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: "Be careful!",
+                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
+                },
+                footer: {
+                    buttonCancelText: "Don't do it",
+                    buttonSubmitText: "Do it, I understand"
+                },
+                callback: {
+                    submit: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(true);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
+                }
+            });
         },
 
         renderList: function() {
@@ -87,12 +163,7 @@ define([
 
         renderForm: function() {
 
-            // show navigation submenu
-            this.getTabs(this.options.id, function(navigation) {
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: navigation
-                });
-            }.bind(this));
+            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation,this.options.id);
 
             // load data and show form
             this.content = new Content();
@@ -113,48 +184,7 @@ define([
                     {name: 'content/components/form@sulucontent', options: { el: this.$el, data: this.content.toJSON()}}
                 ]);
             }
-        },
 
-        // TODO move to extension
-        // Navigation
-        getTabs: function(id, callback) {
-            //TODO Simplify this task for bundle developer?
-
-            var navigation = JSON.parse(ContentNavigation),
-                hasNew, hasEdit;
-
-            // get url from backbone
-            this.sandbox.emit('navigation.url', function(url) {
-                var items = [];
-                // check action
-                this.sandbox.util.foreach(navigation.sub.items, function(content) {
-                    // check DisplayMode (new or edit) and show menu item or don't
-                    hasNew = content.displayOptions.indexOf('new') >= 0;
-                    hasEdit = content.displayOptions.indexOf('edit') >= 0;
-                    if ((!id && hasNew) || (id && hasEdit)) {
-                        content.action = this.parseActionUrl(content.action, url, id);
-                        if (content.action === url) {
-                            content.selected = true;
-                        }
-                        items.push(content);
-                    }
-                }.bind(this));
-                navigation.sub.items = items;
-                callback(navigation);
-            }.bind(this));
-        },
-
-        parseActionUrl: function(actionString, url, id) {
-            // if first char is '/' use absolute url
-            if (actionString.substr(0, 1) === '/') {
-                return actionString.substr(1, actionString.length);
-            }
-            // FIXME: ugly removal
-            if (id) {
-                var strSearch = 'edit:' + id;
-                url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
-            }
-            return  url + '/' + actionString;
         }
     };
 });

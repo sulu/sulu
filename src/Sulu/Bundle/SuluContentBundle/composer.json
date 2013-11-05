@@ -15,11 +15,14 @@
 
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop",
 
         "jackalope/jackalope-jackrabbit": "1.0.*",
 
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "1.0.*",
+
         "jms/serializer-bundle": "@dev"
     },
     "require-dev": {
