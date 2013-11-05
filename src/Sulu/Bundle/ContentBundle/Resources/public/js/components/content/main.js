@@ -169,7 +169,6 @@ define([
             this.content = new Content();
             if (!!this.options.id) {
                 this.content = new Content({id: this.options.id});
-                //contact = this.getModel(this.options.id);
                 this.content.fetch({
                     success: function(model) {
                         this.sandbox.start([
@@ -185,6 +184,7 @@ define([
                     {name: 'content/components/form@sulucontent', options: { el: this.$el, data: this.content.toJSON()}}
                 ]);
             }
+
         }
     };
 });
