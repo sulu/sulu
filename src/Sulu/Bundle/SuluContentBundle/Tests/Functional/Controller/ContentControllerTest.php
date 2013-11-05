@@ -115,7 +115,7 @@ class ContentControllerTest extends WebTestCase
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
         for ($i = 0; $i < count($data); $i++) {
-            $data[$i] = $mapper->save($data[$i], 'en', 'overview', 1)->toArray();
+            $data[$i] = $mapper->save($data[$i], 'overview', 'en', 1)->toArray();
         }
 
         return $data;
