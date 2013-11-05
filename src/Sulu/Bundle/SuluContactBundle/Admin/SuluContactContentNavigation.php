@@ -21,11 +21,6 @@ class SuluContactContentNavigation extends ContentNavigation
         parent::__construct();
 
         $this->setName('Contacts');
-//        $this->setHeader(array(
-//            'title'         => 'back to contacts',
-//            'displayOption' => 'link',
-//            'action'        => 'contacts/contacts'
-//        ));
 
         $details = new NavigationItem('Details');
         $details->setContentType('contact');
