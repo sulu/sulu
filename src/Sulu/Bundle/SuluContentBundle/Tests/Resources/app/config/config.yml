@@ -1,3 +1,6 @@
+imports:
+    - { resource: security.yml }
+
 framework:
     secret: secret
     router: { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -21,6 +24,9 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        resolve_target_entities:
+                    Sulu\Bundle\ContactBundle\Entity\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
+
 
 monolog:
     handlers:
