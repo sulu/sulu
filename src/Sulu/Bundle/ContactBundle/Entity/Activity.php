@@ -61,13 +61,13 @@ class Activity
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @var \Sulu\Component\Security\UserInterface
      * @Exclude
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @var \Sulu\Component\Security\UserInterface
      * @Exclude
      */
     private $creator;
@@ -259,10 +259,10 @@ class Activity
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\UserInterface $changer
+     * @param \Sulu\Component\Security\UserInterface $changer
      * @return Activity
      */
-    public function setChanger(\Sulu\Bundle\ContactBundle\Entity\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -272,7 +272,7 @@ class Activity
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
@@ -282,10 +282,10 @@ class Activity
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\UserInterface $creator
+     * @param \Sulu\Component\Security\UserInterface $creator
      * @return Activity
      */
-    public function setCreator(\Sulu\Bundle\ContactBundle\Entity\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -295,7 +295,7 @@ class Activity
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\UserInterface
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getCreator()
     {
