@@ -11,8 +11,8 @@
         {% block emails %}
             <h2><%=translate('public.email')%></h2>
 
-            <div class="grid-row" id="emails" data-mapper-property="emails" data-type="array">
-                <div class="grid-col-6 floating email-item">
+            <div class="grid-row" id="emails" data-mapper-property="emails" data-type="collection">
+                <div class="grid-col-6 floating emails-item">
                     <input type="hidden" data-mapper-property="id" class="id-value"/>
 
                     <div class="grid-col-12 dropdown"
@@ -52,8 +52,8 @@
         {% block phones %}
             <h2><%=translate('public.phone')%></h2>
 
-            <div class="grid-row" id="phones" data-mapper-property="phones" data-type="array">
-                <div class="grid-col-6 floating phone-item">
+            <div class="grid-row" id="phones" data-mapper-property="phones" data-type="collection">
+                <div class="grid-col-6 floating phones-item">
                     <input type="hidden" data-mapper-property="id" class="id-value"/>
 
                     <div class="grid-col-12 dropdown"
@@ -97,8 +97,8 @@
             </div>
 
 
-            <div id="addresses" data-mapper-property="addresses" data-type="array">
-                <div class="address-item m-bottom-10">
+            <div id="addresses" data-mapper-property="addresses" data-type="collection">
+                <div class="addresses-item m-bottom-10">
                     <input type="hidden" data-mapper-property="id" class="id-value"/>
 
                     <div class="grid-row">
