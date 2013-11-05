@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontact/model/account'], function(Account) {
+define([
+    'sulucontact/model/account',
+    'text!/admin/contact/navigation/account'
+], function(Account, ContentNavigation) {
 
     'use strict';
 
@@ -78,7 +81,7 @@ define(['sulucontact/model/account'], function(Account) {
                     if (!!data.id) {
                         this.sandbox.emit('sulu.contacts.accounts.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id);
+                        this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
@@ -89,7 +92,7 @@ define(['sulucontact/model/account'], function(Account) {
 
         load: function(id) {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id);
+            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
         add: function() {
@@ -132,9 +135,11 @@ define(['sulucontact/model/account'], function(Account) {
         renderForm: function() {
 
             // show navigation submenu
-            this.sandbox.emit('navigation.item.column.show', {
-                data: this.getTabs(this.options.id)
-            });
+            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
+                this.sandbox.emit('navigation.item.column.show', {
+                    data: navigation
+                });
+            }.bind(this));
 
             // load data and show form
             this.account = new Account();
@@ -364,41 +369,6 @@ define(['sulucontact/model/account'], function(Account) {
                     }.bind(this)
                 }
             }, params.templateType);
-        },
-
-
-        // Navigation
-        getTabs: function(id) {
-            //TODO Simplify this task for bundle developer?
-            var cssId = id || 'new',
-
-            // TODO translate
-                navigation = {
-                    'title': 'Contact',
-                    'header': {
-                        'displayOption': 'link',
-                        'action': 'contacts/accounts'
-                    },
-                    'hasSub': 'true',
-                    'displayOption': 'content',
-                    //TODO id mandatory?
-                    'sub': {
-                        'items': []
-                    }
-                };
-
-            if (!!id) {
-                navigation.sub.items.push({
-                    'title': 'Details',
-                    'action': 'contacts/accounts/edit:' + cssId + '/details',
-                    'hasSub': false,
-                    'type': 'content',
-                    'selected': true,
-                    'id': 'contacts-details-' + cssId
-                });
-            }
-
-            return navigation;
         },
 
         template: {

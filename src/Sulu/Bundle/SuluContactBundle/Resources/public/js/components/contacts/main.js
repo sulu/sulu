@@ -9,7 +9,7 @@
 
 define([
     'sulucontact/model/contact',
-    'text!/admin/contact/navigation/content'
+    'text!/admin/contact/navigation/contact'
 ], function(Contact, ContentNavigation) {
 
     'use strict';
@@ -127,7 +127,7 @@ define([
         renderForm: function() {
 
             // show navigation submenu
-            this.getTabs(this.options.id, function(navigation) {
+            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
                 this.sandbox.emit('navigation.item.column.show', {
                     data: navigation
                 });
@@ -190,48 +190,6 @@ define([
                     }.bind(this)
                 }
             });
-        },
-
-
-        // Navigation
-        getTabs: function(id, callback) {
-            //TODO Simplify this task for bundle developer?
-
-            var navigation = JSON.parse(ContentNavigation),
-                hasNew, hasEdit;
-
-            // get url from backbone
-            this.sandbox.emit('navigation.url', function(url) {
-                var items = [];
-                // check action
-                this.sandbox.util.foreach(navigation.sub.items, function(content) {
-                    // check DisplayMode (new or edit) and show menu item or don't
-                    hasNew = content.displayOptions.indexOf('new') >= 0;
-                    hasEdit = content.displayOptions.indexOf('edit') >= 0;
-                    if ((!id && hasNew) || (id && hasEdit)) {
-                        content.action = this.parseActionUrl(content.action, url, id);
-                        if (content.action === url) {
-                            content.selected = true;
-                        }
-                        items.push(content);
-                    }
-                }.bind(this));
-                navigation.sub.items = items;
-                callback(navigation);
-            }.bind(this));
-        },
-
-        parseActionUrl: function(actionString, url, id) {
-            // if first char is '/' use absolute url
-            if (actionString.substr(0, 1) === '/') {
-                return actionString.substr(1, actionString.length);
-            }
-            // TODO: FIXIT: ugly removal
-            if (id) {
-                var strSearch = 'edit:' + id;
-                url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
-            }
-            return  url + '/' + actionString;
         }
     };
 });

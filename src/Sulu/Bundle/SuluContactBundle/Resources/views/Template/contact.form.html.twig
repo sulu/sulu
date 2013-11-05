@@ -1,7 +1,7 @@
 {% extends "SuluContactBundle:Template:base.form.html.twig" %}
 
 {% block static %}
-    <h2 class="bold"><%=translate('contact.contacts.title')%></h2>
+    <h1 class="p-top-10"><%=translate('contact.contacts.title')%></h1>
 
     <div class="grid-row">
         <div class="grid-col-2">
@@ -11,11 +11,11 @@
             <div class="grid-row">
                 <div class="grid-col-6">
                     <label for="first-name" class="required"><%=translate('contact.contacts.firstName')%></label>
-                    <input class="form-element" type="text" id="first-name"data-validation-required="true" data-validation-min-length="3" data-mapper-property="firstName" value=""/>
+                    <input class="form-element input-large" type="text" id="first-name"data-validation-required="true" data-validation-min-length="3" data-mapper-property="firstName" value=""/>
                 </div>
                 <div class="grid-col-6">
                     <label for="last-name" class="required"><%=translate('contact.contacts.lastName')%></label>
-                    <input class="form-element" type="text" id="last-name" data-trigger="focusout" data-validation-required="true" data-validation-min-length="3" data-mapper-property="lastName" value=""/>
+                    <input class="form-element input-large" type="text" id="last-name" data-trigger="focusout" data-validation-required="true" data-validation-min-length="3" data-mapper-property="lastName" value=""/>
                 </div>
             </div>
             <div class="grid-row">
