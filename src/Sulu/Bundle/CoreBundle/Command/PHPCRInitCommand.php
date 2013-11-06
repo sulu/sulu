@@ -36,7 +36,7 @@ class PHPCRInitCommand extends ContainerAwareCommand
     {
         // get basic node paths
         $contents = $this->getContainer()->getParameter('sulu.content.base_path.content');
-        $routes = $this->getContainer()->getParameter('sulu.content.base_path.routes');
+        $routes = $this->getContainer()->getParameter('sulu.content.base_path.route');
 
         /** @var SessionInterface $session */
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
@@ -47,6 +47,8 @@ class PHPCRInitCommand extends ContainerAwareCommand
         // create basic nodes
         $this->createRecursive($contents, $root);
         $this->createRecursive($routes, $root);
+
+        $session->save();
     }
 
     /**
