@@ -67,8 +67,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $postSave = array();
 
         // go through every property in the template
+        /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
-            /** @var PropertyInterface $property */
+            // allow null values in data
             if (isset($data[$property->getName()])) {
                 $type = $this->getContentType($property->getContentTypeName());
                 $value = $data[$property->getName()];
