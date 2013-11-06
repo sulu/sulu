@@ -38,10 +38,5 @@ class SuluScriptHandler extends ScriptHandler
             $appDir,
             'sulu:install:kernel ' . escapeshellarg($dir . '/' . $appDir) . ' website'
         );
-        parent::executeCommand(
-            $event,
-            $appDir,
-            'sulu:phpcr:init'
-        );
     }
 }
