@@ -12,10 +12,13 @@ namespace Sulu\Component\Content\Mapper;
 
 use Jackalope\RepositoryFactoryJackrabbit;
 use Jackalope\Session;
+use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Component\Content\Property;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
@@ -48,12 +51,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = $this->getContainerMock();
-
-        $this->mapper = new ContentMapper('/cmf/contents');
-        $this->mapper->setContainer($this->container);
-
-        $this->prepareSession();
+        $this->prepareMapper();
 
         NodeHelper::purgeWorkspace($this->session);
         $this->session->save();
@@ -68,6 +66,16 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $contents->addMixin('mix:referenceable');
 
         $this->session->save();
+    }
+
+    private function prepareMapper()
+    {
+        $this->container = $this->getContainerMock();
+
+        $this->mapper = new ContentMapper('/cmf/contents');
+        $this->mapper->setContainer($this->container);
+
+        $this->prepareSession();
     }
 
     /**
@@ -187,8 +195,10 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        //NodeHelper::purgeWorkspace($this->session);
-        $this->session->save();
+        if (isset($this->session)) {
+            NodeHelper::purgeWorkspace($this->session);
+            $this->session->save();
+        }
     }
 
     public function testSave()
@@ -235,6 +245,47 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals('Test', $content->article);
+        $this->assertEquals('/de/test', $content->url);
+        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+    }
+
+    public function testNewProperty()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/de/test',
+            'article' => 'Test'
+        );
+
+        $contentBefore = $this->mapper->save($data, 'overview', 'de', 1);
+
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/de/test');
+
+        /** @var NodeInterface $contentNode */
+        $contentNode = $route->getPropertyValue('content');
+
+        // simulate new property article, by deleting the property
+        /** @var PropertyInterface $articleProperty */
+        $articleProperty = $contentNode->getProperty('article');
+        $this->session->removeItem($articleProperty->getPath());
+        $this->session->save();
+
+        // simulates a new request
+        $this->prepareMapper();
+
+        /** @var StructureInterface $content */
+        $content = $this->mapper->read($contentBefore->getUuid(), 'de');
+
+        // test values
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals(null, $content->article);
         $this->assertEquals('/de/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
