@@ -1,9 +1,9 @@
 {
     "name": "sulu/website-bundle",
     "type": "sulu-bundle",
-    "description": "TODO",
+    "description": "This sulu bundle is responsible for the websites administrated by Sulu",
     "license": "MIT",
-    "keywords": ["TODO"],
+    "keywords": ["sulu", "website"],
     "authors": [
         {
             "name": "Sulu Community",
@@ -12,15 +12,10 @@
     ],
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "1.0.*",
-        "jms/serializer-bundle": "@dev",
-        "sulu/core-bundle": "dev-develop",
-        "sulu/admin-bundle": "dev-develop"
+        "sulu/sulu": "dev-develop"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
-        "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.3.*",
         "phpunit/phpunit": "3.7.*"
     },
