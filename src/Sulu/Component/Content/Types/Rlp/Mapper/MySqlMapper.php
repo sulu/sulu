@@ -51,4 +51,15 @@ class MySqlMapper extends RlpMapper {
     {
         // TODO: Implement unique() method.
     }
+
+    /**
+     * returns a unique path with "-1" if necessary
+     * @param string $path
+     * @param string $portal key of portal
+     * @return string
+     */
+    public function getUniquePath($path, $portal)
+    {
+        // TODO: Implement getUniquePath() method.
+    }
 }

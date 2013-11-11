@@ -30,6 +30,30 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $mapper;
 
     /**
+     * replacers for cleanup
+     * @var array
+     */
+    protected $replacers = array(
+        'default' => array(
+            'ä' => 'ae',
+            'ö' => 'oe',
+            'ü' => 'ue'
+        ),
+        'de' => array(
+            '&' => 'und'
+        ),
+        'en' => array(
+            '&' => 'and'
+        )
+    );
+
+    /**
+     * valid pattern for path
+     * @var string
+     */
+    private $pattern = '/([A-Za-z0-9-_\/])/';
+
+    /**
      * @param string $name name of RLP Strategy
      * @param RlpMapperInterface $mapper
      */
@@ -84,8 +108,32 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     protected function cleanup($dirty)
     {
-        // TODO: Implement cleanup() method.
-        return $dirty;
+        $clean = strtolower($dirty);
+
+        // TODO language
+        $language = 'de';
+        $replacers = array_merge($this->replacers['default'], $this->replacers[$language]);
+
+        if (count($replacers) > 0) {
+            foreach ($replacers as $key => $value) {
+                $clean = str_replace($key, $value, $clean);
+            }
+        }
+
+        // Inspired by ZOOLU
+        // delete problematic characters
+        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
+
+        $clean = str_replace('+', '-', $clean);
+
+        // replace multiple minus with one
+        $clean = preg_replace('/([-]+)/', '-', $clean);
+
+        // delete minus at the beginning or end
+        $clean = preg_replace('/^([-])/', '', $clean);
+        $clean = preg_replace('/([-])$/', '', $clean);
+
+        return $clean;
     }
 
     /**
@@ -93,10 +141,12 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @param NodeInterface $contentNode
      * @param string $path to generate
      * @param string $portal key of portal
+     * @return int|string id or uuid of new route
      */
     public function save(NodeInterface $contentNode, $path, $portal)
     {
-        $this->mapper->save($contentNode, $path, $portal);
+        // delegate to mapper
+        return $this->mapper->save($contentNode, $path, $portal);
     }
 
     /**
@@ -107,7 +157,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     public function isValid($path, $portal)
     {
-        // TODO check for valid signs
-        return $this->mapper->unique($path, $portal);
+        // check for valid signs and uniqueness
+        return preg_match($this->pattern, $path) && $this->mapper->unique($path, $portal);
     }
 }

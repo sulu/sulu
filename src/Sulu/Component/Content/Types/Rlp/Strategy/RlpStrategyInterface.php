@@ -37,6 +37,7 @@ interface RLPStrategyInterface {
      * @param NodeInterface $contentNode
      * @param string $path to generate
      * @param string $portal key of portal
+     * @return int|string id or uuid of new route
      */
     public function save(NodeInterface $contentNode, $path, $portal);
 
