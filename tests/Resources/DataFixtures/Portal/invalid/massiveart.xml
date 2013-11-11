@@ -5,6 +5,10 @@
 
     <name>Massive Art</name>
     <key>massiveart</key>
+    
+    <resource-locator>
+        <strategy>tree</strategy>
+    </resource-locator>
 
     <languages>
         <language main="true">en</language>
