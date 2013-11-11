@@ -10,30 +10,30 @@
 
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
+use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+
 /**
  * implements RLP Strategy "as short as possible"
  */
 class TreeStrategy extends RLPStrategy
 {
-
     /**
-     * @param string $contentPath base path of content in PHPCR
-     * @param $routePath
+     * @param RlpMapperInterface $mapper
      */
-    public function __construct($contentPath, $routePath)
+    public function __construct(RlpMapperInterface $mapper)
     {
-
+        parent::__construct('whole-tree', $mapper);
     }
 
     /**
-     * returns whole path for given ContentNode
-     * @param string $title title of new node
-     * @param string $parentPath parent path of new contentNode
-     * @param string $portal key of portal
-     * @return string whole path
+     * internal generator
+     * @param $title
+     * @param $parentPath
+     * @return string
      */
-    public function generate($title, $parentPath, $portal)
+    protected function _generate($title, $parentPath)
     {
-        // TODO: Implement generate() method.
+        // concat parentPath and title to whole tree path
+        return $parentPath . '/' . $title;
     }
 }

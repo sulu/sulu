@@ -39,4 +39,12 @@ interface RlpMapperInterface {
      * @return bool
      */
     public function unique($path, $portal);
+
+    /**
+     * returns a unique path with "-1" if necessary
+     * @param string $path
+     * @param string $portal key of portal
+     * @return string
+     */
+    public function getUniquePath($path, $portal);
 }
