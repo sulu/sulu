@@ -1,0 +1,8 @@
+parameters:
+    sulu_website.admin.class: Sulu\Bundle\WebsiteBundle\Admin\SuluWebsiteAdmin
+
+services:
+    sulu_website.admin:
+        class: %sulu_website.admin.class%
+        tags:
+        - { name: sulu.admin }
