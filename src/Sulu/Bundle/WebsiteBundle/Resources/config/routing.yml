@@ -1,0 +1,3 @@
+sulu_website:
+    resource: "@SuluWebsiteBundle/Resources/config/routing_api.yml"
+    prefix: /api
