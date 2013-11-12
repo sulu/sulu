@@ -45,8 +45,7 @@ class ResourceLocator extends ComplexContentType
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        // TODO portal
-        $value = $this->strategy->read($node, 'default');
+        $value = $this->getStrategy()->read($node, $this->getPortal());
         $property->setValue($value);
     }
 
@@ -59,8 +58,23 @@ class ResourceLocator extends ComplexContentType
      */
     public function set(NodeInterface $node, PropertyInterface $property)
     {
-        // TODO portal
-        $this->strategy->save($node, $property->getValue(), 'default');
+        $this->getStrategy()->save($node, $property->getValue(), $this->getPortal());
+    }
+
+    /**
+     * returns strategy of current portal
+     * @return RLPStrategyInterface
+     */
+    public function getStrategy()
+    {
+        // TODO get strategy from ???
+        return $this->strategy;
+    }
+
+    public function getPortal()
+    {
+        // TODO get real portal from portalmanager + request
+        return 'default';
     }
 
     /**
