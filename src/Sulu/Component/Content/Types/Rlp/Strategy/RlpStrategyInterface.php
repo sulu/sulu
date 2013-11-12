@@ -33,13 +33,25 @@ interface RLPStrategyInterface {
     public function generate($title, $parentPath, $portal);
 
     /**
-     * save route in storage with reference on given contentNode
-     * @param NodeInterface $contentNode
-     * @param string $path to generate
+     * creates a new route for given path
+     * @param NodeInterface $contentNode reference node
+     * @param string $path path to generate
      * @param string $portal key of portal
-     * @return int|string id or uuid of new route
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
     public function save(NodeInterface $contentNode, $path, $portal);
+
+    /**
+     * returns path for given contentNode
+     * @param NodeInterface $contentNode reference node
+     * @param string $portal key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     *
+     * @return string path
+     */
+    public function read(NodeInterface $contentNode, $portal);
 
     /**
      * checks if path is valid

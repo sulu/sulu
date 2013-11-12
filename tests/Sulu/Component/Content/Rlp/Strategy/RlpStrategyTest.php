@@ -33,7 +33,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array('unique', 'getUniquePath', 'save'),
+            array('unique', 'getUniquePath', 'save', 'read'),
             array('test-mapper'),
             'TestMapper'
         );
@@ -45,7 +45,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
         $this->mapper->expects($this->any())
             ->method('save')
-            ->will($this->returnValue(1));
+            ->will($this->returnValue(null));
+        $this->mapper->expects($this->any())
+            ->method('read')
+            ->will($this->returnValue('/test'));
 
         $this->strategy = $this->getMockForAbstractClass(
             $this->className,

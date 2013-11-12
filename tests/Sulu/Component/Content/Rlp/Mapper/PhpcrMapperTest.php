@@ -178,6 +178,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 
         $node = $this->session->getNode($route);
         $this->assertTrue($node->getPropertyValue('sulu:content') == $this->content1);
+        $this->assertTrue($node->hasProperty('sulu:content'));
     }
 
     public function testReadFailure()
