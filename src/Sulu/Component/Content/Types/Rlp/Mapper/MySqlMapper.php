@@ -42,6 +42,20 @@ class MySqlMapper extends RlpMapper {
     }
 
     /**
+     * returns path for given contentNode
+     * @param NodeInterface $contentNode reference node
+     * @param string $portal key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     *
+     * @return string path
+     */
+    public function read(NodeInterface $contentNode, $portal)
+    {
+        // TODO: Implement read() method.
+    }
+
+    /**
      * checks if given path is unique
      * @param string $path
      * @param string $portal key of portal
