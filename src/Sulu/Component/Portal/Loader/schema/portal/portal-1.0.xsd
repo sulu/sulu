@@ -9,11 +9,24 @@
         <xs:sequence>
             <xs:element type="xs:string" name="name"/>
             <xs:element type="xs:string" name="key"/>
+            <xs:element type="resourceLocatorType" name="resource-locator"/>
             <xs:element type="languagesType" name="languages"/>
             <xs:element type="themeType" name="theme"/>
             <xs:element type="environmentsType" name="environments"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="resourceLocatorType">
+        <xs:sequence>
+            <xs:element type="resourceLocatorStrategyType" name="strategy"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="resourceLocatorStrategyType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="tree"/>
+            <xs:enumeration value="short"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="languagesType">
         <xs:sequence>
