@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Types\Rlp\Mapper;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
 class PhpcrMapper extends RlpMapper
@@ -42,11 +43,47 @@ class PhpcrMapper extends RlpMapper
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
      * @param string $portal key of portal
-     * @return int|string id or uuid of new route
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
     public function save(NodeInterface $contentNode, $path, $portal)
     {
-        // TODO: Implement save() method.
+        // TODO portal
+        $session = $this->sessionFactory->getSession();
+        $routes = $this->getRoutes($session);
+
+        // check if route already exists
+        if (!$this->isUnique($routes, $path)) {
+            $routeNode = $routes->getNode(ltrim($path, '/'));
+            if ($routeNode->hasProperty('content') && $routeNode->getPropertyValue('content') == $contentNode) {
+                // route already exists and referenced on contentNode
+                return;
+            } else {
+                throw new ResourceLocatorAlreadyExistsException();
+            }
+        }
+
+        // create root recursive
+        $routePath = explode('/', ltrim($path, '/'));
+        $node = $routes;
+        foreach ($routePath as $path) {
+            if ($path != '') {
+                if ($node->hasNode($path)) {
+                    $node = $node->getNode($path);
+                } else {
+                    $node = $node->addNode($path, 'nt:unstructured');
+                    $node->addMixin('mix:referenceable');
+                }
+            }
+        }
+
+        // TODO sulu:route mixin to search faster for route
+        // $routeNode->addMixin('sulu:route');
+        $node->setProperty('content', $contentNode);
+
+        // FIXME better solution? node have to be saved before referenced
+        $session->save();
+        $contentNode->setProperty('route', $node);
     }
 
     /**

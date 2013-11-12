@@ -90,6 +90,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         // set post save content types properties
         foreach ($postSave as $post) {
+            // TODO exception handling
             /** @var ContentTypeInterface $type */
             $type = $post['type'];
             /** @var PropertyInterface $property */

@@ -28,7 +28,8 @@ interface RlpMapperInterface {
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
      * @param string $portal key of portal
-     * @return int|string id or uuid of new route
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
     public function save(NodeInterface $contentNode, $path, $portal);
 

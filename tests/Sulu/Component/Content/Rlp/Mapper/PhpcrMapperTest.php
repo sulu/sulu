@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Rlp\Strategy;
 
 use Jackalope\RepositoryFactoryJackrabbit;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
@@ -34,6 +35,10 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
      * @var SessionInterface
      */
     private $session;
+    /**
+     * @var NodeInterface
+     */
+    private $content1;
 
     public function setUp()
     {
@@ -63,6 +68,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $repository = $factory->getRepository($parameters);
         $credentials = new SimpleCredentials('admin', 'admin');
 
+        /** @var SessionInterface $session */
         $session = $repository->login($credentials, 'default');
 
         NodeHelper::purgeWorkspace($session);
@@ -93,6 +99,12 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 
         $drill1 = $machines->addNode('drill-1');
         $drill1->addMixin('mix:referenceable');
+
+        $contents = $cmf->addNode('contents');
+        $contents->addMixin('mix:referenceable');
+
+        $this->content1 = $contents->addNode('content1');
+        $this->content1->addMixin('mix:referenceable');
 
         $this->session->save();
     }
@@ -141,5 +153,22 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $result = $this->mapper->getUniquePath('/news', 'default');
         $this->assertEquals('/news', $result);
         $this->assertTrue($this->mapper->unique($result, 'default'));
+    }
+
+    public function testSaveFailure()
+    {
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException');
+        $this->mapper->save($this->content1, '/products/machines/drill', 'default');
+    }
+
+    public function testSave()
+    {
+        $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        $route = '/cmf/routes/products/news/content1-news';
+
+        $node = $this->session->getNode($route);
+        $this->assertTrue($node->getPropertyValue('content') == $this->content1);
     }
 }
