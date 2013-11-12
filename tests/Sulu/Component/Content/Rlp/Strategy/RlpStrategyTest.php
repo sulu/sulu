@@ -108,30 +108,34 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValid()
     {
-        // false from mapper
+        // false from mapper (is not unique)
         $result = $this->strategy->isValid('/products/machines', 'default');
         $this->assertFalse($result);
 
-        // true from mapper
+        // true from mapper (is unique)
         $result = $this->strategy->isValid('/products/machines-1', 'default');
         $this->assertTrue($result);
 
-        // false from not good signs
+        // false from strategy incorrect signs
         $result = $this->strategy->isValid('/products/mä  chines', 'default');
         $this->assertFalse($result);
     }
 
     public function testGenerate()
     {
+        // /products/machines => not unique add -1
         $result = $this->strategy->generate('machines', '/products', 'default');
         $this->assertEquals('/products/machines-1', $result);
 
+        // /products/machines/drill => not unique add -1
         $result = $this->strategy->generate('drill', '/products/machines', 'default');
         $this->assertEquals('/products/machines/drill-1', $result);
 
+        // /products/mä   chines => after cleanup => /products/mae-chines
         $result = $this->strategy->generate('mä   chines', '/products', 'default');
         $this->assertEquals('/products/mae-chines', $result);
 
+        // /products/mächines => after cleanup => /products/maechines
         $result = $this->strategy->generate('mächines', '/products', 'default');
         $this->assertEquals('/products/maechines', $result);
     }
