@@ -27,8 +27,10 @@ use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 
+/**
+ * tests content mapper with tree strategy and phpcr mapper
+ */
 class ContentMapperTest extends \PHPUnit_Framework_TestCase
 {
     /**
