@@ -35,6 +35,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     protected $replacers = array(
         'default' => array(
+            ' ' => '-',
             '+' => '-',
             'ä' => 'ae',
             'ö' => 'oe',
