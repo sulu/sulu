@@ -39,12 +39,14 @@ class PHPCRInitCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('sulu.phpcr.session');
+        $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
         /** @var WorkspaceInterface $workspace */
         $workspace = $session->getWorkspace();
 
         // init node namespace and types
+        $output->writeln('Register namespace');
         $workspace->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $output->writeln('Register node types');
         $workspace->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $workspace->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
         $workspace->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
