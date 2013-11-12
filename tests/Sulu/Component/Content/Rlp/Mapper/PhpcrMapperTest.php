@@ -171,4 +171,19 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $node = $this->session->getNode($route);
         $this->assertTrue($node->getPropertyValue('content') == $this->content1);
     }
+
+    public function testReadFailure()
+    {
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotExistsException');
+        $this->mapper->read($this->content1, 'default');
+    }
+
+    public function testRead()
+    {
+        $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        $result = $this->mapper->read($this->content1, 'default');
+        $this->assertEquals('/products/news/content1-news', $result);
+    }
 }

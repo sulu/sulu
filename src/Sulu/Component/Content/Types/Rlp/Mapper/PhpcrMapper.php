@@ -98,7 +98,7 @@ class PhpcrMapper extends RlpMapper
         foreach ($contentNode->getReferences('content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 // remove last slash from parent path and remove left basePath
-                $value = ltrim(rtrim($ref->getParent()->getPath(), '/'), $this->basePath);
+                $value = '/' . ltrim(rtrim($ref->getParent()->getPath(), '/'), $this->basePath);
 
                 return $value;
             }
