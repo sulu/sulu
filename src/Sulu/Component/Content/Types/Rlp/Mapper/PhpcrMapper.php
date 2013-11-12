@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Types\Rlp\Mapper;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotExistsException;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
 class PhpcrMapper extends RlpMapper
@@ -80,10 +81,30 @@ class PhpcrMapper extends RlpMapper
         // TODO sulu:route mixin to search faster for route
         // $routeNode->addMixin('sulu:route');
         $node->setProperty('content', $contentNode);
+    }
 
-        // FIXME better solution? node have to be saved before referenced
-        $session->save();
-        $contentNode->setProperty('route', $node);
+    /**
+     * returns path for given contentNode
+     * @param NodeInterface $contentNode reference node
+     * @param string $portal key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     *
+     * @return string path
+     */
+    public function read(NodeInterface $contentNode, $portal)
+    {
+        // search for references with name 'content'
+        foreach ($contentNode->getReferences('content') as $ref) {
+            if ($ref instanceof \PHPCR\PropertyInterface) {
+                // remove last slash from parent path and remove left basePath
+                $value = ltrim(rtrim($ref->getParent()->getPath(), '/'), $this->basePath);
+
+                return $value;
+            }
+        }
+
+        throw new ResourceLocatorNotExistsException();
     }
 
     /**

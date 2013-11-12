@@ -16,6 +16,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Util\UuidUtils;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
@@ -90,12 +91,16 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         // set post save content types properties
         foreach ($postSave as $post) {
-            // TODO exception handling
-            /** @var ContentTypeInterface $type */
-            $type = $post['type'];
-            /** @var PropertyInterface $property */
-            $property = $post['property'];
-            $type->set($node, $property);
+            try {
+                /** @var ContentTypeInterface $type */
+                $type = $post['type'];
+                /** @var PropertyInterface $property */
+                $property = $post['property'];
+
+                $type->set($node, $property);
+            } catch (Exception $ex) {
+                // FIXME message for user or log entry
+            }
         }
 
         $session->save();

@@ -34,6 +34,17 @@ interface RlpMapperInterface {
     public function save(NodeInterface $contentNode, $path, $portal);
 
     /**
+     * returns path for given contentNode
+     * @param NodeInterface $contentNode reference node
+     * @param string $portal key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     *
+     * @return string path
+     */
+    public function read(NodeInterface $contentNode, $portal);
+
+    /**
      * checks if given path is unique
      * @param string $path
      * @param string $portal key of portal
