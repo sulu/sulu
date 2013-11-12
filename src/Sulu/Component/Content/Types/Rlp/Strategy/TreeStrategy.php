@@ -31,7 +31,7 @@ class TreeStrategy extends RLPStrategy
      * @param $parentPath
      * @return string
      */
-    protected function _generate($title, $parentPath)
+    protected function generatePath($title, $parentPath)
     {
         // concat parentPath and title to whole tree path
         return $parentPath . '/' . $title;

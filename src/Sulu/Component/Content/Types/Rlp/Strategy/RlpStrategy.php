@@ -35,6 +35,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     protected $replacers = array(
         'default' => array(
+            '+' => '-',
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue'
@@ -87,7 +88,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     public function generate($title, $parentPath, $portal)
     {
         // get generated path from childClass
-        $path = $this->_generate($title, $parentPath);
+        $path = $this->generatePath($title, $parentPath);
 
         // cleanup path
         $path = $this->cleanup($path);
@@ -104,7 +105,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @param $parentPath
      * @return string
      */
-    protected abstract function _generate($title, $parentPath);
+    protected abstract function generatePath($title, $parentPath);
 
     /**
      * returns a clean string
@@ -128,8 +129,6 @@ abstract class RlpStrategy implements RlpStrategyInterface
         // Inspired by ZOOLU
         // delete problematic characters
         $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
-
-        $clean = str_replace('+', '-', $clean);
 
         // replace multiple minus with one
         $clean = preg_replace('/([-]+)/', '-', $clean);

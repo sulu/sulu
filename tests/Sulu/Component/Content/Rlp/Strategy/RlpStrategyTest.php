@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Rlp;
+namespace Sulu\Component\Content\Rlp\Strategy;
 
 use ReflectionClass;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
@@ -52,6 +52,9 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             array('test-strategy', $this->mapper),
             'TestStrategy'
         );
+        $this->strategy->expects($this->any())
+            ->method('generatePath')
+            ->will($this->returnCallback(array($this, 'generateCallback')));
     }
 
     public function uniqueCallback()
@@ -72,6 +75,13 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         }
 
         return $args[0];
+    }
+
+    public function generateCallback()
+    {
+        $args = func_get_args();
+
+        return $args[1] . '/' . $args[0];
     }
 
     protected function tearDown()
@@ -100,15 +110,30 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         // false from mapper
         $result = $this->strategy->isValid('/products/machines', 'default');
-        $this->assertEquals(false, $result);
+        $this->assertFalse($result);
 
         // true from mapper
         $result = $this->strategy->isValid('/products/machines-1', 'default');
-        $this->assertEquals(true, $result);
+        $this->assertTrue($result);
 
         // false from not good signs
-        $result = $this->strategy->isValid('/products/mä chines', 'default');
-        $this->assertEquals(false, $result);
+        $result = $this->strategy->isValid('/products/mä  chines', 'default');
+        $this->assertFalse($result);
+    }
+
+    public function testGenerate()
+    {
+        $result = $this->strategy->generate('machines', '/products', 'default');
+        $this->assertEquals('/products/machines-1', $result);
+
+        $result = $this->strategy->generate('drill', '/products/machines', 'default');
+        $this->assertEquals('/products/machines/drill-1', $result);
+
+        $result = $this->strategy->generate('mä   chines', '/products', 'default');
+        $this->assertEquals('/products/mae-chines', $result);
+
+        $result = $this->strategy->generate('mächines', '/products', 'default');
+        $this->assertEquals('/products/maechines', $result);
     }
 
 }
