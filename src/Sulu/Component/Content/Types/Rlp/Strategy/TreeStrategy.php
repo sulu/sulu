@@ -15,7 +15,7 @@ use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 /**
  * implements RLP Strategy "as short as possible"
  */
-class TreeStrategy extends RLPStrategy
+class TreeStrategy extends RlpStrategy
 {
     /**
      * @param RlpMapperInterface $mapper
