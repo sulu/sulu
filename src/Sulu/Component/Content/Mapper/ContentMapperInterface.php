@@ -22,17 +22,28 @@ interface ContentMapperInterface
      * Saves the given data in the content storage
      * @param $data array The data to be saved
      * @param $templateKey string name of template
+     * @param string $portal key of portal
      * @param $languageCode string Save data for given language
      * @param $userId int The id of the user who saves
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $languageCode, $userId);
+    public function save($data, $templateKey, $portal, $languageCode, $userId);
 
     /**
-     * Reads the data from the given path
+     * returns the data from the given id
      * @param $id string uuid or path to the content
+     * @param string $portal key of portal
      * @param $language string read data for given language
      * @return StructureInterface
      */
-    public function read($id, $language);
+    public function load($id, $portal, $language);
+
+    /**
+     * returns data from given path
+     * @param string $resourceLocator resource locator
+     * @param string $portal key of portal
+     * @param string $language
+     * @return StructureInterface
+     */
+    public function loadByResourceLocator($resourceLocator, $portal, $language);
 }

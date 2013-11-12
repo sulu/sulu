@@ -24,22 +24,29 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * base path to save the content
      * @var string
      */
-    private $basePath = '/cmf/contents';
+    private $contentBasePath = '/cmf/contents';
+    /**
+     * base path to load the route
+     * @var string
+     */
+    private $routesBasePath = '/cmf/routes';
 
-    public function __construct($basePath)
+    public function __construct($contentBasePath, $routesBasePath)
     {
-        $this->basePath = $basePath;
+        $this->contentBasePath = $contentBasePath;
+        $this->routesBasePath = $routesBasePath;
     }
 
     /**
      * Saves the given data in the content storage
      * @param $data array The data to be saved
-     * @param $languageCode string Save data for given language
      * @param $templateKey string name of template
+     * @param string $portal key of portal
+     * @param $languageCode string Save data for given language
      * @param $userId int The id of the user who saves
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $languageCode, $userId)
+    public function save($data, $templateKey, $portal, $languageCode, $userId)
     {
         // TODO localize
         $structure = $this->getStructure($templateKey);
@@ -47,7 +54,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $root = $session->getRootNode();
         /** @var NodeInterface $node */
         $node = $root->addNode(
-            ltrim($this->getBasePath(), '/') . '/' . $data['title']
+            ltrim($this->getContentBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
         $node->addMixin('sulu:content');
         $node->setProperty('sulu:template', $templateKey);
@@ -114,16 +121,45 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
-     * Reads the data from the given path
-     * @param $id string uuid to the content
+     * returns the data from the given id
+     * @param $id string uuid or path to the content
+     * @param string $portal key of portal
      * @param $language string read data for given language
      * @return StructureInterface
      */
-    public function read($id, $language)
+    public function load($id, $portal, $language)
     {
+        // TODO portal
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($id);
 
+        return $this->loadByNode($contentNode, $language);
+    }
+
+    /**
+     * returns data from given path
+     * @param string $resourceLocator resource locator
+     * @param string $portal key of portal
+     * @param string $language
+     * @return StructureInterface
+     */
+    public function loadByResourceLocator($resourceLocator, $portal, $language)
+    {
+        // TODO portal
+        $session = $this->getSession();
+        $routeNode = $session->getNode(rtrim($this->getRouteBasePath(), '/') . '/' . ltrim($resourceLocator, '/'));
+
+        return $this->loadByNode($routeNode->getPropertyValue('sulu:content'), $language);
+    }
+
+    /**
+     * returns data from given node
+     * @param NodeInterface $contentNode
+     * @param string $language
+     * @return StructureInterface
+     */
+    private function loadByNode(NodeInterface $contentNode, $language)
+    {
         $templateKey = $contentNode->getPropertyValue('sulu:template');
 
         // TODO localize
@@ -176,8 +212,16 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     /**
      * @return string
      */
-    protected function getBasePath()
+    protected function getContentBasePath()
     {
-        return $this->basePath;
+        return $this->contentBasePath;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRouteBasePath()
+    {
+        return $this->routesBasePath;
     }
 }

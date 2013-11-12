@@ -79,7 +79,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = $this->getContainerMock();
 
-        $this->mapper = new ContentMapper('/cmf/contents');
+        $this->mapper = new ContentMapper('/cmf/contents', '/cmf/routes');
         $this->mapper->setContainer($this->container);
 
         $this->prepareSession();
@@ -226,14 +226,14 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag1',
                 'tag2'
             ),
-            'url' => '/de/test',
+            'url' => '/news/test',
             'article' => 'Test'
         );
 
-        $this->mapper->save($data, 'overview', 'de', 1);
+        $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/de/test');
+        $route = $root->getNode('cmf/routes/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -245,7 +245,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
 
-    public function testRead()
+    public function testLoad()
     {
         $data = array(
             'title' => 'Testtitle',
@@ -253,17 +253,17 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag1',
                 'tag2'
             ),
-            'url' => '/de/test',
+            'url' => '/news/test',
             'article' => 'Test'
         );
 
-        $structure = $this->mapper->save($data, 'overview', 'de', 1);
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
-        $content = $this->mapper->read($structure->getUuid(), 'de');
+        $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
 
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals('Test', $content->article);
-        $this->assertEquals('/de/test', $content->url);
+        $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
@@ -277,14 +277,14 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag1',
                 'tag2'
             ),
-            'url' => '/de/test',
+            'url' => '/news/test',
             'article' => 'Test'
         );
 
-        $contentBefore = $this->mapper->save($data, 'overview', 'de', 1);
+        $contentBefore = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/de/test');
+        $route = $root->getNode('cmf/routes/news/test');
 
         /** @var NodeInterface $contentNode */
         $contentNode = $route->getPropertyValue('sulu:content');
@@ -299,14 +299,39 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->prepareMapper();
 
         /** @var StructureInterface $content */
-        $content = $this->mapper->read($contentBefore->getUuid(), 'de');
+        $content = $this->mapper->load($contentBefore->getUuid(), 'default', 'de');
 
         // test values
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals(null, $content->article);
-        $this->assertEquals('/de/test', $content->url);
+        $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
+
+    public function testLoadByRL()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+    }
+
 }
