@@ -32,6 +32,8 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
 
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
+
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
         $this->assertEquals(true, $portal->getLanguages()[0]->isMain());

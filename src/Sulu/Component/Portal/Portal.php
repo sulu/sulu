@@ -29,6 +29,12 @@ class Portal
     private $key;
 
     /**
+     * The url generation strategy for this portal
+     * @var string
+     */
+    private $resourceLocatorStrategy;
+
+    /**
      * An array of languages
      * @var Language[]
      */
@@ -79,6 +85,22 @@ class Portal
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $resourceLocatorStrategy
+     */
+    public function setResourceLocatorStrategy($resourceLocatorStrategy)
+    {
+        $this->resourceLocatorStrategy = $resourceLocatorStrategy;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResourceLocatorStrategy()
+    {
+        return $this->resourceLocatorStrategy;
     }
 
     /**
