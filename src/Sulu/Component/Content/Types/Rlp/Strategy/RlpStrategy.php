@@ -49,9 +49,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
 
     /**
      * valid pattern for path
+     * example: /products/machines
+     *  + test whole input case insensitive
+     *  + trailing slash
+     *  + one or more sign (a-z, 0-9, -, _)
+     *  + repeat
      * @var string
      */
-    private $pattern = '/([A-Za-z0-9-_\/])/';
+    private $pattern = '/^(\/[a-z0-9-_]+)+$/i';
 
     /**
      * @param string $name name of RLP Strategy
