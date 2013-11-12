@@ -20,6 +20,8 @@ use ReflectionMethod;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
+use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
+use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
@@ -148,9 +150,10 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         return $structureManagerMock;
     }
 
+
     public function containerCallback()
     {
-        $resourceLocator = new ResourceLocator($this->sessionService, 'not in use', '/cmf/routes');
+        $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionService, '/cmf/routes')), 'not in use');
 
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
@@ -218,7 +221,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
 
-        $content = $route->getPropertyValue('content');
+        $content = $route->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
@@ -269,7 +272,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $route = $root->getNode('cmf/routes/de/test');
 
         /** @var NodeInterface $contentNode */
-        $contentNode = $route->getPropertyValue('content');
+        $contentNode = $route->getPropertyValue('sulu:content');
 
         // simulate new property article, by deleting the property
         /** @var PropertyInterface $articleProperty */
