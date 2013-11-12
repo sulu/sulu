@@ -46,6 +46,12 @@ class PortalManager implements PortalManagerInterface
      */
     private $logger;
 
+    /**
+     * The current portal for the current request
+     * @var Portal
+     */
+    private $currentPortal;
+
     public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = array())
     {
         $this->loader = $loader;
@@ -170,5 +176,23 @@ class PortalManager implements PortalManagerInterface
         }
 
         return $collection;
+    }
+
+    /**
+     * Sets the current portal (valid for this request)
+     * @param Portal $portal The current portal
+     */
+    public function setCurrentPortal(Portal $portal)
+    {
+        $this->currentPortal = $portal;
+    }
+
+    /**
+     * Returns the current portal for this request
+     * @return Portal
+     */
+    public function getCurrentPortal()
+    {
+        return $this->currentPortal;
     }
 }
