@@ -32,3 +32,8 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
+            
+parameters:
+    # Just a dirty hack to get the jms serializer bundle correctly working
+    # schmittjoh/JMSSerializerBundle#270 (comment)
+    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
