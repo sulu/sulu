@@ -18,6 +18,7 @@ use PHPCR\Util\NodeHelper;
 use \PHPUnit_Framework_TestCase;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 
@@ -49,8 +50,15 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
             'workspace' => 'default'
         ));
         $this->session = $this->prepareSession();
+        $this->prepareRepository();
         $this->prepareTestData();
         $this->mapper = new PhpcrMapper($this->sessionService, '/cmf/routes');
+    }
+
+    public function prepareRepository()
+    {
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
     }
 
     public function tearDown()
@@ -169,7 +177,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $route = '/cmf/routes/products/news/content1-news';
 
         $node = $this->session->getNode($route);
-        $this->assertTrue($node->getPropertyValue('content') == $this->content1);
+        $this->assertTrue($node->getPropertyValue('sulu:content') == $this->content1);
     }
 
     public function testReadFailure()

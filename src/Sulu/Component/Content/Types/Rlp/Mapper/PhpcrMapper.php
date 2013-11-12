@@ -56,7 +56,7 @@ class PhpcrMapper extends RlpMapper
         // check if route already exists
         if (!$this->isUnique($routes, $path)) {
             $routeNode = $routes->getNode(ltrim($path, '/'));
-            if ($routeNode->hasProperty('content') && $routeNode->getPropertyValue('content') == $contentNode) {
+            if ($routeNode->hasProperty('sulu:content') && $routeNode->getPropertyValue('sulu:content') == $contentNode) {
                 // route already exists and referenced on contentNode
                 return;
             } else {
@@ -78,9 +78,8 @@ class PhpcrMapper extends RlpMapper
             }
         }
 
-        // TODO sulu:route mixin to search faster for route
-        // $routeNode->addMixin('sulu:route');
-        $node->setProperty('content', $contentNode);
+        $node->addMixin('sulu:path');
+        $node->setProperty('sulu:content', $contentNode);
     }
 
     /**
@@ -94,8 +93,9 @@ class PhpcrMapper extends RlpMapper
      */
     public function read(NodeInterface $contentNode, $portal)
     {
+        // TODO portal
         // search for references with name 'content'
-        foreach ($contentNode->getReferences('content') as $ref) {
+        foreach ($contentNode->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 // remove last slash from parent path and remove left basePath
                 $value = '/' . ltrim(rtrim($ref->getParent()->getPath(), '/'), $this->basePath);
