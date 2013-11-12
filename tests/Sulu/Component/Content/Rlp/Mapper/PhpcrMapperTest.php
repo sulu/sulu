@@ -18,6 +18,7 @@ use PHPCR\Util\NodeHelper;
 use \PHPUnit_Framework_TestCase;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
@@ -58,6 +59,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
     public function prepareRepository()
     {
         $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
     }
 

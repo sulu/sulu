@@ -73,7 +73,6 @@ class PhpcrMapper extends RlpMapper
                     $node = $node->getNode($path);
                 } else {
                     $node = $node->addNode($path, 'nt:unstructured');
-                    $node->addMixin('mix:referenceable');
                 }
             }
         }

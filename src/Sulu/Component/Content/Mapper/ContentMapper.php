@@ -15,7 +15,6 @@ use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Util\UuidUtils;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
@@ -50,20 +49,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node = $root->addNode(
             ltrim($this->getBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
-        $node->addMixin('mix:referenceable');
-        $node->setProperty('template', $templateKey); // TODO namespace ??? sulu:template
+        $node->addMixin('sulu:content');
+        $node->setProperty('sulu:template', $templateKey);
 
         $dateTime = new \DateTime();
 
         // if is new node
         if ($node->getIdentifier() == null) {
 
-            $node->setProperty('creator', $userId);
-            $node->setProperty('created', $dateTime);
+            $node->setProperty('sulu:creator', $userId);
+            $node->setProperty('sulu:created', $dateTime);
         }
 
-        $node->setProperty('changer', $userId);
-        $node->setProperty('changed', $dateTime);
+        $node->setProperty('sulu:changer', $userId);
+        $node->setProperty('sulu:changed', $dateTime);
 
         $postSave = array();
 
@@ -106,10 +105,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-        $structure->setCreator($node->getPropertyValue('creator'));
-        $structure->setChanger($node->getPropertyValue('changer'));
-        $structure->setCreated($node->getPropertyValue('created'));
-        $structure->setChanged($node->getPropertyValue('changed'));
+        $structure->setCreator($node->getPropertyValue('sulu:creator'));
+        $structure->setChanger($node->getPropertyValue('sulu:changer'));
+        $structure->setCreated($node->getPropertyValue('sulu:created'));
+        $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
         return $structure;
     }
@@ -125,16 +124,16 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($id);
 
-        $templateKey = $contentNode->getPropertyValue('template'); // TODO namespace ??? sulu:template
+        $templateKey = $contentNode->getPropertyValue('sulu:template');
 
         // TODO localize
         $structure = $this->getStructure($templateKey);
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setCreator($contentNode->getPropertyValue('creator'));
-        $structure->setChanger($contentNode->getPropertyValue('changer'));
-        $structure->setCreated($contentNode->getPropertyValue('created'));
-        $structure->setChanged($contentNode->getPropertyValue('changed'));
+        $structure->setCreator($contentNode->getPropertyValue('sulu:creator'));
+        $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
+        $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
+        $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
 
         // go through every property in the template
         /** @var PropertyInterface $property */

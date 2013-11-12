@@ -8,14 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\PHPCR\NodeTypes\Path;
-
+namespace Sulu\Component\PHPCR\NodeTypes\Content;
 
 use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
 
-class PathNodeType implements NodeTypeDefinitionInterface
+class ContentNodeType implements NodeTypeDefinitionInterface
 {
 
     /**
@@ -31,7 +30,7 @@ class PathNodeType implements NodeTypeDefinitionInterface
      */
     public function getName()
     {
-        return 'sulu:path';
+        return 'sulu:content';
     }
 
     /**
@@ -175,7 +174,11 @@ class PathNodeType implements NodeTypeDefinitionInterface
     public function getDeclaredPropertyDefinitions()
     {
         return array(
-            new ContentPropertyDefinition()
+            new TemplatePropertyDefinition(),
+            new ChangedPropertyDefinition(),
+            new ChangerPropertyDefinition(),
+            new CreatedPropertyDefinition(),
+            new CreatorPropertyDefinition()
         );
     }
 

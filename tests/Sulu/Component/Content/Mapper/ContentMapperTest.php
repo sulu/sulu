@@ -24,6 +24,9 @@ use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -80,6 +83,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->mapper->setContainer($this->container);
 
         $this->prepareSession();
+        $this->prepareRepository();
     }
 
     /**
@@ -198,6 +202,14 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->session = $repository->login($credentials, 'default');
     }
 
+    public function prepareRepository()
+    {
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
+    }
+
     public function tearDown()
     {
         if (isset($this->session)) {
@@ -228,8 +240,9 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
-        $this->assertEquals(1, $content->getPropertyValue('creator'));
-        $this->assertEquals(1, $content->getPropertyValue('changer'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
 
     public function testRead()

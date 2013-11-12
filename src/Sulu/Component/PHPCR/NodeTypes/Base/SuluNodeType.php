@@ -8,14 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\PHPCR\NodeTypes\Path;
-
+namespace Sulu\Component\PHPCR\NodeTypes\Base;
 
 use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
 
-class PathNodeType implements NodeTypeDefinitionInterface
+class SuluNodeType implements NodeTypeDefinitionInterface
 {
 
     /**
@@ -31,7 +30,7 @@ class PathNodeType implements NodeTypeDefinitionInterface
      */
     public function getName()
     {
-        return 'sulu:path';
+        return 'sulu:base';
     }
 
     /**
@@ -49,7 +48,7 @@ class PathNodeType implements NodeTypeDefinitionInterface
     public function getDeclaredSupertypeNames()
     {
         return array(
-            'sulu:base'
+            'mix:referenceable'
         );
     }
 
@@ -71,7 +70,7 @@ class PathNodeType implements NodeTypeDefinitionInterface
      */
     public function isAbstract()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -174,9 +173,7 @@ class PathNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredPropertyDefinitions()
     {
-        return array(
-            new ContentPropertyDefinition()
-        );
+        return array();
     }
 
     /**
