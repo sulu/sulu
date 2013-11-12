@@ -12,6 +12,8 @@ namespace Sulu\Bundle\CoreBundle\Command;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPCR\WorkspaceInterface;
+use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,6 +36,15 @@ class PHPCRInitCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var SessionInterface $session */
+        $session = $this->getContainer()->get('sulu.phpcr.session');
+        /** @var WorkspaceInterface $workspace */
+        $workspace = $session->getWorkspace();
+
+        // init node namespace and types
+        $workspace->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $workspace->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
+
         // get basic node paths
         $contents = $this->getContainer()->getParameter('sulu.content.base_path.content');
         $routes = $this->getContainer()->getParameter('sulu.content.base_path.route');
