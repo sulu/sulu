@@ -1,0 +1,145 @@
+<?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Content\Rlp\Strategy;
+
+use Jackalope\RepositoryFactoryJackrabbit;
+use PHPCR\SessionInterface;
+use PHPCR\SimpleCredentials;
+use PHPCR\Util\NodeHelper;
+use \PHPUnit_Framework_TestCase;
+use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
+use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
+use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+
+class PhpcrMapperTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * @var RlpMapperInterface
+     */
+    private $mapper;
+    /**
+     * @var SessionFactoryInterface
+     */
+    private $sessionService;
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    public function setUp()
+    {
+        $this->sessionService = new SessionFactoryService(new RepositoryFactoryJackrabbit(), array(
+            'url' => 'http://localhost:8080/server',
+            'username' => 'admin',
+            'password' => 'admin',
+            'workspace' => 'default'
+        ));
+        $this->session = $this->prepareSession();
+        $this->prepareTestData();
+        $this->mapper = new PhpcrMapper($this->sessionService, '/cmf/routes');
+    }
+
+    public function tearDown()
+    {
+        if (isset($this->session)) {
+            NodeHelper::purgeWorkspace($this->session);
+            $this->session->save();
+        }
+    }
+
+    private function prepareSession()
+    {
+        $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
+        $factory = new RepositoryFactoryJackrabbit();
+        $repository = $factory->getRepository($parameters);
+        $credentials = new SimpleCredentials('admin', 'admin');
+
+        $session = $repository->login($credentials, 'default');
+
+        NodeHelper::purgeWorkspace($session);
+        $session->save();
+
+        return $session;
+    }
+
+    private function prepareTestData()
+    {
+        $cmf = $this->session->getRootNode()->addNode('cmf');
+        $cmf->addMixin('mix:referenceable');
+
+        $routes = $cmf->addNode('routes');
+        $routes->addMixin('mix:referenceable');
+
+        $products = $routes->addNode('products');
+        $products->addMixin('mix:referenceable');
+
+        $machines = $products->addNode('machines');
+        $machines->addMixin('mix:referenceable');
+
+        $machines1 = $products->addNode('machines-1');
+        $machines1->addMixin('mix:referenceable');
+
+        $drill = $machines->addNode('drill');
+        $drill->addMixin('mix:referenceable');
+
+        $drill1 = $machines->addNode('drill-1');
+        $drill1->addMixin('mix:referenceable');
+
+        $this->session->save();
+    }
+
+    public function testUnique()
+    {
+        // exists in phpcr
+        $result = $this->mapper->unique('/products/machines', 'default');
+        $this->assertFalse($result);
+
+        // exists in phpcr
+        $result = $this->mapper->unique('/products/machines/drill', 'default');
+        $this->assertFalse($result);
+
+        // not exists in phpcr
+        $result = $this->mapper->unique('/products/machines-2', 'default');
+        $this->assertTrue($result);
+
+        // not exists in phpcr
+        $result = $this->mapper->unique('/products/machines/drill-2', 'default');
+        $this->assertTrue($result);
+
+        // not exists in phpcr
+        $result = $this->mapper->unique('/news', 'default');
+        $this->assertTrue($result);
+    }
+
+    public function testGetUniquePath()
+    {
+        // machines & machines-1 exists
+        $result = $this->mapper->getUniquePath('/products/machines', 'default');
+        $this->assertEquals('/products/machines-2', $result);
+        $this->assertTrue($this->mapper->unique($result, 'default'));
+
+        // drill & drill-1 exists
+        $result = $this->mapper->getUniquePath('/products/machines/drill', 'default');
+        $this->assertEquals('/products/machines/drill-2', $result);
+        $this->assertTrue($this->mapper->unique($result, 'default'));
+
+        // products exists
+        $result = $this->mapper->getUniquePath('/products', 'default');
+        $this->assertEquals('/products-1', $result);
+        $this->assertTrue($this->mapper->unique($result, 'default'));
+
+        // news not exists
+        $result = $this->mapper->getUniquePath('/news', 'default');
+        $this->assertEquals('/news', $result);
+        $this->assertTrue($this->mapper->unique($result, 'default'));
+    }
+}
