@@ -39,9 +39,6 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
         $this->mapper->expects($this->any())
             ->method('getUniquePath')
             ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
-        $this->mapper->expects($this->any())
-            ->method('save')
-            ->will($this->returnValue(1));
 
         $this->strategy = new TreeStrategy($this->mapper);
     }

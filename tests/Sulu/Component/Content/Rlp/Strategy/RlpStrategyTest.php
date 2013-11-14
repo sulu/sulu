@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content\Rlp\Strategy;
 
+use Jackalope\Node;
+use PHPCR\NodeInterface;
 use ReflectionClass;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy;
@@ -28,12 +30,16 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
      * @var string
      */
     private $className = 'Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy';
+    /**
+     * @var bool
+     */
+    private $isSaved = false;
 
     protected function setUp()
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array('unique', 'getUniquePath', 'save', 'read'),
+            array('unique', 'getUniquePath', 'save', 'read', 'load'),
             array('test-mapper'),
             'TestMapper'
         );
@@ -45,10 +51,13 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
         $this->mapper->expects($this->any())
             ->method('save')
-            ->will($this->returnValue(null));
+            ->will($this->returnCallback(array($this, 'saveCallback')));
         $this->mapper->expects($this->any())
             ->method('read')
             ->will($this->returnValue('/test'));
+        $this->mapper->expects($this->any())
+            ->method('load')
+            ->will($this->returnValue('this-is-a-uuid'));
 
         $this->strategy = $this->getMockForAbstractClass(
             $this->className,
@@ -85,6 +94,11 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $args = func_get_args();
 
         return $args[1] . '/' . $args[0];
+    }
+
+    public function saveCallback()
+    {
+        $this->isSaved = true;
     }
 
     protected function tearDown()
@@ -143,4 +157,34 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/products/maechines', $result);
     }
 
+    /**
+     * @return NodeInterface
+     */
+    private function getNodeMock()
+    {
+        return $this->getMockForAbstractClass('\Jackalope\Node', array(), 'MockNode', false);
+    }
+
+    public function testSave()
+    {
+        $this->isSaved = false;
+        // its a delegate
+        $this->strategy->save($this->getNodeMock(), '/test/test-1', 'default');
+
+        $this->assertTrue($this->isSaved);
+    }
+
+    public function testRead()
+    {
+        // its a delegate
+        $result = $this->mapper->read($this->getNodeMock(), 'default');
+        $this->assertEquals('/test', $result);
+    }
+
+    public function testLoad()
+    {
+        //its a delegate
+        $result = $this->mapper->load('/test', 'default');
+        $this->assertEquals('this-is-a-uuid', $result);
+    }
 }

@@ -171,6 +171,21 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
+     * returns the uuid of referenced content node
+     * @param string $resourceLocator requested RL
+     * @param string $portal key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     *
+     * @return string uuid of content node
+     */
+    public function load($resourceLocator, $portal)
+    {
+        // delegate to mapper
+        return $this->mapper->load($resourceLocator, $portal);
+    }
+
+    /**
      * checks if path is valid
      * @param string $path path of route
      * @param string $portal key of portal

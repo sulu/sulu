@@ -107,6 +107,38 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
+     * returns the uuid of referenced content node
+     * @param string $resourceLocator requested RL
+     * @param string $portal key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     *
+     * @return string uuid of content node
+     */
+    public function load($resourceLocator, $portal)
+    {
+        $resourceLocator = ltrim($resourceLocator, '/');
+
+        // TODO portal
+        $session = $this->sessionFactory->getSession();
+        $routes = $this->getRoutes($session);
+        if (!$routes->hasNode($resourceLocator)) {
+            throw new ResourceLocatorNotExistsException();
+        }
+
+        $route = $routes->getNode($resourceLocator);
+
+        if ($route->hasProperty('sulu:content')) {
+            /** @var NodeInterface $content */
+            $content = $route->getPropertyValue('sulu:content');
+
+            return $content->getIdentifier();
+        } else {
+            throw new ResourceLocatorNotExistsException();
+        }
+    }
+
+    /**
      * checks if given path is unique
      * @param string $path
      * @param string $portal key of portal
