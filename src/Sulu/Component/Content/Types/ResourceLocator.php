@@ -19,7 +19,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
-class ResourceLocator extends ComplexContentType
+class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface
 {
     /**
      * @var RlpStrategyInterface
@@ -59,6 +59,16 @@ class ResourceLocator extends ComplexContentType
     public function set(NodeInterface $node, PropertyInterface $property)
     {
         $this->getStrategy()->save($node, $property->getValue(), $this->getPortal());
+    }
+
+    /**
+     * returns the node of referenced content node
+     * @param string $resourceLocator
+     * @return string
+     */
+    public function loadContentNode($resourceLocator)
+    {
+        return $this->getStrategy()->load($resourceLocator, $this->getPortal());
     }
 
     /**

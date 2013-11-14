@@ -15,6 +15,7 @@ use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
@@ -147,9 +148,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     {
         // TODO portal
         $session = $this->getSession();
-        $routeNode = $session->getNode(rtrim($this->getRouteBasePath(), '/') . '/' . ltrim($resourceLocator, '/'));
+        $uuid = $this->getResourceLocator()->loadContentNode($resourceLocator);
+        $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($routeNode->getPropertyValue('sulu:content'), $language);
+        return $this->loadByNode($contentNode, $language);
     }
 
     /**
@@ -183,12 +185,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
     /**
      * returns a structure with given key
-     * @param $key
+     * @param string $key key of content type
      * @return StructureInterface
      */
     protected function getStructure($key)
     {
         return $this->container->get('sulu.content.structure_manager')->getStructure($key);
+    }
+
+    /**
+     * @return ResourceLocatorInterface
+     */
+    public function getResourceLocator()
+    {
+        return $this->getContentType('resource_locator');
     }
 
     /**
