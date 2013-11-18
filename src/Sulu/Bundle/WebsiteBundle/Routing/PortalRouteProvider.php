@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Portal\PortalManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -56,9 +57,9 @@ class PortalRouteProvider implements RouteProviderInterface
         $portal = $this->portalManager->getCurrentPortal();
         $language = 'en'; //TODO set current language correctly
 
-        $content = $this->contentMapper->loadByResourceLocator($path, $portal->getKey(), $language);
-
         $collection = new RouteCollection();
+
+        $content = $this->contentMapper->loadByResourceLocator($path, $portal->getKey(), $language);
 
         $route = new Route($path, array(
             '_controller' => $content->getController(),

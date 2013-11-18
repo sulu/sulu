@@ -30,7 +30,7 @@ class DefaultController extends Controller
         /** @var Structure $structure */
         $structure = $this->getRequest()->get('content');
         $content = $this->renderView(
-            'ClientWebsiteBundle:Website:' . $structure->getKey() . '.html.twig',
+            'ClientWebsiteBundle:Website:' . $structure->getView(),
             array('content' => $structure)
         );
 
