@@ -10,4 +10,4 @@ services:
 
     sulu_website.provider.portal:
         class: %sulu_website.provider.portal.class%
-        arguments: ["@sulu.content.mapper"]
+        arguments: ["@sulu.content.mapper", "@sulu_core.portal.portal_manager"]

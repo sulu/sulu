@@ -29,9 +29,15 @@ class PortalRouteProvider implements RouteProviderInterface
      */
     private $contentMapper;
 
-    public function __construct(ContentMapperInterface $contentMapper)
+    /**
+     * @var PortalManagerInterface
+     */
+    private $portalManager;
+
+    public function __construct(ContentMapperInterface $contentMapper, PortalManagerInterface $portalManager)
     {
         $this->contentMapper = $contentMapper;
+        $this->portalManager = $portalManager;
     }
 
     /**
@@ -47,7 +53,10 @@ class PortalRouteProvider implements RouteProviderInterface
     public function getRouteCollectionForRequest(Request $request)
     {
         $path = $request->getRequestUri();
-        $content = $this->contentMapper->read('6791a8ff-835c-443c-9275-5280f16e5193', 'en');
+        $portal = $this->portalManager->getCurrentPortal();
+        $language = 'en'; //TODO set current language correctly
+
+        $content = $this->contentMapper->loadByResourceLocator($path, $portal->getKey(), $language);
 
         $collection = new RouteCollection();
 
