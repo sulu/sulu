@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 
+use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Portal\PortalManagerInterface;
@@ -35,10 +36,16 @@ class PortalRouteProvider implements RouteProviderInterface
      */
     private $portalManager;
 
-    public function __construct(ContentMapperInterface $contentMapper, PortalManagerInterface $portalManager)
+    /**
+     * @var ActiveTheme
+     */
+    private $activeTheme;
+
+    public function __construct(ContentMapperInterface $contentMapper, PortalManagerInterface $portalManager, ActiveTheme $activeTheme)
     {
         $this->contentMapper = $contentMapper;
         $this->portalManager = $portalManager;
+        $this->activeTheme = $activeTheme;
     }
 
     /**
@@ -56,6 +63,9 @@ class PortalRouteProvider implements RouteProviderInterface
         $path = $request->getRequestUri();
         $portal = $this->portalManager->getCurrentPortal();
         $language = 'en'; //TODO set current language correctly
+
+        // Set current theme
+        $this->activeTheme->setName($portal->getTheme()->getKey());
 
         $collection = new RouteCollection();
 
