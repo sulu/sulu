@@ -40,6 +40,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue'
+            // TODO should be filled
         ),
         'de' => array(
             '&' => 'und'
