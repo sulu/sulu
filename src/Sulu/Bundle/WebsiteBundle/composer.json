@@ -14,7 +14,8 @@
         "php": ">=5.4",
         "sulu/sulu": "dev-develop",
         "sulu/theme-bundle": "dev-develop",
-        "liip/theme-bundle": "@dev"
+        "liip/theme-bundle": "@dev",
+        "symfony-cmf/routing-bundle": "1.1.*"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
