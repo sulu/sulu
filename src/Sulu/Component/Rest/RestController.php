@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\Listing\ListRestHelper;
 
 /**
  * Abstract Controller for extracting some required rest functionality
@@ -26,6 +27,13 @@ abstract class RestController extends FOSRestController
      */
     protected $entityName;
 
+
+    /**
+     * contains all attributes that are not sortable
+     * @var array
+     */
+    protected $nonSortable = array();
+
     /**
      * Lists all the entities or filters the entities by parameters
      * Special function for lists
@@ -35,16 +43,88 @@ abstract class RestController extends FOSRestController
      */
     protected function responseList($where = array())
     {
+        /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
-        $accounts = $listHelper->find($this->entityName, $where);
+        $entities = $listHelper->find($this->entityName, $where);
 
         $response = array(
-            'total' => sizeof($accounts),
-            'items' => $accounts
+            '_links' => $this->getHalLinks($entities, true),
+            '_embedded' => $entities,
+            '_total' => sizeof($entities),
         );
 
         return $this->view($response, 200);
+    }
+
+
+    /**
+     * creates HAL conform response-array out of an entitycollection
+     * @param array $entityCollection
+     * @return array
+     */
+    protected function createHalResponse(array $entityCollection) {
+        return array(
+            '_links' => $this->getHalLinks($entityCollection),
+            '_embedded' => $entityCollection,
+            '_total' => count($entityCollection),
+        );
+    }
+
+
+    /**
+     * returns HAL-conform _links array
+     * @param array $entities
+     * @param bool $showSortable
+     * @return array
+     */
+    private function getHalLinks(array $entities, $showSortable = false)
+    {
+        /** @var ListRestHelper $listHelper */
+        $listHelper = $this->get('sulu_core.list_rest_helper');
+
+        $path = $this->getRequest()->getRequestUri();
+        $path = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('pageSize') . '=', $listHelper->getLimit(), false);
+
+        $sortable = array();
+        if ($showSortable && count($entities > 0)) {
+            $keys = array_keys($entities[0]);
+            foreach ($keys as $key) {
+                if(!in_array($key, $this->nonSortable)) {
+                    $sortPath = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('sortBy') . '=', $key);
+                    $sortable[$key] =  array(
+                        'asc' => $this->replaceOrAddUrlString($sortPath, $listHelper->getParameterName('sortOrder') . '=', 'asc'),
+                        'desc' => $this->replaceOrAddUrlString($sortPath, $listHelper->getParameterName('sortOrder') . '=', 'desc'),
+                    );
+                }
+            }
+        }
+        return array(
+            'self' => $path,
+            'next' => $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $listHelper->getNextPage()),
+            'prev' => $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $listHelper->getPreviousPage()),
+            'sortable' => $showSortable ? $sortable : null,
+        );
+    }
+
+    /**
+     * function replaces a url parameter
+     * @param $url - the complete url
+     * @param $searchStringBefore - parametername (e.g. page=)
+     * @param $value - replace value
+     * @param bool $add - defines if value should be added
+     * @return mixed|string
+     */
+    public function replaceOrAddUrlString($url, $searchStringBefore, $value, $add = true) {
+        if ($value) {
+            if ($pos = strpos($url,$searchStringBefore)) {
+                return preg_replace("/(.*$searchStringBefore)(\d*)(\&.*)/",'${1}'.$value.'${3}',$url);
+            } else if($add) {
+                $and = (strpos($url,'?')<0) ? '?' : '&';
+                return $url.$and.$searchStringBefore.$value;
+            }
+        }
+        return $url;
     }
 
     /**

@@ -58,7 +58,7 @@ class ListRepository extends EntityRepository
             ->setFirstResult($this->helper->getOffset())
             ->setMaxResults($this->helper->getLimit());
         if ($this->helper->getSearchPattern() != null) {
-            $query->setParameter('search', '%' . $this->helper->getSearchPattern() . '%');
+            $query->setParameter($this->helper->getParameterName('search'), '%' . $this->helper->getSearchPattern() . '%');
         }
 
         return $query->getArrayResult();

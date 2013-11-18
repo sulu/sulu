@@ -37,6 +37,19 @@ class ListRestHelper
     protected $em;
 
     /**
+     * url parameter naming
+     * @var array
+     */
+    protected $parameterNames = array(
+        'sortBy' => 'sortBy',
+        'sortOrder' => 'sortOrder',
+        'pageSize' => 'pageSize',
+        'page' => 'page',
+        'search' => 'search',
+        'searchFields' => 'searchFields'
+    );
+
+    /**
      * The constructor takes the request as an argument, which
      * is injected by the service container
      * @param Request $request
@@ -84,8 +97,8 @@ class ListRestHelper
      */
     public function getSorting()
     {
-        $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
-        $sortBy = $this->getRequest()->get('sortBy', 'id');
+        $sortOrder = $this->getRequest()->get($this->getParameterName('sortOrder'), 'asc');
+        $sortBy = $this->getRequest()->get($this->getParameterName('sortBy'), 'id');
 
         return array($sortBy => $sortOrder);
     }
@@ -96,7 +109,7 @@ class ListRestHelper
      */
     public function getLimit()
     {
-        return $this->getRequest()->get('pageSize');
+        return $this->getRequest()->get($this->getParameterName('pageSize'));
     }
 
     /**
@@ -106,10 +119,41 @@ class ListRestHelper
      */
     public function getOffset()
     {
-        $page = $this->getRequest()->get('page', 1);
-        $pageSize = $this->getRequest()->get('pageSize');
+        $page = $this->getRequest()->get($this->getParameterName('page'), 1);
+        $pageSize = $this->getRequest()->get($this->getParameterName('pageSize'));
 
         return ($pageSize != null) ? $pageSize * ($page - 1) : null;
+    }
+
+    /**
+     * returns the current page
+     * @return mixed
+     */
+    public function getPage() {
+        return $this->getRequest()->get($this->getParameterName('page'),1);
+    }
+
+    /**
+     * returns the next page
+     */
+    public function getNextPage() {
+        $page = $this->getPage();
+        if ($page) {
+            return $page+1;
+        }
+        return null;
+    }
+
+    /**
+     * returns previos page number OR null, if no previous page
+     * @return mixed|null
+     */
+    public function getPreviousPage() {
+        $page = $this->getPage();
+        if ($page>1) {
+            return $this->getRequest()->get($this->getParameterName('page'))-1;
+        }
+        return null;
     }
 
     /**
@@ -119,7 +163,7 @@ class ListRestHelper
      */
     public function getFields()
     {
-        $fields = $this->getRequest()->get('fields');
+        $fields = $this->getRequest()->get($this->getParameterName('fields'));
 
         return ($fields != null) ? explode(',', $fields) : null;
     }
@@ -130,7 +174,7 @@ class ListRestHelper
      */
     public function getSearchPattern()
     {
-        return $this->getRequest()->get('search');
+        return $this->getRequest()->get($this->getParameterName('search'));
     }
 
     /**
@@ -139,8 +183,20 @@ class ListRestHelper
      */
     public function getSearchFields()
     {
-        $searchFields = $this->getRequest()->get('searchFields');
+        $searchFields = $this->getRequest()->get($this->getParameterName('searchFields'));
 
         return ($searchFields != null) ? explode(',', $searchFields) : array();
+    }
+
+    /**
+     * returns parameter
+     * @param $key
+     * @return string|null
+     */
+    public function getParameterName($key) {
+        if (array_key_exists($key, $this->parameterNames)) {
+            return $this->parameterNames[$key];
+        }
+        return null;
     }
 }
