@@ -98,9 +98,11 @@ class ContentControllerTest extends DatabaseTestCase
         self::$em->flush();
 
         $this->prepareSession();
-        $this->prepareRepository();
 
         NodeHelper::purgeWorkspace($this->session);
+        $this->session->save();
+
+        $this->prepareRepository();
         $this->session->save();
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
