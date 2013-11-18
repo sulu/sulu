@@ -76,10 +76,10 @@ define([], function() {
                 formObject.initialized.then(function() {
                     this.sandbox.form.setData(form, data);
 
-                    this.sandbox.start(form);
-
                     // FIXME after setData (solution with deffered)
                     setTimeout(function() {
+                        this.sandbox.start(form);
+
                         this.sandbox.form.addConstraint(form, '#emails .emails-item:first input.email-value', 'required', {required: true});
                         this.sandbox.dom.find('#emails .emails-item:first .remove-email').remove();
                         this.sandbox.dom.addClass('#emails .emails-item:first label span:first', 'required');
