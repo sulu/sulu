@@ -68,6 +68,9 @@ class XmlFileLoader extends FileLoader
         $portal->setName($xpath->query('/x:portal/x:name')->item(0)->nodeValue);
         $portal->setKey($xpath->query('/x:portal/x:key')->item(0)->nodeValue);
 
+        // set resource locator
+        $portal->setResourceLocatorStrategy($xpath->query('/x:portal/x:resource-locator/x:strategy')->item(0)->nodeValue);
+
         // add languages
         foreach ($xpath->query('/x:portal/x:languages/x:language') as $languageNode) {
             /** @var \DOMNode $languageNode */

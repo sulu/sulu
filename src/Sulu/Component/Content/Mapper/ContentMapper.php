@@ -26,6 +26,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @var string
      */
     private $contentBasePath = '/cmf/contents';
+
     /**
      * base path to load the route
      * @var string
@@ -39,12 +40,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
-     * Saves the given data in the content storage
-     * @param $data array The data to be saved
-     * @param $templateKey string name of template
-     * @param string $portalKey key of portal
-     * @param $languageCode string Save data for given language
-     * @param $userId int The id of the user who saves
+     * saves the given data in the content storage
+     * @param array $data The data to be saved
+     * @param string $templateKey Name of template
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Save data for given language
+     * @param int $userId The id of the user who saves
      * @return StructureInterface
      */
     public function save($data, $templateKey, $portalKey, $languageCode, $userId)
@@ -53,10 +54,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
         $root = $session->getRootNode();
+
         /** @var NodeInterface $node */
         $node = $root->addNode(
             ltrim($this->getContentBasePath(), '/') . '/' . $data['title']
         ); //TODO check better way to generate title, tree?
+
         $node->addMixin('sulu:content');
         $node->setProperty('sulu:template', $templateKey);
 
@@ -77,11 +80,14 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // go through every property in the template
         /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
+
             // allow null values in data
             if (isset($data[$property->getName()])) {
                 $type = $this->getContentType($property->getContentTypeName());
                 $value = $data[$property->getName()];
                 $property->setValue($value);
+
+                // add property to post save action
                 if ($type->getType() == ContentTypeInterface::POST_SAVE) {
                     $postSave[] = array(
                         'type' => $type,
@@ -123,9 +129,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
     /**
      * returns the data from the given id
-     * @param $uuid string uuid or path to the content
-     * @param string $portalKey key of portal
-     * @param $languageCode string read data for given language
+     * @param string $uuid UUID of the content
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
     public function load($uuid, $portalKey, $languageCode)
@@ -139,8 +145,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
     /**
      * returns data from given path
-     * @param string $resourceLocator resource locator
-     * @param string $portalKey key of portal
+     * @param string $resourceLocator Resource locator
+     * @param string $portalKey Key of portal
      * @param string $languageCode
      * @return StructureInterface
      */
@@ -148,7 +154,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     {
         // TODO portal
         $session = $this->getSession();
-        $uuid = $this->getResourceLocator()->loadContentNode($resourceLocator);
+        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator);
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode);

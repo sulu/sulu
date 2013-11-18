@@ -27,8 +27,8 @@ class TreeStrategy extends RlpStrategy
 
     /**
      * internal generator
-     * @param $title
-     * @param $parentPath
+     * @param string $title
+     * @param string $parentPath
      * @return string
      */
     protected function generatePath($title, $parentPath)

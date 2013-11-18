@@ -5,6 +5,10 @@
 
     <name>Sulu CMF</name>
     <key>sulu_io</key>
+    
+    <resource-locator>
+        <strategy>short</strategy>
+    </resource-locator>
 
     <languages>
         <language main="true">en</language>
