@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Portal\Portal;
+use Sulu\Component\Portal\Theme;
 use Symfony\Component\HttpFoundation\Request;
 
 class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
@@ -22,6 +23,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $portal->setTheme($theme);
 
         $structure = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\StructureInterface',
@@ -60,7 +64,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         );
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new PortalRouteProvider($contentMapper, $portalManager);
+        $activeTheme = $this->getMock('\Liip\ThemeBundle\ActiveTheme', array(), array(), '', false);
+
+        $portalRouteProvider = new PortalRouteProvider($contentMapper, $portalManager, $activeTheme);
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', array('getRequestUri'));
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue($path));
