@@ -53,7 +53,7 @@ class PortalRouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
 
         $route = new Route($path, array(
-            '_controller' => 'SuluWebsiteBundle:DefaultController:index'
+            '_controller' => 'SuluWebsiteBundle:Default:index'
         ));
 
         $collection->add('dynamic_route_' . uniqid(), $route);
