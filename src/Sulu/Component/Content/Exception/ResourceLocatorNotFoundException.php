@@ -12,7 +12,7 @@ namespace Sulu\Component\Content\Exception;
 
 use Exception;
 
-class ResourceLocatorNotExistsException extends Exception
+class ResourceLocatorNotFoundException extends Exception
 {
 
 }

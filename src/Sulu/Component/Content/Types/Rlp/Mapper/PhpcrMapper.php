@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Types\Rlp\Mapper;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
-use Sulu\Component\Content\Exception\ResourceLocatorNotExistsException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
 class PhpcrMapper extends RlpMapper
@@ -86,7 +86,7 @@ class PhpcrMapper extends RlpMapper
      * @param NodeInterface $contentNode reference node
      * @param string $portal key of portal
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
@@ -103,7 +103,7 @@ class PhpcrMapper extends RlpMapper
             }
         }
 
-        throw new ResourceLocatorNotExistsException();
+        throw new ResourceLocatorNotFoundException();
     }
 
     /**
@@ -111,7 +111,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $resourceLocator requested RL
      * @param string $portal key of portal
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string uuid of content node
      */
@@ -123,7 +123,7 @@ class PhpcrMapper extends RlpMapper
         $session = $this->sessionFactory->getSession();
         $routes = $this->getRoutes($session);
         if (!$routes->hasNode($resourceLocator)) {
-            throw new ResourceLocatorNotExistsException();
+            throw new ResourceLocatorNotFoundException();
         }
 
         $route = $routes->getNode($resourceLocator);
@@ -134,7 +134,7 @@ class PhpcrMapper extends RlpMapper
 
             return $content->getIdentifier();
         } else {
-            throw new ResourceLocatorNotExistsException();
+            throw new ResourceLocatorNotFoundException();
         }
     }
 

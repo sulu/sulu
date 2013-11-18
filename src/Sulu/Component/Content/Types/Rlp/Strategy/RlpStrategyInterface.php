@@ -47,7 +47,7 @@ interface RLPStrategyInterface {
      * @param NodeInterface $contentNode reference node
      * @param string $portal key of portal
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
@@ -58,7 +58,7 @@ interface RLPStrategyInterface {
      * @param string $resourceLocator requested RL
      * @param string $portal key of portal
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotExistsException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string uuid of content node
      */
