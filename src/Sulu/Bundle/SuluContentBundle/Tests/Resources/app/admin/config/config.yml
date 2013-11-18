@@ -40,4 +40,10 @@ monolog:
             level: debug
 
 parameters:
-    sulu.content.template.default_path: %kernel.root_dir%/../Datafixtures/Template
+    sulu.content.template.default_path: %kernel.root_dir%/../Resources/templates
+
+sulu_core:
+    phpcr:
+        ~
+    content:
+        ~

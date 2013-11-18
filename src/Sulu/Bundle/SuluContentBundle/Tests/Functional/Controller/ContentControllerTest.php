@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
+use PHPCR\NodeInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\Testing\DatabaseTestCase;
@@ -196,13 +197,14 @@ class ContentControllerTest extends DatabaseTestCase
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
 
-        $content = $route->getPropertyValue('content');
+        /** @var NodeInterface $content */
+        $content = $route->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
-        $this->assertEquals(1, $content->getPropertyValue('creator'));
-        $this->assertEquals(1, $content->getPropertyValue('changer'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
 
     private function beforeTestGet()
