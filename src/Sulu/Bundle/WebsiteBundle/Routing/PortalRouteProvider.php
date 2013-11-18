@@ -52,11 +52,11 @@ class PortalRouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
 
         $route = new Route($path, array(
-            '_controller' => 'SuluWebsiteBundle:Default:index',
+            '_controller' => $content->getController(),
             'content' => $content
         ));
 
-        $collection->add('dynamic_route_' . uniqid(), $route);
+        $collection->add($content->getKey() . '_' . uniqid(), $route);
 
         return $collection;
     }
