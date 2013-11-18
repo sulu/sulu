@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Types\Rlp\Strategy;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 
 /**
- * implements RLP Strategy "as short as possible"
+ * implements RLP Strategy "whole tree"
  */
 class TreeStrategy extends RlpStrategy
 {
