@@ -14,3 +14,6 @@
 # Jackrabbit
 /bin/jackrabbit-standalone*
 /bin/jackrabbit/*
+
+# test cache
+/Tests/Resources/app/admin/cache/*
