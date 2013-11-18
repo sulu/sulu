@@ -41,9 +41,11 @@ class Configuration implements ConfigurationInterface
 
     private function getPortalConfiguration(NodeBuilder $rootNode)
     {
-        $rootNode->arrayNode('phpcr')
-            ->addDefaultsIfNotSet()
+        $rootNode->arrayNode('portal')
             ->children()
+                ->scalarNode('config_dir')
+                    ->defaultValue('%kernel.root_dir%/../Resources/portals')
+                ->end()
             ->end()
         ->end();
     }
@@ -54,7 +56,6 @@ class Configuration implements ConfigurationInterface
     private function getPhpcrConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('phpcr')
-            ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('factory_class')
                     ->defaultValue('Jackalope\RepositoryFactoryJackrabbit')

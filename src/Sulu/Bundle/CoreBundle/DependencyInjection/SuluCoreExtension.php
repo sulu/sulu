@@ -43,10 +43,16 @@ class SuluCoreExtension extends Extension
 
         // Portal
         if (isset($config['portal'])) {
-            $loader->load('portal.xml');
+            $this->initPortal($config['portal'], $container, $loader);
         }
 
         $loader->load('rest.xml');
+    }
+
+    private function initPortal($portalConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $container->setParameter('sulu_core.portal.config_dir', $portalConfig['config_dir']);
+        $loader->load('portal.xml');
     }
 
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
