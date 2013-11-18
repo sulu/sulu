@@ -12,13 +12,23 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 
 /**
  * Account
  */
-class Account
+class Account extends ApiEntity
 {
+
+    /**
+     * @var string
+     * @Exclude
+     */
+    protected $apiPath = '/admin/api/account';
+
+    protected $sortable = array();
+
     /**
      * @var integer
      */
@@ -106,6 +116,8 @@ class Account
      * @var \Doctrine\Common\Collections\Collection
      */
     private $notes;
+
+
 
     /**
      * Constructor

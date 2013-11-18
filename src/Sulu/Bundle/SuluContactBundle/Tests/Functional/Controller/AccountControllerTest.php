@@ -27,7 +27,7 @@ use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Component\Testing\DatabaseTestCase;
 
-class AccountsControllerTest extends DatabaseTestCase
+class AccountControllerTest extends DatabaseTestCase
 {
 	/**
 	 * @var array
@@ -157,7 +157,7 @@ class AccountsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'GET',
-			'/api/contact/accounts/1'
+			'/api/accounts/1'
 		);
 
 		$response = json_decode($client->getResponse()->getContent());
@@ -187,7 +187,7 @@ class AccountsControllerTest extends DatabaseTestCase
 		$client = self::createClient();
 		$client->request(
 			'GET',
-			'/api/contact/accounts/10'
+			'/api/accounts/10'
 		);
 
 		$this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -291,7 +291,7 @@ class AccountsControllerTest extends DatabaseTestCase
 		$this->assertEquals('Note 1', $response->notes[0]->value);
 		$this->assertEquals('Note 2', $response->notes[1]->value);
 
-		$client->request('GET', '/api/contact/accounts/' . $response->id);
+		$client->request('GET', '/api/accounts/' . $response->id);
 		$response = json_decode($client->getResponse()->getContent());
 
 		$this->assertEquals('ExampleCompany', $response->name);
@@ -605,29 +605,29 @@ class AccountsControllerTest extends DatabaseTestCase
 	public function testGetList()
 	{
 		$client = static::createClient();
-		$client->request('GET', '/api/contact/accounts/list');
+		$client->request('GET', '/api/accounts?flat=true');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->total);
+		$this->assertEquals(1, $response->_total);
 
-		$this->assertEquals('Company', $response->items[0]->name);
+		$this->assertEquals('Company', $response->_embedded[0]->name);
 	}
 
 	public function testGetListSearch()
 	{
 		$client = static::createClient();
-		$client->request('GET', '/api/contact/accounts/list?search=Nothing&searchFields=name,emails_emailType_name');
+		$client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name,emails_emailType_name');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(0, $response->total);
-		$this->assertEquals(0, count($response->items));
+		$this->assertEquals(0, $response->_total);
+		$this->assertEquals(0, count($response->_embedded));
 
-		$client->request('GET', '/api/contact/accounts/list?search=Comp&searchFields=name,emails_emailType_name');
+		$client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name,emails_emailType_name');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->total);
-		$this->assertEquals(1, count($response->items));
-		$this->assertEquals('Company', $response->items[0]->name);
+		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, count($response->_embedded));
+		$this->assertEquals('Company', $response->_embedded[0]->name);
 	}
 
 	public function testPut()
@@ -635,7 +635,7 @@ class AccountsControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'PUT',
-			'/api/contact/accounts/1',
+			'/api/accounts/1',
 			array(
 				'name' => 'ExampleCompany',
 				'urls' => array(
@@ -733,7 +733,7 @@ class AccountsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'GET',
-			'/api/contact/accounts/1'
+			'/api/accounts/1'
 		);
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -787,7 +787,7 @@ class AccountsControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'PUT',
-			'/api/contact/accounts/1',
+			'/api/accounts/1',
 			array(
 				'name' => 'ExampleCompany',
 				'urls' => array(),
@@ -803,7 +803,7 @@ class AccountsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'GET',
-			'/api/contact/accounts/1'
+			'/api/accounts/1'
 		);
 		$response = json_decode($client->getResponse()->getContent());
 		$this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -823,7 +823,7 @@ class AccountsControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'PUT',
-			'/api/contact/accounts/4711',
+			'/api/accounts/4711',
 			array(
 				'name' => 'TestCompany'
 			)
@@ -837,7 +837,7 @@ class AccountsControllerTest extends DatabaseTestCase
 
 		$client = static::createClient();
 
-		$client->request('DELETE', '/api/contact/accounts/1');
+		$client->request('DELETE', '/api/accounts/1');
 		$this->assertEquals('204', $client->getResponse()->getStatusCode());
 	}
 
@@ -847,7 +847,7 @@ class AccountsControllerTest extends DatabaseTestCase
         $client = static::createClient();
 
         $client->request('DELETE',
-            '/api/contact/accounts/1',
+            '/api/accounts/1',
             array(
                 'removeContacts' => 'false'
             )
@@ -855,9 +855,9 @@ class AccountsControllerTest extends DatabaseTestCase
         // check if contacts are still there
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/contact/contacts/list');
+        $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->_total);
     }
 
 
@@ -878,7 +878,7 @@ class AccountsControllerTest extends DatabaseTestCase
         $client = static::createClient();
 
         $client->request('DELETE',
-            '/api/contact/accounts/1',
+            '/api/accounts/1',
             array(
                 'removeContacts' => 'true'
             )
@@ -886,9 +886,9 @@ class AccountsControllerTest extends DatabaseTestCase
         // check if contacts are still there
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/contact/contacts/list');
+        $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->total);
+        $this->assertEquals(0, $response->_total);
 
 
 
@@ -899,13 +899,13 @@ class AccountsControllerTest extends DatabaseTestCase
 
 		$client = static::createClient();
 
-		$client->request('DELETE', '/api/contact/accounts/4711');
+		$client->request('DELETE', '/api/accounts/4711');
 		$this->assertEquals('404', $client->getResponse()->getStatusCode());
 
 
-		$client->request('GET', '/api/contact/accounts/list');
+		$client->request('GET', '/api/accounts?flat=true');
 		$response = json_decode($client->getResponse()->getContent());
-		$this->assertEquals(1, $response->total);
+		$this->assertEquals(1, $response->_total);
 	}
 
 
@@ -953,7 +953,7 @@ class AccountsControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
         $client->request('GET',
-            '/api/contact/accounts/multipledeleteinfo',
+            '/api/accounts/multipledeleteinfo',
             array(
                 "ids"=>array(1,2)
             )
@@ -998,7 +998,7 @@ class AccountsControllerTest extends DatabaseTestCase
         $numContacts = self::$account->getContacts()->count();
 
 		$client = static::createClient();
-		$client->request('GET', '/api/contact/accounts/1/deleteinfo');
+		$client->request('GET', '/api/accounts/1/deleteinfo');
 		$this->assertEquals('200', $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1032,7 +1032,7 @@ class AccountsControllerTest extends DatabaseTestCase
         self::$em->flush();
 
         $client = static::createClient();
-        $client->request('GET', '/api/contact/accounts/1/deleteinfo');
+        $client->request('GET', '/api/accounts/1/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1048,10 +1048,10 @@ class AccountsControllerTest extends DatabaseTestCase
 	{
 
 		$client = static::createClient();
-		$client->request('GET', '/api/contact/accounts/4711/deleteinfo');
+		$client->request('GET', '/api/accounts/4711/deleteinfo');
 		$this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-		$client->request('GET', '/api/contact/accounts/1/deleteinfo');
+		$client->request('GET', '/api/accounts/1/deleteinfo');
 		$this->assertEquals('200', $client->getResponse()->getStatusCode());
 	}
 }
