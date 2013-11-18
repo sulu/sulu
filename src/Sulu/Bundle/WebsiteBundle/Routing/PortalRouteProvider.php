@@ -59,14 +59,18 @@ class PortalRouteProvider implements RouteProviderInterface
 
         $collection = new RouteCollection();
 
-        $content = $this->contentMapper->loadByResourceLocator($path, $portal->getKey(), $language);
+        try {
+            $content = $this->contentMapper->loadByResourceLocator($path, $portal->getKey(), $language);
 
-        $route = new Route($path, array(
-            '_controller' => $content->getController(),
-            'content' => $content
-        ));
+            $route = new Route($path, array(
+                '_controller' => $content->getController(),
+                'content' => $content
+            ));
 
-        $collection->add($content->getKey() . '_' . uniqid(), $route);
+            $collection->add($content->getKey() . '_' . uniqid(), $route);
+        } catch (ResourceLocatorNotFoundException $rlnfe) {
+            //TODO render own 404 page
+        }
 
         return $collection;
     }
