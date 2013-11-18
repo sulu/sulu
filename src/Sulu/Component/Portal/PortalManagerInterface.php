@@ -34,4 +34,16 @@ interface PortalManagerInterface
      * @return PortalCollection
      */
     public function getPortals();
+
+    /**
+     * Sets the current portal (valid for this request)
+     * @param Portal $portal The current portal
+     */
+    public function setCurrentPortal(Portal $portal);
+
+    /**
+     * Returns the current portal for this request
+     * @return Portal
+     */
+    public function getCurrentPortal();
 }

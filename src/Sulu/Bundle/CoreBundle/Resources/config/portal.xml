@@ -5,6 +5,7 @@
     <parameters>
         <parameter key="sulu_core.portal.portal_manager.class">Sulu\Component\Portal\PortalManager</parameter>
         <parameter key="sulu_core.portal.loader.xml_class">Sulu\Component\Portal\Loader\XmlFileLoader</parameter>
+        <parameter key="sulu_core.portal.portal_listener.class">Sulu\Bundle\CoreBundle\EventListener\PortalListener</parameter>
 
         <parameter key="sulu_core.portal.config_dir">%kernel.root_dir%/../Resources/portals</parameter>
         <parameter key="sulu_core.portal.cache_class">PortalCollectionCache</parameter>
@@ -26,6 +27,10 @@
                 <argument key="cache_class">%sulu_core.portal.cache_class%</argument>
                 <argument key="base_class">%sulu_core.portal.base_class%</argument>
             </argument>
+        </service>
+        <service id="sulu_core.portal.portal_listener" class="%sulu_core.portal.portal_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="300"/>
+            <argument type="service" id="sulu_core.portal.portal_manager" />
         </service>
     </services>
 </container>
