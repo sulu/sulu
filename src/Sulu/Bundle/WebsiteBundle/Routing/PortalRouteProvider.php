@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Portal\PortalManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -22,23 +24,19 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PortalRouteProvider implements RouteProviderInterface
 {
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    public function __construct(ContentMapperInterface $contentMapper)
+    {
+        $this->contentMapper = $contentMapper;
+    }
 
     /**
-     * Finds routes that may potentially match the request.
-     *
-     * This may return a mixed list of class instances, but all routes returned
-     * must extend the core symfony route. The classes may also implement
-     * RouteObjectInterface to link to a content document.
-     *
-     * This method may not throw an exception based on implementation specific
-     * restrictions on the url. That case is considered a not found - returning
-     * an empty array. Exceptions are only used to abort the whole request in
-     * case something is seriously broken, like the storage backend being down.
-     *
-     * Note that implementations may not implement an optimal matching
-     * algorithm, simply a reasonable first pass.  That allows for potentially
-     * very large route sets to be filtered down to likely candidates, which
-     * may then be filtered in memory more completely.
+     * Finds the correct route for the current request.
+     * It loads the correct data with the content mapper.
      *
      * @param Request $request A request against which to match.
      *
@@ -49,11 +47,13 @@ class PortalRouteProvider implements RouteProviderInterface
     public function getRouteCollectionForRequest(Request $request)
     {
         $path = $request->getRequestUri();
+        $content = $this->contentMapper->read('6791a8ff-835c-443c-9275-5280f16e5193', 'en');
 
         $collection = new RouteCollection();
 
         $route = new Route($path, array(
-            '_controller' => 'SuluWebsiteBundle:Default:index'
+            '_controller' => 'SuluWebsiteBundle:Default:index',
+            'content' => $content
         ));
 
         $collection->add('dynamic_route_' . uniqid(), $route);
