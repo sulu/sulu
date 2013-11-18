@@ -53,7 +53,7 @@ define([
                 name: 'datagrid@husky',
                 options: {
                     el: this.sandbox.dom.find('#companies-list', this.$el),
-                    url: '/admin/api/contact/accounts/list?fields=id,name',
+                    url: '/admin/api/accounts?flat=true&fields=id,name',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'

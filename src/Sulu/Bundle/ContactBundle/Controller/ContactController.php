@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use DateTime;
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -22,24 +23,35 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 
+
 /**
  * Makes contacts available through a REST API
  * @package Sulu\Bundle\ContactBundle\Controller
  */
-class ContactsController extends RestController implements ClassResourceInterface
+class ContactController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluContactBundle:Contact';
 
+    protected $basePath = 'admin/api/contacts';
+
+    protected $nonSortable = array();
+
+
     /**
-     * Lists all the contacts or filters the contacts by parameters
-     * Special function for lists
-     * route /contacts/list
+     * lists all contacts
+     * optional parameter 'flat' calls listAction
+     * @Get("contacts")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction()
+    public function cgetAction()
     {
-        $view = $this->responseList();
-
+        if ($this->getRequest()->get('flat')=='true') {
+            // flat structure
+            $view = $this->responseList();
+        } else {
+            $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+            $view = $this->view($this->createHalResponse($contacts), 200);
+        }
         return $this->handleView($view);
     }
 

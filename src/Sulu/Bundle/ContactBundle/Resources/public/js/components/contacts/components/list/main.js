@@ -48,7 +48,7 @@ define(function() {
                 name: 'datagrid@husky',
                 options: {
                     el: this.sandbox.dom.find('#people-list', this.$el),
-                    url: '/admin/api/contact/contacts/list?fields=id,title,firstName,lastName,position',
+                    url: '/admin/api/contacts?flat=true&fields=id,title,firstName,lastName,position',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'

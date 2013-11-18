@@ -1,7 +1,7 @@
 sulu_contact.contacts:
     type: rest
-    resource: Sulu\Bundle\ContactBundle\Controller\ContactsController
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactController
 
 sulu_contact.accounts:
     type: rest
-    resource: Sulu\Bundle\ContactBundle\Controller\AccountsController
+    resource: Sulu\Bundle\ContactBundle\Controller\AccountController

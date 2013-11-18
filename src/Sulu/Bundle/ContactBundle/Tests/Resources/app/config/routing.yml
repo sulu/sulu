@@ -4,4 +4,4 @@ sulu_contact:
 
 sulu_contact_api:
     resource: "@SuluContactBundle/Resources/config/routing_api.yml"
-    prefix: /api/contact
+    prefix: /api
