@@ -39,13 +39,11 @@ monolog:
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
 
-parameters:
-    sulu.content.template.default_path: %kernel.root_dir%/../Resources/templates
-
 sulu_core:
     phpcr:
         ~
     content:
-        ~
+        templates:
+            default_path: %kernel.root_dir%/../Resources/templates
     portal:
         ~
