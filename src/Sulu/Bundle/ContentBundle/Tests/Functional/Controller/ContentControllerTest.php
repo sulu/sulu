@@ -4,6 +4,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\Testing\DatabaseTestCase;
 use PHPCR\SessionInterface;
@@ -157,6 +158,7 @@ class ContentControllerTest extends DatabaseTestCase
         $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
     }
 
     protected function tearDown()
