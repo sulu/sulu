@@ -49,12 +49,22 @@ class SuluCoreExtension extends Extension
         $loader->load('rest.xml');
     }
 
+    /**
+     * @param $portalConfig
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
     private function initPortal($portalConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.portal.config_dir', $portalConfig['config_dir']);
         $loader->load('portal.xml');
     }
 
+    /**
+     * @param $phpcrConfig
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         // session factory
@@ -67,6 +77,11 @@ class SuluCoreExtension extends Extension
         $loader->load('phpcr.xml');
     }
 
+    /**
+     * @param $contentConfig
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         // Base Path

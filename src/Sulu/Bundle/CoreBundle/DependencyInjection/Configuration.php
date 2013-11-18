@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -39,6 +37,9 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    /**
+     * @param NodeBuilder $rootNode
+     */
     private function getPortalConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('portal')
@@ -132,7 +133,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
-        ->end()
-    ->end();
+        ->end();
     }
 }
