@@ -1,8 +1,13 @@
 parameters:
     sulu_website.admin.class: Sulu\Bundle\WebsiteBundle\Admin\SuluWebsiteAdmin
+    sulu_website.provider.portal.class: Sulu\Bundle\WebsiteBundle\Routing\PortalRouteProvider
 
 services:
     sulu_website.admin:
         class: %sulu_website.admin.class%
         tags:
         - { name: sulu.admin }
+
+    sulu_website.provider.portal:
+        class: %sulu_website.provider.portal.class%
+        arguments: ["@sulu.content.mapper", "@sulu_core.portal.portal_manager", "@liip_theme.active_theme"]
