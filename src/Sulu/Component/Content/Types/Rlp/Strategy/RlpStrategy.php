@@ -83,10 +83,10 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * returns whole path for given ContentNode
      * @param string $title title of new node
      * @param string $parentPath parent path of new contentNode
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      * @return string whole path
      */
-    public function generate($title, $parentPath, $portal)
+    public function generate($title, $parentPath, $portalKey)
     {
         // get generated path from childClass
         $path = $this->generatePath($title, $parentPath);
@@ -95,7 +95,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $path = $this->cleanup($path);
 
         // get unique path
-        $path = $this->mapper->getUniquePath($path, $portal);
+        $path = $this->mapper->getUniquePath($path, $portalKey);
 
         return $path;
     }
@@ -118,8 +118,8 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $clean = strtolower($dirty);
 
         // TODO language
-        $language = 'de';
-        $replacers = array_merge($this->replacers['default'], $this->replacers[$language]);
+        $languageCode = 'de';
+        $replacers = array_merge($this->replacers['default'], $this->replacers[$languageCode]);
 
         if (count($replacers) > 0) {
             foreach ($replacers as $key => $value) {
@@ -145,55 +145,55 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
-    public function save(NodeInterface $contentNode, $path, $portal)
+    public function save(NodeInterface $contentNode, $path, $portalKey)
     {
         // delegate to mapper
-        return $this->mapper->save($contentNode, $path, $portal);
+        return $this->mapper->save($contentNode, $path, $portalKey);
     }
 
     /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function read(NodeInterface $contentNode, $portal)
+    public function loadByContent(NodeInterface $contentNode, $portalKey)
     {
         // delegate to mapper
-        return $this->mapper->loadByContent($contentNode, $portal);
+        return $this->mapper->loadByContent($contentNode, $portalKey);
     }
 
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string uuid of content node
      */
-    public function load($resourceLocator, $portal)
+    public function loadByResourceLocator($resourceLocator, $portalKey)
     {
         // delegate to mapper
-        return $this->mapper->loadByResourceLocator($resourceLocator, $portal);
+        return $this->mapper->loadByResourceLocator($resourceLocator, $portalKey);
     }
 
     /**
      * checks if path is valid
      * @param string $path path of route
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      * @return bool
      */
-    public function isValid($path, $portal)
+    public function isValid($path, $portalKey)
     {
         // check for valid signs and uniqueness
-        return preg_match($this->pattern, $path) && $this->mapper->unique($path, $portal);
+        return preg_match($this->pattern, $path) && $this->mapper->unique($path, $portalKey);
     }
 }

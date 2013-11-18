@@ -45,7 +45,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        $value = $this->getStrategy()->read($node, $this->getPortal());
+        $value = $this->getStrategy()->loadByContent($node, $this->getPortal());
         $property->setValue($value);
     }
 
@@ -68,7 +68,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function loadContentNode($resourceLocator)
     {
-        return $this->getStrategy()->load($resourceLocator, $this->getPortal());
+        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $this->getPortal());
     }
 
     /**

@@ -27,48 +27,48 @@ interface RLPStrategyInterface {
      * returns whole path for given ContentNode
      * @param string $title title of new node
      * @param string $parentPath parent path of new contentNode
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      * @return string whole path
      */
-    public function generate($title, $parentPath, $portal);
+    public function generate($title, $parentPath, $portalKey);
 
     /**
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
-    public function save(NodeInterface $contentNode, $path, $portal);
+    public function save(NodeInterface $contentNode, $path, $portalKey);
 
     /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function read(NodeInterface $contentNode, $portal);
+    public function loadByContent(NodeInterface $contentNode, $portalKey);
 
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string uuid of content node
      */
-    public function load($resourceLocator, $portal);
+    public function loadByResourceLocator($resourceLocator, $portalKey);
 
     /**
      * checks if path is valid
      * @param string $path path of route
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      * @return bool
      */
-    public function isValid($path, $portal);
+    public function isValid($path, $portalKey);
 }

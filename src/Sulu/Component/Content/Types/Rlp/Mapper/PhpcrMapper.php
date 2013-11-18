@@ -43,11 +43,11 @@ class PhpcrMapper extends RlpMapper
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
-    public function save(NodeInterface $contentNode, $path, $portal)
+    public function save(NodeInterface $contentNode, $path, $portalKey)
     {
         // TODO portal
         $session = $this->sessionFactory->getSession();
@@ -84,13 +84,13 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function loadByContent(NodeInterface $contentNode, $portal)
+    public function loadByContent(NodeInterface $contentNode, $portalKey)
     {
         // TODO portal
         // search for references with name 'content'
@@ -109,13 +109,13 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string uuid of content node
      */
-    public function loadByResourceLocator($resourceLocator, $portal)
+    public function loadByResourceLocator($resourceLocator, $portalKey)
     {
         $resourceLocator = ltrim($resourceLocator, '/');
 
@@ -141,10 +141,10 @@ class PhpcrMapper extends RlpMapper
     /**
      * checks if given path is unique
      * @param string $path
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      * @return bool
      */
-    public function unique($path, $portal)
+    public function unique($path, $portalKey)
     {
         // TODO portal
         $session = $this->sessionFactory->getSession();
@@ -156,10 +156,10 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns a unique path with "-1" if necessary
      * @param string $path
-     * @param string $portal key of portal
+     * @param string $portalKey key of portal
      * @return string
      */
-    public function getUniquePath($path, $portal)
+    public function getUniquePath($path, $portalKey)
     {
         // TODO portal
         $session = $this->sessionFactory->getSession();
