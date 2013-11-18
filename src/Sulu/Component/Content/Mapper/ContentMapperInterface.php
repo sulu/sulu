@@ -19,20 +19,31 @@ use Sulu\Component\Content\StructureInterface;
 interface ContentMapperInterface
 {
     /**
-     * Saves the given data in the content storage
-     * @param $data array The data to be saved
-     * @param $templateKey string name of template
-     * @param $languageCode string Save data for given language
-     * @param $userId int The id of the user who saves
+     * saves the given data in the content storage
+     * @param array $data The data to be saved
+     * @param string $templateKey Name of template
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Save data for given language
+     * @param int $userId The id of the user who saves
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $languageCode, $userId);
+    public function save($data, $templateKey, $portalKey, $languageCode, $userId);
 
     /**
-     * Reads the data from the given path
-     * @param $id string uuid or path to the content
-     * @param $language string read data for given language
+     * returns the data from the given id
+     * @param string $uuid UUID of the content
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
-    public function read($id, $language);
+    public function load($uuid, $portalKey, $languageCode);
+
+    /**
+     * returns data from given path
+     * @param string $resourceLocator Resource locator
+     * @param string $portalKey Key of portal
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function loadByResourceLocator($resourceLocator, $portalKey, $languageCode);
 }

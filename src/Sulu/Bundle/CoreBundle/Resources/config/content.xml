@@ -12,6 +12,8 @@
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
+        <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
+        <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
     </parameters>
 
     <services>
@@ -19,6 +21,7 @@
         <!-- content mapper -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
             <argument>%sulu.content.base_path.content%</argument>
+            <argument>%sulu.content.base_path.route%</argument>
 
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
@@ -41,6 +44,17 @@
             </call>
         </service>
 
+        <!-- Rlp Mapper -->
+        <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument>%sulu.content.base_path.route%</argument>
+        </service>
+
+        <!-- Rlp Strategies -->
+        <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
+            <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
+        </service>
+
         <!-- simple content types -->
         <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
             <argument>%sulu.content.type.text_line.template%</argument>
@@ -51,7 +65,7 @@
 
         <!-- complex content types -->
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
-            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument>%sulu.content.type.resource_locator.template%</argument>
             <argument>%sulu.content.base_path.route%</argument>
         </service>
