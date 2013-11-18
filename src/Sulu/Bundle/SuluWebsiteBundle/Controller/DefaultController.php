@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Component\Content\Structure;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,6 +22,17 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return new Response();
+        /** @var Structure $content */
+        $content = $this->getRequest()->get('content');
+        $response = new Response();
+
+        $response->setPublic();
+        $response->setPrivate();
+        $response->setSharedMaxAge($content->getCacheLifeTime());
+        $response->setMaxAge($content->getCacheLifeTime());
+
+        $response->setContent('<h1>' . $content->title . '</h1><p>' . $content->article . '</p>');
+
+        return $response;
     }
 }
