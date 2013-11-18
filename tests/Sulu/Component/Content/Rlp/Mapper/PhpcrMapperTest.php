@@ -185,7 +185,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 
     public function testReadFailure()
     {
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotExistsException');
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->mapper->read($this->content1, 'default');
     }
 
@@ -200,7 +200,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 
     public function testLoadFailure()
     {
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotExistsException');
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->mapper->load('/test/test-1', 'default');
     }
 
