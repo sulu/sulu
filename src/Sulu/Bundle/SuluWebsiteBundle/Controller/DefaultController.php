@@ -15,23 +15,33 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Default Controller for rendering templates
+ * Default Controller for rendering templates, uses the themes from the ClientWebsiteBundle
  * @package Sulu\Bundle\WebsiteBundle\Controller
  */
 class DefaultController extends Controller
 {
+    /**
+     * Loads the content from the request (filled by the route provider) and creates a response with this content and
+     * the appropriate cache headers
+     * @return Response
+     */
     public function indexAction()
     {
-        /** @var Structure $content */
-        $content = $this->getRequest()->get('content');
+        /** @var Structure $structure */
+        $structure = $this->getRequest()->get('content');
+        $content = $this->renderView(
+            'ClientWebsiteBundle:Website:' . $structure->getKey() . '.html.twig',
+            array('content' => $structure)
+        );
+
         $response = new Response();
 
         $response->setPublic();
         $response->setPrivate();
-        $response->setSharedMaxAge($content->getCacheLifeTime());
-        $response->setMaxAge($content->getCacheLifeTime());
+        $response->setSharedMaxAge($structure->getCacheLifeTime());
+        $response->setMaxAge($structure->getCacheLifeTime());
 
-        $response->setContent('<h1>' . $content->title . '</h1><p>' . $content->article . '</p>');
+        $response->setContent($content);
 
         return $response;
     }
