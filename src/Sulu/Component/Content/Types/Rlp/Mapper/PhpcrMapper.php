@@ -90,7 +90,7 @@ class PhpcrMapper extends RlpMapper
      *
      * @return string path
      */
-    public function read(NodeInterface $contentNode, $portal)
+    public function loadByContent(NodeInterface $contentNode, $portal)
     {
         // TODO portal
         // search for references with name 'content'
@@ -115,7 +115,7 @@ class PhpcrMapper extends RlpMapper
      *
      * @return string uuid of content node
      */
-    public function load($resourceLocator, $portal)
+    public function loadByResourceLocator($resourceLocator, $portal)
     {
         $resourceLocator = ltrim($resourceLocator, '/');
 

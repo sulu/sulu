@@ -39,7 +39,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array('unique', 'getUniquePath', 'save', 'read', 'load'),
+            array('unique', 'getUniquePath', 'save', 'loadByContent', 'loadByResourceLocator'),
             array('test-mapper'),
             'TestMapper'
         );
@@ -53,10 +53,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('save')
             ->will($this->returnCallback(array($this, 'saveCallback')));
         $this->mapper->expects($this->any())
-            ->method('read')
+            ->method('loadByContent')
             ->will($this->returnValue('/test'));
         $this->mapper->expects($this->any())
-            ->method('load')
+            ->method('loadByResourceLocator')
             ->will($this->returnValue('this-is-a-uuid'));
 
         $this->strategy = $this->getMockForAbstractClass(
@@ -177,14 +177,14 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     public function testRead()
     {
         // its a delegate
-        $result = $this->mapper->read($this->getNodeMock(), 'default');
+        $result = $this->mapper->loadByContent($this->getNodeMock(), 'default');
         $this->assertEquals('/test', $result);
     }
 
     public function testLoad()
     {
         //its a delegate
-        $result = $this->mapper->load('/test', 'default');
+        $result = $this->mapper->loadByResourceLocator('/test', 'default');
         $this->assertEquals('this-is-a-uuid', $result);
     }
 }

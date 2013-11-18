@@ -42,7 +42,7 @@ interface RlpMapperInterface {
      *
      * @return string path
      */
-    public function read(NodeInterface $contentNode, $portal);
+    public function loadByContent(NodeInterface $contentNode, $portal);
 
     /**
      * returns the uuid of referenced content node
@@ -53,7 +53,7 @@ interface RlpMapperInterface {
      *
      * @return string uuid of content node
      */
-    public function load($resourceLocator, $portal);
+    public function loadByResourceLocator($resourceLocator, $portal);
 
     /**
      * checks if given path is unique

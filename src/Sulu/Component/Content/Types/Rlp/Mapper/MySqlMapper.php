@@ -50,7 +50,7 @@ class MySqlMapper extends RlpMapper {
      *
      * @return string path
      */
-    public function read(NodeInterface $contentNode, $portal)
+    public function loadByContent(NodeInterface $contentNode, $portal)
     {
         // TODO: Implement read() method.
     }
@@ -86,7 +86,7 @@ class MySqlMapper extends RlpMapper {
      *
      * @return string uuid of content node
      */
-    public function load($resourceLocator, $portal)
+    public function loadByResourceLocator($resourceLocator, $portal)
     {
         // TODO: Implement load() method.
     }

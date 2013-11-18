@@ -186,7 +186,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
     public function testReadFailure()
     {
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
-        $this->mapper->read($this->content1, 'default');
+        $this->mapper->loadByContent($this->content1, 'default');
     }
 
     public function testRead()
@@ -194,14 +194,14 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
         $this->sessionService->getSession()->save();
 
-        $result = $this->mapper->read($this->content1, 'default');
+        $result = $this->mapper->loadByContent($this->content1, 'default');
         $this->assertEquals('/products/news/content1-news', $result);
     }
 
     public function testLoadFailure()
     {
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
-        $this->mapper->load('/test/test-1', 'default');
+        $this->mapper->loadByResourceLocator('/test/test-1', 'default');
     }
 
     public function testLoad()
@@ -210,7 +210,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
         $this->sessionService->getSession()->save();
 
-        $result = $this->mapper->load('/products/news/content1-news', 'default');
+        $result = $this->mapper->loadByResourceLocator('/products/news/content1-news', 'default');
         $this->assertEquals($this->content1->getIdentifier(), $result);
     }
 }

@@ -167,7 +167,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     public function read(NodeInterface $contentNode, $portal)
     {
         // delegate to mapper
-        return $this->mapper->read($contentNode, $portal);
+        return $this->mapper->loadByContent($contentNode, $portal);
     }
 
     /**
@@ -182,7 +182,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     public function load($resourceLocator, $portal)
     {
         // delegate to mapper
-        return $this->mapper->load($resourceLocator, $portal);
+        return $this->mapper->loadByResourceLocator($resourceLocator, $portal);
     }
 
     /**
