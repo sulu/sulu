@@ -45,7 +45,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        $value = $this->getStrategy()->loadByContent($node, $this->getPortal());
+        $value = $this->getStrategy()->loadByContent($node, $this->getPortalKey());
         $property->setValue($value);
     }
 
@@ -58,17 +58,17 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function set(NodeInterface $node, PropertyInterface $property)
     {
-        $this->getStrategy()->save($node, $property->getValue(), $this->getPortal());
+        $this->getStrategy()->save($node, $property->getValue(), $this->getPortalKey());
     }
 
     /**
-     * returns the node of referenced content node
+     * returns the node uuid of referenced content node
      * @param string $resourceLocator
      * @return string
      */
-    public function loadContentNode($resourceLocator)
+    public function loadContentNodeUuid($resourceLocator)
     {
-        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $this->getPortal());
+        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $this->getPortalKey());
     }
 
     /**
@@ -81,7 +81,10 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         return $this->strategy;
     }
 
-    public function getPortal()
+    /**
+     * @return string
+     */
+    public function getPortalKey()
     {
         // TODO get real portal from portalmanager + request
         return 'default';

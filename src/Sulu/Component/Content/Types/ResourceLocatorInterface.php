@@ -17,9 +17,9 @@ interface ResourceLocatorInterface extends ContentTypeInterface
 {
 
     /**
-     * returns the node of referenced content node
+     * returns the node uuid of referenced content node
      * @param string $resourceLocator
      * @return string
      */
-    public function loadContentNode($resourceLocator);
+    public function loadContentNodeUuid($resourceLocator);
 }

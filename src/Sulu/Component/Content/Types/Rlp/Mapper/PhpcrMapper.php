@@ -24,6 +24,7 @@ class PhpcrMapper extends RlpMapper
      * @var SessionFactoryInterface
      */
     private $sessionFactory;
+
     /**
      * @var string
      */
@@ -56,7 +57,9 @@ class PhpcrMapper extends RlpMapper
         // check if route already exists
         if (!$this->isUnique($routes, $path)) {
             $routeNode = $routes->getNode(ltrim($path, '/'));
-            if ($routeNode->hasProperty('sulu:content') && $routeNode->getPropertyValue('sulu:content') == $contentNode) {
+            if ($routeNode->hasProperty('sulu:content') &&
+                $routeNode->getPropertyValue('sulu:content') == $contentNode
+            ) {
                 // route already exists and referenced on contentNode
                 return;
             } else {
