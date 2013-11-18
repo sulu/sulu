@@ -31,12 +31,12 @@ interface ContentMapperInterface
 
     /**
      * returns the data from the given id
-     * @param $id string uuid or path to the content
+     * @param $uuid string uuid or path to the content
      * @param string $portal key of portal
      * @param $language string read data for given language
      * @return StructureInterface
      */
-    public function load($id, $portal, $language);
+    public function load($uuid, $portal, $language);
 
     /**
      * returns data from given path
