@@ -97,7 +97,7 @@ abstract class RestController extends FOSRestController
 //        var_dump($pages);die();
 
         $sortable = array();
-        if ($showSortable && count($entities > 0)) {
+        if ($showSortable && count($entities) > 0) {
             $keys = array_keys($entities[0]);
             foreach ($keys as $key) {
                 if(!in_array($key, $this->nonSortable)) {
