@@ -30,41 +30,33 @@ class RoleController extends RestController implements ClassResourceInterface
 
     protected $permissionEntityName = 'SuluSecurityBundle:Permission';
 
+
+    /**
+     * returns all roles
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function cgetAction()
     {
-
-        $roles = $this->getDoctrine()
-            ->getRepository($this->entityName)
-            ->findAllRoles();
-
-        if ($roles != null) {
-            $convertedRoles = [];
-            foreach ($roles as $role) {
-                array_push($convertedRoles, $this->convertRole($role));
-            }
-
-            $response = array(
-                'total' => count($convertedRoles),
-                'items' => $convertedRoles
-            );
-
-            $view = $this->view($response, 200);
-
-
+        if ($this->getRequest()->get('flat') == 'true') {
+            // flat structure
+            $view = $this->responseList();
         } else {
-            $view = $this->view(array(), 200);
+            $roles = $this->getDoctrine()->getRepository($this->entityName)->findAllRoles();
+
+            if ($roles != null) {
+                $convertedRoles = [];
+                foreach ($roles as $role) {
+                    array_push($convertedRoles, $this->convertRole($role));
+                }
+                $view = $this->view($this->createHalResponse($convertedRoles), 200);
+
+            } else {
+                $view = $this->view(array(), 200);
+            }
         }
-
         return $this->handleView($view);
     }
 
-
-    public function listAction()
-    {
-        $view = $this->responseList();
-
-        return $this->handleView($view);
-    }
 
     /**
      * Returns the role with the given id
@@ -269,6 +261,8 @@ class RoleController extends RestController implements ClassResourceInterface
      */
     protected function convertRole(Role $role)
     {
+        $roleData['_links'] = $role->getLinks();
+
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
         $roleData['system'] = $role->getSystem();
