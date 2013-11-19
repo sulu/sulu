@@ -102,6 +102,7 @@ class PortalCollection implements \IteratorAggregate
             $portalData = array();
             $portalData['name'] = $portal->getName();
             $portalData['key'] = $portal->getKey();
+            $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
 
             foreach ($portal->getLanguages() as $language) {
                 $languageData = array();

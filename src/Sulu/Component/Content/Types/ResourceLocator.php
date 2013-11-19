@@ -16,33 +16,25 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
-class ResourceLocator extends ComplexContentType
+class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface
 {
-    private $basePath = '/cmf/routes';
     /**
-     * @var SessionFactoryInterface
+     * @var RlpStrategyInterface
      */
-    private $sessionFactory;
-
+    private $strategy;
+    /**
+     * template for form generation
+     * @var string
+     */
     private $template;
 
-    protected function getBasePath()
+    function __construct(RlpStrategyInterface $strategy, $template)
     {
-        return $this->basePath;
-    }
-
-    protected function getSession()
-    {
-        return $this->sessionFactory->getSession();
-    }
-
-    function __construct(SessionFactoryInterface $sessionFactory, $template, $basePath)
-    {
-        $this->sessionFactory = $sessionFactory;
+        $this->strategy = $strategy;
         $this->template = $template;
-        $this->basePath = $basePath;
     }
 
     /**
@@ -53,18 +45,8 @@ class ResourceLocator extends ComplexContentType
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        // search for references with name 'content'
-        foreach ($node->getReferences('content') as $ref) {
-            if ($ref instanceof \PHPCR\PropertyInterface) {
-                $value = str_replace($this->getBasePath(), '', $ref->getParent()->getPath());
-                $property->setValue($value);
-
-                return $value;
-            }
-        }
-
-        // TODO exception handling
-        return null;
+        $value = $this->getStrategy()->loadByContent($node, $this->getPortalKey());
+        $property->setValue($value);
     }
 
     /**
@@ -76,40 +58,36 @@ class ResourceLocator extends ComplexContentType
      */
     public function set(NodeInterface $node, PropertyInterface $property)
     {
-        $session = $this->getSession();
-        $data = $property->getValue();
+        $this->getStrategy()->save($node, $property->getValue(), $this->getPortalKey());
+    }
 
-        // create routepath
-        $routePath = ltrim($this->getBasePath(), '/') . '/' . ltrim($data, '/'); //TODO configure path
+    /**
+     * returns the node uuid of referenced content node
+     * @param string $resourceLocator
+     * @return string
+     */
+    public function loadContentNodeUuid($resourceLocator)
+    {
+        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $this->getPortalKey());
+    }
 
-        // check if route already exists
-        if ($session->nodeExists('/' . $routePath)) {
-            $node = $session->getNode($routePath);
-            if ($node->hasProperty('content') && $node->getPropertyValue('content') == $node) {
-                return;
-            } else {
-                throw new ResourceLocatorAlreadyExistsException();
-            }
-        }
+    /**
+     * returns strategy of current portal
+     * @return RLPStrategyInterface
+     */
+    public function getStrategy()
+    {
+        // TODO get strategy from ???
+        return $this->strategy;
+    }
 
-        $routePath = explode('/', $routePath);
-
-        // get root node
-        $routeNode = $session->getRootNode();
-
-        foreach ($routePath as $path) {
-            if ($path != '') {
-                if ($routeNode->hasNode($path)) {
-                    $routeNode = $routeNode->getNode($path);
-                } else {
-                    $routeNode = $routeNode->addNode($path, 'nt:unstructured');
-                }
-            }
-        }
-
-        // TODO sulu:route mixin to search faster for route
-        // $routeNode->addMixin('sulu:route');
-        $routeNode->setProperty('content', $node);
+    /**
+     * @return string
+     */
+    public function getPortalKey()
+    {
+        // TODO get real portal from portalmanager + request
+        return 'default';
     }
 
     /**

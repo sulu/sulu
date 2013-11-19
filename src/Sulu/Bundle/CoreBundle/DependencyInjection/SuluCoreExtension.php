@@ -29,30 +29,85 @@ class SuluCoreExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         // PHPCR
-        $container->setParameter('sulu.phpcr.factory_class', $config['phpcr']['factory_class']);
-        $container->setParameter('sulu.phpcr.url', $config['phpcr']['url']);
-        $container->setParameter('sulu.phpcr.username', $config['phpcr']['username']);
-        $container->setParameter('sulu.phpcr.password', $config['phpcr']['password']);
-        $container->setParameter('sulu.phpcr.workspace', $config['phpcr']['workspace']);
+        if (isset($config['phpcr'])) {
+            $this->initPhpcr($config['phpcr'], $container, $loader);
+        }
 
+        // Content
+        if (isset($config['content'])) {
+            $this->initContent($config['content'], $container, $loader);
+        }
+
+        // Portal
+        if (isset($config['portal'])) {
+            $this->initPortal($config['portal'], $container, $loader);
+        }
+
+        $loader->load('rest.xml');
+    }
+
+    /**
+     * @param $portalConfig
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
+    private function initPortal($portalConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $container->setParameter('sulu_core.portal.config_dir', $portalConfig['config_dir']);
+        $loader->load('portal.xml');
+    }
+
+    /**
+     * @param $phpcrConfig
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
+    private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        // session factory
+        $container->setParameter('sulu.phpcr.factory_class', $phpcrConfig['factory_class']);
+        $container->setParameter('sulu.phpcr.url', $phpcrConfig['url']);
+        $container->setParameter('sulu.phpcr.username', $phpcrConfig['username']);
+        $container->setParameter('sulu.phpcr.password', $phpcrConfig['password']);
+        $container->setParameter('sulu.phpcr.workspace', $phpcrConfig['workspace']);
+
+        $loader->load('phpcr.xml');
+    }
+
+    /**
+     * @param $contentConfig
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
+    private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
         // Base Path
-        $container->setParameter('sulu.content.base_path.content', $config['content']['base_path']['content']);
-        $container->setParameter('sulu.content.base_path.route', $config['content']['base_path']['route']);
+        $container->setParameter('sulu.content.base_path.content', $contentConfig['base_path']['content']);
+        $container->setParameter('sulu.content.base_path.route', $contentConfig['base_path']['route']);
 
         // Content Types
-        $container->setParameter('sulu.content.type.text_line.template', $config['content']['types']['text_line']['template']);
-        $container->setParameter('sulu.content.type.text_area.template', $config['content']['types']['text_area']['template']);
-        $container->setParameter('sulu.content.type.resource_locator.template', $config['content']['types']['resource_locator']['template']);
+        $container->setParameter(
+            'sulu.content.type.text_line.template',
+            $contentConfig['types']['text_line']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.text_area.template',
+            $contentConfig['types']['text_area']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.resource_locator.template',
+            $contentConfig['types']['resource_locator']['template']
+        );
 
         // Template
-        $container->setParameter('sulu.content.template.default_path', $config['content']['templates']['default_path']);
+        $container->setParameter(
+            'sulu.content.template.default_path',
+            $contentConfig['templates']['default_path']
+        );
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('content.xml');
-        $loader->load('portal.xml');
-        $loader->load('phpcr.xml');
-        $loader->load('rest.xml');
     }
 }

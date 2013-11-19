@@ -65,6 +65,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Massive Art', $portal->getName());
         $this->assertEquals('massiveart', $portal->getKey());
 
+        $this->assertEquals('tree', $portal->getResourceLocatorStrategy());
+
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
         $this->assertEquals(true, $portal->getLanguages()[0]->isMain());
@@ -95,6 +97,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
+
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
@@ -129,6 +133,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
+
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
@@ -170,6 +176,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
 
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
+
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
         $this->assertEquals(true, $portal->getLanguages()[0]->isMain());
@@ -200,6 +208,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
+
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
@@ -260,6 +270,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Massive Art', $portal->getName());
         $this->assertEquals('massiveart', $portal->getKey());
 
+        $this->assertEquals('tree', $portal->getResourceLocatorStrategy());
+
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
         $this->assertEquals(true, $portal->getLanguages()[0]->isMain());
@@ -290,6 +302,8 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
+
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($portal->getLanguages()));
         $this->assertEquals('en', $portal->getLanguages()[0]->getCode());

@@ -17,14 +17,14 @@ interface PortalManagerInterface
 {
     /**
      * Returns the portal with the given key
-     * @param $key The key to search for
+     * @param string $key The key to search for
      * @return Portal
      */
     public function findByKey($key);
 
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url)
-     * @param $searchUrl The url to search for
+     * @param string $searchUrl The url to search for
      * @return Portal
      */
     public function findByUrl($searchUrl);
@@ -34,4 +34,16 @@ interface PortalManagerInterface
      * @return PortalCollection
      */
     public function getPortals();
+
+    /**
+     * Sets the current portal (valid for this request)
+     * @param Portal $portal The current portal
+     */
+    public function setCurrentPortal(Portal $portal);
+
+    /**
+     * Returns the current portal for this request
+     * @return Portal
+     */
+    public function getCurrentPortal();
 }

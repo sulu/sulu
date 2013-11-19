@@ -22,6 +22,7 @@ class {{ cache_class }} extends {{ base_class }}
         $portal = new Portal();
         $portal->setName('{{ portal.name }}');
         $portal->setKey('{{ portal.key }}');
+        $portal->setResourceLocatorStrategy('{{ portal.resourceLocator.strategy }}');
 {% for language in portal.languages %}
 
         // add language
