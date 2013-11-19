@@ -100,13 +100,13 @@ class RolesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/roles/list');
+        $client->request('GET', '/api/roles?flat=true');
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
-        $this->assertEquals('Sulu Administrator', $response->items[0]->name);
-        $this->assertEquals('Sulu', $response->items[0]->system);
+        $this->assertEquals('Sulu Administrator', $response->_embedded[0]->name);
+        $this->assertEquals('Sulu', $response->_embedded[0]->system);
     }
 
     public function testGetById()
@@ -418,13 +418,13 @@ class RolesControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, $response->total);
 
-        $this->assertEquals('Sulu Administrator', $response->items[0]->name);
-        $this->assertEquals('Sulu Editor', $response->items[1]->name);
+        $this->assertEquals('Sulu Administrator', $response->_embedded[0]->name);
+        $this->assertEquals('Sulu Editor', $response->_embedded[1]->name);
 
-        $this->assertEquals('Sulu', $response->items[0]->system);
-        $this->assertEquals('Sulu', $response->items[1]->system);
+        $this->assertEquals('Sulu', $response->_embedded[0]->system);
+        $this->assertEquals('Sulu', $response->_embedded[1]->system);
 
-        $this->assertEquals('context1', $response->items[0]->permissions[0]->context);
-        $this->assertEquals('context2', $response->items[1]->permissions[1]->context);
+        $this->assertEquals('context1', $response->_embedded[0]->permissions[0]->context);
+        $this->assertEquals('context2', $response->_embedded[1]->permissions[1]->context);
     }
 }
