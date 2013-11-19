@@ -79,6 +79,7 @@ abstract class RestController extends FOSRestController
     /**
      * returns HAL-conform _links array
      * @param array $entities
+     * @param int $pages
      * @param bool $showSortable
      * @return array
      */
