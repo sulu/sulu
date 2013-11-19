@@ -115,9 +115,9 @@ class ListQueryBuilder
     /**
      * just return count
      */
-    public function justCount($prefix='u', $alias = 'totalcount')
+    public function justCount($countAttribute='u.id', $alias = 'totalcount')
     {
-        $this->replaceSelect = 'COUNT('.$prefix.'.id) as '.$alias;
+        $this->replaceSelect = 'COUNT('.$countAttribute.') as '.$alias;
     }
 
     /**
@@ -150,7 +150,7 @@ class ListQueryBuilder
             $this->select = $prefix;
         }
 
-        if($this->replaceSelect) {$this->select = $this->replaceSelect;}
+        if(!is_null($this->replaceSelect)) {$this->select = $this->replaceSelect;}
 
         $dql = 'SELECT %s
                 FROM %s %s

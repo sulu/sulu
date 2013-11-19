@@ -46,7 +46,8 @@ class ListRestHelper
         'pageSize' => 'pageSize',
         'page' => 'page',
         'search' => 'search',
-        'searchFields' => 'searchFields'
+        'searchFields' => 'searchFields',
+        'fields' => 'fields',
     );
 
     /**
@@ -109,7 +110,7 @@ class ListRestHelper
      */
     public function getLimit()
     {
-        return ($this->getRequest()->get($this->getParameterName('pageSize')));
+        return $this->getRequest()->get($this->getParameterName('pageSize'));
     }
 
     /**
@@ -152,7 +153,6 @@ class ListRestHelper
     public function getFields()
     {
         $fields = $this->getRequest()->get($this->getParameterName('fields'));
-
         return ($fields != null) ? explode(',', $fields) : null;
     }
 
