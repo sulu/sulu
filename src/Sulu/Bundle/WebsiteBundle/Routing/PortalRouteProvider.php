@@ -79,7 +79,12 @@ class PortalRouteProvider implements RouteProviderInterface
 
             $collection->add($content->getKey() . '_' . uniqid(), $route);
         } catch (ResourceLocatorNotFoundException $rlnfe) {
-            //TODO render own 404 page
+            $route = new Route($path, array(
+                '_controller' => 'SuluWebsiteBundle:Default:error404',
+                'path' => $path
+            ));
+
+            $collection->add('error404_' . uniqid(), $route);
         }
 
         return $collection;
