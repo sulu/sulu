@@ -48,7 +48,7 @@ define(function() {
                 name: 'datagrid@husky',
                 options: {
                     el: this.sandbox.dom.find('#content-list', this.$el),
-                    url: '/admin/api/content/contents',
+                    url: '/admin/api/contents',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'

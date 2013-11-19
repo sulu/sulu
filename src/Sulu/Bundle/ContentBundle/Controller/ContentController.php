@@ -70,8 +70,9 @@ class ContentController extends RestController implements ClassResourceInterface
         return $this->handleView(
             $this->view(
                 array(
+                    '_links' => array('self'=>$this->getRequest()->getUri()),
+                    '_embedded' => $result,
                     'total' => sizeof($result),
-                    'items' => $result
                 )
             )
         );
