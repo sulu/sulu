@@ -839,7 +839,7 @@ class ContactControllerTest extends DatabaseTestCase
 		$client->request('GET', '/api/contacts?flat=true');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, $response->total);
 
 		$this->assertEquals('Max', $response->_embedded[0]->firstName);
 		$this->assertEquals('Mustermann', $response->_embedded[0]->lastName);
@@ -853,7 +853,7 @@ class ContactControllerTest extends DatabaseTestCase
 		$client->request('GET', '/api/contacts?flat=true&fields=id,firstName,lastName');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, $response->total);
 		$this->assertEquals(1, $response->_embedded[0]->id);
 		$this->assertEquals('Max', $response->_embedded[0]->firstName);
 		$this->assertEquals('Mustermann', $response->_embedded[0]->lastName);
@@ -862,7 +862,7 @@ class ContactControllerTest extends DatabaseTestCase
 		$client->request('GET', '/api/contacts?flat=true&fields=id,firstName');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, $response->total);
 		$this->assertEquals(1, $response->_embedded[0]->id);
 		$this->assertEquals('Max', $response->_embedded[0]->firstName);
 		$this->assertFalse(isset($response->_embedded[0]->lastName));
@@ -891,6 +891,6 @@ class ContactControllerTest extends DatabaseTestCase
 		$client->request('GET', '/api/contacts?flat=true');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, $response->total);
 	}
 }
