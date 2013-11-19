@@ -34,7 +34,8 @@ class ContentController extends RestController implements ClassResourceInterface
             $uuid,
             function ($uuid) {
                 // TODO language
-                $content = $this->getMapper()->read($uuid, 'en');
+                // TODO portal
+                $content = $this->getMapper()->load($uuid, 'default', 'en');
                 $result = $content->toArray();
                 $result['creator'] = $this->getContactByUserId($result['creator']);
                 $result['changer'] = $this->getContactByUserId($result['changer']);
@@ -61,7 +62,8 @@ class ContentController extends RestController implements ClassResourceInterface
 
         /** @var NodeInterface $node */
         foreach ($contents as $node) {
-            $tmp = $this->getMapper()->read($node->getIdentifier(), 'en')->toArray();
+            // TODO portal
+            $tmp = $this->getMapper()->load($node->getIdentifier(), 'default', 'en')->toArray();
             $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
             $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
             $result[] = $tmp;
@@ -100,9 +102,10 @@ class ContentController extends RestController implements ClassResourceInterface
     public function postAction()
     {
         // TODO language
-        $key = $this->getRequest()->get('template');
+        $templateKey = $this->getRequest()->get('template');
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $structure = $this->getMapper()->save($this->getRequest()->request->all(), $key, 'en', $userId);
+        // TODO portal
+        $structure = $this->getMapper()->save($this->getRequest()->request->all(), $templateKey, 'default', 'en', $userId);
         $result = $structure->toArray();
         $result['creator'] = $this->getContactByUserId($result['creator']);
         $result['changer'] = $this->getContactByUserId($result['changer']);
