@@ -69,6 +69,12 @@ class ListQueryBuilder
      */
     private $searchFields;
 
+
+    /**
+     * @var
+     */
+    private $replaceSelect;
+
     /**
      * @param array $associationNames
      * @param string $entityName
@@ -105,6 +111,15 @@ class ListQueryBuilder
         return $dql;
     }
 
+
+    /**
+     * just return count
+     */
+    public function justCount($prefix='u', $alias = 'totalcount')
+    {
+        $this->replaceSelect = 'COUNT('.$prefix.'.id) as '.$alias;
+    }
+
     /**
      * Create a Select ... From ... Statement for given fields with joins
      *
@@ -115,6 +130,7 @@ class ListQueryBuilder
     {
         $this->joins = '';
         $this->prefixes = array($prefix);
+
 
         // select and where fields
         $fieldsWhere = array_merge(
@@ -133,6 +149,8 @@ class ListQueryBuilder
         if (strlen($this->select) == 0) {
             $this->select = $prefix;
         }
+
+        if($this->replaceSelect) {$this->select = $this->replaceSelect;}
 
         $dql = 'SELECT %s
                 FROM %s %s
@@ -244,6 +262,7 @@ class ListQueryBuilder
 
         return sprintf($format, $parent, $field, $alias);
     }
+
 
     /**
      * Check if Field is an Association

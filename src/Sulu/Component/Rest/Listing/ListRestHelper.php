@@ -109,7 +109,7 @@ class ListRestHelper
      */
     public function getLimit()
     {
-        return $this->getRequest()->get($this->getParameterName('pageSize'));
+        return ($this->getRequest()->get($this->getParameterName('pageSize')));
     }
 
     /**
@@ -134,26 +134,14 @@ class ListRestHelper
     }
 
     /**
-     * returns the next page
+     * returns total amount of pages
+     * @param $entityName
+     * @param $where
+     * @return array
      */
-    public function getNextPage() {
-        $page = $this->getPage();
-        if ($page) {
-            return $page+1;
-        }
-        return null;
-    }
-
-    /**
-     * returns previos page number OR null, if no previous page
-     * @return mixed|null
-     */
-    public function getPreviousPage() {
-        $page = $this->getPage();
-        if ($page>1) {
-            return $this->getRequest()->get($this->getParameterName('page'))-1;
-        }
-        return null;
+    public function getTotalPages($entityName, $where) {
+        $countData = $this->getRepository($entityName)->getCount($where);
+        return $this->getLimit() ? (ceil($countData/$this->getLimit())) : 1;
     }
 
     /**
@@ -199,4 +187,5 @@ class ListRestHelper
         }
         return null;
     }
+
 }

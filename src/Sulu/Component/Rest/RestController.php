@@ -47,11 +47,15 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $entities = $listHelper->find($this->entityName, $where);
+        $pages = $listHelper->getTotalPages($this->entityName, $where);
 
         $response = array(
-            '_links' => $this->getHalLinks($entities, true),
+            '_links' => $this->getHalLinks($entities, $pages, true),
             '_embedded' => $entities,
-            '_total' => sizeof($entities),
+            'total' => sizeof($entities),
+            'page' => $listHelper->getPage(),
+            'pages' => $pages,
+            'pageSize' => $listHelper->getLimit(),
         );
 
         return $this->view($response, 200);
@@ -67,7 +71,7 @@ abstract class RestController extends FOSRestController
         return array(
             '_links' => $this->getHalLinks($entityCollection),
             '_embedded' => $entityCollection,
-            '_total' => count($entityCollection),
+            'total' => count($entityCollection),
         );
     }
 
@@ -78,13 +82,18 @@ abstract class RestController extends FOSRestController
      * @param bool $showSortable
      * @return array
      */
-    private function getHalLinks(array $entities, $showSortable = false)
+    private function getHalLinks(array $entities, $pages = 1, $showSortable = false)
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $path = $this->getRequest()->getRequestUri();
-        $path = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('pageSize') . '=', $listHelper->getLimit(), false);
+        $path = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('pageSize') . '=', $listHelper->getLimit());
+
+        $page = $listHelper->getPage();
+
+//        var_dump($page);
+//        var_dump($pages);die();
 
         $sortable = array();
         if ($showSortable && count($entities > 0)) {
@@ -92,17 +101,17 @@ abstract class RestController extends FOSRestController
             foreach ($keys as $key) {
                 if(!in_array($key, $this->nonSortable)) {
                     $sortPath = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('sortBy') . '=', $key);
-                    $sortable[$key] =  array(
-                        'asc' => $this->replaceOrAddUrlString($sortPath, $listHelper->getParameterName('sortOrder') . '=', 'asc'),
-                        'desc' => $this->replaceOrAddUrlString($sortPath, $listHelper->getParameterName('sortOrder') . '=', 'desc'),
-                    );
+                    $sortable[$key] =  $this->replaceOrAddUrlString($sortPath, $listHelper->getParameterName('sortOrder') . '=', '{sortOrder}');
                 }
             }
         }
         return array(
             'self' => $path,
-            'next' => $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $listHelper->getNextPage()),
-            'prev' => $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $listHelper->getPreviousPage()),
+            'first' => ($pages > 1) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', 1) : null,
+            'last' => ($pages > 1) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $pages) : null,
+            'next' => ($page < $pages) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page+1) : null,
+            'prev' => ($page > 1 && $pages > 1) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page-1) : null,
+            'pagination' => ($pages>1) ?  $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', '{page}') : null,
             'sortable' => $showSortable ? $sortable : null,
         );
     }
@@ -118,7 +127,7 @@ abstract class RestController extends FOSRestController
     public function replaceOrAddUrlString($url, $searchStringBefore, $value, $add = true) {
         if ($value) {
             if ($pos = strpos($url,$searchStringBefore)) {
-                return preg_replace("/(.*$searchStringBefore)(\d*)(\&.*)/",'${1}'.$value.'${3}',$url);
+                return preg_replace("/(.*$searchStringBefore)(\d*)(\&*.*)/",'${1}'.$value.'${3}', $url);
             } else if($add) {
                 $and = (strpos($url,'?')<0) ? '?' : '&';
                 return $url.$and.$searchStringBefore.$value;
