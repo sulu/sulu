@@ -79,10 +79,8 @@ define([], function() {
             createForm: function(data) {
                 var formObject = this.sandbox.form.create(form);
                 formObject.initialized.then(function() {
-                    this.sandbox.form.setData(form, data);
 
-                    // FIXME after setData (solution with deffered)
-                    setTimeout(function() {
+                    this.sandbox.form.setData(form, data).then(function() {
                         if (!!data.urls[0]) {
                             this.sandbox.dom.val('#url', data.urls[0].url);
                         }
@@ -91,29 +89,30 @@ define([], function() {
                         this.sandbox.form.addConstraint(form, '#emails .emails-item:first input.email-value', 'required', {required: true});
                         this.sandbox.dom.find('#emails .emails-item:first .remove-email').remove();
                         this.sandbox.dom.addClass('#emails .emails-item:first label span:first', 'required');
-                    }.bind(this), 100);
+                    }.bind(this));
+
                 }.bind(this));
 
-                this.sandbox.form.addArrayFilter(form, 'emails', function(email) {
+                this.sandbox.form.addCollectionFilter(form, 'emails', function(email) {
                     if (email.id === "") {
                         delete email.id;
                     }
                     return email.email !== "";
                 });
-                this.sandbox.form.addArrayFilter(form, 'phones', function(phone) {
+                this.sandbox.form.addCollectionFilter(form, 'phones', function(phone) {
                     if (phone.id === "") {
                         delete phone.id;
                     }
                     return phone.phone !== "";
                 });
-                this.sandbox.form.addArrayFilter(form, 'addresses', function(address) {
+                this.sandbox.form.addCollectionFilter(form, 'addresses', function(address) {
                     if (address.id === "") {
                         delete address.id;
                     }
-                    return address.street !== "" &&
-                        address.number !== "" &&
-                        address.zip !== "" &&
-                        address.city !== "" &&
+                    return address.street !== "" ||
+                        address.number !== "" ||
+                        address.zip !== "" ||
+                        address.city !== "" ||
                         address.state !== "";
                 });
             },

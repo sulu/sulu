@@ -103,10 +103,10 @@ define([], function() {
                     if (address.id === "") {
                         delete address.id;
                     }
-                    return address.street !== "" &&
-                        address.number !== "" &&
-                        address.zip !== "" &&
-                        address.city !== "" &&
+                    return address.street !== "" ||
+                        address.number !== "" ||
+                        address.zip !== "" ||
+                        address.city !== "" ||
                         address.state !== "";
                 });
             },
