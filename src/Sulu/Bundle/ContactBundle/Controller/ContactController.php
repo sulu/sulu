@@ -40,7 +40,6 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * lists all contacts
      * optional parameter 'flat' calls listAction
-     * @Get("contacts")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction()

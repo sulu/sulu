@@ -202,7 +202,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'parent' => array('id' => self::$account->getId()),
@@ -317,7 +317,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'urls' => array(
@@ -339,7 +339,7 @@ class AccountControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'emails' => array(
@@ -368,7 +368,7 @@ class AccountControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'phones' => array(
@@ -397,7 +397,7 @@ class AccountControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'addresses' => array(
@@ -428,7 +428,7 @@ class AccountControllerTest extends DatabaseTestCase
 
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'notes' => array(
@@ -450,7 +450,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'urls' => array(
@@ -475,7 +475,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'emails' => array(
@@ -507,7 +507,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'phones' => array(
@@ -539,7 +539,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'addresses' => array(
@@ -573,7 +573,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client = static::createClient();
 		$client->request(
 			'POST',
-			'/api/contact/accounts',
+			'/api/accounts',
 			array(
 				'name' => 'ExampleCompany',
 				'addresses' => array(
@@ -608,7 +608,7 @@ class AccountControllerTest extends DatabaseTestCase
 		$client->request('GET', '/api/accounts?flat=true');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, $response->total);
 
 		$this->assertEquals('Company', $response->_embedded[0]->name);
 	}
@@ -619,13 +619,13 @@ class AccountControllerTest extends DatabaseTestCase
 		$client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name,emails_emailType_name');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(0, $response->_total);
+		$this->assertEquals(0, $response->total);
 		$this->assertEquals(0, count($response->_embedded));
 
 		$client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name,emails_emailType_name');
 		$response = json_decode($client->getResponse()->getContent());
 
-		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, $response->total);
 		$this->assertEquals(1, count($response->_embedded));
 		$this->assertEquals('Company', $response->_embedded[0]->name);
 	}
@@ -857,7 +857,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->_total);
+        $this->assertEquals(1, $response->total);
     }
 
 
@@ -888,7 +888,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->_total);
+        $this->assertEquals(0, $response->total);
 
 
 
@@ -905,7 +905,7 @@ class AccountControllerTest extends DatabaseTestCase
 
 		$client->request('GET', '/api/accounts?flat=true');
 		$response = json_decode($client->getResponse()->getContent());
-		$this->assertEquals(1, $response->_total);
+		$this->assertEquals(1, $response->total);
 	}
 
 

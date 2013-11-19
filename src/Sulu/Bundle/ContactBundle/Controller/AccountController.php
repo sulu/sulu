@@ -57,7 +57,7 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all contacts
+     * lists all accounts
      * optional parameter 'flat' calls listAction
      * @return \Symfony\Component\HttpFoundation\Response
      */
