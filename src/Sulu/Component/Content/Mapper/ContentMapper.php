@@ -61,17 +61,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $dateTime = new \DateTime();
 
         /** @var NodeInterface $node */
-        if ($root->hasNode($path)) {
+        if (!$root->hasNode($path)) {
             // create a new node
             $node = $root->addNode($path);
             $node->setProperty('sulu:creator', $userId);
             $node->setProperty('sulu:created', $dateTime);
 
             $node->addMixin('sulu:content');
-            $node->setProperty('sulu:template', $templateKey);
         } else {
             $node = $root->getNode($path);
         }
+        // TODO check change template?
+        $node->setProperty('sulu:template', $templateKey);
 
         $node->setProperty('sulu:changer', $userId);
         $node->setProperty('sulu:changed', $dateTime);
@@ -97,7 +98,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 } else {
                     $type->set($node, $property);
                 }
+            } elseif (!$partialUpdate) {
+                $type = $this->getContentType($property->getContentTypeName());
+                // if it is not a partial update remove property
+                $type->remove($node, $property);
             }
+            // if it is a partial update ignore property
         }
 
         // save node now

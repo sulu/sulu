@@ -58,7 +58,22 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function set(NodeInterface $node, PropertyInterface $property)
     {
-        $this->getStrategy()->save($node, $property->getValue(), $this->getPortalKey());
+        $value = $property->getValue();
+        if ($value != null && $value != '') {
+            $this->getStrategy()->save($node, $value, $this->getPortalKey());
+        } else {
+            $this->remove($node, $property);
+        }
+    }
+
+    /**
+     * remove property from given node
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     */
+    public function remove(NodeInterface $node, PropertyInterface $property)
+    {
+        // TODO: Implement remove() method.
     }
 
     /**

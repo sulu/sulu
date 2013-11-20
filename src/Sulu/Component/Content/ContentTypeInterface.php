@@ -44,6 +44,13 @@ interface ContentTypeInterface
     public function set(NodeInterface $node, PropertyInterface $property);
 
     /**
+     * remove property from given node
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     */
+    public function remove(NodeInterface $node, PropertyInterface $property);
+
+    /**
      * returns a template to render a form
      * @return string
      */
