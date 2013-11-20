@@ -46,30 +46,31 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param string $portalKey Key of portal
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
+     * @param bool $partialUpdate ignore missing property
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $portalKey, $languageCode, $userId)
+    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true)
     {
         // TODO localize
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
         $root = $session->getRootNode();
-
-        /** @var NodeInterface $node */
-        $node = $root->addNode(
-            ltrim($this->getContentBasePath(), '/') . '/' . $data['title']
-        ); //TODO check better way to generate title, tree?
-
-        $node->addMixin('sulu:content');
-        $node->setProperty('sulu:template', $templateKey);
+        //TODO check better way to generate title, tree?
+        $path = ltrim($this->getContentBasePath(), '/') . '/' . $data['title'];
 
         $dateTime = new \DateTime();
 
-        // if is new node
-        if ($node->getIdentifier() == null) {
-
+        /** @var NodeInterface $node */
+        if ($root->hasNode($path)) {
+            // create a new node
+            $node = $root->addNode($path);
             $node->setProperty('sulu:creator', $userId);
             $node->setProperty('sulu:created', $dateTime);
+
+            $node->addMixin('sulu:content');
+            $node->setProperty('sulu:template', $templateKey);
+        } else {
+            $node = $root->getNode($path);
         }
 
         $node->setProperty('sulu:changer', $userId);
