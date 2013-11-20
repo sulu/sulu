@@ -27,6 +27,7 @@ use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
+use Sulu\Component\PHPCR\NodeTypes\PathHistory\PathHistoryNodeType;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -235,6 +236,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathHistoryNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
     }
 
@@ -608,6 +610,57 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateURL()
     {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['url'] = '/news/test/test/test';
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test/test/test', 'default', 'de');
+
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test/test/test');
+
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals('Test', $content->getProperty('article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+
+        // FIXME comment in when history is running
+//        // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
+//        $oldRoute = $root->getNode('cmf/routes/news/test');
+//        $this->assertFalse($oldRoute->hasProperty('sulu:content'));
+//        $this->assertTrue($oldRoute->hasProperty('sulu:route'));
+//
+//        // history should reference to new route
+//        $history = $oldRoute->getPropertyValue('sulu:route');
+//        $this->assertEquals($route->getIdentifier(), $history->getIdentifier());
     }
 
 }
