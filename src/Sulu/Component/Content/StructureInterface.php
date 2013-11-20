@@ -111,6 +111,13 @@ interface StructureInterface extends \JsonSerializable
     public function getProperty($name);
 
     /**
+     * checks if a property exists
+     * @param string $name
+     * @return boolean
+     */
+    public function hasProperty($name);
+
+    /**
      * returns an array of properties
      * @return array
      */

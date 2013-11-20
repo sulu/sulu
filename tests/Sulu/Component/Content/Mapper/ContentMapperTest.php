@@ -108,7 +108,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         return $containerMock;
     }
 
-    public function getStrucktureManager()
+    public function getStructureMock($type = 1)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
@@ -130,32 +130,60 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('tags', 'text_line', false, false, 2, 10)
-            )
-        );
-
-        $method->invokeArgs(
-            $structureMock,
-            array(
                 new Property('url', 'resource_locator')
             )
         );
 
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property('article', 'text_area')
-            )
-        );
+        if ($type == 1) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('tags', 'text_line', false, false, 2, 10)
+                )
+            );
+
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('article', 'text_area')
+                )
+            );
+        } elseif ($type == 2) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('blog', 'text_area')
+                )
+            );
+        }
+
+        return $structureMock;
+    }
+
+    public function getStructureManager()
+    {
 
         $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
         $structureManagerMock->expects($this->any())
             ->method('getStructure')
-            ->will($this->returnValue($structureMock));
+            ->will($this->returnCallback(array($this, 'getStructureCallback')));
 
         return $structureManagerMock;
     }
 
+    public function getStructureCallback()
+    {
+        $args = func_get_args();
+        $structureKey = $args[0];
+
+        if ($structureKey == 'overview') {
+            return $this->getStructureMock(1);
+        } elseif ($structureKey == 'simple') {
+            return $this->getStructureMock(2);
+        }
+
+        return null;
+    }
 
     public function containerCallback()
     {
@@ -163,7 +191,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
-            'sulu.content.structure_manager' => $this->getStrucktureManager(),
+            'sulu.content.structure_manager' => $this->getStructureManager(),
             'sulu.content.type.text_line' => new TextLine('not in use'),
             'sulu.content.type.text_area' => new TextArea('not in use'),
             'sulu.content.type.resource_locator' => $resourceLocator,
@@ -523,6 +551,59 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateTemplate()
     {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data = array(
+            'title' => 'Testtitle',
+            'blog' => 'this is a blog test'
+        );
+
+        // update content
+        $this->mapper->save($data, 'simple', 'default', 'de', 1);
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+
+        // old properties not exists in structure
+        $this->assertEquals(false, $content->hasProperty('article'));
+        $this->assertEquals(false, $content->hasProperty('tags'));
+
+        // old properties are right
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // new property is set
+        $this->assertEquals('this is a blog test', $content->blog);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test');
+        $content = $route->getPropertyValue('sulu:content');
+
+        // old properties exists in node
+        $this->assertEquals('Test', $content->getPropertyValue('article'));
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+
+        // property of new structure exists
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals('this is a blog test', $content->getPropertyValue('blog'));
+        $this->assertEquals('simple', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
 
     public function testUpdateURL()
