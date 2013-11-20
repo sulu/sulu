@@ -22,6 +22,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class ContentController extends RestController implements ClassResourceInterface
 {
 
+
+    /**
+     * for returning self link in get action
+     * @var string
+     */
+    private $apiPath = '/admin/api/contents';
+
+
     /**
      * returns a content item with given UUID as JSON String
      * @param $uuid
@@ -37,6 +45,7 @@ class ContentController extends RestController implements ClassResourceInterface
                 // TODO portal
                 $content = $this->getMapper()->load($uuid, 'default', 'en');
                 $result = $content->toArray();
+                $result['_links'] = array('self' => $this->apiPath.'/'.$uuid);
                 $result['creator'] = $this->getContactByUserId($result['creator']);
                 $result['changer'] = $this->getContactByUserId($result['changer']);
                 return $result;
