@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
@@ -22,13 +21,6 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class Role extends ApiEntity
 {
-
-
-    /**
-     * @var string
-     * @Exclude
-     */
-    protected $apiPath = '/admin/api/roles';
 
     /**
      * @var string
