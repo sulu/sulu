@@ -22,12 +22,6 @@ class Contact extends ApiEntity
 
     /**
      * @var string
-     * @Exclude
-     */
-    protected $apiPath = '/admin/api/contacts';
-
-    /**
-     * @var string
      */
     private $firstName;
 

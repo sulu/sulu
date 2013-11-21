@@ -22,14 +22,6 @@ class Account extends ApiEntity
 {
 
     /**
-     * @var string
-     * @Exclude
-     */
-    protected $apiPath = '/admin/api/account';
-
-    protected $sortable = array();
-
-    /**
      * @var integer
      */
     private $lft;
