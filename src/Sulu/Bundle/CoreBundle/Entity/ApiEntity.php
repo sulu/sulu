@@ -11,10 +11,11 @@ use JMS\Serializer\Annotation\Accessor;
 abstract class ApiEntity
 {
     /**
-     * @var
+     * general base path of entities
+     * @var string
      * @Exclude
      */
-    private $id;
+    protected $apiBasePath = '/admin/api';
 
     /**
      * $apiPath must be overriden by base entity
@@ -23,6 +24,12 @@ abstract class ApiEntity
      */
     protected $apiPath;
 
+
+    /**
+     * @var int
+     * @Exclude
+     */
+    private $id;
 
 
     /**
@@ -57,7 +64,13 @@ abstract class ApiEntity
      * creates the _links array including the self path
      */
     public function createSelfLink() {
-        // add id to path if exists
+        // if no apiPath is not set generate it from basepath
+        if(is_null($this->getApiPath())) {
+            $class = explode('\\', get_class($this));
+            $this->apiPath = $this->apiBasePath.'/'.strtolower(end($class)).'s';
+        }
+
+        // add id to path
         if ($this->getId()) {
             $idPath = '/'.$this->getId();
         }
