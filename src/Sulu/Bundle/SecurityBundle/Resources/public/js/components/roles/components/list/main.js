@@ -59,7 +59,7 @@ define(function() {
                     name: 'datagrid@husky',
                     options: {
                         el: this.sandbox.dom.find('#roles-list'),
-                        url: '/admin/api/security/roles/list?fields=id,name,system',
+                        url: '/admin/api/roles?flat=true&fields=id,name,system',
                         selectItem: {
                             type: 'checkbox'
                         },

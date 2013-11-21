@@ -12,7 +12,7 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(relation
     'use strict';
 
     return relationalModel({
-        urlRoot: '/admin/api/security/roles',
+        urlRoot: '/admin/api/roles',
 
         defaults: function() {
             return {
