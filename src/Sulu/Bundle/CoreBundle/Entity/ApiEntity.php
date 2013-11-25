@@ -71,6 +71,7 @@ abstract class ApiEntity
         }
 
         // add id to path
+        $idPath = '';
         if ($this->getId()) {
             $idPath = '/'.$this->getId();
         }
