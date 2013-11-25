@@ -17,7 +17,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 
-class TranslationsControllerTest extends DatabaseTestCase
+class TranslationControllerTest extends DatabaseTestCase
 {
 
     /**
@@ -177,7 +177,7 @@ class TranslationsControllerTest extends DatabaseTestCase
             )
         );
         $client = static::createClient();
-        $client->request('PATCH', '/api/catalogues/1/translations', $request);
+        $client->request('PATCH', '/api/catalogues/1/translation', $request);
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 

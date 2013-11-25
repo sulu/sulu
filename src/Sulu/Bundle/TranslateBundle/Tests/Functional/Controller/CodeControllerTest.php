@@ -19,7 +19,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Symfony\Component\HttpKernel\Client;
 
-class CodesControllerTest extends DatabaseTestCase
+class CodeControllerTest extends DatabaseTestCase
 {
     /**
      * @var array

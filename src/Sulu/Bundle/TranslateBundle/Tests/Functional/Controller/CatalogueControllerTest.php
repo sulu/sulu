@@ -18,7 +18,7 @@ use Sulu\Component\Testing\DatabaseTestCase;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Tools\SchemaTool;
 
-class CataloguesControllerTest extends DatabaseTestCase
+class CatalogueControllerTest extends DatabaseTestCase
 {
 
     /**

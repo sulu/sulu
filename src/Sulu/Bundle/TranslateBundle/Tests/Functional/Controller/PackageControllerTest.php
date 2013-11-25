@@ -17,7 +17,7 @@ use Sulu\Component\Testing\DatabaseTestCase;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Tools\SchemaTool;
 
-class PackagesControllerTest extends DatabaseTestCase
+class PackageControllerTest extends DatabaseTestCase
 {
     /**
      * @var array
