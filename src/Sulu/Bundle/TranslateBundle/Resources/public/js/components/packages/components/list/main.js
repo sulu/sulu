@@ -56,7 +56,7 @@ define([], function() {
                     name: 'datagrid@husky',
                     options: {
                         el: this.sandbox.dom.find('#package-list', this.$el),
-                        url: '/admin/api/translate/packages',
+                        url: '/admin/api/packages',
                         pagination: false,
                         selectItem: {
                             type: 'checkbox'

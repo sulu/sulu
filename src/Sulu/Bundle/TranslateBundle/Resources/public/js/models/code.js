@@ -12,7 +12,7 @@ define(['mvc/relationalmodel'], function(relationalModel) {
     'use strict';
 
     return relationalModel({
-        urlRoot: '/admin/api/translate/codes',
+        urlRoot: '/admin/api/codes',
         defaults: {
             id: null,
             code: '',

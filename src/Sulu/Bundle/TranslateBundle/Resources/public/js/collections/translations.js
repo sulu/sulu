@@ -20,7 +20,7 @@ define([
         model: Translation,
 
         url: function() {
-            return '/admin/api/translate/catalogues/' + this.catalogueId + '/translations';
+            return '/admin/api/catalogues/' + this.catalogueId + '/translations';
         },
 
         initialize: function(options) {

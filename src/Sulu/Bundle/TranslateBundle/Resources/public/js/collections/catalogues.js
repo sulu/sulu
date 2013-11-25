@@ -17,7 +17,7 @@ define([
         model: Catalogue,
 
         url: function() {
-            return '/admin/api/translate/catalogues/list?fields=' + this.fields + '&packageId=' + this.packageId;
+            return '/admin/api/catalogues?flat=true&fields=' + this.fields + '&packageId=' + this.packageId;
         },
 
         initialize: function(options) {
