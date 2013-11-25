@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * Class Package
@@ -22,8 +23,9 @@ use JMS\Serializer\Annotation\Type;
  *
  * @ExclusionPolicy("all")
  */
-class Package
+class Package extends ApiEntity
 {
+
     /**
      * @var integer
      * @Expose

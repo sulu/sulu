@@ -11,12 +11,14 @@
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * Code
  */
-class Code
+class Code extends ApiEntity
 {
+
     /**
      * @var integer
      */

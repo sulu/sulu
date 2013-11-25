@@ -12,12 +12,14 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * Translation
  */
-class Translation
+class Translation extends ApiEntity
 {
+
     /**
      * @var string
      */

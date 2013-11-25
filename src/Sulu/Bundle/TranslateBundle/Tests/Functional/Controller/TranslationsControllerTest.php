@@ -127,21 +127,21 @@ class TranslationsControllerTest extends DatabaseTestCase
     public function testGetAllWithSuggestions()
     {
         $client = static::createClient();
-        $client->request('GET', '/api/translate/catalogues/2/translations');
+        $client->request('GET', '/api/catalogues/2/translations');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(2, $response->total);
-        $this->assertEquals(2, sizeof($response->items));
+        $this->assertEquals(2, sizeof($response->_embedded));
 
-        $item = $response->items[0];
+        $item = $response->_embedded[0];
         $this->assertEquals(1, $item->id);
         $this->assertEquals('Code 1.2', $item->value);
         $this->assertEquals(1, $item->code->id);
         $this->assertEquals('code.1', $item->code->code);
         $this->assertEquals('Code 1.1', $item->suggestion);
 
-        $item = $response->items[1];
+        $item = $response->_embedded[1];
         $this->assertEquals(2, $item->id);
         $this->assertEquals('Code 2.2', $item->value);
         $this->assertEquals(2, $item->code->id);
@@ -177,32 +177,32 @@ class TranslationsControllerTest extends DatabaseTestCase
             )
         );
         $client = static::createClient();
-        $client->request('PATCH', '/api/translate/catalogues/1/translations', $request);
+        $client->request('PATCH', '/api/catalogues/1/translations', $request);
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
         $client = static::createClient();
-        $client->request('GET', '/api/translate/catalogues/1/translations');
+        $client->request('GET', '/api/catalogues/1/translations');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(3, $response->total);
-        $this->assertEquals(3, sizeof($response->items));
+        $this->assertEquals(3, sizeof($response->_embedded));
 
-        $this->assertEquals(1, $response->items[0]->id);
-        $this->assertEquals('new code value 1.1', $response->items[0]->value);
-        $this->assertEquals(1, $response->items[0]->code->id);
-        $this->assertEquals('code.1', $response->items[0]->code->code);
+        $this->assertEquals(1, $response->_embedded[0]->id);
+        $this->assertEquals('new code value 1.1', $response->_embedded[0]->value);
+        $this->assertEquals(1, $response->_embedded[0]->code->id);
+        $this->assertEquals('code.1', $response->_embedded[0]->code->code);
 
-        $this->assertEquals(2, $response->items[1]->id);
-        $this->assertEquals('', $response->items[1]->value);
-        $this->assertEquals(2, $response->items[1]->code->id);
-        $this->assertEquals('code.2', $response->items[1]->code->code);
+        $this->assertEquals(2, $response->_embedded[1]->id);
+        $this->assertEquals('', $response->_embedded[1]->value);
+        $this->assertEquals(2, $response->_embedded[1]->code->id);
+        $this->assertEquals('code.2', $response->_embedded[1]->code->code);
 
-        $this->assertEquals(4, $response->items[2]->id);
-        $this->assertEquals('realy new Code', $response->items[2]->value);
-        $this->assertEquals(4, $response->items[2]->code->id);
-        $this->assertEquals('new.code', $response->items[2]->code->code);
+        $this->assertEquals(4, $response->_embedded[2]->id);
+        $this->assertEquals('realy new Code', $response->_embedded[2]->value);
+        $this->assertEquals(4, $response->_embedded[2]->code->id);
+        $this->assertEquals('new.code', $response->_embedded[2]->code->code);
     }
 
 }

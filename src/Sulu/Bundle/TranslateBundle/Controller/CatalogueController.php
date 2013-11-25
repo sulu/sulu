@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\RestController;
 
@@ -17,7 +18,7 @@ use Sulu\Component\Rest\RestController;
  * Make the catalogues available through a REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class CataloguesController extends RestController
+class CatalogueController extends RestController
 {
     protected $entityName = 'SuluTranslateBundle:Catalogue';
 
@@ -39,40 +40,35 @@ class CataloguesController extends RestController
         return $this->handleView($view);
     }
 
-    /**
-     * Return all catalogues
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getCataloguesAction()
-    {
-        // FIXME: Already in use - change calls
-        $view = $this->responseList();
-
-        return $this->handleView($view);
-    }
 
     /**
-     * Returns a list of catalogues from a specific package
+     * Returns a list of catalogues (from a specific package)
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listCataloguesAction()
+    public function cgetCataloguesAction()
     {
-        $where = array();
-        $packageId = $this->getRequest()->get('packageId');
-        if (!empty($packageId)) {
-            $where = array('package_id' => $packageId);
+        if ($this->getRequest()->get('flat')=='true') {
+            // flat structure
+            $where = array();
+            $packageId = $this->getRequest()->get('packageId');
+            if (!empty($packageId)) {
+                $where = array('package_id' => $packageId);
+            }
+            $view = $this->responseList($where);
+        } else {
+            $entities = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+            $view = $this->view($this->createHalResponse($entities), 200);
         }
-        $view = $this->responseList($where);
-
         return $this->handleView($view);
     }
+
 
     /**
      * Deletes the catalogue with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteCatalogueAction($id)
+    public function deleteCataloguesAction($id)
     {
         $delete = function ($id) {
             $catalogue = $this->getDoctrine()

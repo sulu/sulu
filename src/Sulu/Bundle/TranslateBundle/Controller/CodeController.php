@@ -10,7 +10,9 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Listing\ListRestHelper;
 use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\CodeRepository;
@@ -20,7 +22,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
  * Makes the translation codes accessible trough an REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class CodesController extends RestController
+class CodeController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluTranslateBundle:Code';
 
@@ -34,37 +36,40 @@ class CodesController extends RestController
      * Lists all the codes or filters the codes by parameters
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getCodesAction()
+    public function cgetAction()
     {
-        $listHelper = $this->get('sulu_core.list_rest_helper');
-        $limit = $listHelper->getLimit();
-        $offset = $listHelper->getOffset();
-        $sorting = $listHelper->getSorting();
 
-        /** @var CodeRepository $repository */
-        $repository = $this->getDoctrine()
-            ->getRepository($this->codeEntity);
-
-        $catalogueId = $this->getRequest()->get('catalogueId');
-        $packageId = $this->getRequest()->get('packageId');
-        if ($catalogueId != null) {
-            // TODO Add limit, offset & sorting for find by filter catalogue
-            $codes = $repository->findByCatalogue($catalogueId);
+        if ($this->getRequest()->get('flat')=='true') {
+            // flat structure
+            return $this->listAction();
         } else {
-            if ($packageId != null) {
-                // TODO Add limit, offset & sorting for find by filter package
-                $codes = $repository->findByPackage($packageId);
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+            $limit = $listHelper->getLimit();
+            $offset = $listHelper->getOffset();
+            $sorting = $listHelper->getSorting();
+
+            /** @var CodeRepository $repository */
+            $repository = $this->getDoctrine()
+                ->getRepository($this->codeEntity);
+
+            $catalogueId = $this->getRequest()->get('catalogueId');
+            $packageId = $this->getRequest()->get('packageId');
+            if ($catalogueId != null) {
+                // TODO Add limit, offset & sorting for find by filter catalogue
+                $codes = $repository->findByCatalogue($catalogueId);
             } else {
-                $codes = $repository->findGetAll($limit, $offset, $sorting);
+                if ($packageId != null) {
+                    // TODO Add limit, offset & sorting for find by filter package
+                    $codes = $repository->findByPackage($packageId);
+                } else {
+                    $codes = $repository->findGetAll($limit, $offset, $sorting);
+                }
             }
+
+            $response = $this->createHalResponse($codes);
+
+            $view = $this->view($response, 200);
         }
-
-        $response = array(
-            'total' => count($codes),
-            'items' => $codes
-        );
-
-        $view = $this->view($response, 200);
 
         return $this->handleView($view);
     }
@@ -75,7 +80,7 @@ class CodesController extends RestController
      * route /codes/list
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listCodesAction()
+    private function listAction()
     {
         $where = array();
         $packageId = $this->getRequest()->get('packageId');
@@ -97,7 +102,7 @@ class CodesController extends RestController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getCodeAction($id)
+    public function getAction($id)
     {
         // TODO Complete or filter for Fields?
         $find = function ($id) {
@@ -115,7 +120,7 @@ class CodesController extends RestController
      * Creates a new code
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postCodesAction()
+    public function postAction()
     {
         $c = $this->getRequest()->get('code');
         $backend = $this->getRequest()->get('backend');
@@ -169,7 +174,7 @@ class CodesController extends RestController
      * @param integer $id The id of the package to update
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putCodesAction($id)
+    public function putAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -238,7 +243,7 @@ class CodesController extends RestController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteCodeAction($id)
+    public function deleteAction($id)
     {
         $delete = function ($id) {
             $code = $this->getDoctrine()
