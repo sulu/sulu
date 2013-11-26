@@ -90,7 +90,7 @@
     </xs:complexType>
     <xs:complexType name="urlsType">
         <xs:sequence>
-            <xs:element type="urlType" name="url"/>
+            <xs:element type="urlType" name="url" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="urlType">

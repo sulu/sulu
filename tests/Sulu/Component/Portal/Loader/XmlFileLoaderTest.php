@@ -27,38 +27,45 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoad()
     {
-        $portal = $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Portal/valid/sulu.io.xml');
+        $workspace = $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Portal/valid/sulu.io.xml');
 
-        $this->assertEquals('Sulu CMF', $portal->getName());
-        $this->assertEquals('sulu_io', $portal->getKey());
+        $this->assertEquals('Sulu CMF', $workspace->getName());
+        $this->assertEquals('sulu_io', $workspace->getKey());
 
-        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
+        $this->assertEquals('en', $workspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $workspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $workspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals(true, $workspace->getLocalizations()[0]->isDefault());
 
-        $this->assertEquals(2, count($portal->getLanguages()));
-        $this->assertEquals('en', $portal->getLanguages()[0]->getCode());
-        $this->assertEquals(true, $portal->getLanguages()[0]->isMain());
-        $this->assertEquals(false, $portal->getLanguages()[0]->isFallback());
-        $this->assertEquals('de', $portal->getLanguages()[1]->getCode());
-        $this->assertEquals(false, $portal->getLanguages()[1]->isMain());
-        $this->assertEquals(true, $portal->getLanguages()[1]->isFallback());
+        $this->assertEquals('de', $workspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $workspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals(null, $workspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals(false, $workspace->getLocalizations()[1]->isDefault());
 
-        $this->assertEquals('sulu', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
+        $this->assertEquals('short', $workspace->getPortals()[0]->getResourceLocatorStrategy());
 
-        $this->assertEquals(2, count($portal->getEnvironments()));
+        $this->assertEquals(1, count($workspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals('de', $workspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('at', $workspace->getPortals()[0]->getLocalizations()[0]->getCountry());
+        $this->assertEquals(true, $workspace->getPortals()[0]->getLocalizations()[0]->isDefault());
 
-        $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
-        $this->assertEquals(2, count($portal->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('sulu.io', $portal->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals(true, $portal->getEnvironments()[0]->getUrls()[0]->isMain());
-        $this->assertEquals('www.sulu.io', $portal->getEnvironments()[0]->getUrls()[1]->getUrl());
-        $this->assertEquals(false, $portal->getEnvironments()[0]->getUrls()[1]->isMain());
+        $this->assertEquals('sulu', $workspace->getPortals()[0]->getTheme()->getKey());
+        $this->assertEquals(1, count($workspace->getPortals()[0]->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $workspace->getPortals()[0]->getTheme()->getExcludedTemplates()[0]);
 
-        $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
-        $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
-        $this->assertEquals(true, $portal->getEnvironments()[0]->getUrls()[0]->isMain());
+        $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()));
+
+        $this->assertEquals('prod', $workspace->getPortals()[0]->getEnvironments()[0]->getType());
+        $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
+        $this->assertEquals('sulu.at', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl());
+        $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
+        $this->assertEquals('www.sulu.at', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getUrl());
+        $this->assertEquals(false, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->isMain());
+
+        $this->assertEquals('dev', $workspace->getPortals()[0]->getEnvironments()[1]->getType());
+        $this->assertEquals(1, count($workspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
+        $this->assertEquals('sulu.lo', $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
     }
 
     /**

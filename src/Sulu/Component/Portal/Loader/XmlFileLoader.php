@@ -26,11 +26,11 @@ class XmlFileLoader extends FileLoader
     const SCHEME_PATH = '/schema/workspace/workspace-1.0.xsd';
 
     /**
-     * Loads a portal from a xml file
+     * Loads a workspace from a xml file
      *
      * @param mixed $resource The resource
      * @param string $type     The resource type
-     * @return Portal The portal object for the given resource
+     * @return Workspace The workspace object for the given resource
      */
     public function load($resource, $type = null)
     {
@@ -101,7 +101,7 @@ class XmlFileLoader extends FileLoader
             $theme = new Theme();
             $theme->setKey($xpath->query('x:theme/x:key', $portalNode)->item(0)->nodeValue);
 
-            foreach($xpath->query('x:theme/x:excluded/x:template') as $templateNode) {
+            foreach($xpath->query('x:theme/x:excluded/x:template', $portalNode) as $templateNode) {
                 /** @var \DOMNode $templateNode */
                 $theme->addExcludedTemplate($templateNode->nodeValue);
             }
