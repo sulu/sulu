@@ -23,12 +23,6 @@ class Portal
     private $name;
 
     /**
-     * The unique key of the portal
-     * @var string
-     */
-    private $key;
-
-    /**
      * The url generation strategy for this portal
      * @var string
      */

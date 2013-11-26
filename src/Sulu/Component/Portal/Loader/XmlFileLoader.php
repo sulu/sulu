@@ -20,7 +20,7 @@ use Symfony\Component\Config\Util\XmlUtils;
 
 class XmlFileLoader extends FileLoader
 {
-    const SCHEME_PATH = '/schema/portal/portal-1.0.xsd';
+    const SCHEME_PATH = '/schema/workspace/workspace-1.0.xsd';
 
     /**
      * Loads a portal from a xml file
@@ -61,7 +61,7 @@ class XmlFileLoader extends FileLoader
     {
         $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
         $xpath = new \DOMXPath($xmlDoc);
-        $xpath->registerNamespace('x', 'http://schemas.sulu.io/portal/portal');
+        $xpath->registerNamespace('x', 'http://schemas.sulu.io/workspace/workspace');
 
         $portal = new Portal();
         // set simple properties
