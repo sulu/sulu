@@ -22,7 +22,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Entity\TranslationRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-class TranslationController extends RestController implements ClassResourceInterface
+class TranslationsController extends RestController implements ClassResourceInterface
 {
     /**
      * @var string
