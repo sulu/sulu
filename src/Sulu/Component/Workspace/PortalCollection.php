@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace;
 
 use Symfony\Component\Config\Resource\FileResource;
 use Traversable;

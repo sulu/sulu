@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace;
 
 /**
  * Container for a portal configuration
@@ -89,7 +89,7 @@ class Portal
 
     /**
      * Sets the localizations to this portal
-     * @param \Sulu\Component\Portal\Localization[] $localizations
+     * @param \Sulu\Component\Workspace\Localization[] $localizations
      */
     public function setLocalizations($localizations)
     {
@@ -98,7 +98,7 @@ class Portal
 
     /**
      * Returns the languages of this portal
-     * @return \Sulu\Component\Portal\Localization[] The languages of this portal
+     * @return \Sulu\Component\Workspace\Localization[] The languages of this portal
      */
     public function getLocalizations()
     {
@@ -107,7 +107,7 @@ class Portal
 
     /**
      * Sets the theme for this portal
-     * @param \Sulu\Component\Portal\Theme $theme
+     * @param \Sulu\Component\Workspace\Theme $theme
      */
     public function setTheme(Theme $theme)
     {
@@ -116,7 +116,7 @@ class Portal
 
     /**
      * Returns the theme for this portal
-     * @return \Sulu\Component\Portal\Theme
+     * @return \Sulu\Component\Workspace\Theme
      */
     public function getTheme()
     {
@@ -134,7 +134,7 @@ class Portal
 
     /**
      * Sets the environments for this portal
-     * @param \Sulu\Component\Portal\Environment[] $environments
+     * @param \Sulu\Component\Workspace\Environment[] $environments
      */
     public function setEnvironments($environments)
     {
@@ -143,7 +143,7 @@ class Portal
 
     /**
      * Returns the environment for this portal
-     * @return \Sulu\Component\Portal\Environment[]
+     * @return \Sulu\Component\Workspace\Environment[]
      */
     public function getEnvironments()
     {

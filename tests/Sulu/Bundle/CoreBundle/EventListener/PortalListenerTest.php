@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\CoreBundle\EventListener;
 
-use Sulu\Component\Portal\Portal;
+use Sulu\Component\Workspace\Portal;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class PortalListenerTest extends \PHPUnit_Framework_TestCase
@@ -18,9 +18,8 @@ class PortalListenerTest extends \PHPUnit_Framework_TestCase
     public function testKernelRequest()
     {
         $portal = new Portal();
-        $portal->setKey('portal');
 
-        $portalManager = $this->getMockForAbstractClass('\Sulu\Component\Portal\PortalManagerInterface', array(), '', true, true, true, array('findByUrl'));
+        $portalManager = $this->getMockForAbstractClass('\Sulu\Component\Workspace\Manager\PortalManagerInterface', array(), '', true, true, true, array('findByUrl'));
         $portalManager->expects($this->any())->method('findByUrl')->will($this->returnValue($portal));
         $portalManager->expects($this->once())->method('setCurrentPortal');
 

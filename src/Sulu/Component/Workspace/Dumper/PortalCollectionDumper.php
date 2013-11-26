@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal\Dumper;
+namespace Sulu\Component\Workspace\Dumper;
 
 
 class PortalCollectionDumper

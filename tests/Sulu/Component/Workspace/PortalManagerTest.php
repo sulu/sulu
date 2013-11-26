@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace;
 
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Portal\Loader\XmlFileLoader;
-use Sulu\Component\Portal\PortalManager;
+use Sulu\Component\Workspace\Loader\XmlFileLoader;
+use Sulu\Component\Workspace\Manager\PortalManager;
 
 class PortalManagerTest extends \PHPUnit_Framework_TestCase
 {

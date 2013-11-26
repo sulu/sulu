@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace;
 
 /**
  * Represents a localization of a workspace definition
@@ -129,16 +129,16 @@ class Localization
 
     /**
      * Sets the children of the localization
-     * @param \Sulu\Component\Portal\Localization[] $children
+     * @param \Sulu\Component\Workspace\Localization[] $children
      */
-    public function setChildren(Localization $children)
+    public function setChildren($children)
     {
         $this->children = $children;
     }
 
     /**
      * Returns the children of the localization
-     * @return \Sulu\Component\Portal\Localization[]
+     * @return \Sulu\Component\Workspace\Localization[]
      */
     public function getChildren()
     {

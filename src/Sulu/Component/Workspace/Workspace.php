@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace;
 
 /**
  * Container for a workspace definition
@@ -75,7 +75,7 @@ class Workspace
 
     /**
      * Returns the localizations of this workspace
-     * @param \Sulu\Component\Portal\Localization[] $localizations
+     * @param \Sulu\Component\Workspace\Localization[] $localizations
      */
     public function setLocalizations($localizations)
     {
@@ -84,7 +84,7 @@ class Workspace
 
     /**
      * Returns the localizations of this workspace
-     * @return \Sulu\Component\Portal\Localization[]
+     * @return \Sulu\Component\Workspace\Localization[]
      */
     public function getLocalizations()
     {
@@ -120,7 +120,7 @@ class Workspace
 
     /**
      * Sets the portals of this workspace
-     * @param \Sulu\Component\Portal\Portal[] $portals
+     * @param \Sulu\Component\Workspace\Portal[] $portals
      */
     public function setPortals($portals)
     {
@@ -129,7 +129,7 @@ class Workspace
 
     /**
      * Returns the portals of this workspace
-     * @return \Sulu\Component\Portal\Portal[]
+     * @return \Sulu\Component\Workspace\Portal[]
      */
     public function getPortals()
     {
@@ -147,7 +147,7 @@ class Workspace
 
     /**
      * Sets the segments of this workspace
-     * @param \Sulu\Component\Portal\Segment[] $segments
+     * @param \Sulu\Component\Workspace\Segment[] $segments
      */
     public function setSegments($segments)
     {
@@ -156,7 +156,7 @@ class Workspace
 
     /**
      * Returns the segments of this workspace
-     * @return \Sulu\Component\Portal\Segment[]
+     * @return \Sulu\Component\Workspace\Segment[]
      */
     public function getSegments()
     {

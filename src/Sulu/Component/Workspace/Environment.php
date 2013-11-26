@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace;
 
 class Environment
 {
@@ -53,7 +53,7 @@ class Environment
 
     /**
      * Set the urls for this environment
-     * @param \Sulu\Component\Portal\Url[] $urls
+     * @param \Sulu\Component\Workspace\Url[] $urls
      */
     public function setUrls($urls)
     {
@@ -62,7 +62,7 @@ class Environment
 
     /**
      * Returns the urls for this environment
-     * @return \Sulu\Component\Portal\Url[]
+     * @return \Sulu\Component\Workspace\Url[]
      */
     public function getUrls()
     {

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal\Loader;
+namespace Sulu\Component\Workspace\Loader;
 
 class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 {

@@ -8,7 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace\Manager;
+
+use Sulu\Component\Workspace\Portal;
 
 /**
  * Defines the methods for the PortalManager

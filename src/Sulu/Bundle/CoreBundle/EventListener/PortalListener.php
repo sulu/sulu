@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\CoreBundle\EventListener;
 
-use Sulu\Component\Portal\PortalManagerInterface;
+use Sulu\Component\Workspace\Manager\PortalManagerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class PortalListener
 {
     /**
-     * @var \Sulu\Component\Portal\PortalManagerInterface
+     * @var \Sulu\Component\Workspace\Manager\PortalManagerInterface
      */
     protected $portalManager;
 

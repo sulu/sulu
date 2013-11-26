@@ -8,16 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal\Loader;
+namespace Sulu\Component\Workspace\Loader;
 
-use Sulu\Component\Portal\Environment;
-use Sulu\Component\Portal\Language;
-use Sulu\Component\Portal\Localization;
-use Sulu\Component\Portal\Portal;
-use Sulu\Component\Portal\Segment;
-use Sulu\Component\Portal\Theme;
-use Sulu\Component\Portal\Url;
-use Sulu\Component\Portal\Workspace;
+use Sulu\Component\Workspace\Environment;
+use Sulu\Component\Workspace\Localization;
+use Sulu\Component\Workspace\Portal;
+use Sulu\Component\Workspace\Segment;
+use Sulu\Component\Workspace\Theme;
+use Sulu\Component\Workspace\Url;
+use Sulu\Component\Workspace\Workspace;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
 

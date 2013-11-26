@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal;
+namespace Sulu\Component\Workspace\Manager;
 
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Portal\PortalCollection;
-use Sulu\Component\Portal\Portal;
-use Sulu\Component\Portal\Dumper\PhpPortalCollectionDumper;
+use Sulu\Component\Workspace\PortalCollection;
+use Sulu\Component\Workspace\Portal;
+use Sulu\Component\Workspace\Dumper\PhpPortalCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;

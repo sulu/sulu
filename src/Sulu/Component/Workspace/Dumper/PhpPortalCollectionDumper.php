@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Portal\Dumper;
+namespace Sulu\Component\Workspace\Dumper;
 
-use Sulu\Component\Portal\PortalCollection;
+use Sulu\Component\Workspace\PortalCollection;
 
 class PhpPortalCollectionDumper extends PortalCollectionDumper
 {
