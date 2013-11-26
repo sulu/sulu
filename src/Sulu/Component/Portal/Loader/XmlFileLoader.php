@@ -12,9 +12,12 @@ namespace Sulu\Component\Portal\Loader;
 
 use Sulu\Component\Portal\Environment;
 use Sulu\Component\Portal\Language;
+use Sulu\Component\Portal\Localization;
 use Sulu\Component\Portal\Portal;
+use Sulu\Component\Portal\Segment;
 use Sulu\Component\Portal\Theme;
 use Sulu\Component\Portal\Url;
+use Sulu\Component\Portal\Workspace;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
 
@@ -59,70 +62,85 @@ class XmlFileLoader extends FileLoader
      */
     private function parseXml($file)
     {
+        // load xml file
         $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
         $xpath = new \DOMXPath($xmlDoc);
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/workspace/workspace');
 
-        $portal = new Portal();
-        // set simple properties
-        $portal->setName($xpath->query('/x:portal/x:name')->item(0)->nodeValue);
-        $portal->setKey($xpath->query('/x:portal/x:key')->item(0)->nodeValue);
+        // set simple workspace properties
+        $workspace = new Workspace();
+        $workspace->setName($xpath->query('/x:workspace/x:name')->item(0)->nodeValue);
+        $workspace->setKey($xpath->query('/x:workspace/x:key')->item(0)->nodeValue);
 
-        // set resource locator
-        $portal->setResourceLocatorStrategy($xpath->query('/x:portal/x:resource-locator/x:strategy')->item(0)->nodeValue);
+        // set localizations on workspaces
+        foreach ($xpath->query('/x:workspace/x:localizations/x:localization') as $localizationNode) {
+            $localization = $this->generateLocalization($localizationNode);
 
-        // add languages
-        foreach ($xpath->query('/x:portal/x:languages/x:language') as $languageNode) {
-            /** @var \DOMNode $languageNode */
-            $language = new Language();
-            $language->setCode($languageNode->nodeValue);
+            $workspace->addLocalization($localization);
+        }
 
-            // set the optional attributes
-            if ($languageNode->hasAttributes()) {
-                $mainNode = $languageNode->attributes->getNamedItem('main');
-                $language->setMain($this->convertBoolean($mainNode));
+        // set segments on workspaces
+        foreach ($xpath->query('/x:workspace/x:segments/x:segment') as $segmentNode) {
+            /** @var \DOMNode $segmentNode */
+            $segment = new Segment();
+            $segment->setName($segmentNode->nodeValue);
+            $segment->setKey($segmentNode->attributes->getNamedItem('key'));
 
-                $fallbackNode = $languageNode->attributes->getNamedItem('fallback');
-                $language->setFallback($this->convertBoolean($fallbackNode));
+            $workspace->addSegment($segment);
+        }
+
+        // set portals on workspaces
+        foreach ($xpath->query('/x:workspace/x:portals/x:portal') as $portalNode) {
+            /** @var \DOMNode $portalNode */
+            $portal = new Portal();
+
+            $portal->setName($xpath->query('x:name', $portalNode)->item(0)->nodeValue);
+            $portal->setResourceLocatorStrategy($xpath->query('x:resource-locator/x:strategy', $portalNode)->item(0)->nodeValue);
+
+            // set theme on portal
+            $theme = new Theme();
+            $theme->setKey($xpath->query('x:theme/x:key', $portalNode)->item(0)->nodeValue);
+
+            foreach($xpath->query('x:theme/x:excluded/x:template') as $templateNode) {
+                /** @var \DOMNode $templateNode */
+                $theme->addExcludedTemplate($templateNode->nodeValue);
             }
 
-            $portal->addLanguage($language);
-        }
+            $portal->setTheme($theme);
 
-        // set theme
-        $theme = new Theme();
-        $theme->setKey($xpath->query('/x:portal/x:theme/x:key')->item(0)->nodeValue);
+            // set localization on portal
+            foreach ($xpath->query('x:localizations/x:localization', $portalNode) as $localizationNode) {
+                $localization = $this->generateLocalization($localizationNode);
 
-        foreach ($xpath->query('/x:portal/x:theme/x:excluded/x:template') as $templateNode) {
-            /** @var \DOMNode $templateNode */
-            $theme->addExcludedTemplate($templateNode->nodeValue);
-        }
-
-        $portal->setTheme($theme);
-
-        // set environments
-        foreach ($xpath->query('/x:portal/x:environments/x:environment') as $environmentNode) {
-            /** @var \DOMNode $environmentNode */
-            $environment = new Environment();
-            $environment->setType($environmentNode->attributes->getNamedItem('type')->nodeValue);
-
-            foreach ($xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
-                /** @var \DOMNode $urlNode */
-                $url = new Url();
-
-                $url->setUrl($urlNode->nodeValue);
-
-                // set optional nodes
-                $mainNode = $urlNode->attributes->getNamedItem('main');
-                $url->setMain($this->convertBoolean($mainNode));
-
-                $environment->addUrl($url);
+                $portal->addLocalization($localization);
             }
 
-            $portal->addEnvironment($environment);
+            $workspace->addPortal($portal);
+
+            // set environments
+            foreach ($xpath->query('x:environments/x:environment', $portalNode) as $environmentNode) {
+                /** @var \DOMNode $environmentNode */
+                $environment = new Environment();
+                $environment->setType($environmentNode->attributes->getNamedItem('type')->nodeValue);
+
+                foreach ($xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
+                    /** @var \DOMNode $urlNode */
+                    $url = new Url();
+
+                    $url->setUrl($urlNode->nodeValue);
+
+                    // set optional nodes
+                    $mainNode = $urlNode->attributes->getNamedItem('main');
+                    $url->setMain($this->convertBoolean($mainNode));
+
+                    $environment->addUrl($url);
+                }
+
+                $portal->addEnvironment($environment);
+            }
         }
 
-        return $portal;
+        return $workspace;
     }
 
     /**
@@ -132,5 +150,29 @@ class XmlFileLoader extends FileLoader
     private function convertBoolean($node)
     {
         return ($node) ? $node->nodeValue == 'true' : false;
+    }
+
+    /**
+     * @param $localizationNode
+     * @return Localization
+     */
+    private function generateLocalization($localizationNode)
+    {
+        /** @var \DOMNode $localizationNode */
+        $localization = new Localization();
+        $localization->setLanguage($localizationNode->attributes->getNamedItem('language')->nodeValue);
+        $localization->setCountry($localizationNode->attributes->getNamedItem('country')->nodeValue);
+
+        // set optional nodes
+        $localization->setDefault($this->convertBoolean($localizationNode->attributes->getNamedItem('default')));
+
+        $shadowNode = $localizationNode->attributes->getNamedItem('shadow');
+        if ($shadowNode) {
+            $localization->setShadow($shadowNode->nodeValue);
+
+            return $localization;
+        }
+
+        return $localization;
     }
 }

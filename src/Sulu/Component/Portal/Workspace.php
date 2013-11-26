@@ -113,7 +113,7 @@ class Workspace
      * Adds a portal to the workspace
      * @param Portal $portal
      */
-    public function addPortals(Portal $portal)
+    public function addPortal(Portal $portal)
     {
         $this->portals[] = $portal;
     }
@@ -140,7 +140,7 @@ class Workspace
      * Adds a segment to the workspace
      * @param Segment $segment
      */
-    public function addSegments(Segment $segment)
+    public function addSegment(Segment $segment)
     {
         $this->segments[] = $segment;
     }
