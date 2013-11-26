@@ -3,9 +3,9 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_core.workspace.portal_manager.class">Sulu\Component\Workspace\PortalManager</parameter>
+        <parameter key="sulu_core.workspace.request_analyzer.class">Sulu\Component\Workspace\Analyzer\RequestAnalyzer</parameter>
         <parameter key="sulu_core.workspace.loader.xml_class">Sulu\Component\Workspace\Loader\XmlFileLoader</parameter>
-        <parameter key="sulu_core.workspace.portal_listener.class">Sulu\Bundle\CoreBundle\EventListener\PortalListener</parameter>
+        <parameter key="sulu_core.workspace.request_listener.class">Sulu\Component\Workspace\EventListener\RequestListener</parameter>
 
         <parameter key="sulu_core.workspace.config_dir">%kernel.root_dir%/../Resources/portals</parameter>
         <parameter key="sulu_core.workspace.cache_class">PortalCollectionCache</parameter>
@@ -16,7 +16,7 @@
         <service id="sulu_core.workspace.loader.xml" class="%sulu_core.workspace.loader.xml_class%">
             <argument type="service" id="file_locator"/>
         </service>
-        <service id="sulu_core.workspace.portal_manager" class="%sulu_core.workspace.portal_manager.class%">
+        <service id="sulu_core.workspace.request_analyzer" class="%sulu_core.workspace.request_analyzer.class%">
             <!-- TODO use delegating loader -->
             <argument type="service" id="sulu_core.workspace.loader.xml" />
             <argument type="service" id="logger"/>
@@ -28,9 +28,9 @@
                 <argument key="base_class">%sulu_core.workspace.base_class%</argument>
             </argument>
         </service>
-        <service id="sulu_core.workspace.portal_listener" class="%sulu_core.workspace.portal_listener.class%">
+        <service id="sulu_core.workspace.request_listener" class="%sulu_core.workspace.request_listener.class%">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="300"/>
-            <argument type="service" id="sulu_core.workspace.portal_manager" />
+            <argument type="service" id="sulu_core.workspace.request_analyzer" />
         </service>
     </services>
 </container>
