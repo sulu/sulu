@@ -74,7 +74,7 @@ class XmlFileLoader extends FileLoader
 
         // set localizations on workspaces
         foreach ($xpath->query('/x:workspace/x:localizations/x:localization') as $localizationNode) {
-            $localization = $this->generateLocalization($localizationNode);
+            $localization = $this->generateLocalization($localizationNode, $xpath);
 
             $workspace->addLocalization($localization);
         }
@@ -84,7 +84,7 @@ class XmlFileLoader extends FileLoader
             /** @var \DOMNode $segmentNode */
             $segment = new Segment();
             $segment->setName($segmentNode->nodeValue);
-            $segment->setKey($segmentNode->attributes->getNamedItem('key'));
+            $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
 
             $workspace->addSegment($segment);
         }
@@ -110,7 +110,7 @@ class XmlFileLoader extends FileLoader
 
             // set localization on portal
             foreach ($xpath->query('x:localizations/x:localization', $portalNode) as $localizationNode) {
-                $localization = $this->generateLocalization($localizationNode);
+                $localization = $this->generateLocalization($localizationNode, $xpath);
 
                 $portal->addLocalization($localization);
             }
@@ -153,12 +153,12 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @param $localizationNode
+     * @param \DOMElement|\DOMNode $localizationNode
+     * @param \DOMXPath $xpath
      * @return Localization
      */
-    private function generateLocalization($localizationNode)
+    private function generateLocalization(\DOMElement $localizationNode, \DOMXPath $xpath)
     {
-        /** @var \DOMNode $localizationNode */
         $localization = new Localization();
         $localization->setLanguage($localizationNode->attributes->getNamedItem('language')->nodeValue);
         $localization->setCountry($localizationNode->attributes->getNamedItem('country')->nodeValue);
@@ -169,8 +169,11 @@ class XmlFileLoader extends FileLoader
         $shadowNode = $localizationNode->attributes->getNamedItem('shadow');
         if ($shadowNode) {
             $localization->setShadow($shadowNode->nodeValue);
+        }
 
-            return $localization;
+        // set child nodes
+        foreach ($xpath->query('x:localization', $localizationNode) as $childNode) {
+            $localization->addChild($this->generateLocalization($childNode, $xpath));
         }
 
         return $localization;

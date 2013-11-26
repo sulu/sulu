@@ -63,7 +63,7 @@
             </theme>
 
             <localizations>
-                <localization language="en" country="ca"/>
+                <localization language="en" country="ca" default="true"/>
                 <localization language="fr" country="ca"/>
             </localizations>
 

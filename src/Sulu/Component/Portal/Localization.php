@@ -41,6 +41,12 @@ class Localization
     private $default;
 
     /**
+     * The sub localizations of this one
+     * @var Localization[]
+     */
+    private $children;
+
+    /**
      * Sets the country of this localization
      * @param string $country
      */
@@ -110,5 +116,32 @@ class Localization
     public function getShadow()
     {
         return $this->shadow;
+    }
+
+    /**
+     * Adds a new child localization
+     * @param Localization $child
+     */
+    public function addChild(Localization $child)
+    {
+        $this->children[] = $child;
+    }
+
+    /**
+     * Sets the children of the localization
+     * @param \Sulu\Component\Portal\Localization[] $children
+     */
+    public function setChildren(Localization $children)
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * Returns the children of the localization
+     * @return \Sulu\Component\Portal\Localization[]
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 }
