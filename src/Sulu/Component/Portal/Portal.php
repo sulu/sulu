@@ -29,10 +29,10 @@ class Portal
     private $resourceLocatorStrategy;
 
     /**
-     * An array of languages
-     * @var Language[]
+     * An array of localizations
+     * @var Localization[]
      */
-    private $languages;
+    private $localizations;
 
     /**
      * The theme of the portal
@@ -44,24 +44,6 @@ class Portal
      * @var Environment[]
      */
     private $environments;
-
-    /**
-     * Sets the unique key of the portal
-     * @param string $key The unique key of the portal
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-    }
-
-    /**
-     * Returns the unique key of the portal
-     * @return string The unique key of the portal
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
 
     /**
      * Sets the name of the portal
@@ -99,28 +81,28 @@ class Portal
 
     /**
      * Adds the given language to the portal
-     * @param Language $language
+     * @param Localization $localization
      */
-    public function addLanguage(Language $language) {
-        $this->languages[] = $language;
+    public function addLocalization(Localization $localization) {
+        $this->localizations[] = $localization;
     }
 
     /**
-     * Sets the languages to this portal
-     * @param \Sulu\Component\Portal\Language $languages The language to add
+     * Sets the localizations to this portal
+     * @param \Sulu\Component\Portal\Localization[] $localizations
      */
-    public function setLanguages($languages)
+    public function setLocalizations($localizations)
     {
-        $this->languages = $languages;
+        $this->localizations = $localizations;
     }
 
     /**
      * Returns the languages of this portal
-     * @return \Sulu\Component\Portal\Language[] The languages of this portal
+     * @return \Sulu\Component\Portal\Localization[] The languages of this portal
      */
-    public function getLanguages()
+    public function getLocalizations()
     {
-        return $this->languages;
+        return $this->localizations;
     }
 
     /**
