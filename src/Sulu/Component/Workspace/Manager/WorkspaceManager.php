@@ -11,9 +11,10 @@
 namespace Sulu\Component\Workspace\Manager;
 
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Workspace\PortalCollection;
+use Sulu\Component\Workspace\Workspace;
+use Sulu\Component\Workspace\WorkspaceCollection;
 use Sulu\Component\Workspace\Portal;
-use Sulu\Component\Workspace\Dumper\PhpPortalCollectionDumper;
+use Sulu\Component\Workspace\Dumper\PhpWorkspaceCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -24,12 +25,12 @@ use Symfony\Component\Finder\SplFileInfo;
  * This class is responsible for loading, reading and caching the portal configuration files
  * @package Sulu\Bundle\CoreBundle\Portal
  */
-class PortalManager implements PortalManagerInterface
+class WorkspaceManager implements WorkspaceManagerInterface
 {
     /**
-     * @var PortalCollection
+     * @var WorkspaceCollection
      */
-    private $portals;
+    private $workspaceCollection;
 
     /**
      * @var array
@@ -46,12 +47,6 @@ class PortalManager implements PortalManagerInterface
      */
     private $logger;
 
-    /**
-     * The current portal for the current request
-     * @var Portal
-     */
-    private $currentPortal;
-
     public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = array())
     {
         $this->loader = $loader;
@@ -60,35 +55,47 @@ class PortalManager implements PortalManagerInterface
     }
 
     /**
-     * Returns the portal with the given key, or null, if it does not exist
-     * @param $key string The key to look for
-     * @return null|Portal
+     * Returns the workspace with the given key
+     * @param $key string The key to search for
+     * @return Workspace
      */
-    public function findByKey($key)
+    public function findWorkspaceByKey($key)
     {
-        foreach ($this->getPortals() as $portal) {
-            /** @var Portal $portal */
-            if ($portal->getKey() == $key) {
-                return $portal;
-            }
-        }
-
-        return null;
+        return $this->workspaceCollection->getWorkspace($key);
     }
 
     /**
-     * Returns the portal for the given url, or null, if it does not exist
-     * @param $searchUrl string The url to search for
-     * @return null|Portal
+     * Returns the portal with the given key
+     * @param string $key The key to search for
+     * @return Portal
      */
-    public function findByUrl($searchUrl)
+    public function findPortalByKey($key)
     {
-        foreach ($this->getPortals() as $portal) {
-            /** @var Portal $portal */
-            foreach ($portal->getEnvironments() as $environment) {
-                foreach ($environment->getUrls() as $url) {
-                    if ($url->getUrl() == $searchUrl) {
-                        return $portal;
+        return $this->workspaceCollection->getPortal($key);
+    }
+
+    /**
+     * Returns the portal with the given url (which has not necessarily to be the main url)
+     * @param string $url The url to search for
+     * @param string $environment The environment in which the url should be searched
+     * @return Portal
+     */
+    public function findPortalInformationByUrl($url, $environment)
+    {
+        foreach ($this->getWorkspaces() as $workspace) {
+            /** @var Workspace $workspace */
+            foreach ($workspace->getPortals() as $portal) {
+                $urlPart = $url;
+
+                // search until every slash has been cut
+                while (true) {
+                    // cut the string at the last slash
+                    $urlPart = preg_replace('/(.*)\\/(.*)/', '$1', $urlPart);
+                    if (array_key_exists($portal->getEnvironments()[$environment], $url)) {
+                        return $portal->getEnvironments()[$environment][$url];
+                    }
+                    if (strpos($urlPart, '/') !== 0) {
+                        break;
                     }
                 }
             }
@@ -98,12 +105,12 @@ class PortalManager implements PortalManagerInterface
     }
 
     /**
-     * Returns the portals from the cache, or creates the cache.
-     * @return PortalCollection
+     * Returns all the workspaces managed by this specific instance
+     * @return WorkspaceCollection
      */
-    public function getPortals()
+    public function getWorkspaces()
     {
-        if ($this->portals === null) {
+        if ($this->workspaceCollection === null) {
             $class = $this->options['cache_class'];
             $cache = new ConfigCache(
                 $this->options['cache_dir'] . '/' . $class . '.php',
@@ -111,8 +118,8 @@ class PortalManager implements PortalManagerInterface
             );
 
             if (!$cache->isFresh()) {
-                $portalCollection = $this->buildPortalCollection();
-                $dumper = new PhpPortalCollectionDumper($portalCollection);
+                $portalCollection = $this->buildWorkspaceCollection();
+                $dumper = new PhpWorkspaceCollectionDumper($portalCollection);
                 $cache->write(
                     $dumper->dump(
                         array(
@@ -126,10 +133,10 @@ class PortalManager implements PortalManagerInterface
 
             require_once $cache;
 
-            $this->portals = new $class();
+            $this->workspaceCollection = new $class();
         }
 
-        return $this->portals;
+        return $this->workspaceCollection;
     }
 
     /**
@@ -152,16 +159,16 @@ class PortalManager implements PortalManagerInterface
 
     /**
      * Builds the portal collection from the config
-     * @return PortalCollection
+     * @return WorkspaceCollection
      */
-    protected function buildPortalCollection()
+    protected function buildWorkspaceCollection()
     {
         // Find portal configs with symfony finder
         $finder = new Finder();
         $finder->in($this->options['config_dir'])->files()->name('*.xml');
 
         // Iterate over config files, and add a portal object for each config to the collection
-        $collection = new PortalCollection();
+        $collection = new WorkspaceCollection();
 
         foreach ($finder as $file) {
             /** @var SplFileInfo $file */
@@ -176,23 +183,5 @@ class PortalManager implements PortalManagerInterface
         }
 
         return $collection;
-    }
-
-    /**
-     * Sets the current portal (valid for this request)
-     * @param Portal $portal The current portal
-     */
-    public function setCurrentPortal(Portal $portal)
-    {
-        $this->currentPortal = $portal;
-    }
-
-    /**
-     * Returns the current portal for this request
-     * @return Portal
-     */
-    public function getCurrentPortal()
-    {
-        return $this->currentPortal;
     }
 }
