@@ -82,18 +82,14 @@ class WorkspaceManager implements WorkspaceManagerInterface
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach ($this->getWorkspaceCollection()->getPortals($environment) as $portal) {
-            // skip the portal if it does not contain the desired environment
-            if (!array_key_exists($environment, $portal->getEnvironments())) {
-                break;
-            }
-
+        foreach ($this->getWorkspaceCollection()->getPortals($environment) as $portalUrl => $portalInformation) {
+            /** @var Portal $portal */
             $urlPart = $url;
 
             // search until every slash has been cut
             while (true) {
-                if (array_key_exists($urlPart, $portal->getEnvironments()[$environment]->getUrls())) {
-                    return $portal->getEnvironments()[$environment]->getUrls()[$urlPart];
+                if ($portalUrl == $urlPart) {
+                    return $portalInformation;
                 }
 
                 if (strpos($urlPart, '/') === false) {

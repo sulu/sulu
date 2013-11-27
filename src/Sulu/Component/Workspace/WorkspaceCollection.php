@@ -78,6 +78,7 @@ class WorkspaceCollection implements \IteratorAggregate
         // TODO handle replacers more elegant
         foreach ($portal->getLocalizations() as $localization) {
             $urlAddress = $url->getUrl();
+
             $urlAddress = str_replace('{language}', $localization->getLanguage(), $urlAddress);
             $urlAddress = str_replace('{country}', $localization->getCountry(), $urlAddress);
             $urlAddress = str_replace(
@@ -91,10 +92,17 @@ class WorkspaceCollection implements \IteratorAggregate
                 foreach ($segments as $segment) {
                     $urlAddressSegment = $urlAddress;
                     $urlAddressSegment = str_replace('{segment}', $segment->getKey(), $urlAddressSegment);
-                    $this->environmentPortals[$environment->getType()][$urlAddressSegment] = $portal;
+                    $this->environmentPortals[$environment->getType()][$urlAddressSegment] = array(
+                        'portal' => $portal,
+                        'localization' => $localization,
+                        'segment' => $segment
+                    );
                 }
             } else {
-                $this->environmentPortals[$environment->getType()][$urlAddress] = $portal;
+                $this->environmentPortals[$environment->getType()][$urlAddress] = array(
+                    'portal' => $portal,
+                    'localization' => $localization
+                );
             }
         }
     }
