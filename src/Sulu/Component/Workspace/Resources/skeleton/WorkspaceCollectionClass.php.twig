@@ -1,3 +1,16 @@
+{% macro create_localizations(localization, count) %}
+        $localization{{ count }} = new Localization();
+        $localization{{ count }}->setLanguage('{{ localization.language }}');
+        $localization{{ count }}->setCountry('{{ localization.country }}');
+        $localization{{ count }}->setDefault({{ (localization.default) ? 'true' : 'false' }});
+        $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
+
+{% for childLocalization in localization.children %}
+    {{ _self.create_localizations(childLocalization, count + 1) }}
+{% endfor %}
+        $localization{{ count - 1 }}->addChild($localization{{ count }});
+{% endmacro %}
+
 <?php
 use Sulu\Component\Workspace\WorkspaceCollection;
 use Sulu\Component\Workspace\Portal;
@@ -26,12 +39,15 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% for localization in workspace.localizations %}
         // add localization to workspace
-        $localization = new Localization();
-        $localization->setLanguage('{{ localization.language }}');
-        $localization->setCountry('{{ localization.country }}');
-        $localization->setDefault({{ (localization.default) ? 'true' : 'false' }});
-        $localization->setShadow('{{ (localization.shadow) }}');
-        $workspace->addLocalization($localization);
+        $localization0 = new Localization();
+        $localization0->setLanguage('{{ localization.language }}');
+        $localization0->setCountry('{{ localization.country }}');
+        $localization0->setDefault({{ (localization.default) ? 'true' : 'false' }});
+        $localization0->setShadow('{{ (localization.shadow) }}');
+{% for childLocalization in localization.children %}
+{{ _self.create_localizations(childLocalization, 1) }}
+{% endfor %}
+        $workspace->addLocalization($localization0);
 
 {% endfor %}
 

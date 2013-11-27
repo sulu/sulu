@@ -184,6 +184,7 @@ class WorkspaceCollection implements \IteratorAggregate
     {
         $workspaces = array();
         foreach ($this->workspaces as $workspace) {
+            $workspaceData = array();
             $workspaceData['key'] = $workspace->getKey();
             $workspaceData['name'] = $workspace->getName();
             $workspaceData['localizations'] = $this->toArrayLocalizations($workspace->getLocalizations());
