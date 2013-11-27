@@ -89,7 +89,7 @@ class WorkspaceCollection implements \IteratorAggregate
 
     /**
      * Returns the workspace with the given key
-     * @param $key The key of the workspace
+     * @param $key string The key of the workspace
      * @return Workspace
      */
     public function getWorkspace($key)

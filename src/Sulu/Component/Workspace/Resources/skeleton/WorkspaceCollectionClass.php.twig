@@ -1,5 +1,5 @@
 <?php
-use Sulu\Component\Workspace\PortalCollection;
+use Sulu\Component\Workspace\WorkspaceCollection;
 use Sulu\Component\Workspace\Portal;
 use Sulu\Component\Workspace\Localization;
 use Sulu\Component\Workspace\Theme;
@@ -48,7 +48,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization->setLanguage('{{ localization.language }}');
         $localization->setCountry('{{ localization.country }}');
         $localization->setDefault({{ (localization.default) ? 'true' : 'false' }});
-        $localization->addLanguage($localization);
+        $portal->addLocalization($localization);
 {% endfor %}
 
         // add theme

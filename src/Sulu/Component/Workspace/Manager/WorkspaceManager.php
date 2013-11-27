@@ -85,6 +85,11 @@ class WorkspaceManager implements WorkspaceManagerInterface
         foreach ($this->getWorkspaces() as $workspace) {
             /** @var Workspace $workspace */
             foreach ($workspace->getPortals() as $portal) {
+                // skip the portal if it does not contain the desired environment
+                if (!array_key_exists($portal->getEnvironments(), $environment)) {
+                    break;
+                }
+
                 $urlPart = $url;
 
                 // search until every slash has been cut
@@ -95,6 +100,7 @@ class WorkspaceManager implements WorkspaceManagerInterface
                         return $portal->getEnvironments()[$environment][$url];
                     }
                     if (strpos($urlPart, '/') !== 0) {
+                        // no slash left to cut
                         break;
                     }
                 }
@@ -149,8 +155,8 @@ class WorkspaceManager implements WorkspaceManagerInterface
             'config_dir' => null,
             'cache_dir' => null,
             'debug' => false,
-            'cache_class' => 'PortalCollectionCache',
-            'base_class' => 'PortalCollection'
+            'cache_class' => 'WorkspaceCollectionCache',
+            'base_class' => 'WorkspaceCollection'
         );
 
         // overwrite the default values with the given options

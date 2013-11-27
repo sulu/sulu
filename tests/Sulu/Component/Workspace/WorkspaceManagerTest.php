@@ -12,9 +12,9 @@ namespace Sulu\Component\Workspace;
 
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Workspace\Loader\XmlFileLoader;
-use Sulu\Component\Workspace\Manager\PortalManager;
+use Sulu\Component\Workspace\Manager\WorkspaceManager;
 
-class PortalManagerTest extends \PHPUnit_Framework_TestCase
+class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var XmlFileLoader
@@ -22,9 +22,9 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
     protected $loader;
 
     /**
-     * @var PortalManager
+     * @var WorkspaceManager
      */
-    protected $portalManager;
+    protected $workspaceManager;
 
     /**
      * @var LoggerInterface
@@ -39,7 +39,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
 
-        $this->portalManager = new PortalManager(
+        $this->workspaceManager = new WorkspaceManager(
             $this->loader,
             $this->logger,
             array(
@@ -51,16 +51,16 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if (file_exists(__DIR__ . '/../../../Resources/cache/PortalCollectionCache.php')) {
-            unlink(__DIR__ . '/../../../Resources/cache/PortalCollectionCache.php');
+        if (file_exists(__DIR__ . '/../../../Resources/cache/WorkspaceCollectionCache.php')) {
+            unlink(__DIR__ . '/../../../Resources/cache/WorkspaceCollectionCache.php');
         }
     }
 
     public function testGetAll()
     {
-        $portals = $this->portalManager->getPortals();
+        $workspaces = $this->workspaceManager->getWorkspaces();
 
-        $portal = $portals->get('massiveart');
+        $portal = $workspaces->get('massiveart');
 
         $this->assertEquals('Massive Art', $portal->getName());
         $this->assertEquals('massiveart', $portal->getKey());
@@ -93,7 +93,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('massiveart.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
         $this->assertEquals(true, $portal->getEnvironments()[0]->getUrls()[0]->isMain());
 
-        $portal = $portals->get('sulu_io');
+        $portal = $workspaces->get('sulu_io');
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
@@ -129,7 +129,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testFindByKey()
     {
-        $portal = $this->portalManager->findByKey('sulu_io');
+        $portal = $this->workspaceManager->findByKey('sulu_io');
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
@@ -165,13 +165,13 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testFindByNotExistingKey()
     {
-        $portal = $this->portalManager->findByKey('not_existing');
+        $portal = $this->workspaceManager->findByKey('not_existing');
         $this->assertNull($portal);
     }
 
     public function testFindByUrl()
     {
-        $portal = $this->portalManager->findByUrl('sulu.io');
+        $portal = $this->workspaceManager->findByUrl('sulu.io');
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
@@ -204,7 +204,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
         $this->assertEquals(true, $portal->getEnvironments()[0]->getUrls()[0]->isMain());
 
-        $portal = $this->portalManager->findByUrl('sulu.lo');
+        $portal = $this->workspaceManager->findByUrl('sulu.lo');
 
         $this->assertEquals('Sulu CMF', $portal->getName());
         $this->assertEquals('sulu_io', $portal->getKey());
@@ -252,7 +252,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->logger->expects($this->once())->method('warning')->will($this->returnValue(null));
 
-        $this->portalManager = new PortalManager(
+        $this->workspaceManager = new PortalManager(
             $this->loader,
             $this->logger,
             array(
@@ -261,7 +261,7 @@ class PortalManagerTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $portals = $this->portalManager->getPortals();
+        $portals = $this->workspaceManager->getPortals();
 
         $this->assertEquals(2, $portals->length());
 

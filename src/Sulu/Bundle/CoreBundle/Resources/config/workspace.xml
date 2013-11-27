@@ -9,8 +9,8 @@
         <parameter key="sulu_core.workspace.request_listener.class">Sulu\Component\Workspace\EventListener\RequestListener</parameter>
 
         <parameter key="sulu_core.workspace.config_dir">%kernel.root_dir%/../Resources/portals</parameter>
-        <parameter key="sulu_core.workspace.cache_class">PortalCollectionCache</parameter>
-        <parameter key="sulu_core.workspace.base_class">PortalCollection</parameter>
+        <parameter key="sulu_core.workspace.cache_class">WorkspaceCollectionCache</parameter>
+        <parameter key="sulu_core.workspace.base_class">WorkspaceCollection</parameter>
     </parameters>
 
     <services>
