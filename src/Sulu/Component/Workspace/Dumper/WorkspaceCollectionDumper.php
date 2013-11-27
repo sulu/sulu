@@ -11,7 +11,7 @@
 namespace Sulu\Component\Workspace\Dumper;
 
 
-class PortalCollectionDumper
+class WorkspaceCollectionDumper
 {
     protected function render($template, $parameters)
     {

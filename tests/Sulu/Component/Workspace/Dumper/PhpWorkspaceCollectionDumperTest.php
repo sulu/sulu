@@ -14,21 +14,41 @@ namespace Sulu\Component\Workspace\Dumper;
 use Sulu\Component\Workspace\Environment;
 use Sulu\Component\Workspace\Localization;
 use Sulu\Component\Workspace\Portal;
-use Sulu\Component\Workspace\PortalCollection;
+use Sulu\Component\Workspace\WorkspaceCollection;
 use Sulu\Component\Workspace\Theme;
 use Sulu\Component\Workspace\Url;
 use Sulu\Component\Workspace\Workspace;
 
-class PhpPortalCollectionDumperTest extends \PHPUnit_Framework_TestCase
+class PhpWorkspaceCollectionDumperTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var PortalCollection
+     * @var WorkspaceCollection
      */
-    private $portalCollection;
+    private $workspaceCollection;
 
     public function setUp()
     {
-        $this->portalCollection = new PortalCollection();
+        $this->workspaceCollection = new WorkspaceCollection();
+
+        $workspace = new Workspace();
+        $localizationEnUs = new Localization();
+        $localizationEnUs->setCountry('us');
+        $localizationEnUs->setLanguage('en');
+        $localizationEnUs->setDefault(true);
+        $localizationEnUs->setShadow('auto');
+        $localizationEnCa = new Localization();
+        $localizationEnCa->setCountry('ca');
+        $localizationEnCa->setLanguage('en');
+        $localizationEnCa->setDefault(false);
+        $localizationEnUs->addChild($localizationEnCa);
+        $localizationFrCa = new Localization();
+        $localizationFrCa->setCountry('ca');
+        $localizationFrCa->setLanguage('fr');
+        $localizationFrCa->setDefault(false);
+        $workspace->addLocalization($localizationEnUs);
+        $workspace->addLocalization($localizationFrCa);
+        $workspace->setKey('default');
+        $workspace->setName('Default');
 
         // first portal
         $portal = new Portal();
@@ -52,39 +72,21 @@ class PhpPortalCollectionDumperTest extends \PHPUnit_Framework_TestCase
         $environment->addUrl($url);
         $portal->addEnvironment($environment);
 
-        $localizationEnUs = new Localization();
-        $localizationEnUs->setCountry('us');
-        $localizationEnUs->setLanguage('en');
-        $localizationEnUs->setDefault(true);
-        $localizationEnUs->setShadow('auto');
-        $localizationEnCa = new Localization();
-        $localizationEnCa->setCountry('ca');
-        $localizationEnCa->setLanguage('en');
-        $localizationEnCa->setDefault(false);
-        $localizationEnUs->addChild($localizationEnCa);
-        $localizationFrCa = new Localization();
-        $localizationFrCa->setCountry('ca');
-        $localizationFrCa->setLanguage('fr');
-        $localizationFrCa->setDefault(false);
         $portal->addLocalization($localizationEnUs);
         $portal->addLocalization($localizationEnCa);
         $portal->addLocalization($localizationFrCa);
 
         $portal->setResourceLocatorStrategy('tree');
 
-        $workspace = new Workspace();
-        $workspace->addLocalization($localizationEnUs);
-        $workspace->addLocalization($localizationFrCa);
         $workspace->addPortal($portal);
-        $workspace->setKey('default');
-        $workspace->setName('Default');
-        $portal->setWorkspace($workspace);
 
-        $this->portalCollection->add($portal);
+        $this->workspaceCollection->add($workspace);
     }
 
     public function testDump()
     {
-        $dumper = new PhpPortalCollectionDumper($this->portalCollection);
+        $dumper = new PhpWorkspaceCollectionDumper($this->workspaceCollection);
+
+        $dump = $dumper->dump(array('cache_class' => 'WorkspaceCollectionCache', 'base_class' => 'WorkspaceCollection'));
     }
 }

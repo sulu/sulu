@@ -10,18 +10,18 @@
 
 namespace Sulu\Component\Workspace\Dumper;
 
-use Sulu\Component\Workspace\PortalCollection;
+use Sulu\Component\Workspace\WorkspaceCollection;
 
-class PhpPortalCollectionDumper extends PortalCollectionDumper
+class PhpWorkspaceCollectionDumper extends WorkspaceCollectionDumper
 {
     /**
-     * @var PortalCollection
+     * @var WorkspaceCollection
      */
-    private $portalCollection;
+    private $workspaceCollection;
 
-    public function __construct(PortalCollection $portalCollection)
+    public function __construct(WorkspaceCollection $workspaceCollection)
     {
-        $this->portalCollection = $portalCollection;
+        $this->workspaceCollection = $workspaceCollection;
     }
 
     /**
@@ -32,11 +32,11 @@ class PhpPortalCollectionDumper extends PortalCollectionDumper
     public function dump($options = array())
     {
         return $this->render(
-            'PortalCollectionClass.php.twig',
+            'WorkspaceCollectionClass.php.twig',
             array(
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],
-                'portals' => $this->portalCollection->toArray()
+                'workspaces' => $this->workspaceCollection->toArray()
             )
         );
     }

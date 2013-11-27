@@ -14,8 +14,8 @@ use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
 
 /**
- * A collection of all portals in a specific sulu installation
- * @package Sulu\Component\Portal
+ * A collection of all workspaces and portals in a specific sulu installation
+ * @package Sulu\Component\Workspace
  */
 class WorkspaceCollection implements \IteratorAggregate
 {

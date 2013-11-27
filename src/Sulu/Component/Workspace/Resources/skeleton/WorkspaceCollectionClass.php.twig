@@ -17,7 +17,24 @@ class {{ cache_class }} extends {{ base_class }}
 {
     public function __construct()
     {
-{% for portal in portals %}
+{% for workspace in workspaces %}
+        // new workspace
+        $workspace = new Workspace();
+        $workspace->setKey('{{ workspace.key }}');
+        $workspace->setName('{{ workspace.name }}');
+
+{% for localization in workspace.localizations %}
+        // add localization to workspace
+        $localization = new Localization();
+        $localization->setLanguage('{{ localization.language }}');
+        $localization->setCountry('{{ localization.country }}');
+        $localization->setDefault({{ (localization.default) ? 'true' : 'false' }});
+        $localization->setShadow('{{ (localization.shadow) }}');
+        $workspace->addLocalization($localization);
+
+{% endfor %}
+
+{% for portal in workspace.portals %}
 
         // new portal
         $portal = new Portal();
@@ -56,26 +73,10 @@ class {{ cache_class }} extends {{ base_class }}
         $portal->addEnvironment($environment);
 {% endfor %}
 
-        // set workspace
-        $workspace = new Workspace();
-
-{% for localization in portal.workspace.localizations %}
-        // add localization to workspace
-        $localization = new Localization();
-        $localization->setLanguage('{{ localization.language }}');
-        $localization->setCountry('{{ localization.country }}');
-        $localization->setDefault({{ (localization.default) ? 'true' : 'false' }});
-        $localization->setShadow('{{ (localization.shadow) }}');
-        $localization->addLanguage($localization);
-        $workspace->addLocalization($localization);
+        $workspace->addPortal($portal);
 
 {% endfor %}
-        $workspace->setKey('{{ portal.workspace.key }}');
-        $workspace->setName('{{ portal.workspace.name }}');
-        $portal->setWorkspace($workspace);
-
-        $this->add($portal);
-
+        $this->add($workspace);
 {% endfor %}
     }
 }
