@@ -112,14 +112,14 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('prod', $workspace->getPortals()[0]->getEnvironments()[0]->getType());
         $this->assertEquals(1, count($workspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
         $this->assertEquals(
-            '[{language}.]massiveart.[{country}][/{segment}]',
+            '{language}.massiveart.{country}/{segment}',
             $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl()
         );
         $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
 
         $this->assertEquals('dev', $workspace->getPortals()[0]->getEnvironments()[1]->getType());
         $this->assertEquals(1, count($workspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('massiveart.lo[/{localization}][/{segment}]', $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $this->assertEquals('massiveart.lo/{localization}/{segment}', $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
         $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
 
         $this->assertEquals('Massive Art CA', $workspace->getPortals()[1]->getName());
@@ -141,7 +141,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('prod', $workspace->getPortals()[1]->getEnvironments()[0]->getType());
         $this->assertEquals(1, count($workspace->getPortals()[1]->getEnvironments()[0]->getUrls()));
         $this->assertEquals(
-            '[{language}.]massiveart.[{country}][/{segment}]',
+            '{language}.massiveart.{country}/{segment}',
             $workspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getUrl()
         );
         $this->assertEquals(true, $workspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->isMain());
@@ -149,7 +149,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('dev', $workspace->getPortals()[1]->getEnvironments()[1]->getType());
         $this->assertEquals(1, count($workspace->getPortals()[1]->getEnvironments()[1]->getUrls()));
         $this->assertEquals(
-            'massiveart.lo[/{localization}][/{segment}]',
+            'massiveart.lo/{localization}/{segment}',
             $workspace->getPortals()[1]->getEnvironments()[1]->getUrls()[0]->getUrl()
         );
         $this->assertEquals(true, $workspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->isMain());

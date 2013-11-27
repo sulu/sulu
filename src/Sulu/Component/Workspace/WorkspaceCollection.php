@@ -56,11 +56,28 @@ class WorkspaceCollection implements \IteratorAggregate
         foreach ($workspace->getPortals() as $portal) {
             $this->allPortals[$portal->getKey()] = $portal;
 
-            // go through every url, and add the information for the portals
-            foreach ($portal->getEnvironments() as $environment) {
-                foreach ($environment->getUrls() as $url) {
-                    // generate all the urls
-                    $this->generatePortalInformation($workspace, $portal, $environment, $url);
+            $this->generateUrls($workspace, $portal);
+        }
+    }
+
+    /**
+     * Generates all the urls for a portal
+     * @param Workspace $workspace
+     * @param Portal $portal
+     */
+    public function generateUrls(Workspace $workspace, Portal $portal)
+    {
+        // go through every url, and add the information for the portals
+        foreach ($portal->getEnvironments() as $environment) {
+            foreach ($environment->getUrls() as $url) {
+                // generate urls from pattern
+                if ($url->isMain()) {
+                    $this->generatePortalInformation(
+                        $portal,
+                        $environment->getType(),
+                        $url->getUrl(),
+                        $workspace->getSegments()
+                    );
                 }
             }
         }
@@ -68,16 +85,17 @@ class WorkspaceCollection implements \IteratorAggregate
 
     /**
      * Generates all the possible urls for the given url pattern
-     * @param Workspace $workspace
      * @param \Sulu\Component\Workspace\Portal $portal
-     * @param \Sulu\Component\Workspace\Environment $environment
-     * @param \Sulu\Component\Workspace\Url $url
+     * @param string $environment
+     * @param string $url
+     * @param Segment[] $segments
+     * @internal param \Sulu\Component\Workspace\Workspace $workspace
      */
-    private function generatePortalInformation(Workspace $workspace, Portal $portal, Environment $environment, Url $url)
+    private function generatePortalInformation(Portal $portal, $environment, $url, $segments)
     {
         // TODO handle replacers more elegant
         foreach ($portal->getLocalizations() as $localization) {
-            $urlAddress = $url->getUrl();
+            $urlAddress = $url;
 
             $urlAddress = str_replace('{language}', $localization->getLanguage(), $urlAddress);
             $urlAddress = str_replace('{country}', $localization->getCountry(), $urlAddress);
@@ -87,19 +105,18 @@ class WorkspaceCollection implements \IteratorAggregate
                 $urlAddress
             );
 
-            $segments = $workspace->getSegments();
             if (!empty($segments)) {
                 foreach ($segments as $segment) {
                     $urlAddressSegment = $urlAddress;
                     $urlAddressSegment = str_replace('{segment}', $segment->getKey(), $urlAddressSegment);
-                    $this->environmentPortals[$environment->getType()][$urlAddressSegment] = array(
+                    $this->environmentPortals[$environment][$urlAddressSegment] = array(
                         'portal' => $portal,
                         'localization' => $localization,
                         'segment' => $segment
                     );
                 }
             } else {
-                $this->environmentPortals[$environment->getType()][$urlAddress] = array(
+                $this->environmentPortals[$environment][$urlAddress] = array(
                     'portal' => $portal,
                     'localization' => $localization
                 );
