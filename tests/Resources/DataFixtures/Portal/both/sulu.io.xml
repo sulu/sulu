@@ -14,6 +14,7 @@
     <portals>
         <portal>
             <name>Sulu CMF AT</name>
+            <key>sulucmf_at</key>
             <resource-locator>
                 <strategy>short</strategy>
             </resource-locator>

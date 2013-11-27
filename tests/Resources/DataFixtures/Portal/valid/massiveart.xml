@@ -21,6 +21,7 @@
     <portals>
         <portal>
             <name>Massive Art US</name>
+            <key>massiveart_us</key>
             <resource-locator>
                 <strategy>tree</strategy>
             </resource-locator>
@@ -51,6 +52,7 @@
         </portal>
         <portal>
             <name>Massive Art CA</name>
+            <key>massiveart_ca</key>
             <resource-locator>
                 <strategy>tree</strategy>
             </resource-locator>
