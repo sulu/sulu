@@ -17,8 +17,14 @@ use Traversable;
  * A collection of all portals in a specific sulu installation
  * @package Sulu\Component\Portal
  */
-class PortalCollection implements \IteratorAggregate
+class WorkspaceCollection implements \IteratorAggregate
 {
+    /**
+     * All the workspaces in a specific sulu installation
+     * @var Workspace[]
+     */
+    private $workspaces;
+
     /**
      * All the portals in a specific sulu installation
      * @var Portal[]
@@ -41,17 +47,16 @@ class PortalCollection implements \IteratorAggregate
     /**
      * Adds the portal with its unique key as array key to the collection for all Portal, and adds all the urls for
      * this portal to the correct environment, with the url as key
-     * @param Portal $portal The portal to add
+     * @param Portal $workspace The portal to add
      */
-    public function add(Portal $portal)
+    public function add(Workspace $workspace)
     {
-        $this->allPortals[$portal->getKey()] = $portal;
-
-        foreach ($portal->getEnvironments() as $environment) {
-            foreach ($environment->getUrls() as $url) {
-                $this->environmentPortals[$environment->getType()][$url->getUrl()] = $portal;
-            }
+        $this->workspaces[$workspace->getKey()] = $workspace;
+        foreach ($workspace->getPortals() as $portal) {
+            $this->allPortals[$portal->getKey()] = $portal;
         }
+
+        // TODO add to correct environment
     }
 
     /**
@@ -77,9 +82,19 @@ class PortalCollection implements \IteratorAggregate
      * @param $key string The index of the portal
      * @return Portal
      */
-    public function get($key)
+    public function getPortal($key)
     {
         return $this->allPortals[$key];
+    }
+
+    /**
+     * Returns the workspace with the given key
+     * @param $key The key of the workspace
+     * @return Workspace
+     */
+    public function getWorkspace($key)
+    {
+        return $this->workspaces[$key];
     }
 
     /**
@@ -109,38 +124,13 @@ class PortalCollection implements \IteratorAggregate
      */
     public function toArray()
     {
-        $portals = array();
+        $workspaces = array();
+        foreach ($this->workspaces as $workspace) {
+            $workspaceData['key'] = $workspace->getKey();
+            $workspaceData['name'] = $workspace->getName();
+            $workspaceData['localizations'] = $this->toArrayLocalizations($workspace->getLocalizations());
 
-        foreach ($this->allPortals as $portal) {
-            $portalData = array();
-            $portalData['name'] = $portal->getName();
-            $portalData['key'] = $portal->getKey();
-            $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
-
-            $portalData['localizations'] = $this->toArrayLocalizations($portal->getLocalizations());
-
-            $portalData['theme']['key'] = $portal->getTheme()->getKey();
-            $portalData['theme']['excludedTemplates'] = $portal->getTheme()->getExcludedTemplates();
-
-            foreach ($portal->getEnvironments() as $environment) {
-                $environmentData = array();
-                $environmentData['type'] = $environment->getType();
-
-                foreach ($environment->getUrls() as $url) {
-                    $urlData = array();
-                    $urlData['url'] = $url->getUrl();
-                    $urlData['main'] = $url->isMain();
-
-                    $environmentData['urls'][] = $urlData;
-                }
-                $portalData['environments'][] = $environmentData;
-            }
-
-            $workspaceData['key'] = $portal->getWorkspace()->getKey();
-            $workspaceData['name'] = $portal->getWorkspace()->getName();
-            $workspaceData['localizations'] = $this->toArrayLocalizations($portal->getWorkspace()->getLocalizations());
-
-            $segments = $portal->getWorkspace()->getSegments();
+            $segments = $workspace->getSegments();
             if (!empty($segments)) {
                 foreach ($segments as $segment) {
                     $segmentData = array();
@@ -151,12 +141,39 @@ class PortalCollection implements \IteratorAggregate
                 }
             }
 
-            $portalData['workspace'] = $workspaceData;
+            $workspaceData['portals'] = array();
 
-            $portals[] = $portalData;
+            foreach ($workspace->getPortals() as $portal) {
+                $portalData = array();
+                $portalData['name'] = $portal->getName();
+                $portalData['key'] = $portal->getKey();
+                $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
+
+                $portalData['localizations'] = $this->toArrayLocalizations($portal->getLocalizations());
+
+                $portalData['theme']['key'] = $portal->getTheme()->getKey();
+                $portalData['theme']['excludedTemplates'] = $portal->getTheme()->getExcludedTemplates();
+
+                foreach ($portal->getEnvironments() as $environment) {
+                    $environmentData = array();
+                    $environmentData['type'] = $environment->getType();
+
+                    foreach ($environment->getUrls() as $url) {
+                        $urlData = array();
+                        $urlData['url'] = $url->getUrl();
+                        $urlData['main'] = $url->isMain();
+
+                        $environmentData['urls'][] = $urlData;
+                    }
+                    $portalData['environments'][] = $environmentData;
+                }
+
+                $workspaceData['portals'][] = $portalData;
+            }
+            $workspaces[] = $workspaceData;
         }
 
-        return $portals;
+        return $workspaces;
     }
 
     /**
