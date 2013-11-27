@@ -36,7 +36,7 @@ class PortalCollection implements \IteratorAggregate
      * Adds the portal with its unique key as array key to the collection
      * @param Portal $portal The portal to add
      */
-    public function add(Portal $portal)
+    public function add(Portal $portal, $environment = 'prod')
     {
         $this->portals[$portal->getKey()] = $portal;
     }
@@ -104,14 +104,7 @@ class PortalCollection implements \IteratorAggregate
             $portalData['key'] = $portal->getKey();
             $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
 
-            foreach ($portal->getLanguages() as $language) {
-                $languageData = array();
-                $languageData['code'] = $language->getCode();
-                $languageData['main'] = $language->isMain();
-                $languageData['fallback'] = $language->isFallback();
-
-                $portalData['languages'][] = $languageData;
-            }
+            $portalData['localizations'] = $this->toArrayLocalizations($portal->getLocalizations());
 
             $portalData['theme']['key'] = $portal->getTheme()->getKey();
             $portalData['theme']['excludedTemplates'] = $portal->getTheme()->getExcludedTemplates();
@@ -130,9 +123,54 @@ class PortalCollection implements \IteratorAggregate
                 $portalData['environments'][] = $environmentData;
             }
 
+            $workspaceData['key'] = $portal->getWorkspace()->getKey();
+            $workspaceData['name'] = $portal->getWorkspace()->getName();
+            $workspaceData['localizations'] = $this->toArrayLocalizations($portal->getWorkspace()->getLocalizations());
+
+            $segments = $portal->getWorkspace()->getSegments();
+            if (!empty($segments)) {
+                foreach ($segments as $segment) {
+                    $segmentData = array();
+                    $segmentData['key'] = $segment->getKey();
+                    $segmentData['name'] = $segment->getName();
+
+                    $workspaceData['segments'][] = $segmentData;
+                }
+            }
+
+            $portalData['workspace'] = $workspaceData;
+
             $portals[] = $portalData;
         }
 
         return $portals;
+    }
+
+    /**
+     * @param $localizations Localization[]
+     * @internal param $portal
+     * @return array
+     */
+    private function toArrayLocalizations($localizations, $withAdditionalOptions = false)
+    {
+        $localizationsArray = array();
+
+        if (!empty($localizations)) {
+            foreach ($localizations as $localization) {
+                $localizationData = array();
+                $localizationData['country'] = $localization->getCountry();
+                $localizationData['language'] = $localization->getLanguage();
+                $localizationData['default'] = $localization->isDefault();
+
+                if (!$withAdditionalOptions) {
+                    $localizationData['children'] = $this->toArrayLocalizations($localization->getChildren(), true);
+                    $localizationData['shadow'] = $localization->getShadow();
+                }
+
+                $localizationsArray[] = $localizationData;
+            }
+        }
+
+        return $localizationsArray;
     }
 }

@@ -23,6 +23,12 @@ class Portal
     private $name;
 
     /**
+     * The key of the portal
+     * @var string
+     */
+    private $key;
+
+    /**
      * The url generation strategy for this portal
      * @var string
      */
@@ -46,6 +52,11 @@ class Portal
     private $environments;
 
     /**
+     * @var Workspace
+     */
+    private $workspace;
+
+    /**
      * Sets the name of the portal
      * @param string $name The name of the portal
      */
@@ -61,6 +72,22 @@ class Portal
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**
@@ -148,5 +175,21 @@ class Portal
     public function getEnvironments()
     {
         return $this->environments;
+    }
+
+    /**
+     * @param \Sulu\Component\Workspace\Workspace $workspace
+     */
+    public function setWorkspace(Workspace $workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    /**
+     * @return \Sulu\Component\Workspace\Workspace
+     */
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 }
