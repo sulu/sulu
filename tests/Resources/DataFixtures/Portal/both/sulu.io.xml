@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<portal xmlns="http://schemas.sulu.io/portal/portal"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://schemas.sulu.io/portal/portal http://schemas.sulu.io/portal/portal-1.0.xsd">
+<workspace xmlns="http://schemas.sulu.io/workspace/workspace"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://schemas.sulu.io/workspace/workspace http://schemas.sulu.io/workspace/workspace-1.0.xsd">
 
     <name>Sulu CMF</name>
     <key>sulu_io</key>
-    
-    <resource-locator>
-        <strategy>short</strategy>
-    </resource-locator>
 
-    <languages>
-        <language main="true">en</language>
-        <language fallback="true">de</language>
-    </languages>
+    <localizations>
+        <localization language="en" country="us" shadow="auto" default="true"/>
+        <localization language="de" country="at"/>
+    </localizations>
 
-    <theme>
-        <key>sulu</key>
-        <excluded>
-            <template>overview</template>
-        </excluded>
-    </theme>
+    <portals>
+        <portal>
+            <name>Sulu CMF AT</name>
+            <resource-locator>
+                <strategy>short</strategy>
+            </resource-locator>
 
-    <environments>
-        <environment type="prod">
-            <urls>
-                <url main="true">sulu.io</url>
-                <url>www.sulu.io</url>
-            </urls>
-        </environment>
-        <environment type="dev">
-            <urls>
-                <url main="true">sulu.lo</url>
-            </urls>
-        </environment>
-    </environments>
-</portal>
+            <theme>
+                <key>sulu</key>
+                <excluded>
+                    <template>overview</template>
+                </excluded>
+            </theme>
+
+            <localizations>
+                <localization language="de" country="at" default="true"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url main="true">sulu.at</url>
+                        <url>www.sulu.at</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url main="true">sulu.lo</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</workspace>

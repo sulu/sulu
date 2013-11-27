@@ -1,36 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<portal xmlns="http://schemas.sulu.io/portal/portal"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://schemas.sulu.io/portal/portal http://schemas.sulu.io/portal/portal-1.0.xsd">
+<workspace xmlns="http://schemas.sulu.io/workspace/workspace"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://schemas.sulu.io/workspace/workspace http://schemas.sulu.io/workspace/workspace-1.0.xsd">
 
     <name>Massive Art</name>
     <key>massiveart</key>
-    
-    <resource-locator>
-        <strategy>tree</strategy>
-    </resource-locator>
 
-    <languages>
-        <language main="true">en</language>
-        <language fallback="true">de</language>
-    </languages>
+    <portals>
+        <portal>
+            <name>Massive Art US</name>
+            <resource-locator>
+                <strategy>tree</strategy>
+            </resource-locator>
 
-    <theme>
-        <key>massiveart</key>
-        <excluded>
-            <template>overview</template>
-        </excluded>
-    </theme>
+            <theme>
+                <key>massiveart</key>
+                <excluded>
+                    <template>overview</template>
+                </excluded>
+            </theme>
 
-    <environments>
-        <environment type="prod">
-            <urls>
-                <url main="true">massiveart.com</url>
-                <url>www.massiveart.com</url>
-            </urls>
-        </environment>
-        <environment type="dev">
+            <localizations>
+                <localization language="en" country="us" default="true"/>
+            </localizations>
 
-        </environment>
-    </environments>
-</portal>
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url main="true">[{language}.]massiveart.[{country}][/{segment}]</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url main="true">massiveart.lo[/{localization}][/{segment}]</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+        <portal>
+            <name>Massive Art CA</name>
+            <resource-locator>
+                <strategy>tree</strategy>
+            </resource-locator>
+
+            <theme>
+                <key>massiveart</key>
+                <excluded>
+                    <template>overview</template>
+                </excluded>
+            </theme>
+
+            <localizations>
+                <localization language="en" country="ca" default="true"/>
+                <localization language="fr" country="ca"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url main="true">[{language}.]massiveart.[{country}][/{segment}]</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url main="true">massiveart.lo[/{localization}][/{segment}]</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</workspace>
