@@ -55,6 +55,7 @@
     <xs:complexType name="portalType">
         <xs:sequence>
             <xs:element type="xs:string" name="name"/>
+            <xs:element type="xs:string" name="key"/>
             <xs:element type="resource-locatorType" name="resource-locator"/>
             <xs:element type="themeType" name="theme"/>
             <xs:element type="localizationsType" name="localizations"/>

@@ -84,7 +84,17 @@ class WorkspaceCollection implements \IteratorAggregate
      */
     public function getPortal($key)
     {
-        return $this->allPortals[$key];
+        return array_key_exists($key, $this->allPortals) ? $this->allPortals[$key] : null;
+    }
+
+    /**
+     * Returns all the portals of this collection
+     * @param string $environment Returns the portals for the given environment
+     * @return Portal[]
+     */
+    public function getPortals($environment = null)
+    {
+        return ($environment == null) ? $this->allPortals : $this->environmentPortals[$environment];
     }
 
     /**
@@ -94,7 +104,7 @@ class WorkspaceCollection implements \IteratorAggregate
      */
     public function getWorkspace($key)
     {
-        return $this->workspaces[$key];
+        return array_key_exists($key, $this->workspaces) ? $this->workspaces[$key] : null;
     }
 
     /**
@@ -103,7 +113,7 @@ class WorkspaceCollection implements \IteratorAggregate
      */
     public function length()
     {
-        return count($this->allPortals);
+        return count($this->workspaces);
     }
 
     /**
@@ -115,7 +125,7 @@ class WorkspaceCollection implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->allPortals);
+        return new \ArrayIterator($this->workspaces);
     }
 
     /**

@@ -45,5 +45,5 @@ interface WorkspaceManagerInterface
      * Returns all the workspaces managed by this specific instance
      * @return WorkspaceCollection
      */
-    public function getWorkspaces();
+    public function getWorkspaceCollection();
 }

@@ -61,7 +61,7 @@ class WorkspaceManager implements WorkspaceManagerInterface
      */
     public function findWorkspaceByKey($key)
     {
-        return $this->workspaceCollection->getWorkspace($key);
+        return $this->getWorkspaceCollection()->getWorkspace($key);
     }
 
     /**
@@ -71,7 +71,7 @@ class WorkspaceManager implements WorkspaceManagerInterface
      */
     public function findPortalByKey($key)
     {
-        return $this->workspaceCollection->getPortal($key);
+        return $this->getWorkspaceCollection()->getPortal($key);
     }
 
     /**
@@ -82,28 +82,27 @@ class WorkspaceManager implements WorkspaceManagerInterface
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach ($this->getWorkspaces() as $workspace) {
-            /** @var Workspace $workspace */
-            foreach ($workspace->getPortals() as $portal) {
-                // skip the portal if it does not contain the desired environment
-                if (!array_key_exists($portal->getEnvironments(), $environment)) {
+        foreach ($this->getWorkspaceCollection()->getPortals($environment) as $portal) {
+            // skip the portal if it does not contain the desired environment
+            if (!array_key_exists($environment, $portal->getEnvironments())) {
+                break;
+            }
+
+            $urlPart = $url;
+
+            // search until every slash has been cut
+            while (true) {
+                if (array_key_exists($urlPart, $portal->getEnvironments()[$environment]->getUrls())) {
+                    return $portal->getEnvironments()[$environment]->getUrls()[$urlPart];
+                }
+
+                if (strpos($urlPart, '/') === false) {
+                    // no slash left to cut
                     break;
                 }
 
-                $urlPart = $url;
-
-                // search until every slash has been cut
-                while (true) {
-                    // cut the string at the last slash
-                    $urlPart = preg_replace('/(.*)\\/(.*)/', '$1', $urlPart);
-                    if (array_key_exists($portal->getEnvironments()[$environment], $url)) {
-                        return $portal->getEnvironments()[$environment][$url];
-                    }
-                    if (strpos($urlPart, '/') !== 0) {
-                        // no slash left to cut
-                        break;
-                    }
-                }
+                // cut the string at the last slash
+                $urlPart = preg_replace('/(.*)\\/(.*)/', '$1', $urlPart);
             }
         }
 
@@ -114,7 +113,7 @@ class WorkspaceManager implements WorkspaceManagerInterface
      * Returns all the workspaces managed by this specific instance
      * @return WorkspaceCollection
      */
-    public function getWorkspaces()
+    public function getWorkspaceCollection()
     {
         if ($this->workspaceCollection === null) {
             $class = $this->options['cache_class'];

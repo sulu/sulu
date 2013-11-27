@@ -94,6 +94,7 @@ class XmlFileLoader extends FileLoader
             $portal = new Portal();
 
             $portal->setName($xpath->query('x:name', $portalNode)->item(0)->nodeValue);
+            $portal->setKey($xpath->query('x:key', $portalNode)->item(0)->nodeValue);
             $portal->setResourceLocatorStrategy($xpath->query('x:resource-locator/x:strategy', $portalNode)->item(0)->nodeValue);
 
             // set theme on portal
