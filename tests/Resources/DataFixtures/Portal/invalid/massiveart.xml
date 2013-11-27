@@ -27,12 +27,12 @@
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url main="true">[{language}.]massiveart.[{country}][/{segment}]</url>
+                        <url main="true">{language}.massiveart.{country}/{segment}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url main="true">massiveart.lo[/{localization}][/{segment}]</url>
+                        <url main="true">massiveart.lo/{localization}/{segment}</url>
                     </urls>
                 </environment>
             </environments>
@@ -58,12 +58,12 @@
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url main="true">[{language}.]massiveart.[{country}][/{segment}]</url>
+                        <url main="true">{language}.massiveart.{country}/{segment}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url main="true">massiveart.lo[/{localization}][/{segment}]</url>
+                        <url main="true">massiveart.lo/{localization}/{segment}</url>
                     </urls>
                 </environment>
             </environments>

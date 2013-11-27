@@ -144,4 +144,13 @@ class Localization
     {
         return $this->children;
     }
+
+    /**
+     * Returns the localization code, which is a combination of the language and the country
+     * @return string
+     */
+    public function getLocalization()
+    {
+        return $this->getLanguage() . '-' . $this->getCountry();
+    }
 }

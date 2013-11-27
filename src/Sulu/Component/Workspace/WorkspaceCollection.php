@@ -47,16 +47,56 @@ class WorkspaceCollection implements \IteratorAggregate
     /**
      * Adds the portal with its unique key as array key to the collection for all Portal, and adds all the urls for
      * this portal to the correct environment, with the url as key
-     * @param Portal $workspace The portal to add
+     * @param Workspace $workspace The portal to add
      */
     public function add(Workspace $workspace)
     {
         $this->workspaces[$workspace->getKey()] = $workspace;
+
         foreach ($workspace->getPortals() as $portal) {
             $this->allPortals[$portal->getKey()] = $portal;
-        }
 
-        // TODO add to correct environment
+            // go through every url, and add the information for the portals
+            foreach ($portal->getEnvironments() as $environment) {
+                foreach ($environment->getUrls() as $url) {
+                    // generate all the urls
+                    $this->generatePortalInformation($workspace, $portal, $environment, $url);
+                }
+            }
+        }
+    }
+
+    /**
+     * Generates all the possible urls for the given url pattern
+     * @param Workspace $workspace
+     * @param \Sulu\Component\Workspace\Portal $portal
+     * @param \Sulu\Component\Workspace\Environment $environment
+     * @param \Sulu\Component\Workspace\Url $url
+     */
+    private function generatePortalInformation(Workspace $workspace, Portal $portal, Environment $environment, Url $url)
+    {
+        // TODO handle replacers more elegant
+        foreach ($portal->getLocalizations() as $localization) {
+            $urlAddress = $url->getUrl();
+            $urlAddress = str_replace('{language}', $localization->getLanguage(), $urlAddress);
+            $urlAddress = str_replace('{country}', $localization->getCountry(), $urlAddress);
+            $urlAddress = str_replace(
+                '{localization}',
+                $localization->getLocalization(),
+                $urlAddress
+            );
+
+            $segments = $workspace->getSegments();
+            if (!empty($segments)) {
+                foreach ($segments as $segment) {
+                    $urlAddressSegment = $urlAddress;
+                    $urlAddressSegment = str_replace('{segment}', $segment->getKey(), $urlAddressSegment);
+                    $this->environmentPortals[$environment->getType()][$urlAddressSegment] = $portal;
+                }
+            } else {
+                $this->environmentPortals[$environment->getType()][$urlAddress] = $portal;
+            }
+        }
     }
 
     /**
