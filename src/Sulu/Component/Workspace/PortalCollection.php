@@ -23,7 +23,13 @@ class PortalCollection implements \IteratorAggregate
      * All the portals in a specific sulu installation
      * @var Portal[]
      */
-    private $portals;
+    private $allPortals;
+
+    /**
+     * The portals of this specific sulu installation, prefiltered by the environment and url
+     * @var array
+     */
+    private $environmentPortals;
 
     /**
      * Contains all the resources, which where used to build this collection.
@@ -33,12 +39,19 @@ class PortalCollection implements \IteratorAggregate
     private $resources;
 
     /**
-     * Adds the portal with its unique key as array key to the collection
+     * Adds the portal with its unique key as array key to the collection for all Portal, and adds all the urls for
+     * this portal to the correct environment, with the url as key
      * @param Portal $portal The portal to add
      */
-    public function add(Portal $portal, $environment = 'prod')
+    public function add(Portal $portal)
     {
-        $this->portals[$portal->getKey()] = $portal;
+        $this->allPortals[$portal->getKey()] = $portal;
+
+        foreach ($portal->getEnvironments() as $environment) {
+            foreach ($environment->getUrls() as $url) {
+                $this->environmentPortals[$environment->getType()][$url->getUrl()] = $portal;
+            }
+        }
     }
 
     /**
@@ -66,7 +79,7 @@ class PortalCollection implements \IteratorAggregate
      */
     public function get($key)
     {
-        return $this->portals[$key];
+        return $this->allPortals[$key];
     }
 
     /**
@@ -75,7 +88,7 @@ class PortalCollection implements \IteratorAggregate
      */
     public function length()
     {
-        return count($this->portals);
+        return count($this->allPortals);
     }
 
     /**
@@ -87,7 +100,7 @@ class PortalCollection implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->portals);
+        return new \ArrayIterator($this->allPortals);
     }
 
     /**
@@ -98,7 +111,7 @@ class PortalCollection implements \IteratorAggregate
     {
         $portals = array();
 
-        foreach ($this->portals as $portal) {
+        foreach ($this->allPortals as $portal) {
             $portalData = array();
             $portalData['name'] = $portal->getName();
             $portalData['key'] = $portal->getKey();

@@ -24,6 +24,7 @@ class PortalCollectionTest extends \PHPUnit_Framework_TestCase
         // first portal
         $portal = new Portal();
         $portal->setName('Portal1');
+        $portal->setKey('portal1');
 
         $theme = new Theme();
         $theme->setKey('portal1theme');
@@ -71,6 +72,21 @@ class PortalCollectionTest extends \PHPUnit_Framework_TestCase
         $portal->setWorkspace($workspace);
 
         $this->portalCollection->add($portal);
+    }
+
+    public function testAdd()
+    {
+        $allPortalsReflection = new \ReflectionProperty('\Sulu\Component\Workspace\PortalCollection', 'allPortals');
+        $allPortalsReflection->setAccessible(true);
+        $environmentPortalsReflection = new \ReflectionProperty('\Sulu\Component\Workspace\PortalCollection', 'environmentPortals');
+        $environmentPortalsReflection->setAccessible(true);
+
+        $allPortals = $allPortalsReflection->getValue($this->portalCollection);
+        $environmentPortals = $environmentPortalsReflection->getValue($this->portalCollection);
+
+        $this->assertEquals('Portal1', $allPortals['portal1']->getName());
+        $this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']->getName());
+        $this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']->getName());
     }
 
     public function testToArray()
