@@ -1,10 +1,11 @@
 <?php
-use Sulu\Component\Portal\PortalCollection;
-use Sulu\Component\Portal\Portal;
-use Sulu\Component\Portal\Language;
-use Sulu\Component\Portal\Theme;
-use Sulu\Component\Portal\Environment;
-use Sulu\Component\Portal\Url;
+use Sulu\Component\Workspace\PortalCollection;
+use Sulu\Component\Workspace\Portal;
+use Sulu\Component\Workspace\Localization;
+use Sulu\Component\Workspace\Theme;
+use Sulu\Component\Workspace\Environment;
+use Sulu\Component\Workspace\Url;
+use Sulu\Component\Workspace\Workspace;
 
 /**
  * {{ cache_class }}
@@ -23,14 +24,14 @@ class {{ cache_class }} extends {{ base_class }}
         $portal->setName('{{ portal.name }}');
         $portal->setKey('{{ portal.key }}');
         $portal->setResourceLocatorStrategy('{{ portal.resourceLocator.strategy }}');
-{% for language in portal.languages %}
+{% for localization in portal.localizations %}
 
-        // add language
-        $language = new Language();
-        $language->setCode('{{ language.code }}');
-        $language->setFallback('{{ language.fallback }}');
-        $language->setMain('{{ language.main }}');
-        $portal->addLanguage($language);
+        // add localization
+        $localization = new Localization();
+        $localization->setLanguage('{{ localization.language }}');
+        $localization->setCountry('{{ localization.country }}');
+        $localization->setDefault({{ (localization.default) ? 'true' : 'false' }});
+        $localization->addLanguage($localization);
 {% endfor %}
 
         // add theme
@@ -54,6 +55,24 @@ class {{ cache_class }} extends {{ base_class }}
 
         $portal->addEnvironment($environment);
 {% endfor %}
+
+        // set workspace
+        $workspace = new Workspace();
+
+{% for localization in portal.workspace.localizations %}
+        // add localization to workspace
+        $localization = new Localization();
+        $localization->setLanguage('{{ localization.language }}');
+        $localization->setCountry('{{ localization.country }}');
+        $localization->setDefault({{ (localization.default) ? 'true' : 'false' }});
+        $localization->setShadow('{{ (localization.shadow) }}');
+        $localization->addLanguage($localization);
+        $workspace->addLocalization($localization);
+
+{% endfor %}
+        $workspace->setKey('{{ portal.workspace.key }}');
+        $workspace->setName('{{ portal.workspace.name }}');
+        $portal->setWorkspace($workspace);
 
         $this->add($portal);
 

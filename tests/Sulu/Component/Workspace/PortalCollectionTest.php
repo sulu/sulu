@@ -103,10 +103,13 @@ class PortalCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('portal1.com', $portal['environments'][0]['urls'][1]['url']);
         $this->assertEquals('us', $portal['localizations'][0]['country']);
         $this->assertEquals('en', $portal['localizations'][0]['language']);
+        $this->assertEquals(true, $portal['localizations'][0]['default']);
         $this->assertEquals('ca', $portal['localizations'][1]['country']);
         $this->assertEquals('en', $portal['localizations'][1]['language']);
+        $this->assertEquals(false, $portal['localizations'][1]['default']);
         $this->assertEquals('ca', $portal['localizations'][2]['country']);
         $this->assertEquals('fr', $portal['localizations'][2]['language']);
+        $this->assertEquals(false, $portal['localizations'][2]['default']);
         $this->assertEquals('tree', $portal['resourceLocator']['strategy']);
         $this->assertEquals('default', $portal['workspace']['key']);
         $this->assertEquals('us', $portal['workspace']['localizations'][0]['country']);
