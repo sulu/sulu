@@ -10,89 +10,120 @@
 
 namespace Sulu\Component\Workspace\Analyzer;
 
-
+use Sulu\Component\Workspace\Localization;
+use Sulu\Component\Workspace\Manager\WorkspaceManagerInterface;
 use Sulu\Component\Workspace\Portal;
 use Sulu\Component\Workspace\Segment;
+use Symfony\Component\HttpFoundation\Request;
 
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
-    private $currentPortal;
-
-    private $currentSegment;
-
-    private $currentLanguage;
-
-    private $currentCountry;
+    /**
+     * The WorkspaceManager, responsible for loading the required workspaces
+     * @var WorkspaceManagerInterface
+     */
+    private $workspaceManager;
 
     /**
-     * Returns the current portal for this request
-     * @return \Sulu\Component\Workspace\Portal
+     * The environment valid to analyze the request
+     * @var string
      */
-    public function getCurrentPortal()
+    private $environment;
+
+    /**
+     * The current portal valid for the current request
+     * @var Portal
+     */
+    private $portal;
+
+    /**
+     * The current segment valid for the current request
+     * @var Segment
+     */
+    private $segment;
+
+    /**
+     * The current localization valid for the current request
+     * @var Localization
+     */
+    private $localization;
+
+    public function __construct(WorkspaceManagerInterface $workspaceManager, $environment)
     {
-        return $this->currentPortal;
+        $this->workspaceManager = $workspaceManager;
+        $this->environment = $environment;
     }
 
     /**
-     * Sets the current portal for this request
-     * @param Portal $portal
+     * Analyzes the current request, and saves the values for portal, localization and segment for further usage
+     * @param Request $request The request to analyze
      */
-    public function setCurrentPortal(Portal $portal)
+    public function analyze(Request $request)
     {
-        $this->currentPortal = $portal;
+        $portalInformation = $this->workspaceManager->findPortalInformationByUrl(
+            $request->getUri(),
+            $this->environment
+        );
+
+        $this->setLocalization($portalInformation['localization']);
+        $this->setPortal($portalInformation['portal']);
+
+        if (array_key_exists('segment', $portalInformation)) {
+            $this->setSegment($portalInformation['segment']);
+        }
+    }
+
+    /**
+     * Returns the current portal for this request
+     * @return Portal
+     */
+    public function getCurrentPortal()
+    {
+        return $this->portal;
     }
 
     /**
      * Returns the current segment for this request
-     * @return \Sulu\Component\Workspace\Segment
+     * @return Segment
      */
     public function getCurrentSegment()
     {
-        return $this->currentSegment;
+        return $this->segment;
     }
 
     /**
-     * Sets the current segment for this request
-     * @param Segment $segment
+     * Returns the current localization for this Request
+     * @return Localization
      */
-    public function setCurrentSegment(Segment $segment)
+    public function getCurrentLocalization()
     {
-        $this->currentSegment = $segment;
+        return $this->localization;
     }
 
     /**
-     * Returns the current country for this Request
-     * @return string
+     * Sets the current localization
+     * @param \Sulu\Component\Workspace\Localization $localization
      */
-    public function getCurrentCountry()
+    protected function setLocalization($localization)
     {
-        return $this->currentCountry;
+        $this->localization = $localization;
     }
 
     /**
-     * Sets the current country for this request
-     * @param string $country
+     * Sets the current portal
+     * @param \Sulu\Component\Workspace\Portal $portal
      */
-    public function setCurrentCountry($country)
+    protected function setPortal($portal)
     {
-        $this->currentCountry = $country;
+        $this->portal = $portal;
     }
 
     /**
-     * Returns the current language for this request
-     * @return string
+     * Sets the current segment
+     * @param \Sulu\Component\Workspace\Segment $segment
      */
-    public function getCurrentLanguage()
+    protected function setSegment($segment)
     {
-        return $this->currentLanguage;
-    }
-
-    /**
-     * Sets the current language for this request
-     * @param string $language
-     */
-    public function setCurrentLanguage($language)
-    {
-        $this->currentLanguage = $language;
+        $this->segment = $segment;
     }
 }

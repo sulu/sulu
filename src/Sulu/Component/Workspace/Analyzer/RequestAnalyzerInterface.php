@@ -10,8 +10,10 @@
 
 namespace Sulu\Component\Workspace\Analyzer;
 
+use Sulu\Component\Workspace\Localization;
 use Sulu\Component\Workspace\Portal;
 use Sulu\Component\Workspace\Segment;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines the interface for the request analyzer, who is responsible for return the required information for the
@@ -21,50 +23,27 @@ use Sulu\Component\Workspace\Segment;
 interface RequestAnalyzerInterface
 {
     /**
+     * Analyzes the current request, and saves the values for portal, language, country and segment for further usage
+     * @param Request $request The request to analyze
+     * @return
+     */
+    public function analyze(Request $request);
+
+    /**
      * Returns the current portal for this request
-     * @return \Sulu\Component\Workspace\Portal
+     * @return Portal
      */
     public function getCurrentPortal();
 
     /**
-     * Sets the current portal for this request
-     * @param Portal $portal
-     */
-    public function setCurrentPortal(Portal $portal);
-
-    /**
      * Returns the current segment for this request
-     * @return \Sulu\Component\Workspace\Segment
+     * @return Segment
      */
     public function getCurrentSegment();
 
     /**
-     * Sets the current segment for this request
-     * @param Segment $segment
+     * Returns the current localization for this Request
+     * @return Localization
      */
-    public function setCurrentSegment(Segment $segment);
-
-    /**
-     * Returns the current country for this Request
-     * @return string
-     */
-    public function getCurrentCountry();
-
-    /**
-     * Sets the current country for this request
-     * @param string $country
-     */
-    public function setCurrentCountry($country);
-
-    /**
-     * Returns the current language for this request
-     * @return string
-     */
-    public function getCurrentLanguage();
-
-    /**
-     * Sets the current language for this request
-     * @param string $language
-     */
-    public function setCurrentLanguage($language);
+    public function getCurrentLocalization();
 }
