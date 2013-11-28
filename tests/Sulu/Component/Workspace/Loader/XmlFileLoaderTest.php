@@ -119,7 +119,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('dev', $workspace->getPortals()[0]->getEnvironments()[1]->getType());
         $this->assertEquals(1, count($workspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('massiveart.lo/{localization}/{segment}', $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $this->assertEquals(
+            'massiveart.lo/{localization}/{segment}',
+            $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl()
+        );
         $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
 
         $this->assertEquals('Massive Art CA', $workspace->getPortals()[1]->getName());
@@ -153,6 +156,66 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
             $workspace->getPortals()[1]->getEnvironments()[1]->getUrls()[0]->getUrl()
         );
         $this->assertEquals(true, $workspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->isMain());
+    }
+
+    public function testLoadWithoutPortalLocalizations()
+    {
+        $workspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Workspace/valid/sulu.io_withoutPortalLocalization.xml'
+        );
+
+        $this->assertEquals('Sulu CMF', $workspace->getName());
+        $this->assertEquals('sulu_io_without_portal_localization', $workspace->getKey());
+
+        $this->assertEquals('en', $workspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $workspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $workspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals(true, $workspace->getLocalizations()[0]->isDefault());
+
+        $this->assertEquals('en', $workspace->getLocalizations()[0]->getChildren()[0]->getLanguage());
+        $this->assertEquals('uk', $workspace->getLocalizations()[0]->getChildren()[0]->getCountry());
+        $this->assertEquals(null, $workspace->getLocalizations()[0]->getChildren()[0]->getShadow());
+        $this->assertEquals(false, $workspace->getLocalizations()[0]->getChildren()[0]->isDefault());
+
+        $this->assertEquals('de', $workspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $workspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals(null, $workspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals(false, $workspace->getLocalizations()[1]->isDefault());
+
+        $this->assertEquals('short', $workspace->getPortals()[0]->getResourceLocatorStrategy());
+
+        $this->assertEquals(3, count($workspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals('en', $workspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $workspace->getPortals()[0]->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $workspace->getPortals()[0]->getLocalizations()[0]->getShadow());
+        $this->assertEquals(true, $workspace->getPortals()[0]->getLocalizations()[0]->isDefault());
+        $this->assertEquals('en', $workspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('uk', $workspace->getPortals()[0]->getLocalizations()[1]->getCountry());
+        $this->assertEquals(null, $workspace->getPortals()[0]->getLocalizations()[1]->getShadow());
+        $this->assertEquals(false, $workspace->getPortals()[0]->getLocalizations()[1]->isDefault());
+        $this->assertEquals('de', $workspace->getPortals()[0]->getLocalizations()[2]->getLanguage());
+        $this->assertEquals('at', $workspace->getPortals()[0]->getLocalizations()[2]->getCountry());
+        $this->assertEquals(null, $workspace->getPortals()[0]->getLocalizations()[2]->getShadow());
+        $this->assertEquals(false, $workspace->getPortals()[0]->getLocalizations()[2]->isDefault());
+
+        $this->assertEquals('sulu', $workspace->getPortals()[0]->getTheme()->getKey());
+        $this->assertEquals(1, count($workspace->getPortals()[0]->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $workspace->getPortals()[0]->getTheme()->getExcludedTemplates()[0]);
+
+        $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()));
+
+        $this->assertEquals('prod', $workspace->getPortals()[0]->getEnvironments()[0]->getType());
+        $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
+        $this->assertEquals('sulu-without.at', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl());
+        $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
+        $this->assertEquals('www.sulu-without.at', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getUrl());
+        $this->assertEquals(false, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->isMain());
+
+        $this->assertEquals('dev', $workspace->getPortals()[0]->getEnvironments()[1]->getType());
+        $this->assertEquals(1, count($workspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
+        $this->assertEquals('sulu-without.lo', $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
+
     }
 
     /**

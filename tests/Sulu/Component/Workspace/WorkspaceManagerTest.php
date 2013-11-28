@@ -343,7 +343,7 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $workspaces = $this->workspaceManager->getWorkspaceCollection();
 
-        $this->assertEquals(2, $workspaces->length());
+        $this->assertEquals(3, $workspaces->length());
 
         $workspace = $workspaces->getWorkspace('massiveart');
 
