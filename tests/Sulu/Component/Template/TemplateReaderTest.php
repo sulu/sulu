@@ -60,7 +60,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/Datafixtures/Template/template.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template.xml');
         $this->assertEquals($template, $result);
     }
 
@@ -85,7 +85,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../Resources/Datafixtures/Template/template_missing_properties.xml'
+            __DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_properties.xml'
         );
         $this->assertEquals($template, $result);
     }
@@ -96,7 +96,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReadTypesMissingMandatory()
     {
         $templateReader = new TemplateReader();
-        $templateReader->load(__DIR__ . '/../../../Resources/Datafixtures/Template/template_missing_mandatory.xml');
+        $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_mandatory.xml');
     }
 
 }
