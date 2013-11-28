@@ -118,14 +118,16 @@ class WorkspaceCollection implements \IteratorAggregate
                     $this->environmentPortals[$environment][$urlResult] = array(
                         'portal' => $portal,
                         'localization' => $localization,
-                        'segment' => $segment
+                        'segment' => $segment,
+                        'url' => $urlResult
                     );
                 }
             } else {
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                 $this->environmentPortals[$environment][$urlResult] = array(
                     'portal' => $portal,
-                    'localization' => $localization
+                    'localization' => $localization,
+                    'url' => $urlResult
                 );
             }
         }

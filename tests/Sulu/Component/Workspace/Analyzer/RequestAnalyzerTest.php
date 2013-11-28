@@ -56,7 +56,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $portalInformation = array(
             'portal' => $portal,
             'localization' => $localization,
-            'segment' => null
+            'segment' => null,
+            'url' => 'sulu.lo'
         );
 
         $this->workspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
@@ -69,6 +70,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de-at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
+        $this->assertEquals('sulu.lo', $this->requestAnalyzer->getCurrentPortalUrl());
     }
 
     /**

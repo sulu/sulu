@@ -65,7 +65,8 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $portalInformation = array(
             'portal' => $portal,
             'localization' => $localization,
-            'segment' => null
+            'segment' => null,
+            'url' => 'sulu.lo'
         );
 
         $this->workspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(

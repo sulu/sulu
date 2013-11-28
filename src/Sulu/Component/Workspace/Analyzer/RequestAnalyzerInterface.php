@@ -46,4 +46,16 @@ interface RequestAnalyzerInterface
      * @return Localization
      */
     public function getCurrentLocalization();
+
+    /**
+     * Returns the redirect url
+     * @return string
+     */
+    public function getRedirect();
+
+    /**
+     * Returns the url of the current portal
+     * @return string
+     */
+    public function getCurrentPortalUrl();
 }

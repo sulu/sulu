@@ -49,6 +49,18 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $localization;
 
+    /**
+     * The redirect, null if not existent
+     * @var string
+     */
+    private $redirect;
+
+    /**
+     * The url of the current portal
+     * @var string
+     */
+    private $portalUrl;
+
     public function __construct(WorkspaceManagerInterface $workspaceManager, $environment)
     {
         $this->workspaceManager = $workspaceManager;
@@ -68,11 +80,17 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         );
 
         if ($portalInformation != null) {
-            $this->setLocalization($portalInformation['localization']);
-            $this->setPortal($portalInformation['portal']);
+            if (array_key_exists('redirect', $portalInformation)) {
+                $this->setPortalUrl($portalInformation['url']);
+                $this->setRedirect($portalInformation['redirect']);
+            } else {
+                $this->setPortalUrl($portalInformation['url']);
+                $this->setLocalization($portalInformation['localization']);
+                $this->setPortal($portalInformation['portal']);
 
-            if (array_key_exists('segment', $portalInformation)) {
-                $this->setSegment($portalInformation['segment']);
+                if (array_key_exists('segment', $portalInformation)) {
+                    $this->setSegment($portalInformation['segment']);
+                }
             }
         } else {
             throw new UrlMatchNotFoundException($request->getUri());
@@ -107,6 +125,24 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * Returns the url of the current Portal
+     * @return string
+     */
+    public function getCurrentPortalUrl()
+    {
+        return $this->portalUrl;
+    }
+
+    /**
+     * Returns the redirect, null if there is no redirect
+     * @return string
+     */
+    public function getRedirect()
+    {
+        return $this->redirect;
+    }
+
+    /**
      * Sets the current localization
      * @param \Sulu\Component\Workspace\Localization $localization
      */
@@ -131,5 +167,23 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     protected function setSegment($segment)
     {
         $this->segment = $segment;
+    }
+
+    /**
+     * Sets the redirect
+     * @param string $redirect
+     */
+    public function setRedirect($redirect)
+    {
+        $this->redirect = $redirect;
+    }
+
+    /**
+     * Sets the url of the current portal
+     * @param string $portalUrl
+     */
+    public function setPortalUrl($portalUrl)
+    {
+        $this->portalUrl = $portalUrl;
     }
 }
