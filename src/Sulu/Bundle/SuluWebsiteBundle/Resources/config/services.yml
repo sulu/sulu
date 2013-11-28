@@ -10,4 +10,4 @@ services:
 
     sulu_website.provider.portal:
         class: %sulu_website.provider.portal.class%
-        arguments: ["@sulu.content.mapper", "@sulu_core.portal.portal_manager", "@liip_theme.active_theme"]
+        arguments: ["@sulu.content.mapper", "@sulu_core.workspace.request_analyzer", "@liip_theme.active_theme"]
