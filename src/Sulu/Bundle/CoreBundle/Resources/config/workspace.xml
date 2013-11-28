@@ -4,11 +4,11 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_core.workspace.request_analyzer.class">Sulu\Component\Workspace\Analyzer\RequestAnalyzer</parameter>
-        <parameter key="sulu_core.workspace.portal_manager.class">Sulu\Component\Workspace\Manager\PortalManager</parameter>
+        <parameter key="sulu_core.workspace.workspace_manager.class">Sulu\Component\Workspace\Manager\WorkspaceManager</parameter>
         <parameter key="sulu_core.workspace.loader.xml_class">Sulu\Component\Workspace\Loader\XmlFileLoader</parameter>
         <parameter key="sulu_core.workspace.request_listener.class">Sulu\Component\Workspace\EventListener\RequestListener</parameter>
 
-        <parameter key="sulu_core.workspace.config_dir">%kernel.root_dir%/../Resources/portals</parameter>
+        <parameter key="sulu_core.workspace.config_dir">%kernel.root_dir%/../Resources/workspaces</parameter>
         <parameter key="sulu_core.workspace.cache_class">WorkspaceCollectionCache</parameter>
         <parameter key="sulu_core.workspace.base_class">WorkspaceCollection</parameter>
     </parameters>
@@ -17,9 +17,9 @@
         <service id="sulu_core.workspace.loader.xml" class="%sulu_core.workspace.loader.xml_class%">
             <argument type="service" id="file_locator"/>
         </service>
-        <service id="sulu_core.workspace.portal_manager" class="%sulu_core.workspace.portal_manager.class%">
+        <service id="sulu_core.workspace.workspace_manager" class="%sulu_core.workspace.workspace_manager.class%">
             <!-- TODO use delegating loader -->
-            <argument type="service" id="sulu_core.workspace.loader.xml" />
+            <argument type="service" id="sulu_core.workspace.loader.xml"/>
             <argument type="service" id="logger"/>
             <argument type="collection">
                 <argument key="config_dir">%sulu_core.workspace.config_dir%</argument>
@@ -29,10 +29,13 @@
                 <argument key="base_class">%sulu_core.workspace.base_class%</argument>
             </argument>
         </service>
-        <service id="sulu_core.workspace.request_analyzer" class="%sulu_core.workspace.request_analyzer.class%"/>
+        <service id="sulu_core.workspace.request_analyzer" class="%sulu_core.workspace.request_analyzer.class%">
+            <argument type="service" id="sulu_core.workspace.workspace_manager"/>
+            <argument>%kernel.environment%</argument>
+        </service>
         <service id="sulu_core.workspace.request_listener" class="%sulu_core.workspace.request_listener.class%">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="300"/>
-            <argument type="service" id="sulu_core.workspace.request_analyzer" />
+            <argument type="service" id="sulu_core.workspace.request_analyzer"/>
         </service>
     </services>
 </container>

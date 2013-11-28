@@ -44,7 +44,7 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->logger,
             array(
                 'cache_dir' => __DIR__ . '/../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Portal/valid'
+                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Workspace/valid'
             )
         );
     }
@@ -337,7 +337,7 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->logger,
             array(
                 'cache_dir' => __DIR__ . '/../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Portal/both'
+                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Workspace/both'
             )
         );
 

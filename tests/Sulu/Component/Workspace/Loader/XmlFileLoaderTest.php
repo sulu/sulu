@@ -27,7 +27,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoad()
     {
-        $workspace = $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Portal/valid/sulu.io.xml');
+        $workspace = $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Workspace/valid/sulu.io.xml');
 
         $this->assertEquals('Sulu CMF', $workspace->getName());
         $this->assertEquals('sulu_io', $workspace->getKey());
@@ -68,7 +68,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
 
         $workspace = $this->loader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Portal/valid/massiveart.xml'
+            __DIR__ . '/../../../../Resources/DataFixtures/Workspace/valid/massiveart.xml'
         );
 
         $this->assertEquals('Massive Art', $workspace->getName());
@@ -160,6 +160,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadInvalid()
     {
-        $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Portal/invalid/massiveart.xml');
+        $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Workspace/invalid/massiveart.xml');
     }
 }
