@@ -93,30 +93,28 @@ class WorkspaceCollection implements \IteratorAggregate
      */
     private function generatePortalInformation(Portal $portal, $environment, $url, $segments)
     {
-        // TODO handle replacers more elegant
         foreach ($portal->getLocalizations() as $localization) {
             $urlAddress = $url;
 
-            $urlAddress = str_replace('{language}', $localization->getLanguage(), $urlAddress);
-            $urlAddress = str_replace('{country}', $localization->getCountry(), $urlAddress);
-            $urlAddress = str_replace(
-                '{localization}',
-                $localization->getLocalization(),
-                $urlAddress
+            $replacers = array(
+                '{language}' => $localization->getLanguage(),
+                '{country}' => $localization->getCountry(),
+                '{localization}' => $localization->getLocalization()
             );
 
             if (!empty($segments)) {
                 foreach ($segments as $segment) {
-                    $urlAddressSegment = $urlAddress;
-                    $urlAddressSegment = str_replace('{segment}', $segment->getKey(), $urlAddressSegment);
-                    $this->environmentPortals[$environment][$urlAddressSegment] = array(
+                    $replacers['{segment}'] = $segment->getKey();
+                    $url = $this->generateUrlAddress($urlAddress, $replacers);
+                    $this->environmentPortals[$environment][$url] = array(
                         'portal' => $portal,
                         'localization' => $localization,
                         'segment' => $segment
                     );
                 }
             } else {
-                $this->environmentPortals[$environment][$urlAddress] = array(
+                $url = $this->generateUrlAddress($urlAddress, $replacers);
+                $this->environmentPortals[$environment][$url] = array(
                     'portal' => $portal,
                     'localization' => $localization
                 );
@@ -328,5 +326,20 @@ class WorkspaceCollection implements \IteratorAggregate
         }
 
         return $environmentData;
+    }
+
+    /**
+     * Replaces the given values in the pattern
+     * @param string $pattern
+     * @param array $replacers
+     * @return string
+     */
+    private function generateUrlAddress($pattern, $replacers)
+    {
+        foreach ($replacers as $replacer => $value) {
+            $pattern = str_replace($replacer, $value, $pattern);
+        }
+
+        return $pattern;
     }
 }

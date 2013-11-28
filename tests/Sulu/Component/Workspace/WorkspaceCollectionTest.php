@@ -90,8 +90,8 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Default', $workspaces['default']->getName());
         $this->assertEquals('Portal1', $allPortals['portal1']->getName());
         // TODO make next two lines possible
-        //$this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']->getName());
-        //$this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']->getName());
+        //$this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']['portal']->getName());
+        //$this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']['portal']->getName());
     }
 
     public function testToArray()
