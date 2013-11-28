@@ -77,79 +77,13 @@ class XmlFileLoader extends FileLoader
         $workspace->setKey($this->xpath->query('/x:workspace/x:key')->item(0)->nodeValue);
 
         // set localizations on workspaces
-        foreach ($this->xpath->query('/x:workspace/x:localizations/x:localization') as $localizationNode) {
-            $localization = $this->generateLocalization($localizationNode);
-
-            $workspace->addLocalization($localization);
-        }
+        $this->generateWorkspaceLocalizations($workspace);
 
         // set segments on workspaces
-        foreach ($this->xpath->query('/x:workspace/x:segments/x:segment') as $segmentNode) {
-            /** @var \DOMNode $segmentNode */
-            $segment = new Segment();
-            $segment->setName($segmentNode->nodeValue);
-            $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
-
-            $workspace->addSegment($segment);
-        }
+        $this->generateSegments($workspace);
 
         // set portals on workspaces
-        foreach ($this->xpath->query('/x:workspace/x:portals/x:portal') as $portalNode) {
-            /** @var \DOMNode $portalNode */
-            $portal = new Portal();
-
-            $portal->setName($this->xpath->query('x:name', $portalNode)->item(0)->nodeValue);
-            $portal->setKey($this->xpath->query('x:key', $portalNode)->item(0)->nodeValue);
-            $portal->setResourceLocatorStrategy(
-                $this->xpath->query('x:resource-locator/x:strategy', $portalNode)->item(0)->nodeValue
-            );
-
-            // set theme on portal
-            $theme = new Theme();
-            $theme->setKey($this->xpath->query('x:theme/x:key', $portalNode)->item(0)->nodeValue);
-
-            foreach ($this->xpath->query('x:theme/x:excluded/x:template', $portalNode) as $templateNode) {
-                /** @var \DOMNode $templateNode */
-                $theme->addExcludedTemplate($templateNode->nodeValue);
-            }
-
-            $portal->setTheme($theme);
-
-            // set localization on portal
-            if ($this->xpath->query('x:localizations', $portalNode)->length > 0) {
-                // set localizations from portal, if they are set
-                $localizationNodes = $this->xpath->query('x:localizations/x:localization', $portalNode);
-                $this->generateLocalizations($localizationNodes, $portal);
-            } else {
-                // if the portal has no localizations fallback to the localizations from the workspace
-                $localizationNodes = $this->xpath->query('/x:workspace/x:localizations//x:localization');
-                $this->generateLocalizations($localizationNodes, $portal, true);
-            }
-
-            $workspace->addPortal($portal);
-
-            // set environments
-            foreach ($this->xpath->query('x:environments/x:environment', $portalNode) as $environmentNode) {
-                /** @var \DOMNode $environmentNode */
-                $environment = new Environment();
-                $environment->setType($environmentNode->attributes->getNamedItem('type')->nodeValue);
-
-                foreach ($this->xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
-                    /** @var \DOMNode $urlNode */
-                    $url = new Url();
-
-                    $url->setUrl($urlNode->nodeValue);
-
-                    // set optional nodes
-                    $mainNode = $urlNode->attributes->getNamedItem('main');
-                    $url->setMain($this->convertBoolean($mainNode));
-
-                    $environment->addUrl($url);
-                }
-
-                $portal->addEnvironment($environment);
-            }
-        }
+        $this->generatePortals($workspace);
 
         return $workspace;
     }
@@ -164,14 +98,32 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @param \DOMNodeList $localizationNodes
-     * @param \DOMXpath $xpath
+     * @param \DOMNode $portalNode
      * @param Portal $portal
      */
-    private function generateLocalizations(\DOMNodeList $localizationNodes, Portal $portal, $flat = false)
+    private function generatePortalLocalizations(\DOMNode $portalNode, Portal $portal)
+    {
+        if ($this->xpath->query('x:localizations', $portalNode)->length > 0) {
+            // set localizations from portal, if they are set
+            $localizationNodes = $this->xpath->query('x:localizations/x:localization', $portalNode);
+            $this->generateLocalizationsFromNodeList($localizationNodes, $portal);
+        } else {
+            // if the portal has no localizations fallback to the localizations from the workspace
+            $localizationNodes = $this->xpath->query('/x:workspace/x:localizations//x:localization');
+            $this->generateLocalizationsFromNodeList($localizationNodes, $portal, true);
+        }
+    }
+
+    /**
+     * @param \DOMNodeList $localizationNodes
+     * @param Portal $portal
+     * @param bool $flat
+     * @internal param \DOMXpath $xpath
+     */
+    private function generateLocalizationsFromNodeList(\DOMNodeList $localizationNodes, Portal $portal, $flat = false)
     {
         foreach ($localizationNodes as $localizationNode) {
-            $localization = $this->generateLocalization($localizationNode, $flat);
+            $localization = $this->generateLocalizationFromNode($localizationNode, $flat);
 
             $portal->addLocalization($localization);
         }
@@ -179,10 +131,11 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMElement|\DOMNode $localizationNode
-     * @param \DOMXPath $xpath
+     * @param bool $flat
+     * @internal param \DOMXPath $xpath
      * @return Localization
      */
-    private function generateLocalization(\DOMElement $localizationNode, $flat = false)
+    private function generateLocalizationFromNode(\DOMElement $localizationNode, $flat = false)
     {
         $localization = new Localization();
         $localization->setLanguage($localizationNode->attributes->getNamedItem('language')->nodeValue);
@@ -199,10 +152,121 @@ class XmlFileLoader extends FileLoader
         // set child nodes
         if (!$flat) {
             foreach ($this->xpath->query('x:localization', $localizationNode) as $childNode) {
-                $localization->addChild($this->generateLocalization($childNode));
+                $localization->addChild($this->generateLocalizationFromNode($childNode));
             }
         }
 
         return $localization;
+    }
+
+    /**
+     * @param Workspace $workspace
+     */
+    private function generateWorkspaceLocalizations(Workspace $workspace)
+    {
+        foreach ($this->xpath->query('/x:workspace/x:localizations/x:localization') as $localizationNode) {
+            $localization = $this->generateLocalizationFromNode($localizationNode);
+
+            $workspace->addLocalization($localization);
+        }
+    }
+
+    /**
+     * @param $workspace
+     */
+    private function generateSegments(Workspace $workspace)
+    {
+        foreach ($this->xpath->query('/x:workspace/x:segments/x:segment') as $segmentNode) {
+            /** @var \DOMNode $segmentNode */
+            $segment = new Segment();
+            $segment->setName($segmentNode->nodeValue);
+            $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
+
+            $workspace->addSegment($segment);
+        }
+    }
+
+    /**
+     * @param Workspace $workspace
+     */
+    private function generatePortals(Workspace $workspace)
+    {
+        foreach ($this->xpath->query('/x:workspace/x:portals/x:portal') as $portalNode) {
+            /** @var \DOMNode $portalNode */
+            $portal = new Portal();
+
+            $portal->setName($this->xpath->query('x:name', $portalNode)->item(0)->nodeValue);
+            $portal->setKey($this->xpath->query('x:key', $portalNode)->item(0)->nodeValue);
+            $portal->setResourceLocatorStrategy(
+                $this->xpath->query('x:resource-locator/x:strategy', $portalNode)->item(0)->nodeValue
+            );
+
+            // set theme on portal
+            $theme = $this->generateTheme($portalNode);
+
+            $portal->setTheme($theme);
+
+            // set localization on portal
+            $this->generatePortalLocalizations($portalNode, $portal);
+
+            $workspace->addPortal($portal);
+
+            // set environments
+            $this->generateEnvironments($portalNode, $portal);
+        }
+    }
+
+    /**
+     * @param \DOMNode $portalNode
+     * @return Theme
+     */
+    private function generateTheme($portalNode)
+    {
+        $theme = new Theme();
+        $theme->setKey($this->xpath->query('x:theme/x:key', $portalNode)->item(0)->nodeValue);
+
+        foreach ($this->xpath->query('x:theme/x:excluded/x:template', $portalNode) as $templateNode) {
+            /** @var \DOMNode $templateNode */
+            $theme->addExcludedTemplate($templateNode->nodeValue);
+        }
+
+        return $theme;
+    }
+
+    /**
+     * @param \DOMNode $portalNode
+     * @param Portal $portal
+     */
+    private function generateEnvironments(\DOMNode $portalNode, Portal $portal)
+    {
+        foreach ($this->xpath->query('x:environments/x:environment', $portalNode) as $environmentNode) {
+            /** @var \DOMNode $environmentNode */
+            $environment = new Environment();
+            $environment->setType($environmentNode->attributes->getNamedItem('type')->nodeValue);
+
+            $this->generateUrls($environmentNode, $environment);
+
+            $portal->addEnvironment($environment);
+        }
+    }
+
+    /**
+     * @param \DOMNode $environmentNode
+     * @param Environment $environment
+     */
+    private function generateUrls(\DOMNode $environmentNode, Environment $environment)
+    {
+        foreach ($this->xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
+            /** @var \DOMNode $urlNode */
+            $url = new Url();
+
+            $url->setUrl($urlNode->nodeValue);
+
+            // set optional nodes
+            $mainNode = $urlNode->attributes->getNamedItem('main');
+            $url->setMain($this->convertBoolean($mainNode));
+
+            $environment->addUrl($url);
+        }
     }
 }

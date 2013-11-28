@@ -215,7 +215,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($workspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
         $this->assertEquals('sulu-without.lo', $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
         $this->assertEquals(true, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->isMain());
-
     }
 
     /**

@@ -206,46 +206,11 @@ class WorkspaceCollection implements \IteratorAggregate
             $workspaceData['name'] = $workspace->getName();
             $workspaceData['localizations'] = $this->toArrayLocalizations($workspace->getLocalizations());
 
-            $segments = $workspace->getSegments();
-            if (!empty($segments)) {
-                foreach ($segments as $segment) {
-                    $segmentData = array();
-                    $segmentData['key'] = $segment->getKey();
-                    $segmentData['name'] = $segment->getName();
-
-                    $workspaceData['segments'][] = $segmentData;
-                }
-            }
+            $workspaceData = $this->toArraySegments($workspace, $workspaceData);
 
             $workspaceData['portals'] = array();
 
-            foreach ($workspace->getPortals() as $portal) {
-                $portalData = array();
-                $portalData['name'] = $portal->getName();
-                $portalData['key'] = $portal->getKey();
-                $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
-
-                $portalData['localizations'] = $this->toArrayLocalizations($portal->getLocalizations());
-
-                $portalData['theme']['key'] = $portal->getTheme()->getKey();
-                $portalData['theme']['excludedTemplates'] = $portal->getTheme()->getExcludedTemplates();
-
-                foreach ($portal->getEnvironments() as $environment) {
-                    $environmentData = array();
-                    $environmentData['type'] = $environment->getType();
-
-                    foreach ($environment->getUrls() as $url) {
-                        $urlData = array();
-                        $urlData['url'] = $url->getUrl();
-                        $urlData['main'] = $url->isMain();
-
-                        $environmentData['urls'][] = $urlData;
-                    }
-                    $portalData['environments'][] = $environmentData;
-                }
-
-                $workspaceData['portals'][] = $portalData;
-            }
+            $workspaceData = $this->toArrayPortals($workspace, $workspaceData);
             $workspaces[] = $workspaceData;
         }
 
@@ -254,7 +219,7 @@ class WorkspaceCollection implements \IteratorAggregate
 
     /**
      * @param $localizations Localization[]
-     * @internal param $portal
+     * @param bool $withAdditionalOptions
      * @return array
      */
     private function toArrayLocalizations($localizations, $withAdditionalOptions = false)
@@ -278,5 +243,90 @@ class WorkspaceCollection implements \IteratorAggregate
         }
 
         return $localizationsArray;
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @param array $workspaceData
+     * @return mixed
+     */
+    private function toArraySegments($workspace, $workspaceData)
+    {
+        $segments = $workspace->getSegments();
+        if (!empty($segments)) {
+            foreach ($segments as $segment) {
+                $segmentData = array();
+                $segmentData['key'] = $segment->getKey();
+                $segmentData['name'] = $segment->getName();
+
+                $workspaceData['segments'][] = $segmentData;
+            }
+
+            return $workspaceData;
+        }
+
+        return $workspaceData;
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @param array $workspaceData
+     * @return mixed
+     */
+    private function toArrayPortals($workspace, $workspaceData)
+    {
+        foreach ($workspace->getPortals() as $portal) {
+            $portalData = array();
+            $portalData['name'] = $portal->getName();
+            $portalData['key'] = $portal->getKey();
+            $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
+
+            $portalData['localizations'] = $this->toArrayLocalizations($portal->getLocalizations());
+
+            $portalData['theme']['key'] = $portal->getTheme()->getKey();
+            $portalData['theme']['excludedTemplates'] = $portal->getTheme()->getExcludedTemplates();
+
+            $portalData = $this->toArrayEnvironments($portal, $portalData);
+
+            $workspaceData['portals'][] = $portalData;
+        }
+
+        return $workspaceData;
+    }
+
+    /**
+     * @param Portal $portal
+     * @param array $portalData
+     * @return mixed
+     */
+    private function toArrayEnvironments($portal, $portalData)
+    {
+        foreach ($portal->getEnvironments() as $environment) {
+            $environmentData = array();
+            $environmentData['type'] = $environment->getType();
+
+            $environmentData = $this->toArrayUrls($environment, $environmentData);
+            $portalData['environments'][] = $environmentData;
+        }
+
+        return $portalData;
+    }
+
+    /**
+     * @param Environment $environment
+     * @param array $environmentData
+     * @return mixed
+     */
+    private function toArrayUrls($environment, $environmentData)
+    {
+        foreach ($environment->getUrls() as $url) {
+            $urlData = array();
+            $urlData['url'] = $url->getUrl();
+            $urlData['main'] = $url->isMain();
+
+            $environmentData['urls'][] = $urlData;
+        }
+
+        return $environmentData;
     }
 }
