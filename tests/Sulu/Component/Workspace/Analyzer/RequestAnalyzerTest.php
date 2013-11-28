@@ -70,4 +70,17 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
     }
+
+    /**
+     * @expectedException \Sulu\Component\Workspace\Analyzer\Exception\UrlMatchNotFoundException
+     */
+    public function testAnalyzeNotExisting()
+    {
+        $this->workspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
+            $this->returnValue(null)
+        );
+
+        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $this->requestAnalyzer->analyze($request);
+    }
 }

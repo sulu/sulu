@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Workspace\Analyzer;
 
+use Sulu\Component\Workspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Workspace\Localization;
 use Sulu\Component\Workspace\Manager\WorkspaceManagerInterface;
 use Sulu\Component\Workspace\Portal;
@@ -65,11 +66,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
             $this->environment
         );
 
-        $this->setLocalization($portalInformation['localization']);
-        $this->setPortal($portalInformation['portal']);
+        if ($portalInformation != null) {
+            $this->setLocalization($portalInformation['localization']);
+            $this->setPortal($portalInformation['portal']);
 
-        if (array_key_exists('segment', $portalInformation)) {
-            $this->setSegment($portalInformation['segment']);
+            if (array_key_exists('segment', $portalInformation)) {
+                $this->setSegment($portalInformation['segment']);
+            }
+        } else {
+            throw new UrlMatchNotFoundException($request->getUri());
         }
     }
 
