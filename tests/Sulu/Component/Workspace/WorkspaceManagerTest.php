@@ -376,4 +376,12 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Sulu CMF', $workspace->getName());
         $this->assertEquals('sulu_io', $workspace->getKey());
     }
+
+    public function testRedirectUrl()
+    {
+        $portalInformation = $this->workspaceManager->findPortalInformationByUrl('www.sulu.at/test/test', 'prod');
+
+        $this->assertEquals('sulu.at', $portalInformation['redirect']);
+        $this->assertEquals('www.sulu.at', $portalInformation['url']);
+    }
 }

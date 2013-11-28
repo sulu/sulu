@@ -74,10 +74,15 @@ class WorkspaceCollection implements \IteratorAggregate
                 if ($url->getRedirect() == null) {
                     $this->generatePortalInformation(
                         $portal,
+                        $url,
                         $environment->getType(),
-                        $url->getUrl(),
                         $workspace->getSegments()
                     );
+                } else {
+                    $environmentType = $environment->getType();
+                    $urlAddress = $url->getUrl();
+                    $this->environmentPortals[$environmentType][$urlAddress]['redirect'] = $url->getRedirect();
+                    $this->environmentPortals[$environmentType][$urlAddress]['url'] = $urlAddress;
                 }
             }
         }
@@ -86,35 +91,39 @@ class WorkspaceCollection implements \IteratorAggregate
     /**
      * Generates all the possible urls for the given url pattern
      * @param \Sulu\Component\Workspace\Portal $portal
+     * @param string|\Sulu\Component\Workspace\Url $url
      * @param string $environment
-     * @param string $url
      * @param Segment[] $segments
      * @internal param \Sulu\Component\Workspace\Workspace $workspace
      */
-    private function generatePortalInformation(Portal $portal, $environment, $url, $segments)
+    private function generatePortalInformation(Portal $portal, Url $url, $environment, $segments)
     {
         foreach ($portal->getLocalizations() as $localization) {
-            $urlAddress = $url;
+            $urlAddress = $url->getUrl();
+
+            $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
+            $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
+            $locale = $language . ($country ? '-' . $country : '');
 
             $replacers = array(
-                '{language}' => $localization->getLanguage(),
-                '{country}' => $localization->getCountry(),
-                '{localization}' => $localization->getLocalization()
+                '{language}' => $language,
+                '{country}' => $country,
+                '{localization}' => $locale
             );
 
             if (!empty($segments)) {
                 foreach ($segments as $segment) {
                     $replacers['{segment}'] = $segment->getKey();
-                    $url = $this->generateUrlAddress($urlAddress, $replacers);
-                    $this->environmentPortals[$environment][$url] = array(
+                    $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
+                    $this->environmentPortals[$environment][$urlResult] = array(
                         'portal' => $portal,
                         'localization' => $localization,
                         'segment' => $segment
                     );
                 }
             } else {
-                $url = $this->generateUrlAddress($urlAddress, $replacers);
-                $this->environmentPortals[$environment][$url] = array(
+                $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
+                $this->environmentPortals[$environment][$urlResult] = array(
                     'portal' => $portal,
                     'localization' => $localization
                 );
