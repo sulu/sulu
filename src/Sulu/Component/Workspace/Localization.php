@@ -35,12 +35,6 @@ class Localization
     private $shadow;
 
     /**
-     * Defines if this localization is the default one
-     * @var boolean
-     */
-    private $default;
-
-    /**
      * The sub localizations of this one
      * @var Localization[]
      */
@@ -62,24 +56,6 @@ class Localization
     public function getCountry()
     {
         return $this->country;
-    }
-
-    /**
-     * Sets if this localization is the default one
-     * @param boolean $default
-     */
-    public function setDefault($default)
-    {
-        $this->default = $default;
-    }
-
-    /**
-     * Returns if this localization is the default one
-     * @return boolean
-     */
-    public function isDefault()
-    {
-        return $this->default;
     }
 
     /**
@@ -151,6 +127,11 @@ class Localization
      */
     public function getLocalization()
     {
-        return $this->getLanguage() . '-' . $this->getCountry();
+        $localization =  $this->getLanguage();
+        if ($this->getCountry() != null) {
+            $localization .= '-' . $this->getCountry();
+        }
+
+        return $localization;
     }
 }

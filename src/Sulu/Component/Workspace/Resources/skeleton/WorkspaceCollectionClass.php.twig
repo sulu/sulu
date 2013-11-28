@@ -2,7 +2,6 @@
         $localization{{ count }} = new Localization();
         $localization{{ count }}->setLanguage('{{ localization.language }}');
         $localization{{ count }}->setCountry('{{ localization.country }}');
-        $localization{{ count }}->setDefault({{ (localization.default) ? 'true' : 'false' }});
         $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
 
 {% for childLocalization in localization.children %}
@@ -42,7 +41,6 @@ class {{ cache_class }} extends {{ base_class }}
         $localization0 = new Localization();
         $localization0->setLanguage('{{ localization.language }}');
         $localization0->setCountry('{{ localization.country }}');
-        $localization0->setDefault({{ (localization.default) ? 'true' : 'false' }});
         $localization0->setShadow('{{ (localization.shadow) }}');
 {% for childLocalization in localization.children %}
 {{ _self.create_localizations(childLocalization, 1) }}
@@ -73,7 +71,6 @@ class {{ cache_class }} extends {{ base_class }}
         $localization = new Localization();
         $localization->setLanguage('{{ localization.language }}');
         $localization->setCountry('{{ localization.country }}');
-        $localization->setDefault({{ (localization.default) ? 'true' : 'false' }});
         $portal->addLocalization($localization);
 {% endfor %}
 
@@ -91,8 +88,11 @@ class {{ cache_class }} extends {{ base_class }}
 
         // add environment url
         $url = new Url();
-        $url->setMain({{ (url.main) ? 'true' : 'false' }});
         $url->setUrl('{{ url.url }}');
+        $url->setLanguage('{{ url.language }}');
+        $url->setCountry('{{ url.country }}');
+        $url->setSegment('{{ url.segment }}');
+        $url->setRedirect('{{ url.redirect }}');
         $environment->addUrl($url);
 {% endfor %}
 

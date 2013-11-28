@@ -71,7 +71,7 @@ class WorkspaceCollection implements \IteratorAggregate
         foreach ($portal->getEnvironments() as $environment) {
             foreach ($environment->getUrls() as $url) {
                 // generate urls from pattern
-                if ($url->isMain()) {
+                if ($url->getRedirect() == null) {
                     $this->generatePortalInformation(
                         $portal,
                         $environment->getType(),
@@ -229,7 +229,6 @@ class WorkspaceCollection implements \IteratorAggregate
                 $localizationData = array();
                 $localizationData['country'] = $localization->getCountry();
                 $localizationData['language'] = $localization->getLanguage();
-                $localizationData['default'] = $localization->isDefault();
 
                 if (!$withAdditionalOptions) {
                     $localizationData['children'] = $this->toArrayLocalizations($localization->getChildren(), true);
@@ -320,7 +319,10 @@ class WorkspaceCollection implements \IteratorAggregate
         foreach ($environment->getUrls() as $url) {
             $urlData = array();
             $urlData['url'] = $url->getUrl();
-            $urlData['main'] = $url->isMain();
+            $urlData['language'] = $url->getLanguage();
+            $urlData['country'] = $url->getCountry();
+            $urlData['segment'] = $url->getSegment();
+            $urlData['redirect'] = $url->getRedirect();
 
             $environmentData['urls'][] = $urlData;
         }

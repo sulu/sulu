@@ -34,29 +34,27 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $environment = new Environment();
         $environment->setType('prod');
         $url = new Url();
-        $url->setMain(true);
         $url->setUrl('www.portal1.com');
+        $url->setLanguage('en');
+        $url->setCountry('us');
         $environment->addUrl($url);
         $url = new Url();
-        $url->setMain(false);
         $url->setUrl('portal1.com');
+        $url->setRedirect('www.portal1.com');
         $environment->addUrl($url);
         $portal->addEnvironment($environment);
 
         $localizationEnUs = new Localization();
         $localizationEnUs->setCountry('us');
         $localizationEnUs->setLanguage('en');
-        $localizationEnUs->setDefault(true);
         $localizationEnUs->setShadow('auto');
         $localizationEnCa = new Localization();
         $localizationEnCa->setCountry('ca');
         $localizationEnCa->setLanguage('en');
-        $localizationEnCa->setDefault(false);
         $localizationEnUs->addChild($localizationEnCa);
         $localizationFrCa = new Localization();
         $localizationFrCa->setCountry('ca');
         $localizationFrCa->setLanguage('fr');
-        $localizationFrCa->setDefault(false);
         $portal->addLocalization($localizationEnUs);
         $portal->addLocalization($localizationEnCa);
         $portal->addLocalization($localizationFrCa);
@@ -90,7 +88,7 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Default', $workspaces['default']->getName());
         $this->assertEquals('Portal1', $allPortals['portal1']->getName());
         // TODO make next two lines possible
-        //$this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']['portal']->getName());
+        $this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']['portal']->getName());
         //$this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']['portal']->getName());
     }
 
@@ -113,19 +111,19 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('portal1theme', $portal['theme']['key']);
         $this->assertEquals(array('overview', 'default'), $portal['theme']['excludedTemplates']);
         $this->assertEquals('prod', $portal['environments'][0]['type']);
-        $this->assertEquals(true, $portal['environments'][0]['urls'][0]['main']);
         $this->assertEquals('www.portal1.com', $portal['environments'][0]['urls'][0]['url']);
-        $this->assertEquals(false, $portal['environments'][0]['urls'][1]['main']);
+        $this->assertEquals('en', $portal['environments'][0]['urls'][0]['language']);
+        $this->assertEquals('us', $portal['environments'][0]['urls'][0]['country']);
+        $this->assertEquals(null, $portal['environments'][0]['urls'][0]['segment']);
+        $this->assertEquals(null, $portal['environments'][0]['urls'][0]['redirect']);
         $this->assertEquals('portal1.com', $portal['environments'][0]['urls'][1]['url']);
+        $this->assertEquals('www.portal1.com', $portal['environments'][0]['urls'][1]['redirect']);
         $this->assertEquals('us', $portal['localizations'][0]['country']);
         $this->assertEquals('en', $portal['localizations'][0]['language']);
-        $this->assertEquals(true, $portal['localizations'][0]['default']);
         $this->assertEquals('ca', $portal['localizations'][1]['country']);
         $this->assertEquals('en', $portal['localizations'][1]['language']);
-        $this->assertEquals(false, $portal['localizations'][1]['default']);
         $this->assertEquals('ca', $portal['localizations'][2]['country']);
         $this->assertEquals('fr', $portal['localizations'][2]['language']);
-        $this->assertEquals(false, $portal['localizations'][2]['default']);
         $this->assertEquals('tree', $portal['resourceLocator']['strategy']);
     }
 }

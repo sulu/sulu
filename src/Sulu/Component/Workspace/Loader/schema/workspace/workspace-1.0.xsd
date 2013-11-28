@@ -21,7 +21,7 @@
         <xs:sequence>
             <xs:element type="localizationType" name="localization" minOccurs="0"/>
         </xs:sequence>
-        <xs:attribute type="xs:string" name="language" use="optional"/>
+        <xs:attribute type="xs:string" name="language" use="required"/>
         <xs:attribute type="xs:string" name="country" use="optional"/>
         <xs:attribute name="shadow" use="optional">
             <xs:simpleType>
@@ -31,7 +31,6 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:boolean" name="default" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="segmentsType">
@@ -97,7 +96,10 @@
     <xs:complexType name="urlType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="main" use="optional"/>
+                <xs:attribute type="xs:string" name="language" use="optional"/>
+                <xs:attribute type="xs:string" name="country" use="optional"/>
+                <xs:attribute type="xs:string" name="segment" use="optional"/>
+                <xs:attribute type="xs:string" name="redirect" use="optional"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

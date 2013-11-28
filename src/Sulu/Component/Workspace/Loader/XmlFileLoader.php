@@ -139,10 +139,12 @@ class XmlFileLoader extends FileLoader
     {
         $localization = new Localization();
         $localization->setLanguage($localizationNode->attributes->getNamedItem('language')->nodeValue);
-        $localization->setCountry($localizationNode->attributes->getNamedItem('country')->nodeValue);
 
         // set optional nodes
-        $localization->setDefault($this->convertBoolean($localizationNode->attributes->getNamedItem('default')));
+        $countryNode = $localizationNode->attributes->getNamedItem('country');
+        if ($countryNode) {
+            $localization->setCountry($countryNode->nodeValue);
+        }
 
         $shadowNode = $localizationNode->attributes->getNamedItem('shadow');
         if ($shadowNode) {
@@ -263,10 +265,22 @@ class XmlFileLoader extends FileLoader
             $url->setUrl($urlNode->nodeValue);
 
             // set optional nodes
-            $mainNode = $urlNode->attributes->getNamedItem('main');
-            $url->setMain($this->convertBoolean($mainNode));
+            $url->setLanguage($this->getOptionalNodeAttribute($urlNode, 'language'));
+            $url->setCountry($this->getOptionalNodeAttribute($urlNode, 'country'));
+            $url->setSegment($this->getOptionalNodeAttribute($urlNode, 'segment'));
+            $url->setRedirect($this->getOptionalNodeAttribute($urlNode, 'redirect'));
 
             $environment->addUrl($url);
         }
+    }
+
+    private function getOptionalNodeAttribute(\DOMNode $node, $name)
+    {
+        $attribute = $node->attributes->getNamedItem($name);
+        if ($attribute) {
+            return $attribute->nodeValue;
+        }
+
+        return null;
     }
 }

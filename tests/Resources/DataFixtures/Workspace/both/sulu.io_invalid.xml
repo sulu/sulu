@@ -21,19 +21,19 @@
             </theme>
 
             <localizations>
-                <localization language="de" country="at" default="true"/>
+                <localization language="de" country="at"/>
             </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url main="true">sulu.at</url>
+                        <url>sulu.at</url>
                         <url>www.sulu.at</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url main="true">sulu.lo</url>
+                        <url>sulu.lo</url>
                     </urls>
                 </environment>
             </environments>

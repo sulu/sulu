@@ -7,10 +7,11 @@
     <key>massiveart</key>
 
     <localizations>
-        <localization language="en" country="us" shadow="auto" default="true">
+        <localization language="en" country="us" shadow="auto">
             <localization language="en" country="ca"/>
         </localization>
         <localization language="fr" country="ca"/>
+        <localization language="de"/>
     </localizations>
 
     <segments>
@@ -34,18 +35,19 @@
             </theme>
 
             <localizations>
-                <localization language="en" country="us" default="true"/>
+                <localization language="en" country="us"/>
+                <localization language="de" />
             </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url main="true">{language}.massiveart.{country}/{segment}</url>
+                        <url>{language}.massiveart.{country}/{segment}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url main="true">massiveart.lo/{localization}/{segment}</url>
+                        <url>massiveart.lo/{localization}/{segment}</url>
                     </urls>
                 </environment>
             </environments>
@@ -65,19 +67,20 @@
             </theme>
 
             <localizations>
-                <localization language="en" country="ca" default="true"/>
+                <localization language="en" country="ca"/>
                 <localization language="fr" country="ca"/>
             </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url main="true">{language}.massiveart.{country}/{segment}</url>
+                        <url>{language}.massiveart.{country}/{segment}</url>
+                        <url language="en" country="ca" segment="s">www.massiveart.com</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url main="true">massiveart.lo/{localization}/{segment}</url>
+                        <url>massiveart.lo/{localization}/{segment}</url>
                     </urls>
                 </environment>
             </environments>
