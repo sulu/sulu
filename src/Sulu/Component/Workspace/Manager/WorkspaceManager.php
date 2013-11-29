@@ -11,6 +11,7 @@
 namespace Sulu\Component\Workspace\Manager;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Workspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Workspace\Workspace;
 use Sulu\Component\Workspace\WorkspaceCollection;
 use Sulu\Component\Workspace\Portal;
@@ -179,6 +180,10 @@ class WorkspaceManager implements WorkspaceManagerInterface
             } catch (\InvalidArgumentException $iae) {
                 $this->logger->warning(
                     'The file "' . $file->getRealPath() . '" does not match the schema and was skipped'
+                );
+            } catch (InvalidUrlDefinitionException $iude) {
+                $this->logger->warning(
+                    'The file "' . $file->getRealPath() .'" defined some invalid urls and was skipped'
                 );
             }
         }
