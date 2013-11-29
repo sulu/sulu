@@ -57,7 +57,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             'portal' => $portal,
             'localization' => $localization,
             'segment' => null,
-            'url' => 'sulu.lo'
+            'url' => 'sulu.lo/test'
         );
 
         $this->workspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
@@ -65,12 +65,15 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         );
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
+        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/test/path/to'));
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de-at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
-        $this->assertEquals('sulu.lo', $this->requestAnalyzer->getCurrentPortalUrl());
+        $this->assertEquals('sulu.lo/test', $this->requestAnalyzer->getCurrentPortalUrl());
+        $this->assertEquals('/path/to', $this->requestAnalyzer->getCurrentPath());
     }
 
     /**

@@ -58,4 +58,10 @@ interface RequestAnalyzerInterface
      * @return string
      */
     public function getCurrentPortalUrl();
+
+    /**
+     * Returns the path of the current request, which is the url without host, language and so on
+     * @return string
+     */
+    public function getCurrentPath();
 }

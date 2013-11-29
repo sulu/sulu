@@ -61,6 +61,12 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $portalUrl;
 
+    /**
+     * The path of the current request
+     * @var string
+     */
+    private $path;
+
     public function __construct(WorkspaceManagerInterface $workspaceManager, $environment)
     {
         $this->workspaceManager = $workspaceManager;
@@ -91,6 +97,14 @@ class RequestAnalyzer implements RequestAnalyzerInterface
                 if (array_key_exists('segment', $portalInformation)) {
                     $this->setSegment($portalInformation['segment']);
                 }
+
+                // get the path and set it on the request
+                $this->setPath(
+                    substr(
+                        $request->getHost() . $request->getRequestUri(),
+                        strlen($portalInformation['url'])
+                    )
+                );
             }
         } else {
             throw new UrlMatchNotFoundException($request->getUri());
@@ -143,6 +157,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * Returns the path of the current request, which is the url without host, language and so on
+     * @return string
+     */
+    public function getCurrentPath()
+    {
+        return $this->path;
+    }
+
+    /**
      * Sets the current localization
      * @param \Sulu\Component\Workspace\Localization $localization
      */
@@ -185,5 +208,14 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public function setPortalUrl($portalUrl)
     {
         $this->portalUrl = $portalUrl;
+    }
+
+    /**
+     * Sets the path of the current request
+     * @param $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 }
