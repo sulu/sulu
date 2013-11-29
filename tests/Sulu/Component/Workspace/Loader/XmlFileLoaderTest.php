@@ -55,9 +55,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('prod', $workspace->getPortals()[0]->getEnvironments()[0]->getType());
         $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
         $this->assertEquals('sulu.at', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl());
-        $this->assertEquals(null, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getLanguage());
+        $this->assertEquals('de', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getLanguage());
         $this->assertEquals(null, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getSegment());
-        $this->assertEquals(null, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getCountry());
+        $this->assertEquals('at', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getCountry());
         $this->assertEquals(null, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getRedirect());
         $this->assertEquals('www.sulu.at', $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getUrl());
         $this->assertEquals(null, $workspace->getPortals()[0]->getEnvironments()[0]->getUrls()[1]->getLanguage());
@@ -214,6 +214,16 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('dev', $workspace->getPortals()[0]->getEnvironments()[1]->getType());
         $this->assertEquals(1, count($workspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
         $this->assertEquals('sulu-without.lo', $workspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
+    }
+
+    /**
+     * @expectedException \Sulu\Component\Workspace\Loader\Exception\InvalidUrlDefinitionException
+     */
+    public function testLoadWithIncorrectUrlDefinition()
+    {
+        $workspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Workspace/invalid/massiveart_withIncorrectUrls.xml'
+        );
     }
 
     /**

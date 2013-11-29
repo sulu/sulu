@@ -11,6 +11,7 @@
 namespace Sulu\Component\Workspace\Loader;
 
 use Sulu\Component\Workspace\Environment;
+use Sulu\Component\Workspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Workspace\Localization;
 use Sulu\Component\Workspace\Portal;
 use Sulu\Component\Workspace\Segment;
@@ -28,6 +29,12 @@ class XmlFileLoader extends FileLoader
      * @var  \DOMXPath
      */
     private $xpath;
+
+    /**
+     * The workspace which is created by this file loader
+     * @var Workspace
+     */
+    private $workspace;
 
     /**
      * Loads a workspace from a xml file
@@ -72,29 +79,20 @@ class XmlFileLoader extends FileLoader
         $this->xpath->registerNamespace('x', 'http://schemas.sulu.io/workspace/workspace');
 
         // set simple workspace properties
-        $workspace = new Workspace();
-        $workspace->setName($this->xpath->query('/x:workspace/x:name')->item(0)->nodeValue);
-        $workspace->setKey($this->xpath->query('/x:workspace/x:key')->item(0)->nodeValue);
+        $this->workspace = new Workspace();
+        $this->workspace->setName($this->xpath->query('/x:workspace/x:name')->item(0)->nodeValue);
+        $this->workspace->setKey($this->xpath->query('/x:workspace/x:key')->item(0)->nodeValue);
 
         // set localizations on workspaces
-        $this->generateWorkspaceLocalizations($workspace);
+        $this->generateWorkspaceLocalizations();
 
         // set segments on workspaces
-        $this->generateSegments($workspace);
+        $this->generateSegments();
 
         // set portals on workspaces
-        $this->generatePortals($workspace);
+        $this->generatePortals();
 
-        return $workspace;
-    }
-
-    /**
-     * @param $node
-     * @return bool
-     */
-    private function convertBoolean($node)
-    {
-        return ($node) ? $node->nodeValue == 'true' : false;
+        return $this->workspace;
     }
 
     /**
@@ -161,22 +159,16 @@ class XmlFileLoader extends FileLoader
         return $localization;
     }
 
-    /**
-     * @param Workspace $workspace
-     */
-    private function generateWorkspaceLocalizations(Workspace $workspace)
+    private function generateWorkspaceLocalizations()
     {
         foreach ($this->xpath->query('/x:workspace/x:localizations/x:localization') as $localizationNode) {
             $localization = $this->generateLocalizationFromNode($localizationNode);
 
-            $workspace->addLocalization($localization);
+            $this->workspace->addLocalization($localization);
         }
     }
 
-    /**
-     * @param $workspace
-     */
-    private function generateSegments(Workspace $workspace)
+    private function generateSegments()
     {
         foreach ($this->xpath->query('/x:workspace/x:segments/x:segment') as $segmentNode) {
             /** @var \DOMNode $segmentNode */
@@ -184,14 +176,11 @@ class XmlFileLoader extends FileLoader
             $segment->setName($segmentNode->nodeValue);
             $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
 
-            $workspace->addSegment($segment);
+            $this->workspace->addSegment($segment);
         }
     }
 
-    /**
-     * @param Workspace $workspace
-     */
-    private function generatePortals(Workspace $workspace)
+    private function generatePortals()
     {
         foreach ($this->xpath->query('/x:workspace/x:portals/x:portal') as $portalNode) {
             /** @var \DOMNode $portalNode */
@@ -211,7 +200,7 @@ class XmlFileLoader extends FileLoader
             // set localization on portal
             $this->generatePortalLocalizations($portalNode, $portal);
 
-            $workspace->addPortal($portal);
+            $this->workspace->addPortal($portal);
 
             // set environments
             $this->generateEnvironments($portalNode, $portal);
@@ -259,6 +248,11 @@ class XmlFileLoader extends FileLoader
     private function generateUrls(\DOMNode $environmentNode, Environment $environment)
     {
         foreach ($this->xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
+            // check if the url is valid, and throw an exception otherwise
+            if (!$this->checkUrlNode($urlNode)) {
+                throw new InvalidUrlDefinitionException($this->workspace, $urlNode->nodeValue);
+            }
+
             /** @var \DOMNode $urlNode */
             $url = new Url();
 
@@ -282,5 +276,44 @@ class XmlFileLoader extends FileLoader
         }
 
         return null;
+    }
+
+    /**
+     * Checks if the urlNode is valid for this workspace
+     * @param \DOMNode $urlNode
+     * @return bool
+     */
+    private function checkUrlNode(\DOMNode $urlNode)
+    {
+        $hasLocalization = ($urlNode->attributes->getNamedItem('localization') != null)
+            || (strpos(
+                    $urlNode->nodeValue,
+                    '{localization}'
+                ) !== false);
+
+        $hasLanguage = ($urlNode->attributes->getNamedItem('language') != null)
+            || (strpos(
+                    $urlNode->nodeValue,
+                    '{language}'
+                ) !== false)
+            || $hasLocalization;
+
+        $hasCountry = ($urlNode->attributes->getNamedItem('country') != null)
+            || (strpos(
+                    $urlNode->nodeValue,
+                    '{country}'
+                ) !== false)
+            || $hasLocalization;
+
+        $hasSegment = (count($this->workspace->getSegments()) == 0)
+            || ($urlNode->attributes->getNamedItem('segment') != null)
+            || (strpos(
+                    $urlNode->nodeValue,
+                    '{segment}'
+                ) !== false);
+
+        $hasRedirect = ($urlNode->attributes->getNamedItem('redirect') != null);
+
+        return ($hasLanguage && $hasCountry && $hasSegment) || $hasRedirect;
     }
 }
