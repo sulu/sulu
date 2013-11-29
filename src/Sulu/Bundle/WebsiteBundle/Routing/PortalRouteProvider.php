@@ -14,7 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Routing;
 use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Workspace\Analyzer\RequestAnalyzer;
+use Sulu\Component\Workspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -32,7 +32,7 @@ class PortalRouteProvider implements RouteProviderInterface
     private $contentMapper;
 
     /**
-     * @var RequestAnalyzer
+     * @var RequestAnalyzerInterface
      */
     private $requestAnalyzer;
 
@@ -41,8 +41,11 @@ class PortalRouteProvider implements RouteProviderInterface
      */
     private $activeTheme;
 
-    public function __construct(ContentMapperInterface $contentMapper, RequestAnalyzer $requestAnalyzer, ActiveTheme $activeTheme)
-    {
+    public function __construct(
+        ContentMapperInterface $contentMapper,
+        RequestAnalyzerInterface $requestAnalyzer,
+        ActiveTheme $activeTheme
+    ) {
         $this->contentMapper = $contentMapper;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->activeTheme = $activeTheme;
@@ -60,31 +63,44 @@ class PortalRouteProvider implements RouteProviderInterface
      */
     public function getRouteCollectionForRequest(Request $request)
     {
-        $path = $request->getRequestUri();
-        $portal = $this->requestAnalyzer->getCurrentPortal();
-        $language = 'en'; //TODO set current language correctly
-
-        // Set current theme
-        $this->activeTheme->setName($portal->getTheme()->getKey());
-
         $collection = new RouteCollection();
 
-        try {
-            $content = $this->contentMapper->loadByResourceLocator($path, $portal->getKey(), $language);
-
-            $route = new Route($path, array(
-                '_controller' => $content->getController(),
-                'content' => $content
+        if ($this->requestAnalyzer->getRedirect() != null) {
+            $route = new Route($request->getRequestUri(), array(
+                '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                'url' => $this->requestAnalyzer->getCurrentPortalUrl(),
+                'redirect' => $this->requestAnalyzer->getRedirect()
             ));
 
-            $collection->add($content->getKey() . '_' . uniqid(), $route);
-        } catch (ResourceLocatorNotFoundException $rlnfe) {
-            $route = new Route($path, array(
-                '_controller' => 'SuluWebsiteBundle:Default:error404',
-                'path' => $path
-            ));
+            $collection->add('redirect_' . uniqid(), $route);
+        } else {
+            $portal = $this->requestAnalyzer->getCurrentPortal();
+            $language = $this->requestAnalyzer->getCurrentLocalization()->getLanguage();
 
-            $collection->add('error404_' . uniqid(), $route);
+            // Set current theme
+            $this->activeTheme->setName($portal->getTheme()->getKey());
+
+            try {
+                $content = $this->contentMapper->loadByResourceLocator(
+                    $this->requestAnalyzer->getCurrentPath(),
+                    $portal->getKey(),
+                    $language
+                );
+
+                $route = new Route($request->getRequestUri(), array(
+                    '_controller' => $content->getController(),
+                    'content' => $content
+                ));
+
+                $collection->add($content->getKey() . '_' . uniqid(), $route);
+            } catch (ResourceLocatorNotFoundException $rlnfe) {
+                $route = new Route($request->getRequestUri(), array(
+                    '_controller' => 'SuluWebsiteBundle:Default:error404',
+                    'path' => $request->getRequestUri()
+                ));
+
+                $collection->add('error404_' . uniqid(), $route);
+            }
         }
 
         return $collection;
