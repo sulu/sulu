@@ -25,7 +25,6 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class Package extends ApiEntity
 {
-
     /**
      * @var integer
      * @Expose

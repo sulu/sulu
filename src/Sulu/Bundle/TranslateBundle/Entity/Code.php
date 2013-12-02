@@ -18,7 +18,6 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class Code extends ApiEntity
 {
-
     /**
      * @var integer
      */

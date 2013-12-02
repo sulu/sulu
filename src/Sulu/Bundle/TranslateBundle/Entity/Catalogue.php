@@ -18,9 +18,8 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  * Catalogue
  * @ExclusionPolicy("all")
  */
-class Catalogue extends \Sulu\Bundle\CoreBundle\Entity\ApiEntity
+class Catalogue extends ApiEntity
 {
-
     /**
      * @var integer
      * @Expose

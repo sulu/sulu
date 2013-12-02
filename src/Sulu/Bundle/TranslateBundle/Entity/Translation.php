@@ -19,7 +19,6 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class Translation extends ApiEntity
 {
-
     /**
      * @var string
      */

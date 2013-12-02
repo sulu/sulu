@@ -40,7 +40,6 @@ class CatalogueController extends RestController
         return $this->handleView($view);
     }
 
-
     /**
      * Returns a list of catalogues (from a specific package)
      * @return \Symfony\Component\HttpFoundation\Response
@@ -61,7 +60,6 @@ class CatalogueController extends RestController
         }
         return $this->handleView($view);
     }
-
 
     /**
      * Deletes the catalogue with the given id
