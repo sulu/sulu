@@ -65,11 +65,11 @@ class PortalRouteProvider implements RouteProviderInterface
     {
         $collection = new RouteCollection();
 
-        if ($this->requestAnalyzer->getRedirect() != null) {
+        if ($this->requestAnalyzer->getCurrentRedirect() != null) {
             $route = new Route($request->getRequestUri(), array(
                 '_controller' => 'SuluWebsiteBundle:Default:redirect',
                 'url' => $this->requestAnalyzer->getCurrentPortalUrl(),
-                'redirect' => $this->requestAnalyzer->getRedirect()
+                'redirect' => $this->requestAnalyzer->getCurrentRedirect()
             ));
 
             $collection->add('redirect_' . uniqid(), $route);
@@ -82,7 +82,7 @@ class PortalRouteProvider implements RouteProviderInterface
 
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
-                    $this->requestAnalyzer->getCurrentPath(),
+                    $this->requestAnalyzer->getCurrentResourceLocator(),
                     $portal->getKey(),
                     $language
                 );

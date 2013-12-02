@@ -172,10 +172,10 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             false,
             true,
             true,
-            array('getRedirect', 'getCurrentPortalUrl')
+            array('getCurrentRedirect', 'getCurrentPortalUrl')
         );
 
-        $portalManager->expects($this->any())->method('getRedirect')->will($this->returnValue('sulu.lo'));
+        $portalManager->expects($this->any())->method('getCurrentRedirect')->will($this->returnValue('sulu.lo'));
         $portalManager->expects($this->any())->method('getCurrentPortalUrl')->will($this->returnValue('sulu-redirect.lo'));
 
         return $portalManager;
