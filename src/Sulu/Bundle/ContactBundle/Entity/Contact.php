@@ -19,7 +19,6 @@ use JMS\Serializer\Annotation\Exclude;
  */
 class Contact extends ApiEntity
 {
-
     /**
      * @var string
      */
@@ -109,9 +108,6 @@ class Contact extends ApiEntity
      * @var \Doctrine\Common\Collections\Collection
      */
     private $phones;
-
-
-
 
     /**
      * Constructor

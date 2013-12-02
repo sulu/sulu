@@ -20,7 +20,6 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class Account extends ApiEntity
 {
-
     /**
      * @var integer
      */
@@ -108,8 +107,6 @@ class Account extends ApiEntity
      * @var \Doctrine\Common\Collections\Collection
      */
     private $notes;
-
-
 
     /**
      * Constructor
