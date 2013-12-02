@@ -35,7 +35,7 @@ class AccountController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluContactBundle:Account';
 
-    protected $nonSortable = array();
+    protected $unsortable = array();
 
     /**
      * Shows a single account with the given id
