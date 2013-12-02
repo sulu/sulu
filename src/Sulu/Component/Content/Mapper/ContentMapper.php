@@ -49,6 +49,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
      * @param string $uuid uuid of node if exists
+     *
+     * @throws \PHPCR\ItemExistsException if new title already exists
+     *
      * @return StructureInterface
      */
     public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null)
@@ -72,11 +75,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $node->addMixin('sulu:content');
         } else {
             $node = $session->getNodeByIdentifier($uuid);
-            try {
+            if ($node->getPropertyValue('title') !== $data['title']) {
                 $node->rename($data['title']);
                 // FIXME refresh session here
-            } catch (ItemExistsException $ex) {
-                // FIXME better solution if title has not changed?
             }
         }
         // TODO check change template?

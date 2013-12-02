@@ -27,6 +27,9 @@ interface ContentMapperInterface
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
      * @param string $uuid uuid of node if exists
+     *
+     * @throws \PHPCR\ItemExistsException if new title already exists
+     *
      * @return StructureInterface
      */
     public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null);
