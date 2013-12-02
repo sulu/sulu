@@ -26,9 +26,10 @@ interface ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param string $uuid uuid of node if exists
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true);
+    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null);
 
     /**
      * returns the data from the given id

@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -47,9 +48,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param string $uuid uuid of node if exists
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true)
+    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null)
     {
         // TODO localize
         $structure = $this->getStructure($templateKey);
@@ -61,7 +63,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $dateTime = new \DateTime();
 
         /** @var NodeInterface $node */
-        if (!$root->hasNode($path)) {
+        if ($uuid === null) {
             // create a new node
             $node = $root->addNode($path);
             $node->setProperty('sulu:creator', $userId);
@@ -69,7 +71,13 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
             $node->addMixin('sulu:content');
         } else {
-            $node = $root->getNode($path);
+            $node = $session->getNodeByIdentifier($uuid);
+            try {
+                $node->rename($data['title']);
+                // FIXME refresh session here
+            } catch (ItemExistsException $ex) {
+                // FIXME better solution if title has not changed?
+            }
         }
         // TODO check change template?
         $node->setProperty('sulu:template', $templateKey);
