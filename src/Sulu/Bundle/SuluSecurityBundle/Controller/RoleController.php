@@ -30,7 +30,6 @@ class RoleController extends RestController implements ClassResourceInterface
 
     protected $permissionEntityName = 'SuluSecurityBundle:Permission';
 
-
     /**
      * returns all roles
      * @return \Symfony\Component\HttpFoundation\Response
