@@ -73,7 +73,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
         $this->assertEquals('sulu.lo/test', $this->requestAnalyzer->getCurrentPortalUrl());
-        $this->assertEquals('/path/to', $this->requestAnalyzer->getCurrentPath());
+        $this->assertEquals('/path/to', $this->requestAnalyzer->getCurrentResourceLocator());
     }
 
     /**

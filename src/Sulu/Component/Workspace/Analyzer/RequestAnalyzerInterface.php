@@ -51,7 +51,7 @@ interface RequestAnalyzerInterface
      * Returns the redirect url
      * @return string
      */
-    public function getRedirect();
+    public function getCurrentRedirect();
 
     /**
      * Returns the url of the current portal
@@ -63,5 +63,5 @@ interface RequestAnalyzerInterface
      * Returns the path of the current request, which is the url without host, language and so on
      * @return string
      */
-    public function getCurrentPath();
+    public function getCurrentResourceLocator();
 }

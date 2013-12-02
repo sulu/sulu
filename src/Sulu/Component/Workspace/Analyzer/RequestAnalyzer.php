@@ -65,7 +65,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * The path of the current request
      * @var string
      */
-    private $path;
+    private $resourceLocator;
 
     public function __construct(WorkspaceManagerInterface $workspaceManager, $environment)
     {
@@ -87,19 +87,19 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
         if ($portalInformation != null) {
             if (array_key_exists('redirect', $portalInformation)) {
-                $this->setPortalUrl($portalInformation['url']);
-                $this->setRedirect($portalInformation['redirect']);
+                $this->setCurrentPortalUrl($portalInformation['url']);
+                $this->setCurrentRedirect($portalInformation['redirect']);
             } else {
-                $this->setPortalUrl($portalInformation['url']);
-                $this->setLocalization($portalInformation['localization']);
-                $this->setPortal($portalInformation['portal']);
+                $this->setCurrentPortalUrl($portalInformation['url']);
+                $this->setCurrentLocalization($portalInformation['localization']);
+                $this->setCurrentPortal($portalInformation['portal']);
 
                 if (array_key_exists('segment', $portalInformation)) {
-                    $this->setSegment($portalInformation['segment']);
+                    $this->setCurrentSegment($portalInformation['segment']);
                 }
 
                 // get the path and set it on the request
-                $this->setPath(
+                $this->setCurrentResourceLocator(
                     substr(
                         $request->getHost() . $request->getRequestUri(),
                         strlen($portalInformation['url'])
@@ -151,7 +151,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Returns the redirect, null if there is no redirect
      * @return string
      */
-    public function getRedirect()
+    public function getCurrentRedirect()
     {
         return $this->redirect;
     }
@@ -160,16 +160,16 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Returns the path of the current request, which is the url without host, language and so on
      * @return string
      */
-    public function getCurrentPath()
+    public function getCurrentResourceLocator()
     {
-        return $this->path;
+        return $this->resourceLocator;
     }
 
     /**
      * Sets the current localization
      * @param \Sulu\Component\Workspace\Localization $localization
      */
-    protected function setLocalization($localization)
+    protected function setCurrentLocalization($localization)
     {
         $this->localization = $localization;
     }
@@ -178,7 +178,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the current portal
      * @param \Sulu\Component\Workspace\Portal $portal
      */
-    protected function setPortal($portal)
+    protected function setCurrentPortal($portal)
     {
         $this->portal = $portal;
     }
@@ -187,7 +187,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the current segment
      * @param \Sulu\Component\Workspace\Segment $segment
      */
-    protected function setSegment($segment)
+    protected function setCurrentSegment($segment)
     {
         $this->segment = $segment;
     }
@@ -196,7 +196,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the redirect
      * @param string $redirect
      */
-    public function setRedirect($redirect)
+    public function setCurrentRedirect($redirect)
     {
         $this->redirect = $redirect;
     }
@@ -205,7 +205,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the url of the current portal
      * @param string $portalUrl
      */
-    public function setPortalUrl($portalUrl)
+    public function setCurrentPortalUrl($portalUrl)
     {
         $this->portalUrl = $portalUrl;
     }
@@ -214,8 +214,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the path of the current request
      * @param $path
      */
-    public function setPath($path)
+    public function setCurrentResourceLocator($path)
     {
-        $this->path = $path;
+        $this->resourceLocator = $path;
     }
 }
