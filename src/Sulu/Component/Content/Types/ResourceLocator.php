@@ -79,10 +79,10 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         if ($value != null && $value != '') {
             $old = $this->getResourceLocator($node);
             if ($old != null) {
-                // FIXME move to right place (e.g. strategy?)
-
+                $this->getStrategy()->move($old, $value, $this->getPortalKey());
+            } else {
+                $this->getStrategy()->save($node, $value, $this->getPortalKey());
             }
-            $this->getStrategy()->save($node, $value, $this->getPortalKey());
         } else {
             $this->remove($node, $property);
         }

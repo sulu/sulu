@@ -223,11 +223,11 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->sessionService->getSession()->save();
 
         // move
-        $this->mapper->move('/products/news/content1-news', '/products/news/content2-news', 'default');
+        $this->mapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default');
         $this->sessionService->getSession()->save();
 
         $oldNode = $this->session->getNode('/cmf/routes/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/routes/products/news/content2-news');
+        $newNode = $this->session->getNode('/cmf/routes/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
@@ -239,7 +239,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
 
         // get content from new path
-        $result = $this->mapper->loadByResourceLocator('/products/news/content2-news', 'default');
+        $result = $this->mapper->loadByResourceLocator('/products/asdf/content2-news', 'default');
         $this->assertEquals($this->content1->getIdentifier(), $result);
 
         // get content from history should throw an exception

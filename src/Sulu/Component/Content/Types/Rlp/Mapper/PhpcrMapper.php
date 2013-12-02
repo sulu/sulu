@@ -60,7 +60,9 @@ class PhpcrMapper extends RlpMapper
         $routes = $this->getRoutes($session);
 
         // check if route already exists
-        $this->checkResourceLocatorExist($routes, $path, $contentNode);
+        if ($this->checkResourceLocatorExist($routes, $path, $contentNode)) {
+            return;
+        }
 
         // create root recursive
         $routePath = explode('/', ltrim($path, '/'));
@@ -203,6 +205,7 @@ class PhpcrMapper extends RlpMapper
 
         // init session
         $session = $this->sessionFactory->getSession();
+        $rootNode = $session->getRootNode();
         $workspace = $session->getWorkspace();
         $routes = $this->getRoutes($session);
 
@@ -210,7 +213,14 @@ class PhpcrMapper extends RlpMapper
         $contentNode = $routeNode->getPropertyValue('sulu:content');
 
         // check if route already exists
-        $this->checkResourceLocatorExist($routes, $dest, $contentNode);
+        if ($this->checkResourceLocatorExist($routes, $dest, $contentNode)) {
+            return;
+        }
+
+        // create parent node for dest path
+        $parentAbsDestPath = PathHelper::normalizePath($absDestPath . '/..');
+        $this->createRecursive($parentAbsDestPath, $rootNode);
+        $session->save();
 
         // copy route to new
         $workspace->copy($absSrcPath, $absDestPath);
@@ -229,6 +239,25 @@ class PhpcrMapper extends RlpMapper
             // FIXME move in SQL statement?
             if ($node->getPath() != $absDestPath) {
                 $this->changePathToHistory($node, $session, $absSrcPath, $absDestPath);
+            }
+        }
+    }
+
+    /**
+     * create a node recursivly
+     * @param string $path path to node
+     * @param NodeInterface $rootNode base node to begin
+     */
+    private function createRecursive($path, $rootNode)
+    {
+        $pathParts = explode('/', ltrim($path, '/'));
+        $curNode = $rootNode;
+        for ($i = 0; $i < sizeof($pathParts); $i++) {
+            if ($curNode->hasNode($pathParts[$i])) {
+                $curNode = $curNode->getNode($pathParts[$i]);
+            } else {
+                $curNode = $curNode->addNode($pathParts[$i]);
+                $curNode->addMixin('mix:referenceable');
             }
         }
     }
@@ -263,11 +292,13 @@ class PhpcrMapper extends RlpMapper
                 $routeNode->getPropertyValue('sulu:content') == $contentNode
             ) {
                 // route already exists and referenced on contentNode
-                return;
+                return true;
             } else {
                 throw new ResourceLocatorAlreadyExistsException();
             }
         }
+
+        return false;
     }
 
     /**

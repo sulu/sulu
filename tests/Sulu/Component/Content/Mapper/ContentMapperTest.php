@@ -57,6 +57,11 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
      */
     protected $session;
 
+    /**
+     * @var ResourceLocator
+     */
+    protected $resourceLocator;
+
     public function setUp()
     {
         $this->prepareMapper();
@@ -85,6 +90,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareSession();
         $this->prepareRepository();
+
+        $this->resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionService, '/cmf/routes')), 'not in use');
     }
 
     /**
@@ -163,7 +170,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function getStructureManager()
     {
-
         $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
         $structureManagerMock->expects($this->any())
             ->method('getStructure')
@@ -188,14 +194,12 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function containerCallback()
     {
-        $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionService, '/cmf/routes')), 'not in use');
-
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
             'sulu.content.structure_manager' => $this->getStructureManager(),
             'sulu.content.type.text_line' => new TextLine('not in use'),
             'sulu.content.type.text_area' => new TextArea('not in use'),
-            'sulu.content.type.resource_locator' => $resourceLocator,
+            'sulu.content.type.resource_locator' => $this->resourceLocator,
             'security.context' => $this->getSecurityContextMock()
         );
         $args = func_get_args();
@@ -635,7 +639,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals('Test', $content->article);
-        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals('/news/test/test/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
@@ -654,14 +658,14 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
 
         // FIXME comment in when history is running
-//        // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
-//        $oldRoute = $root->getNode('cmf/routes/news/test');
-//        $this->assertFalse($oldRoute->hasProperty('sulu:content'));
-//        $this->assertTrue($oldRoute->hasProperty('sulu:route'));
-//
-//        // history should reference to new route
-//        $history = $oldRoute->getPropertyValue('sulu:route');
-//        $this->assertEquals($route->getIdentifier(), $history->getIdentifier());
+        // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
+        $oldRoute = $root->getNode('cmf/routes/news/test');
+        $this->assertFalse($oldRoute->hasProperty('sulu:content'));
+        $this->assertTrue($oldRoute->hasProperty('sulu:realpath'));
+
+        // history should reference to new route
+        $history = $oldRoute->getPropertyValue('sulu:realpath');
+        $this->assertEquals($route->getIdentifier(), $history->getIdentifier());
     }
 
     public function testNameUpdate()
