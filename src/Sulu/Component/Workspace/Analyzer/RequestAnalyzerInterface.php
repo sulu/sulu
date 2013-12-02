@@ -64,4 +64,10 @@ interface RequestAnalyzerInterface
      * @return string
      */
     public function getCurrentResourceLocator();
+
+    /**
+     * Returns the prefix required before the resource locator
+     * @return string
+     */
+    public function getCurrentResourceLocatorPrefix();
 }

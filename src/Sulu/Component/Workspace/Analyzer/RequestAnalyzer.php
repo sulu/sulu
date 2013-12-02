@@ -67,6 +67,12 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $resourceLocator;
 
+    /**
+     * The prefix required before the resource locator
+     * @var string
+     */
+    private $resourceLocatorPrefix;
+
     public function __construct(WorkspaceManagerInterface $workspaceManager, $environment)
     {
         $this->workspaceManager = $workspaceManager;
@@ -103,6 +109,14 @@ class RequestAnalyzer implements RequestAnalyzerInterface
                     substr(
                         $request->getHost() . $request->getRequestUri(),
                         strlen($portalInformation['url'])
+                    )
+                );
+
+                // get the resource locator prefix and set it
+                $this->setCurrentResourceLocatorPrefix(
+                    substr(
+                        $portalInformation['url'],
+                        strlen($request->getHost())
                     )
                 );
             }
@@ -166,6 +180,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * Returns the prefix required before the resource locator
+     * @return string
+     */
+    public function getCurrentResourceLocatorPrefix()
+    {
+        return $this->resourceLocatorPrefix;
+    }
+
+    /**
      * Sets the current localization
      * @param \Sulu\Component\Workspace\Localization $localization
      */
@@ -217,5 +240,14 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public function setCurrentResourceLocator($path)
     {
         $this->resourceLocator = $path;
+    }
+
+    /**
+     * Sets the prefix require before the resource locator
+     * @param string $resourceLocatorPrefix
+     */
+    public function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
+    {
+        $this->resourceLocatorPrefix = $resourceLocatorPrefix;
     }
 }
