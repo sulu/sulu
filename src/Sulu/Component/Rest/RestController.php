@@ -27,12 +27,11 @@ abstract class RestController extends FOSRestController
      */
     protected $entityName;
 
-
     /**
      * contains all attributes that are not sortable
      * @var array
      */
-    protected $nonSortable = array();
+    protected $unsortable = array();
 
     /**
      * Lists all the entities or filters the entities by parameters
@@ -64,14 +63,15 @@ abstract class RestController extends FOSRestController
 
     /**
      * creates HAL conform response-array out of an entitycollection
-     * @param array $entityCollection
+     * @param array $entities
      * @return array
      */
-    protected function createHalResponse(array $entityCollection) {
+    protected function createHalResponse(array $entities)
+    {
         return array(
-            '_links' => $this->getHalLinks($entityCollection),
-            '_embedded' => $entityCollection,
-            'total' => count($entityCollection),
+            '_links' => $this->getHalLinks($entities),
+            '_embedded' => $entities,
+            'total' => count($entities),
         );
     }
 
@@ -89,30 +89,60 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $path = $this->getRequest()->getRequestUri();
-        $path = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('pageSize') . '=', $listHelper->getLimit());
+        $path = $this->replaceOrAddUrlString(
+            $path,
+            $listHelper->getParameterName('pageSize') . '=',
+            $listHelper->getLimit()
+        );
 
         $page = $listHelper->getPage();
-
-//        var_dump($page);
-//        var_dump($pages);die();
 
         $sortable = array();
         if ($showSortable && count($entities) > 0) {
             $keys = array_keys($entities[0]);
             foreach ($keys as $key) {
-                if(!in_array($key, $this->nonSortable)) {
-                    $sortPath = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('sortBy') . '=', $key);
-                    $sortable[$key] =  $this->replaceOrAddUrlString($sortPath, $listHelper->getParameterName('sortOrder') . '=', '{sortOrder}');
+                if (!in_array($key, $this->unsortable)) {
+                    $sortPath = $this->replaceOrAddUrlString(
+                        $path,
+                        $listHelper->getParameterName('sortBy') . '=',
+                        $key
+                    );
+                    $sortable[$key] = $this->replaceOrAddUrlString(
+                        $sortPath,
+                        $listHelper->getParameterName('sortOrder') . '=',
+                        '{sortOrder}'
+                    );
                 }
             }
         }
+
         return array(
             'self' => $path,
-            'first' => ($pages > 1) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', 1) : null,
-            'last' => ($pages > 1) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $pages) : null,
-            'next' => ($page < $pages) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page+1) : null,
-            'prev' => ($page > 1 && $pages > 1) ? $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page-1) : null,
-            'pagination' => ($pages>1) ?  $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', '{page}') : null,
+            'first' => ($pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                1
+            ) : null,
+            'last' => ($pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                $pages
+            ) : null,
+            'next' => ($page < $pages) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                $page + 1
+            ) : null,
+            'prev' => ($page > 1 && $pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                $page - 1
+            ) : null,
+            'pagination' => ($pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                '{page}'
+            ) : null,
             'sortable' => $showSortable ? $sortable : null,
         );
     }
@@ -125,15 +155,20 @@ abstract class RestController extends FOSRestController
      * @param bool $add - defines if value should be added
      * @return mixed|string
      */
-    public function replaceOrAddUrlString($url, $searchStringBefore, $value, $add = true) {
+    public function replaceOrAddUrlString($url, $searchStringBefore, $value, $add = true)
+    {
         if ($value) {
-            if ($pos = strpos($url,$searchStringBefore)) {
-                return preg_replace("/(.*$searchStringBefore)(\d*)(\&*.*)/",'${1}'.$value.'${3}', $url);
-            } else if($add) {
-                $and = (strpos($url,'?')<0) ? '?' : '&';
-                return $url.$and.$searchStringBefore.$value;
+            if ($pos = strpos($url, $searchStringBefore)) {
+                return preg_replace('/(.*' . $searchStringBefore . ')(\d*)(\&*.*)/', '${1}' . $value . '${3}', $url);
+            } else {
+                if ($add) {
+                    $and = (strpos($url, '?') < 0) ? '?' : '&';
+
+                    return $url . $and . $searchStringBefore . $value;
+                }
             }
         }
+
         return $url;
     }
 

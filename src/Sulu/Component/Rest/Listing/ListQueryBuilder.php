@@ -115,9 +115,9 @@ class ListQueryBuilder
     /**
      * just return count
      */
-    public function justCount($countAttribute='u.id', $alias = 'totalcount')
+    public function justCount($countAttribute = 'u.id', $alias = 'totalcount')
     {
-        $this->replaceSelect = 'COUNT('.$countAttribute.') as '.$alias;
+        $this->replaceSelect = 'COUNT(' . $countAttribute . ') as ' . $alias;
     }
 
     /**
@@ -130,7 +130,6 @@ class ListQueryBuilder
     {
         $this->joins = '';
         $this->prefixes = array($prefix);
-
 
         // select and where fields
         $fieldsWhere = array_merge(
@@ -146,11 +145,11 @@ class ListQueryBuilder
             }
         }
         // if no field is selected take prefix
-        if (strlen($this->select) == 0) {
+        if (!is_null($this->replaceSelect)) {
+            $this->select = $this->replaceSelect;
+        } elseif (strlen($this->select) == 0) {
             $this->select = $prefix;
         }
-
-        if(!is_null($this->replaceSelect)) {$this->select = $this->replaceSelect;}
 
         $dql = 'SELECT %s
                 FROM %s %s
@@ -325,7 +324,7 @@ class ListQueryBuilder
                 if ($result != '') {
                     $result .= ' AND ';
                 }
-                $result .= '('.implode(' OR ', $searches).')';
+                $result .= '(' . implode(' OR ', $searches) . ')';
             }
 
             $result = 'WHERE ' . $result;

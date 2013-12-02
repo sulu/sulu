@@ -93,6 +93,4 @@ class ListRepository extends EntityRepository
 
         return intval($query->getSingleResult()['totalcount']);
     }
-
-
 }
