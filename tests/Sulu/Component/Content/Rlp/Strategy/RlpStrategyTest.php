@@ -199,4 +199,13 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $result = $this->mapper->loadByResourceLocator('/test', 'default');
         $this->assertEquals('this-is-a-uuid', $result);
     }
+
+    public function testMove()
+    {
+        $this->isMoved = false;
+        // its a delegate
+        $this->strategy->move('/test/test', '/test/test-1', 'default');
+
+        $this->assertTrue($this->isMoved);
+    }
 }
