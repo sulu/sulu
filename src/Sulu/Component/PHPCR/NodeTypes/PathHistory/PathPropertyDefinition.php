@@ -52,7 +52,7 @@ class PathPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getName()
     {
-        return 'sulu:path';
+        return 'sulu:realpath';
     }
 
     /**

@@ -30,7 +30,7 @@ class PathHistoryNodeType implements NodeTypeDefinitionInterface
      */
     public function getName()
     {
-        return 'sulu:pathHistory';
+        return 'sulu:history';
     }
 
     /**
