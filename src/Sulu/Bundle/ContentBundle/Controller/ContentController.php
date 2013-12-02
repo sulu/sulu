@@ -79,6 +79,23 @@ class ContentController extends RestController implements ClassResourceInterface
         );
     }
 
+    public function putAction($uuid)
+    {
+        // TODO portal
+        // TODO language
+        $templateKey = $this->getRequest()->get('template');
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+
+        $structure = $this->getMapper()->save($this->getRequest()->request->all(), $templateKey, 'default', 'en', $userId, true, $uuid);
+        $result = $structure->toArray();
+        $result['creator'] = $this->getContactByUserId($result['creator']);
+        $result['changer'] = $this->getContactByUserId($result['changer']);
+
+        $view = $this->view($result, 200);
+
+        return $this->handleView($view);
+    }
+
     private function getContactByUserId($id) {
 
         // Todo performance issue
