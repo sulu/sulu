@@ -40,12 +40,12 @@ abstract class ApiEntity
     private $_links;
 
 
-
     /**
      * returns the id of an entity
      * @return mixed
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -54,36 +54,39 @@ abstract class ApiEntity
      */
     public function getLinks()
     {
-        if (count($this->_links<1)) {
+        if (count($this->_links) < 1) {
             $this->createSelfLink();
         }
+
         return $this->_links;
     }
 
     /**
      * creates the _links array including the self path
      */
-    public function createSelfLink() {
+    public function createSelfLink()
+    {
         // if no apiPath is not set generate it from basepath
-        if(is_null($this->getApiPath())) {
+        if (is_null($this->getApiPath())) {
             $class = explode('\\', get_class($this));
-            $this->apiPath = $this->apiBasePath.'/'.strtolower(end($class)).'s';
+            $this->apiPath = $this->apiBasePath . '/' . strtolower(end($class)) . 's';
         }
 
         // add id to path
         $idPath = '';
         if ($this->getId()) {
-            $idPath = '/'.$this->getId();
+            $idPath = '/' . $this->getId();
         }
         $this->_links = array(
-            'self'=> $this->getApiPath().$idPath,
+            'self' => $this->getApiPath() . $idPath,
         );
     }
 
     /**
      * @return string
      */
-    public function getApiPath() {
+    public function getApiPath()
+    {
         return $this->apiPath;
     }
 
@@ -95,7 +98,4 @@ abstract class ApiEntity
     {
         return isset($this->apiPath);
     }
-
-
-
 }
