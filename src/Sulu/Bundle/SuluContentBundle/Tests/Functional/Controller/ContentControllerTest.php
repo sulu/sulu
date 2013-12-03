@@ -187,7 +187,7 @@ class ContentControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/content/contents?template=overview', $data);
+        $client->request('POST', '/api/contents?template=overview', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -256,7 +256,7 @@ class ContentControllerTest extends DatabaseTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('GET', '/api/content/contents/' . $data[0]['id']);
+        $client->request('GET', '/api/contents/' . $data[0]['id']);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -278,26 +278,26 @@ class ContentControllerTest extends DatabaseTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('GET', '/api/content/contents');
+        $client->request('GET', '/api/contents');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
-        $this->assertEquals(2, sizeof($response->items));
+        $this->assertEquals(2, sizeof($response->_embedded));
 
-        $this->assertEquals($data[0]['title'], $response->items[0]->title);
-        $this->assertEquals($data[0]['tags'], $response->items[0]->tags);
-        $this->assertEquals($data[0]['url'], $response->items[0]->url);
-        $this->assertEquals($data[0]['article'], $response->items[0]->article);
-        $this->assertEquals('Max Mustermann', $response->items[0]->creator);
-        $this->assertEquals('Max Mustermann', $response->items[0]->creator);
+        $this->assertEquals($data[0]['title'], $response->_embedded[0]->title);
+        $this->assertEquals($data[0]['tags'], $response->_embedded[0]->tags);
+        $this->assertEquals($data[0]['url'], $response->_embedded[0]->url);
+        $this->assertEquals($data[0]['article'], $response->_embedded[0]->article);
+        $this->assertEquals('Max Mustermann', $response->_embedded[0]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[0]->creator);
 
-        $this->assertEquals($data[1]['title'], $response->items[1]->title);
-        $this->assertEquals($data[1]['tags'], $response->items[1]->tags);
-        $this->assertEquals($data[1]['url'], $response->items[1]->url);
-        $this->assertEquals($data[1]['article'], $response->items[1]->article);
-        $this->assertEquals('Max Mustermann', $response->items[1]->creator);
-        $this->assertEquals('Max Mustermann', $response->items[1]->creator);
+        $this->assertEquals($data[1]['title'], $response->_embedded[1]->title);
+        $this->assertEquals($data[1]['tags'], $response->_embedded[1]->tags);
+        $this->assertEquals($data[1]['url'], $response->_embedded[1]->url);
+        $this->assertEquals($data[1]['article'], $response->_embedded[1]->article);
+        $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
     }
 }
