@@ -82,6 +82,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * Analyzes the current request, and saves the values for portal, localization and segment for further usage
      * @param Request $request The request to analyze
+     * @throws Exception\UrlMatchNotFoundException
      */
     public function analyze(Request $request)
     {

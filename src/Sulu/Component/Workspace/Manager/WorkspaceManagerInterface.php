@@ -37,7 +37,7 @@ interface WorkspaceManagerInterface
      * Returns the portal with the given url (which has not necessarily to be the main url)
      * @param string $url The url to search for
      * @param string $environment The environment in which the url should be searched
-     * @return Portal
+     * @return array|null
      */
     public function findPortalInformationByUrl($url, $environment);
 

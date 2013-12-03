@@ -33,7 +33,8 @@ class UrlMatchNotFoundException extends \Exception
      * Returns the url for which no portal exists
      * @return string
      */
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 }

@@ -35,11 +35,8 @@ class InvalidUrlDefinitionException extends \Exception
     {
         $this->workspace = $workspace;
         $this->urlPattern = $urlPattern;
-        $message = 'The url pattern "'
-            . $urlPattern . '" in the workspace definition "'
-            . $workspace->getKey()
-            . '" has not specified the required attributes'
-            . '(either with xml attributes or as placeholders in the pattern)';
+        $message = 'The url pattern "' . $urlPattern . '" in the workspace definition "' . $workspace->getKey() . '" ' .
+            'has not specified the required attributes (either with xml attributes or as placeholders in the pattern)';
         parent::__construct($message, 0);
     }
 

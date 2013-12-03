@@ -104,5 +104,5 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:element name="workspace" type="workspaceType" />
+    <xs:element name="workspace" type="workspaceType"/>
 </xs:schema>

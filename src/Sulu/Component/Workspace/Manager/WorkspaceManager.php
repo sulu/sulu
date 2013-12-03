@@ -81,6 +81,12 @@ class WorkspaceManager implements WorkspaceManagerInterface
      * @param string $environment The environment in which the url should be searched
      * @return Portal
      */
+
+    /**
+     * @param string $url
+     * @param string $environment
+     * @return array|null
+     */
     public function findPortalInformationByUrl($url, $environment)
     {
         foreach ($this->getWorkspaceCollection()->getPortals($environment) as $portalUrl => $portalInformation) {
@@ -183,7 +189,7 @@ class WorkspaceManager implements WorkspaceManagerInterface
                 );
             } catch (InvalidUrlDefinitionException $iude) {
                 $this->logger->warning(
-                    'The file "' . $file->getRealPath() .'" defined some invalid urls and was skipped'
+                    'The file "' . $file->getRealPath() . '" defined some invalid urls and was skipped'
                 );
             }
         }

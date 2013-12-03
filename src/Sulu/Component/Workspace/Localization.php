@@ -23,7 +23,7 @@ class Localization
     private $language;
 
     /**
-     * The country of the localizatio
+     * The country of the localization
      * @var string
      */
     private $country;
@@ -127,7 +127,7 @@ class Localization
      */
     public function getLocalization()
     {
-        $localization =  $this->getLanguage();
+        $localization = $this->getLanguage();
         if ($this->getCountry() != null) {
             $localization .= '-' . $this->getCountry();
         }

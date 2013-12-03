@@ -110,7 +110,8 @@ class Portal
      * Adds the given language to the portal
      * @param Localization $localization
      */
-    public function addLocalization(Localization $localization) {
+    public function addLocalization(Localization $localization)
+    {
         $this->localizations[] = $localization;
     }
 

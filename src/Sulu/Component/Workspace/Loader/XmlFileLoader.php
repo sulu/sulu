@@ -244,6 +244,7 @@ class XmlFileLoader extends FileLoader
     /**
      * @param \DOMNode $environmentNode
      * @param Environment $environment
+     * @throws Exception\InvalidUrlDefinitionException
      */
     private function generateUrls(\DOMNode $environmentNode, Environment $environment)
     {
@@ -286,31 +287,19 @@ class XmlFileLoader extends FileLoader
     private function checkUrlNode(\DOMNode $urlNode)
     {
         $hasLocalization = ($urlNode->attributes->getNamedItem('localization') != null)
-            || (strpos(
-                    $urlNode->nodeValue,
-                    '{localization}'
-                ) !== false);
+            || (strpos($urlNode->nodeValue, '{localization}') !== false);
 
         $hasLanguage = ($urlNode->attributes->getNamedItem('language') != null)
-            || (strpos(
-                    $urlNode->nodeValue,
-                    '{language}'
-                ) !== false)
+            || (strpos($urlNode->nodeValue, '{language}') !== false)
             || $hasLocalization;
 
         $hasCountry = ($urlNode->attributes->getNamedItem('country') != null)
-            || (strpos(
-                    $urlNode->nodeValue,
-                    '{country}'
-                ) !== false)
+            || (strpos($urlNode->nodeValue, '{country}') !== false)
             || $hasLocalization;
 
         $hasSegment = (count($this->workspace->getSegments()) == 0)
             || ($urlNode->attributes->getNamedItem('segment') != null)
-            || (strpos(
-                    $urlNode->nodeValue,
-                    '{segment}'
-                ) !== false);
+            || (strpos($urlNode->nodeValue, '{segment}') !== false);
 
         $hasRedirect = ($urlNode->attributes->getNamedItem('redirect') != null);
 
