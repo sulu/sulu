@@ -63,7 +63,7 @@ define([], function() {
                         },
                         removeRow: false,
                         tableHead: [
-                            {content: this.sandbox.translate('public.name')}
+                            {content: this.sandbox.translate('public.name'), attribute: "name"}
                         ]
                     }
                 }
