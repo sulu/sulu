@@ -57,7 +57,7 @@ class ContactRepository extends EntityRepository
             ->where('u.id=:id');
 
         $query = $qb->getQuery();
-//        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('id', $id);
 
         try {
@@ -117,7 +117,7 @@ class ContactRepository extends EntityRepository
             ->where('u.id=:id');
 
         $query = $qb->getQuery();
-//        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('id', $id);
 
         try {
