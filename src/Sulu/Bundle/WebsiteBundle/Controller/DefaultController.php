@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Component\Content\Structure;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -59,5 +60,16 @@ class DefaultController extends Controller
         $response->setContent($content);
 
         return $response;
+    }
+
+    public function redirectAction()
+    {
+        $url = str_replace(
+            $this->getRequest()->get('url'),
+            $this->getRequest()->get('redirect'),
+            $this->getRequest()->getUri()
+        );
+
+        return new RedirectResponse($url, 301);
     }
 }
