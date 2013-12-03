@@ -23,17 +23,13 @@ class SuluTranslateContentNavigation extends ContentNavigation
         $this->setName('Package');
 
         $details = new NavigationItem('Details');
-        $details->setContentType('package');
         $details->setAction('details');
-        $details->setType('content');
 
         $this->addNavigationItem($details);
 
 
         $details = new NavigationItem('Settings');
-        $details->setContentType('package');
         $details->setAction('settings');
-        $details->setType('content');
 
         $this->addNavigationItem($details);
 
