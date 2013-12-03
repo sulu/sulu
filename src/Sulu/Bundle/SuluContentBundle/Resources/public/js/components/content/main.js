@@ -69,9 +69,8 @@ define([
                 // on success save contacts id
                 success: function(response) {
                     var model = response.toJSON();
-                    if (!!data.id) {
-                        this.sandbox.emit('husky.header.button-state', 'standard');
-                        this.sandbox.emit('sulu.content.content.saved', model.id);
+                    if (!!this.options.id) {
+                        this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
                         this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
                     }
