@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Controller\Annotations\Get;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -25,13 +26,16 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
 
+
 /**
  * Makes accounts available through a REST API
  * @package Sulu\Bundle\ContactBundle\Controller
  */
-class AccountsController extends RestController implements ClassResourceInterface
+class AccountController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluContactBundle:Account';
+
+    protected $unsortable = array();
 
     /**
      * Shows a single account with the given id
@@ -53,15 +57,18 @@ class AccountsController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Lists all the accounts or filters the accounts by parameters
-     * Special function for lists
-     * route /contacts/list
+     * lists all accounts
+     * optional parameter 'flat' calls listAction
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction()
+    public function cgetAction()
     {
-        $view = $this->responseList();
-
+        if ($this->getRequest()->get('flat')=='true') {
+            $view = $this->responseList();
+        } else {
+            $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+            $view = $this->view($this->createHalResponse($contacts), 200);
+        }
         return $this->handleView($view);
     }
 
@@ -75,7 +82,7 @@ class AccountsController extends RestController implements ClassResourceInterfac
 
         try {
             if ($name == null) {
-                throw new RestException('There is no name for the accoutn given');
+                throw new RestException('There is no name for the account given');
             }
 
             $em = $this->getDoctrine()->getManager();

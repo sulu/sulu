@@ -13,7 +13,7 @@ define([
     'sulucontact/model/emailType'
 ], function(RelationalModel, HasOne, EmailType) {
     return RelationalModel({
-        urlRoot: '/admin/api/contact/emails',
+        urlRoot: '',
         defaults: {
             id: null,
             email: '',
