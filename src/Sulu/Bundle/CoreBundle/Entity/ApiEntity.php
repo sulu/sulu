@@ -3,6 +3,7 @@
 
 namespace Sulu\Bundle\CoreBundle\Entity;
 
+use Doctrine\Common\Inflector\Inflector;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Exclude;
@@ -69,7 +70,8 @@ abstract class ApiEntity
         // if no apiPath is not set generate it from basepath
         if (is_null($this->getApiPath())) {
             $class = explode('\\', get_class($this));
-            $this->apiPath = $this->apiBasePath . '/' . strtolower(end($class)) . 's';
+            $plural = Inflector::pluralize(strtolower(end($class)));
+            $this->apiPath = $this->apiBasePath . '/' . $plural;
         }
 
         // add id to path

@@ -71,17 +71,17 @@ class ListQueryBuilder
 
 
     /**
-     * @var
+     * cache variable for replacing select string in some cases
+     * @var string
      */
     private $replaceSelect;
 
     /**
-     * @param array $associationNames
-     * @param string $entityName
-     * @param array $fields
-     * @param array $sorting
-     * @param array $where
-     * @param string $search
+     * @param $associationNames
+     * @param $entityName
+     * @param $fields
+     * @param $sorting
+     * @param $where
      * @param array $searchFields
      */
     function __construct($associationNames, $entityName, $fields, $sorting, $where, $searchFields = array())

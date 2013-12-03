@@ -80,10 +80,10 @@ abstract class RestController extends FOSRestController
      * returns HAL-conform _links array
      * @param array $entities
      * @param int $pages
-     * @param bool $showSortable
+     * @param bool $returnListLinks
      * @return array
      */
-    private function getHalLinks(array $entities, $pages = 1, $showSortable = false)
+    private function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
@@ -92,13 +92,14 @@ abstract class RestController extends FOSRestController
         $path = $this->replaceOrAddUrlString(
             $path,
             $listHelper->getParameterName('pageSize') . '=',
-            $listHelper->getLimit()
+            $listHelper->getLimit(),
+            false
         );
 
         $page = $listHelper->getPage();
 
         $sortable = array();
-        if ($showSortable && count($entities) > 0) {
+        if ($returnListLinks && count($entities) > 0) {
             $keys = array_keys($entities[0]);
             foreach ($keys as $key) {
                 if (!in_array($key, $this->unsortable)) {
@@ -143,7 +144,7 @@ abstract class RestController extends FOSRestController
                 $listHelper->getParameterName('page') . '=',
                 '{page}'
             ) : null,
-            'sortable' => $showSortable ? $sortable : null,
+            'sortable' => $returnListLinks ? $sortable : null,
         );
     }
 
@@ -162,7 +163,7 @@ abstract class RestController extends FOSRestController
                 return preg_replace('/(.*' . $searchStringBefore . ')(\d*)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
-                    $and = (strpos($url, '?') < 0) ? '?' : '&';
+                    $and = (strpos($url, '?') === false) ? '?' : '&';
 
                     return $url . $and . $searchStringBefore . $value;
                 }

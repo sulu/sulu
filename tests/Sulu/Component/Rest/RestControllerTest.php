@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest;
 use FOS\RestBundle\View\View;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\Listing\ListRestHelper;
 
 class RestControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -247,5 +248,34 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(400, $view->getStatusCode());
     }
+
+    public function testHalLink()
+    {
+        $entities[] = $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity');
+        $entities[] = $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity');
+
+        $listHelper = $this->getMock('\Sulu\Bundle\Rest\Listing\ListRestHelper', array('getParameterName','getLimit','getPage'));
+        $listHelper->expects($this->any())->method('getParameterName')->will($this->returnValueMap(array(array('pageSize','pageSize'))));
+        $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
+        $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
+
+        $request = $this->getMock('\Request', array('getRequestUri'));
+        $controller = $this->getMockForAbstractClass('\Sulu\Component\Rest\RestController', array(), '', true, true, true, array('get', 'getRequest'));
+
+        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/admin/api/contacts'));
+        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
+        $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
+
+        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'getHalLinks');
+        $method->setAccessible(true);
+
+
+        /** @var View $view */
+        $view = $method->invoke($controller, $entities);
+
+        $this->asserEquals($view['self'], '/admin/api/contacts');
+    }
+
+
 
 }
