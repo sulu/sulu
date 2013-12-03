@@ -132,4 +132,22 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             $dql
         );
     }
+
+    public function testCounting()
+    {
+        $builder = new ListQueryBuilder(
+            array(),
+            'SuluCoreBundle:Example',
+            array(),
+            array(),
+            array(),
+            array()
+        );
+
+        $builder->justCount('u.id', 'total');
+
+        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+
+        $this->assertEquals('SELECT COUNT(u.id) as total FROM SuluCoreBundle:Example u', $dql);
+    }
 }
