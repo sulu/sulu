@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\PHPCR\NodeTypes\PathHistory;
+namespace Sulu\Component\PHPCR\NodeTypes\Path;
+
 
 use PHPCR\NodeType\PropertyDefinitionInterface;
 use PHPCR\PropertyType;
 use PHPCR\Version\OnParentVersionAction;
 
-class PathPropertyDefinition implements PropertyDefinitionInterface
-{
+class HistoryPropertyDefinition implements PropertyDefinitionInterface{
 
     /**
      * Gets the node type that contains the declaration of this ItemDefinition.
@@ -31,7 +31,7 @@ class PathPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getDeclaringNodeType()
     {
-        return new PathHistoryNodeType();
+        return new PathNodeType();
     }
 
     /**
@@ -52,7 +52,7 @@ class PathPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getName()
     {
-        return 'sulu:realpath';
+        return 'sulu:history';
     }
 
     /**
@@ -84,7 +84,7 @@ class PathPropertyDefinition implements PropertyDefinitionInterface
      */
     public function isAutoCreated()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -200,7 +200,7 @@ class PathPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getRequiredType()
     {
-        return PropertyType::REFERENCE;
+        return PropertyType::BOOLEAN;
     }
 
     /**
@@ -379,7 +379,7 @@ class PathPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getDefaultValues()
     {
-        return array();
+        return array(false);
     }
 
     /**
@@ -479,5 +479,4 @@ class PathPropertyDefinition implements PropertyDefinitionInterface
     {
         return false;
     }
-
 }

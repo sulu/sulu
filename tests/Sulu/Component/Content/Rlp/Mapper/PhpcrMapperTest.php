@@ -20,7 +20,6 @@ use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\PHPCR\NodeTypes\PathHistory\PathHistoryNodeType;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 
@@ -62,7 +61,6 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathHistoryNodeType(), true);
     }
 
     public function tearDown()
@@ -236,6 +234,41 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         // FIXME after change mixin works: $this->assertEquals('sulu:history', $oldNodeMixins[0]->getName());
 
         $this->assertEquals($newNode, $oldNode->getPropertyValue('sulu:realpath'));
+        $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
+
+        // get content from new path
+        $result = $this->mapper->loadByResourceLocator('/products/asdf/content2-news', 'default');
+        $this->assertEquals($this->content1->getIdentifier(), $result);
+
+        // get content from history should throw an exception
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
+        $result = $this->mapper->loadByResourceLocator('/products/news/content1-news', 'default');
+    }
+
+    public function testMoveTwice()
+    {
+        // create route for content
+        $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        // first move
+        $this->mapper->move('/products/news/content1-news', '/products/news/content2-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        // second move
+        $this->mapper->move('/products/news/content2-news', '/products/asdf/content2-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        $oldNode = $this->session->getNode('/cmf/routes/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/routes/products/asdf/content2-news');
+
+        $oldNodeMixins = $oldNode->getMixinNodeTypes();
+        $newNodeMixins = $newNode->getMixinNodeTypes();
+
+        $this->assertEquals('sulu:path', $newNodeMixins[0]->getName());
+        // FIXME after change mixin works: $this->assertEquals('sulu:history', $oldNodeMixins[0]->getName());
+
+        $this->assertEquals($newNode, $oldNode->getPropertyValue('sulu:content'));
         $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
 
         // get content from new path

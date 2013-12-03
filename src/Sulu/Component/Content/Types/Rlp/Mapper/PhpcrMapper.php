@@ -126,20 +126,22 @@ class PhpcrMapper extends RlpMapper
 
         $route = $routes->getNode($resourceLocator);
 
-        if ($route->hasProperty('sulu:content')) {
-            /** @var NodeInterface $content */
-            $content = $route->getPropertyValue('sulu:content');
+        if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
+            if (!$route->getPropertyValue('sulu:history')) {
+                /** @var NodeInterface $content */
+                $content = $route->getPropertyValue('sulu:content');
 
-            return $content->getIdentifier();
-        } elseif ($route->hasProperty('sulu:realpath')) {
-            // get path from history node
-            /** @var NodeInterface $realPath */
-            $realPath = $route->getPropertyValue('sulu:realpath');
+                return $content->getIdentifier();
+            } else {
+                // get path from history node
+                /** @var NodeInterface $realPath */
+                $realPath = $route->getPropertyValue('sulu:content');
 
-            throw new ResourceLocatorMovedException(
-                $this->getResourceLocator($realPath->getPath()),
-                $realPath->getIdentifier()
-            );
+                throw new ResourceLocatorMovedException(
+                    $this->getResourceLocator($realPath->getPath()),
+                    $realPath->getIdentifier()
+                );
+            }
         } else {
             throw new ResourceLocatorNotFoundException();
         }
@@ -225,11 +227,14 @@ class PhpcrMapper extends RlpMapper
         // copy route to new
         $workspace->copy($absSrcPath, $absDestPath);
 
+        // change old route node to history
+        $this->changePathToHistory($routeNode, $session, $absSrcPath, $absDestPath);
+
         // get all old routes (in old route tree)
         $qm = $workspace->getQueryManager();
         $sql = "SELECT *
                 FROM [sulu:path]
-                WHERE ISDESCENDANTNODE('" . $absSrcPath . "/..')";
+                WHERE ISDESCENDANTNODE('" . $absSrcPath . "')";
 
         $query = $qm->createQuery($sql, 'JCR-SQL2');
         $result = $query->execute();
@@ -244,7 +249,7 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * create a node recursivly
+     * create a node recursively
      * @param string $path path to node
      * @param NodeInterface $rootNode base node to begin
      */
@@ -269,18 +274,14 @@ class PhpcrMapper extends RlpMapper
         $newPath = PathHelper::normalizePath($absDestPath . $relPath);
         $newPathNode = $session->getNode($newPath);
 
-        // add path history mixin
-        $node->addMixin('sulu:history');
-        $node->setProperty('sulu:realpath', $newPathNode);
-
-        // remove path mixin
-        $node->removeMixin('sulu:path');
-        $node->getProperty('sulu:content')->remove();
+        // set history to true and set content to new path
+        $node->setProperty('sulu:content', $newPathNode);
+        $node->setProperty('sulu:history', true);
 
         // get referenced history
         /** @var PropertyInterface $property */
-        foreach ($node->getReferences('sulu:realpath') as $property) {
-            $property->getParent()->setProperty('sulu:realpath', $newPathNode);
+        foreach ($node->getReferences('sulu:content') as $property) {
+            $property->getParent()->setProperty('sulu:content', $newPathNode);
         }
     }
 
