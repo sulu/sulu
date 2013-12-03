@@ -158,22 +158,22 @@ class UserControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/security/users/list');
+        $client->request('GET', '/api/users/list');
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals(1, count($response->total));
-        $this->assertEquals('admin', $response->items[0]->username);
-        $this->assertEquals('securepassword', $response->items[0]->password);
-        $this->assertEquals('de', $response->items[0]->locale);
+        $this->assertEquals('admin', $response->_embedded[0]->username);
+        $this->assertEquals('securepassword', $response->_embedded[0]->password);
+        $this->assertEquals('de', $response->_embedded[0]->locale);
     }
 
     public function testGetById()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/security/users/1');
+        $client->request('GET', '/api/users/1');
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -188,7 +188,7 @@ class UserControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/security/users/10');
+        $client->request('GET', '/api/users/10');
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -202,7 +202,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/security/users',
+            '/api/users',
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
@@ -241,7 +241,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/security/users/2'
+            '/api/users/2'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -262,7 +262,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/security/users',
+            '/api/users',
             array(
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
@@ -293,11 +293,11 @@ class UserControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('DELETE', '/api/security/users/1');
+        $client->request('DELETE', '/api/users/1');
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/security/users/1');
+        $client->request('GET', '/api/users/1');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
@@ -306,7 +306,7 @@ class UserControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('DELETE', '/api/security/users/15');
+        $client->request('DELETE', '/api/users/15');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
@@ -317,7 +317,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/security/users/1',
+            '/api/users/1',
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
@@ -357,7 +357,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/security/users/1'
+            '/api/users/1'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -378,7 +378,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/security/users/1',
+            '/api/users/1',
             array(
                 'username' => 'manager',
                 'locale' => 'en',
@@ -412,7 +412,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/security/users?contactId=2'
+            '/api/users?contactId=2'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -437,7 +437,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/security/users?contactId=1234'
+            '/api/users?contactId=1234'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -452,16 +452,16 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/security/users'
+            '/api/users'
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals(1, count($response->total));
-        $this->assertEquals('admin', $response->items[0]->username);
-        $this->assertEquals('securepassword', $response->items[0]->password);
-        $this->assertEquals('de', $response->items[0]->locale);
+        $this->assertEquals('admin', $response->_embedded[0]->username);
+        $this->assertEquals('securepassword', $response->_embedded[0]->password);
+        $this->assertEquals('de', $response->_embedded[0]->locale);
     }
 
     public function testPutWithRemovedRoles()
@@ -470,7 +470,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/security/users/1',
+            '/api/users/1',
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
@@ -510,7 +510,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/security/users/1',
+            '/api/users/1',
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
@@ -549,7 +549,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/security/users',
+            '/api/users',
             array(
                 'username' => 'manager',
                 'locale' => 'en',
@@ -588,7 +588,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/security/users/1',
+            '/api/users/1',
             array(
                 'username' => 'manager',
                 'locale' => 'en',
@@ -627,7 +627,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/security/users',
+            '/api/users',
             array(
                 'username' => 'manager',
                 'password' => '',
@@ -664,7 +664,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/security/users/1',
+            '/api/users/1',
             array(
                 'username' => 'manager',
                 'password'=> '',

@@ -348,29 +348,31 @@ class UserController extends RestController implements ClassResourceInterface
     }
 
 
+
     /**
      * Returns a user with a specific contact id or all users
+     * optional parameter 'flat' calls listAction
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction()
     {
-        $contactId = $this->getRequest()->get('contactId');
-
-        if ($contactId != null) {
-
-            $user = $this->getDoctrine()
-                ->getRepository($this->entityName)
-                ->findUserByContact($contactId);
-
-            if ($user == null) {
-                $view = $this->view(null, 404);
-            } else {
-                $view = $this->view($user, 200);
-            }
-
-        } else {
-
+        if ($this->getRequest()->get('flat')=='true') {
+            // flat structure
             $view = $this->responseList();
+        } else {
+            $contactId = $this->getRequest()->get('contactId');
+
+            if ($contactId != null) {
+                $user = $this->getDoctrine()->getRepository($this->entityName)->findUserByContact($contactId);
+                if ($user == null) {
+                    $view = $this->view(null, 404);
+                } else {
+                    $view = $this->view($user, 200);
+                }
+            } else {
+                $entities = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+                $view = $this->view($this->createHalResponse($entities), 200);
+            }
         }
         return $this->handleView($view);
     }

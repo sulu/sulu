@@ -4,4 +4,4 @@ sulu_security:
 
 sulu_security_api:
     resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
-    prefix: /api/security
+    prefix: /api

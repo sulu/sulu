@@ -13,13 +13,15 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * Role
  * @ExclusionPolicy("all");
  */
-class Role
+class Role extends ApiEntity
 {
+
     /**
      * @var string
      * @Expose
