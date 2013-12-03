@@ -29,8 +29,7 @@
         </service>
 
         <!-- structure manager -->
-        <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%"
-                 public="false"/>
+        <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%" public="false"/>
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
             <argument type="service" id="sulu.content.structure_manager.loader"/>
             <argument type="collection">
@@ -44,13 +43,13 @@
             </call>
         </service>
 
-        <!-- Rlp Mapper -->
+        <!-- rlp mapper -->
         <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu.content.base_path.route%</argument>
         </service>
 
-        <!-- Rlp Strategies -->
+        <!-- rlp strategies -->
         <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
             <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
         </service>
