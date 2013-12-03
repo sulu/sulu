@@ -231,9 +231,10 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $newNodeMixins = $newNode->getMixinNodeTypes();
 
         $this->assertEquals('sulu:path', $newNodeMixins[0]->getName());
-        // FIXME after change mixin works: $this->assertEquals('sulu:history', $oldNodeMixins[0]->getName());
+        $this->assertEquals('sulu:path', $oldNodeMixins[0]->getName());
 
-        $this->assertEquals($newNode, $oldNode->getPropertyValue('sulu:realpath'));
+        $this->assertTrue($oldNode->getPropertyValue('sulu:history'));
+        $this->assertEquals($newNode, $oldNode->getPropertyValue('sulu:content'));
         $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
 
         // get content from new path
