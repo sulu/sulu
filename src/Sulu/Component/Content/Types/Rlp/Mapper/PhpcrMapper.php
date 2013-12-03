@@ -200,7 +200,9 @@ class PhpcrMapper extends RlpMapper
      * @param string $src old resource locator
      * @param string $dest new resource locator
      * @param string $portalKey key of portal
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      */
     public function move($src, $dest, $portalKey)
     {
@@ -215,6 +217,16 @@ class PhpcrMapper extends RlpMapper
         $routes = $this->getRoutes($session);
 
         $routeNode = $routes->getNode(ltrim($src, '/'));
+        if (!$routeNode->hasProperty('sulu:content')) {
+            throw new ResourceLocatorNotFoundException();
+        } elseif ($routeNode->getPropertyValue('sulu:history')) {
+            $realPath = $routeNode->getPropertyValue('sulu:content');
+
+            throw new ResourceLocatorMovedException(
+                $this->getResourceLocator($realPath->getPath()),
+                $realPath->getIdentifier());
+        }
+
         $contentNode = $routeNode->getPropertyValue('sulu:content');
 
         // check if route already exists
