@@ -57,9 +57,9 @@ define(function() {
             }.bind(this));
 
             // init navigation
-            this.sandbox.on('navigation.item.content.show', function(event) {
-                if (!!event.item.action) {
-                    this.sandbox.emit('sulu.router.navigate', event.item.action);
+            this.sandbox.on('husky.navigation.item.select', function(event) {
+                if (!!event.action) {
+                    this.sandbox.emit('sulu.router.navigate', event.action);
                 }
             }.bind(this));
 
