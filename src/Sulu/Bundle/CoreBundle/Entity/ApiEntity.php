@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Sulu\Bundle\CoreBundle\Entity;
 
 use Doctrine\Common\Inflector\Inflector;
@@ -25,13 +23,11 @@ abstract class ApiEntity
      */
     protected $apiPath;
 
-
     /**
      * @var int
      * @Exclude
      */
     private $id;
-
 
     /**
      * property to be shown in serialized object
@@ -39,7 +35,6 @@ abstract class ApiEntity
      * @var string
      */
     private $_links;
-
 
     /**
      * returns the id of an entity

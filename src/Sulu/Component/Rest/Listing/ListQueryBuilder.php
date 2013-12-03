@@ -69,7 +69,6 @@ class ListQueryBuilder
      */
     private $searchFields;
 
-
     /**
      * cache variable for replacing select string in some cases
      * @var string
@@ -94,7 +93,6 @@ class ListQueryBuilder
         $this->searchFields = $searchFields;
     }
 
-
     /**
      * Searches Entity by filter for fields, pagination and sorted by a column
      *
@@ -110,7 +108,6 @@ class ListQueryBuilder
 
         return $dql;
     }
-
 
     /**
      * just return count
@@ -261,7 +258,6 @@ class ListQueryBuilder
 
         return sprintf($format, $parent, $field, $alias);
     }
-
 
     /**
      * Check if Field is an Association

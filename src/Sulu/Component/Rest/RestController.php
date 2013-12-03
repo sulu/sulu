@@ -60,7 +60,6 @@ abstract class RestController extends FOSRestController
         return $this->view($response, 200);
     }
 
-
     /**
      * creates HAL conform response-array out of an entitycollection
      * @param array $entities
@@ -74,7 +73,6 @@ abstract class RestController extends FOSRestController
             'total' => count($entities),
         );
     }
-
 
     /**
      * returns HAL-conform _links array
