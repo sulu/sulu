@@ -21,23 +21,23 @@ class SuluContactAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem('Root');
 
-        $rootNavigationItem->setHeaderTitle('Contacts');
+        $section = new NavigationItem('Tools');
 
         $contacts = new NavigationItem('Contacts');
         $contacts->setIcon('contact-book');
-        $rootNavigationItem->addChild($contacts);
+        $section->addChild($contacts);
 
         $people = new NavigationItem('People');
         $people->setIcon('parents');
-        $people->setType('content');
         $people->setAction('contacts/contacts');
         $contacts->addChild($people);
 
         $companies = new NavigationItem('Companies');
         $companies->setIcon('bank');
-        $companies->setType('content');
         $companies->setAction('contacts/accounts');
         $contacts->addChild($companies);
+
+        $rootNavigationItem->addChild($section);
 
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
