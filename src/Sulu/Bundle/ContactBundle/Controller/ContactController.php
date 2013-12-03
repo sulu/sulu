@@ -34,8 +34,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
     protected $basePath = 'admin/api/contacts';
 
-    protected $nonSortable = array();
-
+    protected $unsortable = array();
 
     /**
      * lists all contacts
