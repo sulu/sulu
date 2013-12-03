@@ -68,9 +68,9 @@ define([
             }
 
             if (!!data.user.id) { // PUT
-                this.user.url = '/admin/api/security/users/' + data.user.id;
+                this.user.url = '/admin/api/users/' + data.user.id;
             } else { // POST
-                this.user.url = '/admin/api/security/users';
+                this.user.url = '/admin/api/users';
             }
 
             // prepare deselected roles

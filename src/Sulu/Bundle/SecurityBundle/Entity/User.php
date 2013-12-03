@@ -17,6 +17,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Symfony\Bridge\Doctrine\Tests\Security\User\EntityUserProviderTest;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -25,8 +26,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ExclusionPolicy("all")
  */
-class User implements UserInterface, Serializable
+class User extends ApiEntity implements UserInterface, Serializable
 {
+
     /**
      * @var string
      * @Expose
