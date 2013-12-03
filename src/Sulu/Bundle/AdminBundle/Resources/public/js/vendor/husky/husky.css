@@ -4108,15 +4108,19 @@ table {
 .table.is-selectable tr:hover > td {
   background-color: #fff;
 }
-/* line 62, ../scss/modules/tables.scss */
+/* line 61, ../scss/modules/tables.scss */
+.table.is-selectable thead tr {
+  cursor: auto;
+}
+/* line 67, ../scss/modules/tables.scss */
 .table .thumb {
   text-align: center;
 }
-/* line 65, ../scss/modules/tables.scss */
+/* line 70, ../scss/modules/tables.scss */
 .table .thumb img {
   vertical-align: middle;
 }
-/* line 70, ../scss/modules/tables.scss */
+/* line 75, ../scss/modules/tables.scss */
 .table .remove-row {
   text-align: center;
 }
