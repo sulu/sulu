@@ -225,6 +225,13 @@
                 $( self.UI.ulError + ' .remote' ).remove();
               }
 
+              if (false === isConstraintValid) {
+                  self.options.listeners.onFieldError( self.element, self.constraints, self );
+              } else if (true === isConstraintValid && false === self.options.listeners.onFieldSuccess( self.element, self.constraints, self )) {
+                  // if onFieldSuccess returns (bool) false, consider that field si invalid
+                  isConstraintValid = false;
+              }
+
               self.updtConstraint( { name: 'remote', valid: isConstraintValid }, message );
               self.manageValidationResult();
             };
@@ -335,10 +342,27 @@
     * Add / override a validator in validators list
     *
     * @method addValidator
-    * @param {String} name Validator name. Will automatically bindable through data-name=''
-    * @param {Function} fn Validator function. Must return { validator: fn(), priority: int }
+    * @param {String} name Validator name.
+    * @param {Function} fn Validator. Must return { validator: fn(), priority: int }
     */
     , addValidator: function ( name, fn ) {
+      if ('undefined' === typeof fn().validate) {
+        throw new Error( 'Validator `' + name + '` must have a validate method. See more here: http://parsleyjs.org/documentation.html#javascript-general' );
+      }
+
+      // add default prioirty if not given.
+      if ('undefined' === typeof fn().priority) {
+        fn = {
+            validate: fn().validate
+          , priority: 32
+        };
+
+        // Warn if possible
+        if (window.console && window.console.warn) {
+          window.console.warn( 'Validator `' + name + '` should have a priority. Default priority 32 given' );
+        }
+      }
+
       this.validators[ name ] = fn;
     }
 
@@ -498,8 +522,8 @@
     * @method manageErrorContainer
     */
     , manageErrorContainer: function () {
-      var errorContainer = this.options.errorContainer || this.options.errors.container( this.element, this.ParsleyInstance.isRadioOrCheckbox )
-        , ulTemplate = this.options.animate ? this.ulTemplate.show() : this.ulTemplate;
+      var errorContainer = this.options.errorContainer || this.options.errors.container( this.ParsleyInstance.element, this.ParsleyInstance.isRadioOrCheckbox )
+        , ulTemplate = this.options.animate ? this.ulTemplate.css('display', '') : this.ulTemplate;
 
       if ( 'undefined' !== typeof errorContainer ) {
         $( errorContainer ).append( ulTemplate );
@@ -588,13 +612,14 @@
     */
     , bindHtml5Constraints: function () {
       // add html5 required support + class required support
-      if ( this.$element.hasClass( 'required' ) || this.$element.prop( 'required' ) ) {
+      if ( this.$element.hasClass( 'required' ) || this.$element.attr( 'required' ) ) {
         this.options.required = true;
       }
 
       // add html5 supported types & options
-      if ( 'undefined' !== typeof this.$element.attr( 'type' ) && new RegExp( this.$element.attr( 'type' ), 'i' ).test( 'email url number range' ) ) {
-        this.options.type = this.$element.attr( 'type' );
+      var type = this.$element.attr( 'type' );
+      if ( 'undefined' !== typeof type && new RegExp( type, 'i' ).test( 'email url number range tel' ) ) {
+        this.options.type = 'tel' === type ? 'phone' : type;
 
         // number and range types could have min and/or max values
         if ( new RegExp( this.options.type, 'i' ).test( 'number range' ) ) {
@@ -708,15 +733,9 @@
         this.isRequired = false;
       }
 
-      // if there are no more constraint, destroy parsley instance for this field
+      // if there are no more constraint, reset errors and validation state
       if ( !this.hasConstraints() ) {
-        // in a form context, remove item from parent
-        if ( 'ParsleyForm' === typeof this.getParent() ) {
-          this.getParent().removeItem( this.$element );
-          return;
-        }
-
-        this.destroy();
+        this.UI.reset();
         return;
       }
 
@@ -760,11 +779,11 @@
         this.options.trigger = !this.options.trigger ? 'change' : ' change';
       }
 
-      // alaways bind keyup event, for better UX when a field is invalid
+      // always bind keyup event, for better UX when a field is invalid
       var triggers = ( !this.options.trigger ? '' : this.options.trigger )
         + ( new RegExp( 'key', 'i' ).test( this.options.trigger ) ? '' : ' keyup' );
 
-      // alaways bind change event, for better UX when a select is invalid
+      // always bind change event, for better UX when a select is invalid
       if ( this.$element.is( 'select' ) ) {
         triggers += new RegExp( 'change', 'i' ).test( triggers ) ? '' : ' change';
       }
@@ -803,8 +822,8 @@
     * @returns {String} val
     */
     , getVal: function () {
-      if ('undefined' !== typeof this.$element.domApi()[ 'value' ]) {
-        return this.$element.domApi()[ 'value' ];
+      if ('undefined' !== typeof this.$element.domApi( this.options.namespace )[ 'value' ]) {
+        return this.$element.domApi( this.options.namespace )[ 'value' ];
       }
 
       return this.$element.val();
@@ -979,7 +998,6 @@
       for ( var constraint in this.constraints ) {
         if ( false === this.constraints[ constraint ].valid ) {
           errors.push( this.constraints[ constraint ]);
-          // this.UI.manageError( this.constraints[ constraint ] );
           valid = false;
         } else if ( true === this.constraints[ constraint ].valid ) {
           this.UI.removeError( this.constraints[ constraint ].name );
@@ -996,10 +1014,15 @@
         return true;
       } else if ( false === this.valid ) {
         if ( true === this.options.priorityEnabled ) {
-          var maxPriority = 0, constraint;
-          for ( var i = 0; i < errors.length; i++ )
-            if ( this.Validator.validators[ errors[ i ].name ]().priority > maxPriority )
+          var maxPriority = 0, constraint, priority;
+          for ( var i = 0; i < errors.length; i++ ) {
+            priority = this.Validator.validators[ errors[ i ].name ]().priority;
+
+            if ( priority > maxPriority ) {
               constraint = errors[ i ];
+              maxPriority = priority;
+            }
+          }
           this.UI.manageError( constraint );
         } else {
           for ( var i = 0; i < errors.length; i++ )
@@ -1154,7 +1177,7 @@
      // remove eventually already binded events
      this.$element.off( '.' + this.type );
 
-      // alaways bind keyup event, for better UX when a field is invalid
+      // always bind keyup event, for better UX when a field is invalid
       var self = this
         , triggers = ( !this.options.trigger ? '' : this.options.trigger )
         + ( new RegExp( 'change', 'i' ).test( this.options.trigger ) ? '' : ' change' );
@@ -1364,8 +1387,10 @@
   * @return {Mixed} public class method return
   */
   $.fn.parsley = function ( option, fn ) {
-    var options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.domApi() )
-      , newInstance = null;
+    var namespace = { namespace: $( this ).data( 'parsleyNamespace' ) ? $( this ).data( 'parsleyNamespace' ) : ( 'undefined' !== typeof option && 'undefined' !== typeof option.namespace ? option.namespace : $.fn.parsley.defaults.namespace ) }
+      , options = $.extend( true, {}, $.fn.parsley.defaults, 'undefined' !== typeof window.ParsleyConfig ? window.ParsleyConfig : {}, option, this.domApi( namespace.namespace ) )
+      , newInstance = null
+      , args = Array.prototype.slice.call(arguments, 1);
 
     function bind ( self, type ) {
       var parsleyInstance = $( self ).data( type );
@@ -1391,7 +1416,7 @@
 
       // here is our parsley public function accessor
       if ( 'string' === typeof option && 'function' === typeof parsleyInstance[ option ] ) {
-        var response = parsleyInstance[ option ]( fn );
+        var response = parsleyInstance[ option ].apply( parsleyInstance, args );
 
         return 'undefined' !== typeof response ? response : $( self );
       }
@@ -1400,7 +1425,7 @@
     }
 
     // if a form elem is given, bind all its input children
-    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).domApi()[ 'bind' ] ) {
+    if ( $( this ).is( 'form' ) || 'undefined' !== typeof $( this ).domApi( namespace.namespace )[ 'bind' ] ) {
       newInstance = bind ( $( this ), 'parsleyForm' );
 
     // if it is a Parsley supported single element, bind it too, except inputs type hidden
@@ -1412,25 +1437,32 @@
     return 'function' === typeof fn ? fn() : newInstance;
   };
 
-  $.fn.parsley.Constructor = ParsleyForm;
-
   /* PARSLEY auto-binding
   * =================================================== */
   $( window ).on( 'load', function () {
-    $( '[parsley-validate]' ).each( function () {
+    $( '[parsley-validate], [data-parsley-validate]' ).each( function () {
       $( this ).parsley();
     } );
   } );
 
   /* PARSLEY DOM API
   * =================================================== */
-  $.fn.domApi = function () {
-    var obj = {};
-    $.each( this[0].attributes, function () {
-      if ( this.specified && /^parsley-/i.test( this.name ) ) {
-        obj[ camelize( this.name.replace( 'parsley-', '' ) ) ] = deserializeValue( this.value );
+  $.fn.domApi = function ( namespace ) {
+    var attribute,
+      obj = {}
+      , regex = new RegExp("^" + namespace, 'i');
+
+    if ( 'undefined' === typeof this[ 0 ] ) {
+      return {};
+    }
+
+    for ( var i in this[ 0 ].attributes ) {
+      attribute = this[ 0 ].attributes[ i ];
+
+      if ( null !== attribute && attribute.specified && regex.test( attribute.name ) ) {
+        obj[ camelize( attribute.name.replace( namespace, '' ) ) ] = deserializeValue( attribute.value );
       }
-    } );
+    }
 
     return obj;
   };
@@ -1483,7 +1515,8 @@
   */
   $.fn.parsley.defaults = {
     // basic data-api overridable properties here..
-    inputs: 'input, textarea, select'         // Default supported inputs.
+    namespace: 'parsley-'                       // DOM-API, default 'parsley-'. W3C valid would be 'data-parsley-' but quite ugly
+    , inputs: 'input, textarea, select'         // Default supported inputs.
     , excluded: 'input[type=hidden], input[type=file], :disabled' // Do not validate input[type=hidden] & :disabled.
     , priorityEnabled: true                     // Will display only one error at the time depending on validators priorities
     , trigger: false                            // $.Event() that will trigger validation. eg: keyup, change..
