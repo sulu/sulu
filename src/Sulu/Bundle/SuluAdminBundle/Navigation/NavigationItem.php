@@ -72,41 +72,21 @@ class NavigationItem implements \Iterator
     protected $position;
 
     /**
-     * The type of the content (if $type="content")
-     * @var string
+     * Defines if this menu item has settings
+     * @var bool
      */
-    protected $contentType;
-
-    /**
-     * Describes how the navigation item should be shown in husky
-     * @var string
-     */
-    protected $displayOption;
-
-    /**
-     * Defines when items should be shown
-     * @var array
-     */
-    protected $contentDisplay;
-
+    protected $hasSettings;
 
     /**
      * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
-     * @param array $contentDisplay if null -> default is array('new', 'edit')
      */
-    function __construct($name, $parent = null, array $contentDisplay = null)
+    function __construct($name, $parent = null)
     {
         $this->name = $name;
 
         if ($parent != null) {
             $parent->addChild($this);
-        }
-
-        if ($contentDisplay != null) {
-            $this->contentDisplay = $contentDisplay;
-        } else {
-            $this->contentDisplay = array('new','edit');
         }
     }
 
@@ -256,60 +236,6 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * Sets the type of the content (if contentnavigation)
-     * @param string $contentType
-     */
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-
-    /**
-     * Returns the type of the content (if contentnavigation)
-     * @return string
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * Sets the display option
-     * @param string $displayOption
-     */
-    public function setDisplayOption($displayOption)
-    {
-        $this->displayOption = $displayOption;
-    }
-
-    /**
-     * Returns the display option
-     * @return string
-     */
-    public function getDisplayOption()
-    {
-        return $this->displayOption;
-    }
-
-    /**
-     * Sets when item should be shown
-     * @param array $contentDisplay
-     */
-    public function setContentDisplay($contentDisplay)
-    {
-        $this->contentDisplay = $contentDisplay;
-    }
-
-    /**
-     * Returns when to show item
-     * @return array
-     */
-    public function getContentDisplay()
-    {
-        return $this->contentDisplay;
-    }
-
-    /**
      * @param int $position
      */
     public function setPosition($position)
@@ -335,6 +261,22 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     * @param boolean $hasSettings
+     */
+    public function setHasSettings($hasSettings)
+    {
+        $this->hasSettings = $hasSettings;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasSettings()
+    {
+        return $this->hasSettings;
+    }
+
+    /**
      * Returns a copy of this navigation item without its children
      * @return NavigationItem
      */
@@ -347,7 +289,6 @@ class NavigationItem implements \Iterator
         $new->setHeaderIcon($this->getHeaderIcon());
         $new->setHeaderTitle($this->getHeaderTitle());
         $new->setId($this->getId());
-        $new->setDisplayOption($this->getDisplayOption());
 
         return $new;
     }
@@ -493,11 +434,8 @@ class NavigationItem implements \Iterator
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
-            'hasSub' => $this->hasChildren(),
+            'hasSettings' => $this->getHasSettings(),
             'type' => $this->getType(),
-            'contentType' => $this->getContentType(),
-            'contentDisplay' => $this->getContentDisplay(),
-            'displayOption' => $this->getDisplayOption(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
 
@@ -511,7 +449,7 @@ class NavigationItem implements \Iterator
 
         foreach ($this->getChildren() as $key => $child) {
             /** @var NavigationItem $child */
-            $array['sub']['items'][$key] = $child->toArray();
+            $array['items'][$key] = $child->toArray();
         }
 
         return $array;

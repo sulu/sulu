@@ -9,15 +9,14 @@
 #content {
   width: 800px;
   margin-left: 300px;
-  margin-top: 111px;
 }
-/* line 13, ../scss/modules/base.scss */
+/* line 12, ../scss/modules/base.scss */
 #content h2.mainheadline {
   margin-top: 35px;
 }
 
 /*----------------------------------------*/
-/* line 22, ../scss/modules/base.scss */
+/* line 21, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -25,24 +24,24 @@
 }
 
 /*----------------------------------------*/
-/* line 30, ../scss/modules/base.scss */
+/* line 29, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 39, ../scss/modules/base.scss */
+/* line 38, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 43, ../scss/modules/base.scss */
+/* line 42, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 51, ../scss/modules/base.scss */
+/* line 50, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }

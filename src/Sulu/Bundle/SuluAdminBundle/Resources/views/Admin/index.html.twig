@@ -21,9 +21,17 @@
     </head>
     <body>
         <div id="main">
-            <header data-aura-component="header@husky" {% if user.username is defined %} data-aura-user-name="{{ user.username }}" {% endif %}{% if user.logout is defined %} data-aura-logout-url="{{ user.logout }}" {% endif %}></header>
+            {#<header data-aura-component="header@husky" {% if user.username is defined %} data-aura-user-name="{{ user.username }}" {% endif %}{% if user.logout is defined %} data-aura-logout-url="{{ user.logout }}" {% endif %}></header>#}
+            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
+                {% if user.username is defined %}
+                data-aura-footer-template="<div>{{ user.username }}</div>
+                {% endif %}
+                {% if user.logout is defined %}
+                <div><a href='{{ user.logout }}'>logout</a></div>
+                {% endif %}
+                <div class='version'>sulu 2.0.2</div>"
+            ></div>
 
-            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"></div>
 
             <main class="grid" id="content" data-aura-component="app@suluadmin"></main>
 
