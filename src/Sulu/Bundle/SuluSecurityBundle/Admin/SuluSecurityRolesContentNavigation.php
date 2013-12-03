@@ -17,7 +17,6 @@ class SuluSecurityRolesContentNavigation extends ContentNavigation
 
         // define content-tabs
         $details = new NavigationItem('Details');
-        $details->setContentType('roles');
         $details->setAction('details');
         $details->setType('content');
 
