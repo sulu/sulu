@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -22,7 +23,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
  * Makes the translation catalogues accessible trough an REST-API
  * @package Sulu\Bundle\TranslateBundle\Controller
  */
-class PackagesController extends RestController
+class PackageController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluTranslateBundle:Package';
 
@@ -30,10 +31,15 @@ class PackagesController extends RestController
      * Lists all the catalogues or filters the catalogues by parameters
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getPackagesAction()
+    public function cgetAction()
     {
-        $view = $this->responseList();
-
+        if ($this->getRequest()->get('flat')=='true') {
+            // flat structure
+            $view = $this->responseList();
+        } else {
+            $entities = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+            $view = $this->view($this->createHalResponse($entities), 200);
+        }
         return $this->handleView($view);
     }
 
@@ -42,7 +48,7 @@ class PackagesController extends RestController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getPackageAction($id)
+    public function getAction($id)
     {
         $find = function ($id) {
             return $this->getDoctrine()
@@ -59,7 +65,7 @@ class PackagesController extends RestController
      * Creates a new catalogue
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postPackagesAction()
+    public function postAction()
     {
         $name = $this->getRequest()->get('name');
 
@@ -102,7 +108,7 @@ class PackagesController extends RestController
      * @param integer $id The id of the package to update
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putPackagesAction($id)
+    public function putAction($id)
     {
         /** @var Package $package */
         $package = $this->getDoctrine()
@@ -199,7 +205,7 @@ class PackagesController extends RestController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deletePackageAction($id)
+    public function deleteAction($id)
     {
         $delete = function ($id) {
             $entityName = 'SuluTranslateBundle:Package';

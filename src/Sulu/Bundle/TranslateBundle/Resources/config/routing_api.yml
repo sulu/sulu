@@ -1,14 +1,14 @@
 sulu_translate.packages:
     type: rest
-    resource: Sulu\Bundle\TranslateBundle\Controller\PackagesController
+    resource: Sulu\Bundle\TranslateBundle\Controller\PackageController
 
 sulu_translate.catalogues:
     type: rest
-    resource: Sulu\Bundle\TranslateBundle\Controller\CataloguesController
+    resource: Sulu\Bundle\TranslateBundle\Controller\CatalogueController
 
 sulu_translate.codes:
     type: rest
-    resource: Sulu\Bundle\TranslateBundle\Controller\CodesController
+    resource: Sulu\Bundle\TranslateBundle\Controller\CodeController
 
 sulu_translate.translations:
     type: rest

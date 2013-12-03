@@ -5,4 +5,4 @@ sulu_translate:
 sulu_translate_api:
     type: rest
     resource: "@SuluTranslateBundle/Resources/config/routing_api.yml"
-    prefix: /api/translate
+    prefix: /api

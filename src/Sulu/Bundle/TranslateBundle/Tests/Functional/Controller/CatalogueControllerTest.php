@@ -18,7 +18,7 @@ use Sulu\Component\Testing\DatabaseTestCase;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Tools\SchemaTool;
 
-class CataloguesControllerTest extends DatabaseTestCase
+class CatalogueControllerTest extends DatabaseTestCase
 {
 
     /**
@@ -75,25 +75,25 @@ class CataloguesControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/translate/catalogues');
+        $client->request('GET', '/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('EN', $response->items[0]->locale);
+        $this->assertEquals('EN', $response->_embedded[0]->locale);
     }
 
     public function testGetByPackage()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/translate/catalogues?package=1');
+        $client->request('GET', '/api/catalogues?package=1');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('EN', $response->items[0]->locale);
+        $this->assertEquals('EN', $response->_embedded[0]->locale);
     }
 
     public function testGetById()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/translate/catalogues/1');
+        $client->request('GET', '/api/catalogues/1');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->locale);
     }
@@ -103,11 +103,11 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
 
-        $client->request('DELETE', '/api/translate/catalogues/1');
+        $client->request('DELETE', '/api/catalogues/1');
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
 
-        $client->request('GET', '/api/translate/catalogues/1');
+        $client->request('GET', '/api/catalogues/1');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
@@ -117,11 +117,11 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
 
-        $client->request('DELETE', '/api/translate/catalogues/4711');
+        $client->request('DELETE', '/api/catalogues/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
 
-        $client->request('GET', '/api/translate/catalogues');
+        $client->request('GET', '/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
@@ -130,19 +130,19 @@ class CataloguesControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
 
-        $client->request('GET', '/api/translate/catalogues/list?fields=id,locale&packageId=1');
+        $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=1');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('1', $response->items[0]->id);
-        $this->assertEquals('EN', $response->items[0]->locale);
+        $this->assertEquals('1', $response->_embedded[0]->id);
+        $this->assertEquals('EN', $response->_embedded[0]->locale);
 
     }
 
     public function testListCataloguesNotExisting(){
 
         $client = static::createClient();
-        $client->request('GET', '/api/translate/catalogues/list?fields=id,locale&packageId=4711');
+        $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=4711');
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('200', $client->getResponse()->getStatusCode());

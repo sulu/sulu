@@ -12,12 +12,13 @@ namespace Sulu\Bundle\TranslateBundle\Entity;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * Catalogue
  * @ExclusionPolicy("all")
  */
-class Catalogue
+class Catalogue extends ApiEntity
 {
     /**
      * @var integer
