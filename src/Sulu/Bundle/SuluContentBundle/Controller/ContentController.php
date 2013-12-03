@@ -21,14 +21,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ContentController extends RestController implements ClassResourceInterface
 {
-
-
     /**
      * for returning self link in get action
      * @var string
      */
     private $apiPath = '/admin/api/contents';
-
 
     /**
      * returns a content item with given UUID as JSON String
@@ -45,9 +42,10 @@ class ContentController extends RestController implements ClassResourceInterface
                 // TODO portal
                 $content = $this->getMapper()->load($uuid, 'default', 'en');
                 $result = $content->toArray();
-                $result['_links'] = array('self' => $this->apiPath.'/'.$uuid);
+                $result['_links'] = array('self' => $this->apiPath . '/' . $uuid);
                 $result['creator'] = $this->getContactByUserId($result['creator']);
                 $result['changer'] = $this->getContactByUserId($result['changer']);
+
                 return $result;
             }
         );
@@ -81,7 +79,7 @@ class ContentController extends RestController implements ClassResourceInterface
         return $this->handleView(
             $this->view(
                 array(
-                    '_links' => array('self'=>$this->getRequest()->getUri()),
+                    '_links' => array('self' => $this->getRequest()->getUri()),
                     '_embedded' => $result,
                     'total' => sizeof($result),
                 )
@@ -89,19 +87,20 @@ class ContentController extends RestController implements ClassResourceInterface
         );
     }
 
-    private function getContactByUserId($id) {
+    private function getContactByUserId($id)
+    {
 
         // Todo performance issue
         // Todo solve as service
         $user = $this->getDoctrine()->getRepository('SuluSecurityBundle:User')->find($id);
 
-        if($user !== null) {
+        if ($user !== null) {
             $contact = $user->getContact();
-            return $contact->getFirstname()." ".$contact->getLastname();
+
+            return $contact->getFirstname() . " " . $contact->getLastname();
         } else {
             return "";
         }
-
     }
 
     /**
@@ -114,12 +113,17 @@ class ContentController extends RestController implements ClassResourceInterface
         $templateKey = $this->getRequest()->get('template');
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         // TODO portal
-        $structure = $this->getMapper()->save($this->getRequest()->request->all(), $templateKey, 'default', 'en', $userId);
+        $structure = $this->getMapper()->save(
+            $this->getRequest()->request->all(),
+            $templateKey,
+            'default',
+            'en',
+            $userId
+        );
         $result = $structure->toArray();
         $result['creator'] = $this->getContactByUserId($result['creator']);
         $result['changer'] = $this->getContactByUserId($result['changer']);
         $view = $this->view($result, 200);
-
 
         return $this->handleView($view);
     }
@@ -146,7 +150,8 @@ class ContentController extends RestController implements ClassResourceInterface
      * return base content path
      * @return string
      */
-    protected function getBasePath(){
+    protected function getBasePath()
+    {
         return $this->container->getParameter('sulu.content.base_path.content');
     }
 }
