@@ -16,7 +16,6 @@ use PHPCR\WorkspaceInterface;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\PHPCR\NodeTypes\PathHistory\PathHistoryNodeType;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -50,7 +49,6 @@ class PHPCRInitCommand extends ContainerAwareCommand
         $output->writeln('Register node types');
         $workspace->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $workspace->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $workspace->getNodeTypeManager()->registerNodeType(new PathHistoryNodeType(), true);
         $workspace->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
 
         // get basic node paths

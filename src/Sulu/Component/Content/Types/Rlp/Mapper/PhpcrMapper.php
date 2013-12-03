@@ -96,7 +96,10 @@ class PhpcrMapper extends RlpMapper
         // search for references with name 'content'
         foreach ($contentNode->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
-                return $this->getResourceLocator($ref->getParent()->getPath());
+                $parent = $ref->getParent();
+                if (false === $parent->getPropertyValue('sulu:history')) {
+                    return $this->getResourceLocator($ref->getParent()->getPath());
+                }
             }
         }
 
