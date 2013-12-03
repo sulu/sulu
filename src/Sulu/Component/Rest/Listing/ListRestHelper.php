@@ -76,7 +76,7 @@ class ListRestHelper
      * Create a ListRepository for given EntityName and find Entities for list
      * @param string $entityName
      * @param array $where
-     * @return \Doctrine\ORM\Query
+     * @return array
      */
     public function find($entityName, $where = array())
     {

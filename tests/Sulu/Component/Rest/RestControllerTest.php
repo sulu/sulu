@@ -249,33 +249,118 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(400, $view->getStatusCode());
     }
 
-    public function testHalLink()
+    public function testResponseList()
     {
-        $entities[] = $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity');
-        $entities[] = $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity');
+        $entities = array(
+            array(
+                'test' => 1
+            ),
+            array(
+                'test' => 2
+            ),
+            array(
+                'test' => 3
+            )
+        );
 
-        $listHelper = $this->getMock('\Sulu\Bundle\Rest\Listing\ListRestHelper', array('getParameterName','getLimit','getPage'));
-        $listHelper->expects($this->any())->method('getParameterName')->will($this->returnValueMap(array(array('pageSize','pageSize'))));
+        $controller = $this->getMockForAbstractClass(
+            '\Sulu\Component\Rest\RestController',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('get', 'getRequest')
+        );
+
+        $listHelper = $this->getMock(
+            '\Sulu\Bundle\Rest\Listing\ListRestHelper',
+            array('find', 'getTotalPages', 'getParameterName', 'getLimit', 'getPage')
+        );
+        $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
+        $listHelper->expects($this->any())->method('getTotalPages')->will($this->returnValue(3));
+        $listHelper->expects($this->any())->method('getParameterName')->will(
+            $this->returnValueMap(
+                array(
+                    array('pageSize', 'pageSize'),
+                    array('page', 'page'),
+                    array('sortBy', 'sortBy'),
+                    array('sortOrder', 'sortOrder')
+                )
+            )
+        );
         $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
         $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
 
-        $request = $this->getMock('\Request', array('getRequestUri'));
-        $controller = $this->getMockForAbstractClass('\Sulu\Component\Rest\RestController', array(), '', true, true, true, array('get', 'getRequest'));
-
-        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/admin/api/contacts'));
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
+
+        $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
+        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?page=2'));
+        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
+        $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
+
+        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
+        $method->setAccessible(true);
+
+        $view = $method->invoke($controller, $entities)->getData();
+
+        $this->assertEquals('admin/api/contacts?page=2', $view['_links']['self']);
+        $this->assertEquals('admin/api/contacts?page=1', $view['_links']['first']);
+        $this->assertEquals('admin/api/contacts?page=3', $view['_links']['last']);
+        $this->assertEquals('admin/api/contacts?page=1', $view['_links']['prev']);
+        $this->assertEquals('admin/api/contacts?page=3', $view['_links']['next']);
+        $this->assertEquals('admin/api/contacts?page={page}', $view['_links']['pagination']);
+        $this->assertEquals(
+            'admin/api/contacts?sortBy=test&sortOrder={sortOrder}',
+            $view['_links']['sortable']['test']
+        );
+    }
+
+    public function testHalLink()
+    {
+        $entities = array(
+            $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity'),
+            $this->getMockForAbstractClass('\Sulu\Bundle\CoreBundle\Entity\ApiEntity')
+        );
+
+        $listHelper = $this->getMock(
+            '\Sulu\Bundle\Rest\Listing\ListRestHelper',
+            array('getParameterName', 'getLimit', 'getPage')
+        );
+
+        $listHelper->expects($this->any())->method('getParameterName')->will(
+            $this->returnValueMap(
+                array(
+                    array('pageSize', 'pageSize'),
+                    array('page', 'page')
+                )
+            )
+        );
+
+        $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
+        $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
+
+        $controller = $this->getMockForAbstractClass(
+            '\Sulu\Component\Rest\RestController',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('get', 'getRequest')
+        );
+        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
+        $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
+        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/admin/api/contacts'));
+        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'getHalLinks');
         $method->setAccessible(true);
 
-
         /** @var View $view */
         $view = $method->invoke($controller, $entities);
 
-        $this->asserEquals($view['self'], '/admin/api/contacts');
+        $this->assertEquals($view['self'], '/admin/api/contacts');
     }
-
-
-
 }

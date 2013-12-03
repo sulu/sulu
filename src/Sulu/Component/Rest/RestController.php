@@ -89,6 +89,7 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $path = $this->getRequest()->getRequestUri();
+        $pathInfo = $this->getRequest()->getPathInfo();
         $path = $this->replaceOrAddUrlString(
             $path,
             $listHelper->getParameterName('pageSize') . '=',
@@ -104,7 +105,7 @@ abstract class RestController extends FOSRestController
             foreach ($keys as $key) {
                 if (!in_array($key, $this->unsortable)) {
                     $sortPath = $this->replaceOrAddUrlString(
-                        $path,
+                        $pathInfo,
                         $listHelper->getParameterName('sortBy') . '=',
                         $key
                     );
