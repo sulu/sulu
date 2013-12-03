@@ -11,11 +11,13 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Contact
  */
-class Contact
+class Contact extends ApiEntity
 {
     /**
      * @var string
