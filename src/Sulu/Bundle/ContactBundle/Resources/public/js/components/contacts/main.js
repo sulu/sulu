@@ -128,31 +128,29 @@ define([
 
             // show navigation submenu
             this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: navigation
-                });
-            }.bind(this));
 
-            // load data and show form
-            this.contact = new Contact();
-            if (!!this.options.id) {
-                this.contact = new Contact({id: this.options.id});
-                //contact = this.getModel(this.options.id);
-                this.contact.fetch({
-                    success: function(model) {
-                        this.sandbox.start([
-                            {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
-                        ]);
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
-                    }.bind(this)
-                });
-            } else {
-                this.sandbox.start([
-                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: this.contact.toJSON()}}
-                ]);
-            }
+                console.log("nav nav nav",navigation);
+                // load data and show form
+                this.contact = new Contact();
+                if (!!this.options.id) {
+                    this.contact = new Contact({id: this.options.id});
+                    //contact = this.getModel(this.options.id);
+                    this.contact.fetch({
+                        success: function(model) {
+                            this.sandbox.start([
+                                {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON(), tabs: JSON.stringify(navigation)}}
+                            ]);
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log("error while fetching contact");
+                        }.bind(this)
+                    });
+                } else {
+                    this.sandbox.start([
+                        {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: this.contact.toJSON()}}
+                    ]);
+                }
+            }.bind(this));
         },
 
         /**
