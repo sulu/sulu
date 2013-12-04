@@ -56,11 +56,14 @@ define(function() {
                 $(window).scrollTop(0);
             }.bind(this));
 
-            // init navigation
+            // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
-                if (!!event.action) {
-                    this.sandbox.emit('sulu.router.navigate', event.action);
-                }
+                this.emitNavigationEvent(event);
+            }.bind(this));
+
+            // content tabs event
+            this.sandbox.on('husky.tabs.content.item.select', function(event) {
+                this.emitNavigationEvent(event);
             }.bind(this));
 
 
@@ -68,6 +71,12 @@ define(function() {
             this.sandbox.on('navigation.url', function(callbackFunction) {
                 callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
+        },
+
+        emitNavigationEvent: function(event) {
+            if (!!event.action) {
+                this.sandbox.emit('sulu.router.navigate', event.action);
+            }
         }
 
     };

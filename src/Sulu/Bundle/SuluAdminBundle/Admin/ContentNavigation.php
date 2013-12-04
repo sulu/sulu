@@ -61,9 +61,9 @@ abstract class ContentNavigation
 
         /** @var $navigationItem NavigationItem */
         foreach ($this->navigation as $navigationItem) {
-//            if (null === $contentType || $navigationItem->getContentType() == $contentType) {
+            if (null === $contentType || $navigationItem->getContentType() == $contentType) {
                 $navigationItems[] = $navigationItem->toArray();
-//            }
+            }
         }
 
 
@@ -71,7 +71,8 @@ abstract class ContentNavigation
             'id'            => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
             'title'         => $this->getName(),
             'header'        => $this->getHeader(),
-            'items'           =>    $navigationItems
+            'displayOption' => $this->getDisplayOption(),
+            'items'         =>    $navigationItems
         );
 
         return $navigation;
