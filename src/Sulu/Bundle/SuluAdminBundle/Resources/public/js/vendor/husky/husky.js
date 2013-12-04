@@ -23523,10 +23523,6 @@ define('__component__$tabs@husky',[],function() {
     triggerSelectEvent = function(item) {
         var instanceName = this.options.instanceName ? this.options.instanceName+'.':'';
         this.sandbox.emit('husky.tabs.'+instanceName+'item.select', item);
-    },
-
-    renderTabs = function(data){
-
     };
 
     return {
@@ -23566,9 +23562,11 @@ define('__component__$tabs@husky',[],function() {
             this.items = [];
 
             this.sandbox.util.foreach(data.items, function(item) {
-                selected='';
+                // check if item got selected
                 if (this.options.preselect && !!data.url && data.url === item.action) {
                     selected = ' class="is-selected"';
+                } else {
+                    selected = '';
                 }
                 this.items[item.id] = item;
                 this.sandbox.dom.append($list,'<li '+selected+' data-id="'+item.id+'"><a href="#">'+item.title+'</a></li>');
