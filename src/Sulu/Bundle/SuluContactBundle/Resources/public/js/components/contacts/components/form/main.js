@@ -39,7 +39,7 @@ define([], function() {
             render: function() {
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
 
-                this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
+                this.$el.html(this.renderTemplate('/admin/contact/template/contact/form', {'navigationData': this.options.tabs}));
 
                 emailItem = this.$el.find('#emails .emails-item:first');
                 phoneItem = this.$el.find('#phones .phones-item:first');
