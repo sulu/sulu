@@ -3521,7 +3521,7 @@ textarea.form-element {
   width: 250px;
   height: 100%;
   background-color: #3e3e3e;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   top: 0px;
 }
@@ -3531,34 +3531,35 @@ textarea.form-element {
   background-color: #3e3e3e;
 }
 
-/* line 55, ../scss/modules/navigation.scss */
+/* line 56, ../scss/modules/navigation.scss */
 .navigation-content {
   overflow: hidden;
   padding: 40px 0px 20px;
   color: #999999;
   font-size: 16px;
 }
-/* line 61, ../scss/modules/navigation.scss */
+/* line 62, ../scss/modules/navigation.scss */
 .navigation-content a {
   display: inline-block;
   text-decoration: none;
   color: #999999;
+  outline: none;
 }
-/* line 67, ../scss/modules/navigation.scss */
+/* line 69, ../scss/modules/navigation.scss */
 .navigation-content ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* line 74, ../scss/modules/navigation.scss */
+/* line 76, ../scss/modules/navigation.scss */
 .navigation-header {
   height: 40px;
   overflow: hidden;
   margin: 0 20px 30px;
 }
 
-/* line 80, ../scss/modules/navigation.scss */
+/* line 82, ../scss/modules/navigation.scss */
 .navigation-header-title {
   display: inline-block;
   font-size: 18px;
@@ -3567,28 +3568,28 @@ textarea.form-element {
   line-height: 35px;
 }
 
-/* line 88, ../scss/modules/navigation.scss */
+/* line 90, ../scss/modules/navigation.scss */
 .navigation-header-image {
   display: inline-block;
   margin-right: 10px;
   float: left;
 }
-/* line 93, ../scss/modules/navigation.scss */
+/* line 95, ../scss/modules/navigation.scss */
 .navigation-header-image img {
   border-radius: 32px;
 }
 
-/* line 98, ../scss/modules/navigation.scss */
+/* line 100, ../scss/modules/navigation.scss */
 .navigation-search {
   position: relative;
   margin: 5px 20px 20px;
 }
-/* line 102, ../scss/modules/navigation.scss */
+/* line 104, ../scss/modules/navigation.scss */
 .navigation-search a {
   color: #3e3e3e;
 }
 
-/* line 107, ../scss/modules/navigation.scss */
+/* line 109, ../scss/modules/navigation.scss */
 .navigation-search-input {
   padding-left: 40px;
   border: 0;
@@ -3616,12 +3617,12 @@ textarea.form-element {
 .navigation-search-input::-webkit-input-placeholder {
   color: #3e3e3e;
 }
-/* line 118, ../scss/modules/navigation.scss */
+/* line 120, ../scss/modules/navigation.scss */
 .navigation-search-input:focus {
   background-color: white;
 }
 
-/* line 123, ../scss/modules/navigation.scss */
+/* line 125, ../scss/modules/navigation.scss */
 .navigation-search-icon {
   position: absolute;
   top: 6px;
@@ -3629,125 +3630,131 @@ textarea.form-element {
   font-size: 16px;
 }
 
-/* line 135, ../scss/modules/navigation.scss */
+/* line 137, ../scss/modules/navigation.scss */
 li.is-active > .navigation-items-toggle a,
 li.is-active > .navigation-subitems-toggle a {
   color: white;
 }
-/* line 139, ../scss/modules/navigation.scss */
+/* line 141, ../scss/modules/navigation.scss */
 li.is-active > div > a.navigation-settings-icon {
   display: block;
   color: #999999;
 }
 
-/* line 146, ../scss/modules/navigation.scss */
+/* line 149, ../scss/modules/navigation.scss */
 .navigation-items {
-  padding: 9px 20px;
+  padding: 0px 20px;
   overflow: hidden;
   height: 50px;
   /* sub-items */
   /* sub-sub-items */
 }
-/* line 152, ../scss/modules/navigation.scss */
+/* line 155, ../scss/modules/navigation.scss */
 .navigation-items:hover:not(.is-active) {
   background-color: rgba(0, 0, 0, 0.05);
 }
-/* line 156, ../scss/modules/navigation.scss */
+/* line 159, ../scss/modules/navigation.scss */
 .navigation-items > div {
-  padding: 5px;
   position: relative;
+  padding-left: 5px;
 }
-/* line 162, ../scss/modules/navigation.scss */
+/* line 163, ../scss/modules/navigation.scss */
+.navigation-items > div > a {
+  padding: 12px 0;
+}
+/* line 169, ../scss/modules/navigation.scss */
 .navigation-items.is-active {
   background-color: #282828;
 }
-/* line 166, ../scss/modules/navigation.scss */
+/* line 173, ../scss/modules/navigation.scss */
 .navigation-items.is-expanded {
   height: inherit;
+  padding-bottom: 20px;
 }
-/* line 168, ../scss/modules/navigation.scss */
+/* line 177, ../scss/modules/navigation.scss */
 .navigation-items.is-expanded .navigation-items-toggle {
   border-bottom: 1px solid #666666;
   height: inherit;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   margin-bottom: 10px;
+  height: 50px;
 }
-/* line 172, ../scss/modules/navigation.scss */
+/* line 182, ../scss/modules/navigation.scss */
 .navigation-items.is-expanded > ul {
   display: block;
 }
-/* line 179, ../scss/modules/navigation.scss */
+/* line 189, ../scss/modules/navigation.scss */
 .navigation-items.is-selected a {
   color: white;
 }
-/* line 185, ../scss/modules/navigation.scss */
+/* line 195, ../scss/modules/navigation.scss */
 .navigation-items ul {
   display: none;
   font-size: 14px;
   padding-left: 55px;
 }
-/* line 193, ../scss/modules/navigation.scss */
+/* line 203, ../scss/modules/navigation.scss */
 .navigation-items ul ul {
   font-size: 12px;
   padding-left: 20px;
 }
-/* line 200, ../scss/modules/navigation.scss */
+/* line 210, ../scss/modules/navigation.scss */
 .navigation-items li {
-  padding: 0px 0 0px 10px;
+  padding: 5px 0 0px 10px;
   margin: 0 0 0 -10px;
   border-radius: 4px;
   cursor: pointer;
+  height: 30px;
 }
-/* line 206, ../scss/modules/navigation.scss */
-.navigation-items li:hover:not(.navigation-subitems)::before {
+/* line 217, ../scss/modules/navigation.scss */
+.navigation-items li:hover:not(.navigation-subitems) a::before {
   font-family: "icomoon";
-  font-size: 9px;
+  font-size: 11px;
   content: "\e174";
   display: inline-block;
   margin-left: -15px;
   width: 15px;
   overflow: visible;
+  position: relative;
+  top: -1px;
 }
-/* line 218, ../scss/modules/navigation.scss */
+/* line 231, ../scss/modules/navigation.scss */
 .navigation-items li.is-selected a {
   color: white;
 }
-/* line 221, ../scss/modules/navigation.scss */
+/* line 234, ../scss/modules/navigation.scss */
 .navigation-items li.is-selected a::before {
   font-family: "icomoon";
-  font-size: 9px;
+  font-size: 11px;
   content: "\e174";
   display: inline-block;
   margin-left: -15px;
   width: 15px;
   overflow: visible;
+  position: relative;
+  top: -1px;
 }
-/* line 233, ../scss/modules/navigation.scss */
+/* line 248, ../scss/modules/navigation.scss */
 .navigation-items li a {
   display: inline-block;
   height: 30px;
   /* prohibits height changes on select */
 }
 
-/* line 243, ../scss/modules/navigation.scss */
+/* line 258, ../scss/modules/navigation.scss */
 .navigation-subitems.is-expanded > ul {
   display: block;
 }
-/* line 246, ../scss/modules/navigation.scss */
+/* line 261, ../scss/modules/navigation.scss */
 .navigation-subitems.is-expanded .navigation-subitems-toggle {
   border-bottom: 1px solid #666666;
   height: inherit;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   margin-bottom: 10px;
   padding-bottom: 0;
 }
-/* line 252, ../scss/modules/navigation.scss */
-.navigation-subitems.is-expanded li:hover::before {
-  font-size: 8px;
-  height: 25px;
-}
 
-/* line 265, ../scss/modules/navigation.scss */
+/* line 281, ../scss/modules/navigation.scss */
 .navigation-item {
   width: 100%;
   display: inline-block;
@@ -3756,36 +3763,36 @@ li.is-active > div > a.navigation-settings-icon {
   top: 2px;
 }
 
-/* line 273, ../scss/modules/navigation.scss */
+/* line 289, ../scss/modules/navigation.scss */
 .navigation-item-title {
   position: relative;
-  top: -2px;
+  top: 2px;
   padding-left: 35px;
 }
 
-/* line 279, ../scss/modules/navigation.scss */
+/* line 295, ../scss/modules/navigation.scss */
 .navigation-item-icon {
   position: absolute;
-  top: -3px;
+  padding-left: 3px;
   font-size: 18px;
 }
 
-/* line 285, ../scss/modules/navigation.scss */
+/* line 302, ../scss/modules/navigation.scss */
 .navigation-items-toggle {
   position: relative;
 }
 
-/* line 289, ../scss/modules/navigation.scss */
+/* line 306, ../scss/modules/navigation.scss */
 li a.navigation-settings-icon {
   width: auto;
   position: absolute;
   right: 20px;
-  top: 5px;
+  top: 4px;
   font-size: 14px;
   display: none;
 }
 
-/* line 298, ../scss/modules/navigation.scss */
+/* line 315, ../scss/modules/navigation.scss */
 .navigation-toggle-icon {
   width: auto;
   position: absolute;
@@ -3794,29 +3801,29 @@ li a.navigation-settings-icon {
   font-size: 10px;
 }
 
-/* line 306, ../scss/modules/navigation.scss */
+/* line 323, ../scss/modules/navigation.scss */
 .navigation footer {
   border-top: 1px solid #5B5B5B;
   padding-top: 20px;
   margin: 80px 20px 0 55px;
   font-size: 12px;
 }
-/* line 312, ../scss/modules/navigation.scss */
+/* line 329, ../scss/modules/navigation.scss */
 .navigation footer .version {
   font-size: 10px;
 }
 
-/* line 318, ../scss/modules/navigation.scss */
+/* line 335, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle {
   padding: 2px 0 2px;
   position: relative;
   height: 30px;
 }
-/* line 323, ../scss/modules/navigation.scss */
+/* line 340, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle .navigation-toggle-icon {
   top: 5px;
 }
-/* line 327, ../scss/modules/navigation.scss */
+/* line 344, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle .navigation-item {
   padding: 0px;
 }
@@ -4110,6 +4117,36 @@ a.btn-black {
 /* line 35, ../scss/modules/auto-complete.scss */
 .husky-auto-complete .dropdown-menu {
   top: 40px;
+}
+
+/* line 7, ../scss/modules/tabs.scss */
+.husky-tabs ul {
+  width: 100%;
+  padding: 0 0 5px;
+  border-bottom: 2px solid #cccccc;
+}
+/* line 12, ../scss/modules/tabs.scss */
+.husky-tabs ul li {
+  display: inline;
+  list-style-type: none;
+}
+/* line 16, ../scss/modules/tabs.scss */
+.husky-tabs ul li a {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+/* line 21, ../scss/modules/tabs.scss */
+.husky-tabs ul li a:hover {
+  color: #666666;
+}
+/* line 27, ../scss/modules/tabs.scss */
+.husky-tabs ul li.is-selected a {
+  color: #249fbe;
+}
+/* line 32, ../scss/modules/tabs.scss */
+.husky-tabs ul li:not(:last-child) {
+  padding-right: 30px;
 }
 
 /* line 17, ../scss/modules/dialog.scss */

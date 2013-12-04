@@ -34,7 +34,7 @@
                             app.sandbox.emit('navigation.url', function (url) {
                                 var items = [];
                                 // check action
-                                app.sandbox.util.foreach(navigation.sub.items, function (content) {
+                                app.sandbox.util.foreach(navigation.items, function (content) {
                                     // check DisplayMode (new or edit) and show menu item or don't
                                     hasNew = content.contentDisplay.indexOf('new') >= 0;
                                     hasEdit = content.contentDisplay.indexOf('edit') >= 0;
@@ -46,7 +46,8 @@
                                         items.push(content);
                                     }
                                 }.bind(this));
-                                navigation.sub.items = items;
+                                navigation.url = url;
+                                navigation.items = items;
 
                                 // if callback isset call it
                                 if (!!callback && typeof callback === 'function') {
