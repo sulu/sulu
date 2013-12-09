@@ -14,7 +14,7 @@ define([
     'use strict';
 
     return new RelationalModel({
-        urlRoot: '/admin/api/content/contents',
+        urlRoot: '/admin/api/contents',
 
         saveTemplate: function(attributes, template, options) {
             options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?template=' + template});
