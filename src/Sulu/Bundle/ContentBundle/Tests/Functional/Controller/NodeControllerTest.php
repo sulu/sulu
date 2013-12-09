@@ -270,7 +270,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals($data[0]['article'], $response->article);
     }
 
-    public function testUpdate()
+    public function testPut()
     {
         $client = $this->createClient(
             array(),
@@ -299,7 +299,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Max Mustermann', $item->creator);
         $this->assertEquals('Max Mustermann', $item->creator);
 
-        $client->request('GET', '/api/nodes');
+        $client->request('GET', '/api/nodes?depth=1');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
