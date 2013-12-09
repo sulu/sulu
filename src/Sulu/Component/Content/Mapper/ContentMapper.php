@@ -64,6 +64,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $parentUuid = null
     ) {
         // TODO localize
+        // TODO portal
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
 
@@ -92,7 +93,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 // FIXME refresh session here
             }
         }
-        // TODO check change template?
         $node->setProperty('sulu:template', $templateKey);
 
         $node->setProperty('sulu:changer', $userId);
