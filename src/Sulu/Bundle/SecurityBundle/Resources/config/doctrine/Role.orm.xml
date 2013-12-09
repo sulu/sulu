@@ -26,5 +26,7 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+
+        <many-to-many field="groups" target-entity="Sulu\Bundle\SecurityBundle\Entity\Group" mapped-by="roles"/>
     </entity>
 </doctrine-mapping>
