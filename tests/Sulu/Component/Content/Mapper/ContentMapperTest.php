@@ -729,7 +729,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $data['url'] = '/news/test/test';
 
         // update content
-        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, null, $structure->getUuid());
 
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test/test', 'default', 'de');
@@ -772,5 +772,81 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         // history should reference to new route
         $history = $oldRoute->getPropertyValue('sulu:content');
         $this->assertEquals($route->getIdentifier(), $history->getIdentifier());
+    }
+
+    public function testContentTree()
+    {
+        $data = array(
+            array(
+                'title' => 'News',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news',
+                'article' => 'asdfasdfasdf'
+            ),
+            array(
+                'title' => 'Testnews-1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testnews-2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-2',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testnews-2-1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-2/test-1',
+                'article' => 'Test'
+            )
+        );
+
+        // save root content
+        $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+
+        // add a child content
+        $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
+        $child = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
+        $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
+
+        // check child
+        $content = $this->mapper->loadByResourceLocator('/news/test-1', 'default', 'de');
+        $this->assertEquals('Testnews-1', $content->title);
+
+        $content = $this->mapper->loadByResourceLocator('/news/test-2', 'default', 'de');
+        $this->assertEquals('Testnews-2', $content->title);
+
+        // check content repository
+        $root = $this->session->getRootNode();
+        $contentRootNode = $root->getNode('cmf/contents');
+        $this->assertEquals(1, sizeof($contentRootNode->getNodes()));
+
+        $newsNode = $contentRootNode->getNode('News');
+        $this->assertEquals(2, sizeof($newsNode->getNodes()));
+        $this->assertEquals('News', $newsNode->getPropertyValue('title'));
+
+        $testNewsNode = $newsNode->getNode('Testnews-1');
+        $this->assertEquals('Testnews-1', $testNewsNode->getPropertyValue('title'));
+
+        $testNewsNode = $newsNode->getNode('Testnews-2');
+        $this->assertEquals(1, sizeof($testNewsNode->getNodes()));
+        $this->assertEquals('Testnews-2', $testNewsNode->getPropertyValue('title'));
+
+        $subTestNewsNode = $testNewsNode->getNode('Testnews-2-1');
+        $this->assertEquals('Testnews-2-1', $subTestNewsNode->getPropertyValue('title'));
     }
 }

@@ -26,13 +26,23 @@ interface ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param string $parentUuid uuid of parent node
      * @param string $uuid uuid of node if exists
      *
      * @throws \PHPCR\ItemExistsException if new title already exists
      *
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null);
+    public function save(
+        $data,
+        $templateKey,
+        $portalKey,
+        $languageCode,
+        $userId,
+        $partialUpdate = true,
+        $uuid = null,
+        $parentUuid = null
+    );
 
     /**
      * returns the data from the given id

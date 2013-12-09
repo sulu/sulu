@@ -48,20 +48,32 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param string $parentUuid uuid of parent node
      * @param string $uuid uuid of node if exists
-     *
-     * @throws \PHPCR\ItemExistsException if new title already exists
      *
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null)
-    {
+    public function save(
+        $data,
+        $templateKey,
+        $portalKey,
+        $languageCode,
+        $userId,
+        $partialUpdate = true,
+        $uuid = null,
+        $parentUuid = null
+    ) {
         // TODO localize
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
-        $root = $session->getRootNode();
-        //TODO check better way to generate title, tree?
-        $path = ltrim($this->getContentBasePath(), '/') . '/' . $data['title'];
+
+        if ($parentUuid !== null) {
+            $root = $session->getNodeByIdentifier($parentUuid);
+        } else {
+            $root = $session->getNode($this->getContentBasePath());
+        }
+
+        $path = $data['title'];
 
         $dateTime = new \DateTime();
 
