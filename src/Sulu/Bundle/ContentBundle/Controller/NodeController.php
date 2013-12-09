@@ -25,7 +25,7 @@ class NodeController extends RestController implements ClassResourceInterface
      * for returning self link in get action
      * @var string
      */
-    private $apiPath = '/admin/api/contents';
+    private $apiPath = '/admin/api/nodes';
 
     /**
      * returns a content item with given UUID as JSON String
@@ -59,31 +59,55 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        // TODO uuid of parent?
+        // TODO pagination
         $result = array();
-        $basePath = $this->getBasePath();
 
-        // FIXME make it better
-        $session = $this->getSession();
-        $contents = $session->getNode($basePath);
+        $parentUuid = $this->getRequest()->get('parent');
+        $depth = $this->getRequest()->get('depth');
 
-        /** @var NodeInterface $node */
-        foreach ($contents as $node) {
-            // TODO portal
-            $tmp = $this->getMapper()->load($node->getIdentifier(), 'default', 'en')->toArray();
-            $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
-            $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
-            $result[] = $tmp;
+        if ($depth == 1) {
+            // TODO language, portal
+            $structures = $this->getMapper()->loadByParent($parentUuid, 'default', 'de');
+            foreach ($structures as $structure) {
+                $tmp = $structure->toArray();
+                $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
+                $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
+                $tmp['_links'] = array(
+                    'self' => $this->apiPath . '/' . $tmp['id'],
+                    'children' => $this->apiPath . '?parent=' . $tmp['id'] . '&depth=' . $depth
+                );
+                $tmp['_embedded'] = array();
+                // TODO hasSub
+
+                $result[] = $tmp;
+            }
         }
 
-        return $this->handleView(
-            $this->view(
+        if ($parentUuid !== null) {
+            $parent = $this->getMapper()->load($parentUuid, 'default', 'de')->toArray();
+            $result = array_merge(
+                $parent,
                 array(
-                    '_links' => array('self' => $this->getRequest()->getUri()),
+                    '_links' => array(
+                        'self' => $this->apiPath . '/' . $parent['id'],
+                        'children' => $this->apiPath . '?parent=' . $parent['id'] . '&depth=' . $depth
+                    ),
                     '_embedded' => $result,
                     'total' => sizeof($result),
                 )
-            )
+            );
+        } else {
+            $result = array(
+                '_links' => array(
+                    'children' => $this->apiPath . '?depth=' . $depth
+                ),
+                '_embedded' => $result,
+                'total' => sizeof($result)
+            );
+        }
+
+        return $this->handleView(
+            $this->view($result)
         );
     }
 
