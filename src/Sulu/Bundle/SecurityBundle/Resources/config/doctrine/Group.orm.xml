@@ -52,5 +52,7 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+
+        <gedmo:tree type="nested"/>
     </entity>
 </doctrine-mapping>
