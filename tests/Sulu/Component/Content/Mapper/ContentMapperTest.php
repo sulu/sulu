@@ -899,11 +899,16 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $child = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
         $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
 
+        // get root children
+        $children = $this->mapper->loadByParent(null, 'default', 'de');
+        $this->assertEquals(1, sizeof($children));
+
+        $this->assertEquals('News', $children[0]->title);
+
         // get children from 'News'
         $rootChildren = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
         $this->assertEquals(2, sizeof($rootChildren));
 
-        $this->assertEquals('Testnews-1', $rootChildren[0]->title);
         $this->assertEquals('Testnews-2', $rootChildren[1]->title);
 
         $testNewsChildren = $this->mapper->loadByParent($child->getUuid(), 'default', 'de');
