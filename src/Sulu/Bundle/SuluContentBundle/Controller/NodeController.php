@@ -141,14 +141,19 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         // TODO language
         $templateKey = $this->getRequest()->get('template');
+        $parentUuid = $this->getRequest()->get('parent');
+
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
+
         // TODO portal
         $structure = $this->getMapper()->save(
             $this->getRequest()->request->all(),
             $templateKey,
             'default',
             'en',
-            $userId
+            $userId,
+            null,
+            $parentUuid
         );
         $result = $structure->toArray();
         $result['creator'] = $this->getContactByUserId($result['creator']);
