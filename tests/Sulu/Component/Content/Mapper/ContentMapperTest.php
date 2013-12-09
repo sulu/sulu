@@ -823,12 +823,22 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $child = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
         $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
 
-        // check child
+        // check nodes
+        $content = $this->mapper->loadByResourceLocator('/news', 'default', 'de');
+        $this->assertEquals('News', $content->title);
+        $this->assertTrue($content->getHasChildren());
+
         $content = $this->mapper->loadByResourceLocator('/news/test-1', 'default', 'de');
         $this->assertEquals('Testnews-1', $content->title);
+        $this->assertFalse($content->getHasChildren());
 
         $content = $this->mapper->loadByResourceLocator('/news/test-2', 'default', 'de');
         $this->assertEquals('Testnews-2', $content->title);
+        $this->assertTrue($content->getHasChildren());
+
+        $content = $this->mapper->loadByResourceLocator('/news/test-2/test-1', 'default', 'de');
+        $this->assertEquals('Testnews-2-1', $content->title);
+        $this->assertFalse($content->getHasChildren());
 
         // check content repository
         $root = $this->session->getRootNode();

@@ -231,6 +231,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
         $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
+        $structure->setHasChildren($contentNode->hasNodes());
 
         // go through every property in the template
         /** @var PropertyInterface $property */
