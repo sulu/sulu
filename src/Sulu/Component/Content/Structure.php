@@ -353,6 +353,7 @@ abstract class Structure implements StructureInterface
     {
         $result = array(
             'id' => $this->uuid,
+            'hasSub' => $this->hasChildren,
             'creator' => $this->creator,
             'changer' => $this->changer,
             'created' => $this->created,
