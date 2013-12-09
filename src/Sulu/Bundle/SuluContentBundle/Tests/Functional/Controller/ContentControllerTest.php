@@ -186,17 +186,19 @@ class ContentControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/contents?template=overview', $data);
+        $client->request('POST', '/api/nodes?template=overview', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('Testtitle', $response->title);
-        $this->assertEquals('Test', $response->article);
-        $this->assertEquals('/de/test', $response->url);
-        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
-        $this->assertEquals('Max Mustermann', $response->creator);
-        $this->assertEquals('Max Mustermann', $response->changer);
+        $item = $response->_embedded[0];
+
+        $this->assertEquals('Testtitle', $item->title);
+        $this->assertEquals('Test', $item->article);
+        $this->assertEquals('/de/test', $item->url);
+        $this->assertEquals(array('tag1', 'tag2'), $item->tags);
+        $this->assertEquals('Max Mustermann', $item->creator);
+        $this->assertEquals('Max Mustermann', $item->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
@@ -255,7 +257,7 @@ class ContentControllerTest extends DatabaseTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('GET', '/api/contents/' . $data[0]['id']);
+        $client->request('GET', '/api/nodes/' . $data[0]['id']);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -277,7 +279,7 @@ class ContentControllerTest extends DatabaseTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('GET', '/api/contents');
+        $client->request('GET', '/api/nodes');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -315,7 +317,7 @@ class ContentControllerTest extends DatabaseTestCase
         $data[0]['tags'] = array('new tag');
         $data[0]['article'] = 'thats a new article';
 
-        $client->request('PUT', '/api/contents/' . $data[0]['id'] . '?template=overview', $data[0]);
+        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?template=overview', $data[0]);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -329,7 +331,7 @@ class ContentControllerTest extends DatabaseTestCase
         $this->assertEquals('Max Mustermann', $item->creator);
         $this->assertEquals('Max Mustermann', $item->creator);
 
-        $client->request('GET', '/api/contents');
+        $client->request('GET', '/api/nodes');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());

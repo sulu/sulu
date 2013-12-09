@@ -19,7 +19,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\RestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ContentController extends RestController implements ClassResourceInterface
+class NodeController extends RestController implements ClassResourceInterface
 {
     /**
      * for returning self link in get action
@@ -112,7 +112,7 @@ class ContentController extends RestController implements ClassResourceInterface
                 array(
                     '_links' => array('self' => $this->getRequest()->getUri()),
                     '_embedded' => array($result),
-                    'total' => 0,
+                    'total' => 1,
                 )
             )
         );
@@ -153,9 +153,16 @@ class ContentController extends RestController implements ClassResourceInterface
         $result = $structure->toArray();
         $result['creator'] = $this->getContactByUserId($result['creator']);
         $result['changer'] = $this->getContactByUserId($result['changer']);
-        $view = $this->view($result, 200);
 
-        return $this->handleView($view);
+        return $this->handleView(
+            $this->view(
+                array(
+                    '_links' => array('self' => $this->getRequest()->getUri()),
+                    '_embedded' => array($result),
+                    'total' => 1,
+                )
+            )
+        );
     }
 
     /**
