@@ -156,6 +156,27 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
+     * returns a list of data from children of given node
+     * @param $uuid
+     * @param $portalKey
+     * @param $languageCode@
+     *
+     * @return StructureInterface[]
+     */
+    public function loadByParent($uuid, $portalKey, $languageCode)
+    {
+        // TODO portal
+        $root = $this->getSession()->getNodeByIdentifier($uuid);
+        $result = array();
+
+        foreach ($root->getNodes() as $node) {
+            $result[] = $this->loadByNode($node, $languageCode);
+        }
+
+        return $result;
+    }
+
+    /**
      * returns the data from the given id
      * @param string $uuid UUID of the content
      * @param string $portalKey Key of portal
