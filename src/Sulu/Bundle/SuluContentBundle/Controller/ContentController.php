@@ -107,9 +107,15 @@ class ContentController extends RestController implements ClassResourceInterface
         $result['creator'] = $this->getContactByUserId($result['creator']);
         $result['changer'] = $this->getContactByUserId($result['changer']);
 
-        $view = $this->view($result, 200);
-
-        return $this->handleView($view);
+        return $this->handleView(
+            $this->view(
+                array(
+                    '_links' => array('self' => $this->getRequest()->getUri()),
+                    '_embedded' => array($result),
+                    'total' => 0,
+                )
+            )
+        );
     }
 
     private function getContactByUserId($id)
