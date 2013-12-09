@@ -465,7 +465,9 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, sizeof($items));
         $this->assertEquals($data[0]['title'], $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
         $this->assertEquals($data[1]['title'], $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
 
         // get subitems (remove /admin for test environment)
         $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
@@ -475,7 +477,9 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, sizeof($items));
         $this->assertEquals($data[2]['title'], $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
         $this->assertEquals($data[3]['title'], $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
 
         // get subitems (remove /admin for test environment)
         $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
@@ -485,5 +489,6 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, sizeof($items));
         $this->assertEquals($data[4]['title'], $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
     }
 }
