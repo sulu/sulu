@@ -77,7 +77,6 @@ class NodeController extends RestController implements ClassResourceInterface
                     'children' => $this->apiPath . '?parent=' . $tmp['id'] . '&depth=' . $depth
                 );
                 $tmp['_embedded'] = array();
-                // TODO hasSub
 
                 $result[] = $tmp;
             }
