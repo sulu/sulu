@@ -46,7 +46,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->loader = new TemplateReader();
         $this->structureManager = new StructureManager($this->loader,
             array(
-                'template_dir' => __DIR__ . '/../../../../Resources/Datafixtures/Template',
+                'template_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
                 'cache_dir' => $cacheDir
             ));
     }

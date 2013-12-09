@@ -58,9 +58,39 @@ class ListRepository extends EntityRepository
             ->setFirstResult($this->helper->getOffset())
             ->setMaxResults($this->helper->getLimit());
         if ($this->helper->getSearchPattern() != null) {
-            $query->setParameter('search', '%' . $this->helper->getSearchPattern() . '%');
+            $query->setParameter($this->helper->getParameterName('search'), '%' . $this->helper->getSearchPattern() . '%');
         }
 
         return $query->getArrayResult();
+    }
+
+    /**
+     * returns the amount of data
+     * @param array $where
+     * @param string $prefix
+     * @return int
+     */
+    public function getCount($where = array(), $prefix = 'u')
+    {
+        $queryBuilder = new ListQueryBuilder(
+            $this->getClassMetadata()->getAssociationNames(),
+            $this->getEntityName(),
+            $this->helper->getFields(),
+            $this->helper->getSorting(),
+            $where,
+            $this->helper->getSearchFields()
+        );
+
+        $queryBuilder->justCount($prefix);
+
+        $dql = $queryBuilder->find($prefix);
+
+        $query = $this->getEntityManager()
+            ->createQuery($dql);
+        if ($this->helper->getSearchPattern() != null) {
+            $query->setParameter($this->helper->getParameterName('search'), '%' . $this->helper->getSearchPattern() . '%');
+        }
+
+        return intval($query->getSingleResult()['totalcount']);
     }
 }

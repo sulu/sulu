@@ -43,21 +43,21 @@ class SuluCoreExtension extends Extension
 
         // Portal
         if (isset($config['portal'])) {
-            $this->initPortal($config['portal'], $container, $loader);
+            $this->initWorkspace($config['portal'], $container, $loader);
         }
 
         $loader->load('rest.xml');
     }
 
     /**
-     * @param $portalConfig
+     * @param $workspaceConfig
      * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
      */
-    private function initPortal($portalConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function initWorkspace($workspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
-        $container->setParameter('sulu_core.portal.config_dir', $portalConfig['config_dir']);
-        $loader->load('portal.xml');
+        $container->setParameter('sulu_core.workspace.config_dir', $workspaceConfig['config_dir']);
+        $loader->load('workspace.xml');
     }
 
     /**
