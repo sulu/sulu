@@ -35,7 +35,7 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
+            this.sandbox.on('sulu.content.contents.save', function(data, parent) {
                 this.save(data);
             }, this);
 
@@ -60,12 +60,11 @@ define([
         },
 
         save: function(data) {
-            // TODO save
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
             this.content.set(data);
 
             // TODO select template
-            this.content.saveTemplate(null, 'overview', {
+            this.content.saveTemplate(null, 'overview', this.options.parent, {
                 // on success save contacts id
                 success: function(response) {
                     var model = response.toJSON();
