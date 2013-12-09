@@ -215,6 +215,68 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
 
+    public function testPostTree()
+    {
+        $data1 = array(
+            'title' => 'news',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news',
+            'article' => 'Test'
+        );
+        $data2 = array(
+            'title' => 'test-1',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $client->request('POST', '/api/nodes?template=overview', $data1);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $uuid = $response->_embedded[0]->id;
+
+        $client->request('POST', '/api/nodes?template=overview&parent=' . $uuid, $data2);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $item = $response->_embedded[0];
+
+        $this->assertEquals('test-1', $item->title);
+        $this->assertEquals('Test', $item->article);
+        $this->assertEquals('/news/test', $item->url);
+        $this->assertEquals(array('tag1', 'tag2'), $item->tags);
+        $this->assertEquals('Max Mustermann', $item->creator);
+        $this->assertEquals('Max Mustermann', $item->changer);
+
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test');
+
+        /** @var NodeInterface $content */
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('test-1', $content->getProperty('title')->getString());
+        $this->assertEquals('Test', $content->getProperty('article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+
+        // check parent
+        $this->assertEquals($uuid, $content->getParent()->getIdentifier());
+    }
+
     private function beforeTestGet()
     {
         $data = array(

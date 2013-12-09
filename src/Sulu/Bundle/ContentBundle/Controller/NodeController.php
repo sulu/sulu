@@ -176,6 +176,7 @@ class NodeController extends RestController implements ClassResourceInterface
             'default',
             'en',
             $userId,
+            true,
             null,
             $parentUuid
         );
