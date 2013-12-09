@@ -76,6 +76,11 @@ class User extends ApiEntity implements UserInterface, Serializable
     private $privateKey;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $userGroups;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -308,5 +313,38 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function unserialize($serialized)
     {
         list ($this->id) = unserialize($serialized);
+    }
+
+    /**
+     * Add userGroups
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     * @return User
+     */
+    public function addUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    {
+        $this->userGroups[] = $userGroups;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userGroups
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     */
+    public function removeUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    {
+        $this->userGroups->removeElement($userGroups);
+    }
+
+    /**
+     * Get userGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserGroups()
+    {
+        return $this->userGroups;
     }
 }
