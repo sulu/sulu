@@ -53,6 +53,21 @@ define([
             this.sandbox.on('sulu.content.contents.delete', function(ids) {
                 this.delContents(ids);
             }, this);
+
+            // get resource locator
+            this.sandbox.on('sulu.content.contents.getRL', function(title, callback) {
+                this.getResourceLocator(title, callback);
+            }, this);
+        },
+
+        getResourceLocator: function(title, callback) {
+            if (!!this.options.parent) {
+                // TODO portal
+                this.sandbox.util.load('/admin/api/resourcelocators/' + this.options.parent + '?title=' + title + '&portal=default')
+                    .then(function(data) {
+                        callback(data._embedded.resourceLocator);
+                    });
+            }
         },
 
         del: function() {
