@@ -83,6 +83,18 @@ class NavigationItem implements \Iterator
      */
     protected $displayOption;
 
+    /**
+     * Set which component to call when content navigation item gets clicked
+     * @var string
+     */
+    protected $contentComponent;
+
+
+    /**
+     * Options array of the contentComponent
+     * @var array
+     */
+    protected $contentComponentOptions;
 
     /**
      * @param string $name The name of the item
@@ -303,6 +315,39 @@ class NavigationItem implements \Iterator
         return $this->contentType;
     }
 
+    /**
+     * @param string $contentComponent
+     */
+    public function setContentComponent($contentComponent)
+    {
+        $this->contentComponent = $contentComponent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentComponent()
+    {
+        return $this->contentComponent;
+    }
+
+    /**
+     * @param array $contentComponentOptions
+     */
+    public function setContentComponentOptions($contentComponentOptions)
+    {
+        $this->contentComponentOptions = $contentComponentOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContentComponentOptions()
+    {
+        return $this->contentComponentOptions;
+    }
+
+
 
     /**
      * Returns a copy of this navigation item without its children
@@ -473,6 +518,8 @@ class NavigationItem implements \Iterator
         if (!!$this->getContentType()) {
             $array['contentType'] = $this->getContentType();
             $array['contentDisplay'] = $this->getContentDisplay();
+            $array['contentComponent'] = $this->getContentComponent();
+            $array['contentComponentOptions'] = $this->getContentComponentOptions();
         }
 
         if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {

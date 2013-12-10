@@ -19,7 +19,7 @@
                          * @param id - id of current element (used for url generation)
                          * @param callback - returns parsed navigation element
                          */
-                        getContentTabs: function (contentNavigation, id, callback) {
+                        parseContentNavigation: function (contentNavigation, id, callback) {
                             var navigation, hasNew, hasEdit;
 
                             try {
