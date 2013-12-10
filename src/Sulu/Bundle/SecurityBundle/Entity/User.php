@@ -86,6 +86,7 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function __construct()
     {
         $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -340,11 +341,11 @@ class User extends ApiEntity implements UserInterface, Serializable
 
     /**
      * Get userGroups
-     *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @VirtualProperty
+     * @Type("array")
      */
     public function getUserGroups()
     {
-        return $this->userGroups;
+        return array_values($this->userGroups->toArray());
     }
 }
