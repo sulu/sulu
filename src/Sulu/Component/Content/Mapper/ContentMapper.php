@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -46,31 +47,41 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param string $portalKey Key of portal
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
+     * @param bool $partialUpdate ignore missing property
+     * @param string $uuid uuid of node if exists
+     *
+     * @throws \PHPCR\ItemExistsException if new title already exists
+     *
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $portalKey, $languageCode, $userId)
+    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null)
     {
         // TODO localize
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
         $root = $session->getRootNode();
-
-        /** @var NodeInterface $node */
-        $node = $root->addNode(
-            ltrim($this->getContentBasePath(), '/') . '/' . $data['title']
-        ); //TODO check better way to generate title, tree?
-
-        $node->addMixin('sulu:content');
-        $node->setProperty('sulu:template', $templateKey);
+        //TODO check better way to generate title, tree?
+        $path = ltrim($this->getContentBasePath(), '/') . '/' . $data['title'];
 
         $dateTime = new \DateTime();
 
-        // if is new node
-        if ($node->getIdentifier() == null) {
-
+        /** @var NodeInterface $node */
+        if ($uuid === null) {
+            // create a new node
+            $node = $root->addNode($path);
             $node->setProperty('sulu:creator', $userId);
             $node->setProperty('sulu:created', $dateTime);
+
+            $node->addMixin('sulu:content');
+        } else {
+            $node = $session->getNodeByIdentifier($uuid);
+            if ($node->getPropertyValue('title') !== $data['title']) {
+                $node->rename($data['title']);
+                // FIXME refresh session here
+            }
         }
+        // TODO check change template?
+        $node->setProperty('sulu:template', $templateKey);
 
         $node->setProperty('sulu:changer', $userId);
         $node->setProperty('sulu:changed', $dateTime);
@@ -96,7 +107,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 } else {
                     $type->set($node, $property);
                 }
+            } elseif (!$partialUpdate) {
+                $type = $this->getContentType($property->getContentTypeName());
+                // if it is not a partial update remove property
+                $type->remove($node, $property);
             }
+            // if it is a partial update ignore property
         }
 
         // save node now
@@ -111,7 +127,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $property = $post['property'];
 
                 $type->set($node, $property);
-            } catch (Exception $ex) {
+            } catch (Exception $ex) { // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
             }
         }

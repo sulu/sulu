@@ -59,7 +59,25 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     public function set(NodeInterface $node, PropertyInterface $property)
     {
-        $node->setProperty($property->getName(), $property->getValue());
+        $value = $property->getValue();
+        if ($value != null) {
+            $node->setProperty($property->getName(), $property->getValue());
+        } else {
+            $this->remove($node, $property);
+        }
+    }
+
+    /**
+     * remove property from given node
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     */
+    public function remove(NodeInterface $node, PropertyInterface $property)
+    {
+        // if exist remove property of node
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**

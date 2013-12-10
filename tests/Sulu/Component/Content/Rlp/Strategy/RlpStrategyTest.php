@@ -34,12 +34,16 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
      * @var bool
      */
     private $isSaved = false;
+    /**
+     * @var bool
+     */
+    private $isMoved = false;
 
     protected function setUp()
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array('unique', 'getUniquePath', 'save', 'loadByContent', 'loadByResourceLocator'),
+            array('unique', 'getUniquePath', 'save', 'move', 'loadByContent', 'loadByResourceLocator'),
             array('test-mapper'),
             'TestMapper'
         );
@@ -52,6 +56,9 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $this->mapper->expects($this->any())
             ->method('save')
             ->will($this->returnCallback(array($this, 'saveCallback')));
+        $this->mapper->expects($this->any())
+            ->method('move')
+            ->will($this->returnCallback(array($this, 'moveCallback')));
         $this->mapper->expects($this->any())
             ->method('loadByContent')
             ->will($this->returnValue('/test'));
@@ -99,6 +106,11 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     public function saveCallback()
     {
         $this->isSaved = true;
+    }
+
+    public function moveCallback()
+    {
+        $this->isMoved = true;
     }
 
     protected function tearDown()
@@ -186,5 +198,14 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         //its a delegate
         $result = $this->mapper->loadByResourceLocator('/test', 'default');
         $this->assertEquals('this-is-a-uuid', $result);
+    }
+
+    public function testMove()
+    {
+        $this->isMoved = false;
+        // its a delegate
+        $this->strategy->move('/test/test', '/test/test-1', 'default');
+
+        $this->assertTrue($this->isMoved);
     }
 }

@@ -56,6 +56,11 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
      */
     protected $session;
 
+    /**
+     * @var ResourceLocator
+     */
+    protected $resourceLocator;
+
     public function setUp()
     {
         $this->prepareMapper();
@@ -84,6 +89,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareSession();
         $this->prepareRepository();
+
+        $this->resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionService, '/cmf/routes')), 'not in use');
     }
 
     /**
@@ -108,7 +115,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         return $containerMock;
     }
 
-    public function getStrucktureManager()
+    public function getStructureMock($type = 1)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
@@ -130,43 +137,68 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('tags', 'text_line', false, false, 2, 10)
-            )
-        );
-
-        $method->invokeArgs(
-            $structureMock,
-            array(
                 new Property('url', 'resource_locator')
             )
         );
 
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property('article', 'text_area')
-            )
-        );
+        if ($type == 1) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('tags', 'text_line', false, false, 2, 10)
+                )
+            );
 
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('article', 'text_area')
+                )
+            );
+        } elseif ($type == 2) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('blog', 'text_area')
+                )
+            );
+        }
+
+        return $structureMock;
+    }
+
+    public function getStructureManager()
+    {
         $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
         $structureManagerMock->expects($this->any())
             ->method('getStructure')
-            ->will($this->returnValue($structureMock));
+            ->will($this->returnCallback(array($this, 'getStructureCallback')));
 
         return $structureManagerMock;
     }
 
+    public function getStructureCallback()
+    {
+        $args = func_get_args();
+        $structureKey = $args[0];
+
+        if ($structureKey == 'overview') {
+            return $this->getStructureMock(1);
+        } elseif ($structureKey == 'simple') {
+            return $this->getStructureMock(2);
+        }
+
+        return null;
+    }
 
     public function containerCallback()
     {
-        $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionService, '/cmf/routes')), 'not in use');
-
         $result = array(
             'sulu.phpcr.session' => $this->sessionService,
-            'sulu.content.structure_manager' => $this->getStrucktureManager(),
+            'sulu.content.structure_manager' => $this->getStructureManager(),
             'sulu.content.type.text_line' => new TextLine('not in use'),
             'sulu.content.type.text_area' => new TextArea('not in use'),
-            'sulu.content.type.resource_locator' => $resourceLocator,
+            'sulu.content.type.resource_locator' => $this->resourceLocator,
             'security.context' => $this->getSecurityContextMock()
         );
         $args = func_get_args();
@@ -174,7 +206,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         return $result[$args[0]];
     }
 
-    private function getSecurityContextMock(){
+    private function getSecurityContextMock()
+    {
         $userMock = $this->getMock('\Sulu\Component\Security\UserInterface');
         $userMock->expects($this->any())
             ->method('getId')
@@ -334,4 +367,410 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $content->changer);
     }
 
+    public function testUpdate()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['tags'][] = 'tag3';
+        $data['tags'][0] = 'thats cool';
+        $data['article'] = 'thats a new test';
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('thats a new test', $content->article);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(array('thats cool', 'tag2', 'tag3'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test');
+
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals('thats a new test', $content->getProperty('article')->getString());
+        $this->assertEquals(array('thats cool', 'tag2', 'tag3'), $content->getPropertyValue('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+    }
+
+    public function testPartialUpdate()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['tags'][] = 'tag3';
+        unset($data['tags'][0]);
+        unset($data['article']);
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(array('tag2', 'tag3'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test');
+
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals('Test', $content->getProperty('article')->getString());
+        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+    }
+
+    public function testNonPartialUpdate()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['tags'][] = 'tag3';
+        unset($data['tags'][0]);
+        unset($data['article']);
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, false, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals(null, $content->article);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(array('tag2', 'tag3'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test');
+
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals(false, $content->hasProperty('article'));
+        $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+    }
+
+    public function testUpdateNullValue()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['tags'] = null;
+        $data['article'] = null;
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, false, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals(null, $content->article);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(null, $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test');
+
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals(false, $content->hasProperty('article'));
+        $this->assertEquals(false, $content->hasProperty('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+    }
+
+    public function testUpdateTemplate()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data = array(
+            'title' => 'Testtitle',
+            'blog' => 'this is a blog test'
+        );
+
+        // update content
+        $this->mapper->save($data, 'simple', 'default', 'de', 1, true, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+
+        // old properties not exists in structure
+        $this->assertEquals(false, $content->hasProperty('article'));
+        $this->assertEquals(false, $content->hasProperty('tags'));
+
+        // old properties are right
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // new property is set
+        $this->assertEquals('this is a blog test', $content->blog);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test');
+        $content = $route->getPropertyValue('sulu:content');
+
+        // old properties exists in node
+        $this->assertEquals('Test', $content->getPropertyValue('article'));
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+
+        // property of new structure exists
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals('this is a blog test', $content->getPropertyValue('blog'));
+        $this->assertEquals('simple', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+    }
+
+    public function testUpdateURL()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['url'] = '/news/test/test/test';
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test/test/test', 'default', 'de');
+
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('/news/test/test/test', $content->url);
+        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/test/test/test');
+
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals('Test', $content->getProperty('article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+
+        // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
+        $oldRoute = $root->getNode('cmf/routes/news/test');
+        $this->assertTrue($oldRoute->hasProperty('sulu:content'));
+        $this->assertTrue($oldRoute->hasProperty('sulu:history'));
+        $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
+
+        // history should reference to new route
+        $history = $oldRoute->getPropertyValue('sulu:content');
+        $this->assertEquals($route->getIdentifier(), $history->getIdentifier());
+    }
+
+    public function testNameUpdate()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['title'] = 'Test';
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+
+        // TODO works after this issue is fixed? but its not necessary
+//        // check read
+//        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
+//
+//        $this->assertEquals('Test', $content->title);
+//        $this->assertEquals('Test', $content->article);
+//        $this->assertEquals('/news/test', $content->url);
+//        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+//        $this->assertEquals(1, $content->creator);
+//        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $content = $root->getNode('cmf/contents/Test');
+
+        $this->assertEquals('Test', $content->getProperty('title')->getString());
+        $this->assertEquals('Test', $content->getProperty('article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+    }
+
+    public function testUpdateUrlTwice()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'Test'
+        );
+
+        // save content
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        // change simple content
+        $data['url'] = '/news/test/test';
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/test/test', 'default', 'de');
+        $this->assertEquals('Testtitle', $content->title);
+
+        // change simple content
+        $data['url'] = '/news/asdf/test/test';
+
+        // update content
+        $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+
+        // check read
+        $content = $this->mapper->loadByResourceLocator('/news/asdf/test/test', 'default', 'de');
+        $this->assertEquals('Testtitle', $content->title);
+        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('/news/asdf/test/test', $content->url);
+        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
+        $this->assertEquals(1, $content->creator);
+        $this->assertEquals(1, $content->changer);
+
+        // check repository
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/routes/news/asdf/test/test');
+
+        $content = $route->getPropertyValue('sulu:content');
+
+        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
+        $this->assertEquals('Test', $content->getProperty('article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+
+        // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
+        $oldRoute = $root->getNode('cmf/routes/news/test');
+        $this->assertTrue($oldRoute->hasProperty('sulu:content'));
+        $this->assertTrue($oldRoute->hasProperty('sulu:history'));
+        $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
+
+        // history should reference to new route
+        $history = $oldRoute->getPropertyValue('sulu:content');
+        $this->assertEquals($route->getIdentifier(), $history->getIdentifier());
+    }
 }

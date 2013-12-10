@@ -205,6 +205,7 @@ abstract class Structure implements StructureInterface
     /**
      * sets created datetime
      * @param DateTime $created
+     * @return \DateTime
      */
     public function setCreated(DateTime $created)
     {
@@ -237,11 +238,21 @@ abstract class Structure implements StructureInterface
      */
     public function getProperty($name)
     {
-        if (isset($this->properties[$name])) {
+        if ($this->hasProperty($name)) {
             return $this->properties[$name];
         } else {
             throw new NoSuchPropertyException();
         }
+    }
+
+    /**
+     * checks if a property exists
+     * @param string $name
+     * @return boolean
+     */
+    public function hasProperty($name)
+    {
+        return isset($this->properties[$name]);
     }
 
     /**

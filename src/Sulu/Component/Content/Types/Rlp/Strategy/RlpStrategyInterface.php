@@ -43,6 +43,16 @@ interface RLPStrategyInterface {
     public function save(NodeInterface $contentNode, $path, $portalKey);
 
     /**
+     * creates a new resourcelocator and creates the correct history
+     * @param string $src old resource locator
+     * @param string $dest new resource locator
+     * @param string $portalKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     */
+    public function move($src, $dest, $portalKey);
+
+    /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
      * @param string $portalKey key of portal

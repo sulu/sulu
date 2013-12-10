@@ -12,8 +12,13 @@ namespace Sulu\Component\Content\Types\Rlp\Mapper;
 
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
+use PHPCR\Util\NodeHelper;
+use PHPCR\Util\PathHelper;
+use PHPCR\WorkspaceInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 
@@ -55,16 +60,8 @@ class PhpcrMapper extends RlpMapper
         $routes = $this->getRoutes($session);
 
         // check if route already exists
-        if (!$this->isUnique($routes, $path)) {
-            $routeNode = $routes->getNode(ltrim($path, '/'));
-            if ($routeNode->hasProperty('sulu:content') &&
-                $routeNode->getPropertyValue('sulu:content') == $contentNode
-            ) {
-                // route already exists and referenced on contentNode
-                return;
-            } else {
-                throw new ResourceLocatorAlreadyExistsException();
-            }
+        if ($this->checkResourceLocator($routes, $path, $contentNode)) {
+            return;
         }
 
         // create root recursive
@@ -99,9 +96,10 @@ class PhpcrMapper extends RlpMapper
         // search for references with name 'content'
         foreach ($contentNode->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
-                $value = substr($ref->getParent()->getPath(), strlen($this->basePath));
-
-                return $value;
+                $parent = $ref->getParent();
+                if (false === $parent->getPropertyValue('sulu:history')) {
+                    return $this->getResourceLocator($ref->getParent()->getPath());
+                }
             }
         }
 
@@ -113,7 +111,8 @@ class PhpcrMapper extends RlpMapper
      * @param string $resourceLocator requested RL
      * @param string $portalKey key of portal
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
      *
      * @return string uuid of content node
      */
@@ -130,11 +129,22 @@ class PhpcrMapper extends RlpMapper
 
         $route = $routes->getNode($resourceLocator);
 
-        if ($route->hasProperty('sulu:content')) {
-            /** @var NodeInterface $content */
-            $content = $route->getPropertyValue('sulu:content');
+        if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
+            if (!$route->getPropertyValue('sulu:history')) {
+                /** @var NodeInterface $content */
+                $content = $route->getPropertyValue('sulu:content');
 
-            return $content->getIdentifier();
+                return $content->getIdentifier();
+            } else {
+                // get path from history node
+                /** @var NodeInterface $realPath */
+                $realPath = $route->getPropertyValue('sulu:content');
+
+                throw new ResourceLocatorMovedException(
+                    $this->getResourceLocator($realPath->getPath()),
+                    $realPath->getIdentifier()
+                );
+            }
         } else {
             throw new ResourceLocatorNotFoundException();
         }
@@ -186,6 +196,129 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
+     * creates a new resourcelocator and creates the correct history
+     * @param string $src old resource locator
+     * @param string $dest new resource locator
+     * @param string $portalKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     */
+    public function move($src, $dest, $portalKey)
+    {
+        // get abs path
+        $absDestPath = $this->getPath($dest);
+        $absSrcPath = $this->getPath($src);
+
+        // init session
+        $session = $this->sessionFactory->getSession();
+        $rootNode = $session->getRootNode();
+        $workspace = $session->getWorkspace();
+        $routes = $this->getRoutes($session);
+
+        $routeNode = $routes->getNode(ltrim($src, '/'));
+        if (!$routeNode->hasProperty('sulu:content')) {
+            throw new ResourceLocatorNotFoundException();
+        } elseif ($routeNode->getPropertyValue('sulu:history')) {
+            $realPath = $routeNode->getPropertyValue('sulu:content');
+
+            throw new ResourceLocatorMovedException(
+                $this->getResourceLocator($realPath->getPath()),
+                $realPath->getIdentifier()
+            );
+        }
+
+        $contentNode = $routeNode->getPropertyValue('sulu:content');
+
+        // check if route already exists
+        if ($this->checkResourceLocator($routes, $dest, $contentNode)) {
+            return;
+        }
+
+        // create parent node for dest path
+        $parentAbsDestPath = PathHelper::normalizePath($absDestPath . '/..');
+        $this->createRecursive($parentAbsDestPath, $rootNode);
+        $session->save();
+
+        // copy route to new
+        $workspace->copy($absSrcPath, $absDestPath);
+
+        // change old route node to history
+        $this->changePathToHistory($routeNode, $session, $absSrcPath, $absDestPath);
+
+        // get all old routes (in old route tree)
+        $qm = $workspace->getQueryManager();
+        $sql = "SELECT *
+                FROM [sulu:path]
+                WHERE ISDESCENDANTNODE('" . $absSrcPath . "')";
+
+        $query = $qm->createQuery($sql, 'JCR-SQL2');
+        $result = $query->execute();
+
+        /** @var NodeInterface $node */
+        foreach ($result->getNodes() as $node) {
+            // FIXME move in SQL statement?
+            if ($node->getPath() != $absDestPath) {
+                $this->changePathToHistory($node, $session, $absSrcPath, $absDestPath);
+            }
+        }
+    }
+
+    /**
+     * create a node recursively
+     * @param string $path path to node
+     * @param NodeInterface $rootNode base node to begin
+     */
+    private function createRecursive($path, $rootNode)
+    {
+        $pathParts = explode('/', ltrim($path, '/'));
+        $curNode = $rootNode;
+        for ($i = 0; $i < sizeof($pathParts); $i++) {
+            if ($curNode->hasNode($pathParts[$i])) {
+                $curNode = $curNode->getNode($pathParts[$i]);
+            } else {
+                $curNode = $curNode->addNode($pathParts[$i]);
+                $curNode->addMixin('mix:referenceable');
+            }
+        }
+    }
+
+    private function changePathToHistory(NodeInterface $node, SessionInterface $session, $absSrcPath, $absDestPath)
+    {
+        // get new path node
+        $relPath = str_replace($absSrcPath, '', $node->getPath());
+        $newPath = PathHelper::normalizePath($absDestPath . $relPath);
+        $newPathNode = $session->getNode($newPath);
+
+        // set history to true and set content to new path
+        $node->setProperty('sulu:content', $newPathNode);
+        $node->setProperty('sulu:history', true);
+
+        // get referenced history
+        /** @var PropertyInterface $property */
+        foreach ($node->getReferences('sulu:content') as $property) {
+            $property->getParent()->setProperty('sulu:content', $newPathNode);
+        }
+    }
+
+    private function checkResourceLocator(NodeInterface $routes, $resourceLocator, $contentNode)
+    {
+        if (!$this->isUnique($routes, $resourceLocator)) {
+            $routeNode = $routes->getNode(ltrim($resourceLocator, '/'));
+            if ($routeNode->hasProperty('sulu:content') &&
+                $routeNode->getPropertyValue('sulu:content') == $contentNode
+            ) {
+                // route already exists and referenced on contentNode
+                return true;
+            } else {
+                throw new ResourceLocatorAlreadyExistsException();
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * check if path is unique from given $root node
      * @param NodeInterface $root route node
      * @param string $path requested path
@@ -200,11 +333,30 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns base node of routes from phpcr
      * @param SessionInterface $session current session
-     * @return NodeInterface base node of routes
+     * @return \PHPCR\NodeInterface base node of routes
      */
     private function getRoutes(SessionInterface $session)
     {
         // trailing slash
-        return $session->getNode('/' . ltrim($this->basePath, '/'));
+        return $session->getNode($this->getPath());
+    }
+
+    /**
+     * returns the abspath
+     * @param string $relPath
+     * @return string
+     */
+    private function getPath($relPath = '')
+    {
+        return '/' . ltrim($this->basePath, '/') . ($relPath !== '' ? '/' . ltrim($relPath, '/') : '');
+    }
+
+    /**
+     * @param $path
+     * @return string
+     */
+    private function getResourceLocator($path)
+    {
+        return substr($path, strlen($this->basePath));
     }
 }

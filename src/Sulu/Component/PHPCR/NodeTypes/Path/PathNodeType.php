@@ -175,7 +175,8 @@ class PathNodeType implements NodeTypeDefinitionInterface
     public function getDeclaredPropertyDefinitions()
     {
         return array(
-            new ContentPropertyDefinition()
+            new ContentPropertyDefinition(),
+            new HistoryPropertyDefinition()
         );
     }
 
