@@ -54,10 +54,10 @@ define({
 
         // show form for editing a contact
         sandbox.mvc.routes.push({
-            route: 'contacts/contacts/edit::id/details',
-            callback: function(id){
+            route: 'contacts/contacts/edit::id/:content',
+            callback: function(id, content){
                 this.html(
-                    '<div data-aura-component="contacts@sulucontact" data-aura-display="form" data-aura-id="' +id + '"/>'
+                    '<div data-aura-component="contacts@sulucontact" data-aura-display="content" data-aura-content="'+content+'" data-aura-id="' +id + '"/>'
                 );
             }
         });

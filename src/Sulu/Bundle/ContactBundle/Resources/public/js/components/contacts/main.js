@@ -23,6 +23,8 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
+            } else if (this.options.display === 'content') {
+                this.renderContent();
             } else {
                 throw 'display type wrong';
             }
@@ -118,6 +120,22 @@ define([
             }.bind(this));
         },
 
+        renderContent: function() {
+            // show navigation submenu
+            this.sandbox.sulu.navigation.parseContentNavigation(ContentNavigation, this.options.id, function(navigation) {
+                this.sandbox.start([{
+                    name:'content@suluadmin', options: {
+                        el: this.options.el,
+                        tabsData: navigation,
+                        heading: this.sandbox.translate('contact.contacts.title'),
+                        contentOptions: {
+                            id : this.options.id
+                        }
+                    }
+                }]);
+            }.bind(this));
+        },
+
         renderList: function() {
             this.sandbox.start([
                 {name: 'contacts/components/list@sulucontact', options: { el: this.$el}}
@@ -125,32 +143,26 @@ define([
         },
 
         renderForm: function() {
-
-            // show navigation submenu
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
-
-                console.log("nav nav nav",navigation);
-                // load data and show form
-                this.contact = new Contact();
-                if (!!this.options.id) {
-                    this.contact = new Contact({id: this.options.id});
-                    //contact = this.getModel(this.options.id);
-                    this.contact.fetch({
-                        success: function(model) {
-                            this.sandbox.start([
-                                {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON(), tabs: JSON.stringify(navigation)}}
-                            ]);
-                        }.bind(this),
-                        error: function() {
-                            this.sandbox.logger.log("error while fetching contact");
-                        }.bind(this)
-                    });
-                } else {
-                    this.sandbox.start([
-                        {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: this.contact.toJSON()}}
-                    ]);
-                }
-            }.bind(this));
+            // load data and show form
+            this.contact = new Contact();
+            if (!!this.options.id) {
+                this.contact = new Contact({id: this.options.id});
+                //contact = this.getModel(this.options.id);
+                this.contact.fetch({
+                    success: function(model) {
+                        this.sandbox.start([
+                            {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
+                        ]);
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log("error while fetching contact");
+                    }.bind(this)
+                });
+            } else {
+                this.sandbox.start([
+                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: this.contact.toJSON()}}
+                ]);
+            }
         },
 
         /**
