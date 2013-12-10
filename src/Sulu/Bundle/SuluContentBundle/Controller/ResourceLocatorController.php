@@ -23,25 +23,19 @@ use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\RestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
-class ResourcelocatorController extends RestController implements ClassResourceInterface
+class ResourcelocatorController extends Controller implements ClassResourceInterface
 {
-    /**
-     * for returning self link in get action
-     * @var string
-     */
-    private $apiPath = '/admin/api/resourceLocators';
 
     /**
      * return resource-locator for sub-node
-     * @param string $uuid uuid of parent node
-     *
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
-     *
      * @return object|\Symfony\Component\HttpFoundation\Response
      */
-    public function getAction($uuid)
+    public function getAction()
     {
+        $parent = $this->getRequest()->get('parent');
         $title = $this->getRequest()->get('title');
         $portal = $this->getRequest()->get('portal');
         if ($title == null) {
@@ -52,24 +46,23 @@ class ResourcelocatorController extends RestController implements ClassResourceI
         }
 
         $result = array(
-            '_links' => array(
-                'self' => $this->apiPath
-            ),
-            '_embedded' => array(
-                'resourceLocator' => $this->getResourceLocator($title, $uuid, $portal)
-            ),
-            'total' => 1
+            'resourceLocator' => $this->getResourceLocator($title, $parent, $portal)
         );
 
-        return $this->handleView(
-            $this->view($result)
-        );
+        $response = new Response(json_encode($result));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     private function getResourceLocator($title, $parentUuid, $portal)
     {
         $strategy = $this->getStrategy($portal);
-        $parentPath = $strategy->loadByContentUuid($parentUuid, $portal);
+        if ($parentUuid !== null) {
+            $parentPath = $strategy->loadByContentUuid($parentUuid, $portal);
+        } else {
+            $parentPath = '/';
+        }
 
         return $strategy->generate($title, $parentPath, $portal);
     }

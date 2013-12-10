@@ -138,26 +138,26 @@ class NodeControllerTest extends DatabaseTestCase
         return $data;
     }
 
-    public function testGetRoot()
-    {
-        
-    }
-
     public function testGet()
     {
-        $this->client->request('GET', '/api/resourcelocators/' . $this->data[0]['id'] . '?title=test&portal=default');
+        $this->client->request('GET', '/content/resourcelocator.json?title=test&portal=default');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals('/products/test', $response->_embedded->resourceLocator);
+        $this->assertEquals('/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/api/resourcelocators/' . $this->data[1]['id'] . '?title=test&portal=default');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&title=test&portal=default');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals('/news/test-2', $response->_embedded->resourceLocator);
+        $this->assertEquals('/products/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/api/resourcelocators/' . $this->data[3]['id'] . '?title=test&portal=default');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&title=test&portal=default');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals('/news/test-1/test-1', $response->_embedded->resourceLocator);
+        $this->assertEquals('/news/test-2', $response->resourceLocator);
+
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&title=test&portal=default');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);
     }
 }

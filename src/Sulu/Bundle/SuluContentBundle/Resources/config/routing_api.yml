@@ -1,7 +1,3 @@
 sulu_content.content:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\NodeController
-
-sulu_content.resource_locator:
-    type: rest
-    resource: Sulu\Bundle\ContentBundle\Controller\ResourcelocatorController
