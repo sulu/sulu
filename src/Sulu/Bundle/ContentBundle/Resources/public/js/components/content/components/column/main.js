@@ -34,6 +34,10 @@ define(function() {
                     }
                 }
             ]);
+
+            this.sandbox.on('husky.column.navigation.add', function(parent) {
+                this.sandbox.emit('sulu.content.contents.new', parent);
+            }.bind(this));
         }
     };
 });

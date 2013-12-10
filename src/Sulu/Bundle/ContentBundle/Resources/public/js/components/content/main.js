@@ -37,7 +37,7 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, parent) {
+            this.sandbox.on('sulu.content.contents.save', function(data) {
                 this.save(data);
             }, this);
 
@@ -47,8 +47,8 @@ define([
             }, this);
 
             // add new contact
-            this.sandbox.on('sulu.content.contents.new', function() {
-                this.add();
+            this.sandbox.on('sulu.content.contents.new', function(parent) {
+                this.add(parent);
             }, this);
 
             // delete selected contacts
@@ -101,9 +101,13 @@ define([
             this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + id + '/details');
         },
 
-        add: function() {
+        add: function(parent) {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/add');
+            if (!!parent) {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/add:' + parent.id);
+            } else {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/add');
+            }
         },
 
         delContents: function(ids) {
