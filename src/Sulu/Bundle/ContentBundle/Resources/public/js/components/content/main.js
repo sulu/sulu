@@ -61,17 +61,16 @@ define([
         },
 
         getResourceLocator: function(title, callback) {
-            if (!!this.options.parent) {
-                // TODO portal
-                this.sandbox.util.load('/admin/api/resourcelocators/' + this.options.parent + '?title=' + title + '&portal=default')
-                    .then(function(data) {
-                        callback(data._embedded.resourceLocator);
-                    });
-            }
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&portal=default';
+            // TODO portal
+            this.sandbox.util.load(url)
+                .then(function(data) {
+                    callback(data.resourceLocator);
+                });
         },
 
         del: function() {
-           // TODO Delete
+            // TODO Delete
         },
 
         save: function(data) {
@@ -108,7 +107,7 @@ define([
         delContents: function(ids) {
 
             if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show','No contents selected for deletion!');
+                this.sandbox.emit('sulu.dialog.error.show', 'No contents selected for deletion!');
                 return;
             }
 
@@ -121,8 +120,8 @@ define([
                             success: function() {
                                 this.sandbox.emit('husky.datagrid.row.remove', id);
                             }.bind(this),
-                            error: function(){
-                               // TODO error message
+                            error: function() {
+                                // TODO error message
                             }
                         });
                     }.bind(this));
@@ -177,7 +176,7 @@ define([
 
         renderForm: function() {
 
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation,this.options.id);
+            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id);
 
             // load data and show form
             this.content = new Content();
