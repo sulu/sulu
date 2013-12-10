@@ -10,13 +10,17 @@
 
 namespace Sulu\Bundle\SecurityBundle\Permission;
 
+use Doctrine\Common\Collections\Collection;
+use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PermissionVoter implements VoterInterface
 {
@@ -66,32 +70,92 @@ class PermissionVoter implements VoterInterface
      * ACCESS_GRANTED, ACCESS_DENIED, or ACCESS_ABSTAIN.
      *
      * @param TokenInterface $token      A TokenInterface instance
-     * @param object $object     The object to secure
+     * @param mixed $object     The object to secure
      * @param array $attributes An array of attributes associated with the method being invoked
      * @return integer either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
+        $vote = VoterInterface::ACCESS_DENIED;
+        /** @var User $user */
+        $user = $token->getUser();
+
         // if not our attribute or class, we can't decide
-        if (!is_object($token->getUser()) ||
-            !$this->supportsClass(get_class($token->getUser())) ||
+        if (!is_object($user) ||
+            !$this->supportsClass(get_class($user)) ||
             !$this->supportsAttribute($attributes)
         ) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        foreach ($token->getUser()->getUserRoles() as $userRole) {
+        foreach ($user->getUserRoles() as $userRole) {
             // check all given roles if they have the given attribute
             /** @var UserRole $userRole */
-            foreach ($userRole->getRole()->getPermissions() as $permission) {
-                /** @var Permission $permission */
-                if ($this->isGranted($object, $attributes, $permission, $userRole)) {
-                    return VoterInterface::ACCESS_GRANTED;
+            if ($this->checkPermissions($object, $attributes, $userRole->getRole()->getPermissions(), $userRole->getLocales())) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
+        foreach ($user->getUserGroups() as $userGroup) {
+            // check if one of the user groups have the given attribute
+            /** @var UserGroup $userGroup */
+            if ($this->checkUserGroup($object, $attributes, $userGroup->getGroup(), $userGroup->getLocales())) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
+        return $vote;
+    }
+
+    /**
+     * Checks if the given group has the permission to execute the desired task
+     * @param mixed $object
+     * @param array $attributes
+     * @param Group $group
+     * @param array $locales
+     * @return bool
+     */
+    public function checkUserGroup($object, $attributes, Group $group, $locales)
+    {
+        // check if the group contains the permission
+        foreach ($group->getRoles() as $role) {
+            /** @var Role $role */
+            if ($this->checkPermissions($object, $attributes, $role->getPermissions(), $locales)) {
+                return true;
+            }
+        }
+
+        // check if one of the child group contains the permission
+        $children = $group->getChildren();
+        if (!empty($children)) {
+            foreach ($children as $child) {
+                if ($this->checkUserGroup($object, $attributes, $child, $locales)) {
+                    return true;
                 }
             }
         }
 
-        return VoterInterface::ACCESS_DENIED;
+        return false;
+    }
+
+    /**
+     * Checks if the given set of permissions grants to execute the desired task
+     * @param mixed $object
+     * @param array $attributes
+     * @param Collection $permissions
+     * @param array $locales
+     * @return bool True if the desired access is valid, otherwise false
+     */
+    private function checkPermissions($object, $attributes, $permissions, $locales)
+    {
+        foreach ($permissions as $permission) {
+            /** @var Permission $permission */
+            if ($this->isGranted($object, $attributes, $permission, $locales)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -99,16 +163,16 @@ class PermissionVoter implements VoterInterface
      * @param string $object
      * @param array $attributes
      * @param Permission $permission
-     * @param UserRole $userRole
+     * @param array|null $locales
      * @return bool
      */
-    private function isGranted($object, array $attributes, Permission $permission, UserRole $userRole)
+    private function isGranted($object, array $attributes, Permission $permission, $locales)
     {
         $hasContext = $permission->getContext() == $object;
 
         $hasPermission = $permission->getPermissions() & $this->permissions[$attributes['permission']];
 
-        $hasLocale = !isset($attributes['locale']) || in_array($attributes['locale'], $userRole->getLocales());
+        $hasLocale = !(isset($attributes['locale']) && is_array($locales)) || in_array($attributes['locale'], $locales);
 
         return $hasContext && $hasPermission && $hasLocale;
     }
