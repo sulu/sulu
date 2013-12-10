@@ -190,6 +190,8 @@ class PhpcrMapper extends RlpMapper
      */
     public function getUniquePath($path, $portalKey)
     {
+        $path = PathHelper::normalizePath($path);
+
         // TODO portal
         $session = $this->sessionFactory->getSession();
         $routes = $this->getRoutes($session);
