@@ -61,16 +61,6 @@ define(function() {
                     );
                 }
             });
-
-            // show form for editing permissions for a contact
-            sandbox.mvc.routes.push({
-                route: 'contacts/contacts/edit::id/permissions',
-                callback: function(id) {
-                    this.html(
-                        '<div data-aura-component="permissions@sulusecurity" data-aura-display="form" data-aura-id="' + id + '"/>'
-                    );
-                }
-            });
         }
     };
 

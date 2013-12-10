@@ -26,6 +26,8 @@ define([
 
             if (this.options.display === 'form') {
                 this.renderForm();
+            } else if (this.options.display === 'content') {
+                this.renderContent();
             }
 
             this.bindCustomEvents();
@@ -137,6 +139,22 @@ define([
                 // TODO error message
                 this.sandbox.logger.log('error: form not accessible without contact id');
             }
+        },
+
+
+        renderContent: function() {
+            // show navigation submenu
+            this.sandbox.sulu.navigation.parseContentNavigation(ContentNavigation, this.options.id, function(navigation) {
+                this.sandbox.start([
+                    {
+                        name: 'content@suluadmin', options: {
+                        el: this.options.el,
+                        tabsData: navigation,
+                        heading: this.sandbox.translate('contact.contacts.title')
+                    }
+                    }
+                ]);
+            }.bind(this));
         },
 
         loadRoles: function() {
