@@ -132,7 +132,6 @@ class ContentControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
@@ -236,7 +235,7 @@ class ContentControllerTest extends DatabaseTestCase
         );
 
         /** @var ContentMapperInterface $mapper */
-       $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
         for ($i = 0; $i < count($data); $i++) {
             $data[$i] = $mapper->save($data[$i], 'overview', 'default', 'en', 1)->toArray();
@@ -297,6 +296,58 @@ class ContentControllerTest extends DatabaseTestCase
         $this->assertEquals($data[1]['tags'], $response->_embedded[1]->tags);
         $this->assertEquals($data[1]['url'], $response->_embedded[1]->url);
         $this->assertEquals($data[1]['article'], $response->_embedded[1]->article);
+        $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
+    }
+
+    public function testUpdate()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->beforeTestGet();
+
+        $data[0]['title'] = 'test123';
+        $data[0]['tags'] = array('new tag');
+        $data[0]['article'] = 'thats a new article';
+
+        $client->request('PUT', '/api/contents/' . $data[0]['id'] . '?template=overview', $data[0]);
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $item = $response->_embedded[0];
+
+        $this->assertEquals($data[0]['title'], $item->title);
+        $this->assertEquals($data[0]['tags'], $item->tags);
+        $this->assertEquals($data[0]['url'], $item->url);
+        $this->assertEquals($data[0]['article'], $item->article);
+        $this->assertEquals('Max Mustermann', $item->creator);
+        $this->assertEquals('Max Mustermann', $item->creator);
+
+        $client->request('GET', '/api/contents');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, sizeof($response->_embedded));
+
+        $this->assertEquals($data[1]['title'], $response->_embedded[0]->title);
+        $this->assertEquals($data[1]['tags'], $response->_embedded[0]->tags);
+        $this->assertEquals($data[1]['url'], $response->_embedded[0]->url);
+        $this->assertEquals($data[1]['article'], $response->_embedded[0]->article);
+        $this->assertEquals('Max Mustermann', $response->_embedded[0]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[0]->creator);
+
+        $this->assertEquals($data[0]['title'], $response->_embedded[1]->title);
+        $this->assertEquals($data[0]['tags'], $response->_embedded[1]->tags);
+        $this->assertEquals($data[0]['url'], $response->_embedded[1]->url);
+        $this->assertEquals($data[0]['article'], $response->_embedded[1]->article);
         $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
         $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
     }
