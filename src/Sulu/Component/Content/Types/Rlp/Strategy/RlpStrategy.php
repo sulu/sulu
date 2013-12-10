@@ -148,6 +148,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @param string $path path to generate
      * @param string $portalKey key of portal
      *
+     * @return \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException≈
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
     public function save(NodeInterface $contentNode, $path, $portalKey)
@@ -183,6 +184,19 @@ abstract class RlpStrategy implements RlpStrategyInterface
     {
         // delegate to mapper
         return $this->mapper->loadByContent($contentNode, $portalKey);
+    }
+
+    /**
+     * returns path for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $portalKey key of portal
+     *
+     * @return string path
+     */
+    public function loadByContentUuid($uuid, $portalKey)
+    {
+        // delegate to mapper
+        return $this->mapper->loadByContentUuid($uuid, $portalKey);
     }
 
     /**

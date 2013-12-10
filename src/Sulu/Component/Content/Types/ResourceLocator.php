@@ -55,10 +55,26 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * @param NodeInterface $node
      * @return mixed
      */
-    public function getResourceLocator($node)
+    public function getResourceLocator(NodeInterface $node)
     {
         try {
             $value = $this->getStrategy()->loadByContent($node, $this->getPortalKey());
+        } catch (ResourceLocatorNotFoundException $ex) {
+            $value = null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * reads the value for given property out of the database + sets the value of the property
+     * @param string $uuid
+     * @return string
+     */
+    public function getResourceLocatorByUuid($uuid)
+    {
+        try {
+            $value = $this->getStrategy()->loadByContentUuid($uuid, $this->getPortalKey());
         } catch (ResourceLocatorNotFoundException $ex) {
             $value = null;
         }

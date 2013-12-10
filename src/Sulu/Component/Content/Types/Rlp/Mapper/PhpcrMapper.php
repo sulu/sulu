@@ -107,6 +107,23 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
+     * returns path for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $portalKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     *
+     * @return string path
+     */
+    public function loadByContentUuid($uuid, $portalKey)
+    {
+        $session = $this->sessionFactory->getSession($portalKey);
+        $contentNode = $session->getNodeByIdentifier($uuid);
+
+        return $this->loadByContent($contentNode, $portalKey);
+    }
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $portalKey key of portal
