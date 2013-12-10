@@ -139,6 +139,9 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $clean = preg_replace('/^([-])/', '', $clean);
         $clean = preg_replace('/([-])$/', '', $clean);
 
+        // remove double slashes
+        $clean = str_replace('//', '/', $clean);
+
         return $clean;
     }
 
