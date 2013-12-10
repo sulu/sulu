@@ -41,7 +41,7 @@ class PermissionVoter implements VoterInterface
      */
     public function supportsAttribute($attribute)
     {
-        if (!is_array($attribute) || !isset($attribute['context']) || !isset($attribute['permission'])) {
+        if (!is_array($attribute) || !isset($attribute['permission'])) {
             return false;
         }
 
@@ -85,7 +85,7 @@ class PermissionVoter implements VoterInterface
             /** @var UserRole $userRole */
             foreach ($userRole->getRole()->getPermissions() as $permission) {
                 /** @var Permission $permission */
-                if ($this->isGranted($attributes, $permission, $userRole)) {
+                if ($this->isGranted($object, $attributes, $permission, $userRole)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
             }
@@ -96,14 +96,15 @@ class PermissionVoter implements VoterInterface
 
     /**
      * Checks if the combination of permission and userrole is allowed for the given attributes
+     * @param string $object
      * @param array $attributes
      * @param Permission $permission
      * @param UserRole $userRole
      * @return bool
      */
-    private function isGranted(array $attributes, Permission $permission, UserRole $userRole)
+    private function isGranted($object, array $attributes, Permission $permission, UserRole $userRole)
     {
-        $hasContext = $permission->getContext() == $attributes['context'];
+        $hasContext = $permission->getContext() == $object;
 
         $hasPermission = $permission->getPermissions() & $this->permissions[$attributes['permission']];
 

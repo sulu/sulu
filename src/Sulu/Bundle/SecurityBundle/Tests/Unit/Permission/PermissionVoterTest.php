@@ -65,9 +65,8 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            null,
+            'sulu.security.roles',
             array(
-                'context' => 'sulu.security.roles',
                 'permission' => 'view'
             )
         );
@@ -79,9 +78,8 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            null,
+            'sulu.security.roles',
             array(
-                'context' => 'sulu.security.roles',
                 'permission' => 'security'
             )
         );
