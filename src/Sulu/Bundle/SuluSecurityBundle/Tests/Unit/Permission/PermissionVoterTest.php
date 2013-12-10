@@ -63,24 +63,28 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testPositiveVote()
     {
-        $access = $this->voter->vote($this->token, null, (
+        $access = $this->voter->vote(
+            $this->token,
+            null,
             array(
                 'context' => 'sulu.security.roles',
                 'permission' => 'view'
             )
-        ));
+        );
 
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testNegativeVote()
     {
-        $access = $this->voter->vote($this->token, null, (
+        $access = $this->voter->vote(
+            $this->token,
+            null,
             array(
                 'context' => 'sulu.security.roles',
                 'permission' => 'security'
             )
-            ));
+        );
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
     }

@@ -15,12 +15,13 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * UserRole
  * @ExclusionPolicy("all");
  */
-class UserRole
+class UserRole extends ApiEntity
 {
     /**
      * @var integer
