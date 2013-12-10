@@ -51,6 +51,21 @@ define([], function() {
                     this.submit();
                 }
             }.bind(this));
+
+            this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+        },
+
+        setResourceLocator: function() {
+            var title = this.sandbox.dom.val('#title'),
+                url = '#url';
+
+            this.sandbox.dom.addClass(url, 'is-loading');
+            this.sandbox.dom.css(url, 'background-position', '99%');
+
+            this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
+                    this.sandbox.dom.removeClass(url, 'is-loading');
+                this.sandbox.dom.val(url, rl);
+            }.bind(this));
         },
 
         bindCustomEvents: function() {
