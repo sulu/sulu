@@ -9,3 +9,7 @@ sulu_content.content_navigation:
 sulu_content.content_list:
     pattern: /template/content/list.html
     defaults: { _controller: SuluContentBundle:Template:list }
+
+sulu_content.resource_locator_get:
+    pattern: /resourcelocator.json
+    defaults: { _controller: SuluContentBundle:Resourcelocator:get }
