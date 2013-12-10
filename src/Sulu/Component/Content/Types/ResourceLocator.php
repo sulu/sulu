@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
@@ -45,8 +46,24 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        $value = $this->getStrategy()->loadByContent($node, $this->getPortalKey());
+        $value = $this->getResourceLocator($node);
         $property->setValue($value);
+    }
+
+    /**
+     * reads the value for given property out of the database + sets the value of the property
+     * @param NodeInterface $node
+     * @return mixed
+     */
+    public function getResourceLocator($node)
+    {
+        try {
+            $value = $this->getStrategy()->loadByContent($node, $this->getPortalKey());
+        } catch (ResourceLocatorNotFoundException $ex) {
+            $value = null;
+        }
+
+        return $value;
     }
 
     /**
@@ -58,7 +75,27 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function set(NodeInterface $node, PropertyInterface $property)
     {
-        $this->getStrategy()->save($node, $property->getValue(), $this->getPortalKey());
+        $value = $property->getValue();
+        if ($value != null && $value != '') {
+            $old = $this->getResourceLocator($node);
+            if ($old != null) {
+                $this->getStrategy()->move($old, $value, $this->getPortalKey());
+            } else {
+                $this->getStrategy()->save($node, $value, $this->getPortalKey());
+            }
+        } else {
+            $this->remove($node, $property);
+        }
+    }
+
+    /**
+     * remove property from given node
+     * @param NodeInterface $node
+     * @param PropertyInterface $property
+     */
+    public function remove(NodeInterface $node, PropertyInterface $property)
+    {
+        // TODO: Implement remove() method.
     }
 
     /**

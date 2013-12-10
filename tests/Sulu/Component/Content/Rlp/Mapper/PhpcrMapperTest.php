@@ -16,6 +16,7 @@ use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use \PHPUnit_Framework_TestCase;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
@@ -212,5 +213,155 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 
         $result = $this->mapper->loadByResourceLocator('/products/news/content1-news', 'default');
         $this->assertEquals($this->content1->getIdentifier(), $result);
+    }
+
+    public function testMove()
+    {
+        // create route for content
+        $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        // move
+        $this->mapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        $oldNode = $this->session->getNode('/cmf/routes/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/routes/products/asdf/content2-news');
+
+        $oldNodeMixins = $oldNode->getMixinNodeTypes();
+        $newNodeMixins = $newNode->getMixinNodeTypes();
+
+        $this->assertEquals('sulu:path', $newNodeMixins[0]->getName());
+        $this->assertEquals('sulu:path', $oldNodeMixins[0]->getName());
+
+        $this->assertTrue($oldNode->getPropertyValue('sulu:history'));
+        $this->assertEquals($newNode, $oldNode->getPropertyValue('sulu:content'));
+        $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
+
+        // get content from new path
+        $result = $this->mapper->loadByResourceLocator('/products/asdf/content2-news', 'default');
+        $this->assertEquals($this->content1->getIdentifier(), $result);
+
+        // get content from history should throw an exception
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
+        $result = $this->mapper->loadByResourceLocator('/products/news/content1-news', 'default');
+    }
+
+    public function testMoveTwice()
+    {
+        // create route for content
+        $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        // first move
+        $this->mapper->move('/products/news/content1-news', '/products/news/content2-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        // second move
+        $this->mapper->move('/products/news/content2-news', '/products/asdf/content2-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        $oldNode = $this->session->getNode('/cmf/routes/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/routes/products/asdf/content2-news');
+
+        $oldNodeMixins = $oldNode->getMixinNodeTypes();
+        $newNodeMixins = $newNode->getMixinNodeTypes();
+
+        $this->assertEquals('sulu:path', $newNodeMixins[0]->getName());
+        // FIXME after change mixin works: $this->assertEquals('sulu:history', $oldNodeMixins[0]->getName());
+
+        $this->assertEquals($newNode, $oldNode->getPropertyValue('sulu:content'));
+        $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
+
+        // get content from new path
+        $result = $this->mapper->loadByResourceLocator('/products/asdf/content2-news', 'default');
+        $this->assertEquals($this->content1->getIdentifier(), $result);
+
+        // get content from history should throw an exception
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
+        $result = $this->mapper->loadByResourceLocator('/products/news/content1-news', 'default');
+    }
+
+    public function testMoveNotExist()
+    {
+        // create routes for content
+        $this->mapper->save($this->content1, '/news/news-1', 'default');
+        $this->sessionService->getSession()->save();
+
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
+        $this->mapper->move('/news', '/neuigkeiten', 'default');
+    }
+
+    public function testMoveTree()
+    {
+        $session = $this->sessionService->getSession();
+
+        // create routes for content
+        $this->mapper->save($this->content1, '/news', 'default');
+        $this->mapper->save($this->content1, '/news/news-1', 'default');
+        $this->mapper->save($this->content1, '/news/news-1/sub-1', 'default');
+        $this->mapper->save($this->content1, '/news/news-1/sub-2', 'default');
+
+        $this->mapper->save($this->content1, '/news/news-2', 'default');
+        $this->mapper->save($this->content1, '/news/news-2/sub-1', 'default');
+        $this->mapper->save($this->content1, '/news/news-2/sub-2', 'default');
+        $session->save();
+
+        // move route
+        $this->mapper->move('/news', '/test', 'default');
+        $session->save();
+        $session->refresh(false);
+
+        // check exist new routes
+        $this->assertEquals(
+            $this->content1->getIdentifier(),
+            $this->mapper->loadByResourceLocator('/test', 'default')
+        );
+        $this->assertEquals(
+            $this->content1->getIdentifier(),
+            $this->mapper->loadByResourceLocator('/test/news-1', 'default')
+        );
+        $this->assertEquals(
+            $this->content1->getIdentifier(),
+            $this->mapper->loadByResourceLocator('/test/news-1/sub-1', 'default')
+        );
+        $this->assertEquals(
+            $this->content1->getIdentifier(),
+            $this->mapper->loadByResourceLocator('/test/news-1/sub-2', 'default')
+        );
+
+        $this->assertEquals(
+            $this->content1->getIdentifier(),
+            $this->mapper->loadByResourceLocator('/test/news-2', 'default')
+        );
+        $this->assertEquals(
+            $this->content1->getIdentifier(),
+            $this->mapper->loadByResourceLocator('/test/news-2/sub-1', 'default')
+        );
+        $this->assertEquals(
+            $this->content1->getIdentifier(),
+            $this->mapper->loadByResourceLocator('/test/news-2/sub-2', 'default')
+        );
+
+        // check history
+        $this->assertEquals('/test', $this->getRlForHistory('/news'));
+        $this->assertEquals('/test/news-1', $this->getRlForHistory('/news/news-1'));
+        $this->assertEquals('/test/news-1/sub-1', $this->getRlForHistory('/news/news-1/sub-1'));
+        $this->assertEquals('/test/news-1/sub-2', $this->getRlForHistory('/news/news-1/sub-2'));
+
+        $this->assertEquals('/test/news-2', $this->getRlForHistory('/news/news-2'));
+        $this->assertEquals('/test/news-2/sub-1', $this->getRlForHistory('/news/news-2/sub-1'));
+        $this->assertEquals('/test/news-2/sub-2', $this->getRlForHistory('/news/news-2/sub-2'));
+    }
+
+    private function getRlForHistory($rl)
+    {
+        try {
+            $this->mapper->loadByResourceLocator($rl, 'default');
+
+            return false;
+        } catch (ResourceLocatorMovedException $ex) {
+            return $ex->getNewResourceLocator();
+        }
     }
 }

@@ -50,7 +50,8 @@ interface RlpMapperInterface
      * @param string $resourceLocator requested RL
      * @param string $portalKey key of portal
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
      *
      * @return string uuid of content node
      */
@@ -71,4 +72,14 @@ interface RlpMapperInterface
      * @return string
      */
     public function getUniquePath($path, $portalKey);
+
+    /**
+     * creates a new resourcelocator and creates the correct history
+     * @param string $src old resource locator
+     * @param string $dest new resource locator
+     * @param string $portalKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     */
+    public function move($src, $dest, $portalKey);
 }
