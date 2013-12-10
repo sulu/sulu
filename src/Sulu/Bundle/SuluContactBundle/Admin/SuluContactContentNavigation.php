@@ -25,6 +25,8 @@ class SuluContactContentNavigation extends ContentNavigation
         $details = new NavigationItem('Details');
         $details->setAction('details');
         $details->setContentType('contact');
+        $details->setContentComponent('contacts@sulucontact');
+        $details->setContentComponentOptions(array('display'=>'form'));
 
         $this->addNavigationItem($details);
 
