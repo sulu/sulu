@@ -72,6 +72,13 @@ class NodeController extends RestController implements ClassResourceInterface
                 $tmp = $structure->toArray();
                 $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
                 $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
+
+                // TODO published, linked, type
+                $tmp['published'] = true;
+                $tmp['linked'] = false;
+                $tmp['type'] = 'none';
+
+                // hal spec
                 $tmp['_links'] = array(
                     'self' => $this->apiPath . '/' . $tmp['id'],
                     'children' => $this->apiPath . '?parent=' . $tmp['id'] . '&depth=' . $depth
