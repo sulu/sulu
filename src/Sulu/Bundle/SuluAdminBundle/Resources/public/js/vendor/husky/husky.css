@@ -2855,7 +2855,7 @@ h5 {
 }
 
 /* line 5, ../scss/modules/icons.scss */
-.icon-class, .navigation-search-icon {
+.icon-class, .search-container .search-icon {
   font-family: "icomoon";
 }
 
@@ -2883,7 +2883,7 @@ h5 {
 }
 
 /* line 35, ../scss/modules/icons.scss */
-.icon-search::after, .navigation-search-icon::after {
+.icon-search::after, .search-container .search-icon::after {
   content: "\e028";
   display: inline-block;
 }
@@ -3019,54 +3019,60 @@ h5 {
 }
 
 /* line 190, ../scss/modules/icons.scss */
+.icon-chevron-up::after {
+  content: "\e22a";
+  display: inline-block;
+}
+
+/* line 197, ../scss/modules/icons.scss */
 .icon-archive::after {
   content: "\e150";
   display: inline-block;
 }
 
-/* line 197, ../scss/modules/icons.scss */
+/* line 204, ../scss/modules/icons.scss */
 .icon-check::after {
   content: "\e153";
   display: inline-block;
 }
 
-/* line 204, ../scss/modules/icons.scss */
+/* line 211, ../scss/modules/icons.scss */
 .icon-adjust-alt::after {
   content: "\e140";
   display: inline-block;
 }
 
-/* line 211, ../scss/modules/icons.scss */
+/* line 218, ../scss/modules/icons.scss */
 .icon-list::after {
   content: "\e115";
   display: inline-block;
 }
 
-/* line 218, ../scss/modules/icons.scss */
+/* line 225, ../scss/modules/icons.scss */
 .icon-items::after {
   content: "\e319";
   display: inline-block;
 }
 
-/* line 225, ../scss/modules/icons.scss */
+/* line 232, ../scss/modules/icons.scss */
 .icon-star::after {
   content: "\e050";
   display: inline-block;
 }
 
-/* line 232, ../scss/modules/icons.scss */
+/* line 239, ../scss/modules/icons.scss */
 .icon-globe::after {
   content: "\e341";
   display: inline-block;
 }
 
-/* line 239, ../scss/modules/icons.scss */
+/* line 246, ../scss/modules/icons.scss */
 .icon-dashboard::after {
   content: "\e332";
   display: inline-block;
 }
 
-/* line 246, ../scss/modules/icons.scss */
+/* line 253, ../scss/modules/icons.scss */
 .icon-arrow-down::after {
   content: "\e224";
   display: inline-block;
@@ -3077,7 +3083,7 @@ h5 {
   transform: rotate(90deg);
 }
 
-/* line 259, ../scss/modules/icons.scss */
+/* line 266, ../scss/modules/icons.scss */
 .icon-arrow-up::after {
   content: "\e225";
   display: inline-block;
@@ -3086,6 +3092,42 @@ h5 {
   -o-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
+}
+
+/* line 279, ../scss/modules/icons.scss */
+.icon-user-add::after {
+  content: "\e007";
+  display: inline-block;
+}
+
+/* line 286, ../scss/modules/icons.scss */
+.icon-bin::after {
+  content: "\e017";
+  display: inline-block;
+}
+
+/* line 293, ../scss/modules/icons.scss */
+.icon-retweet::after {
+  content: "\e081";
+  display: inline-block;
+}
+
+/* line 300, ../scss/modules/icons.scss */
+.icon-file-import::after {
+  content: "\e359";
+  display: inline-block;
+}
+
+/* line 307, ../scss/modules/icons.scss */
+.icon-file-export::after {
+  content: "\e360";
+  display: inline-block;
+}
+
+/* line 314, ../scss/modules/icons.scss */
+.icon-show-thumbnails::after {
+  content: "\e157";
+  display: inline-block;
 }
 
 /* line 8, ../scss/modules/core.scss */
@@ -3522,7 +3564,7 @@ textarea.form-element {
   height: 100%;
   background-color: #3e3e3e;
   overflow-y: auto;
-  position: absolute;
+  position: fixed;
   top: 0px;
 }
 
@@ -3584,64 +3626,19 @@ textarea.form-element {
   position: relative;
   margin: 5px 20px 20px;
 }
-/* line 104, ../scss/modules/navigation.scss */
-.navigation-search a {
-  color: #3e3e3e;
-}
 
-/* line 109, ../scss/modules/navigation.scss */
-.navigation-search-input {
-  padding-left: 40px;
-  border: 0;
-  margin: 0;
-  background-color: #999999;
-  color: #3e3e3e;
-}
-/* line 2, ../scss/mixins.scss */
-.navigation-search-input.placeholder {
-  color: #3e3e3e;
-}
-/* line 3, ../scss/mixins.scss */
-.navigation-search-input:-moz-placeholder {
-  color: #3e3e3e;
-}
-/* line 4, ../scss/mixins.scss */
-.navigation-search-input::-moz-placeholder {
-  color: #3e3e3e;
-}
-/* line 5, ../scss/mixins.scss */
-.navigation-search-input:-ms-input-placeholder {
-  color: #3e3e3e;
-}
-/* line 6, ../scss/mixins.scss */
-.navigation-search-input::-webkit-input-placeholder {
-  color: #3e3e3e;
-}
-/* line 120, ../scss/modules/navigation.scss */
-.navigation-search-input:focus {
-  background-color: white;
-}
-
-/* line 125, ../scss/modules/navigation.scss */
-.navigation-search-icon {
-  position: absolute;
-  top: 6px;
-  left: 8px;
-  font-size: 16px;
-}
-
-/* line 137, ../scss/modules/navigation.scss */
+/* line 107, ../scss/modules/navigation.scss */
 li.is-active > .navigation-items-toggle a,
 li.is-active > .navigation-subitems-toggle a {
   color: white;
 }
-/* line 141, ../scss/modules/navigation.scss */
+/* line 111, ../scss/modules/navigation.scss */
 li.is-active > div > a.navigation-settings-icon {
   display: block;
   color: #999999;
 }
 
-/* line 149, ../scss/modules/navigation.scss */
+/* line 119, ../scss/modules/navigation.scss */
 .navigation-items {
   padding: 0px 20px;
   overflow: hidden;
@@ -3649,29 +3646,29 @@ li.is-active > div > a.navigation-settings-icon {
   /* sub-items */
   /* sub-sub-items */
 }
-/* line 155, ../scss/modules/navigation.scss */
+/* line 125, ../scss/modules/navigation.scss */
 .navigation-items:hover:not(.is-active) {
   background-color: rgba(0, 0, 0, 0.05);
 }
-/* line 159, ../scss/modules/navigation.scss */
+/* line 129, ../scss/modules/navigation.scss */
 .navigation-items > div {
   position: relative;
   padding-left: 5px;
 }
-/* line 163, ../scss/modules/navigation.scss */
+/* line 133, ../scss/modules/navigation.scss */
 .navigation-items > div > a {
   padding: 12px 0;
 }
-/* line 169, ../scss/modules/navigation.scss */
+/* line 139, ../scss/modules/navigation.scss */
 .navigation-items.is-active {
   background-color: #282828;
 }
-/* line 173, ../scss/modules/navigation.scss */
+/* line 143, ../scss/modules/navigation.scss */
 .navigation-items.is-expanded {
   height: inherit;
   padding-bottom: 20px;
 }
-/* line 177, ../scss/modules/navigation.scss */
+/* line 147, ../scss/modules/navigation.scss */
 .navigation-items.is-expanded .navigation-items-toggle {
   border-bottom: 1px solid #666666;
   height: inherit;
@@ -3679,26 +3676,26 @@ li.is-active > div > a.navigation-settings-icon {
   margin-bottom: 10px;
   height: 50px;
 }
-/* line 182, ../scss/modules/navigation.scss */
+/* line 152, ../scss/modules/navigation.scss */
 .navigation-items.is-expanded > ul {
   display: block;
 }
-/* line 189, ../scss/modules/navigation.scss */
+/* line 159, ../scss/modules/navigation.scss */
 .navigation-items.is-selected a {
   color: white;
 }
-/* line 195, ../scss/modules/navigation.scss */
+/* line 165, ../scss/modules/navigation.scss */
 .navigation-items ul {
   display: none;
   font-size: 14px;
   padding-left: 55px;
 }
-/* line 203, ../scss/modules/navigation.scss */
+/* line 173, ../scss/modules/navigation.scss */
 .navigation-items ul ul {
   font-size: 12px;
   padding-left: 20px;
 }
-/* line 210, ../scss/modules/navigation.scss */
+/* line 180, ../scss/modules/navigation.scss */
 .navigation-items li {
   padding: 5px 0 0px 10px;
   margin: 0 0 0 -10px;
@@ -3706,7 +3703,7 @@ li.is-active > div > a.navigation-settings-icon {
   cursor: pointer;
   height: 30px;
 }
-/* line 217, ../scss/modules/navigation.scss */
+/* line 187, ../scss/modules/navigation.scss */
 .navigation-items li:hover:not(.navigation-subitems) a::before {
   font-family: "icomoon";
   font-size: 11px;
@@ -3718,11 +3715,11 @@ li.is-active > div > a.navigation-settings-icon {
   position: relative;
   top: -1px;
 }
-/* line 231, ../scss/modules/navigation.scss */
+/* line 201, ../scss/modules/navigation.scss */
 .navigation-items li.is-selected a {
   color: white;
 }
-/* line 234, ../scss/modules/navigation.scss */
+/* line 204, ../scss/modules/navigation.scss */
 .navigation-items li.is-selected a::before {
   font-family: "icomoon";
   font-size: 11px;
@@ -3734,18 +3731,18 @@ li.is-active > div > a.navigation-settings-icon {
   position: relative;
   top: -1px;
 }
-/* line 248, ../scss/modules/navigation.scss */
+/* line 218, ../scss/modules/navigation.scss */
 .navigation-items li a {
   display: inline-block;
   height: 30px;
   /* prohibits height changes on select */
 }
 
-/* line 258, ../scss/modules/navigation.scss */
+/* line 228, ../scss/modules/navigation.scss */
 .navigation-subitems.is-expanded > ul {
   display: block;
 }
-/* line 261, ../scss/modules/navigation.scss */
+/* line 231, ../scss/modules/navigation.scss */
 .navigation-subitems.is-expanded .navigation-subitems-toggle {
   border-bottom: 1px solid #666666;
   height: inherit;
@@ -3754,7 +3751,7 @@ li.is-active > div > a.navigation-settings-icon {
   padding-bottom: 0;
 }
 
-/* line 281, ../scss/modules/navigation.scss */
+/* line 251, ../scss/modules/navigation.scss */
 .navigation-item {
   width: 100%;
   display: inline-block;
@@ -3763,26 +3760,26 @@ li.is-active > div > a.navigation-settings-icon {
   top: 2px;
 }
 
-/* line 289, ../scss/modules/navigation.scss */
+/* line 259, ../scss/modules/navigation.scss */
 .navigation-item-title {
   position: relative;
   top: 2px;
   padding-left: 35px;
 }
 
-/* line 295, ../scss/modules/navigation.scss */
+/* line 265, ../scss/modules/navigation.scss */
 .navigation-item-icon {
   position: absolute;
   padding-left: 3px;
   font-size: 18px;
 }
 
-/* line 302, ../scss/modules/navigation.scss */
+/* line 272, ../scss/modules/navigation.scss */
 .navigation-items-toggle {
   position: relative;
 }
 
-/* line 306, ../scss/modules/navigation.scss */
+/* line 276, ../scss/modules/navigation.scss */
 li a.navigation-settings-icon {
   width: auto;
   position: absolute;
@@ -3792,7 +3789,7 @@ li a.navigation-settings-icon {
   display: none;
 }
 
-/* line 315, ../scss/modules/navigation.scss */
+/* line 285, ../scss/modules/navigation.scss */
 .navigation-toggle-icon {
   width: auto;
   position: absolute;
@@ -3801,29 +3798,29 @@ li a.navigation-settings-icon {
   font-size: 10px;
 }
 
-/* line 323, ../scss/modules/navigation.scss */
+/* line 293, ../scss/modules/navigation.scss */
 .navigation footer {
   border-top: 1px solid #5B5B5B;
   padding-top: 20px;
   margin: 80px 20px 0 55px;
   font-size: 12px;
 }
-/* line 329, ../scss/modules/navigation.scss */
+/* line 299, ../scss/modules/navigation.scss */
 .navigation footer .version {
   font-size: 10px;
 }
 
-/* line 335, ../scss/modules/navigation.scss */
+/* line 305, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle {
   padding: 2px 0 2px;
   position: relative;
   height: 30px;
 }
-/* line 340, ../scss/modules/navigation.scss */
+/* line 310, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle .navigation-toggle-icon {
   top: 5px;
 }
-/* line 344, ../scss/modules/navigation.scss */
+/* line 314, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle .navigation-item {
   padding: 0px;
 }
@@ -3974,15 +3971,19 @@ table {
 .table.is-selectable tr:hover > td {
   background-color: #fff;
 }
-/* line 62, ../scss/modules/tables.scss */
+/* line 61, ../scss/modules/tables.scss */
+.table.is-selectable thead tr {
+  cursor: auto;
+}
+/* line 67, ../scss/modules/tables.scss */
 .table .thumb {
   text-align: center;
 }
-/* line 65, ../scss/modules/tables.scss */
+/* line 70, ../scss/modules/tables.scss */
 .table .thumb img {
   vertical-align: middle;
 }
-/* line 70, ../scss/modules/tables.scss */
+/* line 75, ../scss/modules/tables.scss */
 .table .remove-row {
   text-align: center;
 }
@@ -4119,34 +4120,238 @@ a.btn-black {
   top: 40px;
 }
 
+/* line 5, ../scss/modules/search.scss */
+.search-container {
+  /** look and feel **/
+}
+/* line 7, ../scss/modules/search.scss */
+.search-container a {
+  color: #3e3e3e;
+}
+/* line 11, ../scss/modules/search.scss */
+.search-container .search-input {
+  padding-left: 40px;
+  border: 0;
+  margin: 0;
+  background-color: #999999;
+  color: #3e3e3e;
+}
+/* line 2, ../scss/mixins.scss */
+.search-container .search-input.placeholder {
+  color: #3e3e3e;
+}
+/* line 3, ../scss/mixins.scss */
+.search-container .search-input:-moz-placeholder {
+  color: #3e3e3e;
+}
+/* line 4, ../scss/mixins.scss */
+.search-container .search-input::-moz-placeholder {
+  color: #3e3e3e;
+}
+/* line 5, ../scss/mixins.scss */
+.search-container .search-input:-ms-input-placeholder {
+  color: #3e3e3e;
+}
+/* line 6, ../scss/mixins.scss */
+.search-container .search-input::-webkit-input-placeholder {
+  color: #3e3e3e;
+}
+/* line 22, ../scss/modules/search.scss */
+.search-container .search-input:focus {
+  background-color: white;
+}
+/* line 27, ../scss/modules/search.scss */
+.search-container .search-icon {
+  position: absolute;
+  padding-left: 8px;
+  font-size: 16px;
+  line-height: 30px;
+  vertical-align: middle;
+}
+/* line 44, ../scss/modules/search.scss */
+.search-container.gray .search-input {
+  background-color: #999999;
+}
+/* line 46, ../scss/modules/search.scss */
+.search-container.gray .search-input:focus {
+  background-color: white;
+}
+/* line 54, ../scss/modules/search.scss */
+.search-container.white .search-input {
+  background-color: white;
+}
+/* line 56, ../scss/modules/search.scss */
+.search-container.white .search-input:focus {
+  background-color: white;
+}
+/* line 63, ../scss/modules/search.scss */
+.search-container.small .search-input {
+  font-size: 12px;
+}
+/* line 66, ../scss/modules/search.scss */
+.search-container.small .search-icon {
+  padding-right: 15px;
+  font-size: 12px;
+}
+
 /* line 7, ../scss/modules/tabs.scss */
-.husky-tabs ul {
+.tabs-container ul {
   width: 100%;
   padding: 0 0 5px;
   border-bottom: 2px solid #cccccc;
 }
 /* line 12, ../scss/modules/tabs.scss */
-.husky-tabs ul li {
+.tabs-container ul li {
   display: inline;
   list-style-type: none;
 }
 /* line 16, ../scss/modules/tabs.scss */
-.husky-tabs ul li a {
+.tabs-container ul li a {
   color: black;
   font-weight: bold;
   text-decoration: none;
 }
 /* line 21, ../scss/modules/tabs.scss */
-.husky-tabs ul li a:hover {
+.tabs-container ul li a:hover {
   color: #666666;
 }
 /* line 27, ../scss/modules/tabs.scss */
-.husky-tabs ul li.is-selected a {
+.tabs-container ul li.is-selected a {
   color: #249fbe;
 }
 /* line 32, ../scss/modules/tabs.scss */
-.husky-tabs ul li:not(:last-child) {
+.tabs-container ul li:not(:last-child) {
   padding-right: 30px;
+}
+
+/* line 13, ../scss/modules/toolbar.scss */
+.toolbar-container {
+  line-height: 1;
+}
+/* line 23, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.large > button, .toolbar-container button.large {
+  width: 50px;
+  height: 40px;
+  font-size: 18px;
+}
+/* line 29, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.large:not(:last-child), .toolbar-container button.large:not(:last-child) {
+  margin-right: 20px;
+}
+/* line 35, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.medium > button, .toolbar-container button.medium {
+  width: 40px;
+  height: 30px;
+  font-size: 14px;
+}
+/* line 41, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.medium:not(:last-child), .toolbar-container button.medium:not(:last-child) {
+  margin-right: 10px;
+}
+/* line 47, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.small > button, .toolbar-container button.small {
+  width: 30px;
+  height: 20px;
+  font-size: 10px;
+}
+/* line 53, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.small:not(:last-child), .toolbar-container button.small:not(:last-child) {
+  margin-right: 5px;
+}
+/* line 58, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group, .toolbar-container .btn-group-vertical {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0;
+  margin-right: 20px;
+}
+/* line 67, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button, .toolbar-container .btn-group-vertical > button {
+  margin-right: 0;
+}
+/* line 72, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:not(:first-child):not(:last-child):not(.dropdown-toggle), .toolbar-container .btn-group-vertical > button:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  margin: 0 0 0 -1px;
+  border-radius: 0;
+}
+/* line 78, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:last-child, .toolbar-container .btn-group-vertical > button:last-child {
+  margin-left: -1px;
+}
+/* line 81, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:last-child:not(:first-child):not(.dropdown-toggle), .toolbar-container .btn-group-vertical > button:last-child:not(:first-child):not(.dropdown-toggle) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+/* line 88, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:first-child, .toolbar-container .btn-group-vertical > button:first-child {
+  margin-left: 0;
+}
+/* line 91, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:first-child:not(:last-child):not(.dropdown-toggle), .toolbar-container .btn-group-vertical > button:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+/* line 98, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group:not(:last-child), .toolbar-container .btn-group-vertical:not(:last-child) {
+  margin-right: 20px;
+}
+/* line 103, ../scss/modules/toolbar.scss */
+.toolbar-container button {
+  cursor: pointer;
+  width: 50px;
+  height: 40px;
+  font-size: 18px;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  background-image: none;
+  background-color: transparent;
+  outline: none;
+  margin-right: 20px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+/* line 121, ../scss/modules/toolbar.scss */
+.toolbar-container button:disabled {
+  color: #999999;
+}
+/* line 125, ../scss/modules/toolbar.scss */
+.toolbar-container button:hover:not(:disabled) {
+  background-color: #dddddd;
+}
+/* line 128, ../scss/modules/toolbar.scss */
+.toolbar-container button:active:not(:disabled) {
+  background-color: #cccccc;
+}
+/* line 132, ../scss/modules/toolbar.scss */
+.toolbar-container button.highlight {
+  color: #FFF;
+  background-color: #249fbe;
+  border-color: #249fbe;
+}
+/* line 137, ../scss/modules/toolbar.scss */
+.toolbar-container button.highlight:hover {
+  background-color: #26aacb;
+  border-color: #26aacb;
+}
+/* line 140, ../scss/modules/toolbar.scss */
+.toolbar-container button.highlight:active {
+  background-color: #28b1d3;
+  border-color: #28b1d3;
+}
+/* line 144, ../scss/modules/toolbar.scss */
+.toolbar-container button.highlight:disabled, .toolbar-container button.highlight disabled:hover, .toolbar-container button.highlight disabled:focus {
+  background-color: #999999;
+  border-color: #999999;
+}
+/* line 152, ../scss/modules/toolbar.scss */
+.toolbar-container .toolbar-search {
+  display: inline-block;
 }
 
 /* line 17, ../scss/modules/dialog.scss */
