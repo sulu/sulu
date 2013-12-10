@@ -38,6 +38,10 @@ define(function() {
             this.sandbox.on('husky.column.navigation.add', function(parent) {
                 this.sandbox.emit('sulu.content.contents.new', parent);
             }.bind(this));
+
+            this.sandbox.on('husky.column.navigation.edit', function(item) {
+                this.sandbox.emit('sulu.content.contents.load', item.id);
+            }.bind(this));
         }
     };
 });
