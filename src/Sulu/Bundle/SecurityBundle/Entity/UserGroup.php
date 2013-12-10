@@ -3,11 +3,12 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * UserGroup
  */
-class UserGroup
+class UserGroup extends ApiEntity
 {
     /**
      * @var string

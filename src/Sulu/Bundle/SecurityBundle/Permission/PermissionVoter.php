@@ -81,12 +81,11 @@ class PermissionVoter implements VoterInterface
         }
 
         foreach ($token->getUser()->getUserRoles() as $userRole) {
-            //check all given roles if they have the given attribute
+            // check all given roles if they have the given attribute
             /** @var UserRole $userRole */
             foreach ($userRole->getRole()->getPermissions() as $permission) {
                 /** @var Permission $permission */
-                if ($this->isGranted($attributes, $permission, $userRole)
-                ) {
+                if ($this->isGranted($attributes, $permission, $userRole)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
             }
@@ -102,7 +101,7 @@ class PermissionVoter implements VoterInterface
      * @param UserRole $userRole
      * @return bool
      */
-    public function isGranted(array $attributes, Permission $permission, UserRole $userRole)
+    private function isGranted(array $attributes, Permission $permission, UserRole $userRole)
     {
         $hasContext = $permission->getContext() == $attributes['context'];
 
