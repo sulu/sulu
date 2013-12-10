@@ -23,6 +23,8 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
+            } else if (this.options.display === 'column') {
+                this.renderColumn();
             } else {
                 throw 'display type wrong';
             }
@@ -171,6 +173,12 @@ define([
         renderList: function() {
             this.sandbox.start([
                 {name: 'content/components/list@sulucontent', options: { el: this.$el}}
+            ]);
+        },
+
+        renderColumn: function() {
+            this.sandbox.start([
+                {name: 'content/components/column@sulucontent', options: { el: this.$el}}
             ]);
         },
 

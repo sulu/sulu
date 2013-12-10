@@ -35,4 +35,9 @@ class TemplateController extends Controller
         return $this->render('SuluContentBundle:Template:list.html.twig');
     }
 
+    public function columnAction()
+    {
+        return $this->render('SuluContentBundle:Template:column.html.twig');
+    }
+
 }

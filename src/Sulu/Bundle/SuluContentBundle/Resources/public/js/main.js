@@ -30,7 +30,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'content/contents',
             callback: function() {
-                this.html('<div data-aura-component="content@sulucontent" data-aura-display="list"/>');
+                this.html('<div data-aura-component="content@sulucontent" data-aura-display="column"/>');
             }
         });
 
