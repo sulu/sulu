@@ -127,7 +127,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $property = $post['property'];
 
                 $type->set($node, $property);
-            } catch (Exception $ex) {
+            } catch (Exception $ex) { // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
             }
         }
