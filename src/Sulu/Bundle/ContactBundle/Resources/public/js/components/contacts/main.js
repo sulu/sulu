@@ -23,8 +23,6 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
-            } else if (this.options.display === 'content') {
-                this.renderContent();
             } else {
                 throw 'display type wrong';
             }
@@ -117,22 +115,6 @@ define([
                     }.bind(this));
                     this.sandbox.emit('husky.header.button-state', 'standard');
                 }
-            }.bind(this));
-        },
-
-        renderContent: function() {
-            // show navigation submenu
-            this.sandbox.sulu.navigation.parseContentNavigation(ContentNavigation, this.options.id, function(navigation) {
-                this.sandbox.start([{
-                    name:'content@suluadmin', options: {
-                        el: this.options.el,
-                        tabsData: navigation,
-                        heading: this.sandbox.translate('contact.contacts.title'),
-                        contentOptions: {
-                            id : this.options.id
-                        }
-                    }
-                }]);
             }.bind(this));
         },
 
