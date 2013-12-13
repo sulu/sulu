@@ -44,12 +44,17 @@ define(function() {
 
         bindCustomEvents: function() {
             // listening for navigation events
-            this.sandbox.on('sulu.router.navigate', function(route) {
+            this.sandbox.on('sulu.router.navigate', function(route, trigger) {
+
+                // default vars
+                trigger = (typeof trigger !== 'undefined') ? trigger : true;
+
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
+
                 // navigate
-                router.navigate(route, {trigger: true});
+                router.navigate(route, {trigger: trigger});
 
                 // move to top
                 // FIXME abstract
@@ -74,8 +79,11 @@ define(function() {
         },
 
         emitNavigationEvent: function(event) {
+
+            // TODO: select right bundle / item in navigation
+
             if (!!event.action) {
-                this.sandbox.emit('sulu.router.navigate', event.action);
+                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
             }
         }
 
