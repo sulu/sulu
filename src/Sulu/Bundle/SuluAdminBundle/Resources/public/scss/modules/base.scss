@@ -1,3 +1,5 @@
+$contentWidth : 800px;
+
 .control-label {
   padding-left: 10px;
   cursor: pointer;
@@ -6,11 +8,26 @@
 // Content
 /*----------------------------------------*/
 #content {
-  width: 800px;
+
+  width: $contentWidth;
   margin-left: 300px;
 
   h2.mainheadline {
     margin-top: 35px;
+  }
+
+
+
+  // tabs content
+  #edit-toolbar {
+    z-index:100;
+    position: fixed;
+    top: 30px;
+    min-width: $contentWidth;
+  }
+
+  .content-tabs-content {
+    margin-top: 100px;
   }
 
 }

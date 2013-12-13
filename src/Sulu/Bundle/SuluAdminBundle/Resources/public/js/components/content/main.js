@@ -19,22 +19,14 @@ define([], function() {
 
     var defaults = {
         heading: '',
-        tabsData: null
-    };
+        tabsData: null,
+        instanceName: 'content'
+        },
 
-    return {
-        view: true,
-
-        initialize: function() {
-
-            // default
-            this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            // skeleton
-            this.sandbox.dom.html(this.options.el, '<div id="edit-toolbar"></div><h1>' + this.options.heading + '</h1><div id="content-tabs" /><div id="content-tabs-content" />');
-
-            // bind events (also initializes first component)
-            this.bindCustomEvents();
+        initializeTabs = function() {
+            if (this.options.tabsData && this.options.tabsData.items <= 1) {
+                // TODO: do not show tabs if just one item available
+            }
 
             // initialize tabs
             this.sandbox.start([
@@ -43,30 +35,83 @@ define([], function() {
                     options: {
                         el: '#content-tabs',
                         data: this.options.tabsData,
-                        instanceName: 'content'
+                        instanceName: this.options.instanceName,
+                        forceReload: false
                     }
                 }
             ]);
         },
 
-        bindCustomEvents: function() {
-            // load component on start
-            this.sandbox.on('husky.tabs.content.initialized', this.startComponent.bind(this));
-            // load component after click
-            this.sandbox.on('husky.tabs.content.item.select', this.startComponent.bind(this));
+        initializeToolbar = function() {
+
+            this.sandbox.start([
+                {
+                    name: 'edit-toolbar@suluadmin',
+                    options: {
+                        el: '#edit-toolbar',
+                        data: this.options.tabsData,
+                        instanceName: this.options.instanceName,
+                        forceReload: false
+                    }
+                }
+            ]);
+        };
+
+
+
+    return {
+        view: true,
+
+        initialize: function() {
+
+            // default
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            // skeleton
+            this.sandbox.dom.html(this.options.el, '<div id="edit-toolbar"></div><div class="content-tabs-content"><h1>' + this.options.heading + '</h1><div id="content-tabs" /><div id="content-tabs-component" /></div>');
+
+            // bind events (also initializes first component)
+            this.bindCustomEvents();
+
+            // initialize toolbar
+            initializeToolbar.call(this);
+
+            // initialize tabs
+            initializeTabs.call(this);
+
+
         },
 
-        startComponent: function(item) {
+        /**
+         * listens to tab events
+         */
+        bindCustomEvents: function() {
+            var instanceName = (this.options.instanceName && this.options.instanceName!=='') ? this.options.instanceName+'.' : '';
+            // load component on start
+            this.sandbox.on('husky.tabs.'+instanceName+'initialized', this.startTabComponent.bind(this));
+            // load component after click
+            this.sandbox.on('husky.tabs.'+instanceName+'item.select', this.startTabComponent.bind(this));
+        },
 
-            if (item.action === this.action) {
+        /**
+         * gets called when tabs either got initialized or when tab was clicked
+         * @param item
+         */
+        startTabComponent: function(item) {
+
+            if (!item.forceReload && item.action === this.action) {
                 this.sandbox.logger.log("page already loaded; no reload required!");
                 return;
             }
+
+            this.sandbox.dom.html('#content-tabs-component', '<img src="/bundles/suluadmin/img/loader.gif" />');
+
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
             if (!!item && !!item.contentComponent) {
-                var options = this.sandbox.util.extend(true, {}, {el: '#content-tabs-content'}, item.contentComponentOptions, this.options.contentOptions);
+                var options = this.sandbox.util.extend(true, {}, {el: '#content-tabs-component'}, item.contentComponentOptions, this.options.contentOptions);
+                // start component defined by
                 this.sandbox.start([
                     {name: item.contentComponent, options: options}
                 ]);
