@@ -40,8 +40,9 @@ define([], function() {
                             icon: 'floppy-saved',
                             iconSize: 'large',
                             class: 'highlight',
+                            disabled: true,
                             callback: function() {
-                                this.sandbox.emit('sulu.edittoolbar.save');
+                                this.sandbox.emit('sulu.edit-toolbar.save');
                             }.bind(this)
                         },
                         {
@@ -53,13 +54,25 @@ define([], function() {
                                 {
                                     title:'delete',
                                     callback: function() {
-                                        this.sandbox.emit('sulu.edittoolbar.delete');
+                                        this.sandbox.emit('sulu.edit-toolbar.delete');
                                     }.bind(this)
                                 }
                             ]
                         }
                     ];
                 }
+        },
+
+        changeStateCallbacks = {
+            default: function(saved, type) {
+                if (type === 'edit') {
+                    if (!!saved) {
+                        this.sandbox.emit('husky.edittoolbar.item.disable', 'save-button');
+                    } else {
+                        this.sandbox.emit('husky.edittoolbar.item.enable', 'save-button');
+                    }
+                }
+            }
         };
 
     return {
@@ -71,19 +84,26 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, this.options, defaults);
 
-            var template;
+            var template = this.options.template;
 
             // load template:
-            if (typeof this.options.template === 'string') {
+            if (typeof template === 'string') {
                 try {
-                    this.options.template = JSON.parse(this.options.template);
+                    this.options.template = JSON.parse(template);
                 } catch (e) {
-                    if (!!templates[this.options.template]) {
-                        this.options.template = templates[this.options.template].call(this);
+                    if (!!templates[template]) {
+                        this.options.template = templates[template].call(this);
                     } else {
                         this.sandbox.logger.log('no template found!');
                     }
+                }
+            }
 
+            if (!this.options.changeStateCallback || typeof this.options.changeStateCallback !== 'function') {
+                if (!!changeStateCallbacks[template]) {
+                    this.options.changeStateCallback = changeStateCallbacks[template];
+                } else {
+                    this.sandbox.logger.log('no template found!');
                 }
             }
 
@@ -98,7 +118,6 @@ define([], function() {
                 }
             ]);
 
-
             // bind events (also initializes first component)
             this.bindCustomEvents();
 
@@ -108,11 +127,13 @@ define([], function() {
          * listens to tab events
          */
         bindCustomEvents: function() {
-//            var instanceName = (this.options.instanceName && this.options.instanceName!=='') ? this.options.instanceName+'.' : '';
-//            // load component on start
-//            this.sandbox.on('husky.tabs.'+instanceName+'initialized', this.startTabComponent.bind(this));
-//            // load component after click
-//            this.sandbox.on('husky.tabs.'+instanceName+'item.select', this.startTabComponent.bind(this));
+            var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
+            // load component on start
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', this.changeState.bind(this));
+        },
+
+        changeState: function(type, saved) {
+            this.options.changeStateCallback.call(this, saved, type);
         }
 
     };
