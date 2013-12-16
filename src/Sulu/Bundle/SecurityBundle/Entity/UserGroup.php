@@ -1,39 +1,34 @@
 <?php
 /*
-* This file is part of the Sulu CMS.
-*
-* (c) MASSIVE ART WebServices GmbH
-*
-* This source file is subject to the MIT license that is bundled
-* with this source code in the file LICENSE.
-*/
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
- * UserRole
- * @ExclusionPolicy("all");
+ * UserGroup
  */
-class UserRole extends ApiEntity
+class UserGroup extends ApiEntity
 {
     /**
-     * @var integer
-     * @Expose
-     */
-    private $id;
-
-    /**
      * @var string
-     * @Expose
      */
     private $locale;
+
+    /**
+     * @var integer
+     */
+    private $id;
 
     /**
      * @var \Sulu\Bundle\SecurityBundle\Entity\User
@@ -41,26 +36,15 @@ class UserRole extends ApiEntity
     private $user;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\Role
-     * @Expose
+     * @var \Sulu\Bundle\SecurityBundle\Entity\Group
      */
-    private $role;
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $group;
 
     /**
      * Set locale
      *
      * @param string $locale
-     * @return UserRole
+     * @return UserGroup
      */
     public function setLocale($locale)
     {
@@ -91,12 +75,22 @@ class UserRole extends ApiEntity
     }
 
     /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Set user
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\User $user
-     * @return UserRole
+     * @return UserGroup
      */
-    public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user)
+    public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -114,25 +108,25 @@ class UserRole extends ApiEntity
     }
 
     /**
-     * Set role
+     * Set group
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Role $role
-     * @return UserRole
+     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $group
+     * @return UserGroup
      */
-    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\Role $role)
+    public function setGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $group = null)
     {
-        $this->role = $role;
+        $this->group = $group;
 
         return $this;
     }
 
     /**
-     * Get role
+     * Get group
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Role
+     * @return \Sulu\Bundle\SecurityBundle\Entity\Group
      */
-    public function getRole()
+    public function getGroup()
     {
-        return $this->role;
+        return $this->group;
     }
 }

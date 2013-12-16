@@ -8,7 +8,6 @@
 * with this source code in the file LICENSE.
 */
 
-
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
@@ -27,16 +26,21 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
 
-    public function findUserById($id){
+    public function findUserById($id)
+    {
         try {
 
             $qb = $this->createQueryBuilder('user')
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.userGroups', 'userGroups')
+                ->leftJoin('userGroups.group', 'grp')
                 ->leftJoin('user.contact', 'contact')
                 ->leftJoin('contact.emails', 'emails')
                 ->addSelect('userRoles')
                 ->addSelect('role')
+                ->addSelect('userGroups')
+                ->addSelect('grp')
                 ->addSelect('contact')
                 ->addSelect('emails')
                 ->where('user.id=:userId');
@@ -64,10 +68,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $qb = $this->createQueryBuilder('user')
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
+                ->leftJoin('user.userGroups', 'userGroups')
+                ->leftJoin('userGroups.group', 'grp')
                 ->leftJoin('user.contact', 'contact')
                 ->leftJoin('contact.emails', 'emails')
                 ->addSelect('userRoles')
                 ->addSelect('role')
+                ->addSelect('userGroups')
+                ->addSelect('grp')
                 ->addSelect('contact')
                 ->addSelect('emails')
                 ->where('user.contact=:contactId');
@@ -101,8 +109,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->leftJoin('user.userRoles', 'userRoles')
             ->leftJoin('userRoles.role', 'role')
             ->leftJoin('role.permissions', 'permissions')
+            ->leftJoin('user.userGroups', 'userGroups')
+            ->leftJoin('userGroups.group', 'grp')
             ->addSelect('userRoles')
             ->addSelect('role')
+            ->addSelect('userGroups')
+            ->addSelect('grp')
             ->addSelect('permissions')
             ->where('user.username=:username');
 

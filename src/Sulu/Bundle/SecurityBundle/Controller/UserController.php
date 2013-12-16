@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -27,8 +28,10 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 class UserController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluSecurityBundle:User';
-    protected $roleEntityName = 'SuluSecurityBundle:Role';
-    protected $contactEntityName = 'SuluContactBundle:Contact';
+
+    const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
+    const ENTITY_NAME_GROUP = 'SuluSecurityBundle:Group';
+    const ENTITY_NAME_CONTACT = 'SuluContactBundle:Contact';
 
     /**
      * Lists all the users in the system
@@ -67,6 +70,7 @@ class UserController extends RestController implements ClassResourceInterface
     {
         try {
             $userRoles = $this->getRequest()->get('userRoles');
+            $userGroups = $this->getRequest()->get('userGroups');
 
             $this->checkArguments();
 
@@ -77,8 +81,10 @@ class UserController extends RestController implements ClassResourceInterface
             $user->setUsername($this->getRequest()->get('username'));
             $user->setSalt($this->generateSalt());
 
-            if($this->isValidPassword($this->getRequest()->get('password'))) {
-                $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+            if ($this->isValidPassword($this->getRequest()->get('password'))) {
+                $user->setPassword(
+                    $this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt())
+                );
             } else {
                 throw new InvalidArgumentException($this->entityName, 'password');
             }
@@ -91,6 +97,12 @@ class UserController extends RestController implements ClassResourceInterface
             if (!empty($userRoles)) {
                 foreach ($userRoles as $userRole) {
                     $this->addUserRole($user, $userRole);
+                }
+            }
+
+            if (!empty($userGroups)) {
+                foreach ($userGroups as $userGroup) {
+                    $this->addUserGroup($user, $userGroup);
                 }
             }
 
@@ -112,7 +124,8 @@ class UserController extends RestController implements ClassResourceInterface
      * @param $password The password to check
      * @return bool True if the password is valid, otherwise false
      */
-    private function isValidPassword($password) {
+    private function isValidPassword($password)
+    {
         return !empty($password);
     }
 
@@ -141,14 +154,16 @@ class UserController extends RestController implements ClassResourceInterface
             $user->setUsername($this->getRequest()->get('username'));
             $user->setSalt($this->generateSalt());
 
-            if($this->getRequest()->get('password') != "") {
-                $user->setPassword($this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt()));
+            if ($this->getRequest()->get('password') != '') {
+                $user->setPassword(
+                    $this->encodePassword($user, $this->getRequest()->get('password'), $user->getSalt())
+                );
             }
 
             $user->setLocale($this->getRequest()->get('locale'));
 
-            if (!$this->processUserRoles($user)) {
-                throw new RestException("Could not update dependencies!");
+            if (!$this->processUserRoles($user) || !$this->processUserGroups($user)) {
+                throw new RestException('Could not update dependencies!');
             }
 
             $em->persist($user);
@@ -191,8 +206,8 @@ class UserController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Process all emails from request
-     * @param User $user The contact on which is worked
+     * Process all user roles from request
+     * @param User $user The user on which is worked
      * @return bool True if the processing was successful, otherwise false
      */
     protected function processUserRoles(User $user)
@@ -216,22 +231,47 @@ class UserController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Process all user groups from request
+     * @param User $user The user on which is worked
+     * @return bool True if the processing was successful, otherwise false
+     */
+    protected function processUserGroups(User $user)
+    {
+        $userGroups = $this->getRequest()->get('userGroups');
+
+        $delete = function ($userGroup) use ($user) {
+            $user->removeUserGroup($userGroup);
+            $this->getDoctrine()->getManager()->remove($userGroup);
+        };
+
+        $update = function ($userGroup, $userGroupData) {
+            return $this->updateUserGroup($userGroup, $userGroupData);
+        };
+
+        $add = function ($userGroup) use ($user) {
+            return $this->addUserGroup($user, $userGroup);
+        };
+
+        return $this->processPut($user->getUserGroups(), $userGroups, $delete, $update, $add);
+    }
+
+    /**
      * Adds a new UserRole to the given user
      * @param User $user
      * @param $userRoleData
      * @return bool
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function addUserRole(User $user, $userRoleData)
+    private function addUserRole(User $user, $userRoleData)
     {
         $em = $this->getDoctrine()->getManager();
 
         $role = $this->getDoctrine()
-            ->getRepository($this->roleEntityName)
+            ->getRepository(self::ENTITY_NAME_ROLE)
             ->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException($this->roleEntityName, $userRoleData['role']['id']);
+            throw new EntityNotFoundException(self::ENTITY_NAME_ROLE, $userRoleData['role']['id']);
         }
 
         $userRole = new UserRole();
@@ -255,18 +295,75 @@ class UserController extends RestController implements ClassResourceInterface
     private function updateUserRole(UserRole $userRole, $userRoleData)
     {
         $role = $this->getDoctrine()
-            ->getRepository($this->roleEntityName)
+            ->getRepository(self::ENTITY_NAME_ROLE)
             ->findRoleById($userRoleData['role']['id']);
 
         if (!$role) {
-            throw new EntityNotFoundException($this->roleEntityName, $userRole['role']['id']);
+            throw new EntityNotFoundException(self::ENTITY_NAME_ROLE, $userRole['role']['id']);
         }
 
         $userRole->setRole($role);
-        if(array_key_exists('locales', $userRoleData)){
+        if (array_key_exists('locales', $userRoleData)) {
             $userRole->setLocale(json_encode($userRoleData['locales']));
         } else {
             $userRole->setLocale($userRoleData['locale']);
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds a new UserGroup to the given user
+     * @param User $user
+     * @param $userGroupData
+     * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    private function addUserGroup(User $user, $userGroupData)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $group = $this->getDoctrine()
+            ->getRepository(self::ENTITY_NAME_GROUP)
+            ->findGroupById($userGroupData['group']['id']);
+
+        if (!$group) {
+            throw new EntityNotFoundException(self::ENTITY_NAME_GROUP, $userGroupData['group']['id']);
+        }
+
+        $userGroup = new UserGroup();
+        $userGroup->setUser($user);
+        $userGroup->setGroup($group);
+        $userGroup->setLocale(json_encode($userGroupData['locales']));
+        $em->persist($userGroup);
+
+        $user->addUserGroup($userGroup);
+
+        return true;
+    }
+
+    /**
+     * Updates an existing UserGroup with the given data
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroup
+     * @param $userGroupData
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @return bool
+     */
+    private function updateUserGroup(UserGroup $userGroup, $userGroupData)
+    {
+        $group = $this->getDoctrine()
+            ->getRepository(self::ENTITY_NAME_GROUP)
+            ->findGroupById($userGroupData['group']['id']);
+
+        if (!$group) {
+            throw new EntityNotFoundException(self::ENTITY_NAME_GROUP, $userGroup['group']['id']);
+        }
+
+        $userGroup->setGroup($group);
+        if (array_key_exists('locales', $userGroupData)) {
+            $userGroup->setLocale(json_encode($userGroupData['locales']));
+        } else {
+            $userGroup->setLocale($userGroupData['locale']);
         }
 
         return true;
@@ -301,11 +398,12 @@ class UserController extends RestController implements ClassResourceInterface
      */
     private function isValidId($id)
     {
-        return  (is_int((int) $id) && $id > 0);
+        return (is_int((int)$id) && $id > 0);
     }
 
 
-     /* Returns the contact with the given id
+    /**
+     * Returns the contact with the given id
      * @param $id
      * @return Contact
      * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
@@ -313,11 +411,11 @@ class UserController extends RestController implements ClassResourceInterface
     private function getContact($id)
     {
         $contact = $this->getDoctrine()
-            ->getRepository($this->contactEntityName)
+            ->getRepository(self::ENTITY_NAME_CONTACT)
             ->findById($id);
 
         if (!$contact) {
-            throw new EntityNotFoundException($this->contactEntityName, $id);
+            throw new EntityNotFoundException(self::ENTITY_NAME_CONTACT, $id);
         }
 
         return $contact;
@@ -344,10 +442,7 @@ class UserController extends RestController implements ClassResourceInterface
         $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
-
     }
-
-
 
     /**
      * Returns a user with a specific contact id or all users
@@ -356,7 +451,7 @@ class UserController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        if ($this->getRequest()->get('flat')=='true') {
+        if ($this->getRequest()->get('flat') == 'true') {
             // flat structure
             $view = $this->responseList();
         } else {

@@ -10,9 +10,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Permission\Controller;
 
+use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Permission\PermissionVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -53,6 +55,26 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
         $userRole->setRole($role);
         $user->addUserRole($userRole);
 
+        $userGroup = new UserGroup();
+        $group = new Group();
+        $role = new Role();
+        $permission = new Permission();
+        $permission->setPermissions(122);
+        $permission->setContext('sulu.security.groups');
+        $role->addPermission($permission);
+        $group->addRole($role);
+        $userGroup->setGroup($group);
+
+        $nestedGroup = new Group();
+        $role = new Role();
+        $permission = new Permission();
+        $permission->setPermissions(122);
+        $permission->setContext('sulu.security.groups.nested');
+        $role->addPermission($permission);
+        $nestedGroup->addRole($role);
+        $group->addChildren($nestedGroup);
+        $user->addUserGroup($userGroup);
+
         $this->token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->token->expects($this->any())
             ->method('getUser')
@@ -63,24 +85,78 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testPositiveVote()
     {
-        $access = $this->voter->vote($this->token, null, (
+        $access = $this->voter->vote(
+            $this->token,
+            'sulu.security.roles',
             array(
-                'context' => 'sulu.security.roles',
                 'permission' => 'view'
             )
-        ));
+        );
 
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testNegativeVote()
     {
-        $access = $this->voter->vote($this->token, null, (
+        $access = $this->voter->vote(
+            $this->token,
+            'sulu.security.roles',
             array(
-                'context' => 'sulu.security.roles',
                 'permission' => 'security'
             )
-            ));
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+    }
+
+    public function testPositiveGroupVote()
+    {
+        $access = $this->voter->vote(
+            $this->token,
+            'sulu.security.groups',
+            array(
+                'permission' => 'view'
+            )
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+    }
+
+    public function testNegativeGroupVote()
+    {
+        $access = $this->voter->vote(
+            $this->token,
+            'sulu.security.groups',
+            array(
+                'permission' => 'security'
+            )
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+    }
+
+    public function testPositiveNestedGroupVote()
+    {
+        $access = $this->voter->vote(
+            $this->token,
+            'sulu.security.groups.nested',
+            array(
+                'permission' => 'view'
+            )
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+    }
+
+    public function testNegativeNestedGroupVote()
+    {
+        $access = $this->voter->vote(
+            $this->token,
+            'sulu.security.groups.nested',
+            array(
+                'permission' => 'security'
+            )
+        );
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
     }

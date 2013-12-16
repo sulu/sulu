@@ -16,6 +16,7 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+            new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),

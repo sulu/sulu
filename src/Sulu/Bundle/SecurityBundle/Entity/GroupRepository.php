@@ -19,26 +19,27 @@ use Doctrine\ORM\Query;
  * Repository for the User, implementing some additional functions
  * for querying objects
  */
-class RoleRepository extends EntityRepository
+class GroupRepository extends EntityRepository
 {
-
     /**
      * Searches for a role with a specific id
      * @param $id
      * @return role
      */
-    public function findRoleById($id)
+    public function findGroupById($id)
     {
         try {
 
-            $qb = $this->createQueryBuilder('role')
-                ->leftJoin('role.permissions', 'permissions')
-                ->addSelect('permissions')
-                ->where('role.id=:roleId');
+            $qb = $this->createQueryBuilder('grp')
+                ->leftJoin('grp.roles', 'roles')
+                ->leftJoin('grp.parent', 'parent')
+                ->addSelect('roles')
+                ->addSelect('parent')
+                ->where('grp.id=:groupId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-            $query->setParameter('roleId', $id);
+            $query->setParameter('groupId', $id);
 
             return $query->getSingleResult();
 
@@ -51,13 +52,11 @@ class RoleRepository extends EntityRepository
      * Searches for all roles
      * @return array
      */
-    public function findAllRoles()
+    public function findAllGroups()
     {
         try {
 
-            $qb = $this->createQueryBuilder('role')
-                ->leftJoin('role.permissions', 'permissions')
-                ->addSelect('permissions');
+            $qb = $this->createQueryBuilder('grp');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -70,5 +69,4 @@ class RoleRepository extends EntityRepository
             return null;
         }
     }
-
 }

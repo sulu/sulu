@@ -76,6 +76,11 @@ class Role extends ApiEntity
     private $userRoles;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $groups;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -294,5 +299,38 @@ class Role extends ApiEntity
     public function getUserRoles()
     {
         return $this->userRoles;
+    }
+
+    /**
+     * Add groups
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
+     * @return Role
+     */
+    public function addGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups)
+    {
+        $this->groups[] = $groups;
+
+        return $this;
+    }
+
+    /**
+     * Remove groups
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
+     */
+    public function removeGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups)
+    {
+        $this->groups->removeElement($groups);
+    }
+
+    /**
+     * Get groups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
     }
 }

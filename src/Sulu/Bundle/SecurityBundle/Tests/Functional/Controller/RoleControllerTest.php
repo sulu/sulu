@@ -90,6 +90,8 @@ class RolesControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
+            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
         );
 
         self::$tool->dropSchema(self::$entities);
