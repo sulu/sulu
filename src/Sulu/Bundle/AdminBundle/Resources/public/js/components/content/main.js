@@ -46,9 +46,21 @@ define([], function() {
 
             this.sandbox.start([
                 {
+                    name: 'page-functions@husky',
+                    options: {
+                        el: '#page-functions',
+                        data: {
+                            icon: 'chevron-left',
+                            callback: function() {
+                                console.log("go back to last page");
+                            }
+                        }
+                    }
+                },
+                {
                     name: 'edit-toolbar@suluadmin',
                     options: {
-                        el: '#edit-toolbar',
+                        el: '#toolbar',
                         pageFunction: {
                             icon: 'chevron-left',
                             callback: function() {
@@ -71,7 +83,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // skeleton
-            this.sandbox.dom.html(this.options.el, '<div id="edit-toolbar"></div><div class="content-tabs-content"><h1>' + this.options.heading + '</h1><div id="content-tabs" /><div id="content-tabs-component" /></div>');
+            this.sandbox.dom.html(this.options.el, '<div id="edit-toolbar"><div id="page-functions"></div><div id="toolbar"></div></div><div class="content-tabs-content"><h1>' + this.options.heading + '</h1><div id="content-tabs" /><div id="content-tabs-component" /></div>');
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
@@ -92,6 +104,11 @@ define([], function() {
             this.sandbox.on('husky.tabs.' + instanceName + 'initialized', this.startTabComponent.bind(this));
             // load component after click
             this.sandbox.on('husky.tabs.' + instanceName + 'item.select', this.startTabComponent.bind(this));
+
+            // back clicked
+            this.sandbox.on('husky.page-functions.clicked', function() {
+                this.sandbox.emit('sulu.edit-toolbar.back');
+            }.bind(this))
         },
 
         /**

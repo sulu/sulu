@@ -98,6 +98,11 @@ input, select {
   margin-top: 10px;
 }
 
+/* line 1, ../scss/modules/toolbar.scss */
+#toolbar .edit-toolbar-left {
+  margin-left: -50px;
+}
+
 /* line 1, ../scss/modules/login.scss */
 #login {
   position: absolute;
