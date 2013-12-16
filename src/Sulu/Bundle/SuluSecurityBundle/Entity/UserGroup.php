@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
@@ -32,7 +40,6 @@ class UserGroup extends ApiEntity
      */
     private $group;
 
-
     /**
      * Set locale
      *
@@ -42,14 +49,14 @@ class UserGroup extends ApiEntity
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -70,7 +77,7 @@ class UserGroup extends ApiEntity
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -86,14 +93,14 @@ class UserGroup extends ApiEntity
     public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user = null)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getUser()
     {
@@ -109,7 +116,7 @@ class UserGroup extends ApiEntity
     public function setGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $group = null)
     {
         $this->group = $group;
-    
+
         return $this;
     }
 

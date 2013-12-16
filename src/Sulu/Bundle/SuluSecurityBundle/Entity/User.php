@@ -324,7 +324,7 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function addUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
     {
         $this->userGroups[] = $userGroups;
-    
+
         return $this;
     }
 

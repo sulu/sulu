@@ -310,7 +310,7 @@ class Role extends ApiEntity
     public function addGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups)
     {
         $this->groups[] = $groups;
-    
+
         return $this;
     }
 
@@ -327,7 +327,7 @@ class Role extends ApiEntity
     /**
      * Get groups
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getGroups()
     {

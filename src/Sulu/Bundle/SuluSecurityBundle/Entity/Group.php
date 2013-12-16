@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
@@ -84,7 +92,7 @@ class Group extends ApiEntity
         $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set lft
      *
@@ -94,14 +102,14 @@ class Group extends ApiEntity
     public function setLft($lft)
     {
         $this->lft = $lft;
-    
+
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer 
+     * @return integer
      */
     public function getLft()
     {
@@ -117,14 +125,14 @@ class Group extends ApiEntity
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-    
+
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgt()
     {
@@ -140,14 +148,14 @@ class Group extends ApiEntity
     public function setDepth($depth)
     {
         $this->depth = $depth;
-    
+
         return $this;
     }
 
     /**
      * Get depth
      *
-     * @return integer 
+     * @return integer
      */
     public function getDepth()
     {
@@ -163,14 +171,14 @@ class Group extends ApiEntity
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -186,14 +194,14 @@ class Group extends ApiEntity
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -209,14 +217,14 @@ class Group extends ApiEntity
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -226,7 +234,7 @@ class Group extends ApiEntity
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -242,7 +250,7 @@ class Group extends ApiEntity
     public function addChildren(\Sulu\Bundle\SecurityBundle\Entity\Group $children)
     {
         $this->children[] = $children;
-    
+
         return $this;
     }
 
@@ -259,7 +267,7 @@ class Group extends ApiEntity
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
@@ -275,7 +283,7 @@ class Group extends ApiEntity
     public function addUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
     {
         $this->userGroups[] = $userGroups;
-    
+
         return $this;
     }
 
@@ -292,7 +300,7 @@ class Group extends ApiEntity
     /**
      * Get userGroups
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUserGroups()
     {
@@ -308,14 +316,14 @@ class Group extends ApiEntity
     public function setParent(\Sulu\Bundle\SecurityBundle\Entity\Group $parent = null)
     {
         $this->parent = $parent;
-    
+
         return $this;
     }
 
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Group 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\Group
      */
     public function getParent()
     {
@@ -331,7 +339,7 @@ class Group extends ApiEntity
     public function addRole(\Sulu\Bundle\SecurityBundle\Entity\Role $roles)
     {
         $this->roles[] = $roles;
-    
+
         return $this;
     }
 
@@ -348,7 +356,7 @@ class Group extends ApiEntity
     /**
      * Get roles
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRoles()
     {
@@ -364,14 +372,14 @@ class Group extends ApiEntity
     public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getChanger()
     {
@@ -387,14 +395,14 @@ class Group extends ApiEntity
     public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getCreator()
     {

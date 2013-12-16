@@ -8,7 +8,6 @@
 * with this source code in the file LICENSE.
 */
 
-
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
@@ -27,7 +26,8 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
 
-    public function findUserById($id){
+    public function findUserById($id)
+    {
         try {
 
             $qb = $this->createQueryBuilder('user')

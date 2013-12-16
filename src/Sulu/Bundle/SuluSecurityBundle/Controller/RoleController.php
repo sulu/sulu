@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
