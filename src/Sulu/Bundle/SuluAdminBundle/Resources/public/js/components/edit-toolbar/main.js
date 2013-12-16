@@ -67,9 +67,9 @@ define([], function() {
             default: function(saved, type) {
                 if (type === 'edit') {
                     if (!!saved) {
-                        this.sandbox.emit('husky.edittoolbar.item.disable', 'save-button');
+                        this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
                     } else {
-                        this.sandbox.emit('husky.edittoolbar.item.enable', 'save-button');
+                        this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
                     }
                 }
             }
