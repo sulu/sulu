@@ -27,11 +27,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResourcelocatorController extends Controller implements ClassResourceInterface
 {
-
     /**
      * return resource-locator for sub-node
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
-     * @return object|\Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction()
     {

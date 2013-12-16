@@ -63,7 +63,7 @@ define([], function() {
             this.sandbox.dom.css(url, 'background-position', '99%');
 
             this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
-                    this.sandbox.dom.removeClass(url, 'is-loading');
+                this.sandbox.dom.removeClass(url, 'is-loading');
                 this.sandbox.dom.val(url, rl);
             }.bind(this));
         },
