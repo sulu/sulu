@@ -32,6 +32,10 @@ class GroupRepository extends EntityRepository
         try {
 
             $qb = $this->createQueryBuilder('grp')
+                ->leftJoin('grp.roles', 'roles')
+                ->leftJoin('grp.parent', 'parent')
+                ->addSelect('roles')
+                ->addSelect('parent')
                 ->where('grp.id=:groupId');
 
             $query = $qb->getQuery();
