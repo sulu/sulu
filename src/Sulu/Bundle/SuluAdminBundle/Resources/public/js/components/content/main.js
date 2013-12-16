@@ -49,7 +49,6 @@ define([], function() {
                     name: 'edit-toolbar@suluadmin',
                     options: {
                         el: '#edit-toolbar',
-                        data: this.options.tabsData,
                         pageFunction: {
                             icon: 'chevron-left',
                             callback: function() {
@@ -62,8 +61,6 @@ define([], function() {
                 }
             ]);
         };
-
-
 
     return {
         view: true,
@@ -84,19 +81,17 @@ define([], function() {
 
             // initialize tabs
             initializeTabs.call(this);
-
-
         },
 
         /**
          * listens to tab events
          */
         bindCustomEvents: function() {
-            var instanceName = (this.options.instanceName && this.options.instanceName!=='') ? this.options.instanceName+'.' : '';
+            var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
-            this.sandbox.on('husky.tabs.'+instanceName+'initialized', this.startTabComponent.bind(this));
+            this.sandbox.on('husky.tabs.' + instanceName + 'initialized', this.startTabComponent.bind(this));
             // load component after click
-            this.sandbox.on('husky.tabs.'+instanceName+'item.select', this.startTabComponent.bind(this));
+            this.sandbox.on('husky.tabs.' + instanceName + 'item.select', this.startTabComponent.bind(this));
         },
 
         /**
