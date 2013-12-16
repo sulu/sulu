@@ -38,7 +38,9 @@ define({
         sandbox.mvc.routes.push({
             route: 'contacts/contacts/add',
             callback: function(){
-                this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="form"/>');
+                this.html(
+                    '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="details"/>'
+                );
             }
         });
 
