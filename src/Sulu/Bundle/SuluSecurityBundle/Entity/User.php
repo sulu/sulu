@@ -28,7 +28,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User extends ApiEntity implements UserInterface, Serializable
 {
-
     /**
      * @var string
      * @Expose
@@ -76,11 +75,17 @@ class User extends ApiEntity implements UserInterface, Serializable
     private $privateKey;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $userGroups;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -308,5 +313,38 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function unserialize($serialized)
     {
         list ($this->id) = unserialize($serialized);
+    }
+
+    /**
+     * Add userGroups
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     * @return User
+     */
+    public function addUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    {
+        $this->userGroups[] = $userGroups;
+
+        return $this;
+    }
+
+    /**
+     * Remove userGroups
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     */
+    public function removeUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    {
+        $this->userGroups->removeElement($userGroups);
+    }
+
+    /**
+     * Get userGroups
+     * @VirtualProperty
+     * @Type("array")
+     */
+    public function getUserGroups()
+    {
+        return array_values($this->userGroups->toArray());
     }
 }

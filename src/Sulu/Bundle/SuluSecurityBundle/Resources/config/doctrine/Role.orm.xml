@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Sulu\Bundle\SecurityBundle\Entity\Role" table="se_roles" repository-class="Sulu\Bundle\SecurityBundle\Entity\RoleRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -26,5 +25,7 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+
+        <many-to-many field="groups" target-entity="Sulu\Bundle\SecurityBundle\Entity\Group" mapped-by="roles"/>
     </entity>
 </doctrine-mapping>
