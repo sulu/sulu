@@ -71,5 +71,4 @@ class RoleRepository extends EntityRepository
         }
     }
 
-
 }

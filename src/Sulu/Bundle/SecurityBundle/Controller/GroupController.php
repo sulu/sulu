@@ -10,11 +10,9 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
@@ -27,7 +25,7 @@ class GroupController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluSecurityBundle:Group';
 
-    protected $roleEntityName = 'SuluSecurityBundle:Role';
+    const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
     /**
      * returns all groups
@@ -131,7 +129,7 @@ class GroupController extends RestController implements ClassResourceInterface
                 $group->setChanged(new \DateTime());
 
                 if (!$this->processRoles($group)) {
-                    throw new RestException("Could not update dependencies!");
+                    throw new RestException('Could not update dependencies!');
                 }
 
                 $em->flush();
@@ -201,16 +199,17 @@ class GroupController extends RestController implements ClassResourceInterface
      * @param Group $group
      * @param array $roleData
      * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function addRole(Group $group, $roleData)
     {
         $em = $this->getDoctrine()->getManager();
 
         if (isset($roleData['id'])) {
-            $role = $em->getRepository($this->roleEntityName)->findRoleById($roleData['id']);
+            $role = $em->getRepository(self::ENTITY_NAME_ROLE)->findRoleById($roleData['id']);
 
             if (!$role) {
-                throw new EntityNotFoundException($this->roleEntityName, $roleData['id']);
+                throw new EntityNotFoundException(self::ENTITY_NAME_ROLE, $roleData['id']);
             }
 
             $group->addRole($role);
