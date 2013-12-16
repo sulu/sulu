@@ -170,6 +170,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         // /products/mächines => after cleanup => /products/maechines
         $result = $this->strategy->generate('mächines', '/products', 'default');
         $this->assertEquals('/products/maechines', $result);
+
+        // /products/Äpfel => after cleanup => /products/aepfel
+        $result = $this->strategy->generate('Äpfel', '/products', 'default');
+        $this->assertEquals('/products/aepfel', $result);
     }
 
     /**

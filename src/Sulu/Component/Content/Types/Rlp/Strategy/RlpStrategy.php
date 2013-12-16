@@ -39,7 +39,11 @@ abstract class RlpStrategy implements RlpStrategyInterface
             '+' => '-',
             'ä' => 'ae',
             'ö' => 'oe',
-            'ü' => 'ue'
+            'ü' => 'ue',
+            // because strtolower ignores Ä,Ö,Ü
+            'Ä' => 'ae',
+            'Ö' => 'oe',
+            'Ü' => 'ue'
             // TODO should be filled
         ),
         'de' => array(
