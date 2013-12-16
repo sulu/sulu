@@ -50,6 +50,12 @@ define([], function() {
                     options: {
                         el: '#edit-toolbar',
                         data: this.options.tabsData,
+                        pageFunction: {
+                            icon: 'chevron-left',
+                            callback: function() {
+                                console.log("go back to last page");
+                            }
+                        },
                         instanceName: this.options.instanceName,
                         forceReload: false
                     }

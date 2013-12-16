@@ -92,6 +92,7 @@ define([], function() {
                     name: 'edit-toolbar@husky',
                     options: {
                         el: this.options.el,
+                        pageFunction: this.options.pageFunction,
                         data: this.options.template
                     }
                 }

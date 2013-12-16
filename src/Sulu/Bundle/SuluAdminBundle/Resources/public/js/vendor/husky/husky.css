@@ -3149,22 +3149,14 @@ h5 {
 }
 
 /* line 332, ../scss/modules/icons.scss */
-.icon-eye-open::after {
-  content: "\e052";
+.icon-floppy-save::after {
+  content: "\e447";
   display: inline-block;
 }
 
 /* line 339, ../scss/modules/icons.scss */
-.icon-floppy-save::after {
-  font-family: "Glyphicons Halflings Regular";
-  content: "\e175";
-  display: inline-block;
-}
-
-/* line 347, ../scss/modules/icons.scss */
-.icon-floppy-saved::after {
-  font-family: "Glyphicons Halflings Regular";
-  content: "\e173";
+.icon-eye-open::after {
+  content: "\e052";
   display: inline-block;
 }
 
@@ -4493,103 +4485,78 @@ a.btn-black {
 .toolbar-container {
   line-height: 1;
 }
-/* line 24, ../scss/modules/toolbar.scss */
-.toolbar-container .large button {
+/* line 23, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.large > button, .toolbar-container button.large {
   width: 50px;
   height: 40px;
   font-size: 18px;
+}
+/* line 29, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.large:not(:last-child), .toolbar-container button.large:not(:last-child) {
   margin-right: 20px;
 }
-/* line 34, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group.large:not(:last-child),
-.toolbar-container :not(.btn-group) .group.large:not(:last-child) {
-  margin-right: 20px;
-}
-/* line 41, ../scss/modules/toolbar.scss */
-.toolbar-container .medium button {
+/* line 35, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.medium > button, .toolbar-container button.medium {
   width: 40px;
   height: 30px;
   font-size: 14px;
+}
+/* line 41, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.medium:not(:last-child), .toolbar-container button.medium:not(:last-child) {
   margin-right: 10px;
 }
 /* line 47, ../scss/modules/toolbar.scss */
-.toolbar-container .medium button.dropdown-toggle:after {
-  top: -1px;
-}
-/* line 54, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group.medium:not(:last-child),
-.toolbar-container :not(.btn-group) .group.medium:not(:last-child) {
-  margin-right: 10px;
-}
-/* line 61, ../scss/modules/toolbar.scss */
-.toolbar-container .small button {
+.toolbar-container .btn-group.small > button, .toolbar-container button.small {
   width: 30px;
   height: 20px;
   font-size: 10px;
+}
+/* line 53, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group.small:not(:last-child), .toolbar-container button.small:not(:last-child) {
   margin-right: 5px;
 }
-/* line 68, ../scss/modules/toolbar.scss */
-.toolbar-container .small button.dropdown-toggle:after {
-  top: -1px;
-  margin-left: 3px;
-  border-left-width: 3px;
-  border-right-width: 3px;
-  border-top-width: 4px;
-}
-/* line 79, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group.small:not(:last-child),
-.toolbar-container :not(.btn-group) .group.small:not(:last-child) {
-  margin-right: 5px;
-}
-/* line 85, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group {
+/* line 58, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group, .toolbar-container .btn-group-vertical {
   position: relative;
   display: inline-block;
   vertical-align: middle;
   font-size: 0;
   margin-right: 20px;
 }
-/* line 95, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group > .group button {
+/* line 67, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button, .toolbar-container .btn-group-vertical > button {
   margin-right: 0;
 }
-/* line 100, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group > .group:not(:first-child):not(:last-child):not(.dropdown-toggle) button {
+/* line 72, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:not(:first-child):not(:last-child):not(.dropdown-toggle), .toolbar-container .btn-group-vertical > button:not(:first-child):not(:last-child):not(.dropdown-toggle) {
   margin: 0 0 0 -1px;
   border-radius: 0;
 }
-/* line 107, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group > .group:last-child button {
+/* line 78, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:last-child, .toolbar-container .btn-group-vertical > button:last-child {
   margin-left: -1px;
 }
-/* line 110, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group > .group:last-child:not(:first-child):not(.dropdown-toggle) button {
+/* line 81, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:last-child:not(:first-child):not(.dropdown-toggle), .toolbar-container .btn-group-vertical > button:last-child:not(:first-child):not(.dropdown-toggle) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-/* line 118, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group > .group:first-child button {
+/* line 88, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:first-child, .toolbar-container .btn-group-vertical > button:first-child {
   margin-left: 0;
 }
-/* line 121, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group > .group:first-child:not(:last-child):not(.dropdown-toggle) button {
+/* line 91, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group > button:first-child:not(:last-child):not(.dropdown-toggle), .toolbar-container .btn-group-vertical > button:first-child:not(:last-child):not(.dropdown-toggle) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-/* line 128, ../scss/modules/toolbar.scss */
-.toolbar-container .btn-group:not(:last-child) {
+/* line 98, ../scss/modules/toolbar.scss */
+.toolbar-container .btn-group:not(:last-child), .toolbar-container .btn-group-vertical:not(:last-child) {
   margin-right: 20px;
 }
-/* line 133, ../scss/modules/toolbar.scss */
-.toolbar-container .group {
-  display: inline-block;
-  font-size: 14px;
-}
-/* line 138, ../scss/modules/toolbar.scss */
+/* line 103, ../scss/modules/toolbar.scss */
 .toolbar-container button {
   cursor: pointer;
-  display: inline-block;
-  line-height: 1;
   width: 50px;
   height: 40px;
   font-size: 18px;
@@ -4606,116 +4573,42 @@ a.btn-black {
   -moz-user-select: none;
   user-select: none;
 }
-/* line 162, ../scss/modules/toolbar.scss */
+/* line 121, ../scss/modules/toolbar.scss */
 .toolbar-container button:disabled {
   color: #999999;
 }
-/* line 166, ../scss/modules/toolbar.scss */
+/* line 125, ../scss/modules/toolbar.scss */
 .toolbar-container button:hover:not(:disabled) {
   background-color: #dddddd;
 }
-/* line 169, ../scss/modules/toolbar.scss */
+/* line 128, ../scss/modules/toolbar.scss */
 .toolbar-container button:active:not(:disabled) {
   background-color: #cccccc;
 }
-/* line 173, ../scss/modules/toolbar.scss */
+/* line 132, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight {
   color: #FFF;
   background-color: #249fbe;
   border-color: #249fbe;
 }
-/* line 178, ../scss/modules/toolbar.scss */
+/* line 137, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:hover {
   background-color: #26aacb;
   border-color: #26aacb;
 }
-/* line 181, ../scss/modules/toolbar.scss */
+/* line 140, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:active {
   background-color: #28b1d3;
   border-color: #28b1d3;
 }
-/* line 185, ../scss/modules/toolbar.scss */
+/* line 144, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:disabled, .toolbar-container button.highlight:disabled:hover, .toolbar-container button.highlight:disabled:focus {
   background-color: #999999;
   border-color: #999999;
 }
-/* line 190, ../scss/modules/toolbar.scss */
-.toolbar-container button span {
-  vertical-align: middle;
-}
-/* line 196, ../scss/modules/toolbar.scss */
+/* line 152, ../scss/modules/toolbar.scss */
 .toolbar-container .toolbar-search {
   display: inline-block;
-}
-/* line 205, ../scss/modules/toolbar.scss */
-.toolbar-container .is-expanded ul.toolbar-dropdown-menu {
-  display: block;
-}
-/* line 211, ../scss/modules/toolbar.scss */
-.toolbar-container .medium ul.toolbar-dropdown-menu, .toolbar-container .small ul.toolbar-dropdown-menu {
-  font-size: 12px;
-}
-/* line 216, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu {
-  background-color: white;
-  border: 0px solid #cccccc;
-  display: none;
-  position: absolute;
-  top: 100%;
-  z-index: 1000;
-  float: left;
-  min-width: 160px;
-  list-style: none;
-  padding: 5px 0;
-  margin-top: 0px;
-  margin-left: 0px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 3px 3px 0px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.15) 3px 3px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0.15) 3px 3px 0px 0px;
-}
-/* line 234, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu.right-aligned {
-  left: auto;
-  right: 0;
-}
-/* line 239, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu li {
-  display: list-item;
-  float: none;
-  line-height: 1;
-  height: 30px;
-  line-height: 30px;
-  white-space: nowrap;
-  padding: 0 20px;
-}
-/* line 250, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu li a {
-  color: black;
-  text-decoration: none;
-}
-/* line 256, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu li.is-selected, .toolbar-container ul.toolbar-dropdown-menu li:hover {
-  background-color: #249fbe;
-}
-/* line 258, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu li.is-selected a, .toolbar-container ul.toolbar-dropdown-menu li:hover a {
-  color: white;
-}
-/* line 263, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu li:active {
-  background-color: #28b1d3;
-}
-/* line 267, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu li.divider {
-  height: 1px;
-  margin: 5px 0;
-  overflow: hidden;
-  background-color: #dddddd;
-}
-/* line 274, ../scss/modules/toolbar.scss */
-.toolbar-container ul.toolbar-dropdown-menu li a {
-  clear: both;
-  text-align: left;
 }
 
 /* line 17, ../scss/modules/dialog.scss */
