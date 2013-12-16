@@ -21,7 +21,6 @@ use Doctrine\ORM\Query;
  */
 class GroupRepository extends EntityRepository
 {
-
     /**
      * Searches for a role with a specific id
      * @param $id
