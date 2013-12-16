@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Component\Testing\DatabaseTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -38,6 +39,7 @@ class UserControllerTest extends DatabaseTestCase
     {
         $this->setUpSchema();
 
+        // Contact
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
@@ -78,7 +80,7 @@ class UserControllerTest extends DatabaseTestCase
         $role2->setCreated(new DateTime());
         self::$em->persist($role2);
 
-
+        // User 1
         $user = new User();
         $user->setUsername('admin');
         $user->setPassword('securepassword');
@@ -112,6 +114,25 @@ class UserControllerTest extends DatabaseTestCase
         $permission2->setRole($role2);
         $permission2->setContext("Context 2");
         self::$em->persist($permission2);
+
+        // user groups
+        $group1 = new Group();
+        $group1->setName('Group1');
+        $group1->setLft(0);
+        $group1->setRgt(0);
+        $group1->setDepth(0);
+        $group1->setCreated(new DateTime());
+        $group1->setChanged(new DateTime());
+        self::$em->persist($group1);
+
+        $group2 = new Group();
+        $group2->setName('Group2');
+        $group2->setLft(0);
+        $group2->setRgt(0);
+        $group2->setDepth(0);
+        $group2->setCreated(new DateTime());
+        $group2->setChanged(new DateTime());
+        self::$em->persist($group2);
 
         self::$em->flush();
     }
@@ -225,6 +246,20 @@ class UserControllerTest extends DatabaseTestCase
                         ),
                         'locales' => array('en')
                     ),
+                ),
+                'userGroups' => array(
+                    array(
+                        'group' => array(
+                            'id' => 1
+                        ),
+                        'locales' => array('de', 'en')
+                    ),
+                    array(
+                        'group' => array(
+                            'id' => 2
+                        ),
+                        'locales' => array('en')
+                    )
                 )
             )
         );
@@ -240,6 +275,11 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+        $this->assertEquals('Group1', $response->userGroups[0]->group->name);
+        $this->assertEquals('de', $response->userGroups[0]->locales[0]);
+        $this->assertEquals('en', $response->userGroups[0]->locales[1]);
+        $this->assertEquals('Group2', $response->userGroups[1]->group->name);
+        $this->assertEquals('en', $response->userGroups[1]->locales[0]);
 
         $client->request(
             'GET',
@@ -256,6 +296,11 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+        $this->assertEquals('Group1', $response->userGroups[0]->group->name);
+        $this->assertEquals('de', $response->userGroups[0]->locales[0]);
+        $this->assertEquals('en', $response->userGroups[0]->locales[1]);
+        $this->assertEquals('Group2', $response->userGroups[1]->group->name);
+        $this->assertEquals('en', $response->userGroups[1]->locales[0]);
     }
 
     public function testPostWithMissingArgument()
@@ -342,6 +387,20 @@ class UserControllerTest extends DatabaseTestCase
                         ),
                         'locales' => array('en')
                     ),
+                ),
+                'userGroups' => array(
+                    array(
+                        'group' => array(
+                            'id' => 1
+                        ),
+                        'locales' => array('de', 'en')
+                    ),
+                    array(
+                        'group' => array(
+                            'id' => 2
+                        ),
+                        'locales' => array('en')
+                    )
                 )
             )
         );
@@ -356,6 +415,11 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+        $this->assertEquals('Group1', $response->userGroups[0]->group->name);
+        $this->assertEquals('de', $response->userGroups[0]->locales[0]);
+        $this->assertEquals('en', $response->userGroups[0]->locales[1]);
+        $this->assertEquals('Group2', $response->userGroups[1]->group->name);
+        $this->assertEquals('en', $response->userGroups[1]->locales[0]);
 
         $client->request(
             'GET',
@@ -372,6 +436,11 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
+        $this->assertEquals('Group1', $response->userGroups[0]->group->name);
+        $this->assertEquals('de', $response->userGroups[0]->locales[0]);
+        $this->assertEquals('en', $response->userGroups[0]->locales[1]);
+        $this->assertEquals('Group2', $response->userGroups[1]->group->name);
+        $this->assertEquals('en', $response->userGroups[1]->locales[0]);
     }
 
     public function testPutWithMissingArgument()
