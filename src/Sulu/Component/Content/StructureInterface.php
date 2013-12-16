@@ -124,6 +124,16 @@ interface StructureInterface extends \JsonSerializable
     public function getProperties();
 
     /**
+     * @param boolean $hasChildren
+     */
+    public function setHasChildren($hasChildren);
+
+    /**
+     * @return boolean
+     */
+    public function getHasChildren();
+
+    /**
      * returns an array of property value pairs
      * @return array
      */

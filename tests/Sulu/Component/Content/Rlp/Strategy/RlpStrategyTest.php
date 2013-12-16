@@ -43,7 +43,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array('unique', 'getUniquePath', 'save', 'move', 'loadByContent', 'loadByResourceLocator'),
+            array('unique', 'getUniquePath', 'save', 'move', 'loadByContent', 'loadByContentUuid', 'loadByResourceLocator'),
             array('test-mapper'),
             'TestMapper'
         );
@@ -61,6 +61,9 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnCallback(array($this, 'moveCallback')));
         $this->mapper->expects($this->any())
             ->method('loadByContent')
+            ->will($this->returnValue('/test'));
+        $this->mapper->expects($this->any())
+            ->method('loadByContentUuid')
             ->will($this->returnValue('/test'));
         $this->mapper->expects($this->any())
             ->method('loadByResourceLocator')
@@ -167,6 +170,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         // /products/mächines => after cleanup => /products/maechines
         $result = $this->strategy->generate('mächines', '/products', 'default');
         $this->assertEquals('/products/maechines', $result);
+
+        // /products/Äpfel => after cleanup => /products/aepfel
+        $result = $this->strategy->generate('Äpfel', '/products', 'default');
+        $this->assertEquals('/products/aepfel', $result);
     }
 
     /**
@@ -190,6 +197,8 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         // its a delegate
         $result = $this->mapper->loadByContent($this->getNodeMock(), 'default');
+        $this->assertEquals('/test', $result);
+        $result = $this->mapper->loadByContentUuid('123-123-123', 'default');
         $this->assertEquals('/test', $result);
     }
 

@@ -46,6 +46,17 @@ interface RlpMapperInterface
     public function loadByContent(NodeInterface $contentNode, $portalKey);
 
     /**
+     * returns path for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $portalKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     *
+     * @return string path
+     */
+    public function loadByContentUuid($uuid, $portalKey);
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $portalKey key of portal

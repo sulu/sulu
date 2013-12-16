@@ -39,7 +39,11 @@ abstract class RlpStrategy implements RlpStrategyInterface
             '+' => '-',
             'ä' => 'ae',
             'ö' => 'oe',
-            'ü' => 'ue'
+            'ü' => 'ue',
+            // because strtolower ignores Ä,Ö,Ü
+            'Ä' => 'ae',
+            'Ö' => 'oe',
+            'Ü' => 'ue'
             // TODO should be filled
         ),
         'de' => array(
@@ -139,6 +143,9 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $clean = preg_replace('/^([-])/', '', $clean);
         $clean = preg_replace('/([-])$/', '', $clean);
 
+        // remove double slashes
+        $clean = str_replace('//', '/', $clean);
+
         return $clean;
     }
 
@@ -183,6 +190,19 @@ abstract class RlpStrategy implements RlpStrategyInterface
     {
         // delegate to mapper
         return $this->mapper->loadByContent($contentNode, $portalKey);
+    }
+
+    /**
+     * returns path for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $portalKey key of portal
+     *
+     * @return string path
+     */
+    public function loadByContentUuid($uuid, $portalKey)
+    {
+        // delegate to mapper
+        return $this->mapper->loadByContentUuid($uuid, $portalKey);
     }
 
     /**
