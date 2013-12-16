@@ -145,7 +145,7 @@ define([], function() {
                 }, this);
 
                 // back to list
-                this.sandbox.on('husky.edit-toolbar.back', function() {
+                this.sandbox.on('sulu.edit-toolbar.back', function() {
                     this.sandbox.emit('sulu.contacts.contacts.list');
                 }, this);
             },
