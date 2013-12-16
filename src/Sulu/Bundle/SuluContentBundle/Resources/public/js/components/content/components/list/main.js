@@ -48,7 +48,7 @@ define(function() {
                 name: 'datagrid@husky',
                 options: {
                     el: this.sandbox.dom.find('#content-list', this.$el),
-                    url: '/admin/api/contents',
+                    url: '/admin/api/nodes?depth=1',
                     pagination: false,
                     selectItem: {
                         type: 'checkbox'
@@ -56,12 +56,11 @@ define(function() {
                     removeRow: false,
                     tableHead: [
 
-                        {content: this.sandbox.translate('content.contents.changer')},
-                        {content: this.sandbox.translate('contact.contents.changed')},
-                        {content: this.sandbox.translate('contact.contents.title')}
+                        {content: this.sandbox.translate('content.contents.changer'), attribute: 'changer'},
+                        {content: this.sandbox.translate('contact.contents.changed'), attribute: 'changed'},
+                        {content: this.sandbox.translate('contact.contents.title'), attribute: 'title'}
 
-                    ],
-                    excludeFields: ['id', 'article', 'created','creator', 'tags', 'url' ]
+                    ]
                 }
             }]);
 

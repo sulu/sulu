@@ -26,7 +26,6 @@ define({
 
         app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
-
         // list all contacts
         sandbox.mvc.routes.push({
             route: 'content/contents',
@@ -37,8 +36,16 @@ define({
 
         // show form for new content
         sandbox.mvc.routes.push({
+            route: 'content/contents/add::id',
+            callback: function(id) {
+                this.html('<div data-aura-component="content@sulucontent" data-aura-display="form" data-aura-parent="' + id + '"/>');
+            }
+        });
+
+        // show form for new content
+        sandbox.mvc.routes.push({
             route: 'content/contents/add',
-            callback: function() {
+            callback: function(id) {
                 this.html('<div data-aura-component="content@sulucontent" data-aura-display="form"/>');
             }
         });

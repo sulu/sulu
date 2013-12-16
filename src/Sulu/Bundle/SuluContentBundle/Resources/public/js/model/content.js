@@ -14,10 +14,10 @@ define([
     'use strict';
 
     return new RelationalModel({
-        urlRoot: '/admin/api/contents',
+        urlRoot: '/admin/api/nodes',
 
-        saveTemplate: function(attributes, template, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?template=' + template});
+        saveTemplate: function(attributes, template, parent, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?template=' + template + (!!parent ? '& parent=' + parent : '')});
 
             return this.save.call(this, attributes, options);
         },

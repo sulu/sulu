@@ -19,20 +19,19 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\RestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ContentController extends RestController implements ClassResourceInterface
+class NodeController extends RestController implements ClassResourceInterface
 {
     /**
      * for returning self link in get action
      * @var string
      */
-    private $apiPath = '/admin/api/contents';
+    private $apiPath = '/admin/api/nodes';
 
     /**
      * returns a content item with given UUID as JSON String
      * @param $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function getAction($uuid)
     {
         $view = $this->responseGetById(
@@ -59,31 +58,62 @@ class ContentController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        // TODO uuid of parent?
+        // TODO pagination
         $result = array();
-        $basePath = $this->getBasePath();
 
-        // FIXME make it better
-        $session = $this->getSession();
-        $contents = $session->getNode($basePath);
+        $parentUuid = $this->getRequest()->get('parent');
+        $depth = $this->getRequest()->get('depth');
 
-        /** @var NodeInterface $node */
-        foreach ($contents as $node) {
-            // TODO portal
-            $tmp = $this->getMapper()->load($node->getIdentifier(), 'default', 'en')->toArray();
-            $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
-            $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
-            $result[] = $tmp;
+        // TODO handle different depths
+        if ($depth == 1) {
+            // TODO language, portal
+            $structures = $this->getMapper()->loadByParent($parentUuid, 'default', 'de');
+            foreach ($structures as $structure) {
+                $tmp = $structure->toArray();
+                $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
+                $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
+
+                // TODO published, linked, type
+                $tmp['published'] = true;
+                $tmp['linked'] = false;
+                $tmp['type'] = 'none';
+
+                // hal spec
+                $tmp['_links'] = array(
+                    'self' => $this->apiPath . '/' . $tmp['id'],
+                    'children' => $this->apiPath . '?parent=' . $tmp['id'] . '&depth=' . $depth
+                );
+                $tmp['_embedded'] = array();
+
+                $result[] = $tmp;
+            }
         }
 
-        return $this->handleView(
-            $this->view(
+        if ($parentUuid !== null) {
+            $parent = $this->getMapper()->load($parentUuid, 'default', 'de')->toArray();
+            $result = array_merge(
+                $parent,
                 array(
-                    '_links' => array('self' => $this->getRequest()->getUri()),
+                    '_links' => array(
+                        'self' => $this->apiPath . '/' . $parent['id'],
+                        'children' => $this->apiPath . '?parent=' . $parent['id'] . '&depth=' . $depth
+                    ),
                     '_embedded' => $result,
                     'total' => sizeof($result),
                 )
-            )
+            );
+        } else {
+            $result = array(
+                '_links' => array(
+                    'children' => $this->apiPath . '?depth=' . $depth
+                ),
+                '_embedded' => $result,
+                'total' => sizeof($result)
+            );
+        }
+
+        return $this->handleView(
+            $this->view($result)
         );
     }
 
@@ -112,7 +142,7 @@ class ContentController extends RestController implements ClassResourceInterface
                 array(
                     '_links' => array('self' => $this->getRequest()->getUri()),
                     '_embedded' => array($result),
-                    'total' => 0,
+                    'total' => 1,
                 )
             )
         );
@@ -141,21 +171,34 @@ class ContentController extends RestController implements ClassResourceInterface
     {
         // TODO language
         $templateKey = $this->getRequest()->get('template');
+        $parentUuid = $this->getRequest()->get('parent');
+
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
+
         // TODO portal
         $structure = $this->getMapper()->save(
             $this->getRequest()->request->all(),
             $templateKey,
             'default',
             'en',
-            $userId
+            $userId,
+            true,
+            null,
+            $parentUuid
         );
         $result = $structure->toArray();
         $result['creator'] = $this->getContactByUserId($result['creator']);
         $result['changer'] = $this->getContactByUserId($result['changer']);
-        $view = $this->view($result, 200);
 
-        return $this->handleView($view);
+        return $this->handleView(
+            $this->view(
+                array(
+                    '_links' => array('self' => $this->getRequest()->getUri()),
+                    '_embedded' => array($result),
+                    'total' => 1,
+                )
+            )
+        );
     }
 
     /**
