@@ -28,7 +28,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User extends ApiEntity implements UserInterface, Serializable
 {
-
     /**
      * @var string
      * @Expose

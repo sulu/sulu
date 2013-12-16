@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
-    <entity name="Sulu\Bundle\SecurityBundle\Entity\Group" table="se_groups">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\Group" table="se_groups" repository-class="Sulu\Bundle\SecurityBundle\Entity\GroupRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
