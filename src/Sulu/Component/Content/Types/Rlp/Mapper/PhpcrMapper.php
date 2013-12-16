@@ -60,7 +60,7 @@ class PhpcrMapper extends RlpMapper
         $routes = $this->getRoutes($session);
 
         // check if route already exists
-        if ($this->checkResourceLocatorExist($routes, $path, $contentNode)) {
+        if ($this->checkResourceLocator($routes, $path, $contentNode)) {
             return;
         }
 
@@ -241,13 +241,14 @@ class PhpcrMapper extends RlpMapper
 
             throw new ResourceLocatorMovedException(
                 $this->getResourceLocator($realPath->getPath()),
-                $realPath->getIdentifier());
+                $realPath->getIdentifier()
+            );
         }
 
         $contentNode = $routeNode->getPropertyValue('sulu:content');
 
         // check if route already exists
-        if ($this->checkResourceLocatorExist($routes, $dest, $contentNode)) {
+        if ($this->checkResourceLocator($routes, $dest, $contentNode)) {
             return;
         }
 
@@ -317,7 +318,7 @@ class PhpcrMapper extends RlpMapper
         }
     }
 
-    private function checkResourceLocatorExist(NodeInterface $routes, $resourceLocator, $contentNode)
+    private function checkResourceLocator(NodeInterface $routes, $resourceLocator, $contentNode)
     {
         if (!$this->isUnique($routes, $resourceLocator)) {
             $routeNode = $routes->getNode(ltrim($resourceLocator, '/'));

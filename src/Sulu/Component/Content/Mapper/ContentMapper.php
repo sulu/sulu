@@ -62,7 +62,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $partialUpdate = true,
         $uuid = null,
         $parentUuid = null
-    ) {
+    )
+    {
         // TODO localize
         // TODO portal
         $structure = $this->getStructure($templateKey);
@@ -159,7 +160,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * returns a list of data from children of given node
      * @param $uuid
      * @param $portalKey
-     * @param $languageCode@
+     * @param $languageCode
      *
      * @return StructureInterface[]
      */
@@ -168,7 +169,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // TODO portal
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
-        }else{
+        } else {
             $root = $this->getSession()->getNode($this->getContentBasePath());
         }
         $result = array();

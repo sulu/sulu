@@ -151,7 +151,6 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @param string $path path to generate
      * @param string $portalKey key of portal
      *
-     * @return \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException≈
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
     public function save(NodeInterface $contentNode, $path, $portalKey)

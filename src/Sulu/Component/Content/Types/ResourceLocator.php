@@ -26,6 +26,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * @var RlpStrategyInterface
      */
     private $strategy;
+
     /**
      * template for form generation
      * @var string
