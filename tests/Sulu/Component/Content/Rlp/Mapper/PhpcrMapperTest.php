@@ -190,12 +190,27 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->loadByContent($this->content1, 'default');
     }
 
+    public function testReadFailureUuid()
+    {
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
+        $this->mapper->loadByContentUuid($this->content1->getIdentifier(), 'default');
+    }
+
     public function testRead()
     {
         $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
         $this->sessionService->getSession()->save();
 
         $result = $this->mapper->loadByContent($this->content1, 'default');
+        $this->assertEquals('/products/news/content1-news', $result);
+    }
+
+    public function testReadUuid()
+    {
+        $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
+        $this->sessionService->getSession()->save();
+
+        $result = $this->mapper->loadByContentUuid($this->content1->getIdentifier(), 'default');
         $this->assertEquals('/products/news/content1-news', $result);
     }
 

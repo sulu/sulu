@@ -48,20 +48,34 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param string $parentUuid uuid of parent node
      * @param string $uuid uuid of node if exists
-     *
-     * @throws \PHPCR\ItemExistsException if new title already exists
      *
      * @return StructureInterface
      */
-    public function save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate = true, $uuid = null)
+    public function save(
+        $data,
+        $templateKey,
+        $portalKey,
+        $languageCode,
+        $userId,
+        $partialUpdate = true,
+        $uuid = null,
+        $parentUuid = null
+    )
     {
         // TODO localize
+        // TODO portal
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
-        $root = $session->getRootNode();
-        //TODO check better way to generate title, tree?
-        $path = ltrim($this->getContentBasePath(), '/') . '/' . $data['title'];
+
+        if ($parentUuid !== null) {
+            $root = $session->getNodeByIdentifier($parentUuid);
+        } else {
+            $root = $session->getNode($this->getContentBasePath());
+        }
+
+        $path = $data['title'];
 
         $dateTime = new \DateTime();
 
@@ -80,7 +94,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 // FIXME refresh session here
             }
         }
-        // TODO check change template?
         $node->setProperty('sulu:template', $templateKey);
 
         $node->setProperty('sulu:changer', $userId);
@@ -144,6 +157,31 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
+     * returns a list of data from children of given node
+     * @param $uuid
+     * @param $portalKey
+     * @param $languageCode
+     *
+     * @return StructureInterface[]
+     */
+    public function loadByParent($uuid, $portalKey, $languageCode)
+    {
+        // TODO portal
+        if ($uuid != null) {
+            $root = $this->getSession()->getNodeByIdentifier($uuid);
+        } else {
+            $root = $this->getSession()->getNode($this->getContentBasePath());
+        }
+        $result = array();
+
+        foreach ($root->getNodes() as $node) {
+            $result[] = $this->loadByNode($node, $languageCode);
+        }
+
+        return $result;
+    }
+
+    /**
      * returns the data from the given id
      * @param string $uuid UUID of the content
      * @param string $portalKey Key of portal
@@ -194,6 +232,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
         $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
+        $structure->setHasChildren($contentNode->hasNodes());
 
         // go through every property in the template
         /** @var PropertyInterface $property */

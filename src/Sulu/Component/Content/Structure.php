@@ -50,6 +50,12 @@ abstract class Structure implements StructureInterface
     private $properties = array();
 
     /**
+     * has structure sub structures
+     * @var bool
+     */
+    private $hasChildren = false;
+
+    /**
      * uuid of node in CR
      * @var string
      */
@@ -223,11 +229,11 @@ abstract class Structure implements StructureInterface
 
     /**
      * sets changed datetime
-     * @param DateTime $modified
+     * @param \DateTime $changed
      */
     public function setChanged(DateTime $changed)
     {
-        return $this->changed = $changed;
+        $this->changed = $changed;
     }
 
     /**
@@ -253,6 +259,22 @@ abstract class Structure implements StructureInterface
     public function hasProperty($name)
     {
         return isset($this->properties[$name]);
+    }
+
+    /**
+     * @param boolean $hasChildren
+     */
+    public function setHasChildren($hasChildren)
+    {
+        $this->hasChildren = $hasChildren;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasChildren()
+    {
+        return $this->hasChildren;
     }
 
     /**
@@ -331,6 +353,7 @@ abstract class Structure implements StructureInterface
     {
         $result = array(
             'id' => $this->uuid,
+            'hasSub' => $this->hasChildren,
             'creator' => $this->creator,
             'changer' => $this->changer,
             'created' => $this->created,

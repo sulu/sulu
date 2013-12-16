@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Types;
 
 
+use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 interface ResourceLocatorInterface extends ContentTypeInterface
@@ -22,4 +23,18 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @return string
      */
     public function loadContentNodeUuid($resourceLocator);
+
+    /**
+     * reads the value for given property out of the database + sets the value of the property
+     * @param NodeInterface $node
+     * @return string
+     */
+    public function getResourceLocator(NodeInterface $node);
+
+    /**
+     * reads the value for given property out of the database + sets the value of the property
+     * @param string $uuid
+     * @return string
+     */
+    public function getResourceLocatorByUuid($uuid);
 }
