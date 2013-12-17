@@ -18,7 +18,7 @@ define([], function() {
         templates: ['/admin/content/template/form/overview'],
 
         initialize: function() {
-            this.currentType = this.currentState = '';
+            this.saved = true;
 
             this.formId = '#content-form';
             this.render();
@@ -108,8 +108,11 @@ define([], function() {
 
         // @var Bool saved - defines if saved state should be shown
         setHeaderBar: function(saved) {
-            var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-            this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+            if (saved !== this.saved) {
+                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+            }
+            this.saved = saved;
         },
 
 
