@@ -23,8 +23,10 @@ class SuluContentContentNavigation extends ContentNavigation
         $this->setName('Content');
 
         $details = new NavigationItem('Details');
-        $details->setContentType('content');
         $details->setAction('details');
+        $details->setContentType('content');
+        $details->setContentComponent('content@sulucontent');
+        $details->setContentComponentOptions(array('display'=>'form'));
 
         $this->addNavigationItem($details);
     }

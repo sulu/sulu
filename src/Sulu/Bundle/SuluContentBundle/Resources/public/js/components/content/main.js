@@ -175,9 +175,6 @@ define([
         },
 
         renderForm: function() {
-
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id);
-
             // load data and show form
             this.content = new Content();
             if (!!this.options.id) {
