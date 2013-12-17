@@ -17,8 +17,6 @@ define([], function() {
             emailItem,
             phoneItem,
             addressItem,
-            currentType,
-            currentState,
             addressCounter;
 
         return {
