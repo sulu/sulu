@@ -10,7 +10,7 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\Testing\DatabaseTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
-class NodeControllerTest extends DatabaseTestCase
+class ResourceLocatorControllerTest extends DatabaseTestCase
 {
     /**
      * @var Client
