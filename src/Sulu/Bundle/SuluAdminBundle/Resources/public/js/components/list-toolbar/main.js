@@ -81,8 +81,6 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, this.options, defaults);
 
-            var template;
-
             // load template:
             if (typeof this.options.template === 'string') {
                 try {
@@ -108,10 +106,8 @@ define([], function() {
                 }
             ]);
 
-
             // bind events (also initializes first component)
             this.bindCustomEvents();
-
         },
 
         /**
@@ -120,6 +116,5 @@ define([], function() {
         bindCustomEvents: function() {
 
         }
-
     };
 });

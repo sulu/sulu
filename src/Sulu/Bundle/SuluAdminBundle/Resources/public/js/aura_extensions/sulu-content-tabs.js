@@ -27,7 +27,7 @@ define([], function() {
                         }.bind(this));
                     }.bind(this));
             }
-        }),
+        });
 
         app.sandbox.sulu = {
             tabs: {
@@ -94,7 +94,7 @@ define([], function() {
                     if (actionString.substr(0, 1) === '/') {
                         return actionString.substr(1, actionString.length);
                     }
-                    // TODO: FIXIT: ugly removal
+                    // FIXME: ugly removal
                     if (id) {
                         var strSearch = 'edit:' + id;
                         url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
@@ -102,7 +102,6 @@ define([], function() {
                     return  url + '/' + actionString;
                 }
             }
-        }
+        };
     };
-
 });

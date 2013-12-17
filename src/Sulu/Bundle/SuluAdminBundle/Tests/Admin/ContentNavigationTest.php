@@ -47,7 +47,7 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
         );
 
         $details = new NavigationItem('Details');
-//        $details->setContentType('contact');
+        $details->setContentType('contact');
         $details->setAction('details');
         $this->contentNavigation1->addNavigationItem($details);
 
@@ -61,6 +61,7 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
             array('getNavigationItems')
         );
         $permissions = new NavigationItem('Permissions');
+        $permissions->setContentType('contact');
         $permissions->setAction('permissions');
         $this->contentNavigation2
             ->expects($this->any())
@@ -78,8 +79,10 @@ class ContentNavigationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Details', $result['items'][0]['title']);
         $this->assertEquals('details', $result['items'][0]['action']);
+        $this->assertEquals('contact', $result['items'][0]['contentType']);
 
         $this->assertEquals('Permissions', $result['items'][1]['title']);
         $this->assertEquals('permissions', $result['items'][1]['action']);
+        $this->assertEquals('contact', $result['items'][1]['contentType']);
     }
 }
