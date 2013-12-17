@@ -23,6 +23,8 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
+            } else if (this.options.display === 'column') {
+                this.renderColumn();
             } else {
                 throw 'display type wrong';
             }
@@ -35,7 +37,7 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, parent) {
+            this.sandbox.on('sulu.content.contents.save', function(data) {
                 this.save(data);
             }, this);
 
@@ -45,8 +47,8 @@ define([
             }, this);
 
             // add new contact
-            this.sandbox.on('sulu.content.contents.new', function() {
-                this.add();
+            this.sandbox.on('sulu.content.contents.new', function(parent) {
+                this.add(parent);
             }, this);
 
             // delete selected contacts
@@ -60,7 +62,7 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.content.contents.list', function(ids) {
+            this.sandbox.on('sulu.content.contents.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
             }, this);
         },
@@ -104,9 +106,12 @@ define([
             this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + id + '/details');
         },
 
-        add: function() {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/add');
+        add: function(parent) {
+            if (!!parent) {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/add:' + parent.id + '/details');
+            } else {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/add/details');
+            }
         },
 
         delContents: function(ids) {
@@ -176,6 +181,12 @@ define([
         renderList: function() {
             this.sandbox.start([
                 {name: 'content/components/list@sulucontent', options: { el: this.$el}}
+            ]);
+        },
+
+        renderColumn: function() {
+            this.sandbox.start([
+                {name: 'content/components/column@sulucontent', options: { el: this.$el}}
             ]);
         },
 
