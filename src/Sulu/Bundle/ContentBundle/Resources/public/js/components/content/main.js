@@ -35,7 +35,7 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
+            this.sandbox.on('sulu.content.contents.save', function(data, parent) {
                 this.save(data);
             }, this);
 
@@ -53,26 +53,44 @@ define([
             this.sandbox.on('sulu.content.contents.delete', function(ids) {
                 this.delContents(ids);
             }, this);
+
+            // get resource locator
+            this.sandbox.on('sulu.content.contents.getRL', function(title, callback) {
+                this.getResourceLocator(title, callback);
+            }, this);
+
+            // load list view
+            this.sandbox.on('sulu.content.contents.list', function(ids) {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+            }, this);
+        },
+
+        getResourceLocator: function(title, callback) {
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&portal=default';
+            // TODO portal
+            this.sandbox.util.load(url)
+                .then(function(data) {
+                    callback(data.resourceLocator);
+                });
         },
 
         del: function() {
-           // TODO Delete
+            // TODO Delete
         },
 
         save: function(data) {
-            // TODO save
             this.sandbox.emit('husky.header.button-state', 'loading-save-button');
             this.content.set(data);
 
             // TODO select template
-            this.content.saveTemplate(null, 'overview', {
+            this.content.saveTemplate(null, 'overview', this.options.parent, {
                 // on success save contacts id
                 success: function(response) {
                     var model = response.toJSON();
-                    if (!!data.id) {
-                        this.sandbox.emit('sulu.content.content.saved', model.id);
+                    if (!!this.options.id) {
+                        this.sandbox.emit('sulu.content.contents.saved', model._embedded[0].id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model._embedded[0].id + '/details');
                     }
                 }.bind(this),
                 error: function() {
@@ -94,7 +112,7 @@ define([
         delContents: function(ids) {
 
             if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show','No contents selected for deletion!');
+                this.sandbox.emit('sulu.dialog.error.show', 'No contents selected for deletion!');
                 return;
             }
 
@@ -107,8 +125,8 @@ define([
                             success: function() {
                                 this.sandbox.emit('husky.datagrid.row.remove', id);
                             }.bind(this),
-                            error: function(){
-                               // TODO error message
+                            error: function() {
+                                // TODO error message
                             }
                         });
                     }.bind(this));
@@ -162,9 +180,6 @@ define([
         },
 
         renderForm: function() {
-
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation,this.options.id);
-
             // load data and show form
             this.content = new Content();
             if (!!this.options.id) {
