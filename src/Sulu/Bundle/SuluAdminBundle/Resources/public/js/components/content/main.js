@@ -36,7 +36,8 @@ define([], function() {
                         el: '#content-tabs',
                         data: this.options.tabsData,
                         instanceName: this.options.instanceName,
-                        forceReload: false
+                        forceReload: false,
+                        forceSelect: true
                     }
                 }
             ]);
@@ -100,12 +101,16 @@ define([], function() {
          */
         startTabComponent: function(item) {
 
+            if (!item) {
+                item = this.options.tabsData.items[0];
+            }
+
             if (!item.forceReload && item.action === this.action) {
                 this.sandbox.logger.log("page already loaded; no reload required!");
                 return;
             }
 
-            this.sandbox.dom.html('#content-tabs-component', '<img src="/bundles/suluadmin/img/loader.gif" />');
+            this.sandbox.dom.html('#content-tabs-component', '<span class="is-loading" />');
 
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
@@ -117,7 +122,9 @@ define([], function() {
                     {name: item.contentComponent, options: options}
                 ]);
             }
-            this.action = item.action;
+            if (!!item) {
+                this.action = item.action;
+            }
         }
     };
 });
