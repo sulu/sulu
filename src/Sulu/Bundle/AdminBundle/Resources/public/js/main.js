@@ -41,7 +41,7 @@ require(['husky'], function(Husky) {
         }.bind(this));
 
         app.use('aura_extensions/backbone-relational');
-        app.use('aura_extensions/sulu-navigation');
+        app.use('aura_extensions/sulu-content-tabs');
 
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 
