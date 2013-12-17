@@ -49,4 +49,4 @@ sulu_core:
         ~
 
 parameters:
-    sulu_admin_name: Sulu
+    sulu_admin.name: Sulu
