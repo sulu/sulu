@@ -36,10 +36,10 @@ define({
 
         // show form for new contacts
         sandbox.mvc.routes.push({
-            route: 'contacts/contacts/add/:content',
+            route: 'contacts/contacts/add',
             callback: function(content){
                 this.html(
-                    '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form"/>'
+                    '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form" />'
                 );
             }
         });
@@ -74,7 +74,7 @@ define({
 
         //show for a new account
         sandbox.mvc.routes.push({
-            route: 'contacts/accounts/add/details',
+            route: 'contacts/accounts/add',
             callback: function(){
                 this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="form"/>');
             }
@@ -82,22 +82,13 @@ define({
 
         //show for for editing an account
         sandbox.mvc.routes.push({
-            route: 'contacts/accounts/edit::id',
-            callback: function(id){
+            route: 'contacts/accounts/edit::id/:content',
+            callback: function(id, content){
                 this.html(
-                    '<div data-aura-component="accounts@sulucontact" data-aura-display="form" data-aura-id="' +id + '"/>'
+                    '<div data-aura-component="accounts/components/content@sulucontact" data-aura-content="'+content+'" data-aura-id="' +id + '"/>'
                 );
             }
         });
 
-        //show for for editing an account
-        sandbox.mvc.routes.push({
-            route: 'contacts/accounts/edit::id/details',
-            callback: function(id){
-                this.html(
-                    '<div data-aura-component="accounts@sulucontact" data-aura-display="form" data-aura-id="' +id + '"/>'
-                );
-            }
-        });
     }
 });
