@@ -6,6 +6,7 @@ parameters:
 services:
     sulu_content.admin:
         class: %sulu_content.admin.class%
+        arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
     sulu_content.admin.content_navigation:
