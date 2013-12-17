@@ -56,7 +56,7 @@ define([], function() {
                         name: 'auto-complete@husky',
                         options: {
                             el: '#company',
-                            url: '/admin/api/contact/accounts/list?searchFields=id,name',
+                            url: '/admin/api/accounts?searchFields=id,name',
                             value: !!data.parent ? data.parent : null,
                             excludeItems: excludeItem,
                             instanceName: 'companyInput'
