@@ -17,9 +17,9 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 class SuluContactAdmin extends Admin
 {
 
-    public function __construct()
+    public function __construct($title)
     {
-        $rootNavigationItem = new NavigationItem('Root');
+        $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('Tools');
 
