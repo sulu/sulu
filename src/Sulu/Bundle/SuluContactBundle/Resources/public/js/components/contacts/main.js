@@ -99,7 +99,7 @@ define([
 
         add: function() {
             this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add/details');
+            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add');
         },
 
         delContacts: function(ids) {
