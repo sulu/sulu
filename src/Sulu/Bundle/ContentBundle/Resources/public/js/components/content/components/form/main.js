@@ -52,7 +52,9 @@ define([], function() {
                 }
             }.bind(this));
 
-            this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            if (!this.options.data.id) {
+                this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            }
         },
 
         setResourceLocator: function() {
