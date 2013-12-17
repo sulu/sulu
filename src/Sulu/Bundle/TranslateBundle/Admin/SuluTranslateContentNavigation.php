@@ -27,6 +27,7 @@ class SuluTranslateContentNavigation extends ContentNavigation
         $details->setContentType('package');
         $details->setContentComponent('packages@sulutranslate');
         $details->setContentComponentOptions(array('display'=>'details'));
+        $details->setContentDisplay(array('edit'));
 
         $this->addNavigationItem($details);
 
