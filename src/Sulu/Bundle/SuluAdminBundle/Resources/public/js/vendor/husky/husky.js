@@ -24566,7 +24566,18 @@ define('__component__$tabs@husky',[],function() {
 
 });
 
-/*****************************************************************************
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/toolbar
+ */
+
+/*
  *
  *  Tabs
  *
@@ -24582,8 +24593,19 @@ define('__component__$tabs@husky',[],function() {
  *      - husky.toolbar.<<instanceName>>.item.select - triggered when item was clicked
  *
  *
- *****************************************************************************/
+ */
 
+/**
+ * @class Toolbar
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.url] url to fetch data from
+ * @param {String} [options.data] if no url is provided
+ * @param {String} [options.selected] the item that's selected on initialize
+ * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
+ * @param {String} [options.hasSearch] adds a search element at the end
+ */
 define('__component__$toolbar@husky',[],function() {
 
     
@@ -24640,9 +24662,9 @@ define('__component__$toolbar@husky',[],function() {
         /**
          * created dropdown menu
          * @param listItem
-         * @param items
-         **/
-            createDropdownMenu = function(listItem, parent) {
+         * @param parent
+         */
+        createDropdownMenu = function(listItem, parent) {
             var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
                 classString = '';
             this.sandbox.dom.after(listItem, $list);
@@ -24671,11 +24693,11 @@ define('__component__$toolbar@husky',[],function() {
          * otherwise a new id is generated for the element
          * @param item
          */
-            checkItemId = function(item) {
+        checkItemId = function(item) {
             // if item has no id, generate random id
             if (!item.id || !!this.items[item.id]) {
                 do {
-                    item.id = createUniqueId();
+                    item.id = this.sandbox.util._.uniqueId();
                 } while (!!this.items[item.id]);
             }
         },
@@ -24685,7 +24707,7 @@ define('__component__$toolbar@husky',[],function() {
          * opens dropdown submenu
          * @param event
          */
-            toggleItem = function(event) {
+        toggleItem = function(event) {
 
             event.preventDefault();
             event.stopPropagation();
@@ -24710,17 +24732,6 @@ define('__component__$toolbar@husky',[],function() {
 
         hideDropdowns = function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
-        },
-
-        /**
-         * function generates a unique id
-         * @returns string
-         */
-            createUniqueId = function() {
-            return 'xxxxyxxyx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
         };
 
     return {
@@ -24824,7 +24835,18 @@ define('__component__$toolbar@husky',[],function() {
 
 });
 
-/*****************************************************************************
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/edit-toolbar
+ */
+
+/*
  *
  *  edit-toolbar
  *
@@ -24858,8 +24880,18 @@ define('__component__$toolbar@husky',[],function() {
  *          - divider = true; takes item as divider element
  *
  *
- *****************************************************************************/
+ */
 
+/**
+ * @class EditToolbar
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.url] url to fetch data from
+ * @param {String} [options.data] if no url is provided
+ * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
+ * @param {String} [options.appearance]
+ */
 define('__component__$edit-toolbar@husky',[],function() {
 
     
@@ -24872,18 +24904,13 @@ define('__component__$edit-toolbar@husky',[],function() {
         },
 
         /** templates container */
-        templates = {
+            templates = {
             skeleton: [
                 '<div class="edit-toolbar-container">',
-                '   <div class="navbar">',
+                '   <nav class="edit-toolbar-nav">',
                 '       <ul class="edit-toolbar-left" />',
                 '       <ul class="edit-toolbar-right" />',
-                '   </div>',
-                '</div>'
-            ].join(''),
-            pageFunction: [
-                '<div class="page-function"> ',
-                '   <a href="#" id="back-page-function"><span class="icon-<%= icon %>"></span></a>',
+                '   </nav>',
                 '</div>'
             ].join('')
         },
@@ -24892,13 +24919,6 @@ define('__component__$edit-toolbar@husky',[],function() {
         bindDOMEvents = function() {
             this.sandbox.dom.on(this.options.el, 'click', toggleItem.bind(this), '.dropdown-toggle');
             this.sandbox.dom.on(this.options.el, 'click', selectItem.bind(this), 'li');
-            this.sandbox.dom.on(this.options.el, 'click', backPageFunctionClick.bind(this), '#back-page-function');
-        },
-
-        // FIXME to be replaced by own component
-        backPageFunctionClick = function() {
-            emitEvent.call(this, 'back');
-            return false;
         },
 
         /** events bound to sandbox */
@@ -24914,8 +24934,8 @@ define('__component__$edit-toolbar@husky',[],function() {
         /** set item enable or disable */
         enableItem = function(enabled, id) {
             var item = this.items[id],
-                $item = this.sandbox.dom.find('*[data-id="' + id + '"]'),
-                $iconItem = this.sandbox.dom.find('*[data-id="' + id + '"] .icon'),
+                $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
+                $iconItem = this.sandbox.dom.find('[data-id="' + id + '"] .icon', this.$el),
                 enabledIconClass = createIconClass.call(this, item, true),
                 disabledIconClass = createIconClass.call(this, item, false);
 
@@ -24958,7 +24978,7 @@ define('__component__$edit-toolbar@husky',[],function() {
 
                     // TODO: check if dropdown overlaps screen: set ul to .right-aligned
 
-                    // on every click remove submenu
+                    // on every click remove sub-menu
                     this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
                 }
             }
@@ -24984,7 +25004,7 @@ define('__component__$edit-toolbar@husky',[],function() {
                 $parent = this.sandbox.dom.parents(event.currentTarget, 'li').eq(0);
 
             // stop if item has subitems
-            if (item.items && item.items.length>0) {
+            if (item.items && item.items.length > 0) {
                 return;
             }
 
@@ -25019,17 +25039,17 @@ define('__component__$edit-toolbar@husky',[],function() {
         },
 
         /**
-         * changes the listitems icon and title
-         * @param listelement
+         * changes the list items icon and title
+         * @param listElement
          * @param item
          */
-        changeMainListItem = function(listelement, item) {
+        changeMainListItem = function(listElement, item) {
 
             // TODO: do not change size of element on change title
             // first get title
-            var listItems = this.sandbox.dom.find('span',listelement);
+            var listItems = this.sandbox.dom.find('span', listElement);
             if (!!item.icon) {
-                this.sandbox.dom.removeClass(listItems.eq(0),'');
+                this.sandbox.dom.removeClass(listItems.eq(0), '');
                 if (item.icon !== false) {
                     this.sandbox.dom.addClass(listItems.eq(0), createIconSupportClass.call(this, item));
                 }
@@ -25083,8 +25103,8 @@ define('__component__$edit-toolbar@husky',[],function() {
          * @param listItem
          * @param parent
          */
-            createDropdownMenu = function(listItem, parent) {
-            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
+        createDropdownMenu = function(listItem, parent) {
+            var $list = this.sandbox.dom.createElement('<ul class="edit-toolbar-dropdown-menu" />'),
                 classString = '';
             this.sandbox.dom.append(listItem, $list);
             this.sandbox.util.foreach(parent.items, function(item) {
@@ -25116,24 +25136,13 @@ define('__component__$edit-toolbar@husky',[],function() {
             // if item has no id, generate random id
             if (!item.id || !!this.items[item.id]) {
                 do {
-                    item.id = createUniqueId();
+                    item.id = this.sandbox.util.uniqueId();
                 } while (!!this.items[item.id]);
             }
             // set enabled defaults
             if (!item.disabled) {
                 item.disabled = false;
             }
-        },
-
-        /**
-         * function generates a unique id
-         * @returns string
-         */
-        createUniqueId = function() {
-            return 'xxxxyxxyx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
         },
 
         /** emits event */
@@ -25182,14 +25191,6 @@ define('__component__$edit-toolbar@husky',[],function() {
                 $listItem, $listLink,
                 title;
 
-            // first render page function
-            if (this.options.pageFunction) {
-                // render skeleton
-                this.sandbox.dom.append(this.options.el, this.sandbox.template.parse(templates.pageFunction, {
-                    icon: this.options.pageFunction.icon
-                }));
-            }
-
             // create navbar skeleton
             this.sandbox.dom.append(this.options.el, templates.skeleton);
 
@@ -25212,7 +25213,7 @@ define('__component__$edit-toolbar@husky',[],function() {
                 this.items[item.id] = item;
 
                 // create class array
-                classArray = [];
+                classArray = ['edit-toolbar-item'];
                 if (!!item.class) {
                     classArray.push(item.class);
                 }
@@ -25224,12 +25225,12 @@ define('__component__$edit-toolbar@husky',[],function() {
                     addTo = $left;
                 }
 
-                $listItem = this.sandbox.dom.createElement('<li class="' + classArray.join(',') + '" data-id="' + item.id + '"/>');
+                $listItem = this.sandbox.dom.createElement('<li class="' + classArray.join(' ') + '" data-id="' + item.id + '"/>');
                 $listLink = this.sandbox.dom.createElement('<a href="#" />');
                 this.sandbox.dom.append($listItem, $listLink);
 
                 // create icon span
-                this.sandbox.dom.append($listLink, '<span class="'+createIconSupportClass.call(this, item)+'" />');
+                this.sandbox.dom.append($listLink, '<span class="' + createIconSupportClass.call(this, item) + '" />');
 
                 // create title span
                 title = item.title ? item.title : '';
@@ -25246,7 +25247,6 @@ define('__component__$edit-toolbar@husky',[],function() {
                 this.sandbox.dom.append(addTo, $listItem);
 
             }.bind(this));
-
 
             // initialization finished
             emitEvent.call(this, 'initialized');
@@ -26050,6 +26050,99 @@ define('__component__$password-fields@husky',[], function() {
         }
     };
 });
+
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/page-functions
+ */
+
+/**
+ * @class PageFunctions
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.url] url to load data
+ * @param {Object} [options.data] data to view
+ */
+define('__component__$page-functions@husky',[], function() {
+
+        
+
+        var defaults = {
+                url: '', // url to load data
+                data: {}
+            },
+
+            template = function() {
+                return [
+                    '<div class="page-function"> ',
+                    '   <a href="#" id="<%= id %>"><span class="icon-<%= icon %>"></span></a>',
+                    '</div>'
+                ].join('');
+            },
+
+            /**
+             * Namespace of events
+             * @type {string}
+             */
+            eventNamespace = 'husky.page-functions.',
+
+            /**
+             * @event husky.page-functions.rendered
+             * @description the component has been rendered
+             */
+            RENDERED = eventNamespace + 'rendered',
+
+            /**
+             * @event husky.page-functions.clicked
+             * @description link was clicked
+             */
+            CLICK = eventNamespace + 'clicked';
+
+        return {
+
+            view: true,
+
+            initialize: function() {
+                this.sandbox.logger.log('initialize', this);
+                this.sandbox.logger.log(arguments);
+
+                // extend default options
+                this.options = this.sandbox.util.extend({}, defaults, this.options);
+
+                this.render();
+            },
+
+            render: function() {
+                if (!this.options.data.id) {
+                    this.options.data.id = this.sandbox.util.uniqueId();
+                }
+
+                this.sandbox.dom.append(this.options.el, this.sandbox.template.parse(template(), this.options.data));
+
+                this.bindDomEvents();
+
+                this.sandbox.emit(RENDERED);
+            },
+
+            bindDomEvents: function() {
+                this.sandbox.dom.on(this.options.el, 'click', function(e) {
+                    e.preventDefault();
+                    this.sandbox.emit(CLICK);
+
+                    return false;
+                }.bind(this), '#' + this.options.data.id);
+            }
+
+        };
+    }
+);
 
 (function() {
 
@@ -26892,7 +26985,7 @@ define('husky_extensions/util',[],function() {
             app.core.util.foreach = function(array, callbackValue) {
                 if (array.length && array.length > 0) {
                     for (var i = -1, length = array.length; ++i < length;) {
-                        callbackValue( array[i], i);
+                        callbackValue(array[i], i);
                     }
                 } else {
                     app.sandbox.logger.log('error at util.foreach: no array given');
@@ -26922,10 +27015,13 @@ define('husky_extensions/util',[],function() {
                 return deferred.promise();
             };
 
-            app.core.util.contains = function(list, value){
+            app.core.util.contains = function(list, value) {
                 return _.contains(list, value);
             };
 
+            app.core.util.uniqueId = function(prefix) {
+                return _.uniqueId(prefix);
+            };
         }
     };
 });
