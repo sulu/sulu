@@ -44,23 +44,31 @@ define(function() {
 
         bindCustomEvents: function() {
             // listening for navigation events
-            this.sandbox.on('sulu.router.navigate', function(route) {
+            this.sandbox.on('sulu.router.navigate', function(route, trigger) {
+
+                // default vars
+                trigger = (typeof trigger !== 'undefined') ? trigger : true;
+
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
+
                 // navigate
-                router.navigate(route, {trigger: true});
+                router.navigate(route, {trigger: trigger});
 
                 // move to top
                 // FIXME abstract
                 $(window).scrollTop(0);
             }.bind(this));
 
-            // init navigation
-            this.sandbox.on('navigation.item.content.show', function(event) {
-                if (!!event.item.action) {
-                    this.sandbox.emit('sulu.router.navigate', event.item.action);
-                }
+            // navigation event
+            this.sandbox.on('husky.navigation.item.select', function(event) {
+                this.emitNavigationEvent(event);
+            }.bind(this));
+
+            // content tabs event
+            this.sandbox.on('husky.tabs.content.item.select', function(event) {
+                this.emitNavigationEvent(event);
             }.bind(this));
 
 
@@ -68,6 +76,15 @@ define(function() {
             this.sandbox.on('navigation.url', function(callbackFunction) {
                 callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
+        },
+
+        emitNavigationEvent: function(event) {
+
+            // TODO: select right bundle / item in navigation
+
+            if (!!event.action) {
+                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
+            }
         }
 
     };

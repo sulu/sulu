@@ -30,12 +30,6 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
-     * The type of the navigationItem
-     * @var string
-     */
-    protected $type;
-
-    /**
      * The icon of the navigationItem
      * @var string
      */
@@ -72,7 +66,13 @@ class NavigationItem implements \Iterator
     protected $position;
 
     /**
-     * The type of the content (if $type="content")
+     * Defines if this menu item has settings
+     * @var bool
+     */
+    protected $hasSettings;
+
+    /**
+     * The type of the content
      * @var string
      */
     protected $contentType;
@@ -84,11 +84,16 @@ class NavigationItem implements \Iterator
     protected $displayOption;
 
     /**
-     * Defines when items should be shown
+     * Set which component to call when content navigation item gets clicked
+     * @var string
+     */
+    protected $contentComponent;
+
+    /**
+     * Options array of the contentComponent
      * @var array
      */
-    protected $contentDisplay;
-
+    protected $contentComponentOptions;
 
     /**
      * @param string $name The name of the item
@@ -102,11 +107,10 @@ class NavigationItem implements \Iterator
         if ($parent != null) {
             $parent->addChild($this);
         }
-
         if ($contentDisplay != null) {
             $this->contentDisplay = $contentDisplay;
         } else {
-            $this->contentDisplay = array('new','edit');
+            $this->contentDisplay = array('new', 'edit');
         }
     }
 
@@ -126,24 +130,6 @@ class NavigationItem implements \Iterator
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Sets the type of the navigationItem
-     * @param string $type The type of the navigationItem
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Returns the type of the navigationItem
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -181,7 +167,6 @@ class NavigationItem implements \Iterator
     {
         return $this->icon;
     }
-
 
     /**
      * Sets the action of the NavigationItem
@@ -256,60 +241,7 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * Sets the type of the content (if contentnavigation)
-     * @param string $contentType
-     */
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-
-    /**
-     * Returns the type of the content (if contentnavigation)
-     * @return string
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * Sets the display option
-     * @param string $displayOption
-     */
-    public function setDisplayOption($displayOption)
-    {
-        $this->displayOption = $displayOption;
-    }
-
-    /**
-     * Returns the display option
-     * @return string
-     */
-    public function getDisplayOption()
-    {
-        return $this->displayOption;
-    }
-
-    /**
-     * Sets when item should be shown
-     * @param array $contentDisplay
-     */
-    public function setContentDisplay($contentDisplay)
-    {
-        $this->contentDisplay = $contentDisplay;
-    }
-
-    /**
-     * Returns when to show item
-     * @return array
-     */
-    public function getContentDisplay()
-    {
-        return $this->contentDisplay;
-    }
-
-    /**
+     *
      * @param int $position
      */
     public function setPosition($position)
@@ -335,6 +267,86 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     * @param boolean $hasSettings
+     */
+    public function setHasSettings($hasSettings)
+    {
+        $this->hasSettings = $hasSettings;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasSettings()
+    {
+        return $this->hasSettings;
+    }
+
+    /**
+     * @param array $contentDisplay
+     */
+    public function setContentDisplay($contentDisplay)
+    {
+        $this->contentDisplay = $contentDisplay;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContentDisplay()
+    {
+        return $this->contentDisplay;
+    }
+
+    /**
+     * @param string $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param string $contentComponent
+     */
+    public function setContentComponent($contentComponent)
+    {
+        $this->contentComponent = $contentComponent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentComponent()
+    {
+        return $this->contentComponent;
+    }
+
+    /**
+     * @param array $contentComponentOptions
+     */
+    public function setContentComponentOptions($contentComponentOptions)
+    {
+        $this->contentComponentOptions = $contentComponentOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContentComponentOptions()
+    {
+        return $this->contentComponentOptions;
+    }
+
+    /**
      * Returns a copy of this navigation item without its children
      * @return NavigationItem
      */
@@ -342,12 +354,14 @@ class NavigationItem implements \Iterator
     {
         $new = new NavigationItem($this->getName());
         $new->setAction($this->getAction());
-        $new->setType($this->getType());
         $new->setIcon($this->getIcon());
         $new->setHeaderIcon($this->getHeaderIcon());
         $new->setHeaderTitle($this->getHeaderTitle());
         $new->setId($this->getId());
-        $new->setDisplayOption($this->getDisplayOption());
+        $new->setHasSettings($this->getHasSettings());
+        $new->setContentDisplay($this->getContentDisplay());
+        $new->setContentType($this->getContentType());
+        $new->setPosition($this->getPosition());
 
         return $new;
     }
@@ -493,13 +507,17 @@ class NavigationItem implements \Iterator
             'title' => $this->getName(),
             'icon' => $this->getIcon(),
             'action' => $this->getAction(),
-            'hasSub' => $this->hasChildren(),
-            'type' => $this->getType(),
-            'contentType' => $this->getContentType(),
-            'contentDisplay' => $this->getContentDisplay(),
-            'displayOption' => $this->getDisplayOption(),
+            'hasSettings' => $this->getHasSettings(),
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
         );
+
+        // content specific options
+        if (!!$this->getContentType()) {
+            $array['contentType'] = $this->getContentType();
+            $array['contentDisplay'] = $this->getContentDisplay();
+            $array['contentComponent'] = $this->getContentComponent();
+            $array['contentComponentOptions'] = $this->getContentComponentOptions();
+        }
 
         if ($this->getHeaderIcon() != null || $this->getHeaderTitle() != null) {
             $array['header'] = array(
@@ -511,7 +529,7 @@ class NavigationItem implements \Iterator
 
         foreach ($this->getChildren() as $key => $child) {
             /** @var NavigationItem $child */
-            $array['sub']['items'][$key] = $child->toArray();
+            $array['items'][$key] = $child->toArray();
         }
 
         return $array;

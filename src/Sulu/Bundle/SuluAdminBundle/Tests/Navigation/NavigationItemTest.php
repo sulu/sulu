@@ -35,7 +35,6 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->item1->setHeaderIcon('logo');
         $this->item1->setHeaderTitle('title');
         $this->item1->setAction('action');
-        $this->item1->setDisplayOption('dropdown');
         new NavigationItem('Portals', $this->item1);
         new NavigationItem('Settings', $this->item1);
         $this->item2 = new NavigationItem('Root');
@@ -68,12 +67,6 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
     {
         $this->navigationItem->setIcon('icon');
         $this->assertEquals('icon', $this->navigationItem->getIcon());
-    }
-
-    public function testType()
-    {
-        $this->navigationItem->setType('content');
-        $this->assertEquals('content', $this->navigationItem->getType());
     }
 
     public function testAction()
@@ -125,12 +118,10 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $copy = $this->item1->copyChildless();
 
         $this->assertEquals($this->item1->getAction(), $copy->getAction());
-        $this->assertEquals($this->item1->getType(), $copy->getType());
         $this->assertEquals($this->item1->getIcon(), $copy->getIcon());
         $this->assertEquals($this->item1->getHeaderIcon(), $copy->getHeaderIcon());
         $this->assertEquals($this->item1->getHeaderTitle(), $copy->getHeaderTitle());
         $this->assertEquals($this->item1->getId(), $copy->getId());
-        $this->assertEquals($this->item1->getDisplayOption(), $copy->getDisplayOption());
     }
 
     public function testIterator()
@@ -150,18 +141,15 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $array = $this->item1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertTrue($array['hasSub']);
         $this->assertEquals('action', $array['action']);
         $this->assertEquals('logo', $array['header']['logo']);
         $this->assertEquals('title', $array['header']['title']);
 
-        $this->assertEquals('Portals', $array['sub']['items'][0]['title']);
-        $this->assertFalse($array['sub']['items'][0]['hasSub']);
-        $this->assertEquals(null, $array['sub']['items'][0]['action']);
+        $this->assertEquals('Portals', $array['items'][0]['title']);
+        $this->assertEquals(null, $array['items'][0]['action']);
 
-        $this->assertEquals('Settings', $array['sub']['items'][1]['title']);
-        $this->assertFalse($array['sub']['items'][1]['hasSub']);
-        $this->assertEquals(null, $array['sub']['items'][1]['action']);
+        $this->assertEquals('Settings', $array['items'][1]['title']);
+        $this->assertEquals(null, $array['items'][1]['action']);
 
         $array = $this->item2->toArray();
 

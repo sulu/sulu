@@ -1,23 +1,38 @@
-/* line 1, ../scss/modules/base.scss */
+/* line 3, ../scss/modules/base.scss */
 .control-label {
   padding-left: 10px;
   cursor: pointer;
 }
 
 /*----------------------------------------*/
-/* line 8, ../scss/modules/base.scss */
+/* line 10, ../scss/modules/base.scss */
 #content {
   width: 800px;
   margin-left: 300px;
-  margin-top: 111px;
+  margin-top: 40px;
 }
-/* line 13, ../scss/modules/base.scss */
+/* line 16, ../scss/modules/base.scss */
 #content h2.mainheadline {
   margin-top: 35px;
 }
+/* line 23, ../scss/modules/base.scss */
+#content #edit-toolbar {
+  z-index: 100;
+  position: fixed;
+  top: 30px;
+  min-width: 800px;
+}
+/* line 30, ../scss/modules/base.scss */
+#content #list-toolbar-container {
+  margin-bottom: 18px;
+}
+/* line 34, ../scss/modules/base.scss */
+#content .content-tabs-content {
+  margin-top: 100px;
+}
 
 /*----------------------------------------*/
-/* line 22, ../scss/modules/base.scss */
+/* line 42, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -25,24 +40,24 @@
 }
 
 /*----------------------------------------*/
-/* line 30, ../scss/modules/base.scss */
+/* line 50, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 39, ../scss/modules/base.scss */
+/* line 59, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 43, ../scss/modules/base.scss */
+/* line 63, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 51, ../scss/modules/base.scss */
+/* line 71, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
@@ -86,6 +101,17 @@ input, select {
   text-align: right;
   font-size: 14px;
   margin-top: 10px;
+}
+
+/* line 2, ../scss/modules/icons.scss */
+.icon-floppy::after {
+  content: "\e444";
+  display: inline-block;
+}
+
+/* line 1, ../scss/modules/toolbar.scss */
+#toolbar .edit-toolbar-left {
+  margin-left: -50px;
 }
 
 /* line 1, ../scss/modules/login.scss */

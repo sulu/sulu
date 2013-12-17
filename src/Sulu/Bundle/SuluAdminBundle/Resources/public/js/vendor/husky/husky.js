@@ -21669,1134 +21669,384 @@ define('husky',[
  * with this source code in the file LICENSE.
  *
  * Name: navigation
+ *
+ * Description:
+ *  Navigation Element
+ *  also loads search component
+ *
  * Options:
+ *  footerTemplate - html template to define the footer
  *
- * Provided Events:
+ * Provides Events:
+ *  husky.navigation.footer.set - set template
  *
- * Used Events:
+ * Triggers Events:
+ *  husky.navigation.item.select - {item}
+ *  husky.navigation.item.toggle - isExpanded, {item}
+ *  husky.navigation.item.settings - {item}
  *
  */
 
-define('husky_components/navigation/item',[],function() {
-    
-
-    var defaults = {
-            title: '',
-            hasSub: false
-        },
-
-        render = function() {
-            prepareColumnItem.call(this);
-
-            bindDomEvents.call(this);
-        },
-
-        prepareColumnItem = function() {
-            var columnItemClasses = ['navigation-column-item'];
-            // init classes
-            if (!!this.options.data.class) {
-                columnItemClasses.push(this.options.data.class);
-            }
-
-            if (!!this.options.data.selected) {
-                columnItemClasses.push('selected');
-                this.options.column.addSelected();
-            }
-
-            this.sandbox.dom.attr(this.$el, {
-                id: this.options.data.id,
-                class: columnItemClasses.join(' '),
-                title: this.options.data.title,
-                'data-has-sub': (!!this.options.data.hasSub) ? 'true' : 'false'
-            });
-
-            // add icon
-            if (!!this.options.data.icon) {
-                this.$el.append(
-                    this.sandbox.dom.createElement('<span/>', {
-                        class: 'icon-' + this.options.data.icon
-                    })
-                );
-            }
-            // add title
-            this.$el.append(this.options.data.title);
-        },
-
-        bindDomEvents = function() {
-            this.sandbox.dom.on(this.$el, 'click', clickItem.bind(this));
-            this.sandbox.dom.on(this.$el, 'dblclick', dblClickItem.bind(this));
-        },
-
-        clickItem = function(event) {
-            this.sandbox.logger.log('click item', this.options.data);
-
-            removeNavigationFolding.call(this);
-            event.stopPropagation();
-
-            // emit click callback or event
-            if (!!this.options.clickCallback && typeof this.options.clickCallback === 'function') {
-                this.options.clickCallback(this.options.data);
-            } else {
-                this.sandbox.emit('husky.navigation.item.click', this.options.data);
-            }
-
-            // selected class
-            this.sandbox.dom.addClass(this.$el, 'selected');
-            // selected column
-            this.options.column.addSelected();
-        },
-
-        dblClickItem = function(event) {
-
-            event.stopPropagation();
-
-
-            this.sandbox.logger.log('double click item', this.options.data);
-
-            event.stopPropagation();
-
-            // emit click callback or event
-            if (!!this.options.doubleClickCallback && typeof this.options.doubleClickCallback === 'function') {
-                this.options.doubleClickCallback(this.options.data);
-            } else {
-                this.sandbox.emit('husky.navigation.item.doubleclick', this.options.data);
-            }
-
-            // selected class
-            this.sandbox.dom.addClass(this.$el, 'selected');
-            // selected column
-            this.options.column.addSelected();
-
-
-        },
-
-    // removes fold event from navigation
-        removeNavigationFolding = function() {
-            this.sandbox.dom.off('#navigation', 'mouseleave');
-        };
-
-    return function() {
-        return {
-            render: function() {
-                render.call(this);
-            },
-
-            setOptions: function(options) {
-                if (!options) {
-                    throw('No options were defined!');
-                }
-                this.options = this.sandbox.util.extend({}, defaults, options);
-                this.$el = this.options.$el;
-            },
-
-            loadingItem: function(onOff) {
-                if (onOff) {
-                    this.sandbox.dom.addClass(this.$el, 'is-loading');
-                } else {
-                    this.sandbox.dom.removeClass(this.$el, 'is-loading');
-                }
-            },
-
-            selectItem: function(onOff) {
-                if (!!onOff) {
-                    this.sandbox.dom.addClass(this.$el, 'selected');
-                } else {
-                    this.sandbox.dom.removeClass(this.$el, 'selected');
-                }
-            }
-        };
-    };
-});
-
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- * Name: navigation
- * Options:
- *
- * Provided Events:
- *
- * Used Events:
- *
- */
-
-define('husky_components/navigation/column',['husky_components/navigation/item'], function(NavigationItem) {
-    
-
-    var render = function() {
-            prepareColumn.call(this);
-
-            if (!!this.options.data.displayOption && this.options.data.displayOption === 'portals') {
-                renderPortals.call(this);
-            } else {
-                if (this.options.data.displayOption !== 'portal' && (this.sandbox.dom.data(this.$el, 'columnId') < 2 || !!this.options.data.displayOption)) {
-                    this.sandbox.dom.append(this.$el, prepareColumnHeader.call(this));
-                }
-
-                prepareColumnItems.call(this);
-                this.sandbox.dom.append(this.$el, this.$columnItemsList);
-            }
-
-            bindDomEvents.call(this);
-        },
-
-        renderPortals = function() {
-            var $columnHeader = this.sandbox.dom.createElement('<div/>', {
-                'class': 'navigation-column-header'
-            });
-
-            $columnHeader.html(template.columnHeaderPortal.call(this, {
-                title: this.options.data.sub.items[0].title,
-                logo: !!this.options.data.header ? this.options.data.header.logo : null
-            }));
-
-            this.sandbox.dom.append(this.$el, $columnHeader);
-
-            this.sandbox.start([
-                {
-                    name: 'dropdown@husky',
-                    options: {
-                        el: $columnHeader.find('#portal-header'),
-                        data: this.options.data.sub.items,
-                        alignment: 'right',
-                        instanceName: 'portalHeader',
-                        valueName: 'title',
-                        setParentDropDown: true,
-                        trigger: '.navigation-column-title, .dropdown-toggle',
-                        clickCallback: portalClick.bind(this)
-                    }
-                }
-            ]);
-
-            preparePortalsColumnList.call(this, this.options.data.sub.items[0]).then(function($columnItemsList) {
-                this.sandbox.dom.append(this.$el, $columnItemsList);
-            }.bind(this));
-        },
-
-        portalClick = function(item) {
-            if (!!this.locked) {
-                return;
-            }
-            this.sandbox.logger.log('item clicked', item);
-            this.sandbox.dom.text('#portal-header h2', item.title);
-            this.sandbox.dom.find('#' + this.id + ' .navigation-items').remove();
-
-            if (!!this.options.updateColumnCallback) {
-                this.options.updateColumnCallback(this.index, true);
-            }
-
-            preparePortalsColumnList.call(this, item).then(function($columnItemsList) {
-                this.sandbox.dom.append(this.$el, $columnItemsList);
-            }.bind(this));
-        },
-
-        preparePortalsColumnList = function(item) {
-            var $columnItemsList,
-                dfd = new this.sandbox.data.deferred();
-
-            if (!!item.hasSub && !!item.sub) {
-                $columnItemsList = prepareColumnItems.call(this, item);
-                dfd.resolve($columnItemsList);
-            } else {
-                this.locked = true;
-                this.sandbox.util.load(item.action)
-                    .then(function(data) {
-                        this.locked = false;
-                        $columnItemsList = prepareColumnItems.call(this, data);
-                        dfd.resolve($columnItemsList);
-                    }.bind(this));
-            }
-
-            return dfd.promise();
-        },
-
-        prepareColumnHeader = function() {
-            var $columnHeader = this.sandbox.dom.createElement('<div/>', {
-                'class': 'navigation-column-header'
-            });
-
-            if (this.options.data.header.displayOption === 'link') {
-                $columnHeader.html(template.columnHeaderLink.call(this, {
-                    title: this.options.data.header.title,
-                    icon: this.options.data.header.icon,
-                    action: this.options.data.header.action
-                }));
-            } else {
-                $columnHeader.html(template.columnHeader.call(this, {
-                    title: this.options.data.header.title,
-                    logo: this.options.data.header.logo || this.options.data.logo || null
-                }));
-            }
-
-            return $columnHeader;
-        },
-
-        bindDomEvents = function() {
-            // FIXME better solution
-            this.sandbox.dom.on('body', 'click', clickColumn.bind(this), '#' + this.id + '.collapsed');
-            this.sandbox.dom.on('body', 'click', clickColumn.bind(this), '#' + this.id + '.hide');
-        },
-
-        clickColumn = function() {
-            if (!!this.options.selectedClickCallback && typeof this.options.selectedClickCallback === 'function') {
-                this.options.selectedClickCallback(this.options.index);
-            } else {
-                this.sandbox.emit('husky.navigation.column.selected-click', this.options.index);
-            }
-        },
-
-        prepareColumn = function() {
-            var columnClasses = ['navigation-column'];
-
-            if (!!this.options.data && !!this.options.data.displayOption) {
-                // add a class that defines display-options
-                columnClasses.push(this.options.data.displayOption + '-column');
-            } else if (this.options.index === 0) {
-                // if the column is the second column
-                columnClasses.push('first-column');
-            } else if (this.options.index === 1) {
-                // if the column is the second column
-                columnClasses.push('second-column');
-            }
-
-            this.id = 'column-' + this.options.index;
-
-            this.sandbox.dom.attr(this.$el, {
-                'id': this.id,
-                'data-column-id': this.options.index,
-                'class': columnClasses.join(' ')
-            });
-        },
-
-        prepareColumnItems = function(data) {
-            if (!data) {
-                data = this.options.data;
-            }
-
-            this.$columnItemsList = this.sandbox.dom.createElement('<ul/>', {
-                class: 'navigation-items'
-            });
-
-            data.sub.items.forEach(function(item) {
-                this.$columnItemsList.append(prepareColumnItem.call(this, item));
-            }.bind(this));
-
-            return this.$columnItemsList;
-        },
-
-        prepareColumnItem = function(item) {
-            var $item = this.sandbox.dom.createElement('<li/>'),
-                navigationItem = new NavigationItem();
-
-            navigationItem.sandbox = this.sandbox;
-            navigationItem.setOptions({
-                $el: $item,
-                data: item,
-                column: this,
-                clickCallback: clickCallback.bind(this),
-                doubleClickCallback: clickCallback.bind(this, true)
-            });
-
-            navigationItem.render();
-            this.items[item.id] = navigationItem;
-
-            return $item;
-        },
-
-        clickCallback = function(item, isDoubleClick) {
-            var itemId = '#' + item.id,
-                $item = this.sandbox.dom.find(itemId);
-
-            item.columnIndex = this.options.index;
-
-            // reset selected item
-            this.sandbox.dom.removeClass('#' + this.id + ' .selected:not(' + itemId + ')', 'selected');
-
-            if (!!this.options.selectedCallback && typeof this.options.selectedCallback === 'function') {
-                this.options.selectedCallback(this.options.index, item);
-            } else {
-                this.sandbox.emit('husky.navigation.column.item-selected', this.options.index, this.options.index, item);
-            }
-
-            if (isDoubleClick || this.sandbox.dom.hasClass($item, 'selected') && this.sandbox.dom.hasClass(this.$el, 'collapsed')) {
-                // add a column to navigation
-                if (!!this.options.selectedClickCallback && typeof this.options.selectedClickCallback === 'function') {
-                    this.options.selectedClickCallback(this.options.index);
-                } else {
-                    this.sandbox.emit('husky.navigation.column.selected-click', this.options.index);
-                }
-            } else if (!!item.hasSub) {
-                // add a column to navigation
-                if (!!this.options.addColumnCallback && typeof this.options.addColumnCallback === 'function') {
-                    this.options.addColumnCallback(this.options.index, item);
-                } else {
-                    this.sandbox.emit('husky.navigation.column.add-column', this.options.index, item);
-                }
-            } else if (item.type === 'content') {
-                // show content
-                if (!!this.options.contentCallback && typeof this.options.contentCallback === 'function') {
-                    this.options.contentCallback(this.options.index, item);
-                } else {
-                    this.sandbox.emit('husky.navigation.column.show-content', this.options.index, this.options.data);
-                }
-            }
-        },
-        template = {
-            columnHeaderLink: function(data) {
-                data.title = data.title || this.sandbox.translate('navigation.list');
-                data.icon = data.icon || 'list';
-                data.action = data.action || '';
-
-                return [
-                    '<div class="navigation-header-link pointer" data-action="', data.action, '"><span class="icon-', data.icon, '"></span>&nbsp;', data.title, '</div>'
-                ].join('');
-            },
-
-            columnHeader: function(data) {
-                var titleTemplate = null;
-
-                data = data || {};
-
-                data.title = data.title || '';
-                data.logo = data.logo || '';
-
-                if (!!data.logo) {
-                    titleTemplate = '<span class="navigation-column-logo"><img alt="' + data.title + '" src="' + data.logo + '"/></span>';
-                }
-
-                return [
-                    titleTemplate,
-                    '<h2 class="navigation-column-title">', data.title, '</h2>'
-                ].join('');
-            },
-
-            columnHeaderPortal: function(data) {
-                var titleTemplate;
-                data.title = data.title || '';
-                data.logo = data.logo || '';
-
-                if (!!data.logo) {
-                    titleTemplate = '<span class="navigation-column-logo"><img alt="' + data.title + '" src="' + data.logo + '"/></span>';
-                }
-
-                return [
-                    '<div id="portal-header">',
-                    titleTemplate,
-                    '   <h2 class="navigation-column-title pointer">', data.title, '</h2>',
-                    '   <span class="dropdown-toggle inline-block pointer"></span>',
-                    '</div>'
-                ].join('');
-            },
-
-            // TODO: Remove search
-            search: function(data) {
-                data = data || {};
-
-                data.action = data.action || '';
-                data.icon = data.icon || '';
-
-                return [
-                    '<input type="text" class="search" autofill="false" data-action="', data.action, '" placeholder="Search ..."/>' // TODO Translate
-                ].join('');
-            }
-        };
-
-    return function() {
-        return {
-            render: function() {
-                this.items = {};
-
-                render.call(this);
-            },
-
-            setOptions: function(options) {
-                if (!options) {
-                    throw('No options were defined!');
-                }
-                this.options = options;
-                this.$el = this.options.$el;
-            },
-
-            show: function() {
-                this.sandbox.dom.removeClass(this.$el, 'hide collapsed');
-            },
-
-            collapse: function() {
-                this.sandbox.dom.removeClass(this.$el, 'hide');
-                this.sandbox.dom.addClass(this.$el, 'collapsed');
-            },
-
-            hide: function() {
-                this.sandbox.dom.addClass(this.$el, 'hide');
-                this.sandbox.dom.removeClass(this.$el, 'collapsed');
-            },
-
-            loadingItem: function(index, onOff) {
-                this.items[index].loadingItem(onOff);
-            },
-
-            selectItem: function(index, onOff) {
-                this.items[index].selectItem(onOff);
-            },
-
-            getSelectedItemId: function() {
-                return this.sandbox.dom.attr(this.$el, 'id');
-            },
-
-            isSubColumn: function() {
-                return this.options.index >= 2 && this.options.data.displayOption !== 'content';
-            },
-
-            isContentColumn: function() {
-                return this.options.data.displayOption === 'content';
-            },
-
-            getIndex: function() {
-                return this.options.index;
-            },
-
-            remove: function() {
-                this.sandbox.dom.remove(this.$el);
-            },
-
-            hasClass: function(className) {
-                return this.sandbox.dom.hasClass(this.$el, className);
-            },
-
-            addSelected: function() {
-                this.sandbox.dom.addClass(this.$columnItemsList, 'item-selected');
-            }
-        };
-    };
-});
-
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- * Name: navigation
- * Options:
- *
- * Provided Events:
- *
- * Used Events:
- *
- */
-
-define('__component__$navigation@husky',['husky_components/navigation/column'], function(NavigationColumn) {
+// TODO: arrow keys
+// TODO: action as link for ux -> footer where it will link
+// TODO: cogwheel at dashboard in the middle
+// TODO: events as specified
+// TODO: move functions into private space
+// TODO: cleanup css-classes
+// TODO: responsive collapsed navigation
+
+define('__component__$navigation@husky',[],function() {
 
     
 
-
-    var prepareFirstColumn = function(data) {
-            this.data = data;
-
-            this.options.data = data;
-
-            var $column = startColumn.call(this, 0, data);
-            this.sandbox.dom.append(this.$navigationColumns, $column);
+    var templates = {
+            /** component skeleton */
+            skeleton: [
+                '<nav class="navigation">',
+                '   <div class="navigation-content">',
+                '       <header class="navigation-header">',
+                '           <div class="navigation-header-image">',
+                '               <% if (icon) { %>',
+                '               <img alt="#" src="<%= icon %>"/>',
+                '               <% } %>',
+                '           </div>',
+                '           <div class="navigation-header-title"><% if (title) { %> <%= title %><% } %></div>',
+                '       </header>',
+                '       <div id="navigation-search" class="navigation-search"></div>',
+                '       <div id="navigation-item-container" class="navigation-item-container"></div>',
+                '       <footer>',
+                '       </footer>',
+                '   </div>',
+                '</nav>'].join(''),
+            /** main navigation items (with icons)*/
+            mainItem: [
+                '<li class="js-navigation-items navigation-items" id="<%= item.id %>" data-id="<%= item.id %>">',
+                '   <div <% if (item.items && item.items.length > 0) { %> class="navigation-items-toggle" <% } %> >',
+                '       <a class="<% if (!!item.action) { %>js-navigation-item <% } %>navigation-item" href="#">',
+                '           <span class="<%= icon %> navigation-item-icon"></span>',
+                '           <span class="navigation-item-title"><%= item.title %></span>',
+                '       </a>',
+                '       <% if (item.hasSettings) { %>',
+                '           <a class="icon-cogwheel navigation-settings-icon js-navigation-settings" id="<%= item.id %>" href="#"></a>',
+                '       <% } %>',
+                '       <% if (item.items && item.items.length > 0) { %>',
+                '           <a class="icon-chevron-right navigation-toggle-icon" href="#"></a>',
+                '       <% } %>',
+                '   </div>',
+                '</li>'].join(''),
+            /** sub navigation items */
+            subToggleItem: [
+                '   <li class="js-navigation-items navigation-subitems" id="<%= item.id %>" data-id="<%= item.id %>">',
+                '       <div class="navigation-subitems-toggle">',
+                '           <a class="<% if (!!item.action) { %>js-navigation-item <% } %> navigation-item" href="#"><%= item.title %></a>',
+                '           <% if (item.hasSettings) { %>',
+                '           <a class="icon-cogwheel navigation-settings-icon js-navigation-settings" href="#"></a>',
+                '           <% } %>',
+                '           <a class="icon-chevron-right navigation-toggle-icon" href="#"></a>',
+                '       </div>',
+                '</li>'].join(''),
+            /** siple sub item */
+            subItem: [
+                '<li class="js-navigation-sub-item" id="<%= item.id %>" data-id="<%= item.id %>">',
+                '   <a href="#"><%= item.title %></a>',
+                '</li>'
+            ].join('')
         },
-
-        startColumn = function(index, data) {
-            var $column = this.sandbox.dom.createElement('<li/>'),
-                navigationColumn = new NavigationColumn();
-
-            navigationColumn.sandbox = this.sandbox;
-
-            if (!data.header || !data.header.logo) {
-                if (!data.header) {
-                    data.header = {
-                        title: data.title
-                    };
-                }
-                data.header.logo = !!this.options.data.header && !!this.options.data.header.logo ? this.options.data.header.logo : null;
+        defaults = {
+            footerTemplate: '',
+            labels: {
+                hide: 'Hide',
+                show: 'Show'
             }
-
-            navigationColumn.setOptions({
-                $el: $column,
-                data: data,
-                index: index,
-                contentCallback: contentCallback.bind(this),
-                selectedCallback: selectedCallback.bind(this),
-                addColumnCallback: addColumnCallback.bind(this),
-                selectedClickCallback: selectedClickCallback.bind(this),
-                updateColumnCallback: updateColumns.bind(this)
-            });
-
-            navigationColumn.render();
-            this.columns[index] = navigationColumn;
-
-            return $column;
-        },
-
-        contentCallback = function(index, data) {
-            this.sandbox.logger.log('content', index, data);
-
-            if (index >= 1) {
-                // FIXME abstract
-                if (!$('#' + data.id).parent().parent().hasClass('content-column')) {
-                    updateColumns.call(this, 1, true);
-                }
-            } else {
-                updateColumns.call(this, 1, true);
-            }
-
-            hideSubColumns.call(this);
-
-            // TODO improvement for different sates
-
-            if (index === 0) { // first column click, display content
-
-                this.columns[0].show();
-                if (!!this.columns[1]) {
-                    this.columns[1].remove();
-                    delete this.columns[1];
-                }
-
-            } else if (index === 1) { // second column click, display content
-
-                this.columns[0].collapse();
-                if (!!this.columns[1]) {
-                    this.columns[1].show();
-                }
-
-            } else if (index >= 2) { // all other columns, display content
-
-
-                this.columns[0].hide();
-                if (!!this.columns[1]) {
-                    this.columns[1].collapse();
-                }
-
-            }
-
-            this.sandbox.emit('navigation.item.content.show', {
-                item: data,
-                data: getNavigationData.call(this)
-            });
-        },
-
-        updateColumns = function(index, removeSubColumns) {
-            if (!!removeSubColumns) {
-                hideSubColumns.call(this);
-            }
-
-            // loop thru all columns
-            for (var colIndex in this.columns) {
-                if (this.columns.hasOwnProperty(colIndex) && parseInt(colIndex, 10) > index) {
-                    if (!removeSubColumns || !this.columns[colIndex].isSubColumn()) { // delete only if flag not set or is not a subColumn
-                        this.columns[colIndex].remove(); // remove dom element
-                        delete this.columns[colIndex]; // delete index
-                    }
-                }
-            }
-
-            this.contentColumn = false;
-            this.contentColumnSelected = false;
-        },
-
-        selectedCallback = function(index, item) {
-            this.sandbox.emit('navigation.item.selected', {
-                item: item,
-                data: getNavigationData.call(this)
-            });
-        },
-
-        selectedClickCallback = function(index) {
-
-            if (isHiddenSubColumns.call(this) && !!this.columns[1] &&
-                this.sandbox.dom.data(this.$navigationSubColumns, 'parent') === this.columns[0].getSelectedItemId()) {
-                showSubColumns.call(this);
-            }
-
-            if (index === 0) { // first column click while is selected
-
-                this.columns[0].show();
-                this.columns[1].show();
-
-            } else if (index === 1) { // second column click while is selected
-
-                this.columns[0].collapse();
-                this.columns[1].show();
-
-            }
-        },
-
-        hideSubColumns = function() {
-            this.sandbox.dom.addClass('#' + this.id + ' .navigation-sub-columns .navigation-column', 'hide-portal');
-
-            this.sandbox.dom.css(this.$navigationSubColumns, 'display', 'none');
-        },
-
-        isHiddenSubColumns = function() {
-            return this.sandbox.dom.css(this.$navigationSubColumns, 'display') === 'none';
-        },
-
-        showSubColumns = function() {
-            scrollToLastSubColumn.call(this);
-            this.sandbox.dom.css(this.$navigationSubColumns, 'display', 'block');
-        },
-
-        addColumnCallback = function(index, item) {
-            if (!!this.locked) {
-                return;
-            }
-
-            if (index === 1) { // click on second column, check if subColumns can be shown
-                if (this.sandbox.dom.data(this.$navigationSubColumns, 'parent') === item.id && // subColumns belongs to clicked item
-                    isHiddenSubColumns.call(this) && // subColumns are hidden
-                    this.sandbox.dom.find('#' + this.id + ' .navigation-sub-columns-container .navigation-column').length > 0) { // and there are sum subColumns
-                    showSubColumns.call(this);
-
-                    this.columns[0].collapse();
-                    return;
-                }
-            }
-
-            if (!item.sub) { // sub items not present
-                if (!!item.action) { // url to load from is defined
-                    if (index < 1) { // click on second column and add a new column
-                        updateColumns.call(this, index, true);
-                    } else {
-
-                        this.columns[0].collapse();
-                        updateColumns.call(this, index, false);
-
-                    }
-
-                    this.columns[index].show();
-
-                    this.columns[item.columnIndex].loadingItem(item.id, true);
-                    this.locked = true;
-                    this.sandbox.util.load(item.action)
-                        .then(function(data) {
-                            this.locked = false;
-                            addColumn.call(this, index + 1, data, item.id);
-                            this.columns[item.columnIndex].loadingItem(item.id, false);
-                        }.bind(this))
-                        .fail(function() {
-                            this.locked = false;
-                            this.columns[item.columnIndex].loadingItem(item.id, false);
-                            this.sandbox.logger.error('Could not load data from action: ' + item.action);
-                        }.bind(this));
-                }
-            } else {
-                updateColumns.call(this, index, true);
-                addColumn.call(this, index + 1, item, item.id);
-            }
-        },
-
-        addColumn = function(index, data, subColumnParentId) {
-            var $column = startColumn.call(this, index, data);
-
-            if (data.displayOption !== 'content') {
-                removeContentColumn.call(this);
-            }
-
-            if (index >= 2 && data.displayOption !== 'content') { //
-                if (!this.$navigationSubColumns) {
-                    initSubColumns.call(this);
-                    this.sandbox.dom.data(this.$navigationSubColumns, 'parent', subColumnParentId);
-                } else {
-                    showSubColumns.call(this);
-                }
-                this.sandbox.dom.append(this.$navigationSubColumns, $column);
-                scrollToLastSubColumn.call(this);
-            } else {
-                this.sandbox.dom.insertAt(index, 'li.navigation-column:not(.portal-column)', this.$navigationColumns, $column);
-            }
-
-            setNavigationSize.call(this);
-        },
-
-        scrollToLastSubColumn = function() {
-            if (!!this.$navigationSubColumns) {
-                this.$navigationSubColumns.delay(250).animate({
-                    'scrollLeft': 1000
-                }, 500);
-            }
-        },
-
-        initSubColumns = function() {
-            this.$subColumns = this.sandbox.dom.createElement('<li/>', {
-                'class': 'navigation-sub-columns-container'
-            });
-            this.$navigationSubColumns = this.sandbox.dom.createElement('<ul/>', {
-                'class': 'navigation-sub-columns'
-            });
-            this.sandbox.dom.append(this.$subColumns, this.$navigationSubColumns);
-            this.sandbox.dom.append(this.$navigationColumns, this.$subColumns);
-        },
-
-        render = function() {
-            this.$el.html(this.$navigation);
-
-            bindDomEvents.call(this);
-            bindCustomEvents.call(this);
-        },
-
-        bindDomEvents = function() {
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize load', setNavigationSize.bind(this));
-            this.sandbox.dom.on('#' + this.id, 'mouseover', hiddenFirstColumnHover.bind(this), '.navigation-column.first-column.hide');
-            this.sandbox.dom.on('#' + this.id, 'click', headerLinkClick.bind(this), '.navigation-header-link');
-            this.sandbox.dom.on('#' + this.id, 'mousewheel DOMMouseScroll', scrollSubColumns.bind(this), '.navigation-sub-columns-container');
-        },
-
-
-        navigationOutListener = function() {
-
-            if (!!this.columns[0]) {
-                this.columns[0].hide();
-            }
-            if (this.columns[1]) {
-                this.columns[1].collapse();
-            }
-
-            // TODO: check selected element
-//            this.sandbox.foreach(this.columns, function(column, index) {
-//                if (index>0) {
-//
-//                }
-//            });
-        },
-
-    // mouse out for hidden first column
-        hiddenFirstColumnOut = function(event) {
-            // remove focus
-            this.sandbox.dom.removeClass(event.target, 'hasFocus');
-        },
-
-    // removes fold event from navigation
-        removeNavigationFolding = function() {
-            this.sandbox.dom.off('#navigation', 'mouseleave');
-        },
-
-    // mouse over for hidden first column
-        hiddenFirstColumnHover = function(event) {
-
-            // add focus class
-            this.sandbox.dom.addClass(event.target, 'hasFocus');
-            // focus mouseout listener
-            this.sandbox.dom.mouseleave(event.target, hiddenFirstColumnOut.bind(this));
-
-            // and check after timeout
-            setTimeout(function() {
-                if (this.sandbox.dom.hasClass(event.target, 'hasFocus')) {
-                    // show items
-                    if (!!this.columns[0]) {
-                        this.columns[0].show();
-                    }
-                    if (!!this.columns[1]) {
-                        this.columns[1].show();
-                    }
-                    this.sandbox.dom.mouseleave('#navigation', navigationOutListener.bind(this));
-                    this.sandbox.dom.one('#navigation', 'click', function() {
-                        removeNavigationFolding.call(this);
-                    }.bind(this));
-                }
-            }.bind(this), 250);
-        },
-
-        bindCustomEvents = function() {
-            // FIXME enable for reload navigation for route: this.sandbox.on('navigation.route', routeNavigation.bind(this));
-            this.sandbox.on('navigation.item.column.show', showColumn.bind(this));
-        },
-
-    // FIXME better solution? move to column
-        headerLinkClick = function() {
-            var action = this.sandbox.dom.data('#' + this.id + ' .navigation-header-link', 'action');
-
-            removeContentColumn.call(this);
-
-            // FIXME abstract these states
-            if (this.sandbox.dom.hasClass('#column-0', 'hide') &&
-                this.sandbox.dom.hasClass('#column-1', 'collapsed')) {
-
-                this.columns[0].collapse();
-                this.columns[1].show();
-
-            } else if (this.sandbox.dom.find('#column-1').length === 0) {
-
-                this.columns[0].show();
-
-            } else if (!this.sandbox.dom.hasClass('#column-0', 'collapsed') && !this.sandbox.dom.hasClass('#column-1', 'collapsed')) {
-
-                this.columns[0].collapse();
-
-            }
-
-            if (isHiddenSubColumns.call(this) && !!this.columns[1] &&
-                this.sandbox.dom.data(this.$navigationSubColumns, 'parent') === this.columns[0].getSelectedItemId()) {
-                showSubColumns.call(this);
-            }
-
-            this.sandbox.emit('navigation.item.content.show', {
-                item: {
-                    action: action
-                },
-                data: getNavigationData.call(this)
-            });
-        },
-
-        removeContentColumn = function() {
-            this.sandbox.dom.removeClass('#' + this.id, 'show-content');
-            var index = this.sandbox.dom.data('#' + this.id + ' .content-column', 'column-id');
-
-            if (!!index && !!this.columns[index]) {
-                this.columns[index].remove();
-                delete this.columns[index];
-            }
-
-            this.contentColumn = false;
-            this.contentColumnSelected = false;
-        },
-
-        getCurrentIndex = function(contentColumn) {
-            var index, currentIndex = 0;
-
-            this.sandbox.util.foreach(this.columns, function(column) {
-                if (!!column && (!contentColumn || column.isContentColumn()) && !column.hasClass('hide-portal')) {
-                    index = column.getIndex();
-                    if (currentIndex < index) {
-                        currentIndex = index;
-                    }
-                }
-            }.bind(this));
-
-            return currentIndex;
-        },
-
-        showColumn = function(params) {
-            if (!params.data.displayOption || params.data.displayOption === 'content') {
-                if (compareContentColumn.call(this, params)) {
-                    return;
-                }
-                removeContentColumn.call(this);
-                this.contentColumn = params;
-            }
-
-            var currentIndex = getCurrentIndex.call(this, false);
-
-            if (this.sandbox.dom.find('#column-0').length === 1 &&
-                this.sandbox.dom.find('#column-1').length === 1) {
-
-                this.columns[0].hide();
-                if (!!this.columns[1]) {
-                    this.columns[1].collapse();
-                }
-
-            } else {
-
-                this.columns[0].collapse();
-
-            }
-
-            addColumn.call(this, currentIndex + 1, params.data);
-
-            if (!!this.contentColumnSelected) {
-                this.columns[currentIndex + 1].selectItem(this.contentColumnSelected.id, true);
-            }
-
-            this.sandbox.dom.addClass('#' + this.id, 'show-content');
-
-            setTimeout(function() {
-                this.sandbox.emit('navigation.size.changed', {
-                    data: getNavigationData.call(this)
-                });
-            }.bind(this), 10);
-        },
-
-        compareContentColumn = function(params) {
-            this.contentColumnSelected = false;
-            if (!this.contentColumn) {
-                return false;
-            }
-
-            return compare.call(this, this.contentColumn, params, ['selected', 'logo', 'columnIndex']);
-        },
-
-        /**
-         * compares two objects
-         * exclude given properties
-         */
-            compare = function(obj1, obj2, excludeProperties) {
-            for (var p in obj1) {
-                if (!this.sandbox.util.contains(excludeProperties, p)) {
-                    if (obj1.hasOwnProperty(p) && obj2.hasOwnProperty(p)) {
-                        if (typeof obj1[p] === 'object') {
-                            if (!compare.call(this, obj1[p], obj2[p], excludeProperties)) {
-                                return false;
-                            }
-                        } else if (obj1[p] !== obj2[p]) {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                } else {
-                    if (p === 'selected' && !!obj2[p]) {
-                        this.contentColumnSelected = obj2;
-                    }
-                }
-            }
-            return true;
-        },
-
-        scrollSubColumns = function(event) {
-            var direction = event.originalEvent.detail < 0 || event.originalEvent.wheelDelta > 0 ? 1 : -1,
-                scrollSpeed = 25,
-                scrollLeft = 0;
-
-            event.preventDefault();
-
-            if (this.scrollLocked) {
-                this.scrollLocked = false;
-
-                // normalize scrolling
-                setTimeout(function() {
-                    this.scrollLocked = true;
-
-                    if (direction < 0) {
-                        // left scroll
-                        scrollLeft = this.$navigationSubColumns.scrollLeft() + scrollSpeed;
-                        this.$navigationSubColumns.scrollLeft(scrollLeft);
-                    } else {
-                        // right scroll
-                        scrollLeft = this.$navigationSubColumns.scrollLeft() - scrollSpeed;
-                        this.$navigationSubColumns.scrollLeft(scrollLeft);
-                    }
-                }.bind(this), 25);
-            }
-        },
-
-        setNavigationSize = function() {
-            var $window = this.sandbox.dom.$window,
-                $navigation = this.sandbox.dom.$('#' + this.id),
-                $navigationSubColumnsCont = this.sandbox.dom.$('#' + this.id + ' .navigation-sub-columns-container'),
-                $navigationSubColumns = this.sandbox.dom.$('#' + this.id + ' .navigation-sub-columns'),
-                paddingRight = 100;
-
-            setTimeout(function() {
-                this.sandbox.dom.css($navigationSubColumns, {
-                    width: 'auto'
-                });
-
-                $navigationSubColumnsCont.removeClass('scrolling');
-
-                if (this.sandbox.dom.width($window) < this.sandbox.dom.width($navigation) + paddingRight) {
-                    this.sandbox.dom.css($navigationSubColumns, {
-                        width: (this.sandbox.dom.width($window) - paddingRight) - this.sandbox.dom.width($navigation) - this.sandbox.dom.width($navigationSubColumns),
-                        height: this.sandbox.dom.height($navigation)
-                    });
-                    this.sandbox.dom.addClass($navigationSubColumnsCont, 'scrolling');
-                } else {
-                    this.sandbox.dom.css($navigationSubColumns, {
-                        height: $navigation.height() + 5
-                    });
-                }
-            }.bind(this), 250);
-        },
-
-        getNavigationData = function() {
-            return {
-                // TODO
-            };
-        },
-
-    // TODO
-        prepareRoute = function(params) {
-            var routes = params.route.split('/'),
-                route = '',
-                items = this.data.sub.items,
-                retItems = [],
-                i = 0,
-                j = 0;
-
-            for (i; i <= routes.length; i++) {
-                j = 0;
-                route = '';
-
-                for (j; j <= items.length; j++) {
-                    if (!!retItems.length) {
-                        route = routes.slice(0, retItems.length).join('/') + '/';
-                        this.sandbox.logger.log(route);
-                    }
-
-                    if (route + items[j].route === routes[i]) {
-                        retItems.push(items[j]);
-                        items = items[j].sub.items;
-                        break;
-                    }
-                }
-            }
-
-            return retItems;
-        },
-
-        /**
-         * TODO reanable for navigation update while routing
-         */
-            routeNavigation = function(params) {
-            var preparedRoute;
-            if (!params) {
-                throw('No params were defined!');
-            }
-            // FIXME update this.columns array
-            this.sandbox.dom.remove('.navigation-column:gt(0)');
-            preparedRoute = prepareRoute.call(this, params);
-
-            this.sandbox.logger.log(preparedRoute);
         };
 
-    return  {
-        scrollLocked: true,
 
-        view: true,
-
-        // current content column
-        contentColumn: false,
-
-        // helper var for selected item
-        contentColumnSelected: false,
+    return {
 
         initialize: function() {
-            this.sandbox.logger.log('initialize');
-            this.sandbox.logger.log(arguments);
 
-            this.id = 'navigation';
-            this.sandbox.logger.log('id:', '#' + this.id);
+            this.sandbox.logger.log('Initialized Navigation');
 
-            // init container
-            this.$navigation = this.sandbox.dom.createElement('<div/>', {
-                class: 'navigation',
-                id: this.id
-            });
-            this.$navigationColumns = this.sandbox.dom.createElement('<ul/>', {
-                class: 'navigation-columns'
-            });
-            this.$navigation.append(this.$navigationColumns);
+            // merging options
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            // init data
-            this.data = null;
-            this.columns = [];
+            // binding dom events
+            this.bindDOMEvents();
+
+            this.bindCustomEvents();
 
             // load Data
             if (!!this.options.url) {
                 this.sandbox.util.load(this.options.url)
-                    .then(prepareFirstColumn.bind(this));
-
-                render.call(this);
+                    .then(this.render.bind(this))
+                    .fail(function(data) {
+                        this.sandbox.logger.log("data could not be loaded:", data);
+                    }.bind(this));
             }
+        },
+
+        /**
+         * renders the navigation
+         * gets called after navigation data was loaded
+         * @param data
+         */
+        render: function(data) {
+
+            // data storage
+            this.options.data = data;
+
+            // array to save all navigation items
+            this.items = [];
+
+            // add container class to current div
+            this.sandbox.dom.addClass(this.$el, 'navigation-container');
+
+            // render skeleton
+            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {
+                title: this.options.data.title,
+                icon: this.options.data.icon
+            }));
+
+            // start search component
+            this.sandbox.start([
+                {name: 'search@husky', options: {el: '#navigation-search'}}
+            ]);
+
+            // render navigation items
+            this.renderNavigationItems(this.options.data);
+
+            // render footer
+            if (!!this.options.footerTemplate && this.options.footerTemplate !== '') {
+                this.renderFooter(this.options.footerTemplate);
+            }
+
+            // emit initialized event
+            this.sandbox.emit('husky.navigation.initialized');
+        },
+
+        /**
+         *  renders main navigation elements
+         */
+        renderNavigationItems: function(data) {
+            var $elem, $sectionDiv, $sectionList;
+            // iterate through sections
+            this.sandbox.util.foreach(data.items, function(section) {
+                $sectionDiv = this.sandbox.dom.createElement('<div class="section">');
+                $sectionList = this.sandbox.dom.createElement('<ul class="section-items">');
+                this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + section.title.toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.options.labels.hide + '</a></span></div>');
+
+                // iterate through section items
+                this.sandbox.util.foreach(section.items, function(item) {
+                    // create item
+                    $elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.mainItem, {
+                        item: item,
+                        icon: item.icon ? 'icon-' + item.icon : ''
+                    }));
+                    //render sub-items
+                    if (item.items && item.items.length > 0) {
+                        this.renderSubNavigationItems(item, this.sandbox.dom.find('div', $elem));
+                    }
+                    this.sandbox.dom.append($sectionList, $elem);
+                    this.items[item.id] = item;
+                }.bind(this));
+
+                this.sandbox.dom.append($sectionDiv, $sectionList);
+                this.sandbox.dom.append('#navigation-item-container', $sectionDiv);
+
+            }.bind(this));
+        },
+
+        /**
+         * renders sub-navigation elements
+         */
+        renderSubNavigationItems: function(data, after) {
+            var elem,
+                list = this.sandbox.dom.createElement('<ul style="display:none" />');
+
+            this.sandbox.util.foreach(data.items, function(item) {
+                this.items[item.id] = item;
+                if (item.items && item.items.length > 0) {
+                    elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subToggleItem, {item: item}));
+                    this.renderSubNavigationItems(item, this.sandbox.dom.find('div', elem));
+                } else {
+                    elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subItem, {item: item}));
+                }
+                this.sandbox.dom.append(list, elem);
+            }.bind(this));
+
+            this.sandbox.dom.after(after, list);
+        },
+
+        renderFooter: function(footerTemplate) {
+            var $footer = this.sandbox.dom.find('footer', this.$el);
+            this.sandbox.dom.html($footer, footerTemplate);
+        },
+
+        /**
+         * Interaction
+         */
+        bindDOMEvents: function() {
+            this.sandbox.dom.on(this.$el, 'click', this.toggleItems.bind(this), '.navigation-items-toggle, .navigation-subitems-toggle');
+            this.sandbox.dom.on(this.$el, 'click', this.toggleSections.bind(this), '.section-toggle');
+            this.sandbox.dom.on(this.$el, 'click', this.settingsClicked.bind(this), '.js-navigation-settings');
+            this.sandbox.dom.on(this.$el, 'click', this.selectSubItem.bind(this), '.js-navigation-sub-item, .js-navigation-item');
+        },
+
+        /**
+         * event listener
+         */
+        bindCustomEvents: function() {
+            // change footer template
+            this.sandbox.on('husky.navigation.footer.set', function(template) {
+                this.options.footerTemplate = template;
+                this.renderFooter(template);
+            }.bind(this));
+
+        },
+
+
+        /**
+         * gets called when settings icon is clicked
+         * @emits husky.navigation.settings (name, id, parent)
+         * @param event
+         */
+        settingsClicked: function(event) {
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            // emit event
+            var listItem = this.sandbox.dom.closest(event.currentTarget, '.js-navigation-items'),
+                item = this.items[this.sandbox.dom.data(listItem, 'id')];
+
+            this.sandbox.emit('husky.navigation.item.settings', item);
+
+        },
+
+        /**
+         * Toggles menu element with submenu
+         * Raises navigation.toggle
+         * @param event
+         */
+        toggleItems: function(event) {
+
+            event.preventDefault();
+
+            var $items = this.sandbox.dom.closest(event.currentTarget, '.js-navigation-items'),
+                item, xBottom, windowHeight, itemHeight, itemTop,
+                $toggle,
+
+                $childList = this.sandbox.dom.find('ul:first', $items),
+                isExpanded = this.sandbox.dom.hasClass($items, 'is-expanded');
+
+
+            if (isExpanded) {
+                this.sandbox.dom.slideUp($childList, 200, function() {
+
+                    this.sandbox.dom.removeClass($items, 'is-expanded');
+
+                    // change toggle item
+                    $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
+                    this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
+                    this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
+
+                }.bind(this));
+            } else {
+                this.sandbox.dom.addClass($items, 'is-expanded');
+                // change toggle item
+                $toggle = this.sandbox.dom.find('.icon-chevron-right', event.currentTarget);
+                this.sandbox.dom.removeClass($toggle, 'icon-chevron-right');
+                this.sandbox.dom.prependClass($toggle, 'icon-chevron-down');
+
+                this.sandbox.dom.slideDown($childList, 200, function() {
+
+
+                    // check if collapsed element overlaps browser border
+                    itemTop = this.sandbox.dom.offset($items).top;
+                    itemHeight = this.sandbox.dom.height($items);
+                    xBottom = itemTop + itemHeight;
+                    windowHeight = this.sandbox.dom.height(this.sandbox.dom.window);
+                    if (xBottom > windowHeight) {
+                        if (itemHeight < windowHeight) {
+                            this.sandbox.dom.scrollAnimate((xBottom - windowHeight + 40), '.navigation-container');
+                        } else {
+                            this.sandbox.dom.scrollAnimate(itemTop, '.navigation-container');
+                        }
+                    }
+                }.bind(this));
+            }
+
+            // emit event
+            item = this.items[this.sandbox.dom.data($items, 'id')];
+            this.sandbox.emit('husky.navigation.item.toggle', !isExpanded, item);
+        },
+
+
+        /**
+         * toggles sections
+         * @param event
+         */
+        toggleSections: function(event) {
+
+            event.preventDefault();
+
+            var $section = this.sandbox.dom.closest(event.currentTarget, '.section'),
+                $list = this.sandbox.dom.find('.section-items', $section),
+                toggleLink = this.sandbox.dom.find('a', event.currentTarget);
+
+
+            if (this.sandbox.dom.hasClass($section, 'is-hidden')) {
+                // hide section
+                this.sandbox.dom.slideDown($list, 200, function() {
+                    this.sandbox.dom.html(toggleLink, this.options.labels.hide);
+                    this.sandbox.dom.removeClass($section, 'is-hidden');
+                }.bind(this));
+            } else {
+                // show section
+                this.sandbox.dom.html(toggleLink, this.options.labels.show);
+                this.sandbox.dom.slideUp($list, 200, function() {
+                    this.sandbox.dom.addClass($section, 'is-hidden');
+                }.bind(this));
+            }
+
+            this.sandbox.emit('husky.navigation.section.toggle');
+        },
+
+        /**
+         * Selects menu element without submenu
+         * Raises navigation.select
+         * @param event
+         */
+        selectSubItem: function(event) {
+
+            event.preventDefault();
+
+            var $subItem = this.sandbox.dom.createElement(event.currentTarget),
+                $items = this.sandbox.dom.parents(event.currentTarget, '.js-navigation-items'),
+                $parent = this.sandbox.dom.parent(event.currentTarget),
+                item;
+
+            if (this.sandbox.dom.hasClass($subItem, 'js-navigation-item')) {
+                $subItem = this.sandbox.dom.createElement(this.sandbox.dom.closest(event.currentTarget, 'li'));
+            }
+
+            // if toggle was clicked, do not set active and selected
+            if (this.sandbox.dom.hasClass($parent, 'navigation-items-toggle') || this.sandbox.dom.hasClass($parent, 'navigation-subitems-toggle')) {
+                return;
+            }
+
+            this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
+            this.sandbox.dom.addClass($subItem, 'is-selected');
+
+            this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-active', this.$el), 'is-active');
+            this.sandbox.dom.addClass($items, 'is-active');
+
+
+            // emit event
+            item = this.items[this.sandbox.dom.data($subItem, 'id')];
+            this.sandbox.emit('husky.navigation.item.select', item);
         }
+
     };
 
 });
@@ -25073,6 +24323,941 @@ define('__component__$select@husky',[],function() {
 
 });
 
+/**
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * Name: search
+ * Options:
+ *      instanceName: instance name of this component
+ *      placeholderText: text to show in search field
+ *      appearance [gray, white, small]: look and feel of search
+ *
+ * Provided Events:
+ *
+ *
+ * Triggers Events:
+ *  husky.search.<<instanceName>> , string  - triggered when search is performed - returns the searchstring
+ *  husky.search.<<instanceName>>.initialized - triggered when search is initialized
+ *
+ */
+
+define('__component__$search@husky',[], function() {
+
+    
+
+    var templates = {
+            skeleton: [
+                    '<a class="search-icon" href="#"></a>',
+                    '<input id="search-input" type="text" class="form-element input-round search-input" placeholder="<%= placeholderText %>"/>'
+                ].join('')
+        },
+        defaults = {
+            instanceName: null,
+            placeholderText: 'Search...',
+            appearance: 'gray'
+        };
+
+    return {
+
+        initialize: function() {
+            this.sandbox.logger.log('initialize', this);
+            this.options = this.sandbox.util.extend({}, defaults, this.options);
+
+            this.render();
+
+            this.bindDOMEvents();
+
+            var instanceName = this.options.instanceName ? this.options.instanceName+'.' : '';
+            this.sandbox.emit('husky.search.'+instanceName+'initialized');
+
+        },
+
+        render: function() {
+            this.sandbox.dom.addClass(this.options.el, 'search-container');
+            this.sandbox.dom.addClass(this.options.el, this.options.appearance);
+            this.sandbox.dom.html(this.$el,this.sandbox.template.parse(templates.skeleton, {placeholderText: this.options.placeholderText}));
+        },
+
+        // bind dom elements
+        bindDOMEvents: function() {
+            this.sandbox.dom.on(this.options.el, 'click', this.submitSearch.bind(this), '.search-icon');
+            this.sandbox.dom.on(this.options.el, 'keyup', this.checkEnterPressed.bind(this), '#search-input');
+        },
+
+        bindCustomEvents: function() {
+
+        },
+
+        checkEnterPressed: function(event) {
+            if (event.keyCode === 13) {
+                this.submitSearch();
+            }
+        },
+
+        submitSearch: function() {
+
+            // get search value
+
+            var searchString = this.sandbox.dom.val(this.sandbox.dom.find('#search-input', this.options.el));
+
+            // check if searchstring is emtpy
+            if (searchString === '') {
+                return;
+            }
+
+            // emit event
+            this.emitSearchEvent(searchString);
+        },
+
+
+        /**
+         * function emits event based on options.name
+         * @param searchString
+         */
+        emitSearchEvent: function(searchString) {
+
+            var event = 'husky.search';
+            if (this.options.instanceName) {
+                event += '.' + this.options.instanceName;
+            }
+
+            // trigger sandbox event
+            this.sandbox.emit(event, searchString);
+        }
+
+    };
+
+});
+
+/*****************************************************************************
+ *
+ *  Tabs
+ *
+ *  Options (defaults)
+ *      - url: url to fetch data from
+ *      - data: if no url is provided
+ *      - selected: the item that's selected on initialize
+ *      - instanceName - enables custom events (in case of multiple tabs on one page)
+ *      - preselect - defines if actions are going to be checked against current URL and preselected (current URL mus be provided by data.url)
+ *      - forceReload - defines if tabs are forcing page to reload
+ *      - forceSelect - forces tabs to select first item, if no selected item has been found
+ *  Provides Events
+ *      - husky.tabs.<<instanceName>>.getSelected [callback(item)] - returns item with callback
+ *  Triggers Events
+ *      - husky.tabs.<<instanceName>>.item.select [item] - triggered when item was clicked
+ *      - husky.tabs.<<instanceName>>.initialized [selectedItem]- triggered when tabs have been initialized
+ *
+ *  Data options
+ *      - items
+ *          - forceReload: overwrites default-setting for certain item
+ *
+ *  TODO select first (or with parameter) item after load
+ *
+ *****************************************************************************/
+
+define('__component__$tabs@husky',[],function() {
+
+    
+
+    var defaults = {
+            url: null,
+            data: [],
+            instanceName: '',
+            preselect: true,
+            forceReload: false,
+            forceSelect: true
+        },
+
+        selectItem = function(event) {
+            event.preventDefault();
+            this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
+            this.sandbox.dom.addClass(event.currentTarget, 'is-selected');
+            triggerSelectEvent.call(this, this.items[this.sandbox.dom.data(event.currentTarget, 'id')]);
+        },
+
+        triggerSelectEvent = function(item) {
+
+            item.forceReload = (item.forceReload && typeof item.forceReload !== "undefined") ? item.forceReload : this.options.forceReload;
+            this.sandbox.emit(createEventString.call(this, 'item.select'), item);
+        },
+
+        bindDOMEvents = function() {
+            this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
+        },
+
+        bindCustomEvents = function() {
+            this.sandbox.on(createEventString.call(this, 'getSelected'), function(callback) {
+                var selection = this.sandbox.dom.find('.is-selected', this.options.el);
+                callback.call(this.items[this.sandbox.dom.data(selection, 'id')]);
+            }.bind(this));
+        },
+
+        createEventString = function(ending) {
+            var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
+            return 'husky.tabs.' + instanceName + ending;
+        };
+
+    return {
+
+        view: true,
+
+        initialize: function() {
+
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.$el = this.sandbox.dom.$(this.options.el);
+
+            // load data and call render
+            if (!!this.options.url) {
+                this.sandbox.util.load(this.options.url)
+                    .then(this.render.bind(this))
+                    .fail(function(data) {
+                        this.sandbox.logger.log('data could not be loaded:', data);
+                    }.bind(this));
+            } else if (!!this.options.data) {
+                this.render((this.options.data));
+            } else {
+                this.sandbox.logger.log('no data provided for tabs!');
+            }
+
+            bindDOMEvents.call(this);
+
+            bindCustomEvents.call(this);
+        },
+
+        render: function(data) {
+
+            var $element = this.sandbox.dom.createElement('<div class="tabs-container"></div>'),
+                $list = this.sandbox.dom.createElement('<ul/>'),
+                selected = '', selectedItem = null;
+
+            this.sandbox.dom.append(this.$el, $element);
+            this.sandbox.dom.append($element, $list);
+
+            this.items = [];
+
+            this.sandbox.util.foreach(data.items, function(item) {
+                // check if item got selected
+                if (this.options.preselect && !!data.url && data.url === item.action) {
+                    selected = ' class="is-selected"';
+                    selectedItem = item;
+                } else {
+                    selected = '';
+                }
+
+                this.items[item.id] = item;
+                this.sandbox.dom.append($list, '<li ' + selected + ' data-id="' + item.id + '"><a href="#">' + item.title + '</a></li>');
+            }.bind(this));
+
+            // force selection of first element
+            if (!selectedItem && this.options.forceSelect) {
+                selectedItem = this.options.data[0];
+                this.sandbox.dom.addClass(this.sandbox.dom.find('li',$list).eq(0),'is-selected');
+            }
+
+            // initialization finished
+            this.sandbox.emit(createEventString.call(this, 'initialized'), selectedItem);
+        }
+    };
+
+});
+
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/toolbar
+ */
+
+/*
+ *
+ *  Tabs
+ *
+ *  Options (defaults)
+ *      - url: url to fetch data from
+ *      - data: if no url is provided
+ *      - selected: the item that's selected on initialize
+ *      - instanceName - enables custom events (in case of multiple tabs on one page)
+ *      - hasSearch - adds a search element at the end
+ *  Provides Events
+ *      -
+ *  Triggers Events
+ *      - husky.toolbar.<<instanceName>>.item.select - triggered when item was clicked
+ *
+ *
+ */
+
+/**
+ * @class Toolbar
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.url] url to fetch data from
+ * @param {String} [options.data] if no url is provided
+ * @param {String} [options.selected] the item that's selected on initialize
+ * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
+ * @param {String} [options.hasSearch] adds a search element at the end
+ */
+define('__component__$toolbar@husky',[],function() {
+
+    
+
+    var defaults = {
+            url: null,
+            data: [],
+            instanceName: '',
+            hasSearch: false,
+            appearance: 'large'
+        },
+
+        selectItem = function(event) {
+            event.preventDefault();
+
+            var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
+                $parent;
+
+            if (item.disabled) {
+                return;
+            }
+
+            // if toggle item do not trigger event
+            if (!item.items) {
+                $parent = this.sandbox.dom.find('button',this.sandbox.dom.closest(event.currentTarget,'.group'));
+                triggerSelectEvent.call(this, item, $parent);
+            }
+        },
+
+        triggerSelectEvent = function(item, $parent) {
+            var instanceName, parentId, icon;
+            parentId = this.sandbox.dom.data($parent, 'id');
+
+            if (this.items[parentId].type === "select") {
+                icon =this.sandbox.dom.find('span', $parent);
+                this.sandbox.dom.removeClass(icon);
+                this.sandbox.dom.addClass(icon, item.icon);
+            }
+
+            // if callback is set call it, else trigger event
+            if (item.callback) {
+                item.callback();
+            } else {
+                instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
+                this.sandbox.emit('husky.toolbar.' + instanceName + 'item.select', item);
+            }
+        },
+
+        bindDOMEvents = function() {
+            this.sandbox.dom.on(this.options.el, 'click', selectItem.bind(this), 'button:not(:disabled), li');
+            this.sandbox.dom.on(this.options.el, 'click', toggleItem.bind(this), '.dropdown-toggle');
+        },
+
+        /**
+         * created dropdown menu
+         * @param listItem
+         * @param parent
+         */
+        createDropdownMenu = function(listItem, parent) {
+            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
+                classString = '';
+            this.sandbox.dom.after(listItem, $list);
+            this.sandbox.util.foreach(parent.items, function(item) {
+
+                if (item.divider) {
+                    this.sandbox.dom.append($list, '<li class="divider"></li>');
+                    return;
+                }
+
+                item.parentId = parent.id;
+                // check id for uniqueness
+                checkItemId.call(this, item);
+                this.items[item.id] = item;
+
+                if (item.disabled) {
+                    classString = ' class="disabled"';
+                }
+
+                this.sandbox.dom.append($list, '<li data-id="' + item.id + '"' + classString + '><a href="#">' + item.title + '</a></li>');
+            }.bind(this));
+        },
+
+        /**
+         * function checks if id is set and unique among all items
+         * otherwise a new id is generated for the element
+         * @param item
+         */
+        checkItemId = function(item) {
+            // if item has no id, generate random id
+            if (!item.id || !!this.items[item.id]) {
+                do {
+                    item.id = this.sandbox.util._.uniqueId();
+                } while (!!this.items[item.id]);
+            }
+        },
+
+        /**
+         * gets called when toggle item is clicked
+         * opens dropdown submenu
+         * @param event
+         */
+        toggleItem = function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            var $list = this.sandbox.dom.parent(event.currentTarget),
+                visible;
+
+            if (this.sandbox.dom.hasClass($list, 'is-expanded')) {
+                visible = true;
+            }
+            hideDropdowns.call(this);
+
+            if (!visible) {
+                this.sandbox.dom.addClass($list, 'is-expanded');
+
+                // TODO: check if dropdown overlaps screen: set ul to .right-aligned
+
+                // on every click remove submenu
+                this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
+            }
+        },
+
+        hideDropdowns = function() {
+            this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
+        };
+
+    return {
+
+        view: true,
+
+        initialize: function() {
+
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.$el = this.sandbox.dom.$(this.options.el);
+
+            // load data and call render
+            if (!!this.options.url) {
+                this.sandbox.util.load(this.options.url)
+                    .then(this.render.bind(this))
+                    .fail(function(data) {
+                        this.sandbox.logger.log('data could not be loaded:', data);
+                    }.bind(this));
+            } else if (!!this.options.data) {
+                this.render((this.options.data));
+            } else {
+                this.sandbox.logger.log('no data provided for tabs!');
+            }
+
+            bindDOMEvents.call(this);
+        },
+
+        render: function(data) {
+
+            // TODO: add appearance class
+
+            var $container = this.sandbox.dom.createElement('<div class="toolbar-container" />'),
+                classArray, addTo, disabledString, button, $group;
+
+            this.sandbox.dom.append(this.options.el, $container);
+
+            // create items array
+            this.items = [];
+            // save item groups in array
+            this.itemGroup = [];
+
+
+            // create all elements
+            this.sandbox.util.foreach(data, function(item) {
+
+                checkItemId.call(this, item);
+                // save to items array
+                this.items[item.id] = item;
+                // create classes array
+                classArray = [];
+
+                // check if item is in a group
+                if (!!item.group) {
+                    // create group if not created yet
+                    if (!this.itemGroup[item.group]) {
+                        this.itemGroup[item.group] = this.sandbox.dom.createElement('<div id="' + item.group + '" class="btn-group" />');
+                        this.sandbox.dom.append($container, this.itemGroup[item.group]);
+                        this.sandbox.dom.addClass(this.itemGroup[item.group], this.options.appearance);
+                    }
+                    addTo = this.itemGroup[item.group];
+                } else {
+                    addTo = $container;
+                }
+
+
+                if (!!item.class) {
+                    classArray.push(item.class);
+                }
+
+                disabledString = '';
+                if (item.disabled) {
+                    disabledString = 'disabled';
+                }
+                // create button
+                $group = this.sandbox.dom.createElement('<div class="group ' + this.options.appearance + '" />');
+                this.sandbox.dom.append(addTo, $group);
+                button = this.sandbox.dom.createElement('<button data-id="' + item.id + '" class="' + classArray.join(' ') + '" title="' + item.title + '" ' + disabledString + '><span class="icon-' + item.icon + '"/></button>');
+                this.sandbox.dom.append($group, button);
+
+                // now create subitems
+                if (!!item.items) {
+                    this.sandbox.dom.addClass(button, 'dropdown-toggle');
+                    createDropdownMenu.call(this, button, item);
+                }
+
+            }.bind(this));
+
+            // add search
+            if (this.options.hasSearch) {
+                this.sandbox.dom.append($container, '<div id="' + this.options.instanceName + '-toolbar-search" class="toolbar-search" />');
+            }
+            // start search component
+            this.sandbox.start([
+                {name: 'search@husky', options: {el: '#' + this.options.instanceName + '-toolbar-search', instanceName: this.options.instanceName, appearance: 'white small'}}
+            ]);
+
+            // initialization finished
+            this.sandbox.emit('husky.tabs.initialized');
+        }
+    };
+
+});
+
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/edit-toolbar
+ */
+
+/*
+ *
+ *  edit-toolbar
+ *
+ *  Options (defaults)
+ *      - url: url to fetch data from
+ *      - data: if no url is provided
+ *      - instanceName - enables custom events (in case of multiple tabs on one page)
+ *      - appearance -
+ *  Provides Events
+ *      - husky.edit-toolbar.<<instanceName>>.item.disable - disable item with given id
+ *      - husky.edit-toolbar.<<instanceName>>.item.enable - enable item with given id
+ *
+ *  Triggers Events
+ *      - husky.edit-toolbar.<<instanceName>>.item.select - triggered when item was clicked
+ *
+ *  data structure:
+ *      - title
+ *      - id (optional - will be generated otherwise)
+ *      - icon (optional)
+ *      - disableIcon (optional): icon when item is disabled
+ *      - disabled (optional): is item disabled or enabled
+ *      - iconSize (optional: large/medium/small)
+ *      - class (optional: highlight/highlight-gray)
+ *      - group (optional: left/right)
+ *      - type (optional: none/select) - if select, the selected item is displayed in mainitem
+ *      - callback (optional) - callback function
+ *      - items (optional - if dropdown):
+ *          - title
+ *          - icon (optional) false will remove icon
+ *          - callback
+ *          - divider = true; takes item as divider element
+ *
+ *
+ */
+
+/**
+ * @class EditToolbar
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.url] url to fetch data from
+ * @param {String} [options.data] if no url is provided
+ * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
+ * @param {String} [options.appearance]
+ */
+define('__component__$edit-toolbar@husky',[],function() {
+
+    
+
+    var defaults = {
+            url: null,
+            data: [],
+            instanceName: '',
+            appearance: null // TODO: implement small version
+        },
+
+        /** templates container */
+            templates = {
+            skeleton: [
+                '<div class="edit-toolbar-container">',
+                '   <nav class="edit-toolbar-nav">',
+                '       <ul class="edit-toolbar-left" />',
+                '       <ul class="edit-toolbar-right" />',
+                '   </nav>',
+                '</div>'
+            ].join('')
+        },
+
+        /** events bound to dom */
+        bindDOMEvents = function() {
+            this.sandbox.dom.on(this.options.el, 'click', toggleItem.bind(this), '.dropdown-toggle');
+            this.sandbox.dom.on(this.options.el, 'click', selectItem.bind(this), 'li');
+        },
+
+        /** events bound to sandbox */
+        bindCustomEvents = function() {
+            this.sandbox.on(createEventName.call(this, 'item.disable'), function(id) {
+                enableItem.call(this, false, id);
+            }.bind(this));
+            this.sandbox.on(createEventName.call(this, 'item.enable'), function(id) {
+                enableItem.call(this, true, id);
+            }.bind(this));
+        },
+
+        /** set item enable or disable */
+        enableItem = function(enabled, id) {
+            var item = this.items[id],
+                $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
+                $iconItem = this.sandbox.dom.find('[data-id="' + id + '"] .icon', this.$el),
+                enabledIconClass = createIconClass.call(this, item, true),
+                disabledIconClass = createIconClass.call(this, item, false);
+
+            this.items[id].disabled = !enabled;
+
+            if (!!enabled) {
+                this.sandbox.dom.removeClass($item, 'disabled');
+                this.sandbox.dom.removeClass($iconItem, disabledIconClass);
+                this.sandbox.dom.prependClass($iconItem, enabledIconClass);
+            } else {
+                this.sandbox.dom.addClass($item, 'disabled');
+                this.sandbox.dom.removeClass($iconItem, enabledIconClass);
+                this.sandbox.dom.prependClass($iconItem, disabledIconClass);
+            }
+        },
+
+        /**
+         * gets called when toggle item is clicked
+         * opens dropdown submenu
+         * @param event
+         */
+        toggleItem = function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            var $list = this.sandbox.dom.parent(event.currentTarget),
+                id = this.sandbox.dom.data($list, 'id'),
+                item = this.items[id],
+                visible;
+
+            if (!item || !item.disabled) {
+                if (this.sandbox.dom.hasClass($list, 'is-expanded')) {
+                    visible = true;
+                }
+                hideDropdowns.call(this);
+
+                if (!visible) {
+                    this.sandbox.dom.addClass($list, 'is-expanded');
+
+                    // TODO: check if dropdown overlaps screen: set ul to .right-aligned
+
+                    // on every click remove sub-menu
+                    this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
+                }
+            }
+        },
+
+        /**
+         * hides dropdowns of this instance
+         */
+        hideDropdowns = function() {
+            this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
+        },
+
+        /**
+         * when an element gets selected
+         * gets item from items array and delegates to triggerSelectEvent function
+         * @param event
+         */
+        selectItem = function(event) {
+
+            event.preventDefault();
+
+            var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
+                $parent = this.sandbox.dom.parents(event.currentTarget, 'li').eq(0);
+
+            // stop if item has subitems
+            if (item.items && item.items.length > 0) {
+                return;
+            }
+
+            if (!item.disabled) {
+                triggerSelectEvent.call(this, item, $parent);
+            }
+        },
+
+        /**
+         * either calls items callback (if set) or triggers select event
+         * @param item
+         * @param $parent
+         */
+        triggerSelectEvent = function(item, $parent) {
+
+            var parentItem;
+
+            // check if has parent and type of parent
+            if (item.parentId) {
+                parentItem = this.items[item.parentId];
+                if (!!parentItem.type && parentItem.type === "select") {
+                    changeMainListItem.call(this, $parent, item);
+                }
+            }
+
+            // if callback is set call it, else trigger event
+            if (item.callback) {
+                item.callback();
+            } else {
+                emitEvent.call(this, 'item.select', item);
+            }
+        },
+
+        /**
+         * changes the list items icon and title
+         * @param listElement
+         * @param item
+         */
+        changeMainListItem = function(listElement, item) {
+
+            // TODO: do not change size of element on change title
+            // first get title
+            var listItems = this.sandbox.dom.find('span', listElement);
+            if (!!item.icon) {
+                this.sandbox.dom.removeClass(listItems.eq(0), '');
+                if (item.icon !== false) {
+                    this.sandbox.dom.addClass(listItems.eq(0), createIconSupportClass.call(this, item, !item.disabled));
+                }
+            }
+            if (!!item.title) {
+                this.sandbox.dom.html(listItems.eq(1), item.title);
+            }
+        },
+
+        /**
+         * creates icon span with icon classes
+         * @param item
+         * @param enabled
+         * @returns {HTMLElement|*}
+         */
+        createIconSupportClass = function(item, enabled) {
+            var classArray,
+                classString = '',
+                icon = createIconClass.call(this, item, enabled);
+
+            // create icon class
+            if (item.icon) {
+                classArray = [];
+                classArray.push(icon);
+                classArray.push('icon');
+                if (item.iconSize) {
+                    classArray.push(item.iconSize);
+                }
+
+                classString = classArray.join(' ');
+            }
+
+            return classString;
+        },
+
+        /**
+         * returns valid class for item and state
+         * @param item
+         * @param enabled
+         */
+        createIconClass = function(item, enabled) {
+            if (enabled === undefined) {
+                enabled = true;
+            }
+            var icon = (!!enabled ? item.icon : !!item.disabledIcon ? item.disabledIcon : item.icon);
+            return 'icon-' + icon;
+        },
+
+        /**
+         * created dropdown menu
+         * @param listItem
+         * @param parent
+         */
+        createDropdownMenu = function(listItem, parent) {
+            var $list = this.sandbox.dom.createElement('<ul class="edit-toolbar-dropdown-menu" />'),
+                classString = '';
+            this.sandbox.dom.append(listItem, $list);
+            this.sandbox.util.foreach(parent.items, function(item) {
+
+                if (item.divider) {
+                    this.sandbox.dom.append($list, '<li class="divider"></li>');
+                    return;
+                }
+
+                item.parentId = parent.id;
+                // check id for uniqueness
+                checkItemId.call(this, item);
+                this.items[item.id] = item;
+
+                if (item.disabled) {
+                    classString = ' class="disabled"';
+                }
+
+                this.sandbox.dom.append($list, '<li data-id="' + item.id + '"' + classString + '><a href="#">' + item.title + '</a></li>');
+            }.bind(this));
+        },
+
+        /**
+         * function checks if id is set and unique among all items
+         * otherwise a new id is generated for the element
+         * @param item
+         */
+        checkItemId = function(item) {
+            // if item has no id, generate random id
+            if (!item.id || !!this.items[item.id]) {
+                do {
+                    item.id = this.sandbox.util.uniqueId();
+                } while (!!this.items[item.id]);
+            }
+            // set enabled defaults
+            if (!item.disabled) {
+                item.disabled = false;
+            }
+        },
+
+        /** emits event */
+        emitEvent = function(postFix, data) {
+            var eventName = createEventName.call(this, postFix);
+            if (!!data) {
+                this.sandbox.emit(eventName, data);
+            } else {
+                this.sandbox.emit(eventName);
+            }
+        },
+
+        /** returns normalized event names */
+        createEventName = function(postFix) {
+            return 'husky.edit-toolbar.' + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        };
+
+    return {
+
+        view: true,
+
+        initialize: function() {
+
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            // load data and call render
+            if (!!this.options.url) {
+                this.sandbox.util.load(this.options.url)
+                    .then(this.render.bind(this))
+                    .fail(function(data) {
+                        this.sandbox.logger.log('data could not be loaded:', data);
+                    }.bind(this));
+            } else if (!!this.options.data) {
+                this.render((this.options.data));
+            } else {
+                this.sandbox.logger.log('no data provided for tabs!');
+            }
+
+            bindDOMEvents.call(this);
+            bindCustomEvents.call(this);
+        },
+
+        render: function(data) {
+
+            var classArray, addTo, $left, $right,
+                $listItem, $listLink,
+                title;
+
+            // create navbar skeleton
+            this.sandbox.dom.append(this.options.el, templates.skeleton);
+
+            $left = this.sandbox.dom.find('.edit-toolbar-left', this.options.el);
+            $right = this.sandbox.dom.find('.edit-toolbar-right', this.options.el);
+
+            // create items array
+            this.items = [];
+            // save item groups in array
+            this.itemGroup = [];
+
+
+            // create all elements
+            this.sandbox.util.foreach(data, function(item) {
+
+                // check id for uniqueness
+                checkItemId.call(this, item);
+
+                // save to items array
+                this.items[item.id] = item;
+
+                // create class array
+                classArray = ['edit-toolbar-item'];
+                if (!!item.class) {
+                    classArray.push(item.class);
+                }
+                if (item.disabled) {
+                    classArray.push('disabled');
+                }
+
+                // if group is set to right, add to right list, otherwise always add to left list
+                if (!!item.group && item.group === 'right') {
+                    addTo = $right;
+                } else {
+                    addTo = $left;
+                }
+
+                $listItem = this.sandbox.dom.createElement('<li class="' + classArray.join(' ') + '" data-id="' + item.id + '"/>');
+                $listLink = this.sandbox.dom.createElement('<a href="#" />');
+                this.sandbox.dom.append($listItem, $listLink);
+
+                // create icon span
+                this.sandbox.dom.append($listLink, '<span class="' + createIconSupportClass.call(this, item, !item.disabled) + '" />');
+
+                // create title span
+                title = item.title ? item.title : '';
+                this.sandbox.dom.append($listLink, '<span class="title">' + title + '</span>');
+
+
+                // now create subitems
+                if (!!item.items) {
+                    this.sandbox.dom.addClass($listLink, 'dropdown-toggle');
+                    createDropdownMenu.call(this, $listItem, item);
+                }
+
+                // create button
+                this.sandbox.dom.append(addTo, $listItem);
+
+            }.bind(this));
+
+            // initialization finished
+            emitEvent.call(this, 'initialized');
+        }
+    };
+
+});
+
 /*
  * This file is part of the Sulu CMS.
  *
@@ -25869,6 +26054,99 @@ define('__component__$password-fields@husky',[], function() {
     };
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/page-functions
+ */
+
+/**
+ * @class PageFunctions
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.url] url to load data
+ * @param {Object} [options.data] data to view
+ */
+define('__component__$page-functions@husky',[], function() {
+
+        
+
+        var defaults = {
+                url: '', // url to load data
+                data: {}
+            },
+
+            template = function() {
+                return [
+                    '<div class="page-function"> ',
+                    '   <a href="#" id="<%= id %>"><span class="icon-<%= icon %>"></span></a>',
+                    '</div>'
+                ].join('');
+            },
+
+            /**
+             * Namespace of events
+             * @type {string}
+             */
+            eventNamespace = 'husky.page-functions.',
+
+            /**
+             * @event husky.page-functions.rendered
+             * @description the component has been rendered
+             */
+            RENDERED = eventNamespace + 'rendered',
+
+            /**
+             * @event husky.page-functions.clicked
+             * @description link was clicked
+             */
+            CLICK = eventNamespace + 'clicked';
+
+        return {
+
+            view: true,
+
+            initialize: function() {
+                this.sandbox.logger.log('initialize', this);
+                this.sandbox.logger.log(arguments);
+
+                // extend default options
+                this.options = this.sandbox.util.extend({}, defaults, this.options);
+
+                this.render();
+            },
+
+            render: function() {
+                if (!this.options.data.id) {
+                    this.options.data.id = this.sandbox.util.uniqueId();
+                }
+
+                this.sandbox.dom.append(this.options.el, this.sandbox.template.parse(template(), this.options.data));
+
+                this.bindDomEvents();
+
+                this.sandbox.emit(RENDERED);
+            },
+
+            bindDomEvents: function() {
+                this.sandbox.dom.on(this.options.el, 'click', function(e) {
+                    e.preventDefault();
+                    this.sandbox.emit(CLICK);
+
+                    return false;
+                }.bind(this), '#' + this.options.data.id);
+            }
+
+        };
+    }
+);
+
 (function() {
 
     
@@ -26291,6 +26569,9 @@ define('husky_extensions/collection',[],function() {
             };
 
             app.core.dom.removeClass = function(selector, classes) {
+                if (!classes) {
+                    return $(selector).removeClass();
+                }
                 return $(selector).removeClass(classes);
             };
 
@@ -26300,6 +26581,15 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.hasClass = function(selector, classes) {
                 return $(selector).hasClass(classes);
+            };
+
+            app.core.dom.prependClass = function(selector, classes) {
+                var $el = $(selector),
+                    oldClasses = $el.attr('class');
+
+                /* prepend class */
+                classes = classes + ' ' + oldClasses;
+                $el.attr('class', classes);
             };
 
             app.core.dom.parent = function(selector) {
@@ -26312,6 +26602,15 @@ define('husky_extensions/collection',[],function() {
 
             app.core.dom.height = function(selector) {
                 return $(selector).height();
+            };
+
+            app.core.dom.offset = function(selector, attributes) {
+                if (attributes) {
+                    return $(selector).offset(attributes);
+                } else {
+                    return $(selector).offset();
+                }
+
             };
 
             app.core.dom.remove = function(context, selector) {
@@ -26447,6 +26746,28 @@ define('husky_extensions/collection',[],function() {
             app.core.dom.scrollTop = function(itemSelector) {
                 $(window).scrollTop($(itemSelector).offset().top);
             };
+
+
+            app.core.dom.scrollAnimate = function(position, selector) {
+                if (!!selector) {
+                    $(selector).animate({
+                        scrollTop: position
+                    }, 500);
+                } else {
+                    $('html, body').animate({
+                        scrollTop: position
+                    }, 500);
+                }
+            };
+
+            app.core.dom.slideUp = function(selector, duration, complete) {
+                $(selector).slideUp(duration,complete);
+            };
+
+            app.core.dom.slideDown = function(selector, duration, complete) {
+                $(selector).slideDown(duration,complete);
+            };
+
 
             app.core.util.ajax = $.ajax;
         }
@@ -26667,7 +26988,7 @@ define('husky_extensions/util',[],function() {
             app.core.util.foreach = function(array, callbackValue) {
                 if (array.length && array.length > 0) {
                     for (var i = -1, length = array.length; ++i < length;) {
-                        callbackValue( array[i], i);
+                        callbackValue(array[i], i);
                     }
                 } else {
                     app.sandbox.logger.log('error at util.foreach: no array given');
@@ -26687,8 +27008,8 @@ define('husky_extensions/util',[],function() {
                         deferred.resolve(data);
                     }.bind(this),
 
-                    error: function() {
-                        deferred.reject();
+                    error: function(error) {
+                        deferred.reject(error);
                     }
                 });
 
@@ -26697,10 +27018,13 @@ define('husky_extensions/util',[],function() {
                 return deferred.promise();
             };
 
-            app.core.util.contains = function(list, value){
+            app.core.util.contains = function(list, value) {
                 return _.contains(list, value);
             };
 
+            app.core.util.uniqueId = function(prefix) {
+                return _.uniqueId(prefix);
+            };
         }
     };
 });
