@@ -76,9 +76,7 @@ define([], function() {
     return {
         view: true,
 
-
         initialize: function() {
-
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, this.options, defaults);
 
@@ -118,7 +116,6 @@ define([], function() {
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
-
         },
 
         /**
@@ -133,6 +130,5 @@ define([], function() {
         changeState: function(type, saved) {
             this.options.changeStateCallback.call(this, saved, type);
         }
-
     };
 });

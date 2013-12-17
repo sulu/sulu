@@ -243,6 +243,7 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     *
      * @param int $position
      */
     public function setPosition($position)
