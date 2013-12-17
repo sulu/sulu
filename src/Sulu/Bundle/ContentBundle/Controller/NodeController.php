@@ -32,7 +32,6 @@ class NodeController extends RestController implements ClassResourceInterface
      * @param $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function getAction($uuid)
     {
         $view = $this->responseGetById(
@@ -65,6 +64,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $parentUuid = $this->getRequest()->get('parent');
         $depth = $this->getRequest()->get('depth');
 
+        // TODO handle different depths
         if ($depth == 1) {
             // TODO language, portal
             $structures = $this->getMapper()->loadByParent($parentUuid, 'default', 'de');
