@@ -32,46 +32,43 @@ define([], function() {
         },
 
         templates = {
-            default:
-                function() {
-                    return[
-                        {
-                            id: 'save-button',
-                            icon: 'floppy',
-                            disabledIcon: 'floppy-saved',
-                            iconSize: 'large',
-                            class: 'highlight',
-                            disabled: true,
-                            callback: function() {
-                                this.sandbox.emit('sulu.edit-toolbar.save');
-                            }.bind(this)
-                        },
-                        {
-                            icon: 'cogwheel',
-                            iconSize: 'large',
-                            class: 'highlight-gray',
-                            group: 'right',
-                            items: [
-                                {
-                                    title:'delete',
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.edit-toolbar.delete');
-                                    }.bind(this)
-                                }
-                            ]
-                        }
-                    ];
-                }
+            default: function() {
+                return[
+                    {
+                        id: 'save-button',
+                        icon: 'floppy',
+                        disabledIcon: 'floppy-saved',
+                        iconSize: 'large',
+                        class: 'highlight',
+                        disabled: true,
+                        callback: function() {
+                            this.sandbox.emit('sulu.edit-toolbar.save');
+                        }.bind(this)
+                    },
+                    {
+                        icon: 'cogwheel',
+                        iconSize: 'large',
+                        class: 'highlight-gray',
+                        group: 'right',
+                        items: [
+                            {
+                                title: 'delete',
+                                callback: function() {
+                                    this.sandbox.emit('sulu.edit-toolbar.delete');
+                                }.bind(this)
+                            }
+                        ]
+                    }
+                ];
+            }
         },
 
         changeStateCallbacks = {
             default: function(saved, type) {
-                if (type === 'edit') {
-                    if (!!saved) {
-                        this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
-                    } else {
-                        this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
-                    }
+                if (!!saved) {
+                    this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
+                } else {
+                    this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
                 }
             }
         };
