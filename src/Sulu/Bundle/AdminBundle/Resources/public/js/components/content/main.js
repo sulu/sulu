@@ -51,10 +51,7 @@ define([], function() {
                     options: {
                         el: '#page-functions',
                         data: {
-                            icon: 'chevron-left',
-                            callback: function() {
-                                console.log("go back to last page");
-                            }
+                            icon: 'chevron-left'
                         }
                     }
                 },
@@ -62,12 +59,6 @@ define([], function() {
                     name: 'edit-toolbar@suluadmin',
                     options: {
                         el: '#toolbar',
-                        pageFunction: {
-                            icon: 'chevron-left',
-                            callback: function() {
-                                console.log("go back to last page");
-                            }
-                        },
                         instanceName: this.options.instanceName,
                         forceReload: false
                     }
@@ -109,7 +100,7 @@ define([], function() {
             // back clicked
             this.sandbox.on('husky.page-functions.clicked', function() {
                 this.sandbox.emit('sulu.edit-toolbar.back');
-            }.bind(this))
+            }.bind(this));
         },
 
         /**
