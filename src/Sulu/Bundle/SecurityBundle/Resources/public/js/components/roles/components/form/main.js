@@ -40,11 +40,11 @@ define([], function() {
         templates: ['/admin/security/template/role/form'],
 
         initialize: function() {
-            currentType = currentState = '';
+            this.saved = true;
             permissionData = this.options.data.permissions;
 
-            this.initializeHeader();
             this.render();
+
             this.initializeMatrix();
             this.initializeValidation();
 
@@ -72,23 +72,27 @@ define([], function() {
             this.sandbox.on('husky.matrix.changed', function(data) {
                 this.changePermission(data);
             }.bind(this));
-        },
 
-        initializeHeader: function() {
-            if (!!this.options.data.id) {
-                this.sandbox.emit('husky.header.button-type', 'saveDelete');
-            } else {
-                this.sandbox.emit('husky.header.button-type', 'save');
-            }
-
-            this.sandbox.on('husky.button.save.click', function() {
+            this.sandbox.on('sulu.edit-toolbar.save', function() {
                 this.save();
             }.bind(this));
 
-            this.sandbox.on('husky.button.delete.click', function() {
+            this.sandbox.on('sulu.edit-toolbar.delete', function() {
                 this.sandbox.emit('sulu.role.delete', this.sandbox.dom.val('#id'));
             }.bind(this));
+
+            this.sandbox.on('sulu.role.saved', function(id) {
+                this.options.data.id = id;
+                this.setHeaderBar(true);
+            }, this);
+
+            // back to list
+            this.sandbox.on('sulu.edit-toolbar.back', function() {
+                this.sandbox.emit('sulu.roles.list');
+            }, this);
         },
+
+
 
         initializeValidation: function() {
             this.sandbox.form.create(formSelector);
@@ -238,30 +242,11 @@ define([], function() {
 
         // @var Bool saved - defines if saved state should be shown
         setHeaderBar: function(saved) {
-
-            var changeType, changeState,
-                ending = (!!this.options.data && !!this.options.data.id) ? 'Delete' : '';
-
-            changeType = 'save' + ending;
-
-            if (saved) {
-                if (ending === '') {
-                    changeState = 'hide';
-                } else {
-                    changeState = 'standard';
-                }
-            } else {
-                changeState = 'dirty';
+            if (saved !== this.saved) {
+                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
             }
-
-            if (currentType !== changeType) {
-                this.sandbox.emit('husky.header.button-type', changeType);
-                currentType = changeType;
-            }
-            if (currentState !== changeState) {
-                this.sandbox.emit('husky.header.button-state', changeState);
-                currentState = changeState;
-            }
+            this.saved = saved;
         },
 
         listenForChange: function() {
