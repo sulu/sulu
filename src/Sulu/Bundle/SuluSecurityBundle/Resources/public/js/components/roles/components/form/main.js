@@ -92,8 +92,6 @@ define([], function() {
             }, this);
         },
 
-
-
         initializeValidation: function() {
             this.sandbox.form.create(formSelector);
         },

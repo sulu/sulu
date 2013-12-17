@@ -19,7 +19,6 @@ define([
         name: 'Sulu Security Role',
 
         initialize: function() {
-
             this.role = null;
             this.idDelete = null;
             this.loading = 'delete';
@@ -68,7 +67,6 @@ define([
 
         // redirects to the form with the role data, when the sulu.roles.load event with an id is thrown
         load: function(id) {
-
             this.sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id + '/details');
         },
 
@@ -88,7 +86,6 @@ define([
         // deletes the role with the id thrown with the sulu.role.delete event
         // id can be an array of ids or one id
         del: function(id) {
-
             this.idDelete = id;
 
             this.confirmDeleteDialog(function(wasConfirmed) {
@@ -107,7 +104,6 @@ define([
         },
 
         delSubmitOnce: function(id, navigate) {
-
             if(this.role === null) {
                 this.role = new Role();
             }
@@ -140,7 +136,6 @@ define([
         },
 
         renderForm: function() {
-
             this.role = new Role();
 
             var component = {
