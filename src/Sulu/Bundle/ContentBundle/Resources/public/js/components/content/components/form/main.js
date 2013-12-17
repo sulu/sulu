@@ -80,8 +80,13 @@ define([], function() {
             }, this);
 
             // contact saved
-            this.sandbox.on('husky.button.save.click', function() {
+            this.sandbox.on('sulu.edit-toolbar.save', function() {
                 this.submit();
+            }, this);
+
+            // back to list
+            this.sandbox.on('sulu.edit-toolbar.back', function() {
+                this.sandbox.emit('sulu.content.contents.list');
             }, this);
         },
 
@@ -103,30 +108,8 @@ define([], function() {
 
         // @var Bool saved - defines if saved state should be shown
         setHeaderBar: function(saved) {
-
-            var changeType, changeState,
-                ending = (!!this.options.data && !!this.options.data.id) ? 'Delete' : '';
-
-            changeType = 'save' + ending;
-
-            if (saved) {
-                if (ending === '') {
-                    changeState = 'hide';
-                } else {
-                    changeState = 'standard';
-                }
-            } else {
-                changeState = 'dirty';
-            }
-
-            if (this.currentType !== changeType) {
-                this.sandbox.emit('husky.header.button-type', changeType);
-                this.currentType = changeType;
-            }
-            if (this.currentState !== changeState) {
-                this.sandbox.emit('husky.header.button-state', changeState);
-                this.currentState = changeState;
-            }
+            var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
+            this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
         },
 
 

@@ -58,6 +58,11 @@ define([
             this.sandbox.on('sulu.content.contents.getRL', function(title, callback) {
                 this.getResourceLocator(title, callback);
             }, this);
+
+            // load list view
+            this.sandbox.on('sulu.content.contents.list', function(ids) {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+            }, this);
         },
 
         getResourceLocator: function(title, callback) {
