@@ -23,18 +23,18 @@ class SuluContactContentNavigation extends ContentNavigation
         $this->setName('Contacts');
 
         $details = new NavigationItem('Details');
-        $details->setContentType('contact');
         $details->setAction('details');
-        $details->setType('content');
-
+        $details->setContentType('contact');
+        $details->setContentComponent('contacts@sulucontact');
+        $details->setContentComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
 
 
         $details = new NavigationItem('Details');
-        $details->setContentType('account');
         $details->setAction('details');
-        $details->setType('content');
-
+        $details->setContentType('account');
+        $details->setContentComponent('accounts@sulucontact');
+        $details->setContentComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
 
     }

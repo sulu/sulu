@@ -17,8 +17,6 @@ define([], function() {
             emailItem,
             phoneItem,
             addressItem,
-            currentType,
-            currentState,
             addressCounter;
 
         return {
@@ -28,7 +26,7 @@ define([], function() {
             templates: ['/admin/contact/template/account/form'],
 
             initialize: function() {
-                currentType = currentState = '';
+                this.saved = true;
                 addressCounter=1;
                 this.formId="#contact-form";
                 this.render();
@@ -137,7 +135,7 @@ define([], function() {
 
             bindCustomEvents: function() {
                 // delete account
-                this.sandbox.on('husky.button.delete.click', function() {
+                this.sandbox.on('sulu.edit-toolbar.delete', function() {
                     this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
                 }, this);
 
@@ -148,8 +146,13 @@ define([], function() {
                 }, this);
 
                 // account saved
-                this.sandbox.on('husky.button.save.click', function() {
+                this.sandbox.on('sulu.edit-toolbar.save', function() {
                     this.submit();
+                }, this);
+
+                // back to list
+                this.sandbox.on('sulu.edit-toolbar.back', function() {
+                    this.sandbox.emit('sulu.contacts.accounts.list');
                 }, this);
             },
 
@@ -309,32 +312,13 @@ define([], function() {
                 $item.remove();
             },
 
-            // @var Bool saved - defines if saved state should be shown
+            /** @var Bool saved - defines if saved state should be shown */
             setHeaderBar: function(saved) {
-
-                var changeType, changeState,
-                    ending = (!!this.options.data && !!this.options.data.id) ? 'Delete' : '';
-
-                changeType = 'save' + ending;
-
-                if (saved) {
-                    if (ending === '') {
-                        changeState = 'hide';
-                    } else {
-                        changeState = 'standard';
-                    }
-                } else {
-                    changeState = 'dirty';
+                if (saved !== this.saved) {
+                    var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
+                    this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
                 }
-
-                if (currentType !== changeType) {
-                    this.sandbox.emit('husky.header.button-type', changeType);
-                    currentType = changeType;
-                }
-                if (currentState !== changeState) {
-                    this.sandbox.emit('husky.header.button-state', changeState);
-                    currentState = changeState;
-                }
+                this.saved = saved;
             },
 
             listenForChange: function() {
