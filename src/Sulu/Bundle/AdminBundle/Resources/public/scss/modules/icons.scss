@@ -1,0 +1,6 @@
+.icon-floppy {
+    &::after {
+        content: "\e444";
+        display: inline-block;
+    }
+}

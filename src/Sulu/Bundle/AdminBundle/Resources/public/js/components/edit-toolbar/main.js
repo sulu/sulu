@@ -37,7 +37,8 @@ define([], function() {
                     return[
                         {
                             id: 'save-button',
-                            icon: 'floppy-saved',
+                            icon: 'floppy',
+                            disabledIcon: 'floppy-saved',
                             iconSize: 'large',
                             class: 'highlight',
                             disabled: true,

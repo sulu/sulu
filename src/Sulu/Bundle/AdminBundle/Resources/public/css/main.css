@@ -99,6 +99,12 @@ input, select {
   margin-top: 10px;
 }
 
+/* line 2, ../scss/modules/icons.scss */
+.icon-floppy::after {
+  content: "\e444";
+  display: inline-block;
+}
+
 /* line 1, ../scss/modules/toolbar.scss */
 #toolbar .edit-toolbar-left {
   margin-left: -50px;
