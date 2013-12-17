@@ -59,3 +59,5 @@ security:
             pattern: ^/admin
             anonymous: ~
 
+parameters:
+    sulu_admin_name: Sulu
