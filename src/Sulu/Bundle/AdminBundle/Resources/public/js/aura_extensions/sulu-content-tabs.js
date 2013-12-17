@@ -18,9 +18,7 @@ define([], function() {
                                         el: this.options.el,
                                         tabsData: navigation,
                                         heading: this.sandbox.translate(this.content.title),
-                                        contentOptions: {
-                                            id: this.options.id
-                                        }
+                                        contentOptions: this.options
                                     }
                                 }
                             ]);
