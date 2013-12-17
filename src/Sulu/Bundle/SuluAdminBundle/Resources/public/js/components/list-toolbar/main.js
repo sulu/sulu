@@ -79,7 +79,7 @@ define([], function() {
         initialize: function() {
 
             // merge defaults
-            this.options = this.sandbox.util.extend(true, {}, this.options, defaults);
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             var template;
 
@@ -103,7 +103,8 @@ define([], function() {
                     options: {
                         hasSearch: true,
                         el: this.options.el,
-                        data: this.options.template
+                        data: this.options.template,
+                        instanceName: this.options.instanceName
                     }
                 }
             ]);
