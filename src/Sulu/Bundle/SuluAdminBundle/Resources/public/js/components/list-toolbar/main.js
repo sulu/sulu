@@ -39,6 +39,7 @@ define([], function() {
                             id: 'add',
                             icon: 'user-add',
                             class: 'highlight',
+                            title: 'add',
                             callback: function() {
                                 this.sandbox.emit('sulu.list-toolbar.add');
                             }.bind(this)
@@ -46,6 +47,7 @@ define([], function() {
                         {
                             id: 'delete',
                             icon: 'bin',
+                            title: 'delete',
                             group: '1',
                             callback: function() {
                                 this.sandbox.emit('sulu.list-toolbar.delete');
