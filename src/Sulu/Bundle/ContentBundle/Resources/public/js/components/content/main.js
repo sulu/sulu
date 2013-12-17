@@ -62,7 +62,7 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.content.contents.list', function(ids) {
+            this.sandbox.on('sulu.content.contents.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
             }, this);
         },
@@ -107,11 +107,10 @@ define([
         },
 
         add: function(parent) {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
             if (!!parent) {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/add:' + parent.id);
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/add:' + parent.id + '/details');
             } else {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/add');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/add/details');
             }
         },
 
