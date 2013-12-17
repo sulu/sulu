@@ -51,6 +51,10 @@ define([
                 this.del(id);
             }.bind(this));
 
+            this.sandbox.on('sulu.roles.list', function() {
+                this.sandbox.emit('sulu.router.navigate', 'settings/roles');
+            }.bind(this));
+
             this.sandbox.on('sulu.roles.delete', function(ids) {
                 this.loading = 'add';
                 this.del(ids);
@@ -59,30 +63,24 @@ define([
 
         // redirects to a new form, when the sulu.roles.new event is thrown
         add: function() {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
             this.sandbox.emit('sulu.router.navigate', 'settings/roles/new');
         },
 
         // redirects to the form with the role data, when the sulu.roles.load event with an id is thrown
         load: function(id) {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-
 
             this.sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id + '/details');
         },
 
         // saves the data, which is thrown together with a sulu.roles.save event
         save: function(data) {
-            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
-
             this.role.set(data);
             this.role.save(null, {
-                success: function() {
-                    this.sandbox.emit('husky.header.button-state', 'standard');
+                success: function(data) {
+                    this.sandbox.emit('sulu.role.saved', data.id);
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('sulu.dialog.error.show', 'An error occured during saving the role!');
-                    this.sandbox.emit('husky.header.button-state', 'standard');
                 }.bind(this)
             });
         },
@@ -142,13 +140,6 @@ define([
         },
 
         renderForm: function() {
-
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: navigation
-                });
-            }.bind(this));
-
 
             this.role = new Role();
 

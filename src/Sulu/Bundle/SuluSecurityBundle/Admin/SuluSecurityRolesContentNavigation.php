@@ -19,6 +19,8 @@ class SuluSecurityRolesContentNavigation extends ContentNavigation
         $details = new NavigationItem('Details');
         $details->setAction('details');
         $details->setContentType('roles');
+        $details->setContentComponent('roles@sulusecurity');
+        $details->setContentComponentOptions(array('display'=>'form'));
 
         $this->addNavigationItem($details);
     }

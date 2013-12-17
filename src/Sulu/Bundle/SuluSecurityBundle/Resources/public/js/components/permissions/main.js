@@ -172,7 +172,7 @@ define([
 
         loadUser: function() {
             this.user = new User();
-            this.user.url = '/admin/api/security/users?contactId=' + this.options.id;
+            this.user.url = '/admin/api/users?contactId=' + this.options.id;
             this.user.fetch({
                 success: function() {
                     this.contact = this.user.get('contact').toJSON();

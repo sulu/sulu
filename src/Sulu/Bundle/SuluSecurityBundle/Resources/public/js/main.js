@@ -38,26 +38,17 @@ define(function() {
             sandbox.mvc.routes.push({
                 route: 'settings/roles/new',
                 callback: function() {
-                    this.html('<div data-aura-component="roles@sulusecurity" data-aura-display="form"/>');
+                    this.html('<div data-aura-component="roles/components/content@sulusecurity" data-aura-display="form"/>');
                 }
             });
 
-            // show form for editing a role
-            sandbox.mvc.routes.push({
-                route: 'settings/roles/edit::id',
-                callback: function(id) {
-                    this.html(
-                        '<div data-aura-component="roles@sulusecurity" data-aura-display="form" data-aura-id="' + id + '"/>'
-                    );
-                }
-            });
 
             // show form for editing a role
             sandbox.mvc.routes.push({
-                route: 'settings/roles/edit::id/details',
+                route: 'settings/roles/edit::id/:content',
                 callback: function(id) {
                     this.html(
-                        '<div data-aura-component="roles@sulusecurity" data-aura-display="form" data-aura-id="' + id + '"/>'
+                        '<div data-aura-component="roles/components/content@sulusecurity" data-aura-display="form" data-aura-id="' + id + '"/>'
                     );
                 }
             });
