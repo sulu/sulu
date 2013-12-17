@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 
             // Sulu
+            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
         );
