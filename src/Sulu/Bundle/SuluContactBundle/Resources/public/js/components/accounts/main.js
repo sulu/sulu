@@ -53,6 +53,11 @@ define([
             this.sandbox.on('sulu.contacts.accounts.delete', function(ids) {
                 this.delAccounts(ids);
             }, this);
+
+            // load list view
+            this.sandbox.on('sulu.contacts.accounts.list', function(ids) {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
+            }, this);
         },
 
         del: function() {
