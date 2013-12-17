@@ -98,24 +98,11 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         $array = $this->navigation1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertTrue($array['hasSub']);
-
-        $this->assertEquals('Portals', $array['sub']['items'][0]['title']);
-        $this->assertTrue($array['sub']['items'][0]['hasSub']);
-
-        $this->assertEquals('DE', $array['sub']['items'][0]['sub']['items'][0]['title']);
-        $this->assertFalse($array['sub']['items'][0]['sub']['items'][0]['hasSub']);
-
-        $this->assertEquals('AT', $array['sub']['items'][0]['sub']['items'][1]['title']);
-        $this->assertFalse($array['sub']['items'][0]['sub']['items'][1]['hasSub']);
-
-        $this->assertEquals('COM', $array['sub']['items'][0]['sub']['items'][2]['title']);
-        $this->assertFalse($array['sub']['items'][0]['sub']['items'][2]['hasSub']);
-
-        $this->assertEquals('Settings', $array['sub']['items'][1]['title']);
-        $this->assertTrue($array['sub']['items'][0]['hasSub']);
-
-        $this->assertEquals('Translate', $array['sub']['items'][1]['sub']['items'][0]['title']);
-        $this->assertFalse($array['sub']['items'][0]['sub']['items'][0]['hasSub']);
+        $this->assertEquals('Portals', $array['items'][0]['title']);
+        $this->assertEquals('DE', $array['items'][0]['items'][0]['title']);
+        $this->assertEquals('AT', $array['items'][0]['items'][1]['title']);
+        $this->assertEquals('COM', $array['items'][0]['items'][2]['title']);
+        $this->assertEquals('Settings', $array['items'][1]['title']);
+        $this->assertEquals('Translate', $array['items'][1]['items'][0]['title']);
     }
 }

@@ -89,7 +89,6 @@ class NavigationItem implements \Iterator
      */
     protected $contentComponent;
 
-
     /**
      * Options array of the contentComponent
      * @var array
@@ -168,7 +167,6 @@ class NavigationItem implements \Iterator
     {
         return $this->icon;
     }
-
 
     /**
      * Sets the action of the NavigationItem
@@ -347,8 +345,6 @@ class NavigationItem implements \Iterator
     {
         return $this->contentComponentOptions;
     }
-
-
 
     /**
      * Returns a copy of this navigation item without its children
