@@ -36,10 +36,10 @@ define({
 
         // show form for new contacts
         sandbox.mvc.routes.push({
-            route: 'contacts/contacts/add',
-            callback: function(){
+            route: 'contacts/contacts/add/:content',
+            callback: function(content){
                 this.html(
-                    '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="details"/>'
+                    '<div data-aura-component="contacts/components/content@sulucontact" data-aura-display="content" data-aura-content="form"/>'
                 );
             }
         });
@@ -74,7 +74,7 @@ define({
 
         //show for a new account
         sandbox.mvc.routes.push({
-            route: 'contacts/accounts/add',
+            route: 'contacts/accounts/add/details',
             callback: function(){
                 this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="form"/>');
             }
