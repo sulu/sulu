@@ -47,3 +47,6 @@ sulu_core:
             default_path: %kernel.root_dir%/../Resources/templates
     portal:
         ~
+
+parameters:
+    sulu_admin_name: Sulu
