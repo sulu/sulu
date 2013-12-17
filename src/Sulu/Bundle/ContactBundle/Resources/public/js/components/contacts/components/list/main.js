@@ -24,24 +24,12 @@ define(function() {
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
-            // dropdown - showing options
             this.sandbox.start([{
-                name: 'dropdown@husky',
+                name: 'list-toolbar@suluadmin',
                 options: {
-                    el: '#options-dropdown',
-                    trigger: '.dropdown-toggle',
-                    setParentDropDown: true,
-                    instanceName: 'options',
-                    alignment: 'right',
-                    data: [
-                        {
-                            'id': 1,
-                            'type':'delete',
-                            'name': this.sandbox.translate('public.delete')
-                        }
-                    ]
+                    el: '#options-dropdown'
                 }
-            }]);
+            }])
 
             // datagrid
             this.sandbox.start([{
@@ -71,23 +59,22 @@ define(function() {
             }, this);
 
 
-            this.sandbox.on('husky.dropdown.options.clicked',  function() {
-                this.sandbox.emit('husky.dropdown.options.toggle');
-            }, this);
+//            this.sandbox.on('husky.dropdown.options.clicked',  function() {
+//                this.sandbox.emit('husky.dropdown.options.toggle');
+//            }, this);
 
-            // optionsmenu clicked
-            this.sandbox.on('husky.dropdown.options.item.click', function(event) {
-                if (event.type === "delete") {
-                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                        this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-                    }.bind(this));
-                }
-            },this);
+//            // optionsmenu clicked
+//            this.sandbox.on('husky.dropdown.options.item.click', function(event) {
+//                if (event.type === "delete") {
+//                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+//                        this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+//                    }.bind(this));
+//                }
+//            },this);
 
-            // add button in headerbar
-            this.sandbox.emit('husky.header.button-type', 'add');
 
-            this.sandbox.on('husky.button.add.click', function() {
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                console.log("whoot?");
                 this.sandbox.emit('sulu.contacts.contacts.new');
             }, this);
         }
