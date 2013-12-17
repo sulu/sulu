@@ -53,6 +53,11 @@ define([
             this.sandbox.on('sulu.contacts.accounts.delete', function(ids) {
                 this.delAccounts(ids);
             }, this);
+
+            // load list view
+            this.sandbox.on('sulu.contacts.accounts.list', function(ids) {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
+            }, this);
         },
 
         del: function() {
@@ -134,13 +139,6 @@ define([
 
         renderForm: function() {
 
-            // show navigation submenu
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: navigation
-                });
-            }.bind(this));
-
             // load data and show form
             this.account = new Account();
             if (!!this.options.id) {
@@ -164,11 +162,10 @@ define([
         },
 
         confirmSingleDeleteDialog: function(callbackFunction, id) {
-            var url = '/admin/api/contact/accounts/' + id + '/deleteinfo';
+            var url = '/admin/api/accounts/' + id + '/deleteinfo';
 
             this.sandbox.util.ajax({
                 headers: {
-                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
 

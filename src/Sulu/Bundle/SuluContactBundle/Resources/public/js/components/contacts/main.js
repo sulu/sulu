@@ -53,6 +53,11 @@ define([
             this.sandbox.on('sulu.contacts.contacts.delete', function(ids) {
                 this.delContacts(ids);
             }, this);
+
+            // load list view
+            this.sandbox.on('sulu.contacts.contacts.list', function(ids) {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
+            }, this);
         },
 
         del: function() {
@@ -125,14 +130,6 @@ define([
         },
 
         renderForm: function() {
-
-            // show navigation submenu
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: navigation
-                });
-            }.bind(this));
-
             // load data and show form
             this.contact = new Contact();
             if (!!this.options.id) {
