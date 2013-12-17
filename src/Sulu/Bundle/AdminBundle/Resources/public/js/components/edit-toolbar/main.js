@@ -80,7 +80,7 @@ define([], function() {
         initialize: function() {
 
             // merge defaults
-            this.options = this.sandbox.util.extend(true, {}, this.options, defaults);
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             var template = this.options.template;
 
