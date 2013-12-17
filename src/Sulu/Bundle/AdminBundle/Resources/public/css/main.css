@@ -23,12 +23,16 @@
   min-width: 800px;
 }
 /* line 30, ../scss/modules/base.scss */
+#content #list-toolbar-container {
+  margin-bottom: 18px;
+}
+/* line 34, ../scss/modules/base.scss */
 #content .content-tabs-content {
   margin-top: 100px;
 }
 
 /*----------------------------------------*/
-/* line 38, ../scss/modules/base.scss */
+/* line 42, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -36,24 +40,24 @@
 }
 
 /*----------------------------------------*/
-/* line 46, ../scss/modules/base.scss */
+/* line 50, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 55, ../scss/modules/base.scss */
+/* line 59, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 59, ../scss/modules/base.scss */
+/* line 63, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 67, ../scss/modules/base.scss */
+/* line 71, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
