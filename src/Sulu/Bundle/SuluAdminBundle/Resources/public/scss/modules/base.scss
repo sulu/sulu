@@ -27,6 +27,10 @@ $contentWidth : 800px;
     min-width: $contentWidth;
   }
 
+  #list-toolbar-container {
+      margin-bottom: 18px;
+  }
+
   .content-tabs-content {
     margin-top: 100px;
   }
