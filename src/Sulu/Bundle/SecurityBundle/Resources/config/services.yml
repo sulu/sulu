@@ -19,6 +19,7 @@ parameters:
 services:
     sulu_security.admin:
         class: %sulu_security.admin.class%
+        arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
 

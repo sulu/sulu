@@ -26,6 +26,8 @@ define([
 
             if (this.options.display === 'form') {
                 this.renderForm();
+            } else if (this.options.display === 'content') {
+                this.renderContent();
             }
 
             this.bindCustomEvents();
@@ -139,6 +141,22 @@ define([
             }
         },
 
+
+        renderContent: function() {
+            // show navigation submenu
+            this.sandbox.sulu.navigation.parseContentNavigation(ContentNavigation, this.options.id, function(navigation) {
+                this.sandbox.start([
+                    {
+                        name: 'content@suluadmin', options: {
+                        el: this.options.el,
+                        tabsData: navigation,
+                        heading: this.sandbox.translate('contact.contacts.title')
+                    }
+                    }
+                ]);
+            }.bind(this));
+        },
+
         loadRoles: function() {
             this.roles = new Roles();
             this.roles.fetch({
@@ -154,7 +172,7 @@ define([
 
         loadUser: function() {
             this.user = new User();
-            this.user.url = '/admin/api/security/users?contactId=' + this.options.id;
+            this.user.url = '/admin/api/users?contactId=' + this.options.id;
             this.user.fetch({
                 success: function() {
                     this.contact = this.user.get('contact').toJSON();
