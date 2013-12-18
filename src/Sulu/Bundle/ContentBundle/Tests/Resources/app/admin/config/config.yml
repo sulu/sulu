@@ -27,7 +27,6 @@ doctrine:
         resolve_target_entities:
             Sulu\Component\Security\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
 
-
 monolog:
     handlers:
         main:
@@ -48,5 +47,5 @@ sulu_core:
     portal:
         ~
 
-parameters:
-    sulu_admin.name: Sulu
+sulu_admin:
+    name: SULU 2.0
