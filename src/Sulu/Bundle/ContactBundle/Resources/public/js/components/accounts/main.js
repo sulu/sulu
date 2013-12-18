@@ -8,9 +8,8 @@
  */
 
 define([
-    'sulucontact/model/account',
-    'text!/admin/contact/navigation/account'
-], function(Account, ContentNavigation) {
+    'sulucontact/model/account'
+], function(Account) {
 
     'use strict';
 
@@ -130,24 +129,28 @@ define([
         },
 
         renderList: function() {
-
+            var $list = $('<div id="accounts-list-container"/>');
+            this.html($list);
             this.sandbox.start([
-                {name: 'accounts/components/list@sulucontact', options: { el: this.$el}}
+                {name: 'accounts/components/list@sulucontact', options: { el: $list}}
             ]);
 
         },
 
         renderForm: function() {
-
             // load data and show form
             this.account = new Account();
+
+            var $form = $('<div id="accounts-form-container"/>');
+            this.html($form);
+
             if (!!this.options.id) {
                 this.account = new Account({id: this.options.id});
                 //account = this.getModel(this.options.id);
                 this.account.fetch({
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'accounts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
+                            {name: 'accounts/components/form@sulucontact', options: { el: $form, data: model.toJSON()}}
                         ]);
                     }.bind(this),
                     error: function() {
@@ -156,7 +159,7 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'accounts/components/form@sulucontact', options: { el: this.$el, data: this.account.toJSON()}}
+                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
                 ]);
             }
         },
