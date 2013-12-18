@@ -1,7 +1,7 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -11,6 +11,22 @@ define(function() {
 
     'use strict';
 
+    var bindCustomEvents = function() {
+        this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.emit('sulu.roles.new');
+        }.bind(this));
+
+        this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.roles.delete', ids);
+            }.bind(this));
+        }.bind(this));
+
+        this.sandbox.on('husky.datagrid.item.click', function(id) {
+            this.sandbox.emit('sulu.roles.load', id);
+        }.bind(this));
+    };
+
     return {
         name: 'Sulu Security Role List',
 
@@ -18,43 +34,20 @@ define(function() {
 
         initialize: function() {
             this.initializeDataGrid();
-            this.initializeHeader();
+            bindCustomEvents.call(this);
         },
 
         initializeDataGrid: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/role/list'));
 
-            // dropdown - showing options
             this.sandbox.start([
                 {
-                    name: 'dropdown@husky',
+                    name: 'list-toolbar@suluadmin',
                     options: {
-                        el: '#options-dropdown',
-                        trigger: '.dropdown-toggle',
-                        setParentDropDown: true,
-                        instanceName: 'options',
-                        alignment: 'right',
-                        data: [
-                            {
-                                'id': 1,
-                                'type': 'delete',
-                                'name': this.sandbox.translate('public.delete')
-                            }
-                        ]
+                        el: '#list-toolbar-container',
+                        instanceName: 'roles'
                     }
-                }
-            ]);
-
-            // dropdown clicked
-            this.sandbox.on('husky.dropdown.options.item.click', function(event) {
-                if (event.type === "delete") {
-                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                        this.sandbox.emit('sulu.roles.delete', ids);
-                    }.bind(this));
-                }
-            }, this);
-
-            this.sandbox.start([
+                },
                 {
                     name: 'datagrid@husky',
                     options: {
@@ -73,18 +66,6 @@ define(function() {
                     }
                 }
             ]);
-
-            this.sandbox.on('husky.datagrid.item.click', function(id) {
-                this.sandbox.emit('sulu.roles.load', id);
-            }.bind(this));
-        },
-
-        initializeHeader: function() {
-            this.sandbox.emit('husky.header.button-type', 'add');
-
-            this.sandbox.on('husky.button.add.click', function() {
-                this.sandbox.emit('sulu.roles.new');
-            }.bind(this));
         }
     };
 });

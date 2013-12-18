@@ -27,7 +27,7 @@ class RoleController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluSecurityBundle:Role';
 
-    protected $permissionEntityName = 'SuluSecurityBundle:Permission';
+    const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
     /**
      * returns all roles
@@ -214,11 +214,10 @@ class RoleController extends RestController implements ClassResourceInterface
      */
     protected function addPermission(Role $role, $permissionData)
     {
-        $permissionEntityName = 'SuluSecurityBundle:Permission';
         $em = $this->getDoctrine()->getManager();
 
         if (isset($permissionData['id'])) {
-            throw new EntityIdAlreadySetException($permissionEntityName, $permissionData['id']);
+            throw new EntityIdAlreadySetException(self::ENTITY_NAME_PERMISSION, $permissionData['id']);
         }
 
         $permission = new Permission();
@@ -275,7 +274,7 @@ class RoleController extends RestController implements ClassResourceInterface
                     'context' => $permission->getContext(),
                     'module' => $permission->getModule(),
                     'permissions' => $this->get('sulu_security.mask_converter')
-                        ->convertPermissionsToArray($permission->getPermissions())
+                            ->convertPermissionsToArray($permission->getPermissions())
                 );
             }
         }
