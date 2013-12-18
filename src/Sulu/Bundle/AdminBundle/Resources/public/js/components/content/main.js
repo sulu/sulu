@@ -128,7 +128,6 @@ define([], function() {
             if (!!item && !!item.contentComponent) {
                 var options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#content-tabs-component', reset: true }, item.contentComponentOptions);
                 // start component defined by
-
                 this.sandbox.start([
                     {name: item.contentComponent, options: options}
                 ]);
