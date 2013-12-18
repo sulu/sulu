@@ -7,16 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel'], function(relationalModel) {
+define(function() {
 
     'use strict';
 
-    return relationalModel({
-        defaults: function() {
-            return {
-                context: '',
-                permissions: ''
-            };
+    return {
+        content: {
+            url: '/admin/security/navigation/roles',
+            title: 'security.roles.title'
         }
-    });
+    };
 });

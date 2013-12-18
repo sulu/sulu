@@ -1,7 +1,7 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -22,7 +22,7 @@ define([], function() {
         view: true,
 
         initialize: function() {
-
+            this.saved = true;
             this.formId = '#permissions-form';
             this.selectedRoles = [];
             this.deselectedRoles = [];
@@ -30,7 +30,7 @@ define([], function() {
             this.passwordField1Id = '#husky-password-fields-instance1-password1';
             this.passwordField2Id = '#husky-password-fields-instance1-password2';
 
-            if(!!this.options.data) {
+            if (!!this.options.data) {
                 this.user = this.options.data.user;
                 this.contact = this.options.data.contact;
                 this.roles = this.options.data.roles;
@@ -54,7 +54,7 @@ define([], function() {
 
         addConstraintsToPasswordFields: function() {
             // TODO FIXME
-            setTimeout(function(){
+            setTimeout(function() {
                 this.sandbox.form.addConstraint(this.formId, this.passwordField1Id, 'required', {required: true});
                 this.sandbox.form.addConstraint(this.formId, this.passwordField2Id, 'required', {required: true});
             }.bind(this), 10);
@@ -62,7 +62,7 @@ define([], function() {
 
         // Headerbar
 
-        initializeHeaderbar: function(){
+        initializeHeaderbar: function() {
             this.currentType = '';
             this.currentState = '';
 
@@ -71,32 +71,11 @@ define([], function() {
         },
 
         setHeaderBar: function(saved) {
-
-            var changeType,
-                changeState,
-                ending = (!!this.contact.id) ? 'Delete' : '';
-
-            changeType = 'save' + ending;
-
-            if (saved) {
-                if (ending === '') {
-                    changeState = 'hide';
-                } else {
-                    changeState = 'standard';
-                }
-            } else {
-                changeState = 'dirty';
+            if (saved !== this.saved) {
+                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
             }
-
-            if (this.currentType !== changeType) {
-                this.sandbox.emit('husky.header.button-type', changeType);
-                this.currentType = changeType;
-            }
-            if (this.currentState !== changeState) {
-                this.sandbox.emit('husky.header.button-state', changeState);
-                this.currentState = changeState;
-            }
-
+            this.saved = saved;
         },
 
         listenForChange: function() {
@@ -110,10 +89,10 @@ define([], function() {
             }.bind(this), 'input');
 
             this.sandbox.util.each(this.roles, function(index, value) {
-                this.sandbox.on('husky.dropdown.multiple.select.languageSelector'+value.id+'.selected.item', function(){
+                this.sandbox.on('husky.dropdown.multiple.select.languageSelector' + value.id + '.selected.item', function() {
                     this.setHeaderBar(false);
                 }, this);
-                this.sandbox.on('husky.dropdown.multiple.select.languageSelector'+value.id+'.deselected.item', function(){
+                this.sandbox.on('husky.dropdown.multiple.select.languageSelector' + value.id + '.deselected.item', function() {
                     this.setHeaderBar(false);
                 }, this);
             }.bind(this));
@@ -125,11 +104,11 @@ define([], function() {
         render: function() {
             var email = "",
                 headline;
-            if(!!this.contact.emails && this.contact.emails.length > 0) {
+            if (!!this.contact.emails && this.contact.emails.length > 0) {
                 email = this.contact.emails[0].email;
             }
 
-            headline = this.contact ? this.contact.firstName+' '+this.contact.lastName : this.sandbox.translate('security.permission.title');
+            headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {user: !!this.user ? this.user : null, email: email, headline: headline}));
         },
 
@@ -141,7 +120,7 @@ define([], function() {
                     options: {
                         instanceName: "instance1",
                         el: '#password-component',
-                        labels:{
+                        labels: {
                             inputPassword1: this.sandbox.translate('security.permission.password'),
                             inputPassword2: this.sandbox.translate('security.permission.passwordRepeat'),
                             generateLabel: this.sandbox.translate('security.permission.generatePassword')
@@ -152,16 +131,16 @@ define([], function() {
             ]);
 
             // set timeout
-            if(!this.user || !this.user.id) {
+            if (!this.user || !this.user.id) {
                 this.addConstraintsToPasswordFields();
             }
         },
 
         bindDOMEvents: function() {
 
-            this.sandbox.dom.on('#rolesTable', 'click', function(event){
+            this.sandbox.dom.on('#rolesTable', 'click', function(event) {
                 var id = this.sandbox.dom.attr(event.currentTarget, 'id');
-                if(id === 'selectAll'){
+                if (id === 'selectAll') {
                     this.selectAll(event.currentTarget);
                 } else {
                     this.selectItem(event.currentTarget);
@@ -202,7 +181,7 @@ define([], function() {
                 this.sandbox.util.each($checkboxes, function(index, value) {
                     roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(value)), 'id');
 
-                    if(this.selectedRoles.indexOf(roleId) < 0) {
+                    if (this.selectedRoles.indexOf(roleId) < 0) {
                         this.selectedRoles.push(roleId);
                     }
 
@@ -223,9 +202,9 @@ define([], function() {
             if (index >= 0) {
                 this.sandbox.dom.removeClass($element, 'is-selected');
                 this.sandbox.dom.prop($element, 'checked', false);
-                this.selectedRoles.splice(index,1);
+                this.selectedRoles.splice(index, 1);
 
-                if(this.deselectedRoles.indexOf(roleId) < 0) {
+                if (this.deselectedRoles.indexOf(roleId) < 0) {
                     this.deselectedRoles.push(roleId);
                 }
 
@@ -243,14 +222,14 @@ define([], function() {
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('husky.button.delete.click', function() {
+            this.sandbox.on('sulu.edit-toolbar.delete', function() {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
             this.sandbox.on('sulu.user.permissions.saved', function(model) {
                 this.user = model;
 
-                if(!!this.user.id && !!this.sandbox.form.element.hasConstraint(this.passwordField1Id, 'required')) {
+                if (!!this.user.id && !!this.sandbox.form.element.hasConstraint(this.passwordField1Id, 'required')) {
                     this.sandbox.form.deleteConstraint(this.formId, this.passwordField1Id, 'required');
                     this.sandbox.form.deleteConstraint(this.formId, this.passwordField2Id, 'required');
                 }
@@ -258,7 +237,7 @@ define([], function() {
                 this.setHeaderBar(true);
             }, this);
 
-            this.sandbox.on('husky.button.save.click', function() {
+            this.sandbox.on('sulu.edit-toolbar.save', function() {
                 this.save();
             }, this);
         },
@@ -275,7 +254,7 @@ define([], function() {
                 this.sandbox.logger.log('validation succeeded');
 
                 data = {
-                    user : {
+                    user: {
                         username: this.sandbox.dom.val('#username'),
                         contact: this.contact
                     },
@@ -284,11 +263,11 @@ define([], function() {
                     deselectedRoles: this.deselectedRoles
                 };
 
-                if(!!this.user && !!this.user.id) {
+                if (!!this.user && !!this.user.id) {
                     data.user.id = this.user.id;
                 }
 
-                if(!!this.password && this.password !== '') {
+                if (!!this.password && this.password !== '') {
                     data.user.password = this.password;
                 }
 
@@ -296,26 +275,26 @@ define([], function() {
             }
         },
 
-        isValidPassword: function(){
-            if(!!this.user && !!this.user.id) { // existion user - does not have to set password
+        isValidPassword: function() {
+            if (!!this.user && !!this.user.id) { // existion user - does not have to set password
                 return true;
             } else { // new user - should set password at least once and it should not be empty
                 return !!this.password && this.password !== '';
             }
         },
 
-        getSelectedRolesAndLanguages: function(){
+        getSelectedRolesAndLanguages: function() {
             var $tr,
                 data = [],
                 config;
 
-            this.sandbox.util.each(this.selectedRoles, function(index,value) {
-                $tr = this.sandbox.dom.find('#languageSelector'+value);
+            this.sandbox.util.each(this.selectedRoles, function(index, value) {
+                $tr = this.sandbox.dom.find('#languageSelector' + value);
 
                 config = {};
                 config.roleId = value;
 
-                this.sandbox.emit('husky.dropdown.multiple.select.languageSelector'+value+'.getChecked', function(selected){
+                this.sandbox.emit('husky.dropdown.multiple.select.languageSelector' + value + '.getChecked', function(selected) {
                     config.selection = selected;
                 });
 
@@ -327,8 +306,8 @@ define([], function() {
 
         },
 
-        getPassword: function(){
-            this.sandbox.emit('husky.password.fields.instance1.get.passwords', function(password1){
+        getPassword: function() {
+            this.sandbox.emit('husky.password.fields.instance1.get.passwords', function(password1) {
                 this.password = password1;
             }.bind(this));
         },
@@ -347,22 +326,22 @@ define([], function() {
                 rows;
 
             $tmp = this.sandbox.dom.append($tmp, $tableContent);
-            this.sandbox.dom.html($permissionsContainer,$tmp);
+            this.sandbox.dom.html($permissionsContainer, $tmp);
 
             rows = this.sandbox.dom.find('tbody tr', '#rolesTable');
 
             // TODO get elements for dropdown from portal
 
-            this.sandbox.util.each(rows, function(index,value){
-                var id = this.sandbox.dom.data(value,'id'),
+            this.sandbox.util.each(rows, function(index, value) {
+                var id = this.sandbox.dom.data(value, 'id'),
                     preSelectedValues = this.getUserRoleLocalesWithRoleId(id);
 
                 this.sandbox.start([
                     {
                         name: 'dropdown-multiple-select@husky',
                         options: {
-                            el: '#languageSelector'+id,
-                            instanceName: 'languageSelector'+id,
+                            el: '#languageSelector' + id,
+                            instanceName: 'languageSelector' + id,
                             defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                             checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
@@ -374,28 +353,28 @@ define([], function() {
             }.bind(this));
         },
 
-        getUserRoleLocalesWithRoleId:function(id){
+        getUserRoleLocalesWithRoleId: function(id) {
 
             var locales;
-            if(!!this.user && this.user.userRoles) {
-                this.sandbox.util.each(this.user.userRoles, function(index,value){
-                    if(value.role.id === id) {
+            if (!!this.user && this.user.userRoles) {
+                this.sandbox.util.each(this.user.userRoles, function(index, value) {
+                    if (value.role.id === id) {
                         locales = value.locales;
                         return false;
                     }
                 }.bind(this));
             }
 
-            if(!!locales) {
+            if (!!locales) {
                 return locales;
             } else {
                 return [];
             }
         },
 
-        getSelectRolesOfUser: function(){
-            if(!!this.user && !!this.user.userRoles) {
-                this.sandbox.util.each(this.user.userRoles, function(index,value) {
+        getSelectRolesOfUser: function() {
+            if (!!this.user && !!this.user.userRoles) {
+                this.sandbox.util.each(this.user.userRoles, function(index, value) {
                     this.selectedRoles.push(value.role.id);
                 }.bind(this));
             }
@@ -413,7 +392,7 @@ define([], function() {
             var $tableBody = this.sandbox.dom.createElement('<tbody/>'),
                 tableContent = [];
 
-            this.sandbox.util.each(this.roles, function(index, value){
+            this.sandbox.util.each(this.roles, function(index, value) {
                 tableContent.push(this.prepareTableRow(value));
             }.bind(this));
 
@@ -421,7 +400,7 @@ define([], function() {
         },
 
 
-        prepareTableRow: function(role){
+        prepareTableRow: function(role) {
 
             var $tableRow;
 
@@ -440,9 +419,9 @@ define([], function() {
                     '<thead>',
                         '<tr>' +
                             '<th width="5%"><input id="selectAll" type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></th>',
-                            '<th width="30%">',thLabel1,'</th>',
-                            '<th width="45%">',thLabel2,'</th>',
-                            '<th width="20%">',thLabel3,'</th>',
+                            '<th width="30%">', thLabel1, '</th>',
+                            '<th width="45%">', thLabel2, '</th>',
+                            '<th width="20%">', thLabel3, '</th>',
                         '</tr>',
                     '</thead>'
                 ].join('');
@@ -455,19 +434,19 @@ define([], function() {
                 if (!!selected) {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                        '<td><input type="checkbox" class="custom-checkbox is-selected" checked/><span class="custom-checkbox-icon"></span></td>',
-                        '<td>', title, '</td>',
-                        '<td id="languageSelector', id, '"></td>',
-                        '<td></td>',
+                            '<td><input type="checkbox" class="custom-checkbox is-selected" checked/><span class="custom-checkbox-icon"></span></td>',
+                            '<td>', title, '</td>',
+                            '<td id="languageSelector', id, '"></td>',
+                            '<td></td>',
                         '</tr>'
                     ].join('');
                 } else {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                        '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
-                        '<td>', title, '</td>',
-                        '<td id="languageSelector', id, '"></td>',
-                        '<td></td>',
+                            '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
+                            '<td>', title, '</td>',
+                            '<td id="languageSelector', id, '"></td>',
+                            '<td></td>',
                         '</tr>'
                     ].join('');
                 }

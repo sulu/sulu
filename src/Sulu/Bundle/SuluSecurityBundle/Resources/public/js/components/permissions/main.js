@@ -1,7 +1,7 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -61,7 +61,7 @@ define([
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);
 
-            if(!!data.user.password && data.user.password !== '') {
+            if (!!data.user.password && data.user.password !== '') {
                 this.user.set('password', data.user.password);
             } else {
                 this.user.set('password', '');
@@ -154,7 +154,7 @@ define([
 
         loadUser: function() {
             this.user = new User();
-            this.user.url = '/admin/api/security/users?contactId=' + this.options.id;
+            this.user.url = '/admin/api/users?contactId=' + this.options.id;
             this.user.fetch({
                 success: function() {
                     this.contact = this.user.get('contact').toJSON();
@@ -183,20 +183,22 @@ define([
         },
 
         startComponent: function() {
-            var data = {};
+            var data = {},
+                $form = $('<div id="roles-form-container"/>');
             data.contact = this.contact;
 
-            if(!!this.user) {
+            if (!!this.user) {
                 data.user = this.user.toJSON();
             }
 
             data.roles = this.roles.toJSON();
 
+            this.html($form);
             this.sandbox.start([
                 {
                     name: 'permissions/components/form@sulusecurity',
                     options: {
-                        el: this.$el,
+                        el: $form,
                         data: data
                     }}
             ]);
