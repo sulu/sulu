@@ -8,9 +8,8 @@
  */
 
 define([
-    'sulucontact/model/contact',
-    'text!/admin/contact/navigation/contact'
-], function(Contact, ContentNavigation) {
+    'sulucontact/model/contact'
+], function(Contact) {
 
     'use strict';
 
@@ -55,7 +54,7 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.contacts.contacts.list', function(ids) {
+            this.sandbox.on('sulu.contacts.contacts.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
             }, this);
         },
@@ -87,7 +86,7 @@ define([
                     }
                 }.bind(this),
                 error: function() {
-                    this.sandbox.logger.log("error while saving profile");
+                    this.sandbox.logger.log('error while saving profile');
                 }.bind(this)
             });
         },
@@ -124,30 +123,34 @@ define([
         },
 
         renderList: function() {
+            var $list = $('<div id="contacts-list-container"/>');
+            this.html($list);
             this.sandbox.start([
-                {name: 'contacts/components/list@sulucontact', options: { el: this.$el}}
+                {name: 'contacts/components/list@sulucontact', options: { el: $list}}
             ]);
         },
 
         renderForm: function() {
             // load data and show form
             this.contact = new Contact();
+            var $form = $('<div id="contacts-form-container"/>');
+            this.html($form);
             if (!!this.options.id) {
                 this.contact = new Contact({id: this.options.id});
                 //contact = this.getModel(this.options.id);
                 this.contact.fetch({
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: model.toJSON()}}
+                            {name: 'contacts/components/form@sulucontact', options: { el: $form, data: model.toJSON()}}
                         ]);
                     }.bind(this),
                     error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
+                        this.sandbox.logger.log('error while fetching contact');
                     }.bind(this)
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'contacts/components/form@sulucontact', options: { el: this.$el, data: this.contact.toJSON()}}
+                    {name: 'contacts/components/form@sulucontact', options: { el: $form, data: this.contact.toJSON()}}
                 ]);
             }
         },
@@ -165,12 +168,12 @@ define([
             // show dialog
             this.sandbox.emit('sulu.dialog.confirmation.show', {
                 content: {
-                    title: "Be careful!",
-                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
+                    title: 'Be careful!',
+                    content: '<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>'
                 },
                 footer: {
-                    buttonCancelText: "Don't do it",
-                    buttonSubmitText: "Do it, I understand"
+                    buttonCancelText: 'Don\'t do it',
+                    buttonSubmitText: 'Do it, I understand'
                 },
                 callback: {
                     submit: function() {
