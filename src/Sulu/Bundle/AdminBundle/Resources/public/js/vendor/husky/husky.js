@@ -25451,7 +25451,7 @@ define('__component__$auto-complete@husky',[], function() {
                     this.noState();
 
                     // if only one result this is it, if no result hideDropDown, else generateDropDown
-                    this.updateData(response.items);
+                    this.updateData(response._embedded);
                     if (this.data.length > 1) {
                         this.generateDropDown(this.data);
                     } else if (this.data.length === 1) {
