@@ -133,8 +133,10 @@ define([
         renderForm: function() {
             // load data and show form
             this.contact = new Contact();
+
             var $form = $('<div id="contacts-form-container"/>');
             this.html($form);
+
             if (!!this.options.id) {
                 this.contact = new Contact({id: this.options.id});
                 //contact = this.getModel(this.options.id);
