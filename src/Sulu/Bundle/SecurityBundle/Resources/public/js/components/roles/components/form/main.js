@@ -1,7 +1,7 @@
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -250,10 +250,10 @@ define([], function() {
         listenForChange: function() {
             this.sandbox.dom.on('#role-form', 'change', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "select, input");
+            }.bind(this), 'select, input');
             this.sandbox.dom.on('#role-form', 'keyup', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "input");
+            }.bind(this), 'input');
             this.sandbox.on('husky.matrix.changed', function() {
                 this.setHeaderBar(false);
             }.bind(this));
