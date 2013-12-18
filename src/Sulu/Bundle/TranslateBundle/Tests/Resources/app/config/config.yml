@@ -33,5 +33,5 @@ monolog:
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
 
-parameters:
-    sulu_admin_name: Sulu
+sulu_admin:
+    name: SULU 2.0
