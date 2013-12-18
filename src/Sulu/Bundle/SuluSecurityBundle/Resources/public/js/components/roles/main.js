@@ -9,9 +9,8 @@
 
 
 define([
-    'sulusecurity/models/role',
-    'text!/admin/security/navigation/roles'
-], function(Role, ContentNavigation) {
+    'sulusecurity/models/role'
+], function(Role) {
 
     'use strict';
 
@@ -94,7 +93,7 @@ define([
                     if (typeof this.idDelete === 'number' || typeof this.idDelete === 'string') {
                         this.delSubmitOnce(this.idDelete, true);
                     } else {
-                        this.sandbox.util.each(this.idDelete, function(index,value) {
+                        this.sandbox.util.each(this.idDelete, function(index, value) {
                             this.delSubmitOnce(value, false);
                         }.bind(this));
                     }
@@ -104,7 +103,7 @@ define([
         },
 
         delSubmitOnce: function(id, navigate) {
-            if(this.role === null) {
+            if (this.role === null) {
                 this.role = new Role();
             }
 
@@ -125,11 +124,13 @@ define([
         },
 
         renderList: function() {
+            var $list = $('<div id="roles-list-container"/>');
+            this.html($list);
             this.sandbox.start([
                 {
                     name: 'roles/components/list@sulusecurity',
                     options: {
-                        el: this.options.el
+                        el: $list
                     }
                 }
             ]);
@@ -138,13 +139,16 @@ define([
         renderForm: function() {
             this.role = new Role();
 
-            var component = {
-                name: 'roles/components/form@sulusecurity',
-                options: {
-                    el: this.options.el,
-                    data: this.role.defaults()
-                }
-            };
+            var $form = $('<div id="roles-form-container"/>'),
+                component = {
+                    name: 'roles/components/form@sulusecurity',
+                    options: {
+                        el: $form,
+                        data: this.role.defaults()
+                    }
+                };
+
+            this.html($form);
 
             if (!!this.options.id) {
                 this.role.set({id: this.options.id});

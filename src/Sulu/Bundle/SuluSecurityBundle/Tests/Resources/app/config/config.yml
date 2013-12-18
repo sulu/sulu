@@ -47,6 +47,9 @@ monolog:
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
 
+sulu_admin:
+    name: SULU 2.0
+
 parameters:
     # Just a dirty hack to get the jms serializer bundle correctly working
     # https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
@@ -70,6 +73,3 @@ security:
         sulu:
             pattern: ^/admin
             anonymous: ~
-
-parameters:
-    sulu_admin_name: Sulu
