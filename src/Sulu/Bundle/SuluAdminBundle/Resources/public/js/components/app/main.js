@@ -52,7 +52,6 @@ define(function() {
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
-
                 // navigate
                 router.navigate(route, {trigger: trigger});
 

@@ -676,7 +676,7 @@ h6 {
 
 /* line 29, ../scss/typo.scss */
 h1 {
-  color: #00aeff;
+  color: #249fbe;
   font-size: 36px;
   line-height: 40px;
 }
@@ -3939,7 +3939,7 @@ li a.navigation-settings-icon {
 }
 /* line 35, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover, .column-navigation-wrapper .column-navigation .column .dropdown-menu > ul > li.selected, .dropdown-menu > ul > li.hover {
-  background-color: #00aeff;
+  background-color: #249fbe;
   cursor: pointer;
   color: white;
 }
@@ -4049,7 +4049,7 @@ li a.navigation-settings-icon {
 /* line 87, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item.highlight {
   min-width: 100px;
-  background-color: #00aeff;
+  background-color: #249fbe;
 }
 /* line 92, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item.highlight.disabled:hover, .edit-toolbar-item.highlight.disabled {
@@ -4061,11 +4061,11 @@ li a.navigation-settings-icon {
 }
 /* line 99, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item.highlight:hover {
-  background-color: #0fb3ff;
+  background-color: #26aacb;
 }
 /* line 102, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item.highlight:active {
-  background-color: #1ab6ff;
+  background-color: #28b1d3;
 }
 /* line 106, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item.highlight a {
@@ -4177,7 +4177,7 @@ li a.navigation-settings-icon {
 }
 /* line 217, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.is-selected, .edit-toolbar-dropdown-menu li:hover, .edit-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected, .column-navigation-wrapper .column-navigation .column ul .edit-toolbar-dropdown-menu li.selected {
-  background-color: #00aeff;
+  background-color: #249fbe;
 }
 /* line 219, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.is-selected a, .edit-toolbar-dropdown-menu li:hover a, .edit-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected a, .column-navigation-wrapper .column-navigation .column ul .edit-toolbar-dropdown-menu li.selected a {
@@ -4195,7 +4195,7 @@ li a.navigation-settings-icon {
 }
 /* line 234, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li:active {
-  background-color: #1ab6ff;
+  background-color: #28b1d3;
 }
 /* line 238, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.divider {
@@ -4533,7 +4533,7 @@ a.btn-black {
 }
 /* line 27, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected a {
-  color: #00aeff;
+  color: #249fbe;
 }
 /* line 32, ../scss/modules/tabs.scss */
 .tabs-container ul li:not(:last-child) {
@@ -4671,18 +4671,18 @@ a.btn-black {
 /* line 172, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight {
   color: #FFF;
-  background-color: #00aeff;
-  border-color: #00aeff;
+  background-color: #249fbe;
+  border-color: #249fbe;
 }
 /* line 177, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:hover {
-  background-color: #0fb3ff;
-  border-color: #0fb3ff;
+  background-color: #26aacb;
+  border-color: #26aacb;
 }
 /* line 180, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:active {
-  background-color: #1ab6ff;
-  border-color: #1ab6ff;
+  background-color: #28b1d3;
+  border-color: #28b1d3;
 }
 /* line 184, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:disabled, .toolbar-container button.highlight:disabled:hover, .toolbar-container button.highlight:disabled:focus {
@@ -4747,7 +4747,7 @@ a.btn-black {
 }
 /* line 257, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.is-selected, .toolbar-container ul.toolbar-dropdown-menu li:hover, .toolbar-container .column-navigation-wrapper .column-navigation .column ul.toolbar-dropdown-menu li.selected, .column-navigation-wrapper .column-navigation .column .toolbar-container ul.toolbar-dropdown-menu li.selected {
-  background-color: #00aeff;
+  background-color: #249fbe;
 }
 /* line 259, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.is-selected a, .toolbar-container ul.toolbar-dropdown-menu li:hover a, .toolbar-container .column-navigation-wrapper .column-navigation .column ul.toolbar-dropdown-menu li.selected a, .column-navigation-wrapper .column-navigation .column .toolbar-container ul.toolbar-dropdown-menu li.selected a {
@@ -4765,7 +4765,7 @@ a.btn-black {
 }
 /* line 274, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li:active {
-  background-color: #1ab6ff;
+  background-color: #28b1d3;
 }
 /* line 278, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.divider {

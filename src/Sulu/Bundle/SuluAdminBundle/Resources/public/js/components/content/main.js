@@ -18,9 +18,9 @@ define([], function() {
     'use strict';
 
     var defaults = {
-        heading: '',
-        tabsData: null,
-        instanceName: 'content'
+            heading: '',
+            tabsData: null,
+            instanceName: 'content'
         },
 
         initializeTabs = function() {
@@ -75,7 +75,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // skeleton
-            this.sandbox.dom.html(this.options.el, '<div id="edit-toolbar"><div id="page-functions"></div><div id="toolbar"></div></div><div class="content-tabs-content"><h1>' + this.options.heading + '</h1><div id="content-tabs" /><div id="content-tabs-component" /></div>');
+            this.sandbox.dom.html(this.$el, '<div id="edit-toolbar"><div id="page-functions"></div><div id="toolbar"></div></div><div class="content-tabs-content"><h1>' + this.options.heading + '</h1><div id="content-tabs" />');
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
@@ -114,22 +114,26 @@ define([], function() {
             }
 
             if (!item.forceReload && item.action === this.action) {
-                this.sandbox.logger.log("page already loaded; no reload required!");
+                this.sandbox.logger.log('page already loaded; no reload required!');
                 return;
             }
-
-            this.sandbox.dom.html('#content-tabs-component', '<span class="is-loading" />');
 
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
+            this.sandbox.stop('#content-tabs-component');
+
+            this.sandbox.dom.append(this.$el, '<div id="content-tabs-component"><span class="is-loading"/></div>');
+
             if (!!item && !!item.contentComponent) {
-                var options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#content-tabs-component'}, item.contentComponentOptions);
+                var options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#content-tabs-component', reset: true }, item.contentComponentOptions);
                 // start component defined by
+
                 this.sandbox.start([
                     {name: item.contentComponent, options: options}
                 ]);
             }
+
             if (!!item) {
                 this.action = item.action;
             }
