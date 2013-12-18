@@ -19,17 +19,22 @@ use Sulu\Bundle\TranslateBundle\Command\ImportCommand;
 class SuluTranslateAdmin extends Admin
 {
 
-    public function __construct()
+    public function __construct($title)
     {
-        $rootNavigationItem = new NavigationItem('Root');
+        $rootNavigationItem = new NavigationItem($title);
+
+        $section = new NavigationItem('Tools');
+
         $settings = new NavigationItem('Settings');
         $settings->setIcon('cogwheels');
-        $rootNavigationItem->addChild($settings);
+
         $translate = new NavigationItem('Translate');
         $translate->setAction('settings/translate');
 		$translate->setIcon('book-open');
-        $translate->setType('content');
         $settings->addChild($translate);
+
+        $section->addChild($settings);
+        $rootNavigationItem->addChild($section);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 

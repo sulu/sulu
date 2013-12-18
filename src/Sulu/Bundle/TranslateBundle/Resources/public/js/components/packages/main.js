@@ -49,6 +49,11 @@ define([
                 this.load(id);
             }, this);
 
+            // wait for navigation events
+            this.sandbox.on('sulu.translate.package.list', function() {
+                this.sandbox.emit('sulu.router.navigate', 'settings/translate');
+            }, this);
+
             // add new contact
             this.sandbox.on('sulu.translate.package.new', function() {
                 this.add();
@@ -88,18 +93,8 @@ define([
             ]);
         },
 
-        getTabs: function() {
-            // show navigation submenu
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: navigation
-                });
-            }.bind(this));
-        },
-
         renderSettings: function() {
             // show navigation submenu
-            this.getTabs();
 
             var packageModel;
             if (!!this.options.id) {
@@ -135,7 +130,6 @@ define([
 
         renderDetails: function() {
             // show navigation submenu
-            this.getTabs();
 
             if (!!this.options.id) {
                 var packageModel = this.getModel(this.options.id);
