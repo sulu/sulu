@@ -11,9 +11,8 @@ define([
     'sulutranslate/models/package',
     'sulutranslate/models/code',
     'sulutranslate/collections/catalogues',
-    'sulutranslate/collections/translations',
-    'text!/admin/translate/navigation/content?type=package'
-], function(Package, Code, Catalogues, Translations, ContentNavigation) {
+    'sulutranslate/collections/translations'
+], function(Package, Code, Catalogues, Translations) {
 
     'use strict';
 
@@ -47,6 +46,11 @@ define([
             // wait for navigation events
             this.sandbox.on('sulu.translate.package.load', function(id) {
                 this.load(id);
+            }, this);
+
+            // wait for navigation events
+            this.sandbox.on('sulu.translate.package.list', function() {
+                this.sandbox.emit('sulu.router.navigate', 'settings/translate');
             }, this);
 
             // add new contact
@@ -88,18 +92,8 @@ define([
             ]);
         },
 
-        getTabs: function() {
-            // show navigation submenu
-            this.sandbox.sulu.navigation.getContentTabs(ContentNavigation, this.options.id, function(navigation) {
-                this.sandbox.emit('navigation.item.column.show', {
-                    data: navigation
-                });
-            }.bind(this));
-        },
-
         renderSettings: function() {
             // show navigation submenu
-            this.getTabs();
 
             var packageModel;
             if (!!this.options.id) {
@@ -135,7 +129,6 @@ define([
 
         renderDetails: function() {
             // show navigation submenu
-            this.getTabs();
 
             if (!!this.options.id) {
                 var packageModel = this.getModel(this.options.id);

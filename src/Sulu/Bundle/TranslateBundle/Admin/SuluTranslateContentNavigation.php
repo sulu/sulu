@@ -23,19 +23,22 @@ class SuluTranslateContentNavigation extends ContentNavigation
         $this->setName('Package');
 
         $details = new NavigationItem('Details');
-        $details->setContentType('package');
         $details->setAction('details');
-        $details->setType('content');
-
-        $this->addNavigationItem($details);
-
-
-        $details = new NavigationItem('Settings');
         $details->setContentType('package');
-        $details->setAction('settings');
-        $details->setType('content');
+        $details->setContentComponent('packages@sulutranslate');
+        $details->setContentComponentOptions(array('display' => 'details'));
+        $details->setContentDisplay(array('edit'));
 
         $this->addNavigationItem($details);
+
+
+        $settings = new NavigationItem('Settings');
+        $settings->setAction('settings');
+        $settings->setContentType('package');
+        $settings->setContentComponent('packages@sulutranslate');
+        $settings->setContentComponentOptions(array('display' => 'settings'));
+
+        $this->addNavigationItem($settings);
 
     }
 }
