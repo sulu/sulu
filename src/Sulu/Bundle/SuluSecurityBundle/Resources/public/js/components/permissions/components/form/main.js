@@ -22,7 +22,7 @@ define([], function() {
         view: true,
 
         initialize: function() {
-
+            this.saved = true;
             this.formId = '#permissions-form';
             this.selectedRoles = [];
             this.deselectedRoles = [];
@@ -71,32 +71,11 @@ define([], function() {
         },
 
         setHeaderBar: function(saved) {
-
-            var changeType,
-                changeState,
-                ending = (!!this.contact.id) ? 'Delete' : '';
-
-            changeType = 'save' + ending;
-
-            if (saved) {
-                if (ending === '') {
-                    changeState = 'hide';
-                } else {
-                    changeState = 'standard';
-                }
-            } else {
-                changeState = 'dirty';
+            if (saved !== this.saved) {
+                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
             }
-
-            if (this.currentType !== changeType) {
-                this.sandbox.emit('husky.header.button-type', changeType);
-                this.currentType = changeType;
-            }
-            if (this.currentState !== changeState) {
-                this.sandbox.emit('husky.header.button-state', changeState);
-                this.currentState = changeState;
-            }
-
+            this.saved = saved;
         },
 
         listenForChange: function() {
@@ -243,7 +222,7 @@ define([], function() {
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('husky.button.delete.click', function() {
+            this.sandbox.on('sulu.edit-toolbar.delete', function() {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
@@ -258,7 +237,7 @@ define([], function() {
                 this.setHeaderBar(true);
             }, this);
 
-            this.sandbox.on('husky.button.save.click', function() {
+            this.sandbox.on('sulu.edit-toolbar.save', function() {
                 this.save();
             }, this);
         },
