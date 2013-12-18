@@ -30,7 +30,7 @@ class SuluTranslateAdmin extends Admin
 
         $translate = new NavigationItem('Translate');
         $translate->setAction('settings/translate');
-		$translate->setIcon('book-open');
+        $translate->setIcon('book-open');
         $settings->addChild($translate);
 
         $section->addChild($settings);

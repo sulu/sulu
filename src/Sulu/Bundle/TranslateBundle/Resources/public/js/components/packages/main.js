@@ -11,9 +11,8 @@ define([
     'sulutranslate/models/package',
     'sulutranslate/models/code',
     'sulutranslate/collections/catalogues',
-    'sulutranslate/collections/translations',
-    'text!/admin/translate/navigation/content?type=package'
-], function(Package, Code, Catalogues, Translations, ContentNavigation) {
+    'sulutranslate/collections/translations'
+], function(Package, Code, Catalogues, Translations) {
 
     'use strict';
 
