@@ -108,6 +108,16 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($structure->getProperty('url')->getValue(), $result['url']);
     }
 
+    public function testDelete()
+    {
+        $structure = $this->prepareGetTestData();
+
+        $this->nodeRepository->deleteNode($structure->getUuid(), 'default');
+
+        $this->setExpectedException('PHPCR\ItemNotFoundException');
+        $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
+    }
+
     protected function setUp()
     {
         $this->prepareContainerMock();

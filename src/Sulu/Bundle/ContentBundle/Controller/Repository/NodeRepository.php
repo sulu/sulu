@@ -52,6 +52,16 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
+     * removes given node
+     * @param $uuid
+     * @param $portalKey
+     */
+    public function deleteNode($uuid, $portalKey)
+    {
+        $this->getMapper()->delete($uuid, $portalKey);
+    }
+
+    /**
      * return content mapper
      * @return ContentMapperInterface
      */
@@ -96,4 +106,4 @@ class NodeRepository implements NodeRepositoryInterface
     {
         $this->apiBasePath = $apiBasePath;
     }
-} 
+}
