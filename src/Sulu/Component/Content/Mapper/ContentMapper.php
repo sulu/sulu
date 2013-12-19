@@ -326,6 +326,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         $contentNode->remove();
+        $session->save();
     }
 
     /**
