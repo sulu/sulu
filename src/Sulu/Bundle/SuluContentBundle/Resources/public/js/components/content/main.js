@@ -32,7 +32,7 @@ define([
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.content.contents.delete', function() {
+            this.sandbox.on('sulu.content.content.delete', function() {
                 this.del();
             }, this);
 
@@ -77,7 +77,65 @@ define([
         },
 
         del: function() {
-            // TODO Delete
+            this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    this.content.destroy({
+                        processData: true,
+
+                        success: function() {
+                            this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                        }.bind(this)
+                    });
+                }
+            }.bind(this), this.options.id);
+        },
+
+        showConfirmSingleDeleteDialog: function(callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            var params = {
+                templateType: null,
+                title: 'Warning!',
+                content: 'Do you really want to delete the selected company? All data is going to be lost.',
+                buttonCancelText: 'Cancel',
+                buttonSubmitText: 'Delete'
+            };
+
+            // FIXME translation
+
+            // show dialog
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: params.title,
+                    content: params.content
+                },
+                footer: {
+                    buttonCancelText: params.buttonCancelText,
+                    buttonSubmitText: params.buttonSubmitText
+                },
+                callback: {
+                    submit: function() {
+                        var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(true, deleteContacts);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
+                }
+            }, params.templateType);
         },
 
         save: function(data) {
