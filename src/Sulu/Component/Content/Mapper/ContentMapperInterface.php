@@ -71,4 +71,11 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function loadByResourceLocator($resourceLocator, $portalKey, $languageCode);
+
+    /**
+     * deletes content with subcontent in given portal
+     * @param string $uuid UUID of content
+     * @param string $portalKey Key of portal
+     */
+    public function delete($uuid, $portalKey);
 }

@@ -245,6 +245,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
+     * deletes content with subcontent in given portal
+     * @param string $uuid UUID of content
+     * @param string $portalKey Key of portal
+     */
+    public function delete($uuid, $portalKey)
+    {
+        // TODO portal
+        $session = $this->getSession();
+        $contentNode = $session->getNodeByIdentifier($uuid);
+
+        $contentNode->remove();
+    }
+
+    /**
      * returns a structure with given key
      * @param string $key key of content type
      * @return StructureInterface

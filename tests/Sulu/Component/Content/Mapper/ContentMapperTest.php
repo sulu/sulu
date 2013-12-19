@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Mapper;
 
 use Jackalope\RepositoryFactoryJackrabbit;
 use Jackalope\Session;
+use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SimpleCredentials;
@@ -28,6 +29,7 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -925,5 +927,79 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, sizeof($testNewsChildren));
 
         $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->title);
+    }
+
+    public function testUpdateStartPage()
+    {
+        
+    }
+
+    public function testDelete()
+    {
+        $data = array(
+            array(
+                'title' => 'News',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news',
+                'article' => 'asdfasdfasdf'
+            ),
+            array(
+                'title' => 'Testnews-1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testnews-2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-2',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testnews-2-1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-2/test-1',
+                'article' => 'Test'
+            )
+        );
+
+        // save root content
+        $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+
+        // add a child content
+        $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
+        $child = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
+        $subChild = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
+
+        // delete /news/test-2/test-1
+        $this->mapper->delete($child->getUuid(), 'default');
+
+        // check
+        try {
+            $this->mapper->load($child->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        try {
+            $this->mapper->load($subChild->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        $result = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
+        $this->assertEquals(1, sizeof($result));
     }
 }
