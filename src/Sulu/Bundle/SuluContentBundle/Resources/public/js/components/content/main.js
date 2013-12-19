@@ -81,7 +81,7 @@ define([
         },
 
         save: function(data) {
-            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            // TODO: show loading icon
             this.content.set(data);
 
             // TODO select template
@@ -102,7 +102,7 @@ define([
         },
 
         load: function(id) {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + id + '/details');
         },
 
@@ -123,7 +123,7 @@ define([
 
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                    // TODO: show loading icon
                     ids.forEach(function(id) {
                         var content = new Content({id: id});
                         content.destroy({
@@ -135,7 +135,6 @@ define([
                             }
                         });
                     }.bind(this));
-                    this.sandbox.emit('husky.header.button-state', 'standard');
                 }
             }.bind(this));
 
@@ -179,18 +178,24 @@ define([
         },
 
         renderList: function() {
+            var $list = this.sandbox.dom.createElement('<div id="contacts-list-container"/>');
+            this.html($list);
             this.sandbox.start([
-                {name: 'content/components/list@sulucontent', options: { el: this.$el}}
+                {name: 'content/components/list@sulucontent', options: { el: $list}}
             ]);
         },
 
         renderColumn: function() {
+            var $column = this.sandbox.dom.createElement('<div id="contacts-column-container"/>');
+            this.html($column);
             this.sandbox.start([
-                {name: 'content/components/column@sulucontent', options: { el: this.$el}}
+                {name: 'content/components/column@sulucontent', options: { el: $column}}
             ]);
         },
 
         renderForm: function() {
+            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>');
+            this.html($form);
             // load data and show form
             this.content = new Content();
             if (!!this.options.id) {
@@ -198,7 +203,7 @@ define([
                 this.content.fetch({
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'content/components/form@sulucontent', options: { el: this.$el, data: model.toJSON()}}
+                            {name: 'content/components/form@sulucontent', options: { el: $form, data: model.toJSON()}}
                         ]);
                     }.bind(this),
                     error: function() {
@@ -207,7 +212,7 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'content/components/form@sulucontent', options: { el: this.$el, data: this.content.toJSON()}}
+                    {name: 'content/components/form@sulucontent', options: { el: $form, data: this.content.toJSON()}}
                 ]);
             }
 
