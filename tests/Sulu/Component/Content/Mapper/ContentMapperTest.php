@@ -719,7 +719,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $content = $root->getNode('cmf/contents/Test');
+        $content = $root->getNode('cmf/contents/test');
 
         $this->assertEquals('Test', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
@@ -863,18 +863,18 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $root = $this->session->getRootNode();
         $contentRootNode = $root->getNode('cmf/contents');
 
-        $newsNode = $contentRootNode->getNode('News');
+        $newsNode = $contentRootNode->getNode('news');
         $this->assertEquals(2, sizeof($newsNode->getNodes()));
         $this->assertEquals('News', $newsNode->getPropertyValue('title'));
 
-        $testNewsNode = $newsNode->getNode('Testnews-1');
+        $testNewsNode = $newsNode->getNode('testnews-1');
         $this->assertEquals('Testnews-1', $testNewsNode->getPropertyValue('title'));
 
-        $testNewsNode = $newsNode->getNode('Testnews-2');
+        $testNewsNode = $newsNode->getNode('testnews-2');
         $this->assertEquals(1, sizeof($testNewsNode->getNodes()));
         $this->assertEquals('Testnews-2', $testNewsNode->getPropertyValue('title'));
 
-        $subTestNewsNode = $testNewsNode->getNode('Testnews-2-1');
+        $subTestNewsNode = $testNewsNode->getNode('testnews-2-1');
         $this->assertEquals('Testnews-2-1', $subTestNewsNode->getPropertyValue('title'));
     }
 
@@ -1043,5 +1043,25 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
         $this->assertEquals(1, sizeof($result));
+    }
+
+    public function testCleanUp()
+    {
+        $data = array(
+            'title' => 'ä   ü ö   Ä Ü Ö',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/',
+            'article' => 'article'
+        );
+
+        $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
+
+        $node = $this->session->getNodeByIdentifier($structure->getUuid());
+
+        $this->assertEquals($node->getName(), 'ae-ue-oe-ae-ue-oe');
+        $this->assertEquals($node->getPath(), '/cmf/contents/ae-ue-oe-ae-ue-oe');
     }
 }

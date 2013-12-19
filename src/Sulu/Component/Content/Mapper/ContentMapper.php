@@ -34,6 +34,32 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     private $routesBasePath = '/cmf/routes';
 
+    /**
+     * TODO abstract with cleanup from RLPStrategy
+     * replacers for cleanup
+     * @var array
+     */
+    protected $replacers = array(
+        'default' => array(
+            ' ' => '-',
+            '+' => '-',
+            'ä' => 'ae',
+            'ö' => 'oe',
+            'ü' => 'ue',
+            // because strtolower ignores Ä,Ö,Ü
+            'Ä' => 'ae',
+            'Ö' => 'oe',
+            'Ü' => 'ue'
+            // TODO should be filled
+        ),
+        'de' => array(
+            '&' => 'und'
+        ),
+        'en' => array(
+            '&' => 'and'
+        )
+    );
+
     public function __construct($contentBasePath, $routesBasePath)
     {
         $this->contentBasePath = $contentBasePath;
@@ -75,7 +101,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $root = $session->getNode($this->getContentBasePath());
         }
 
-        $path = $data['title'];
+        $path = $this->cleanUp($data['title']);
 
         $dateTime = new \DateTime();
 
@@ -94,7 +120,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $node->getPath() !== $this->getContentBasePath() &&
                 (!$node->hasProperty('title') || $node->getPropertyValue('title') !== $data['title'])
             ) {
-                $node->rename($data['title']);
+                $node->rename($path);
                 // FIXME refresh session here
             }
         }
@@ -352,5 +378,41 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     protected function getRouteBasePath()
     {
         return $this->routesBasePath;
+    }
+
+    /**
+     * TODO abstract with cleanup from RLPStrategy
+     * @param string $dirty
+     * @return string
+     */
+    protected function cleanUp($dirty)
+    {
+        $clean = strtolower($dirty);
+
+        // TODO language
+        $languageCode = 'de';
+        $replacers = array_merge($this->replacers['default'], $this->replacers[$languageCode]);
+
+        if (count($replacers) > 0) {
+            foreach ($replacers as $key => $value) {
+                $clean = str_replace($key, $value, $clean);
+            }
+        }
+
+        // Inspired by ZOOLU
+        // delete problematic characters
+        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
+
+        // replace multiple minus with one
+        $clean = preg_replace('/([-]+)/', '-', $clean);
+
+        // delete minus at the beginning or end
+        $clean = preg_replace('/^([-])/', '', $clean);
+        $clean = preg_replace('/([-])$/', '', $clean);
+
+        // remove double slashes
+        $clean = str_replace('//', '/', $clean);
+
+        return $clean;
     }
 }
