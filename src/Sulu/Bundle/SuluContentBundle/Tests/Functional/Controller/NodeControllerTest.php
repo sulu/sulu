@@ -333,6 +333,24 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals($data[0]['article'], $response->article);
     }
 
+    public function testDelete()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->beforeTestGet();
+
+        $client->request('DELETE', '/api/nodes/' . $data[0]['id']);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/nodes/' . $data[0]['id']);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
     public function testPut()
     {
         $client = $this->createClient(

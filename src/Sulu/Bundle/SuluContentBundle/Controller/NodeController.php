@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContactBundle\Controller\ContactsController;
@@ -39,8 +40,12 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $portal = $this->getRequest()->get('portal', 'default');
 
-        $result = $this->get('sulu_content.node_repository')->getNode($uuid, $portal, $language);
-        $view = $this->view($result);
+        try {
+            $result = $this->get('sulu_content.node_repository')->getNode($uuid, $portal, $language);
+            $view = $this->view($result);
+        } catch (ItemNotFoundException $ex) {
+            $view = $this->view($ex->getMessage(), 404);
+        }
 
         return $this->handleView($view);
     }
@@ -191,6 +196,26 @@ class NodeController extends RestController implements ClassResourceInterface
                     'total' => 1,
                 )
             )
+        );
+    }
+
+    public function deleteAction($uuid)
+    {
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+
+        try {
+            $this->get('sulu_content.node_repository')->deleteNode($uuid, $portal, $language);
+
+            $view = $this->view(null, 204);
+        } catch (ItemNotFoundException $ex) {
+            $view = $this->view($ex->getMessage(), 404);
+        }
+
+        return $this->handleView(
+            $view
         );
     }
 

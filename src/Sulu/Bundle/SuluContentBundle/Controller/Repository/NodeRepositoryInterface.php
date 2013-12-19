@@ -21,4 +21,11 @@ interface NodeRepositoryInterface {
      * @return array
      */
     public function getNode($uuid, $portalKey, $languageCode);
+
+    /**
+     * removes given node
+     * @param $uuid
+     * @param $portalKey
+     */
+    public function deleteNode($uuid, $portalKey);
 }
