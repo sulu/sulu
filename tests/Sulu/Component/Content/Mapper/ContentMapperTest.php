@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Mapper;
 
 use Jackalope\RepositoryFactoryJackrabbit;
 use Jackalope\Session;
+use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SimpleCredentials;
@@ -28,6 +29,7 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -61,6 +63,16 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
      */
     protected $resourceLocator;
 
+    /**
+     * @var NodeInterface
+     */
+    protected $contents;
+
+    /**
+     * @var NodeInterface
+     */
+    protected $routes;
+
     public function setUp()
     {
         $this->prepareMapper();
@@ -70,13 +82,20 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
         $cmf->addMixin('mix:referenceable');
+        $this->session->save();
 
-        $routes = $cmf->addNode('routes');
-        $routes->addMixin('mix:referenceable');
+        $this->contents = $cmf->addNode('contents');
+        $this->contents->setProperty('sulu:template', 'overview');
+        $this->contents->setProperty('sulu:creator', 1);
+        $this->contents->setProperty('sulu:created', new \DateTime());
+        $this->contents->setProperty('sulu:changer', 1);
+        $this->contents->setProperty('sulu:changed', new \DateTime());
+        $this->contents->addMixin('sulu:content');
+        $this->session->save();
 
-        $contents = $cmf->addNode('contents');
-        $contents->addMixin('mix:referenceable');
-
+        $this->routes = $cmf->addNode('routes');
+        $this->routes->setProperty('sulu:content', $this->contents);
+        $this->routes->addMixin('sulu:path');
         $this->session->save();
     }
 
@@ -700,7 +719,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $content = $root->getNode('cmf/contents/Test');
+        $content = $root->getNode('cmf/contents/test');
 
         $this->assertEquals('Test', $content->getProperty('title')->getString());
         $this->assertEquals('Test', $content->getProperty('article')->getString());
@@ -843,20 +862,19 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         // check content repository
         $root = $this->session->getRootNode();
         $contentRootNode = $root->getNode('cmf/contents');
-        $this->assertEquals(1, sizeof($contentRootNode->getNodes()));
 
-        $newsNode = $contentRootNode->getNode('News');
+        $newsNode = $contentRootNode->getNode('news');
         $this->assertEquals(2, sizeof($newsNode->getNodes()));
         $this->assertEquals('News', $newsNode->getPropertyValue('title'));
 
-        $testNewsNode = $newsNode->getNode('Testnews-1');
+        $testNewsNode = $newsNode->getNode('testnews-1');
         $this->assertEquals('Testnews-1', $testNewsNode->getPropertyValue('title'));
 
-        $testNewsNode = $newsNode->getNode('Testnews-2');
+        $testNewsNode = $newsNode->getNode('testnews-2');
         $this->assertEquals(1, sizeof($testNewsNode->getNodes()));
         $this->assertEquals('Testnews-2', $testNewsNode->getPropertyValue('title'));
 
-        $subTestNewsNode = $testNewsNode->getNode('Testnews-2-1');
+        $subTestNewsNode = $testNewsNode->getNode('testnews-2-1');
         $this->assertEquals('Testnews-2-1', $subTestNewsNode->getPropertyValue('title'));
     }
 
@@ -925,5 +943,125 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, sizeof($testNewsChildren));
 
         $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->title);
+    }
+
+    public function testStartPage()
+    {
+        $data = array(
+            'title' => 'startpage',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/',
+            'article' => 'article'
+        );
+
+        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
+
+        $startPage = $this->mapper->loadStartPage('default', 'en');
+        $this->assertEquals('startpage', $startPage->title);
+        $this->assertEquals('/', $startPage->url);
+
+        $data['title'] = 'new-startpage';
+
+        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
+
+        $startPage = $this->mapper->loadStartPage('default', 'en');
+        $this->assertEquals('new-startpage', $startPage->title);
+        $this->assertEquals('/', $startPage->url);
+
+        $startPage = $this->mapper->loadByResourceLocator('/', 'default', 'en');
+        $this->assertEquals('new-startpage', $startPage->title);
+        $this->assertEquals('/', $startPage->url);
+    }
+
+    public function testDelete()
+    {
+        $data = array(
+            array(
+                'title' => 'News',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news',
+                'article' => 'asdfasdfasdf'
+            ),
+            array(
+                'title' => 'Testnews-1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-1',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testnews-2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-2',
+                'article' => 'Test'
+            ),
+            array(
+                'title' => 'Testnews-2-1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-2/test-1',
+                'article' => 'Test'
+            )
+        );
+
+        // save root content
+        $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+
+        // add a child content
+        $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
+        $child = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
+        $subChild = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
+
+        // delete /news/test-2/test-1
+        $this->mapper->delete($child->getUuid(), 'default');
+
+        // check
+        try {
+            $this->mapper->load($child->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        try {
+            $this->mapper->load($subChild->getUuid(), 'default', 'de');
+            $this->assertTrue(false, 'Node should not exists');
+        } catch (ItemNotFoundException $ex) {
+        }
+
+        $result = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
+        $this->assertEquals(1, sizeof($result));
+    }
+
+    public function testCleanUp()
+    {
+        $data = array(
+            'title' => 'ä   ü ö   Ä Ü Ö',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/',
+            'article' => 'article'
+        );
+
+        $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
+
+        $node = $this->session->getNodeByIdentifier($structure->getUuid());
+
+        $this->assertEquals($node->getName(), 'ae-ue-oe-ae-ue-oe');
+        $this->assertEquals($node->getPath(), '/cmf/contents/ae-ue-oe-ae-ue-oe');
     }
 }

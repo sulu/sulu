@@ -34,6 +34,32 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     private $routesBasePath = '/cmf/routes';
 
+    /**
+     * TODO abstract with cleanup from RLPStrategy
+     * replacers for cleanup
+     * @var array
+     */
+    protected $replacers = array(
+        'default' => array(
+            ' ' => '-',
+            '+' => '-',
+            'ä' => 'ae',
+            'ö' => 'oe',
+            'ü' => 'ue',
+            // because strtolower ignores Ä,Ö,Ü
+            'Ä' => 'ae',
+            'Ö' => 'oe',
+            'Ü' => 'ue'
+            // TODO should be filled
+        ),
+        'de' => array(
+            '&' => 'und'
+        ),
+        'en' => array(
+            '&' => 'and'
+        )
+    );
+
     public function __construct($contentBasePath, $routesBasePath)
     {
         $this->contentBasePath = $contentBasePath;
@@ -75,7 +101,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $root = $session->getNode($this->getContentBasePath());
         }
 
-        $path = $data['title'];
+        $path = $this->cleanUp($data['title']);
 
         $dateTime = new \DateTime();
 
@@ -89,8 +115,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $node->addMixin('sulu:content');
         } else {
             $node = $session->getNodeByIdentifier($uuid);
-            if ($node->getPropertyValue('title') !== $data['title']) {
-                $node->rename($data['title']);
+
+            if (
+                $node->getPath() !== $this->getContentBasePath() &&
+                (!$node->hasProperty('title') || $node->getPropertyValue('title') !== $data['title'])
+            ) {
+                $node->rename($path);
                 // FIXME refresh session here
             }
         }
@@ -157,6 +187,32 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
+     * saves the given data in the content storage
+     * @param array $data The data to be saved
+     * @param string $templateKey Name of template
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Save data for given language
+     * @param int $userId The id of the user who saves
+     * @param bool $partialUpdate ignore missing property
+     *
+     * @throws \PHPCR\ItemExistsException if new title already exists
+     *
+     * @return StructureInterface
+     */
+    public function saveStartPage(
+        $data,
+        $templateKey,
+        $portalKey,
+        $languageCode,
+        $userId,
+        $partialUpdate = true
+    )
+    {
+        $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
+        return $this->save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate, $uuid);
+    }
+
+    /**
      * returns a list of data from children of given node
      * @param $uuid
      * @param $portalKey
@@ -195,6 +251,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode);
+    }
+
+    /**
+     * returns the data from the given id
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Read data for given language
+     * @return StructureInterface
+     */
+    public function loadStartPage($portalKey, $languageCode)
+    {
+        // TODO Portal
+        $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
+
+        return $this->load($uuid, $portalKey, $languageCode);
     }
 
     /**
@@ -242,6 +312,37 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         }
 
         return $structure;
+    }
+
+    /**
+     * deletes content with subcontent in given portal
+     * @param string $uuid UUID of content
+     * @param string $portalKey Key of portal
+     */
+    public function delete($uuid, $portalKey)
+    {
+        // TODO portal
+        $session = $this->getSession();
+        $contentNode = $session->getNodeByIdentifier($uuid);
+
+        $this->deleteRecursively($contentNode);
+        $session->save();
+    }
+
+    /**
+     * remove node with references (path, history path ...)
+     * @param NodeInterface $node
+     */
+    private function deleteRecursively(NodeInterface $node)
+    {
+        foreach ($node->getReferences() as $ref) {
+            if ($ref instanceof \PHPCR\PropertyInterface) {
+                $this->deleteRecursively($ref->getParent());
+            } else {
+                $this->deleteRecursively($ref);
+            }
+        }
+        $node->remove();
     }
 
     /**
@@ -294,5 +395,41 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     protected function getRouteBasePath()
     {
         return $this->routesBasePath;
+    }
+
+    /**
+     * TODO abstract with cleanup from RLPStrategy
+     * @param string $dirty
+     * @return string
+     */
+    protected function cleanUp($dirty)
+    {
+        $clean = strtolower($dirty);
+
+        // TODO language
+        $languageCode = 'de';
+        $replacers = array_merge($this->replacers['default'], $this->replacers[$languageCode]);
+
+        if (count($replacers) > 0) {
+            foreach ($replacers as $key => $value) {
+                $clean = str_replace($key, $value, $clean);
+            }
+        }
+
+        // Inspired by ZOOLU
+        // delete problematic characters
+        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
+
+        // replace multiple minus with one
+        $clean = preg_replace('/([-]+)/', '-', $clean);
+
+        // delete minus at the beginning or end
+        $clean = preg_replace('/^([-])/', '', $clean);
+        $clean = preg_replace('/([-])$/', '', $clean);
+
+        // remove double slashes
+        $clean = str_replace('//', '/', $clean);
+
+        return $clean;
     }
 }

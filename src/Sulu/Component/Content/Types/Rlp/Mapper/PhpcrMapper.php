@@ -140,11 +140,15 @@ class PhpcrMapper extends RlpMapper
         // TODO portal
         $session = $this->sessionFactory->getSession();
         $routes = $this->getRoutes($session);
-        if (!$routes->hasNode($resourceLocator)) {
+        if (!$routes->hasNode($resourceLocator) && $resourceLocator !== '') {
             throw new ResourceLocatorNotFoundException();
         }
 
-        $route = $routes->getNode($resourceLocator);
+        if ($resourceLocator !== '') {
+            $route = $routes->getNode($resourceLocator);
+        } else {
+            $route = $routes;
+        }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
             if (!$route->getPropertyValue('sulu:history')) {
@@ -374,6 +378,9 @@ class PhpcrMapper extends RlpMapper
      */
     private function getResourceLocator($path)
     {
+        if ($path === $this->basePath) {
+            return '/';
+        }
         return substr($path, strlen($this->basePath));
     }
 }
