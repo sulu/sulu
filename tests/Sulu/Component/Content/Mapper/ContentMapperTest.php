@@ -958,7 +958,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'article'
         );
 
-        $this->mapper->save($data, 'overview', 'default', 'en', 1, false, $this->contents->getIdentifier());
+        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false, $this->contents->getIdentifier());
     }
 
     public function testDelete()
