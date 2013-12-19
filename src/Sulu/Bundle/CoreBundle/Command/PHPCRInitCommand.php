@@ -12,6 +12,7 @@ namespace Sulu\Bundle\CoreBundle\Command;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPCR\Util\NodeHelper;
 use PHPCR\WorkspaceInterface;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
@@ -33,6 +34,9 @@ class PHPCRInitCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('sulu:phpcr:init')
+            ->addOption('user-id', 'u', InputOption::VALUE_OPTIONAL, '', 1)
+            ->addOption('template', 't', InputOption::VALUE_OPTIONAL, '', 'overview')
+            ->addOption('clear', 'c', InputOption::VALUE_OPTIONAL, '', false)
             ->setDescription('Creates default nodes in PHPCR');
     }
 
@@ -59,11 +63,30 @@ class PHPCRInitCommand extends ContainerAwareCommand
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
         $root = $session->getRootNode();
 
+        if ($input->getOption('clear')) {
+            NodeHelper::purgeWorkspace($session);
+            $session->save();
+            $output->writeln('Clear repository');
+        }
+
         $output->writeln('Create basic nodes: "' . $contents . '", "' . $routes . '"');
 
+        $userId = $input->getOption('user-id');
+        $template = $input->getOption('template');
+
         // create basic nodes
-        $this->createRecursive($contents, $root);
-        $this->createRecursive($routes, $root);
+        $content = $this->createRecursive($contents, $root);
+        $content->setProperty('sulu:template', $template);
+        $content->setProperty('sulu:creator', $userId);
+        $content->setProperty('sulu:created', new \DateTime());
+        $content->setProperty('sulu:changer', $userId);
+        $content->setProperty('sulu:changed', new \DateTime());
+        $content->addMixin('sulu:content');
+        $session->save();
+
+        $route = $this->createRecursive($routes, $root);
+        $route->setProperty('sulu:content', $content);
+        $route->setProperty('sulu:history', false);
 
         $session->save();
     }
@@ -72,6 +95,7 @@ class PHPCRInitCommand extends ContainerAwareCommand
      * create a node recursivly
      * @param string $path path to node
      * @param NodeInterface $rootNode base node to begin
+     * @return \PHPCR\NodeInterface
      */
     private function createRecursive($path, $rootNode)
     {
@@ -82,8 +106,8 @@ class PHPCRInitCommand extends ContainerAwareCommand
                 $curNode = $curNode->getNode($pathParts[$i]);
             } else {
                 $curNode = $curNode->addNode($pathParts[$i]);
-                $curNode->addMixin('mix:referenceable');
             }
         }
+        return $curNode;
     }
 }
