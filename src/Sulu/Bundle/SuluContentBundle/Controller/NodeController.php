@@ -51,6 +51,22 @@ class NodeController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * returns a content item for startpage
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function startAction()
+    {
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+
+        $result = $this->get('sulu_content.node_repository')->getStartNode($portal, $language);
+
+        return $this->handleView($this->view($result));
+    }
+
+    /**
      * returns all content items as JSON String
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -144,6 +160,20 @@ class NodeController extends RestController implements ClassResourceInterface
                 )
             )
         );
+    }
+
+    public function cputStartAction()
+    {
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+        $template = $this->getRequest()->get('template', 'overview');
+        $data = $this->getRequest()->request->all();
+
+        $result = $this->get('sulu_content.node_repository')->saveStartNode($data, $template, $portal, $language);
+        
+        return $this->handleView($this->view($result));
     }
 
     private function getContactByUserId($id)

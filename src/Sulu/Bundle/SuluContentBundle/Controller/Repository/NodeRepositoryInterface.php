@@ -23,6 +23,24 @@ interface NodeRepositoryInterface {
     public function getNode($uuid, $portalKey, $languageCode);
 
     /**
+     * returns start node for given portal
+     * @param string $portalKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function getStartNode($portalKey, $languageCode);
+
+    /**
+     * save start page of given portal
+     * @param array $data
+     * @param string $templateKey
+     * @param string $portalKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function saveStartNode($data, $templateKey, $portalKey, $languageCode);
+    
+    /**
      * removes given node
      * @param $uuid
      * @param $portalKey
