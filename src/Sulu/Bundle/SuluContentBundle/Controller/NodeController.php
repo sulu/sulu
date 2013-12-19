@@ -34,20 +34,13 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function getAction($uuid)
     {
-        $view = $this->responseGetById(
-            $uuid,
-            function ($uuid) {
-                // TODO language
-                // TODO portal
-                $content = $this->getMapper()->load($uuid, 'default', 'en');
-                $result = $content->toArray();
-                $result['_links'] = array('self' => $this->apiPath . '/' . $uuid);
-                $result['creator'] = $this->getContactByUserId($result['creator']);
-                $result['changer'] = $this->getContactByUserId($result['changer']);
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
 
-                return $result;
-            }
-        );
+        $result = $this->get('sulu_content.node_repository')->getNode($uuid, $portal, $language);
+        $view = $this->view($result);
 
         return $this->handleView($view);
     }
