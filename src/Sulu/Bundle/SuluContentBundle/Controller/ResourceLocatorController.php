@@ -25,7 +25,7 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-class ResourcelocatorController extends Controller implements ClassResourceInterface
+class ResourceLocatorController extends Controller implements ClassResourceInterface
 {
     /**
      * return resource-locator for sub-node
