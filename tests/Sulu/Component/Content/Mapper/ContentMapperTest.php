@@ -63,6 +63,16 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
      */
     protected $resourceLocator;
 
+    /**
+     * @var NodeInterface
+     */
+    protected $contents;
+
+    /**
+     * @var NodeInterface
+     */
+    protected $routes;
+
     public function setUp()
     {
         $this->prepareMapper();
@@ -72,13 +82,20 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
         $cmf->addMixin('mix:referenceable');
+        $this->session->save();
 
-        $routes = $cmf->addNode('routes');
-        $routes->addMixin('mix:referenceable');
+        $this->contents = $cmf->addNode('contents');
+        $this->contents->setProperty('sulu:template', 'overview');
+        $this->contents->setProperty('sulu:creator', 1);
+        $this->contents->setProperty('sulu:created', new \DateTime());
+        $this->contents->setProperty('sulu:changer', 1);
+        $this->contents->setProperty('sulu:changed', new \DateTime());
+        $this->contents->addMixin('sulu:content');
+        $this->session->save();
 
-        $contents = $cmf->addNode('contents');
-        $contents->addMixin('mix:referenceable');
-
+        $this->routes = $cmf->addNode('routes');
+        $this->routes->setProperty('sulu:content', $this->contents);
+        $this->routes->addMixin('sulu:path');
         $this->session->save();
     }
 
@@ -929,9 +946,19 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->title);
     }
 
-    public function testUpdateStartPage()
+    public function testStartPage()
     {
-        
+        $data = array(
+            'title' => 'startpage',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/',
+            'article' => 'article'
+        );
+
+        $this->mapper->save($data, 'overview', 'default', 'en', 1, false, $this->contents->getIdentifier());
     }
 
     public function testDelete()

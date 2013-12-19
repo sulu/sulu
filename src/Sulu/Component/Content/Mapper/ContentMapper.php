@@ -89,7 +89,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $node->addMixin('sulu:content');
         } else {
             $node = $session->getNodeByIdentifier($uuid);
-            if ($node->getPropertyValue('title') !== $data['title']) {
+
+            if (
+                $node->getPath() !== $this->getContentBasePath() &&
+                (!$node->hasProperty('title') || $node->getPropertyValue('title') !== $data['title'])
+            ) {
                 $node->rename($data['title']);
                 // FIXME refresh session here
             }
@@ -154,6 +158,32 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
         return $structure;
+    }
+
+    /**
+     * saves the given data in the content storage
+     * @param array $data The data to be saved
+     * @param string $templateKey Name of template
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Save data for given language
+     * @param int $userId The id of the user who saves
+     * @param bool $partialUpdate ignore missing property
+     *
+     * @throws \PHPCR\ItemExistsException if new title already exists
+     *
+     * @return StructureInterface
+     */
+    public function saveStartPage(
+        $data,
+        $templateKey,
+        $portalKey,
+        $languageCode,
+        $userId,
+        $partialUpdate = true
+    )
+    {
+        $uuid = $this->getSession()->getNode($this->getContentBasePath());
+        return $this->save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate, $uuid);
     }
 
     /**

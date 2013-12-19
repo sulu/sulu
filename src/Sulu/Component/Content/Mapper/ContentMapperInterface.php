@@ -45,6 +45,28 @@ interface ContentMapperInterface
     );
 
     /**
+     * saves the given data in the content storage
+     * @param array $data The data to be saved
+     * @param string $templateKey Name of template
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Save data for given language
+     * @param int $userId The id of the user who saves
+     * @param bool $partialUpdate ignore missing property
+     *
+     * @throws \PHPCR\ItemExistsException if new title already exists
+     *
+     * @return StructureInterface
+     */
+    public function saveStartPage(
+        $data,
+        $templateKey,
+        $portalKey,
+        $languageCode,
+        $userId,
+        $partialUpdate = true
+    );
+
+    /**
      * returns a list of data from children of given node
      * @param $uuid
      * @param $portalKey
