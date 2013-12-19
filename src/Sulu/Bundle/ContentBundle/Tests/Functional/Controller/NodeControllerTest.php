@@ -166,6 +166,7 @@ class NodeControllerTest extends DatabaseTestCase
             NodeHelper::purgeWorkspace($this->session);
             $this->session->save();
         }
+        self::$tool->dropSchema(self::$entities);
         parent::tearDown();
     }
 
