@@ -37,11 +37,11 @@ define([], function() {
             render: function() {
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
 
-                this.$el.html(this.renderTemplate('/admin/contact/template/account/form'));
+                this.$html(this.renderTemplate('/admin/contact/template/account/form'));
 
-                emailItem = this.$el.find('#emails .email-item:first');
-                phoneItem = this.$el.find('#phones .phone-item:first');
-                addressItem = this.$el.find('#addresses .address-item:first');
+                emailItem = this.sandbox.dom.find('#emails .email-item:first', this.$el);
+                phoneItem = this.sandbox.dom.find('#phones .phone-item:first', this.$el);
+                addressItem = this.sandbox.dom.find('#addresses .address-item:first', this.$el);
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 

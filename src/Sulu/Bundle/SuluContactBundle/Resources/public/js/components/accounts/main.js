@@ -62,11 +62,9 @@ define([
         del: function() {
             this.confirmSingleDeleteDialog(function(wasConfirmed, removeContacts) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
                     this.account.destroy({
                         data: {removeContacts: !!removeContacts},
                         processData: true,
-
                         success: function() {
                             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
                         }.bind(this)
@@ -76,7 +74,6 @@ define([
         },
 
         save: function(data) {
-            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
             this.account.set(data);
             this.account.save(null, {
                 // on success save contacts id
@@ -95,12 +92,12 @@ define([
         },
 
         load: function(id) {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
         add: function() {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
         },
 
@@ -111,7 +108,7 @@ define([
             }
             this.confirmMultipleDeleteDialog(ids, function(wasConfirmed, removeContacts) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                    // TODO: show loading icon
                     ids.forEach(function(id) {
                         var account = new Account({id: id});
                         account.destroy({
@@ -123,13 +120,12 @@ define([
                             }.bind(this)
                         });
                     }.bind(this));
-                    this.sandbox.emit('husky.header.button-state', 'standard');
                 }
             }.bind(this));
         },
 
         renderList: function() {
-            var $list = $('<div id="accounts-list-container"/>');
+            var $list = this.sandbox.dom.createElement('<div id="accounts-list-container"/>');
             this.html($list);
             this.sandbox.start([
                 {name: 'accounts/components/list@sulucontact', options: { el: $list}}
@@ -141,7 +137,7 @@ define([
             // load data and show form
             this.account = new Account();
 
-            var $form = $('<div id="accounts-form-container"/>');
+            var $form = this.sandbox.dom.createElement('<div id="accounts-form-container"/>');
             this.html($form);
 
             if (!!this.options.id) {
