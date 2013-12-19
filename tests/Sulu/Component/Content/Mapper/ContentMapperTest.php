@@ -862,7 +862,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         // check content repository
         $root = $this->session->getRootNode();
         $contentRootNode = $root->getNode('cmf/contents');
-        $this->assertEquals(1, sizeof($contentRootNode->getNodes()));
 
         $newsNode = $contentRootNode->getNode('News');
         $this->assertEquals(2, sizeof($newsNode->getNodes()));
