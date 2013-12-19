@@ -25,4 +25,4 @@ services:
         arguments: [@doctrine]
     sulu_content.node_repository:
         class: %sulu_content.node_repository.class%
-        arguments: [@sulu.content.mapper, @sulu_content.get_contact]
+        arguments: [@sulu.content.mapper, @sulu_content.get_contact, @security.context]
