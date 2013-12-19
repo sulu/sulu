@@ -9,7 +9,7 @@
         </div>
         <div class="grid-col-6">
             <label for="email" class="required"><%=translate('security.permission.email')%></label>
-            <input name="email" id="email" type="text" class="form-element m-top-15" readonly value="<%= (!!email) ? email : '' %>" />
+            <input name="email" tabindex="-1" id="email" type="text" class="form-element m-top-15" readonly value="<%= (!!email) ? email : '' %>" />
         </div>
     </div>
 

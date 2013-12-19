@@ -124,7 +124,7 @@ define([
         },
 
         renderList: function() {
-            var $list = $('<div id="roles-list-container"/>');
+            var $list = this.sandbox.dom.createElement('<div id="roles-list-container"/>');
             this.html($list);
             this.sandbox.start([
                 {
@@ -139,7 +139,7 @@ define([
         renderForm: function() {
             this.role = new Role();
 
-            var $form = $('<div id="roles-form-container"/>'),
+            var $form = this.sandbox.dom.createElement('<div id="roles-form-container"/>'),
                 component = {
                     name: 'roles/components/form@sulusecurity',
                     options: {
