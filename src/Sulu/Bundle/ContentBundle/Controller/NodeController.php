@@ -54,7 +54,7 @@ class NodeController extends RestController implements ClassResourceInterface
      * returns a content item for startpage
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function startAction()
+    public function indexAction()
     {
         // TODO language
         // TODO portal
@@ -162,7 +162,7 @@ class NodeController extends RestController implements ClassResourceInterface
         );
     }
 
-    public function cputStartAction()
+    public function cputIndexAction()
     {
         // TODO language
         // TODO portal
@@ -172,7 +172,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $data = $this->getRequest()->request->all();
 
         $result = $this->get('sulu_content.node_repository')->saveStartNode($data, $template, $portal, $language);
-        
+
         return $this->handleView($this->view($result));
     }
 
