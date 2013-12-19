@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller\Repository;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class NodeRepository implements NodeRepositoryInterface
 {
@@ -31,10 +32,20 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    function __construct(ContentMapperInterface $mapper, GetContactInterface $contact)
+    /**
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
+    private $securityContext;
+
+    function __construct(
+        ContentMapperInterface $mapper,
+        GetContactInterface $contact,
+        SecurityContextInterface $securityContext
+    )
     {
         $this->mapper = $mapper;
         $this->contact = $contact;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -47,6 +58,40 @@ class NodeRepository implements NodeRepositoryInterface
     public function getNode($uuid, $portalKey, $languageCode)
     {
         $structure = $this->getMapper()->load($uuid, $portalKey, $languageCode);
+
+        return $this->prepareNode($structure);
+    }
+
+    /**
+     * returns start node for given portal
+     * @param string $portalKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function getStartNode($portalKey, $languageCode)
+    {
+        $structure = $this->getMapper()->loadStartPage($portalKey, $languageCode);
+
+        return $this->prepareNode($structure);
+    }
+
+    /**
+     * save start page of given portal
+     * @param array $data
+     * @param string $templateKey
+     * @param string $portalKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function saveStartNode($data, $templateKey, $portalKey, $languageCode)
+    {
+        $structure = $this->getMapper()->saveStartPage(
+            $data,
+            $templateKey,
+            $portalKey,
+            $languageCode,
+            $this->getUserId()
+        );
 
         return $this->prepareNode($structure);
     }
@@ -97,6 +142,11 @@ class NodeRepository implements NodeRepositoryInterface
     protected function getContact($id)
     {
         return $this->contact->getContact($id);
+    }
+
+    protected function getUserId()
+    {
+        return $this->securityContext->getToken()->getUser()->getId();
     }
 
     /**
