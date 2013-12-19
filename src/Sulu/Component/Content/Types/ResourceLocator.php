@@ -95,10 +95,12 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $value = $property->getValue();
         if ($value != null && $value != '') {
             $old = $this->getResourceLocator($node);
-            if ($old != null) {
-                $this->getStrategy()->move($old, $value, $this->getPortalKey());
-            } else {
-                $this->getStrategy()->save($node, $value, $this->getPortalKey());
+            if ($old !== '/') {
+                if ($old != null) {
+                    $this->getStrategy()->move($old, $value, $this->getPortalKey());
+                } else {
+                    $this->getStrategy()->save($node, $value, $this->getPortalKey());
+                }
             }
         } else {
             $this->remove($node, $property);

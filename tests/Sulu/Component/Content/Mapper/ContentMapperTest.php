@@ -958,7 +958,23 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
             'article' => 'article'
         );
 
-        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false, $this->contents->getIdentifier());
+        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
+
+        $startPage = $this->mapper->loadStartPage('default', 'en');
+        $this->assertEquals('startpage', $startPage->title);
+        $this->assertEquals('/', $startPage->url);
+
+        $data['title'] = 'new-startpage';
+
+        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
+
+        $startPage = $this->mapper->loadStartPage('default', 'en');
+        $this->assertEquals('new-startpage', $startPage->title);
+        $this->assertEquals('/', $startPage->url);
+
+        $startPage = $this->mapper->loadByResourceLocator('/', 'default', 'en');
+        $this->assertEquals('new-startpage', $startPage->title);
+        $this->assertEquals('/', $startPage->url);
     }
 
     public function testDelete()

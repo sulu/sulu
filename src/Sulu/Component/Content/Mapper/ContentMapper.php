@@ -182,7 +182,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $partialUpdate = true
     )
     {
-        $uuid = $this->getSession()->getNode($this->getContentBasePath());
+        $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
         return $this->save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate, $uuid);
     }
 
@@ -225,6 +225,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode);
+    }
+
+    /**
+     * returns the data from the given id
+     * @param string $portalKey Key of portal
+     * @param string $languageCode Read data for given language
+     * @return StructureInterface
+     */
+    public function loadStartPage($portalKey, $languageCode)
+    {
+        // TODO Portal
+        $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
+
+        return $this->load($uuid, $portalKey, $languageCode);
     }
 
     /**
