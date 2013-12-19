@@ -325,8 +325,24 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        $contentNode->remove();
+        $this->deleteRecursively($contentNode);
         $session->save();
+    }
+
+    /**
+     * remove node with references (path, history path ...)
+     * @param NodeInterface $node
+     */
+    private function deleteRecursively(NodeInterface $node)
+    {
+        foreach ($node->getReferences() as $ref) {
+            if ($ref instanceof \PHPCR\PropertyInterface) {
+                $this->deleteRecursively($ref->getParent());
+            } else {
+                $this->deleteRecursively($ref);
+            }
+        }
+        $node->remove();
     }
 
     /**
