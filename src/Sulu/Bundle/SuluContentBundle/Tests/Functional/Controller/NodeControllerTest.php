@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\NodeInterface;
+use PHPCR\SimpleCredentials;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
@@ -118,7 +119,6 @@ class NodeControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
@@ -148,7 +148,7 @@ class NodeControllerTest extends DatabaseTestCase
         $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
         $factory = new $factoryclass();
         $repository = $factory->getRepository($parameters);
-        $credentials = new \PHPCR\SimpleCredentials('admin', 'admin');
+        $credentials = new SimpleCredentials('admin', 'admin');
         $this->session = $repository->login($credentials, 'default');
     }
 
