@@ -37,7 +37,7 @@ define([], function() {
             render: function() {
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
 
-                this.$html(this.renderTemplate('/admin/contact/template/account/form'));
+                this.html(this.renderTemplate('/admin/contact/template/account/form'));
 
                 emailItem = this.sandbox.dom.find('#emails .email-item:first', this.$el);
                 phoneItem = this.sandbox.dom.find('#phones .phone-item:first', this.$el);
