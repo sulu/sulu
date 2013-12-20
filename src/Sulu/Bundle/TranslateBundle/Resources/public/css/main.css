@@ -25,7 +25,7 @@ table#codes .show-options {
   left: -15px;
 }
 /* line 29, ../scss/modules/codes.scss */
-table#codes .icon-arrow-right {
+table#codes .custom-icon-arrow-right {
   width: 0px;
   height: 0px;
   border-style: solid;
@@ -33,7 +33,7 @@ table#codes .icon-arrow-right {
   border-color: transparent transparent transparent #000000;
 }
 /* line 37, ../scss/modules/codes.scss */
-table#codes .icon-arrow-down {
+table#codes .custom-icon-arrow-down {
   width: 0px;
   height: 0px;
   border-style: solid;

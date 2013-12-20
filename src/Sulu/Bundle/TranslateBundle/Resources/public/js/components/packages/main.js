@@ -86,15 +86,17 @@ define([
         },
 
         renderList: function() {
-
+            var $list = this.sandbox.dom.createElement('<div id="roles-list-container"/>');
+            this.html($list);
             this.sandbox.start([
-                {name: 'packages/components/list@sulutranslate', options: { el: this.$el}}
+                {name: 'packages/components/list@sulutranslate', options: { el: $list}}
             ]);
         },
 
         renderSettings: function() {
+            var $settings = this.sandbox.dom.createElement('<div id="roles-settings-container"/>');
             // show navigation submenu
-
+            this.html($settings);
             var packageModel;
             if (!!this.options.id) {
                 packageModel = this.getModel(this.options.id);
@@ -105,7 +107,7 @@ define([
                             {
                                 name: 'packages/components/settings@sulutranslate',
                                 options: {
-                                    el: this.$el, data: model.toJSON()
+                                    el: $settings, data: model.toJSON()
                                 }
                             }
                         ]);
@@ -120,7 +122,7 @@ define([
                     {
                         name: 'packages/components/settings@sulutranslate',
                         options: {
-                            el: this.$el, data: packageModel.toJSON()
+                            el: $settings, data: packageModel.toJSON()
                         }
                     }
                 ]);
@@ -129,7 +131,6 @@ define([
 
         renderDetails: function() {
             // show navigation submenu
-
             if (!!this.options.id) {
                 var packageModel = this.getModel(this.options.id);
 
@@ -145,13 +146,13 @@ define([
         },
 
         add: function() {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'settings/translate/add');
         },
 
         load: function(id) {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
-            this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + id + '/settings');
+            // TODO: show loading icon
+            this.sandbox.emit('sulu.router.navigate', 'settings/translate/edit:' + id + '/details');
         },
 
         save: function(data) {
@@ -160,7 +161,7 @@ define([
                 packageModel = this.getModel(data.id);
             }
 
-            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            // TODO: show loading icon
             packageModel.set(data);
             packageModel.save(null, {
                 // on success save contacts id
@@ -183,7 +184,7 @@ define([
                 if (wasConfirmed) {
                     var packageModel = this.getModel(id);
 
-                    this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
+                    // TODO: show loading icon
                     packageModel.destroy({
                         success: function() {
                             this.sandbox.emit('sulu.router.navigate', 'settings/translate');
@@ -217,13 +218,15 @@ define([
         },
 
         loadTranslations: function(packageModel, selectedCatalogue) {
+            var $details = this.sandbox.dom.createElement('<div id="roles-details-container"/>');
+            this.html($details);
 
             this.translations = new Translations({translateCatalogueId: selectedCatalogue.get('id')});
             this.translations.fetch({
                 success: function() {
                     this.sandbox.start([
                         {name: 'packages/components/details@sulutranslate', options: {
-                            el: this.$el,
+                            el: $details,
                             data: packageModel.toJSON(),
                             selectedCatalogue: selectedCatalogue.toJSON(),
                             translations: this.translations.toJSON()
@@ -248,7 +251,7 @@ define([
                     }
                 };
 
-            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            // TODO: show loading icon
 
             this.sandbox.util.each(codesToDelete, function(index) {
                 promiseCounter++;
@@ -286,7 +289,7 @@ define([
             }
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+                    // TODO: show loading icon
 
                     ids.forEach(function(id) {
                         var packageModel = this.getModel(id);
@@ -297,7 +300,6 @@ define([
                             }.bind(this)
                         });
                     }.bind(this));
-                    this.sandbox.emit('husky.header.button-state', 'standard');
                 }
             });
         },
