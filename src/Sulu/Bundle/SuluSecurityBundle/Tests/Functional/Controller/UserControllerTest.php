@@ -205,6 +205,7 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('de', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
+        $this->assertEquals('Max Muster ', $response->fullName);
     }
 
     public function testGetByNotExistingId()
