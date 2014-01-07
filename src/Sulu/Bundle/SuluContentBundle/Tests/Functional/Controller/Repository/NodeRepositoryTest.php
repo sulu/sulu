@@ -10,14 +10,16 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Controller\Repository;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityRepository;
 use Jackalope\RepositoryFactoryJackrabbit;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Controller\Repository\GetContactInterface;
 use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -39,9 +41,17 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var GetContactInterface
+     * @var Registry
      */
-    private $contactMock;
+    private $doctrineMock;
+    /**
+     * @var EntityRepository
+     */
+    private $repositoryMock;
+    /**
+     * @var User
+     */
+    private $userMock;
     /**
      * @var ContentMapperInterface
      */
@@ -121,11 +131,11 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->prepareContainerMock();
-        $this->prepareContactMock();
+        $this->prepareDoctrineMock();
 
         $this->prepareMapper();
 
-        $this->nodeRepository = new NodeRepository($this->mapper, $this->contactMock);
+        $this->nodeRepository = new NodeRepository($this->mapper, $this->doctrineMock, $this->securityContextMock);
     }
 
     private function prepareContainerMock()
@@ -225,16 +235,44 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->session->save();
     }
 
-    private function prepareContactMock()
+    private function prepareDoctrineMock()
     {
-        $this->contactMock = $this->getMock(
-            '\Sulu\Bundle\ContentBundle\Controller\Repository\GetContactInterface',
-            array('getContact')
+        $this->doctrineMock = $this->getMock(
+            '\Doctrine\Bundle\DoctrineBundle\Registry',
+            array('getRepository'),
+            array(),
+            '',
+            false
         );
-        $this->contactMock
+        $this->repositoryMock = $this->getMock(
+            '\Doctrine\ORM\EntityRepository',
+            array('find'),
+            array(),
+            '',
+            false
+        );
+        $this->userMock = $this->getMock(
+            '\Sulu\Bundle\SecurityBundle\Entity\User',
+            array('getFullName'),
+            array(),
+            '',
+            false
+        );
+
+        $this->doctrineMock
             ->expects($this->any())
-            ->method('getContact')
-            ->will($this->returnValue('FirstName LastName'));
+            ->method('getRepository')
+            ->will($this->returnValue($this->repositoryMock));
+
+        $this->repositoryMock
+            ->expects($this->any())
+            ->method('find')
+            ->will($this->returnValue($this->userMock));
+
+        $this->userMock
+            ->expects($this->any())
+            ->method('getFullName')
+            ->will($this->returnValue('Max Mustermann'));
     }
 
     public function containerCallback()
