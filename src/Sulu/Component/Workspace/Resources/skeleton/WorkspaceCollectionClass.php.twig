@@ -71,6 +71,7 @@ class {{ cache_class }} extends {{ base_class }}
         $portal->setName('{{ portal.name }}');
         $portal->setKey('{{ portal.key }}');
         $portal->setResourceLocatorStrategy('{{ portal.resourceLocator.strategy }}');
+        $portal->setWorkspace($workspace);
 {% for localization in portal.localizations %}
 
         // add localization
