@@ -19,6 +19,13 @@
         <segment key="s">summer</segment>
     </segments>
 
+    <theme>
+        <key>massiveart</key>
+        <excluded>
+            <template>overview</template>
+        </excluded>
+    </theme>
+
     <portals>
         <portal>
             <name>Massive Art US</name>
@@ -26,13 +33,6 @@
             <resource-locator>
                 <strategy>tree</strategy>
             </resource-locator>
-
-            <theme>
-                <key>massiveart</key>
-                <excluded>
-                    <template>overview</template>
-                </excluded>
-            </theme>
 
             <localizations>
                 <localization language="en" country="us"/>
@@ -58,13 +58,6 @@
             <resource-locator>
                 <strategy>tree</strategy>
             </resource-locator>
-
-            <theme>
-                <key>massiveart</key>
-                <excluded>
-                    <template>overview</template>
-                </excluded>
-            </theme>
 
             <localizations>
                 <localization language="en" country="ca"/>

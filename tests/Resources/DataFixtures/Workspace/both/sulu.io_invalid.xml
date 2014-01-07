@@ -6,19 +6,19 @@
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
+    <theme>
+        <key>sulu</key>
+        <excluded>
+            <template>overview</template>
+        </excluded>
+    </theme>
+
     <portals>
         <portal>
             <name>Sulu CMF AT</name>
             <resource-locator>
                 <strategy>short</strategy>
             </resource-locator>
-
-            <theme>
-                <key>sulu</key>
-                <excluded>
-                    <template>overview</template>
-                </excluded>
-            </theme>
 
             <localizations>
                 <localization language="de" country="at"/>

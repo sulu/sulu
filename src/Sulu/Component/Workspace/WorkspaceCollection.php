@@ -219,6 +219,9 @@ class WorkspaceCollection implements \IteratorAggregate
 
             $workspaceData['portals'] = array();
 
+            $workspaceData['theme']['key'] = $workspace->getTheme()->getKey();
+            $workspaceData['theme']['excludedTemplates'] = $workspace->getTheme()->getExcludedTemplates();
+
             $workspaceData = $this->toArrayPortals($workspace, $workspaceData);
             $workspaces[] = $workspaceData;
         }
@@ -290,9 +293,6 @@ class WorkspaceCollection implements \IteratorAggregate
             $portalData['resourceLocator']['strategy'] = $portal->getResourceLocatorStrategy();
 
             $portalData['localizations'] = $this->toArrayLocalizations($portal->getLocalizations());
-
-            $portalData['theme']['key'] = $portal->getTheme()->getKey();
-            $portalData['theme']['excludedTemplates'] = $portal->getTheme()->getExcludedTemplates();
 
             $portalData = $this->toArrayEnvironments($portal, $portalData);
 
