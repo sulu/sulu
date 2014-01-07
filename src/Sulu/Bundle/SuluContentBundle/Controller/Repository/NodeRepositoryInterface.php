@@ -28,7 +28,7 @@ interface NodeRepositoryInterface {
      * @param string $languageCode
      * @return array
      */
-    public function getStartNode($portalKey, $languageCode);
+    public function getIndexNode($portalKey, $languageCode);
 
     /**
      * save start page of given portal
@@ -38,7 +38,7 @@ interface NodeRepositoryInterface {
      * @param string $languageCode
      * @return array
      */
-    public function saveStartNode($data, $templateKey, $portalKey, $languageCode);
+    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode);
     
     /**
      * removes given node

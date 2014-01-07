@@ -128,6 +128,14 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
     }
 
+    public function testGetIndexNode()
+    {
+    }
+
+    public function testSaveIndexNode()
+    {
+    }
+
     protected function setUp()
     {
         $this->prepareContainerMock();
