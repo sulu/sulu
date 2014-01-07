@@ -32,8 +32,8 @@ define([
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.content.content.delete', function() {
-                this.del();
+            this.sandbox.on('sulu.content.content.delete', function(id) {
+                this.del(id);
             }, this);
 
             // save the current package
@@ -76,16 +76,27 @@ define([
                 });
         },
 
-        del: function() {
+        del: function(id) {
             this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.content.destroy({
-                        processData: true,
+                    if (id !== this.content.get('id')) {
+                        var content = new Content({id: id});
+                        content.destroy({
+                            processData: true,
 
-                        success: function() {
-                            this.sandbox.emit('sulu.router.navigate', 'content/contents');
-                        }.bind(this)
-                    });
+                            success: function() {
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                            }.bind(this)
+                        });
+                    } else {
+                        this.content.destroy({
+                            processData: true,
+
+                            success: function() {
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                            }.bind(this)
+                        });
+                    }
                 }
             }.bind(this), this.options.id);
         },
