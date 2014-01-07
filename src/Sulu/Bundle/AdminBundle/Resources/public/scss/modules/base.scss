@@ -21,23 +21,23 @@ $contentWidth : 800px;
       margin-top: 0;
   }
 
-
-  // tabs content
-  #edit-toolbar {
-    z-index:100;
-    position: fixed;
-    top: 40px;
-    min-width: $contentWidth;
-  }
-
-  #list-toolbar-container {
-      margin-bottom: 18px;
-  }
-
   .content-tabs-content {
     margin-top: 60px;
   }
 
+}
+
+
+// tabs content
+#edit-toolbar {
+    z-index:100;
+    position: fixed;
+    top: 40px;
+    min-width: $contentWidth;
+}
+
+#list-toolbar-container {
+    margin-bottom: 18px;
 }
 
 // Control elements
