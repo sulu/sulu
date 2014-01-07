@@ -78,7 +78,7 @@ class PortalRouteProvider implements RouteProviderInterface
             $language = $this->requestAnalyzer->getCurrentLocalization()->getLanguage();
 
             // Set current theme
-            $this->activeTheme->setName($portal->getTheme()->getKey());
+            $this->activeTheme->setName($portal->getWorkspace()->getTheme()->getKey());
 
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
