@@ -16,6 +16,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Symfony\Bridge\Doctrine\Tests\Security\User\EntityUserProviderTest;
@@ -109,6 +110,16 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("fullName")
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->getContact()->getFullName();
     }
 
     /**
