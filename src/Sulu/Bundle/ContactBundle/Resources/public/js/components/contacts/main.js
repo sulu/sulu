@@ -62,7 +62,7 @@ define([
         del: function() {
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('husky.header.button-state', 'loading-delete-button');
+                    // TODO: show loading icon
                     this.contact.destroy({
                         success: function() {
                             this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
@@ -73,7 +73,7 @@ define([
         },
 
         save: function(data) {
-            this.sandbox.emit('husky.header.button-state', 'loading-save-button');
+            // TODO: show loading icon
             this.contact.set(data);
             this.contact.save(null, {
                 // on success save contacts id
@@ -92,12 +92,12 @@ define([
         },
 
         load: function(id) {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
         },
 
         add: function() {
-            this.sandbox.emit('husky.header.button-state', 'loading-add-button');
+            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/add');
         },
 
@@ -108,7 +108,6 @@ define([
             }
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('husky.header.button-state', 'loading-add-button');
                     ids.forEach(function(id) {
                         var contact = new Contact({id: id});
                         contact.destroy({
@@ -117,13 +116,12 @@ define([
                             }.bind(this)
                         });
                     }.bind(this));
-                    this.sandbox.emit('husky.header.button-state', 'standard');
                 }
             }.bind(this));
         },
 
         renderList: function() {
-            var $list = $('<div id="contacts-list-container"/>');
+            var $list = this.sandbox.dom.createElement('<div id="contacts-list-container"/>');
             this.html($list);
             this.sandbox.start([
                 {name: 'contacts/components/list@sulucontact', options: { el: $list}}
@@ -134,7 +132,7 @@ define([
             // load data and show form
             this.contact = new Contact();
 
-            var $form = $('<div id="contacts-form-container"/>');
+            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>');
             this.html($form);
 
             if (!!this.options.id) {
