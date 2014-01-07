@@ -121,7 +121,7 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $languageCode
      * @return array
      */
-    public function getStartNode($portalKey, $languageCode)
+    public function getIndexNode($portalKey, $languageCode)
     {
         $structure = $this->getMapper()->loadStartPage($portalKey, $languageCode);
 
@@ -136,7 +136,7 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $languageCode
      * @return array
      */
-    public function saveStartNode($data, $templateKey, $portalKey, $languageCode)
+    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode)
     {
         $structure = $this->getMapper()->saveStartPage(
             $data,
