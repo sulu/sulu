@@ -10,8 +10,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
+use Ratchet\Http\HttpServer;
 use Ratchet\MessageComponentInterface;
 use Ratchet\Server\IoServer;
+use Ratchet\WebSocket\WsServer;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,7 +31,14 @@ class PreviewServerCommand extends ContainerAwareCommand
     {
         /** @var MessageComponentInterface $previewMessageComponent */
         $previewMessageComponent = $this->getMessageComponent();
-        $server = IoServer::factory($previewMessageComponent, 8080);
+        $server = IoServer::factory(
+            new HttpServer(
+                new WsServer(
+                    $previewMessageComponent
+                )
+            ),
+            9876
+        );
         $server->run();
     }
 
