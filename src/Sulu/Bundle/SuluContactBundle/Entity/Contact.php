@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Contact
@@ -189,6 +191,16 @@ class Contact extends ApiEntity
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("fullName")
+     * @return string
+     */
+    public function getFullName()
+    {
+       return $this->firstName . ' ' . $this->lastName;
     }
 
     /**
