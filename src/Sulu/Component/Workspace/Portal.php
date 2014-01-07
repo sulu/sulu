@@ -41,12 +41,6 @@ class Portal
     private $localizations;
 
     /**
-     * The theme of the portal
-     * @var Theme
-     */
-    private $theme;
-
-    /**
      * @var Environment[]
      */
     private $environments;
@@ -131,24 +125,6 @@ class Portal
     public function getLocalizations()
     {
         return $this->localizations;
-    }
-
-    /**
-     * Sets the theme for this portal
-     * @param \Sulu\Component\Workspace\Theme $theme
-     */
-    public function setTheme(Theme $theme)
-    {
-        $this->theme = $theme;
-    }
-
-    /**
-     * Returns the theme for this portal
-     * @return \Sulu\Component\Workspace\Theme
-     */
-    public function getTheme()
-    {
-        return $this->theme;
     }
 
     /**

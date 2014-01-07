@@ -41,6 +41,12 @@ class Workspace
     private $segments;
 
     /**
+     * The theme of the workspace
+     * @var Theme
+     */
+    private $theme;
+
+    /**
      * The portals defined for this workspace
      * @var Portal[]
      */
@@ -161,5 +167,23 @@ class Workspace
     public function getSegments()
     {
         return $this->segments;
+    }
+
+    /**
+     * Sets the theme for this portal
+     * @param \Sulu\Component\Workspace\Theme $theme
+     */
+    public function setTheme(Theme $theme)
+    {
+        $this->theme = $theme;
+    }
+
+    /**
+     * Returns the theme for this portal
+     * @return \Sulu\Component\Workspace\Theme
+     */
+    public function getTheme()
+    {
+        return $this->theme;
     }
 }

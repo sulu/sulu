@@ -40,15 +40,15 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $workspace->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $workspace->getLocalizations()[1]->getShadow());
 
+        $this->assertEquals('sulu', $workspace->getTheme()->getKey());
+        $this->assertEquals(1, count($workspace->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $workspace->getTheme()->getExcludedTemplates()[0]);
+
         $this->assertEquals('short', $workspace->getPortals()[0]->getResourceLocatorStrategy());
 
         $this->assertEquals(1, count($workspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('de', $workspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('at', $workspace->getPortals()[0]->getLocalizations()[0]->getCountry());
-
-        $this->assertEquals('sulu', $workspace->getPortals()[0]->getTheme()->getKey());
-        $this->assertEquals(1, count($workspace->getPortals()[0]->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $workspace->getPortals()[0]->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()));
 
@@ -98,6 +98,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('s', $workspace->getSegments()[1]->getKey());
         $this->assertEquals('summer', $workspace->getSegments()[1]->getName());
 
+        $this->assertEquals('massiveart', $workspace->getTheme()->getKey());
+        $this->assertEquals(1, count($workspace->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $workspace->getTheme()->getExcludedTemplates()[0]);
+
         $this->assertEquals('tree', $workspace->getPortals()[0]->getResourceLocatorStrategy());
 
         $this->assertEquals(2, count($workspace->getPortals()[0]->getLocalizations()));
@@ -107,9 +111,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $workspace->getPortals()[0]->getLocalizations()[1]->getCountry());
 
         $this->assertEquals('Massive Art US', $workspace->getPortals()[0]->getName());
-        $this->assertEquals('massiveart', $workspace->getPortals()[0]->getTheme()->getKey());
-        $this->assertEquals(1, count($workspace->getPortals()[0]->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $workspace->getPortals()[0]->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()));
 
@@ -135,10 +136,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ca', $workspace->getPortals()[1]->getLocalizations()[0]->getCountry());
         $this->assertEquals('fr', $workspace->getPortals()[1]->getLocalizations()[1]->getLanguage());
         $this->assertEquals('ca', $workspace->getPortals()[1]->getLocalizations()[1]->getCountry());
-
-        $this->assertEquals('massiveart', $workspace->getPortals()[1]->getTheme()->getKey());
-        $this->assertEquals(1, count($workspace->getPortals()[1]->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $workspace->getPortals()[1]->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($workspace->getPortals()[1]->getEnvironments()));
 
@@ -188,6 +185,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $workspace->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $workspace->getLocalizations()[1]->getShadow());
 
+        $this->assertEquals('sulu', $workspace->getTheme()->getKey());
+        $this->assertEquals(1, count($workspace->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $workspace->getTheme()->getExcludedTemplates()[0]);
+
         $this->assertEquals('short', $workspace->getPortals()[0]->getResourceLocatorStrategy());
 
         $this->assertEquals(3, count($workspace->getPortals()[0]->getLocalizations()));
@@ -200,10 +201,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $workspace->getPortals()[0]->getLocalizations()[2]->getLanguage());
         $this->assertEquals('at', $workspace->getPortals()[0]->getLocalizations()[2]->getCountry());
         $this->assertEquals(null, $workspace->getPortals()[0]->getLocalizations()[2]->getShadow());
-
-        $this->assertEquals('sulu', $workspace->getPortals()[0]->getTheme()->getKey());
-        $this->assertEquals(1, count($workspace->getPortals()[0]->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $workspace->getPortals()[0]->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($workspace->getPortals()[0]->getEnvironments()));
 
@@ -221,7 +218,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithIncorrectUrlDefinition()
     {
-        $workspace = $this->loader->load(
+        $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Workspace/invalid/massiveart_withIncorrectUrls.xml'
         );
     }

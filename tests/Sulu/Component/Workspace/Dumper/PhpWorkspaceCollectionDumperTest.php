@@ -55,7 +55,7 @@ class PhpWorkspaceCollectionDumperTest extends \PHPUnit_Framework_TestCase
         $theme = new Theme();
         $theme->setKey('portal1theme');
         $theme->setExcludedTemplates(array('overview', 'default'));
-        $portal->setTheme($theme);
+        $workspace->setTheme($theme);
 
         $environment = new Environment();
         $environment->setType('prod');
