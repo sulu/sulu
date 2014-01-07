@@ -24,13 +24,30 @@ define(function() {
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/column'));
 
-            // datagrid
+            // datagrid && tabs
             this.sandbox.start([
                 {
                     name: 'column-navigation@husky',
                     options: {
                         el: '#content-column',
                         url: '/admin/api/nodes?depth=1'
+                    }
+                },
+                {
+                    name: 'tabs@husky',
+                    options: {
+                        el: '#list-tabs',
+                        data: {
+                            "items": [
+                                {
+                                    "title": "Content"
+                                },
+                                {
+                                    "title": "Home page",
+                                    "action": "content/contents/edit:index/details"
+                                }
+                            ]
+                        }
                     }
                 }
             ]);
@@ -41,6 +58,12 @@ define(function() {
 
             this.sandbox.on('husky.column-navigation.edit', function(item) {
                 this.sandbox.emit('sulu.content.contents.load', item.id);
+            }.bind(this));
+
+            this.sandbox.on('husky.tabs.item.select', function(item) {
+                if (!!item.action) {
+                    this.sandbox.emit('sulu.router.navigate', item.action);
+                }
             }.bind(this));
         }
     };
