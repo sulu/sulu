@@ -131,12 +131,79 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testSave()
     {
-        // TODO ...
+        $structure = $this->prepareGetTestData();
+
+        $node = $this->nodeRepository->saveNode(
+            array(
+                'title' => 'asdf'
+            ),
+            'overview',
+            'default',
+            'de',
+            $structure->getUuid()
+        );
+
+        // new session (because of jackrabbit bug)
+        $this->sessionService = new SessionFactoryService(new RepositoryFactoryJackrabbit(), array(
+            'url' => 'http://localhost:8080/server',
+            'username' => 'admin',
+            'password' => 'admin',
+            'workspace' => 'default'
+        ));
+
+        $result = $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
+
+        $this->assertEquals('asdf', $result['title']);
+        $this->assertEquals($structure->getProperty('url')->getValue(), $result['url']);
     }
 
     public function testSaveNewNode()
     {
-        // TODO ...
+        $structure = $this->prepareGetTestData();
+
+        $node = $this->nodeRepository->saveNode(
+            array(
+                'title' => 'asdf',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test/asdf',
+                'article' => 'Test'
+            ),
+            'overview',
+            'default',
+            'de',
+            null,
+            $structure->getUuid()
+        );
+
+        $result = $this->nodeRepository->getNode($node['id'], 'default', 'en');
+
+        $this->assertEquals('asdf', $result['title']);
+        $this->assertEquals('/news/test/asdf', $result['url']);
+
+        $node = $this->nodeRepository->saveNode(
+            array(
+                'title' => 'asdf',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/asdf',
+                'article' => 'Test'
+            ),
+            'overview',
+            'default',
+            'de',
+            null,
+            null
+        );
+
+        $result = $this->nodeRepository->getNode($node['id'], 'default', 'en');
+
+        $this->assertEquals('asdf', $result['title']);
+        $this->assertEquals('/asdf', $result['url']);
     }
 
     public function testIndexNode()
