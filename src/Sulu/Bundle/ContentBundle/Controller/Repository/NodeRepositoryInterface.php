@@ -23,6 +23,17 @@ interface NodeRepositoryInterface {
     public function getNode($uuid, $portalKey, $languageCode);
 
     /**
+     * returns a list of nodes
+     * @param string $parent uuid of parent node
+     * @param string $portalKey key of current portal
+     * @param string $languageCode
+     * @param int $depth
+     * @param bool $flat
+     * @return array
+     */
+    public function getNodes($parent, $portalKey, $languageCode, $depth = 1, $flat = true);
+
+    /**
      * returns start node for given portal
      * @param string $portalKey
      * @param string $languageCode

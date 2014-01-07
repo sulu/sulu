@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Controller\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Jackalope\NotImplementedException;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -60,9 +61,10 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * returns finished Node (with _links and _embedded)
      * @param StructureInterface $structure
+     * @param int $depth
      * @return array
      */
-    protected function prepareNode(StructureInterface $structure)
+    protected function prepareNode(StructureInterface $structure, $depth = 1)
     {
         $result = $structure->toArray();
 
@@ -75,7 +77,7 @@ class NodeRepository implements NodeRepositoryInterface
         // add api links
         $result['_links'] = array(
             'self' => $this->apiBasePath . '/' . $structure->getUuid(),
-            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=1'
+            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=' . $depth
         );
 
         return $result;
@@ -157,5 +159,48 @@ class NodeRepository implements NodeRepositoryInterface
     public function deleteNode($uuid, $portalKey)
     {
         $this->getMapper()->delete($uuid, $portalKey);
+    }
+
+    /**
+     * returns a list of nodes
+     * @param string $parent uuid of parent node
+     * @param string $portalKey key of current portal
+     * @param string $languageCode
+     * @param int $depth
+     * @param bool $flat
+     * @return array
+     */
+    public function getNodes($parent, $portalKey, $languageCode, $depth = 1, $flat = true)
+    {
+        $nodes = $this->getMapper()->loadByParent($parent, $portalKey, $languageCode, $depth, $flat);
+
+        if ($parent != null) {
+            $parentNode = $this->getMapper()->load($parent, $portalKey, $languageCode);
+        } else {
+            $parentNode = $this->getMapper()->loadStartPage($portalKey, $languageCode);
+        }
+        $result = $this->prepareNodesTree($parentNode);
+        $result['_embedded'] = $this->prepareNodesTree($nodes);
+        $result['total'] = sizeof($result['_embedded']);
+
+        return $result;
+    }
+
+    /**
+     * @param StructureInterface[] $nodes
+     * @return array
+     */
+    private function prepareNodesTree($nodes)
+    {
+        $results = array();
+        foreach ($nodes as $node) {
+            $result = $this->prepareNode($node);
+            if ($node->getHasChildren() && $node->getChildren() != null) {
+                $result['_embedded'] = $this->prepareNodesTree($node->getChildren());
+            }
+            $results[] = $result;
+        }
+
+        return $results;
     }
 }

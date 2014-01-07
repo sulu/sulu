@@ -15,6 +15,7 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContactBundle\Controller\ContactsController;
+use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\RestController;
@@ -41,7 +42,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $portal = $this->getRequest()->get('portal', 'default');
 
         try {
-            $result = $this->get('sulu_content.node_repository')->getNode($uuid, $portal, $language);
+            $result = $this->getRepository()->getNode($uuid, $portal, $language);
             $view = $this->view($result);
         } catch (ItemNotFoundException $ex) {
             $view = $this->view($ex->getMessage(), 404);
@@ -61,7 +62,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $portal = $this->getRequest()->get('portal', 'default');
 
-        $result = $this->get('sulu_content.node_repository')->getStartNode($portal, $language);
+        $result = $this->getRepository()->getIndexNode($portal, $language);
 
         return $this->handleView($this->view($result));
     }
@@ -73,58 +74,14 @@ class NodeController extends RestController implements ClassResourceInterface
     public function cgetAction()
     {
         // TODO pagination
-        $result = array();
-
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
         $parentUuid = $this->getRequest()->get('parent');
-        $depth = $this->getRequest()->get('depth');
+        $depth = $this->getRequest()->get('depth', 1);
+        $depth = intval($depth);
+        $flat = $this->getRequest()->get('flat', true);
 
-        // TODO handle different depths
-        if ($depth == 1) {
-            // TODO language, portal
-            $structures = $this->getMapper()->loadByParent($parentUuid, 'default', 'de');
-            foreach ($structures as $structure) {
-                $tmp = $structure->toArray();
-                $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
-                $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
-
-                // TODO published, linked, type
-                $tmp['published'] = true;
-                $tmp['linked'] = false;
-                $tmp['type'] = 'none';
-
-                // hal spec
-                $tmp['_links'] = array(
-                    'self' => $this->apiPath . '/' . $tmp['id'],
-                    'children' => $this->apiPath . '?parent=' . $tmp['id'] . '&depth=' . $depth
-                );
-                $tmp['_embedded'] = array();
-
-                $result[] = $tmp;
-            }
-        }
-
-        if ($parentUuid !== null) {
-            $parent = $this->getMapper()->load($parentUuid, 'default', 'de')->toArray();
-            $result = array_merge(
-                $parent,
-                array(
-                    '_links' => array(
-                        'self' => $this->apiPath . '/' . $parent['id'],
-                        'children' => $this->apiPath . '?parent=' . $parent['id'] . '&depth=' . $depth
-                    ),
-                    '_embedded' => $result,
-                    'total' => sizeof($result),
-                )
-            );
-        } else {
-            $result = array(
-                '_links' => array(
-                    'children' => $this->apiPath . '?depth=' . $depth
-                ),
-                '_embedded' => $result,
-                'total' => sizeof($result)
-            );
-        }
+        $result = $this->getRepository()->getNodes($parentUuid, $portal, $language, $depth, $flat);
 
         return $this->handleView(
             $this->view($result)
@@ -237,7 +194,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $portal = $this->getRequest()->get('portal', 'default');
 
         try {
-            $this->get('sulu_content.node_repository')->deleteNode($uuid, $portal, $language);
+            $this->getRepository()->deleteNode($uuid, $portal, $language);
 
             $view = $this->view(null, 204);
         } catch (ItemNotFoundException $ex) {
@@ -256,6 +213,14 @@ class NodeController extends RestController implements ClassResourceInterface
     protected function getMapper()
     {
         return $this->container->get('sulu.content.mapper');
+    }
+
+    /**
+     * @return NodeRepositoryInterface
+     */
+    protected function getRepository()
+    {
+        return $this->get('sulu_content.node_repository');
     }
 
     /**
