@@ -159,9 +159,9 @@ define([
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!this.options.id) {
-                        this.sandbox.emit('sulu.content.contents.saved', model._embedded[0].id);
+                        this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model._embedded[0].id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
