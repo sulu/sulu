@@ -2,7 +2,6 @@ parameters:
     sulu_content.admin.class: Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin
     sulu_content.twig_extension.class: Sulu\Bundle\ContentBundle\Twig\ContentExtension
     sulu_content.admin.content_navigation.class: Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation
-    sulu_content.get_contact.class: Sulu\Bundle\ContentBundle\Controller\Repository\GetContactName
     sulu_content.node_repository.class: Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepository
 
 services:
@@ -19,10 +18,6 @@ services:
             - [ setContainer,[ @service_container ] ]
         tags:
             - { name: twig.extension }
-    sulu_content.get_contact:
-        public: false
-        class: %sulu_content.get_contact.class%
-        arguments: [@doctrine]
     sulu_content.node_repository:
         class: %sulu_content.node_repository.class%
-        arguments: [@sulu.content.mapper, @sulu_content.get_contact, @security.context]
+        arguments: [@sulu.content.mapper, @doctrine, @security.context]
