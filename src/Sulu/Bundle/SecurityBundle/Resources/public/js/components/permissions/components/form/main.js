@@ -240,6 +240,10 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.save', function() {
                 this.save();
             }, this);
+
+            this.sandbox.on('sulu.edit-toolbar.back', function(){
+                this.sandbox.emit('sulu.contacts.contacts.list');
+            }, this);
         },
 
         save: function() {
