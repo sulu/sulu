@@ -49,6 +49,59 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
+     * return content mapper
+     * @return ContentMapperInterface
+     */
+    protected function getMapper()
+    {
+        return $this->mapper;
+    }
+
+    /**
+     * returns finished Node (with _links and _embedded)
+     * @param StructureInterface $structure
+     * @return array
+     */
+    protected function prepareNode(StructureInterface $structure)
+    {
+        $result = $structure->toArray();
+
+        // replace creator, changer
+        $result['creator'] = $this->getContact($structure->getCreator());
+        $result['changer'] = $this->getContact($structure->getChanger());
+
+        // add default empty embedded property
+        $result['_embedded'] = array();
+        // add api links
+        $result['_links'] = array(
+            'self' => $this->apiBasePath . '/' . $structure->getUuid(),
+            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=1'
+        );
+
+        return $result;
+    }
+
+    protected function getContact($id)
+    {
+        /** @var User $user */
+        $user = $this->doctrine->getRepository('SuluSecurityBundle:User')->find($id);
+        return $user->getFullName();
+    }
+
+    protected function getUserId()
+    {
+        return $this->securityContext->getToken()->getUser()->getId();
+    }
+
+    /**
+     * @param string $apiBasePath
+     */
+    public function setApiBasePath($apiBasePath)
+    {
+        $this->apiBasePath = $apiBasePath;
+    }
+
+    /**
      * returns node for given uuid
      * @param $uuid
      * @param $portalKey
@@ -104,58 +157,5 @@ class NodeRepository implements NodeRepositoryInterface
     public function deleteNode($uuid, $portalKey)
     {
         $this->getMapper()->delete($uuid, $portalKey);
-    }
-
-    /**
-     * return content mapper
-     * @return ContentMapperInterface
-     */
-    protected function getMapper()
-    {
-        return $this->mapper;
-    }
-
-    /**
-     * returns finished Node (with _links and _embedded)
-     * @param StructureInterface $structure
-     * @return array
-     */
-    protected function prepareNode(StructureInterface $structure)
-    {
-        $result = $structure->toArray();
-
-        // replace creator, changer
-        $result['creator'] = $this->getContact($structure->getCreator());
-        $result['changer'] = $this->getContact($structure->getChanger());
-
-        // add default empty embedded property
-        $result['_embedded'] = array();
-        // add api links
-        $result['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $structure->getUuid(),
-            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=1'
-        );
-
-        return $result;
-    }
-
-    protected function getContact($id)
-    {
-        /** @var User $user */
-        $user = $this->doctrine->getRepository('SuluSecurityBundle:User')->find($id);
-        return $user->getFullName();
-    }
-
-    protected function getUserId()
-    {
-        return $this->securityContext->getToken()->getUser()->getId();
-    }
-
-    /**
-     * @param string $apiBasePath
-     */
-    public function setApiBasePath($apiBasePath)
-    {
-        $this->apiBasePath = $apiBasePath;
     }
 }
