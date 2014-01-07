@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -24,6 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Component\Testing\DatabaseTestCase;
+
 class ContactControllerTest extends DatabaseTestCase
 {
 	/**
@@ -160,7 +160,8 @@ class ContactControllerTest extends DatabaseTestCase
 
 		$this->assertEquals('Max', $response->firstName);
 		$this->assertEquals('Mustermann', $response->lastName);
-		$this->assertEquals('Dr', $response->title);
+        $this->assertEquals('Max Mustermann', $response->fullName);
+        $this->assertEquals('Dr', $response->title);
 		$this->assertEquals('CEO', $response->position);
 		$this->assertEquals('123456789', $response->phones[0]->phone);
 		$this->assertEquals('Private', $response->phones[0]->phoneType->name);
