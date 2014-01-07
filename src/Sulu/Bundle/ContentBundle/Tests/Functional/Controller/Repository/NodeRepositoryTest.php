@@ -37,6 +37,7 @@ use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -128,12 +129,21 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
     }
 
-    public function testGetIndexNode()
+    public function testIndexNode()
     {
-    }
+        $data = array(
+            'title' => 'Testtitle',
+        );
+        $this->nodeRepository->saveIndexNode(
+            $data,
+            'overview',
+            'default',
+            'de'
+        );
 
-    public function testSaveIndexNode()
-    {
+        $index = $this->nodeRepository->getIndexNode('default', 'de');
+
+        $this->assertEquals('Testtitle', $index['title']);
     }
 
     protected function setUp()
@@ -239,7 +249,13 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $routes->addMixin('mix:referenceable');
 
         $contents = $cmf->addNode('contents');
-        $contents->addMixin('mix:referenceable');
+        $contents->addMixin('sulu:content');
+        $contents->setProperty('sulu:creator', 1);
+        $contents->setProperty('sulu:created', new \DateTime());
+        $contents->setProperty('sulu:changer', 1);
+        $contents->setProperty('sulu:changed', new \DateTime());
+        $contents->setProperty('sulu:template', 'overview');
+
         $this->session->save();
     }
 
