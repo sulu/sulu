@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Controller\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -23,28 +24,27 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $mapper;
     /**
-     * @var GetContactInterface
-     */
-    private $contact;
-    /**
      * for returning self link in get action
      * @var string
      */
     private $apiBasePath = '/admin/api/nodes';
-
     /**
      * @var \Symfony\Component\Security\Core\SecurityContextInterface
      */
     private $securityContext;
+    /**
+     * @var Registry
+     */
+    private $doctrine;
 
     function __construct(
         ContentMapperInterface $mapper,
-        GetContactInterface $contact,
+        Registry $doctrine,
         SecurityContextInterface $securityContext
     )
     {
         $this->mapper = $mapper;
-        $this->contact = $contact;
+        $this->doctrine = $doctrine;
         $this->securityContext = $securityContext;
     }
 
@@ -141,7 +141,9 @@ class NodeRepository implements NodeRepositoryInterface
 
     protected function getContact($id)
     {
-        return $this->contact->getContact($id);
+        /** @var User $user */
+        $user = $this->doctrine->getRepository('SuluSecurityBundle:User')->find($id);
+        return $user->getFullName();
     }
 
     protected function getUserId()
