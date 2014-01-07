@@ -14,6 +14,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Workspace\Localization;
 use Sulu\Component\Workspace\Portal;
 use Sulu\Component\Workspace\Theme;
+use Sulu\Component\Workspace\Workspace;
 use Symfony\Component\HttpFoundation\Request;
 
 class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
@@ -27,7 +28,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setKey('portal');
         $theme = new Theme();
         $theme->setKey('theme');
-        $portal->setTheme($theme);
+        $workspace = new Workspace();
+        $workspace->setTheme($theme);
+        $portal->setWorkspace($workspace);
         $localization = new Localization();
         $localization->setLanguage('de');
 
@@ -58,7 +61,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setKey('portal');
         $theme = new Theme();
         $theme->setKey('theme');
-        $portal->setTheme($theme);
+        $workspace = new Workspace();
+        $workspace->setTheme($theme);
+        $portal->setWorkspace($workspace);
         $localization = new Localization();
         $localization->setLanguage('de');
 
@@ -91,7 +96,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setKey('portal');
         $theme = new Theme();
         $theme->setKey('theme');
-        $portal->setTheme($theme);
+        $workspace = new Workspace();
+        $workspace->setTheme($theme);
+        $portal->setWorkspace($workspace);
 
         $structure = $this->getStructureMock($uuid);
         $requestAnalyzer = $this->getRequestAnalyzerRedirectMock($portal);
