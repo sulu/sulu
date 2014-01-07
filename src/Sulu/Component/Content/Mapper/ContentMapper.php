@@ -70,7 +70,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template
-     * @param string $portalKey Key of portal
+     * @param string $workspaceKey Key of workspace
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
@@ -82,7 +82,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     public function save(
         $data,
         $templateKey,
-        $portalKey,
+        $workspaceKey,
         $languageCode,
         $userId,
         $partialUpdate = true,
@@ -91,7 +91,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     )
     {
         // TODO localize
-        // TODO portal
+        // TODO workspace
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
 
@@ -190,7 +190,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template
-     * @param string $portalKey Key of portal
+     * @param string $workspaceKey Key of workspace
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
@@ -202,51 +202,77 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     public function saveStartPage(
         $data,
         $templateKey,
-        $portalKey,
+        $workspaceKey,
         $languageCode,
         $userId,
         $partialUpdate = true
     )
     {
         $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
-        return $this->save($data, $templateKey, $portalKey, $languageCode, $userId, $partialUpdate, $uuid);
+        return $this->save($data, $templateKey, $workspaceKey, $languageCode, $userId, $partialUpdate, $uuid);
     }
 
     /**
      * returns a list of data from children of given node
      * @param $uuid
-     * @param $portalKey
+     * @param $workspaceKey
      * @param $languageCode
+     * @param int $depth
+     * @param bool $flat
      *
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $portalKey, $languageCode)
+    public function loadByParent($uuid, $workspaceKey, $languageCode, $depth = 1, $flat = true)
     {
-        // TODO portal
+        // TODO workspace
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
         } else {
             $root = $this->getSession()->getNode($this->getContentBasePath());
         }
-        $result = array();
+        return $this->loadByParentNode($root, $workspaceKey, $languageCode, $depth, $flat);
+    }
 
-        foreach ($root->getNodes() as $node) {
-            $result[] = $this->loadByNode($node, $languageCode);
+    /**
+     * returns a list of data from children of given node
+     * @param NodeInterface $parent
+     * @param $workspaceKey
+     * @param $languageCode
+     * @param int $depth
+     * @param bool $flat
+     * @return array
+     */
+    private function loadByParentNode(NodeInterface $parent, $workspaceKey, $languageCode, $depth = 1, $flat = true)
+    {
+        $results = array();
+
+        /** @var NodeInterface $node */
+        foreach ($parent->getNodes() as $node) {
+            $result = $this->loadByNode($node, $languageCode);
+            $results[] = $result;
+            if ($depth > 1) {
+                $children = $this->loadByParentNode($node, $workspaceKey, $languageCode, $depth - 1, $flat);
+                if ($flat) {
+                    $results = array_merge($results, $children);
+                } else {
+                    $result->setChildren($children);
+                }
+            }
         }
 
-        return $result;
+        return $results;
     }
 
     /**
      * returns the data from the given id
      * @param string $uuid UUID of the content
-     * @param string $portalKey Key of portal
+     * @param string $workspaceKey Key of workspace
      * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
-    public function load($uuid, $portalKey, $languageCode)
+    public function load($uuid, $workspaceKey, $languageCode)
     {
-        // TODO portal
+        // TODO workspace
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
@@ -255,28 +281,28 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
     /**
      * returns the data from the given id
-     * @param string $portalKey Key of portal
+     * @param string $workspaceKey Key of workspace
      * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
-    public function loadStartPage($portalKey, $languageCode)
+    public function loadStartPage($workspaceKey, $languageCode)
     {
-        // TODO Portal
+        // TODO workspace
         $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
 
-        return $this->load($uuid, $portalKey, $languageCode);
+        return $this->load($uuid, $workspaceKey, $languageCode);
     }
 
     /**
      * returns data from given path
      * @param string $resourceLocator Resource locator
-     * @param string $portalKey Key of portal
+     * @param string $workspaceKey Key of workspace
      * @param string $languageCode
      * @return StructureInterface
      */
-    public function loadByResourceLocator($resourceLocator, $portalKey, $languageCode)
+    public function loadByResourceLocator($resourceLocator, $workspaceKey, $languageCode)
     {
-        // TODO portal
+        // TODO workspace
         $session = $this->getSession();
         $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator);
         $contentNode = $session->getNodeByIdentifier($uuid);
@@ -315,13 +341,13 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
-     * deletes content with subcontent in given portal
+     * deletes content with subcontent in given workspace
      * @param string $uuid UUID of content
-     * @param string $portalKey Key of portal
+     * @param string $workspaceKey Key of workspace
      */
-    public function delete($uuid, $portalKey)
+    public function delete($uuid, $workspaceKey)
     {
-        // TODO portal
+        // TODO workspace
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
