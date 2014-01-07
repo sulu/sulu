@@ -48,9 +48,9 @@ class XmlFileLoader extends FileLoader
         $path = $this->getLocator()->locate($resource);
 
         // load data in path
-        $portal = $this->parseXml($path);
+        $workspace = $this->parseXml($path);
 
-        return $portal;
+        return $workspace;
     }
 
     /**
@@ -82,6 +82,7 @@ class XmlFileLoader extends FileLoader
         $this->workspace = new Workspace();
         $this->workspace->setName($this->xpath->query('/x:workspace/x:name')->item(0)->nodeValue);
         $this->workspace->setKey($this->xpath->query('/x:workspace/x:key')->item(0)->nodeValue);
+        $this->workspace->setTheme($this->generateTheme());
 
         // set localizations on workspaces
         $this->generateWorkspaceLocalizations();
@@ -192,11 +193,6 @@ class XmlFileLoader extends FileLoader
                 $this->xpath->query('x:resource-locator/x:strategy', $portalNode)->item(0)->nodeValue
             );
 
-            // set theme on portal
-            $theme = $this->generateTheme($portalNode);
-
-            $portal->setTheme($theme);
-
             // set localization on portal
             $this->generatePortalLocalizations($portalNode, $portal);
 
@@ -208,15 +204,15 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @param \DOMNode $portalNode
+     * @param \DOMNode $workspaceNode
      * @return Theme
      */
-    private function generateTheme($portalNode)
+    private function generateTheme()
     {
         $theme = new Theme();
-        $theme->setKey($this->xpath->query('x:theme/x:key', $portalNode)->item(0)->nodeValue);
+        $theme->setKey($this->xpath->query('/x:workspace/x:theme/x:key')->item(0)->nodeValue);
 
-        foreach ($this->xpath->query('x:theme/x:excluded/x:template', $portalNode) as $templateNode) {
+        foreach ($this->xpath->query('/x:workspace/x:theme/x:excluded/x:template') as $templateNode) {
             /** @var \DOMNode $templateNode */
             $theme->addExcludedTemplate($templateNode->nodeValue);
         }

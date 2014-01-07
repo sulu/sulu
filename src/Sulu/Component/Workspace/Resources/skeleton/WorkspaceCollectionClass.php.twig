@@ -58,6 +58,12 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% endfor %}
 
+        // add theme
+        $theme = new Theme();
+        $theme->setKey('{{ workspace.theme.key }}');
+{% for excludedTemplate in workspace.theme.excludedTemplates %}        $theme->addExcludedTemplate('{{ excludedTemplate }}');
+{% endfor %}        $workspace->setTheme($theme);
+
 {% for portal in workspace.portals %}
 
         // new portal
@@ -65,6 +71,7 @@ class {{ cache_class }} extends {{ base_class }}
         $portal->setName('{{ portal.name }}');
         $portal->setKey('{{ portal.key }}');
         $portal->setResourceLocatorStrategy('{{ portal.resourceLocator.strategy }}');
+        $portal->setWorkspace($workspace);
 {% for localization in portal.localizations %}
 
         // add localization
@@ -74,11 +81,6 @@ class {{ cache_class }} extends {{ base_class }}
         $portal->addLocalization($localization);
 {% endfor %}
 
-        // add theme
-        $theme = new Theme();
-        $theme->setKey('{{ portal.theme.key }}');
-{% for excludedTemplate in portal.theme.excludedTemplates %}        $theme->addExcludedTemplate('{{ excludedTemplate }}');
-{% endfor %}        $portal->setTheme($theme);
 {% for environment in portal.environments %}
 
         // add environment

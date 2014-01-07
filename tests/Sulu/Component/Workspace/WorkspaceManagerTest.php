@@ -78,6 +78,9 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ca', $workspace->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $workspace->getLocalizations()[1]->getShadow());
 
+        $this->assertEquals('massiveart', $workspace->getTheme()->getKey());
+        $this->assertEquals(1, count($workspace->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $workspace->getTheme()->getExcludedTemplates()[0]);
 
         $portal = $workspace->getPortals()[0];
 
@@ -93,10 +96,6 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
         $this->assertEquals(null, $portal->getLocalizations()[1]->getCountry());
         $this->assertEquals(false, $portal->getLocalizations()[1]->getShadow());
-
-        $this->assertEquals('massiveart', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
@@ -123,10 +122,6 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $portal->getLocalizations()[1]->getLanguage());
         $this->assertEquals('ca', $portal->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $portal->getLocalizations()[1]->getShadow());
-
-        $this->assertEquals('massiveart', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
@@ -164,6 +159,10 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $workspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $workspace->getLocalizations()[1]->getShadow());
 
+        $this->assertEquals('sulu', $workspace->getTheme()->getKey());
+        $this->assertEquals(1, count($workspace->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $workspace->getTheme()->getExcludedTemplates()[0]);
+
         $portal = $workspace->getPortals()[0];
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
@@ -175,10 +174,6 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
-
-        $this->assertEquals('sulu', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
@@ -206,10 +201,6 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
-
-        $this->assertEquals('sulu', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
@@ -254,10 +245,6 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
 
-        $this->assertEquals('sulu', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
-
         $this->assertEquals(2, count($portal->getEnvironments()));
 
         $this->assertEquals('prod', $portal->getEnvironments()[0]->getType());
@@ -285,10 +272,6 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
-
-        $this->assertEquals('sulu', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
@@ -323,10 +306,6 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
         $this->assertEquals(null, $portal->getLocalizations()[1]->getCountry());
         $this->assertEquals(false, $portal->getLocalizations()[1]->getShadow());
-
-        $this->assertEquals('massiveart', $portal->getTheme()->getKey());
-        $this->assertEquals(1, count($portal->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $portal->getTheme()->getExcludedTemplates()[0]);
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 

@@ -6,19 +6,19 @@
     <name>Massive Art</name>
     <key>massiveart</key>
 
+    <theme>
+        <key>massiveart</key>
+        <excluded>
+            <template>overview</template>
+        </excluded>
+    </theme>
+
     <portals>
         <portal>
             <name>Massive Art US</name>
             <resource-locator>
                 <strategy>tree</strategy>
             </resource-locator>
-
-            <theme>
-                <key>massiveart</key>
-                <excluded>
-                    <template>overview</template>
-                </excluded>
-            </theme>
 
             <localizations>
                 <localization language="en" country="us" default="true"/>
@@ -42,13 +42,6 @@
             <resource-locator>
                 <strategy>tree</strategy>
             </resource-locator>
-
-            <theme>
-                <key>massiveart</key>
-                <excluded>
-                    <template>overview</template>
-                </excluded>
-            </theme>
 
             <localizations>
                 <localization language="en" country="ca" default="true"/>

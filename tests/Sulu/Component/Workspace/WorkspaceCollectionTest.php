@@ -29,7 +29,6 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $theme = new Theme();
         $theme->setKey('portal1theme');
         $theme->setExcludedTemplates(array('overview', 'default'));
-        $portal->setTheme($theme);
 
         $environment = new Environment();
         $environment->setType('prod');
@@ -64,6 +63,7 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $workspace = new Workspace();
         $workspace->addLocalization($localizationEnUs);
         $workspace->addLocalization($localizationFrCa);
+        $workspace->setTheme($theme);
         $workspace->addPortal($portal);
         $workspace->setKey('default');
         $workspace->setName('Default');
@@ -104,12 +104,12 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en', $workspace['localizations'][0]['children'][0]['language']);
         $this->assertEquals('ca', $workspace['localizations'][1]['country']);
         $this->assertEquals('fr', $workspace['localizations'][1]['language']);
+        $this->assertEquals('portal1theme', $workspace['theme']['key']);
+        $this->assertEquals(array('overview', 'default'), $workspace['theme']['excludedTemplates']);
 
         $portal = $workspace['portals'][0];
 
         $this->assertEquals('Portal1', $portal['name']);
-        $this->assertEquals('portal1theme', $portal['theme']['key']);
-        $this->assertEquals(array('overview', 'default'), $portal['theme']['excludedTemplates']);
         $this->assertEquals('prod', $portal['environments'][0]['type']);
         $this->assertEquals('www.portal1.com', $portal['environments'][0]['urls'][0]['url']);
         $this->assertEquals('en', $portal['environments'][0]['urls'][0]['language']);

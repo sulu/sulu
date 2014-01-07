@@ -8,6 +8,7 @@
             <xs:element type="xs:string" name="key"/>
             <xs:element type="localizationsType" name="localizations"/>
             <xs:element type="segmentsType" name="segments" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="themeType" name="theme"/>
             <xs:element type="portalsType" name="portals"/>
         </xs:sequence>
     </xs:complexType>
@@ -56,7 +57,6 @@
             <xs:element type="xs:string" name="name"/>
             <xs:element type="xs:string" name="key"/>
             <xs:element type="resource-locatorType" name="resource-locator"/>
-            <xs:element type="themeType" name="theme"/>
             <xs:element type="localizationsType" name="localizations" minOccurs="0" maxOccurs="1"/>
             <xs:element type="environmentsType" name="environments"/>
         </xs:sequence>
