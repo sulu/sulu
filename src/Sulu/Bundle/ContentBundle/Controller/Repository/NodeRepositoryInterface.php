@@ -42,6 +42,18 @@ interface NodeRepositoryInterface {
     public function getIndexNode($portalKey, $languageCode);
 
     /**
+     * save node with given uuid or creates a new one
+     * @param array $data
+     * @param string $templateKey
+     * @param string $portalKey
+     * @param string $languageCode
+     * @param string $uuid
+     * @param string $parentUuid
+     * @return array
+     */
+    public function saveNode($data, $templateKey, $portalKey, $languageCode, $uuid = null);
+
+    /**
      * save start page of given portal
      * @param array $data
      * @param string $templateKey
