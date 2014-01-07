@@ -80,11 +80,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $depth = $this->getRequest()->get('depth', 1);
         $depth = intval($depth);
         $flat = $this->getRequest()->get('flat', 'true');
-        if ($flat === 'true') {
-            $flat = true;
-        } else {
-            $flat = false;
-        }
+        $flat = ($flat === 'true');
 
         $result = $this->getRepository()->getNodes($parentUuid, $portal, $language, $depth, $flat);
 
