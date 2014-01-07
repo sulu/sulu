@@ -18,16 +18,12 @@ use Sulu\Bundle\ContactBundle\Controller\ContactsController;
 use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\RestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class NodeController extends RestController implements ClassResourceInterface
 {
-    /**
-     * for returning self link in get action
-     * @var string
-     */
-    private $apiPath = '/admin/api/nodes';
 
     /**
      * returns a content item with given UUID as JSON String
@@ -41,12 +37,16 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $portal = $this->getRequest()->get('portal', 'default');
 
-        try {
-            $result = $this->getRepository()->getNode($uuid, $portal, $language);
-            $view = $this->view($result);
-        } catch (ItemNotFoundException $ex) {
-            $view = $this->view($ex->getMessage(), 404);
-        }
+        $view = $this->responseGetById(
+            $uuid,
+            function ($id) use ($language, $portal) {
+                try {
+                    return $this->getRepository()->getNode($id, $portal, $language);
+                } catch (ItemNotFoundException $ex) {
+                    return null;
+                }
+            }
+        );
 
         return $this->handleView($view);
     }
@@ -89,6 +89,11 @@ class NodeController extends RestController implements ClassResourceInterface
         );
     }
 
+    /**
+     * saves node with given uuid and data
+     * @param $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function putAction($uuid)
     {
         // TODO portal
@@ -105,6 +110,10 @@ class NodeController extends RestController implements ClassResourceInterface
         );
     }
 
+    /**
+     * save action for index page /nodes/index
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function cputIndexAction()
     {
         // TODO language
@@ -140,6 +149,11 @@ class NodeController extends RestController implements ClassResourceInterface
         );
     }
 
+    /**
+     * deletes node with given uuid
+     * @param $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteAction($uuid)
     {
         // TODO language
@@ -147,17 +161,19 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $portal = $this->getRequest()->get('portal', 'default');
 
-        try {
-            $this->getRepository()->deleteNode($uuid, $portal, $language);
-
-            $view = $this->view(null, 204);
-        } catch (ItemNotFoundException $ex) {
-            $view = $this->view($ex->getMessage(), 404);
-        }
-
-        return $this->handleView(
-            $view
+        $view = $this->responseDelete(
+            $uuid,
+            function ($id) use ($language, $portal) {
+                try {
+                    $this->getRepository()->deleteNode($id, $portal, $language);
+                } catch (ItemNotFoundException $ex) {
+                    throw new EntityNotFoundException('Content', $id);
+                }
+            }
         );
+
+
+        return $this->handleView($view);
     }
 
     /**
