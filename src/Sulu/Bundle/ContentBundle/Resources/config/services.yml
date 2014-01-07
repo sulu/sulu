@@ -2,6 +2,7 @@ parameters:
     sulu_content.admin.class: Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin
     sulu_content.twig_extension.class: Sulu\Bundle\ContentBundle\Twig\ContentExtension
     sulu_content.admin.content_navigation.class: Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation
+    sulu_content.preview.message_component.class: Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent
 
 services:
     sulu_content.admin:
@@ -17,3 +18,5 @@ services:
             - [ setContainer,[ @service_container ] ]
         tags:
             - { name: twig.extension }
+    sulu_content.preview.message_component:
+        class: %sulu_content.preview.message_component.class%
