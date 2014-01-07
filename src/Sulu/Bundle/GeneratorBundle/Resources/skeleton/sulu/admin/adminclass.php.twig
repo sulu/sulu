@@ -22,9 +22,9 @@ class {{ basename }}Admin extends Admin
 {
 
 {% block class_body %}
-    public function __construct()
+    public function __construct($title)
     {
-        $rootNavigationItem = new NavigationItem('Root');
+        $rootNavigationItem = new NavigationItem($title);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 

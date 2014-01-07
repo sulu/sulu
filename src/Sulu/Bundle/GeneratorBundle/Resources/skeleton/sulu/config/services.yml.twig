@@ -4,5 +4,6 @@ parameters:
 services:
     {{ extension_alias }}.admin:
         class: %{{ extension_alias }}.admin.class%
+        arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
