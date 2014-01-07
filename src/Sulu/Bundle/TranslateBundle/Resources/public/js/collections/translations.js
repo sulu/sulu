@@ -28,7 +28,7 @@ define([
         },
 
         parse: function(resp) {
-            return resp.items;
+            return resp._embedded;
         },
 
         save: function(sandbox, translations, options) {
@@ -36,7 +36,6 @@ define([
             sandbox.util.ajax({
 
                 headers: {
-                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
 

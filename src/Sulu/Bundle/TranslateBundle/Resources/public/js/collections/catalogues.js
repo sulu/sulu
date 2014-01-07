@@ -26,7 +26,7 @@ define([
         },
 
         parse: function(resp) {
-            return resp.items;
+            return resp._embedded;
         }
 
     });

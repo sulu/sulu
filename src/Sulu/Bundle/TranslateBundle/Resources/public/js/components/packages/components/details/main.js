@@ -168,8 +168,8 @@ define([], function() {
                     var $element = this.sandbox.dom.$(event.currentTarget),
                         $optionsTr = this.sandbox.dom.next(this.sandbox.dom.parent(this.sandbox.dom.parent($element)), '.additional-options');
 
-                    this.sandbox.dom.toggleClass($element, 'icon-arrow-right');
-                    this.sandbox.dom.toggleClass($element, 'icon-arrow-down');
+                    this.sandbox.dom.toggleClass($element, 'custom-icon-arrow-right');
+                    this.sandbox.dom.toggleClass($element, 'custom-icon-arrow-down');
                     this.sandbox.dom.toggleClass($optionsTr, 'hidden');
                 }.bind(this), '.show-options');
             },
@@ -259,8 +259,8 @@ define([], function() {
                 this.sandbox.dom.attr(this.sandbox.dom.parent($backend), {for: 'backend-'+this.codesCounter.toString()});
                 this.sandbox.dom.attr($backend, {id: 'backend-'+this.codesCounter.toString()});
 
-                this.sandbox.dom.toggleClass($pointer, 'icon-arrow-right');
-                this.sandbox.dom.toggleClass($pointer, 'icon-arrow-down');
+                this.sandbox.dom.toggleClass($pointer, 'custom-icon-arrow-right');
+                this.sandbox.dom.toggleClass($pointer, 'custom-icon-arrow-down');
 
                 this.sandbox.dom.append('#codes', $item);
                 this.sandbox.dom.removeClass($additionOptions, 'hidden');
