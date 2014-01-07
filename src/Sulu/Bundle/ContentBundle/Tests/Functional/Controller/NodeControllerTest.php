@@ -585,7 +585,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test5', $items[4]->title);
         $this->assertFalse($items[4]->hasSub);
 
-        // get child nodes from root
+        // get child nodes from subNode
         $client->request('GET', '/api/nodes?depth=3&parent='.$data[3]['id']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -595,5 +595,103 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('test5', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
+    }
+
+    public function testGetTree()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->beforeTestTreeGet();
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=1&flat=false');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(0, sizeof($items[1]->_embedded));
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=2&flat=false');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(2, sizeof($items[1]->_embedded));
+
+        $items = $items[1]->_embedded;
+
+        $this->assertEquals('test3', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test4', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(0, sizeof($items[1]->_embedded));
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=3&flat=false');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(2, sizeof($items[1]->_embedded));
+
+        $items = $items[1]->_embedded;
+
+        $this->assertEquals('test3', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test4', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(1, sizeof($items[1]->_embedded));
+
+        $items = $items[1]->_embedded;
+
+        $this->assertEquals('test5', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        // get child nodes from subNode
+        $client->request('GET', '/api/nodes?depth=3&flat=false&parent='.$data[3]['id']);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(1, sizeof($items));
+
+        $this->assertEquals('test5', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
     }
 }
