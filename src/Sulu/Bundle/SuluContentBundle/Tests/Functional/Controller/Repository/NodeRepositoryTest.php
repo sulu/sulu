@@ -129,6 +129,16 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
     }
 
+    public function testSave()
+    {
+        // TODO ...
+    }
+
+    public function testSaveNewNode()
+    {
+        // TODO ...
+    }
+
     public function testIndexNode()
     {
         $data = array(

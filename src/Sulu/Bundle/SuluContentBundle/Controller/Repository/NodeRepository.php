@@ -203,4 +203,30 @@ class NodeRepository implements NodeRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * save node with given uuid or creates a new one
+     * @param array $data
+     * @param string $templateKey
+     * @param string $portalKey
+     * @param string $languageCode
+     * @param string $uuid
+     * @param string $parentUuid
+     * @return array
+     */
+    public function saveNode($data, $templateKey, $portalKey, $languageCode, $uuid = null, $parentUuid = null)
+    {
+        $node = $this->getMapper()->save(
+            $data,
+            $templateKey,
+            $portalKey,
+            $languageCode,
+            $this->getUserId(),
+            true,
+            $uuid,
+            $parentUuid
+        );
+
+        return $this->prepareNode($node);
+    }
 }

@@ -97,30 +97,15 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         // TODO portal
         // TODO language
-        $templateKey = $this->getRequest()->get('template');
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+        $template = $this->getRequest()->get('template');
+        $data = $this->getRequest()->request->all();
 
-        $structure = $this->getMapper()->save(
-            $this->getRequest()->request->all(),
-            $templateKey,
-            'default',
-            'en',
-            $userId,
-            true,
-            $uuid
-        );
-        $result = $structure->toArray();
-        $result['creator'] = $this->getContactByUserId($result['creator']);
-        $result['changer'] = $this->getContactByUserId($result['changer']);
+        $result = $this->getRepository()->saveNode($data, $template, $portal, $language, $uuid);
 
         return $this->handleView(
-            $this->view(
-                array(
-                    '_links' => array('self' => $this->getRequest()->getUri()),
-                    '_embedded' => array($result),
-                    'total' => 1,
-                )
-            )
+            $this->view($result)
         );
     }
 
@@ -133,24 +118,9 @@ class NodeController extends RestController implements ClassResourceInterface
         $template = $this->getRequest()->get('template', 'overview');
         $data = $this->getRequest()->request->all();
 
-        $result = $this->get('sulu_content.node_repository')->saveStartNode($data, $template, $portal, $language);
+        $result = $this->getRepository()->saveIndexNode($data, $template, $portal, $language);
 
         return $this->handleView($this->view($result));
-    }
-
-    private function getContactByUserId($id)
-    {
-        // Todo performance issue
-        // Todo solve as service
-        $user = $this->getDoctrine()->getRepository('SuluSecurityBundle:User')->find($id);
-
-        if ($user !== null) {
-            $contact = $user->getContact();
-
-            return $contact->getFirstname() . " " . $contact->getLastname();
-        } else {
-            return "";
-        }
     }
 
     /**
@@ -160,34 +130,17 @@ class NodeController extends RestController implements ClassResourceInterface
     public function postAction()
     {
         // TODO language
-        $templateKey = $this->getRequest()->get('template');
-        $parentUuid = $this->getRequest()->get('parent');
-
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
-
         // TODO portal
-        $structure = $this->getMapper()->save(
-            $this->getRequest()->request->all(),
-            $templateKey,
-            'default',
-            'en',
-            $userId,
-            true,
-            null,
-            $parentUuid
-        );
-        $result = $structure->toArray();
-        $result['creator'] = $this->getContactByUserId($result['creator']);
-        $result['changer'] = $this->getContactByUserId($result['changer']);
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+        $template = $this->getRequest()->get('template', 'overview');
+        $data = $this->getRequest()->request->all();
+        $parent = $this->getRequest()->get('parent');
+
+        $result = $this->getRepository()->saveNode($data, $template, $portal, $language, null, $parent);
 
         return $this->handleView(
-            $this->view(
-                array(
-                    '_links' => array('self' => $this->getRequest()->getUri()),
-                    '_embedded' => array($result),
-                    'total' => 1,
-                )
-            )
+            $this->view($result)
         );
     }
 
@@ -212,37 +165,10 @@ class NodeController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * return content mapper
-     * @return ContentMapperInterface
-     */
-    protected function getMapper()
-    {
-        return $this->container->get('sulu.content.mapper');
-    }
-
-    /**
      * @return NodeRepositoryInterface
      */
     protected function getRepository()
     {
         return $this->get('sulu_content.node_repository');
-    }
-
-    /**
-     * returns phpcr session
-     * @return SessionInterface
-     */
-    protected function getSession()
-    {
-        return $this->container->get('sulu.phpcr.session')->getSession();
-    }
-
-    /**
-     * return base content path
-     * @return string
-     */
-    protected function getBasePath()
-    {
-        return $this->container->getParameter('sulu.content.base_path.content');
     }
 }

@@ -200,14 +200,12 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $item = $response->_embedded[0];
-
-        $this->assertEquals('Testtitle', $item->title);
-        $this->assertEquals('Test', $item->article);
-        $this->assertEquals('/de/test', $item->url);
-        $this->assertEquals(array('tag1', 'tag2'), $item->tags);
-        $this->assertEquals('Max Mustermann', $item->creator);
-        $this->assertEquals('Max Mustermann', $item->changer);
+        $this->assertEquals('Testtitle', $response->title);
+        $this->assertEquals('Test', $response->article);
+        $this->assertEquals('/de/test', $response->url);
+        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
@@ -253,20 +251,18 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=overview', $data1);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $uuid = $response->_embedded[0]->id;
+        $uuid = $response->id;
 
         $client->request('POST', '/api/nodes?template=overview&parent=' . $uuid, $data2);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $item = $response->_embedded[0];
-
-        $this->assertEquals('test-1', $item->title);
-        $this->assertEquals('Test', $item->article);
-        $this->assertEquals('/news/test', $item->url);
-        $this->assertEquals(array('tag1', 'tag2'), $item->tags);
-        $this->assertEquals('Max Mustermann', $item->creator);
-        $this->assertEquals('Max Mustermann', $item->changer);
+        $this->assertEquals('test-1', $response->title);
+        $this->assertEquals('Test', $response->article);
+        $this->assertEquals('/news/test', $response->url);
+        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/news/test');
@@ -377,14 +373,12 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $item = $response->_embedded[0];
-
-        $this->assertEquals($data[0]['title'], $item->title);
-        $this->assertEquals($data[0]['tags'], $item->tags);
-        $this->assertEquals($data[0]['url'], $item->url);
-        $this->assertEquals($data[0]['article'], $item->article);
-        $this->assertEquals('Max Mustermann', $item->creator);
-        $this->assertEquals('Max Mustermann', $item->creator);
+        $this->assertEquals($data[0]['title'], $response->title);
+        $this->assertEquals($data[0]['tags'], $response->tags);
+        $this->assertEquals($data[0]['url'], $response->url);
+        $this->assertEquals($data[0]['article'], $response->article);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->creator);
 
         $client->request('GET', '/api/nodes?depth=1');
 
