@@ -37,6 +37,11 @@ define([
                 this.save(data);
             }.bind(this));
 
+            // load list view
+            this.sandbox.on('sulu.contacts.contacts.list', function() {
+                this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
+            }, this);
+
             // delete contact
             this.sandbox.on('sulu.user.permissions.delete', function(id) {
                 this.confirmDeleteDialog(function(wasConfirmed) {
