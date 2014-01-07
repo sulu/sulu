@@ -56,6 +56,12 @@ abstract class Structure implements StructureInterface
     private $hasChildren = false;
 
     /**
+     * children of node
+     * @var StructureInterface[]
+     */
+    private $children = null;
+
+    /**
      * uuid of node in CR
      * @var string
      */
@@ -275,6 +281,22 @@ abstract class Structure implements StructureInterface
     public function getHasChildren()
     {
         return $this->hasChildren;
+    }
+
+    /**
+     * @param StructureInterface[] $children
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * @return null|StructureInterface[]
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 
     /**

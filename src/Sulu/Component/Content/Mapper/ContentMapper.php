@@ -217,10 +217,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param $uuid
      * @param $portalKey
      * @param $languageCode
+     * @param int $depth
+     * @param bool $flat
      *
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $portalKey, $languageCode)
+    public function loadByParent($uuid, $portalKey, $languageCode, $depth = 1, $flat = true)
     {
         // TODO portal
         if ($uuid != null) {
@@ -228,13 +230,37 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         } else {
             $root = $this->getSession()->getNode($this->getContentBasePath());
         }
-        $result = array();
+        return $this->loadByParentNode($root, $portalKey, $languageCode, $depth, $flat);
+    }
 
+    /**
+     * returns a list of data from children of given node
+     * @param NodeInterface $root
+     * @param $portalKey
+     * @param $languageCode
+     * @param int $depth
+     * @param bool $flat
+     * @return array
+     */
+    private function loadByParentNode(NodeInterface $root, $portalKey, $languageCode, $depth = 1, $flat = true)
+    {
+        $results = array();
+
+        /** @var NodeInterface $node */
         foreach ($root->getNodes() as $node) {
-            $result[] = $this->loadByNode($node, $languageCode);
+            $result = $this->loadByNode($node, $languageCode);
+            $results[] = $result;
+            if ($depth > 1) {
+                $children = $this->loadByParentNode($node, $portalKey, $languageCode, $depth - 1, $flat);
+                if ($flat) {
+                    $results = array_merge($results, $children);
+                } else {
+                    $result->setChildren($children);
+                }
+            }
         }
 
-        return $result;
+        return $results;
     }
 
     /**

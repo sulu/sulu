@@ -70,11 +70,13 @@ interface ContentMapperInterface
      * returns a list of data from children of given node
      * @param $uuid
      * @param $portalKey
-     * @param $languageCode@
+     * @param $languageCode
+     * @param int $depth
+     * @param bool $flat
      *
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $portalKey, $languageCode);
+    public function loadByParent($uuid, $portalKey, $languageCode, $depth = 1, $flat = true);
 
     /**
      * returns the data from the given id
