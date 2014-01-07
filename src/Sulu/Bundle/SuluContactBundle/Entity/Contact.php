@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Contact
