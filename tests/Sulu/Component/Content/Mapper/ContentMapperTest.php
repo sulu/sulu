@@ -878,7 +878,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Testnews-2-1', $subTestNewsNode->getPropertyValue('title'));
     }
 
-    public function testGetByParent()
+    private function prepareTreeTestData()
     {
         $data = array(
             array(
@@ -920,12 +920,32 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
 
         // save root content
-        $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $result['root'] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
 
         // add a child content
-        $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
-        $child = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
-        $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
+        $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $result['root']->getUuid());
+        $result['child'] = $this->mapper->save(
+            $data[2],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            $result['root']->getUuid()
+        );
+        $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $result['child']->getUuid());
+
+        return $result;
+    }
+
+    public function testLoadByParent()
+    {
+        $data = $this->prepareTreeTestData();
+        /** @var StructureInterface $root */
+        $root = $data['root'];
+        /** @var StructureInterface $child */
+        $child = $data['child'];
 
         // get root children
         $children = $this->mapper->loadByParent(null, 'default', 'de');
@@ -937,12 +957,91 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $rootChildren = $this->mapper->loadByParent($root->getUuid(), 'default', 'de');
         $this->assertEquals(2, sizeof($rootChildren));
 
+        $this->assertEquals('Testnews-1', $rootChildren[0]->title);
         $this->assertEquals('Testnews-2', $rootChildren[1]->title);
 
         $testNewsChildren = $this->mapper->loadByParent($child->getUuid(), 'default', 'de');
         $this->assertEquals(1, sizeof($testNewsChildren));
 
         $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->title);
+    }
+
+    public function testLoadByParentFlat()
+    {
+        $data = $this->prepareTreeTestData();
+        /** @var StructureInterface $root */
+        $root = $data['root'];
+        /** @var StructureInterface $child */
+        $child = $data['child'];
+
+        $children = $this->mapper->loadByParent(null, 'default', 'de', 2, true);
+        $this->assertEquals(3, sizeof($children));
+        $this->assertEquals('News', $children[0]->title);
+        $this->assertEquals('Testnews-1', $children[1]->title);
+        $this->assertEquals('Testnews-2', $children[2]->title);
+
+
+        $children = $this->mapper->loadByParent(null, 'default', 'de', 3, true);
+        $this->assertEquals(4, sizeof($children));
+        $this->assertEquals('News', $children[0]->title);
+        $this->assertEquals('Testnews-1', $children[1]->title);
+        $this->assertEquals('Testnews-2', $children[2]->title);
+        $this->assertEquals('Testnews-2-1', $children[3]->title);
+
+        $children = $this->mapper->loadByParent($child->getUuid(), 'default', 'de', 3, true);
+        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals('Testnews-2-1', $children[0]->title);
+    }
+
+    public function testLoadByParentTree()
+    {
+        $data = $this->prepareTreeTestData();
+        /** @var StructureInterface $root */
+        $root = $data['root'];
+        /** @var StructureInterface $child */
+        $child = $data['child'];
+
+        $children = $this->mapper->loadByParent(null, 'default', 'de', 2, false);
+        // /News
+        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals('News', $children[0]->title);
+
+        // /News/Testnews-1
+        $tmp = $children[0]->getChildren()[0];
+        $this->assertEquals(0, sizeof($tmp->getChildren()));
+        $this->assertEquals('Testnews-1', $tmp->title);
+
+        // /News/Testnews-2
+        $tmp = $children[0]->getChildren()[1];
+        $this->assertEquals(null, $tmp->getChildren());
+        $this->assertTrue($tmp->getHasChildren());
+        $this->assertEquals('Testnews-2', $tmp->title);
+
+
+        $children = $this->mapper->loadByParent(null, 'default', 'de', 3, false);
+        // /News
+        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals('News', $children[0]->title);
+
+        // /News/Testnews-1
+        $tmp = $children[0]->getChildren()[0];
+        $this->assertEquals(0, sizeof($tmp->getChildren()));
+        $this->assertEquals('Testnews-1', $tmp->title);
+
+        // /News/Testnews-2
+        $tmp = $children[0]->getChildren()[1];
+        $this->assertEquals(1, sizeof($tmp->getChildren()));
+        $this->assertEquals('Testnews-2', $tmp->title);
+
+        // /News/Testnews-2/Testnews-2-1
+        $tmp = $children[0]->getChildren()[1]->getChildren()[0];
+        $this->assertEquals(null, $tmp->getChildren());
+        $this->assertFalse($tmp->getHasChildren());
+        $this->assertEquals('Testnews-2-1', $tmp->title);
+
+        $children = $this->mapper->loadByParent($child->getUuid(), 'default', 'de', 3, false);
+        $this->assertEquals(1, sizeof($children));
+        $this->assertEquals('Testnews-2-1', $children[0]->title);
     }
 
     public function testStartPage()
