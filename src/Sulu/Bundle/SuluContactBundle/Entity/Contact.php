@@ -192,6 +192,16 @@ class Contact extends ApiEntity
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("fullName")
+     * @return string
+     */
+    public function getFullName()
+    {
+       return $this->firstName . ' ' . $this->lastName;
+    }
+
+    /**
      * Set title
      *
      * @param string $title
