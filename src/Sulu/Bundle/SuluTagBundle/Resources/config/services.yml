@@ -1,0 +1,9 @@
+parameters:
+    sulu_tag.admin.class: Sulu\Bundle\TagBundle\Admin\SuluTagAdmin
+
+services:
+    sulu_tag.admin:
+        class: %sulu_tag.admin.class%
+        arguments: [%sulu_admin.name%]
+        tags:
+        - { name: sulu.admin }
