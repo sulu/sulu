@@ -339,8 +339,8 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
     private function prepareUserServiceMock()
     {
         $this->userService = $this->getMock(
-            '\Sulu\Bundle\SecurityBundle\Services\UserServiceInterface',
-            array('getUserById', 'getUsernameByUserId', 'getFullNameByUserId'),
+            '\Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface',
+            array('getCurrentUserData', 'getUsernameByUserId', 'getFullNameByUserId'),
             array(),
             '',
             false
