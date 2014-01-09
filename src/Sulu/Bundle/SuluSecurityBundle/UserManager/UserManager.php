@@ -8,14 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Services;
-
+namespace Sulu\Bundle\SecurityBundle\UserManager;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
+use Sulu\Bundle\AdminBundle\UserManager\UserDataInterface;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 
-class UserService implements UserServiceInterface
+class UserManager implements UserManagerInterface
 {
 
     /**
@@ -23,9 +25,10 @@ class UserService implements UserServiceInterface
      */
     private $doctrine;
 
-    function __construct(Registry $doctrine)
+    function __construct(Registry $doctrine, CurrentUserDataInterface $currentUserData)
     {
         $this->doctrine = $doctrine;
+        $this->currentUserData = $currentUserData;
     }
 
     /**
@@ -42,7 +45,7 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * returns username by id
+     * returns username for given id
      * @param integer $id userId
      * @return string
      */
@@ -52,12 +55,21 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * returns fullName for userId
+     * returns fullName for given id
      * @param integer $id userId
      * @return string
      */
     public function getFullNameByUserId($id)
     {
         return $this->getUserById($id)->getFullName();
+    }
+
+    /**
+     * returns user data of current user
+     * @return UserDataInterface
+     */
+    public function getCurrentUserData()
+    {
+        return $this->currentUserData;
     }
 }

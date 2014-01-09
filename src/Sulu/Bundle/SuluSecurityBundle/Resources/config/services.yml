@@ -50,6 +50,6 @@ services:
         tags:
             - { name: security.voter }
 
-    sulu_user:
+    sulu_security.sulu_manager:
         class: %sulu_user.class%
         arguments: [@doctrine]
