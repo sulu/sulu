@@ -28,7 +28,13 @@ interface CurrentUserDataInterface
      * returns username
      * @return String
      */
-    public function getUserName();
+    public function getUsername();
+
+    /**
+     * returns fullName
+     * @return String
+     */
+    public function getFullName();
 
     /**
      * returns UserIcon URL
