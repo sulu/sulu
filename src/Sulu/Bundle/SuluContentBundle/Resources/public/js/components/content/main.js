@@ -31,7 +31,7 @@ define([
         },
 
         bindCustomEvents: function() {
-            // delete contact
+            // delete content
             this.sandbox.on('sulu.content.content.delete', function(id) {
                 this.del(id);
             }, this);
@@ -46,12 +46,12 @@ define([
                 this.load(id);
             }, this);
 
-            // add new contact
+            // add new content
             this.sandbox.on('sulu.content.contents.new', function(parent) {
                 this.add(parent);
             }, this);
 
-            // delete selected contacts
+            // delete selected content
             this.sandbox.on('sulu.content.contents.delete', function(ids) {
                 this.delContents(ids);
             }, this);
@@ -129,12 +129,11 @@ define([
                 },
                 callback: {
                     submit: function() {
-                        var deleteContacts = this.sandbox.dom.find('#delete-contacts').length && this.sandbox.dom.prop('#delete-contacts', 'checked');
                         this.sandbox.emit('husky.dialog.hide');
 
                         // call callback function
                         if (!!callbackFunction) {
-                            callbackFunction(true, deleteContacts);
+                            callbackFunction(true);
                         }
                     }.bind(this),
                     cancel: function() {
@@ -155,7 +154,7 @@ define([
 
             // TODO select template
             this.content.saveTemplate(null, 'overview', this.options.parent, {
-                // on success save contacts id
+                // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!this.options.id) {
@@ -271,7 +270,7 @@ define([
                         ]);
                     }.bind(this),
                     error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
+                        this.sandbox.logger.log("error while fetching content");
                     }.bind(this)
                 });
             } else {
