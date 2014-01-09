@@ -19,7 +19,7 @@ interface UserServiceInterface
      * @param integer $id userId
      * @return User
      */
-    public function getUserByUserId($id);
+    public function getUserById($id);
 
     /**
      * returns username by id
