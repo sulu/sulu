@@ -12,13 +12,24 @@ namespace Sulu\Bundle\AdminBundle\UserManager;
 
 interface UserManagerInterface
 {
-
+    /**
+     * returns user data of current user
+     * @return UserDataInterface
+     */
     public function getCurrentUserData();
 
-    public function getUserById($id);
-
+    /**
+     * returns username for given id
+     * @param integer $id userId
+     * @return string
+     */
     public function getUsernameByUserId($id);
 
+    /**
+     * returns fullName for given id
+     * @param integer $id userId
+     * @return string
+     */
     public function getFullNameByUserId($id);
 
 }
