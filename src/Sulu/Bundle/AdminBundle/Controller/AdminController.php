@@ -14,19 +14,18 @@ use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class AdminController extends Controller
 {
     public function indexAction()
     {
         // get user data
-
         $serviceId = $this->container->getParameter('sulu_admin.user_data_service');
 
         $user = array();
         if ($this->has($serviceId)) {
-            /** @var UserDataInterface $userData */
-            $userData = $this->get($serviceId);
+            /** @var UserManagerInterface $userManager */
+            $userManager = $this->get($serviceId);
+            $userData = $userManager->getCurrentUserData();
             if ($userData->isLoggedIn()) {
                 $user['username'] = $userData->getUserName();
                 $user['logout'] = $userData->getLogoutLink();
