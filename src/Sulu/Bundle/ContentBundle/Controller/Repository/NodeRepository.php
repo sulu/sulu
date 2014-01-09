@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller\Repository;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Jackalope\NotImplementedException;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Services\UserServiceInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -34,18 +35,18 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $securityContext;
     /**
-     * @var Registry
+     * @var UserServiceInterface
      */
-    private $doctrine;
+    private $userService;
 
     function __construct(
         ContentMapperInterface $mapper,
-        Registry $doctrine,
+        UserServiceInterface $userService,
         SecurityContextInterface $securityContext
     )
     {
         $this->mapper = $mapper;
-        $this->doctrine = $doctrine;
+        $this->userService = $userService;
         $this->securityContext = $securityContext;
     }
 
@@ -69,8 +70,8 @@ class NodeRepository implements NodeRepositoryInterface
         $result = $structure->toArray();
 
         // replace creator, changer
-        $result['creator'] = $this->getContact($structure->getCreator());
-        $result['changer'] = $this->getContact($structure->getChanger());
+        $result['creator'] = $this->getFullNameByUserId($structure->getCreator());
+        $result['changer'] = $this->getFullNameByUserId($structure->getChanger());
 
         // add default empty embedded property
         $result['_embedded'] = array();
@@ -83,11 +84,14 @@ class NodeRepository implements NodeRepositoryInterface
         return $result;
     }
 
-    protected function getContact($id)
+    /**
+     * returns user fullName
+     * @param integer $id userId
+     * @return string
+     */
+    protected function getFullNameByUserId($id)
     {
-        /** @var User $user */
-        $user = $this->doctrine->getRepository('SuluSecurityBundle:User')->find($id);
-        return $user->getFullName();
+        return $this->userService->getFullNameByUserId($id);
     }
 
     protected function getUserId()
