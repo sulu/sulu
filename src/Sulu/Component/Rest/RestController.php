@@ -103,7 +103,7 @@ abstract class RestController extends FOSRestController
             foreach ($keys as $key) {
                 if (!in_array($key, $this->unsortable)) {
                     $sortPath = $this->replaceOrAddUrlString(
-                        $pathInfo,
+                        $path,
                         $listHelper->getParameterName('sortBy') . '=',
                         $key
                     );
@@ -150,21 +150,20 @@ abstract class RestController extends FOSRestController
     /**
      * function replaces a url parameter
      * @param $url - the complete url
-     * @param $searchStringBefore - parametername (e.g. page=)
+     * @param $key - parametername (e.g. page=)
      * @param $value - replace value
      * @param bool $add - defines if value should be added
      * @return mixed|string
      */
-    public function replaceOrAddUrlString($url, $searchStringBefore, $value, $add = true)
+    public function replaceOrAddUrlString($url, $key, $value, $add = true)
     {
         if ($value) {
-            if ($pos = strpos($url, $searchStringBefore)) {
-                return preg_replace('/(.*' . $searchStringBefore . ')(\d*)(\&*.*)/', '${1}' . $value . '${3}', $url);
+            if ($pos = strpos($url, $key)) {
+                return preg_replace('/(.*' . $key . ')(\w+)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
                     $and = (strpos($url, '?') === false) ? '?' : '&';
-
-                    return $url . $and . $searchStringBefore . $value;
+                    return $url . $and . $key . $value;
                 }
             }
         }
