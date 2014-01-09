@@ -20,20 +20,22 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class NodeRepository implements NodeRepositoryInterface
 {
-
     /**
      * @var ContentMapperInterface
      */
     private $mapper;
+
     /**
      * for returning self link in get action
      * @var string
      */
     private $apiBasePath = '/admin/api/nodes';
+
     /**
      * @var \Symfony\Component\Security\Core\SecurityContextInterface
      */
     private $securityContext;
+
     /**
      * @var UserServiceInterface
      */
