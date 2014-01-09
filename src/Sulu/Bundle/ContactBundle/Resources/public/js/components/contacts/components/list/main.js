@@ -60,7 +60,7 @@ define(function() {
                     options: {
                         el: this.sandbox.dom.find('#people-list', this.$el),
                         url: '/admin/api/contacts?flat=true&fields=id,title,firstName,lastName,position',
-                        pagination: true,
+                        pagination: false,
                         selectItem: {
                             type: 'checkbox'
                         },
