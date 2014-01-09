@@ -27,7 +27,7 @@ class AdminController extends Controller
             $userManager = $this->get($serviceId);
             $userData = $userManager->getCurrentUserData();
             if ($userData->isLoggedIn()) {
-                $user['username'] = $userData->getUserName();
+                $user['username'] = $userData->getFullName();
                 $user['logout'] = $userData->getLogoutLink();
             }
         }
