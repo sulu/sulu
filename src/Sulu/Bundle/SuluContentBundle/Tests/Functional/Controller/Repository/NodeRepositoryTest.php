@@ -44,7 +44,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Registry
      */
-    private $doctrineMock;
+    private $userService;
     /**
      * @var EntityRepository
      */
@@ -226,11 +226,11 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->prepareContainerMock();
-        $this->prepareDoctrineMock();
+        $this->prepareUserServiceMock();
 
         $this->prepareMapper();
 
-        $this->nodeRepository = new NodeRepository($this->mapper, $this->doctrineMock, $this->securityContextMock);
+        $this->nodeRepository = new NodeRepository($this->mapper, $this->userService, $this->securityContextMock);
     }
 
     private function prepareContainerMock()
@@ -336,43 +336,19 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->session->save();
     }
 
-    private function prepareDoctrineMock()
+    private function prepareUserServiceMock()
     {
-        $this->doctrineMock = $this->getMock(
-            '\Doctrine\Bundle\DoctrineBundle\Registry',
-            array('getRepository'),
-            array(),
-            '',
-            false
-        );
-        $this->repositoryMock = $this->getMock(
-            '\Doctrine\ORM\EntityRepository',
-            array('find'),
-            array(),
-            '',
-            false
-        );
-        $this->userMock = $this->getMock(
-            '\Sulu\Bundle\SecurityBundle\Entity\User',
-            array('getFullName'),
+        $this->userService = $this->getMock(
+            '\Sulu\Bundle\SecurityBundle\Services\UserServiceInterface',
+            array('getUserById', 'getUsernameByUserId', 'getFullNameByUserId'),
             array(),
             '',
             false
         );
 
-        $this->doctrineMock
+        $this->userService
             ->expects($this->any())
-            ->method('getRepository')
-            ->will($this->returnValue($this->repositoryMock));
-
-        $this->repositoryMock
-            ->expects($this->any())
-            ->method('find')
-            ->will($this->returnValue($this->userMock));
-
-        $this->userMock
-            ->expects($this->any())
-            ->method('getFullName')
+            ->method('getFullNameByUserId')
             ->will($this->returnValue('Max Mustermann'));
     }
 
