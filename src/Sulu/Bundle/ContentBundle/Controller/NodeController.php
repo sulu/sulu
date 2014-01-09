@@ -14,6 +14,8 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 
 class NodeController extends RestController implements ClassResourceInterface
@@ -117,9 +119,21 @@ class NodeController extends RestController implements ClassResourceInterface
         $template = $this->getRequest()->get('template', 'overview');
         $data = $this->getRequest()->request->all();
 
-        $result = $this->getRepository()->saveIndexNode($data, $template, $portal, $language);
+        try {
+            if ($data['url'] != '/') {
+                throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
+            }
 
-        return $this->handleView($this->view($result));
+            $result = $this->getRepository()->saveIndexNode($data, $template, $portal, $language);
+            $view = $this->view($result);
+        } catch (RestException $ex) {
+            $view = $this->view(
+                $ex->toArray(),
+                400
+            );
+        }
+
+        return $this->handleView($view);
     }
 
     /**
