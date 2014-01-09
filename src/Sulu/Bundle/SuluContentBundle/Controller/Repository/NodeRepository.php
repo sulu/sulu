@@ -12,8 +12,8 @@ namespace Sulu\Bundle\ContentBundle\Controller\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Jackalope\NotImplementedException;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SecurityBundle\Services\UserServiceInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -37,18 +37,18 @@ class NodeRepository implements NodeRepositoryInterface
     private $securityContext;
 
     /**
-     * @var UserServiceInterface
+     * @var UserManagerInterface
      */
-    private $userService;
+    private $userManager;
 
     function __construct(
         ContentMapperInterface $mapper,
-        UserServiceInterface $userService,
+        UserManagerInterface $userManager,
         SecurityContextInterface $securityContext
     )
     {
         $this->mapper = $mapper;
-        $this->userService = $userService;
+        $this->userManager = $userManager;
         $this->securityContext = $securityContext;
     }
 
@@ -93,7 +93,7 @@ class NodeRepository implements NodeRepositoryInterface
      */
     protected function getFullNameByUserId($id)
     {
-        return $this->userService->getFullNameByUserId($id);
+        return $this->userManager->getFullNameByUserId($id);
     }
 
     protected function getUserId()
