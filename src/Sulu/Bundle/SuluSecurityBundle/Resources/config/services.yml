@@ -15,6 +15,7 @@ parameters:
     sulu_security.admin.roles_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation
     sulu_security.permission_voter.class: Sulu\Bundle\SecurityBundle\Permission\PermissionVoter
     sulu_security.services.user_data_handler.class: Sulu\Bundle\SecurityBundle\Services\UserDataHandler
+    sulu_user.class: Sulu\Bundle\SecurityBundle\Services\UserService
 
 services:
     sulu_security.admin:
@@ -49,3 +50,6 @@ services:
         tags:
             - { name: security.voter }
 
+    sulu_user:
+        class: %sulu_user.class%
+        arguments: [@doctrine]
