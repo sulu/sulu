@@ -12,15 +12,9 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
-use PHPCR\NodeInterface;
-use PHPCR\SessionInterface;
-use Sulu\Bundle\ContactBundle\Controller\ContactsController;
 use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\RestController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class NodeController extends RestController implements ClassResourceInterface
 {
@@ -80,11 +74,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $depth = $this->getRequest()->get('depth', 1);
         $depth = intval($depth);
         $flat = $this->getRequest()->get('flat', 'true');
-        if ($flat === 'true') {
-            $flat = true;
-        } else {
-            $flat = false;
-        }
+        $flat = ($flat === 'true');
 
         $result = $this->getRepository()->getNodes($parentUuid, $portal, $language, $depth, $flat);
 
