@@ -14,7 +14,7 @@ interface UserManagerInterface
 {
     /**
      * returns user data of current user
-     * @return UserDataInterface
+     * @return CurrentUserDataInterface
      */
     public function getCurrentUserData();
 
