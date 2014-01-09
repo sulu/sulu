@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
-use Sulu\Bundle\AdminBundle\UserData\UserDataInterface;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
