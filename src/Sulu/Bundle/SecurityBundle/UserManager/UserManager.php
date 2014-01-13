@@ -13,13 +13,11 @@ namespace Sulu\Bundle\SecurityBundle\UserManager;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
-use Sulu\Bundle\AdminBundle\UserManager\UserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class UserManager implements UserManagerInterface
 {
-
     /**
      * @var Registry
      */
@@ -66,7 +64,7 @@ class UserManager implements UserManagerInterface
 
     /**
      * returns user data of current user
-     * @return UserDataInterface
+     * @return CurrentUserDataInterface
      */
     public function getCurrentUserData()
     {
