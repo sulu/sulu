@@ -77,6 +77,14 @@ class CurrentUserData implements CurrentUserDataInterface
         return "http://".$this->router->getContext()->getHost().'/admin/logout';
     }
 
+    /**
+     * returns locale of current user
+     * @return String
+     */
+    public function getLocale()
+    {
+        return $this->getUser()->getLocale();
+    }
 
     /**
      * Get a user from the Security Context
