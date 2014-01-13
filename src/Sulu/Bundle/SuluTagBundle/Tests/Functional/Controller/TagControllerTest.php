@@ -27,7 +27,10 @@ class TagControllerTest extends DatabaseTestCase
 
         $tag = new Tag();
         $tag->setName('tag1');
+        $tag->setCreated(new \DateTime());
+        $tag->setChanged(new \DateTime());
         self::$em->persist($tag);
+        self::$em->flush();
     }
 
     public function setUpSchema()
@@ -69,7 +72,7 @@ class TagControllerTest extends DatabaseTestCase
         $client = self::createClient();
         $client->request(
             'GET',
-            '/api/accounts/10'
+            '/api/tags/10'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
