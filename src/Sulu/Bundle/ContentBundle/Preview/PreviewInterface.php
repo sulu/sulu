@@ -10,7 +10,36 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
+use Sulu\Component\Content\StructureInterface;
+use Symfony\Component\HttpFoundation\Response;
+
 interface PreviewInterface
 {
+    /**
+     * starts a preview for given user and content
+     * @param int $userId
+     * @param string $contentUuid
+     * @param string $workspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function startPreview($userId, $contentUuid, $workspaceKey, $languageCode);
 
+    /**
+     * saves changes for given user and content
+     * @param int $userId
+     * @param string $contentUuid
+     * @param string $property propertyName which was changed
+     * @param mixed $data new data
+     * @return StructureInterface
+     */
+    public function update($userId, $contentUuid, $property, $data);
+
+    /**
+     * renders a content for given user
+     * @param $userId
+     * @param $contentId
+     * @return Response
+     */
+    public function render($userId, $contentId);
 } 

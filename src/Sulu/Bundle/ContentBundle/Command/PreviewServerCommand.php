@@ -29,6 +29,9 @@ class PreviewServerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // TODO get from config
+        $port = 9876;
+
         /** @var MessageComponentInterface $previewMessageComponent */
         $previewMessageComponent = $this->getMessageComponent();
         $server = IoServer::factory(
@@ -37,9 +40,10 @@ class PreviewServerCommand extends ContainerAwareCommand
                     $previewMessageComponent
                 )
             ),
-            9876
+            $port
         );
         $server->run();
+        $output->writeln('Server started on: ws://localhost:' . $port);
     }
 
     private function getMessageComponent()
