@@ -11,8 +11,10 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use DOMElement;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -77,7 +79,7 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @param string $property propertyName which was changed
      * @param mixed $data new data
-     * @return StructureInterface
+     * @return string
      */
     public function update($userId, $contentUuid, $property, $data)
     {
@@ -88,26 +90,35 @@ class Preview implements PreviewInterface
         $content->getProperty($property)->setValue($data);
         $this->saveCache($userId, $contentUuid, $content);
 
-        return $content;
+        return $this->render($userId, $contentUuid, $property);
     }
 
     /**
      * renders a content for given user
      * @param int $userId
      * @param string $contentUuid
+     * @param string|null $property
      * @return string
      */
-    public function render($userId, $contentUuid)
+    public function render($userId, $contentUuid, $property = null)
     {
         /** @var StructureInterface $content */
         $content = $this->loadCache($userId, $contentUuid);
 
-        return $this->renderView(
+        $result = $this->renderView(
             $this->templateNamespace . $content->getView(),
             array(
                 'content' => $content
             )
         );
+
+        if ($property != null) {
+            $crawler = new Crawler($result);
+            $nodes = $crawler->filter('*[property="' . $property . '"]');
+            $result = $nodes->first()->html();
+        }
+
+        return $result;
     }
 
     private function saveCache($userId, $contentUuid, $data)

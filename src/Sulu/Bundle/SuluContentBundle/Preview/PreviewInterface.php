@@ -31,15 +31,16 @@ interface PreviewInterface
      * @param string $contentUuid
      * @param string $property propertyName which was changed
      * @param mixed $data new data
-     * @return StructureInterface
+     * @return string
      */
     public function update($userId, $contentUuid, $property, $data);
 
     /**
      * renders a content for given user
-     * @param $userId
-     * @param $contentId
-     * @return Response
+     * @param int $userId
+     * @param string $contentUuid
+     * @param string|null $property
+     * @return string
      */
-    public function render($userId, $contentId);
+    public function render($userId, $contentUuid, $property = null);
 } 

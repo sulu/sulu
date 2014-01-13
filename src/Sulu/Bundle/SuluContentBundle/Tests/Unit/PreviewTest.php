@@ -113,7 +113,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function render($title, $article)
     {
-        return sprintf("<h1>%s</h1><div>%s</div>", $title, $article);
+        return sprintf('<html vocab="http://schema.org/" typeof="Content"><h1 property="title">%s</h1><div property="article">%s</div></html>', $title, $article);
     }
 
     protected function tearDown()
@@ -141,8 +141,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $content = $this->preview->update(1, '123-123-123', 'title', 'aaaa');
 
         // check result
-        $this->assertEquals('aaaa', $content->title);
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
+        $this->assertEquals('aaaa', $content);
 
         // check cache
         $this->assertTrue($this->cache->contains('1:123-123-123'));
@@ -174,8 +173,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         // change a property in FORM
         $content = $this->preview->update(1, '123-123-123', 'title', 'New Title');
-        $this->assertEquals('New Title', $content->title);
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
+        $this->assertEquals('New Title', $content);
 
         // update PREVIEW
         $response = $this->preview->render(1, '123-123-123');
