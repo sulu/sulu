@@ -102,7 +102,10 @@ define([], function() {
                         hasSearch: true,
                         el: this.options.el,
                         data: this.options.template,
-                        instanceName: this.options.instanceName
+                        instanceName: this.options.instanceName,
+                        searchOptions: {
+                            placeholderText: 'public.search'
+                        }
                     }
                 }
             ]);
