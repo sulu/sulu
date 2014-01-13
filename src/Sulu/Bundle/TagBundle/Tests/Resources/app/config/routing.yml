@@ -1,3 +1,7 @@
-sulu_tag:
+sulu_tag_api:
     resource: "@SuluTagBundle/Resources/config/routing.yml"
-    prefix: /sulu_tag
+    prefix: /tag
+
+sulu_tag_api:
+    resource: "@SuluTagBundle/Resources/config/routing_api.yml"
+    prefix: /api
