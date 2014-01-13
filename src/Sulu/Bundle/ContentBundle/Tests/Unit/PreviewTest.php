@@ -135,6 +135,15 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
     }
 
+    public function testStopPreview()
+    {
+        $this->preview->startPreview(1, '123-123-123', 'default', 'en');
+        $this->assertTrue($this->cache->contains('1:123-123-123'));
+
+        $this->preview->stopPreview(1, '123-123-123');
+        $this->assertFalse($this->cache->contains('1:123-123-123'));
+    }
+
     public function testUpdate()
     {
         $this->preview->startPreview(1, '123-123-123', 'default', 'en');

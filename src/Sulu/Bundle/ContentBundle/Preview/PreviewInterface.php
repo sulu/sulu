@@ -26,6 +26,13 @@ interface PreviewInterface
     public function startPreview($userId, $contentUuid, $workspaceKey, $languageCode);
 
     /**
+     * stops a preview
+     * @param int $userId
+     * @param string $contentUuid
+     */
+    public function stopPreview($userId, $contentUuid);
+
+    /**
      * saves changes for given user and content
      * @param int $userId
      * @param string $contentUuid
