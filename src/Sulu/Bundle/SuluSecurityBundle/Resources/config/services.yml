@@ -14,7 +14,8 @@ parameters:
     sulu_security.admin.content_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation
     sulu_security.admin.roles_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation
     sulu_security.permission_voter.class: Sulu\Bundle\SecurityBundle\Permission\PermissionVoter
-    sulu_security.services.user_data_handler.class: Sulu\Bundle\SecurityBundle\Services\UserDataHandler
+    sulu_security.user_manager.class: Sulu\Bundle\SecurityBundle\UserManager\UserManager
+    sulu_security.user_manager.current_user_data.class: Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData
 
 services:
     sulu_security.admin:
@@ -38,10 +39,6 @@ services:
     sulu_security.admin.roles_navigation:
       class: %sulu_security.admin.roles_navigation.class%
 
-    user.services.user_data:
-      class: %sulu_security.services.user_data_handler.class%
-      arguments: [@security.context, @router]
-
     sulu_security.permission_voter:
         class: %sulu_security.permission_voter.class%
         arguments: [%permissions%]
@@ -49,3 +46,11 @@ services:
         tags:
             - { name: security.voter }
 
+    sulu_security.user_manager.current_user_data:
+        class: %sulu_security.user_manager.current_user_data.class%
+        public: false
+        arguments: [@security.context, @router]
+
+    sulu_security.user_manager:
+        class: %sulu_security.user_manager.class%
+        arguments: [@doctrine, @sulu_security.user_manager.current_user_data]
