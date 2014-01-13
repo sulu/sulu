@@ -20,12 +20,12 @@ class SuluSecurityAdmin extends Admin
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('Tools');
+        $section = new NavigationItem('navigation.tools');
 
-        $settings = new NavigationItem('Settings');
+        $settings = new NavigationItem('navigation.settings');
         $settings->setIcon('settings');
 
-        $roles = new NavigationItem('Roles &amp; Permissions', $settings);
+        $roles = new NavigationItem('navigation.settings.roles', $settings);
         $roles->setAction('settings/roles');
         $roles->setIcon('settings');
 
