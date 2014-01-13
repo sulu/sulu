@@ -14,13 +14,13 @@
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "symfony/framework-bundle": "2.3.*",
+        "sensio/distribution-bundle": "2.3.*",
         "friendsofsymfony/rest-bundle": "1.0.*",
-        "jms/serializer-bundle": "@dev"
+        "jms/serializer-bundle": "@dev",
+        "jackalope/jackalope-jackrabbit": "1.0.*"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
-        "doctrine/doctrine-bundle": "1.2.*",
-        "symfony/monolog-bundle": "2.3.*",
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {

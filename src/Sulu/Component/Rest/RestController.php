@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\Listing\ListRestHelper;
 
 /**
  * Abstract Controller for extracting some required rest functionality
@@ -27,6 +28,12 @@ abstract class RestController extends FOSRestController
     protected $entityName;
 
     /**
+     * contains all attributes that are not sortable
+     * @var array
+     */
+    protected $unsortable = array();
+
+    /**
      * Lists all the entities or filters the entities by parameters
      * Special function for lists
      * route /contacts/list
@@ -35,16 +42,133 @@ abstract class RestController extends FOSRestController
      */
     protected function responseList($where = array())
     {
+        /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
-        $accounts = $listHelper->find($this->entityName, $where);
+        $entities = $listHelper->find($this->entityName, $where);
+        $pages = $listHelper->getTotalPages($this->entityName, $where);
 
         $response = array(
-            'total' => sizeof($accounts),
-            'items' => $accounts
+            '_links' => $this->getHalLinks($entities, $pages, true),
+            '_embedded' => $entities,
+            'total' => sizeof($entities),
+            'page' => $listHelper->getPage(),
+            'pages' => $pages,
+            'pageSize' => $listHelper->getLimit(),
         );
 
         return $this->view($response, 200);
+    }
+
+    /**
+     * creates HAL conform response-array out of an entitycollection
+     * @param array $entities
+     * @return array
+     */
+    protected function createHalResponse(array $entities)
+    {
+        return array(
+            '_links' => $this->getHalLinks($entities),
+            '_embedded' => $entities,
+            'total' => count($entities),
+        );
+    }
+
+    /**
+     * returns HAL-conform _links array
+     * @param array $entities
+     * @param int $pages
+     * @param bool $returnListLinks
+     * @return array
+     */
+    private function getHalLinks(array $entities, $pages = 1, $returnListLinks = false)
+    {
+        /** @var ListRestHelper $listHelper */
+        $listHelper = $this->get('sulu_core.list_rest_helper');
+
+        $path = $this->getRequest()->getRequestUri();
+        $pathInfo = $this->getRequest()->getPathInfo();
+        $path = $this->replaceOrAddUrlString(
+            $path,
+            $listHelper->getParameterName('pageSize') . '=',
+            $listHelper->getLimit(),
+            false
+        );
+
+        $page = $listHelper->getPage();
+
+        $sortable = array();
+        if ($returnListLinks && count($entities) > 0) {
+            $keys = array_keys($entities[0]);
+            foreach ($keys as $key) {
+                if (!in_array($key, $this->unsortable)) {
+                    $sortPath = $this->replaceOrAddUrlString(
+                        $path,
+                        $listHelper->getParameterName('sortBy') . '=',
+                        $key
+                    );
+                    $sortable[$key] = $this->replaceOrAddUrlString(
+                        $sortPath,
+                        $listHelper->getParameterName('sortOrder') . '=',
+                        '{sortOrder}'
+                    );
+                }
+            }
+        }
+
+        return array(
+            'self' => $path,
+            'first' => ($pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                1
+            ) : null,
+            'last' => ($pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                $pages
+            ) : null,
+            'next' => ($page < $pages) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                $page + 1
+            ) : null,
+            'prev' => ($page > 1 && $pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                $page - 1
+            ) : null,
+            'pagination' => ($pages > 1) ? $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                '{page}'
+            ) : null,
+            'sortable' => $returnListLinks ? $sortable : null,
+        );
+    }
+
+    /**
+     * function replaces a url parameter
+     * @param $url - the complete url
+     * @param $key - parametername (e.g. page=)
+     * @param $value - replace value
+     * @param bool $add - defines if value should be added
+     * @return mixed|string
+     */
+    public function replaceOrAddUrlString($url, $key, $value, $add = true)
+    {
+        if ($value) {
+            if ($pos = strpos($url, $key)) {
+                return preg_replace('/(.*' . $key . ')(\w+)(\&*.*)/', '${1}' . $value . '${3}', $url);
+            } else {
+                if ($add) {
+                    $and = (strpos($url, '?') === false) ? '?' : '&';
+                    return $url . $and . $key . $value;
+                }
+            }
+        }
+
+        return $url;
     }
 
     /**

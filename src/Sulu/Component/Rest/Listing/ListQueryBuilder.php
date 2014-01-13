@@ -70,12 +70,17 @@ class ListQueryBuilder
     private $searchFields;
 
     /**
-     * @param array $associationNames
-     * @param string $entityName
-     * @param array $fields
-     * @param array $sorting
-     * @param array $where
-     * @param string $search
+     * cache variable for replacing select string in some cases
+     * @var string
+     */
+    private $replaceSelect;
+
+    /**
+     * @param $associationNames
+     * @param $entityName
+     * @param $fields
+     * @param $sorting
+     * @param $where
      * @param array $searchFields
      */
     function __construct($associationNames, $entityName, $fields, $sorting, $where, $searchFields = array())
@@ -87,7 +92,6 @@ class ListQueryBuilder
         $this->where = $where;
         $this->searchFields = $searchFields;
     }
-
 
     /**
      * Searches Entity by filter for fields, pagination and sorted by a column
@@ -103,6 +107,14 @@ class ListQueryBuilder
         $dql = sprintf('%s %s %s', $selectFromDQL, $whereDQL, $orderDQL);
 
         return $dql;
+    }
+
+    /**
+     * just return count
+     */
+    public function justCount($countAttribute = 'u.id', $alias = 'totalcount')
+    {
+        $this->replaceSelect = 'COUNT(' . $countAttribute . ') as ' . $alias;
     }
 
     /**
@@ -130,7 +142,9 @@ class ListQueryBuilder
             }
         }
         // if no field is selected take prefix
-        if (strlen($this->select) == 0) {
+        if (!is_null($this->replaceSelect)) {
+            $this->select = $this->replaceSelect;
+        } elseif (strlen($this->select) == 0) {
             $this->select = $prefix;
         }
 
@@ -306,7 +320,7 @@ class ListQueryBuilder
                 if ($result != '') {
                     $result .= ' AND ';
                 }
-                $result .= '('.implode(' OR ', $searches).')';
+                $result .= '(' . implode(' OR ', $searches) . ')';
             }
 
             $result = 'WHERE ' . $result;
