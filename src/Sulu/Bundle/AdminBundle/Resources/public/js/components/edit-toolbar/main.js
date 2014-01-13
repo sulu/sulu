@@ -52,7 +52,7 @@ define([], function() {
                         group: 'right',
                         items: [
                             {
-                                title: 'delete',
+                                title: this.sandbox.translate('sulu.edit-toolbar.delete'),
                                 callback: function() {
                                     this.sandbox.emit('sulu.edit-toolbar.delete');
                                 }.bind(this)

@@ -41,4 +41,10 @@ interface CurrentUserDataInterface
      * @return String
      */
     public function getLogoutLink();
+
+    /**
+     * returns locale of current user
+     * @return String
+     */
+    public function getLocale();
 } 
