@@ -260,7 +260,8 @@ define([], function() {
                 data = {
                     user: {
                         username: this.sandbox.dom.val('#username'),
-                        contact: this.contact
+                        contact: this.contact,
+                        locale: this.sandbox.dom.val('#locale')
                     },
 
                     selectedRolesAndConfig: this.getSelectedRolesAndLanguages(),
