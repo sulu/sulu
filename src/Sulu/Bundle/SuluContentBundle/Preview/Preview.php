@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
-use DOMElement;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -74,6 +73,16 @@ class Preview implements PreviewInterface
     }
 
     /**
+     * stops a preview
+     * @param int $userId
+     * @param string $contentUuid
+     */
+    public function stopPreview($userId, $contentUuid)
+    {
+        $this->deleteCache($userId, $contentUuid);
+    }
+
+    /**
      * saves changes for given user and content
      * @param int $userId
      * @param string $contentUuid
@@ -121,6 +130,13 @@ class Preview implements PreviewInterface
         return $result;
     }
 
+    /**
+     * saves data in cache
+     * @param int $userId
+     * @param string $contentUuid
+     * @param mixed $data
+     * @return bool
+     */
     private function saveCache($userId, $contentUuid, $data)
     {
         $id = $this->getCacheKey($userId, $contentUuid);
@@ -128,6 +144,12 @@ class Preview implements PreviewInterface
         return $this->cache->save($id, $data, $this->lifeTime);
     }
 
+    /**
+     * returns cache value
+     * @param int $userId
+     * @param string $contentUuid
+     * @return bool|mixed
+     */
     private function loadCache($userId, $contentUuid)
     {
         $id = $this->getCacheKey($userId, $contentUuid);
@@ -138,11 +160,39 @@ class Preview implements PreviewInterface
         return false;
     }
 
+    /**
+     * delete cache entry
+     * @param int $userId
+     * @param string $contentUuid
+     * @return bool
+     */
+    private function deleteCache($userId, $contentUuid)
+    {
+        $id = $this->getCacheKey($userId, $contentUuid);
+
+        if ($this->cache->contains($id)) {
+            return $this->cache->delete($id);
+        }
+        return true;
+    }
+
+    /**
+     * returns cache key
+     * @param int $userId
+     * @param string $contentUuid
+     * @return string
+     */
     private function getCacheKey($userId, $contentUuid)
     {
         return $userId . ':' . $contentUuid;
     }
 
+    /**
+     * render a content
+     * @param string $view
+     * @param array $parameters
+     * @return string
+     */
     private function renderView($view, array $parameters = array())
     {
         return $this->templating->render($view, $parameters);
