@@ -1,7 +1,8 @@
 {
     "globals": {
         "require": false,
-        "define": false
+        "define": false,
+        "SULU": false
     },
     "bitwise": true,
     "camelcase": true,

@@ -21710,7 +21710,7 @@ define('__component__$navigation@husky',[],function() {
                 '               <img alt="#" src="<%= icon %>"/>',
                 '               <% } %>',
                 '           </div>',
-                '           <div class="navigation-header-title"><% if (title) { %> <%= title %><% } %></div>',
+                '           <div class="navigation-header-title"><% if (title) { %> <%= translate(title) %><% } %></div>',
                 '       </header>',
                 '       <div id="navigation-search" class="navigation-search"></div>',
                 '       <div id="navigation-item-container" class="navigation-item-container"></div>',
@@ -21724,7 +21724,7 @@ define('__component__$navigation@husky',[],function() {
                 '   <div <% if (item.items && item.items.length > 0) { %> class="navigation-items-toggle" <% } %> >',
                 '       <a class="<% if (!!item.action) { %>js-navigation-item <% } %>navigation-item" href="#">',
                 '           <span class="<%= icon %> navigation-item-icon"></span>',
-                '           <span class="navigation-item-title"><%= item.title %></span>',
+                '           <span class="navigation-item-title"><%= translate(item.title) %></span>',
                 '       </a>',
                 '       <% if (item.hasSettings) { %>',
                 '           <a class="icon-cogwheel navigation-settings-icon js-navigation-settings" id="<%= item.id %>" href="#"></a>',
@@ -21738,7 +21738,7 @@ define('__component__$navigation@husky',[],function() {
             subToggleItem: [
                 '   <li class="js-navigation-items navigation-subitems" id="<%= item.id %>" data-id="<%= item.id %>">',
                 '       <div class="navigation-subitems-toggle">',
-                '           <a class="<% if (!!item.action) { %>js-navigation-item <% } %> navigation-item" href="#"><%= item.title %></a>',
+                '           <a class="<% if (!!item.action) { %>js-navigation-item <% } %> navigation-item" href="#"><%= translate(item.title) %></a>',
                 '           <% if (item.hasSettings) { %>',
                 '           <a class="icon-cogwheel navigation-settings-icon js-navigation-settings" href="#"></a>',
                 '           <% } %>',
@@ -21748,15 +21748,15 @@ define('__component__$navigation@husky',[],function() {
             /** siple sub item */
             subItem: [
                 '<li class="js-navigation-sub-item" id="<%= item.id %>" data-id="<%= item.id %>">',
-                '   <a href="#"><%= item.title %></a>',
+                '   <a href="#"><%= translate(item.title) %></a>',
                 '</li>'
             ].join('')
         },
         defaults = {
             footerTemplate: '',
             labels: {
-                hide: 'Hide',
-                show: 'Show'
+                hide: 'navigation.hide',
+                show: 'navigation.show'
             }
         };
 
@@ -21804,12 +21804,19 @@ define('__component__$navigation@husky',[],function() {
             // render skeleton
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {
                 title: this.options.data.title,
-                icon: this.options.data.icon
+                icon: this.options.data.icon,
+                translate: this.sandbox.translate
             }));
 
             // start search component
             this.sandbox.start([
-                {name: 'search@husky', options: {el: '#navigation-search'}}
+                {
+                    name: 'search@husky',
+                    options: {
+                        el: '#navigation-search',
+                        placeholderText: 'public.search'
+                    }
+                }
             ]);
 
             // render navigation items
@@ -21833,14 +21840,15 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.util.foreach(data.items, function(section) {
                 $sectionDiv = this.sandbox.dom.createElement('<div class="section">');
                 $sectionList = this.sandbox.dom.createElement('<ul class="section-items">');
-                this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + section.title.toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.options.labels.hide + '</a></span></div>');
+                this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.sandbox.translate(this.options.labels.hide) + '</a></span></div>');
 
                 // iterate through section items
                 this.sandbox.util.foreach(section.items, function(item) {
                     // create item
                     $elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.mainItem, {
                         item: item,
-                        icon: item.icon ? 'icon-' + item.icon : ''
+                        icon: item.icon ? 'icon-' + item.icon : '',
+                        translate: this.sandbox.translate
                     }));
                     //render sub-items
                     if (item.items && item.items.length > 0) {
@@ -21866,10 +21874,10 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.util.foreach(data.items, function(item) {
                 this.items[item.id] = item;
                 if (item.items && item.items.length > 0) {
-                    elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subToggleItem, {item: item}));
+                    elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subToggleItem, {item: item, translate: this.sandbox.translate}));
                     this.renderSubNavigationItems(item, this.sandbox.dom.find('div', elem));
                 } else {
-                    elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subItem, {item: item}));
+                    elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subItem, {item: item, translate: this.sandbox.translate}));
                 }
                 this.sandbox.dom.append(list, elem);
             }.bind(this));
@@ -21998,12 +22006,12 @@ define('__component__$navigation@husky',[],function() {
             if (this.sandbox.dom.hasClass($section, 'is-hidden')) {
                 // hide section
                 this.sandbox.dom.slideDown($list, 200, function() {
-                    this.sandbox.dom.html(toggleLink, this.options.labels.hide);
+                    this.sandbox.dom.html(toggleLink, this.sandbox.translate(this.options.labels.hide));
                     this.sandbox.dom.removeClass($section, 'is-hidden');
                 }.bind(this));
             } else {
                 // show section
-                this.sandbox.dom.html(toggleLink, this.options.labels.show);
+                this.sandbox.dom.html(toggleLink, this.sandbox.translate(this.options.labels.show));
                 this.sandbox.dom.slideUp($list, 200, function() {
                     this.sandbox.dom.addClass($section, 'is-hidden');
                 }.bind(this));
@@ -24384,7 +24392,7 @@ define('__component__$search@husky',[], function() {
         render: function() {
             this.sandbox.dom.addClass(this.options.el, 'search-container');
             this.sandbox.dom.addClass(this.options.el, this.options.appearance);
-            this.sandbox.dom.html(this.$el,this.sandbox.template.parse(templates.skeleton, {placeholderText: this.options.placeholderText}));
+            this.sandbox.dom.html(this.$el,this.sandbox.template.parse(templates.skeleton, {placeholderText: this.sandbox.translate(this.options.placeholderText)}));
         },
 
         // bind dom elements
@@ -24554,7 +24562,7 @@ define('__component__$tabs@husky',[],function() {
                 }
 
                 this.items[item.id] = item;
-                this.sandbox.dom.append($list, '<li ' + selected + ' data-id="' + item.id + '"><a href="#">' + item.title + '</a></li>');
+                this.sandbox.dom.append($list, '<li ' + selected + ' data-id="' + item.id + '"><a href="#">' + this.sandbox.translate(item.title) + '</a></li>');
             }.bind(this));
 
             // force selection of first element
@@ -24619,7 +24627,8 @@ define('__component__$toolbar@husky',[],function() {
             data: [],
             instanceName: '',
             hasSearch: false,
-            appearance: 'large'
+            appearance: 'large',
+            searchOptions: null
         },
 
         selectItem = function(event) {
@@ -24634,7 +24643,7 @@ define('__component__$toolbar@husky',[],function() {
 
             // if toggle item do not trigger event
             if (!item.items) {
-                $parent = this.sandbox.dom.find('button',this.sandbox.dom.closest(event.currentTarget,'.group'));
+                $parent = this.sandbox.dom.find('button', this.sandbox.dom.closest(event.currentTarget, '.group'));
                 triggerSelectEvent.call(this, item, $parent);
             }
         },
@@ -24644,7 +24653,7 @@ define('__component__$toolbar@husky',[],function() {
             parentId = this.sandbox.dom.data($parent, 'id');
 
             if (this.items[parentId].type === "select") {
-                icon =this.sandbox.dom.find('span', $parent);
+                icon = this.sandbox.dom.find('span', $parent);
                 this.sandbox.dom.removeClass(icon);
                 this.sandbox.dom.addClass(icon, item.icon);
             }
@@ -24668,7 +24677,7 @@ define('__component__$toolbar@husky',[],function() {
          * @param listItem
          * @param parent
          */
-        createDropdownMenu = function(listItem, parent) {
+            createDropdownMenu = function(listItem, parent) {
             var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
                 classString = '';
             this.sandbox.dom.after(listItem, $list);
@@ -24697,7 +24706,7 @@ define('__component__$toolbar@husky',[],function() {
          * otherwise a new id is generated for the element
          * @param item
          */
-        checkItemId = function(item) {
+            checkItemId = function(item) {
             // if item has no id, generate random id
             if (!item.id || !!this.items[item.id]) {
                 do {
@@ -24711,7 +24720,7 @@ define('__component__$toolbar@husky',[],function() {
          * opens dropdown submenu
          * @param event
          */
-        toggleItem = function(event) {
+            toggleItem = function(event) {
 
             event.preventDefault();
             event.stopPropagation();
@@ -24768,7 +24777,7 @@ define('__component__$toolbar@husky',[],function() {
             // TODO: add appearance class
 
             var $container = this.sandbox.dom.createElement('<div class="toolbar-container" />'),
-                classArray, addTo, disabledString, button, $group;
+                classArray, addTo, disabledString, button, $group, searchOptions;
 
             this.sandbox.dom.append(this.options.el, $container);
 
@@ -24826,11 +24835,21 @@ define('__component__$toolbar@husky',[],function() {
             // add search
             if (this.options.hasSearch) {
                 this.sandbox.dom.append($container, '<div id="' + this.options.instanceName + '-toolbar-search" class="toolbar-search" />');
+
+                searchOptions = {
+                    el: '#' + this.options.instanceName + '-toolbar-search',
+                    instanceName: this.options.instanceName,
+                    appearance: 'white small'
+                };
+                searchOptions = this.sandbox.util.extend(true, {}, searchOptions, this.options.searchOptions);
+                // start search component
+                this.sandbox.start([
+                    {
+                        name: 'search@husky',
+                        options: searchOptions
+                    }
+                ]);
             }
-            // start search component
-            this.sandbox.start([
-                {name: 'search@husky', options: {el: '#' + this.options.instanceName + '-toolbar-search', instanceName: this.options.instanceName, appearance: 'white small'}}
-            ]);
 
             // initialization finished
             this.sandbox.emit('husky.tabs.initialized');

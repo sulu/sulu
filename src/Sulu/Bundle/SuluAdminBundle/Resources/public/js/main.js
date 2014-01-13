@@ -18,7 +18,7 @@ require(['husky'], function(Husky) {
     'use strict';
 
     // TODO get language from user
-    var language = 'de',
+    var language = SULU.user.locale,
         app;
 
     require(['text!/admin/bundles', 'text!/js/translations/sulu.' + language + '.json'], function(text, messagesText) {

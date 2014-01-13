@@ -59,11 +59,11 @@ define([], function() {
                             group: '1',
                             items: [
                                 {
-                                    title: 'import',
+                                    title: this.sandbox.translate('sulu.list-toolbar.import'),
                                     disabled: true
                                 },
                                 {
-                                    title: 'export',
+                                    title: this.sandbox.translate('sulu.list-toolbar.export'),
                                     disabled: true
                                 }
                             ]
@@ -102,7 +102,10 @@ define([], function() {
                         hasSearch: true,
                         el: this.options.el,
                         data: this.options.template,
-                        instanceName: this.options.instanceName
+                        instanceName: this.options.instanceName,
+                        searchOptions: {
+                            placeholderText: 'public.search'
+                        }
                     }
                 }
             ]);
