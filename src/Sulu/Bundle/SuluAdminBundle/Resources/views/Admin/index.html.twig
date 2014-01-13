@@ -42,6 +42,12 @@
         <!-- build:js app.min.js -->
         <script data-main="/bundles/suluadmin/js/main" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
         <!-- endbuild -->
+
+        <script type="text/javascript">
+            var SULU = {
+                user: {locale: '{{ user.locale is defined ? user.locale : 'en' }}'}
+            };
+        </script>
     </body>
 </html>
 
