@@ -15,6 +15,16 @@
 
     <div class="grid-row m-top-20" id="password-component"></div>
 
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <label for="locale"><%=translate('security.permission.locale')%></label>
+            <select name="locale" id="locale" class="form-element">
+                <option value="de" <%=user.locale==='de'? 'selected="selected"':''%>><%=translate('Deutsch')%></option>
+                <option value="en" <%=user.locale==='en'? 'selected="selected"':''%>><%=translate('English')%></option>
+            </select>
+        </div>
+    </div>
+
     <hr class="divider"/>
 
     <div class="grid-row m-top-30">
