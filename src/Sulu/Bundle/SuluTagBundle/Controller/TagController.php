@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 
@@ -88,7 +89,7 @@ class TagController extends RestController implements ClassResourceInterface
 
         try {
             if ($name == null) {
-                throw new RestException('There is no name for the tag given');
+                throw new MissingArgumentException($this->entityName, 'name');
             }
 
             /** @var Tag $tag */
