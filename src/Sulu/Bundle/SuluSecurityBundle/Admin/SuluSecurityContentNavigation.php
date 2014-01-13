@@ -12,7 +12,7 @@ class SuluSecurityContentNavigation implements ContentNavigationInterface
 
     public function __construct()
     {
-        $permissions = new NavigationItem('Permissions');
+        $permissions = new NavigationItem('content-navigation.security.permissions');
         $permissions->setAction('permissions');
 
         $permissions->setContentComponent('permissions@sulusecurity');
