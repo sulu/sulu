@@ -30,6 +30,7 @@ class AdminController extends Controller
             if ($userData->isLoggedIn()) {
                 $user['username'] = $userData->getUserName();
                 $user['logout'] = $userData->getLogoutLink();
+                $user['locale'] = '';
             }
         }
 
