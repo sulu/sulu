@@ -129,7 +129,7 @@ class Preview implements PreviewInterface
 
     private function getCacheKey($userId, $contentUuid)
     {
-        return 'User:' . $userId . ',Content:' . $contentUuid;
+        return $userId . ':' . $contentUuid;
     }
 
     private function renderView($view, array $parameters = array())
