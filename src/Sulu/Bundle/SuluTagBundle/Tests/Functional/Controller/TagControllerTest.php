@@ -134,6 +134,11 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testDeleteById()
     {
+        $eventListener = $this->getMock('stdClass', array('onDelete'));
+        $eventListener->expects($this->once())->method('onDelete')->will($this->returnValue(1));
+
+        // TODO test if event is thrown
+
         $client = static::createClient();
 
         $client->request('DELETE', '/api/tags/1');
