@@ -1,19 +1,21 @@
 <?php
 
+namespace Sulu\Bundle\SecurityBundle\UserManager;
 
-namespace Sulu\Bundle\SecurityBundle\Services;
-use Sulu\Bundle\AdminBundle\UserData\UserDataInterface;
-
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-
-class UserDataHandler implements UserDataInterface
+class CurrentUserData implements CurrentUserDataInterface
 {
-
+    /**
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
     protected $security;
+
+    /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
     protected $router;
 
     /**
@@ -24,14 +26,6 @@ class UserDataHandler implements UserDataInterface
     {
         $this->security = $security;
         $this->router = $router;
-    }
-
-    /**
-     * @return Boolean - returns if user is admin user
-     */
-    public function isAdminUser()
-    {
-        return $this->security->isGranted('ROLE_ADMIN');
     }
 
     /**
@@ -51,11 +45,16 @@ class UserDataHandler implements UserDataInterface
      */
     public function getUserName()
     {
-        $user = $this->getUser()->getContact();
-        if (!isset($user)) {
-            return $this->getUser()->getUsername();
-        }
-        return $user->getFirstName().' '.$user->getLastName();
+        return $this->getUser()->getUsername();
+    }
+
+    /**
+     * returns fullName
+     * @return String
+     */
+    public function getFullName()
+    {
+        return $this->getUser()->getFullName();
     }
 
     /**
