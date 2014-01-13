@@ -21,6 +21,8 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        resolve_target_entities:
+                    Sulu\Component\Security\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
 
 monolog:
     handlers:
@@ -40,3 +42,21 @@ parameters:
     # Just a dirty hack to get the jms serializer bundle correctly working
     # schmittjoh/JMSSerializerBundle#270 (comment)
     jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+
+security:
+    encoders:
+        Sulu\Bundle\SecurityBundle\Entity\User:
+            algorithm: sha512
+            iterations: 5000
+            encode_as_base64: false
+
+    providers:
+        sulu:
+            entity:
+                class: SuluSecurityBundle:User
+                property: username
+
+    firewalls:
+        sulu:
+            pattern: ^/admin
+            anonymous: ~
