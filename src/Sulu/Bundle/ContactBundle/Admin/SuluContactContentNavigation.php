@@ -22,7 +22,7 @@ class SuluContactContentNavigation extends ContentNavigation
 
         $this->setName('Contacts');
 
-        $details = new NavigationItem('Details');
+        $details = new NavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
         $details->setContentType('contact');
         $details->setContentComponent('contacts@sulucontact');
@@ -30,7 +30,7 @@ class SuluContactContentNavigation extends ContentNavigation
         $this->addNavigationItem($details);
 
 
-        $details = new NavigationItem('Details');
+        $details = new NavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
         $details->setContentType('account');
         $details->setContentComponent('accounts@sulucontact');
