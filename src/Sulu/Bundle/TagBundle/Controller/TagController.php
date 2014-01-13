@@ -12,6 +12,8 @@ namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
+use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
@@ -133,6 +135,10 @@ class TagController extends RestController implements ClassResourceInterface
 
             $em->remove($tag);
             $em->flush();
+
+            // throw an tag.delete event
+            $event = new TagDeleteEvent($tag);
+            $this->get('event_dispatcher')->dispatch(TagEvents::TAG_DELETE, $event);
         };
 
         $view = $this->responseDelete($id, $delete);
