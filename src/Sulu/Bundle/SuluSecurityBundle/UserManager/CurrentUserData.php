@@ -3,15 +3,19 @@
 namespace Sulu\Bundle\SecurityBundle\UserManager;
 
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class CurrentUserData implements CurrentUserDataInterface
 {
-
+    /**
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
     protected $security;
+
+    /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
     protected $router;
 
     /**
@@ -22,14 +26,6 @@ class CurrentUserData implements CurrentUserDataInterface
     {
         $this->security = $security;
         $this->router = $router;
-    }
-
-    /**
-     * @return Boolean - returns if user is admin user
-     */
-    public function isAdminUser()
-    {
-        return $this->security->isGranted('ROLE_ADMIN');
     }
 
     /**
