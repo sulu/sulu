@@ -59,11 +59,11 @@ define([], function() {
                             group: '1',
                             items: [
                                 {
-                                    title: 'import',
+                                    title: this.sandbox.translate('sulu.list-toolbar.import'),
                                     disabled: true
                                 },
                                 {
-                                    title: 'export',
+                                    title: this.sandbox.translate('sulu.list-toolbar.export'),
                                     disabled: true
                                 }
                             ]
