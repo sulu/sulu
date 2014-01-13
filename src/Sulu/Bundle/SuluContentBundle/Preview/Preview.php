@@ -10,7 +10,130 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
-class Preview
-{
+use Doctrine\Common\Cache\Cache;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\StructureInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\EngineInterface;
 
-} 
+class Preview implements PreviewInterface
+{
+    /**
+     * @var EngineInterface
+     */
+    private $templating;
+
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * @var ContentMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var integer
+     */
+    private $lifeTime;
+
+    private $templateNamespace;
+
+    public function __construct(
+        EngineInterface $templating,
+        Cache $cache,
+        ContentMapperInterface $mapper,
+        $lifeTime,
+        $templateNamespace = 'ClientWebsiteBundle:Website:'
+    )
+    {
+        $this->templating = $templating;
+        $this->cache = $cache;
+        $this->mapper = $mapper;
+        $this->lifeTime = $lifeTime;
+        $this->templateNamespace = $templateNamespace;
+    }
+
+    /**
+     * starts a preview for given user and content
+     * @param int $userId
+     * @param string $contentUuid
+     * @param string $workspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function startPreview($userId, $contentUuid, $workspaceKey, $languageCode)
+    {
+        $content = $this->mapper->load($contentUuid, $workspaceKey, $languageCode);
+        $this->saveCache($userId, $contentUuid, $content);
+
+        return $content;
+    }
+
+    /**
+     * saves changes for given user and content
+     * @param int $userId
+     * @param string $contentUuid
+     * @param string $property propertyName which was changed
+     * @param mixed $data new data
+     * @return StructureInterface
+     */
+    public function update($userId, $contentUuid, $property, $data)
+    {
+        /** @var StructureInterface $content */
+        $content = $this->loadCache($userId, $contentUuid);
+
+        // TODO check for complex content types
+        $content->getProperty($property)->setValue($data);
+        $this->saveCache($userId, $contentUuid, $content);
+
+        return $content;
+    }
+
+    /**
+     * renders a content for given user
+     * @param int $userId
+     * @param string $contentUuid
+     * @return string
+     */
+    public function render($userId, $contentUuid)
+    {
+        /** @var StructureInterface $content */
+        $content = $this->loadCache($userId, $contentUuid);
+
+        return $this->renderView(
+            $this->templateNamespace . $content->getView(),
+            array(
+                'content' => $content
+            )
+        );
+    }
+
+    private function saveCache($userId, $contentUuid, $data)
+    {
+        $id = $this->getCacheKey($userId, $contentUuid);
+
+        return $this->cache->save($id, $data, $this->lifeTime);
+    }
+
+    private function loadCache($userId, $contentUuid)
+    {
+        $id = $this->getCacheKey($userId, $contentUuid);
+
+        if ($this->cache->contains($id)) {
+            return $this->cache->fetch($id);
+        }
+        return false;
+    }
+
+    private function getCacheKey($userId, $contentUuid)
+    {
+        return 'User:' . $userId . ',Content:' . $contentUuid;
+    }
+
+    private function renderView($view, array $parameters = array())
+    {
+        return $this->templating->render($view, $parameters);
+    }
+}
