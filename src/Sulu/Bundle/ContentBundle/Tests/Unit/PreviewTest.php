@@ -123,7 +123,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testStartPreview()
     {
-        $content = $this->preview->startPreview(1, '123-123-123', 'default', 'en');
+        $content = $this->preview->start(1, '123-123-123', 'default', 'en');
         // check result
         $this->assertEquals('Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
@@ -137,16 +137,16 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testStopPreview()
     {
-        $this->preview->startPreview(1, '123-123-123', 'default', 'en');
+        $this->preview->start(1, '123-123-123', 'default', 'en');
         $this->assertTrue($this->cache->contains('1:123-123-123'));
 
-        $this->preview->stopPreview(1, '123-123-123');
+        $this->preview->stop(1, '123-123-123');
         $this->assertFalse($this->cache->contains('1:123-123-123'));
     }
 
     public function testUpdate()
     {
-        $this->preview->startPreview(1, '123-123-123', 'default', 'en');
+        $this->preview->start(1, '123-123-123', 'default', 'en');
         $content = $this->preview->update(1, '123-123-123', 'title', 'aaaa');
 
         // check result
@@ -161,7 +161,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->preview->startPreview(1, '123-123-123', 'default', 'en');
+        $this->preview->start(1, '123-123-123', 'default', 'en');
         $response = $this->preview->render(1, '123-123-123');
 
         $expected = $this->render('Title', 'Lorem Ipsum dolorem apsum');
@@ -171,7 +171,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
     public function testRealScenario()
     {
         // start preview from FORM
-        $content = $this->preview->startPreview(1, '123-123-123', 'default', 'en');
+        $content = $this->preview->start(1, '123-123-123', 'default', 'en');
         $this->assertEquals('Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 

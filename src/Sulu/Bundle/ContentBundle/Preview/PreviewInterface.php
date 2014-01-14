@@ -23,14 +23,22 @@ interface PreviewInterface
      * @param string $languageCode
      * @return StructureInterface
      */
-    public function startPreview($userId, $contentUuid, $workspaceKey, $languageCode);
+    public function start($userId, $contentUuid, $workspaceKey, $languageCode);
 
     /**
      * stops a preview
      * @param int $userId
      * @param string $contentUuid
      */
-    public function stopPreview($userId, $contentUuid);
+    public function stop($userId, $contentUuid);
+
+    /**
+     * returns if a preview started for user and content
+     * @param $userId
+     * @param $contentUuid
+     * @return bool
+     */
+    public function started($userId, $contentUuid);
 
     /**
      * saves changes for given user and content

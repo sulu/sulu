@@ -17,3 +17,7 @@ sulu_content.content_column:
 sulu_content.resource_locator_get:
     pattern: /resourcelocator.json
     defaults: { _controller: SuluContentBundle:ResourceLocator:get }
+
+sulu_content.preview.start:
+    pattern: /preview/start/{contentUuid}
+    defaults: { _controller: SuluContentBundle:Preview:start }

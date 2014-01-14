@@ -64,7 +64,7 @@ class Preview implements PreviewInterface
      * @param string $languageCode
      * @return StructureInterface
      */
-    public function startPreview($userId, $contentUuid, $workspaceKey, $languageCode)
+    public function start($userId, $contentUuid, $workspaceKey, $languageCode)
     {
         $content = $this->mapper->load($contentUuid, $workspaceKey, $languageCode);
         $this->saveCache($userId, $contentUuid, $content);
@@ -77,9 +77,20 @@ class Preview implements PreviewInterface
      * @param int $userId
      * @param string $contentUuid
      */
-    public function stopPreview($userId, $contentUuid)
+    public function stop($userId, $contentUuid)
     {
         $this->deleteCache($userId, $contentUuid);
+    }
+
+    /**
+     * returns if a preview started for user and content
+     * @param $userId
+     * @param $contentUuid
+     * @return bool
+     */
+    public function started($userId, $contentUuid)
+    {
+        return $this->cache->contains($this->getCacheKey($userId, $contentUuid));
     }
 
     /**
