@@ -15,7 +15,9 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 class Preview implements PreviewInterface
@@ -55,6 +57,7 @@ class Preview implements PreviewInterface
         Cache $cache,
         ContentMapperInterface $mapper,
         StructureManagerInterface $structureManager,
+        ControllerResolverInterface $controllerResolver,
         $lifeTime,
         $templateNamespace = 'ClientWebsiteBundle:Website:'
     )
@@ -63,6 +66,7 @@ class Preview implements PreviewInterface
         $this->cache = $cache;
         $this->mapper = $mapper;
         $this->structureManager = $structureManager;
+        $this->controllerResolver = $controllerResolver;
         $this->lifeTime = $lifeTime;
         $this->templateNamespace = $templateNamespace;
     }
@@ -128,22 +132,23 @@ class Preview implements PreviewInterface
      * renders a content for given user
      * @param int $userId
      * @param string $contentUuid
+     * @param bool $partial
      * @param string|null $property
      * @return string
      */
-    public function render($userId, $contentUuid, $property = null)
+    public function render($userId, $contentUuid, $partial = false, $property = null)
     {
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
 
-        $result = $this->renderView(
-            $this->templateNamespace . $content->getView(),
-            array(
-                'content' => $content
-            )
-        );
+        // get controller and invoke action
+        $request = new Request();
+        $request->attributes->set('_controller', $content->getController());
+        $controller = $this->controllerResolver->getController($request);
+        $result = $controller[0]->{$controller[1]}($content, true, $partial);
 
         if ($property != null) {
+            // extract special property
             $crawler = new Crawler($result);
             $nodes = $crawler->filter('*[property="' . $property . '"]');
             $result = $nodes->first()->html();
