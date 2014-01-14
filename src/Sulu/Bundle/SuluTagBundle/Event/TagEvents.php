@@ -18,4 +18,10 @@ final class TagEvents {
      * @var string
      */
     const TAG_DELETE = 'tag.delete';
+
+    /**
+     * The tag.merge event is thrown when a Tag gets merged into another one.
+     * The event listener receives a TagMergeEvent instance.
+     */
+    const TAG_MERGE = 'tag.merge';
 } 
