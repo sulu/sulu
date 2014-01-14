@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
+use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
@@ -72,10 +73,15 @@ class TagController extends RestController implements ClassResourceInterface
             $em->flush();
 
             $view = $this->view($tag, 200);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+        } catch (DBALException $dbale) {
+            if ($dbale->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
+                $re = new RestException('The tag with the name "' . $name . '" already exists.');
+                $view = $this->view($re->toArray(), 400);
+            } else {
+                throw $dbale;
+            }
+        } catch (RestException $re) {
+            $view = $this->view($re->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -110,6 +116,13 @@ class TagController extends RestController implements ClassResourceInterface
 
                 $em->flush();
                 $view = $this->view($tag, 200);
+            }
+        } catch (DBALException $dbale) {
+            if ($dbale->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
+                $re = new RestException('The tag with the name "' . $name . '" already exists.');
+                $view = $this->view($re->toArray(), 400);
+            } else {
+                throw $dbale;
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);

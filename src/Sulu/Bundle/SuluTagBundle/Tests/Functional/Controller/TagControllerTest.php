@@ -109,6 +109,17 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals('tag3', $response->name);
     }
 
+    public function testPostExistingName()
+    {
+        $client = self::createClient();
+        $client->request('POST', '/api/tags', array('name' => 'tag1'));
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
+    }
+
     public function testPut()
     {
         $client = self::createClient();
@@ -128,6 +139,17 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('tag1_new', $response->name);
+    }
+
+    public function testPutExistingName()
+    {
+        $client = self::createClient();
+        $client->request('PUT', '/api/tags/2', array('name' => 'tag1'));
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
     }
 
     public function testPutNotExisting()
