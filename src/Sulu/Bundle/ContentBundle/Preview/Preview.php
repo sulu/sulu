@@ -70,7 +70,7 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @param string $workspaceKey
      * @param string $languageCode
-     * @return StructureInterface
+     * @return \Sulu\Component\Content\StructureInterface
      */
     public function start($userId, $contentUuid, $workspaceKey, $languageCode)
     {
@@ -107,8 +107,8 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @param string $property propertyName which was changed
      * @param mixed $data new data
+     * @return \Sulu\Component\Content\StructureInterface
      * @throws PreviewNotFoundException
-     * @return string
      */
     public function update($userId, $contentUuid, $property, $data)
     {
@@ -120,7 +120,28 @@ class Preview implements PreviewInterface
             $content->getProperty($property)->setValue($data);
             $this->saveStructure($userId, $contentUuid, $content);
 
-            return $this->render($userId, $contentUuid, true, $property);
+            $changes = $this->render($userId, $contentUuid, true, $property);
+            $this->addChanges($userId, $contentUuid, $property, $changes);
+
+            return $content;
+        } else {
+            throw new PreviewNotFoundException('Preview not found');
+        }
+    }
+
+    /**
+     * returns pending changes for given user and content
+     * @param $userId
+     * @param $contentUuid
+     * @throws PreviewNotFoundException
+     * @return array
+     */
+    public function getChanges($userId, $contentUuid)
+    {
+        $result = $this->readChanges($userId, $contentUuid);
+
+        if (is_array($result)) {
+            return $result;
         } else {
             throw new PreviewNotFoundException('Preview not found');
         }
@@ -175,7 +196,8 @@ class Preview implements PreviewInterface
 
         return $this->cache->save($cacheId, $data, $this->lifeTime) && $this->cache->save(
             $structureCacheId,
-            $data->getKey()
+            $data->getKey(),
+            $this->lifeTime
         );
     }
 
@@ -201,6 +223,45 @@ class Preview implements PreviewInterface
     }
 
     /**
+     * saves changes for given user and content
+     * @param $userId
+     * @param $contentUuid
+     * @param $property
+     * @param $content
+     */
+    private function addChanges($userId, $contentUuid, $property, $content)
+    {
+        $id = $this->getCacheKey($userId, $contentUuid, 'changes');
+        $changes = $this->cache->fetch($id);
+
+        if (!$changes) {
+            $changes = array();
+        }
+
+        $changes[] = array('property' => $property, 'content' => $content);
+
+        $this->cache->save($id, $changes, $this->lifeTime);
+    }
+
+    /**
+     * return changes for given user and content
+     * @param $userId
+     * @param $contentUuid
+     * @return array
+     */
+    private function readChanges($userId, $contentUuid)
+    {
+        $id = $this->getCacheKey($userId, $contentUuid, 'changes');
+        if ($this->cache->contains($id)) {
+            $changes = $this->cache->fetch($id);
+            $this->cache->save($id, array(), $this->lifeTime);
+            return $changes;
+        }
+
+        return false;
+    }
+
+    /**
      * delete cache entry
      * @param int $userId
      * @param string $contentUuid
@@ -210,12 +271,16 @@ class Preview implements PreviewInterface
     {
         $cacheId = $this->getCacheKey($userId, $contentUuid);
         $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
+        $changesCacheId = $this->getCacheKey($userId, $contentUuid, 'changes');
 
         if ($this->cache->contains($cacheId)) {
             return $this->cache->delete($cacheId);
         }
         if ($this->cache->contains($structureCacheId)) {
             return $this->cache->delete($structureCacheId);
+        }
+        if ($this->cache->contains($changesCacheId)) {
+            return $this->cache->delete($changesCacheId);
         }
 
         return true;

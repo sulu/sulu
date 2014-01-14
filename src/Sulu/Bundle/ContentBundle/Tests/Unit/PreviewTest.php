@@ -186,10 +186,11 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $this->preview->start(1, '123-123-123', 'default', 'en');
-        $content = $this->preview->update(1, '123-123-123', 'title', 'aaaa');
+        $this->preview->update(1, '123-123-123', 'title', 'aaaa');
+        $content = $this->preview->getChanges(1, '123-123-123');
 
         // check result
-        $this->assertEquals('aaaa', $content);
+        $this->assertEquals('aaaa', $content[0]['content']);
 
         // check cache
         $this->assertTrue($this->cache->contains('1:123-123-123'));
@@ -221,11 +222,28 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         // change a property in FORM
         $content = $this->preview->update(1, '123-123-123', 'title', 'New Title');
-        $this->assertEquals('New Title', $content);
+        $this->assertEquals('New Title', $content->title);
+        $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
+
+        $content = $this->preview->update(1, '123-123-123', 'article', 'asdf');
+        $this->assertEquals('New Title', $content->title);
+        $this->assertEquals('asdf', $content->article);
 
         // update PREVIEW
+        $changes = $this->preview->getChanges(1, '123-123-123');
+        $this->assertEquals(2, sizeof($changes));
+        $this->assertEquals('New Title', $changes[0]['content']);
+        $this->assertEquals('title', $changes[0]['property']);
+        $this->assertEquals('asdf', $changes[1]['content']);
+        $this->assertEquals('article', $changes[1]['property']);
+
+        // update PREVIEW
+        $changes = $this->preview->getChanges(1, '123-123-123');
+        $this->assertEquals(0, sizeof($changes));
+
+        // rerender PREVIEW
         $response = $this->preview->render(1, '123-123-123');
-        $expected = $this->render('New Title', 'Lorem Ipsum dolorem apsum');
+        $expected = $this->render('New Title', 'asdf');
         $this->assertEquals($expected, $response);
     }
 }
