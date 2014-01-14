@@ -3,11 +3,12 @@
 namespace Sulu\Bundle\TagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
 /**
  * Tag
  */
-class Tag
+class Tag extends ApiEntity
 {
     /**
      * @var string
