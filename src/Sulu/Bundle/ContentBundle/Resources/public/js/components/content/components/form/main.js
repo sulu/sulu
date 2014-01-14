@@ -90,6 +90,7 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('sulu.content.contents.list');
             }, this);
+
         },
 
         initData: function() {
@@ -125,6 +126,10 @@ define([], function() {
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
             }.bind(this), "input,textarea");
+
+            this.sandbox.on('husky.ckeditor.changed', function(){
+                this.setHeaderBar(false);
+            }.bind(this));
         }
 
     };
