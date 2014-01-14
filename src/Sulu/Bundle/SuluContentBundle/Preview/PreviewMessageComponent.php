@@ -12,15 +12,22 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
 
     protected $clients;
 
-    public function __construct()
+    /**
+     * @var SecurityContext
+     */
+    private $context;
+
+    public function __construct(SecurityContext $context)
     {
         $this->clients = new \SplObjectStorage;
+        $this->context = $context;
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -33,7 +40,8 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        echo($msg . "\n");
+        $user = $this->context->getToken()->getUser();
+        echo($msg . " from user id " . $user->getId() . "\n");
         foreach ($this->clients as $client) {
             if ($from !== $client) {
                 // The sender is not the receiver, send to each client connected
