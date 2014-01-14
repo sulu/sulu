@@ -25,3 +25,11 @@ sulu_content.preview.start:
 sulu_content.preview.render:
     pattern: /preview/render/{contentUuid}
     defaults: { _controller: SuluContentBundle:Preview:render }
+
+sulu_content.preview.update:
+    pattern: /preview/update/{contentUuid}
+    defaults: { _controller: SuluContentBundle:Preview:update }
+
+sulu_content.preview.changes:
+    pattern: /preview/changes/{contentUuid}
+    defaults: { _controller: SuluContentBundle:Preview:changes }
