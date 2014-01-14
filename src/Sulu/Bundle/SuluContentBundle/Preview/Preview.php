@@ -120,8 +120,10 @@ class Preview implements PreviewInterface
             $content->getProperty($property)->setValue($data);
             $this->saveStructure($userId, $contentUuid, $content);
 
-            $changes = $this->render($userId, $contentUuid, true, $property);
-            $this->addChanges($userId, $contentUuid, $property, $changes);
+            $result = $changes = $this->render($userId, $contentUuid, true, $property);
+            if ($result !== false) {
+                $this->addChanges($userId, $contentUuid, $property, $changes);
+            }
 
             return $content;
         } else {
@@ -138,10 +140,9 @@ class Preview implements PreviewInterface
      */
     public function getChanges($userId, $contentUuid)
     {
-        $result = $this->readChanges($userId, $contentUuid);
-
-        if (is_array($result)) {
-            return $result;
+        if ($this->started($userId, $contentUuid)) {
+            $result = $this->readChanges($userId, $contentUuid);
+            return $result !== false ? $result : array();
         } else {
             throw new PreviewNotFoundException('Preview not found');
         }
@@ -173,7 +174,11 @@ class Preview implements PreviewInterface
                 // extract special property
                 $crawler = new Crawler($result);
                 $nodes = $crawler->filter('*[property="' . $property . '"]');
-                $result = $nodes->first()->html();
+                if ($nodes->count() > 0) {
+                    $result = $nodes->first()->html();
+                } else {
+                    return false;
+                }
             }
 
             return $result;
@@ -238,7 +243,7 @@ class Preview implements PreviewInterface
             $changes = array();
         }
 
-        $changes[] = array('property' => $property, 'content' => $content);
+        $changes[$property] = array('property' => $property, 'content' => $content);
 
         $this->cache->save($id, $changes, $this->lifeTime);
     }

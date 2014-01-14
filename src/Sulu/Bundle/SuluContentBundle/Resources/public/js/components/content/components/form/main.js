@@ -25,6 +25,8 @@ define([], function() {
 
             this.setHeaderBar(true);
             this.listenForChange();
+
+            this.initPreview();
         },
 
         render: function() {
@@ -125,6 +127,29 @@ define([], function() {
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
             }.bind(this), "input");
+        },
+
+        initPreview: function() {
+            this.sandbox.dom.on(this.formId, 'focusout', function(e) {
+                var url = '/admin/content/preview/update/0ad908b1-5b26-41ad-a9ac-2fc4371c147d',
+                    $element = $(e.currentTarget);
+
+                this.sandbox.util.ajax({
+                    url: url,
+                    type: 'POST',
+
+                    data: {
+                        property: $element.data('mapperProperty'),
+                        value: $element.data('element').getValue()
+                    },
+
+                    success: function(data) {
+                    }.bind(this),
+
+                    error: function(error) {
+                    }
+                });
+            }.bind(this), "select, input, textarea");
         }
 
     };
