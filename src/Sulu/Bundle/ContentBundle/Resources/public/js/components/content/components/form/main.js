@@ -28,7 +28,7 @@ define([], function() {
         },
 
         render: function() {
-            this.$el.html(this.renderTemplate('/admin/content/template/form/overview'));
+            this.html(this.renderTemplate('/admin/content/template/form/overview'));
 
             var data = this.initData();
             this.createForm(data);
@@ -124,7 +124,7 @@ define([], function() {
             }.bind(this), "select, input");
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "input");
+            }.bind(this), "input,textarea");
         }
 
     };
