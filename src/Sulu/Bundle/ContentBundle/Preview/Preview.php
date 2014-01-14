@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
@@ -35,16 +36,25 @@ class Preview implements PreviewInterface
     private $mapper;
 
     /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
      * @var integer
      */
     private $lifeTime;
 
+    /**
+     * @var string
+     */
     private $templateNamespace;
 
     public function __construct(
         EngineInterface $templating,
         Cache $cache,
         ContentMapperInterface $mapper,
+        StructureManagerInterface $structureManager,
         $lifeTime,
         $templateNamespace = 'ClientWebsiteBundle:Website:'
     )
@@ -52,6 +62,7 @@ class Preview implements PreviewInterface
         $this->templating = $templating;
         $this->cache = $cache;
         $this->mapper = $mapper;
+        $this->structureManager = $structureManager;
         $this->lifeTime = $lifeTime;
         $this->templateNamespace = $templateNamespace;
     }
@@ -67,7 +78,7 @@ class Preview implements PreviewInterface
     public function start($userId, $contentUuid, $workspaceKey, $languageCode)
     {
         $content = $this->mapper->load($contentUuid, $workspaceKey, $languageCode);
-        $this->saveCache($userId, $contentUuid, $content);
+        $this->saveStructure($userId, $contentUuid, $content);
 
         return $content;
     }
@@ -79,7 +90,7 @@ class Preview implements PreviewInterface
      */
     public function stop($userId, $contentUuid)
     {
-        $this->deleteCache($userId, $contentUuid);
+        $this->deleteStructure($userId, $contentUuid);
     }
 
     /**
@@ -104,11 +115,11 @@ class Preview implements PreviewInterface
     public function update($userId, $contentUuid, $property, $data)
     {
         /** @var StructureInterface $content */
-        $content = $this->loadCache($userId, $contentUuid);
+        $content = $this->loadStructure($userId, $contentUuid);
 
         // TODO check for complex content types
         $content->getProperty($property)->setValue($data);
-        $this->saveCache($userId, $contentUuid, $content);
+        $this->saveStructure($userId, $contentUuid, $content);
 
         return $this->render($userId, $contentUuid, $property);
     }
@@ -123,7 +134,7 @@ class Preview implements PreviewInterface
     public function render($userId, $contentUuid, $property = null)
     {
         /** @var StructureInterface $content */
-        $content = $this->loadCache($userId, $contentUuid);
+        $content = $this->loadStructure($userId, $contentUuid);
 
         $result = $this->renderView(
             $this->templateNamespace . $content->getView(),
@@ -145,14 +156,18 @@ class Preview implements PreviewInterface
      * saves data in cache
      * @param int $userId
      * @param string $contentUuid
-     * @param mixed $data
+     * @param StructureInterface $data
      * @return bool
      */
-    private function saveCache($userId, $contentUuid, $data)
+    private function saveStructure($userId, $contentUuid, $data)
     {
-        $id = $this->getCacheKey($userId, $contentUuid);
+        $cacheId = $this->getCacheKey($userId, $contentUuid);
+        $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
 
-        return $this->cache->save($id, $data, $this->lifeTime);
+        return $this->cache->save($cacheId, $data, $this->lifeTime) && $this->cache->save(
+            $structureCacheId,
+            $data->getKey()
+        );
     }
 
     /**
@@ -161,8 +176,13 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @return bool|mixed
      */
-    private function loadCache($userId, $contentUuid)
+    private function loadStructure($userId, $contentUuid)
     {
+        // preload structure class
+        $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
+        $structureKey = $this->cache->fetch($structureCacheId);
+        $this->structureManager->getStructure($structureKey);
+
         $id = $this->getCacheKey($userId, $contentUuid);
 
         if ($this->cache->contains($id)) {
@@ -177,13 +197,18 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @return bool
      */
-    private function deleteCache($userId, $contentUuid)
+    private function deleteStructure($userId, $contentUuid)
     {
-        $id = $this->getCacheKey($userId, $contentUuid);
+        $cacheId = $this->getCacheKey($userId, $contentUuid);
+        $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
 
-        if ($this->cache->contains($id)) {
-            return $this->cache->delete($id);
+        if ($this->cache->contains($cacheId)) {
+            return $this->cache->delete($cacheId);
         }
+        if ($this->cache->contains($structureCacheId)) {
+            return $this->cache->delete($structureCacheId);
+        }
+
         return true;
     }
 
@@ -191,11 +216,12 @@ class Preview implements PreviewInterface
      * returns cache key
      * @param int $userId
      * @param string $contentUuid
+     * @param bool $subKey
      * @return string
      */
-    private function getCacheKey($userId, $contentUuid)
+    private function getCacheKey($userId, $contentUuid, $subKey = false)
     {
-        return $userId . ':' . $contentUuid;
+        return $userId . ':' . $contentUuid . ($subKey != false ? ':' . $subKey : '');
     }
 
     /**

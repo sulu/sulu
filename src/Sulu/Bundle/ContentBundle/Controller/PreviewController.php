@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class PreviewController extends Controller
 {
@@ -24,9 +25,16 @@ class PreviewController extends Controller
         // TODO language
         $uid = $this->getUserId();
         $this->getPreview()->start($uid, $contentUuid, '', '');
+
+        return new Response();
+    }
+
+    public function renderAction($contentUuid)
+    {
+        $uid = $this->getUserId();
         $content = $this->getPreview()->render($uid, $contentUuid);
 
-        return $this->render('SuluContentBundle:Preview:preview-start.html.twig', array('content' => $content));
+        return $this->render('SuluContentBundle:Preview:render.html.twig', array('content' => $content));
     }
 
     /**
