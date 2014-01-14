@@ -17,6 +17,7 @@ use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
 
 class PreviewTest extends \PHPUnit_Framework_TestCase
@@ -36,9 +37,25 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
         $structureManager=$this->prepareStructureManagerMock();
+        $controllerResolver = $this->prepareControllerResolver();
         $this->cache = new ArrayCache();
 
-        $this->preview = new Preview($templating, $this->cache, $mapper, $structureManager, 3600);
+        $this->preview = new Preview($templating, $this->cache, $mapper, $structureManager, $controllerResolver, 3600);
+    }
+
+    public function prepareControllerResolver()
+    {
+        $controller = $this->getMock('\Sulu\Bundle\WebsiteBundle\Controller\WebsiteController', array('indexAction'));
+        $controller->expects($this->any())
+            ->method('indexAction')
+            ->will($this->returnCallback(array($this, 'indexCallback')));
+
+        $resolver = $this->getMock('\Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
+        $resolver->expects($this->any())
+            ->method('getController')
+            ->will($this->returnValue(array($controller, 'indexAction')));
+
+        return $resolver;
     }
 
     public function prepareStructureManagerMock()
@@ -122,9 +139,20 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         return $result;
     }
 
-    public function render($title, $article)
+    public function indexCallback(StructureInterface $structure, $preview = false, $partial = false)
     {
-        return sprintf('<html vocab="http://schema.org/" typeof="Content"><h1 property="title">%s</h1><div property="article">%s</div></html>', $title, $article);
+        return new Response($this->render($structure->title, $structure->article, $partial));
+
+    }
+
+    public function render($title, $article, $partial = false)
+    {
+        $template = '<h1 property="title">%s</h1><div property="article">%s</div>';
+        if (!$partial) {
+            $template = '<html vocab="http://schema.org/" typeof="Content"><body>' . $template . '</body></html>';
+        }
+
+        return sprintf($template, $title, $article);
     }
 
     protected function tearDown()
