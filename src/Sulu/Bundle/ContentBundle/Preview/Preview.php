@@ -47,19 +47,13 @@ class Preview implements PreviewInterface
      */
     private $lifeTime;
 
-    /**
-     * @var string
-     */
-    private $templateNamespace;
-
     public function __construct(
         EngineInterface $templating,
         Cache $cache,
         ContentMapperInterface $mapper,
         StructureManagerInterface $structureManager,
         ControllerResolverInterface $controllerResolver,
-        $lifeTime,
-        $templateNamespace = 'ClientWebsiteBundle:Website:'
+        $lifeTime
     )
     {
         $this->templating = $templating;
@@ -68,7 +62,6 @@ class Preview implements PreviewInterface
         $this->structureManager = $structureManager;
         $this->controllerResolver = $controllerResolver;
         $this->lifeTime = $lifeTime;
-        $this->templateNamespace = $templateNamespace;
     }
 
     /**
@@ -114,6 +107,7 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @param string $property propertyName which was changed
      * @param mixed $data new data
+     * @throws PreviewNotFoundException
      * @return string
      */
     public function update($userId, $contentUuid, $property, $data)
@@ -121,11 +115,15 @@ class Preview implements PreviewInterface
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
 
-        // TODO check for complex content types
-        $content->getProperty($property)->setValue($data);
-        $this->saveStructure($userId, $contentUuid, $content);
+        if ($content != false) {
+            // TODO check for complex content types
+            $content->getProperty($property)->setValue($data);
+            $this->saveStructure($userId, $contentUuid, $content);
 
-        return $this->render($userId, $contentUuid, $property);
+            return $this->render($userId, $contentUuid, true, $property);
+        } else {
+            throw new PreviewNotFoundException('Preview not found');
+        }
     }
 
     /**
@@ -134,6 +132,7 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @param bool $partial
      * @param string|null $property
+     * @throws PreviewNotFoundException
      * @return string
      */
     public function render($userId, $contentUuid, $partial = false, $property = null)
@@ -141,20 +140,25 @@ class Preview implements PreviewInterface
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
 
-        // get controller and invoke action
-        $request = new Request();
-        $request->attributes->set('_controller', $content->getController());
-        $controller = $this->controllerResolver->getController($request);
-        $result = $controller[0]->{$controller[1]}($content, true, $partial);
+        if ($content != false) {
+            // get controller and invoke action
+            $request = new Request();
+            $request->attributes->set('_controller', $content->getController());
+            $controller = $this->controllerResolver->getController($request);
+            $response = $controller[0]->{$controller[1]}($content, true, $partial);
+            $result = $response->getContent();
 
-        if ($property != null) {
-            // extract special property
-            $crawler = new Crawler($result);
-            $nodes = $crawler->filter('*[property="' . $property . '"]');
-            $result = $nodes->first()->html();
+            if ($property != null) {
+                // extract special property
+                $crawler = new Crawler($result);
+                $nodes = $crawler->filter('*[property="' . $property . '"]');
+                $result = $nodes->first()->html();
+            }
+
+            return $result;
+        } else {
+            throw new PreviewNotFoundException('Preview not found');
         }
-
-        return $result;
     }
 
     /**
@@ -227,16 +231,5 @@ class Preview implements PreviewInterface
     private function getCacheKey($userId, $contentUuid, $subKey = false)
     {
         return $userId . ':' . $contentUuid . ($subKey != false ? ':' . $subKey : '');
-    }
-
-    /**
-     * render a content
-     * @param string $view
-     * @param array $parameters
-     * @return string
-     */
-    private function renderView($view, array $parameters = array())
-    {
-        return $this->templating->render($view, $parameters);
     }
 }
