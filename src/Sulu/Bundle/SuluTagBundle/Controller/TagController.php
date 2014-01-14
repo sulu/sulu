@@ -12,12 +12,14 @@ namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use FOS\RestBundle\Controller\Annotations\Post;
 
 /**
  * Makes tag available through
@@ -44,6 +46,42 @@ class TagController extends RestController implements ClassResourceInterface
                     ->findTagById($id);
             }
         );
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * POST Route annotation.
+     * @Post("/tags/merge")
+     */
+    public function postMergeAction()
+    {
+        try {
+            /** @var TagRepository $tagRepository */
+            $tagRepository = $this->getDoctrine()->getRepository($this->entityName);
+            $em = $this->getDoctrine()->getManager();
+
+            $srcTagId = $this->getRequest()->get('src');
+            $destTagId = $this->getRequest()->get('dest');
+
+            $srcTag = $tagRepository->findTagById($srcTagId);
+            $destTag = $tagRepository->findTagById($destTagId);
+
+            if (!$srcTag) {
+                throw new EntityNotFoundException($this->entityName, $srcTagId);
+            }
+
+            if (!$destTag) {
+                throw new EntityNotFoundException($this->entityName, $destTagId);
+            }
+
+            $em->remove($srcTag);
+            $em->flush();
+
+            $view = $this->view(null, 303, array('location' => $destTag->getLinks()['self']));
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        }
 
         return $this->handleView($view);
     }
@@ -120,6 +158,7 @@ class TagController extends RestController implements ClassResourceInterface
     /**
      * Deletes the tag with the given ID
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
     {

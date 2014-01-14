@@ -176,11 +176,25 @@ class TagControllerTest extends DatabaseTestCase
         );
 
         $client->request('POST', '/api/tags/merge', array('src' => 2, 'dest' => 1));
+        $this->assertEquals(303, $client->getResponse()->getStatusCode());
+        $this->assertEquals('/admin/api/tags/1', $client->getResponse()->headers->get('location'));
 
         $client->request('GET', '/api/tags/1');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $client->request('GET', '/api/tags/2');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testMergeNotExisting()
+    {
+        $client = static::createClient();
+        $client->request('POST', '/api/tags/merge', array('src' => 3, 'dest' => 1));
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "3" not found.', $response->message);
     }
 }

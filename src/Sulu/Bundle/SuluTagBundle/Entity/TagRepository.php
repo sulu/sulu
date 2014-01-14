@@ -16,6 +16,11 @@ use Doctrine\ORM\NoResultException;
 
 class TagRepository extends EntityRepository
 {
+    /**
+     * Finds the tag with the given ID
+     * @param $id
+     * @return Tag
+     */
     public function findTagById($id)
     {
         $qb = $this->createQueryBuilder('t')
@@ -25,9 +30,9 @@ class TagRepository extends EntityRepository
         $query->setParameter('id', $id);
 
         try {
-            $contact = $query->getSingleResult();
+            $tag = $query->getSingleResult();
 
-            return $contact;
+            return $tag;
         } catch (NoResultException $nre) {
             return null;
         }
