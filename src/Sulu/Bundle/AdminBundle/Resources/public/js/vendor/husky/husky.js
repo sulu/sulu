@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -27651,6 +27652,18 @@ define('__component__$ckeditor@husky',[], function() {
             initializedCallback: null
         },
 
+        /**
+         * namespace for events
+         * @type {string}
+         */
+            eventNamespace = 'husky.ckeditor.',
+
+        /**
+         * @event husky.column-navigation.loaded
+         * @description the component has loaded everything successfully and will be rendered
+         */
+            CHANGED = eventNamespace + 'changed',
+
 
         /**
          * Removes the not needed elements from the config object for the ckeditor
@@ -27676,7 +27689,11 @@ define('__component__$ckeditor@husky',[], function() {
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             var config = getConfig.call(this);
-            this.$ckeditor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
+            this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
+
+            this.editor.once('change',function(){
+               this.sandbox.emit(CHANGED);
+            }.bind(this));
         }
 
     };
@@ -27816,8 +27833,8 @@ define('__component__$ckeditor@husky',[], function() {
                 ],
 
                 format_tags: 'p;h1;h2;h3;h4;h5;h6',
-                height:'300px',
-                width:'100%',
+                height: '300px',
+                width: '100%',
                 defaultLanguage: 'en',
                 removeButtons: '',
                 removePlugins: 'elementspath,link,magicline',
@@ -27840,14 +27857,17 @@ define('__component__$ckeditor@husky',[], function() {
                     // callback when editor is ready
                     init: function(selector, callback, config) {
 
-                        var configuration = app.sandbox.util.extend(true, {}, config, getConfig.call());
+                        var configuration = app.sandbox.util.extend(true, {}, config, getConfig.call()),
+                            $editor;
 
                         if (!!callback && typeof callback === 'function') {
-                            return $(selector).ckeditor(callback, configuration);
+                            $editor = $(selector).ckeditor(callback, configuration);
                         } else {
-                            return $(selector).ckeditor(configuration);
+                            $editor = $(selector).ckeditor(configuration);
+
                         }
 
+                        return $editor.editor;
                     }
                 };
             }
