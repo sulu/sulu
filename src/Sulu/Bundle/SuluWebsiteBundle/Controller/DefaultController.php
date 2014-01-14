@@ -11,39 +11,29 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Twig_Environment;
 
 /**
  * Default Controller for rendering templates, uses the themes from the ClientWebsiteBundle
  * @package Sulu\Bundle\WebsiteBundle\Controller
  */
-class DefaultController extends Controller
+class DefaultController extends WebsiteController
 {
     /**
      * Loads the content from the request (filled by the route provider) and creates a response with this content and
      * the appropriate cache headers
+     * @param \Sulu\Component\Content\StructureInterface $structure
+     * @param bool $preview
+     * @param bool $partial
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(StructureInterface $structure, $preview = false, $partial = false)
     {
-        /** @var Structure $structure */
-        $structure = $this->getRequest()->get('content');
-        $content = $this->renderView(
-            'ClientWebsiteBundle:Website:' . $structure->getView(),
-            array('content' => $structure)
-        );
-
-        $response = new Response();
-
-        $response->setPublic();
-        $response->setPrivate();
-        $response->setSharedMaxAge($structure->getCacheLifeTime());
-        $response->setMaxAge($structure->getCacheLifeTime());
-
-        $response->setContent($content);
-
+        $response = $this->renderStructure($structure, array(), $preview, $partial);
         return $response;
     }
 

@@ -89,7 +89,7 @@ class PortalRouteProvider implements RouteProviderInterface
 
                 $route = new Route($request->getRequestUri(), array(
                     '_controller' => $content->getController(),
-                    'content' => $content
+                    'structure' => $content
                 ));
 
                 $collection->add($content->getKey() . '_' . uniqid(), $route);
