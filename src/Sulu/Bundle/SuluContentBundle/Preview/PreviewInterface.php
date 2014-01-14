@@ -54,8 +54,9 @@ interface PreviewInterface
      * renders a content for given user
      * @param int $userId
      * @param string $contentUuid
+     * @param bool $partial
      * @param string|null $property
      * @return string
      */
-    public function render($userId, $contentUuid, $property = null);
+    public function render($userId, $contentUuid, $partial = false, $property = null);
 } 
