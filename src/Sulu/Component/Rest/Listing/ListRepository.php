@@ -61,14 +61,17 @@ class ListRepository extends EntityRepository
         );
 
         if ($justCount) {
-            $queryBuilder->justCount($prefix);
+            $queryBuilder->justCount('u.id');
         }
         $dql = $queryBuilder->find($prefix);
 
         $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult($this->helper->getOffset())
+            ->createQuery($dql);
+
+        if(!$justCount) {
+            $query->setFirstResult($this->helper->getOffset())
             ->setMaxResults($this->helper->getLimit());
+        }
         if ($searchPattern != null) {
             $query->setParameter('search', '%' . $searchPattern. '%');
         }

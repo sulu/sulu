@@ -311,7 +311,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('admin/api/contacts?page=3', $view['_links']['next']);
         $this->assertEquals('admin/api/contacts?page={page}', $view['_links']['pagination']);
         $this->assertEquals(
-            'admin/api/contacts?page=2&sortBy=test&sortOrder={sortOrder}',
+            'admin/api/contacts?sortBy=test&sortOrder={sortOrder}',
             $view['_links']['sortable']['test']
         );
         $this->assertEquals('3', $view['total']);

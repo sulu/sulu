@@ -87,7 +87,7 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $path = $this->getRequest()->getRequestUri();
-        $pathInfo = $this->getRequest()->getPathInfo();
+//        $pathInfo = $this->getRequest()->getPathInfo();
         $path = $this->replaceOrAddUrlString(
             $path,
             $listHelper->getParameterName('pageSize') . '=',
@@ -97,13 +97,20 @@ abstract class RestController extends FOSRestController
 
         $page = $listHelper->getPage();
 
+        // create sort links
         $sortable = array();
         if ($returnListLinks && count($entities) > 0) {
             $keys = array_keys($entities[0]);
+            // remove page
+            $sortUrl = $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                null
+            );
             foreach ($keys as $key) {
                 if (!in_array($key, $this->unsortable)) {
                     $sortPath = $this->replaceOrAddUrlString(
-                        $path,
+                        $sortUrl,
                         $listHelper->getParameterName('sortBy') . '=',
                         $key
                     );
@@ -115,6 +122,19 @@ abstract class RestController extends FOSRestController
                 }
             }
         }
+
+        // create search link
+        $searchLink = $this->replaceOrAddUrlString(
+            $path,
+            $listHelper->getParameterName('search') . '=',
+            '{searchString}'
+        );
+        $searchLink = $this->replaceOrAddUrlString(
+            $searchLink,
+            $listHelper->getParameterName('page') . '=',
+            '1'
+        );
+
 
         return array(
             'self' => $path,
@@ -143,6 +163,7 @@ abstract class RestController extends FOSRestController
                 $listHelper->getParameterName('page') . '=',
                 '{page}'
             ) : null,
+            'find' => $returnListLinks ? $searchLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
         );
     }
@@ -166,6 +187,18 @@ abstract class RestController extends FOSRestController
                     return $url . $and . $key . $value;
                 }
             }
+        } else {
+            // remove if key exists
+            if ($pos = strpos($url, $key)) {
+                $result = preg_replace('/(.*)([\\?|\&]{1}'.$key.')(\w+)(\&*.*)/', '${1}${4}', $url);
+
+                // if was first variable, redo questionmark
+                if(strpos($url, '?'.$key)) {
+                    $result = preg_replace('/&/', '?', $result, 1);
+                }
+                return $result;
+            }
+
         }
 
         return $url;
