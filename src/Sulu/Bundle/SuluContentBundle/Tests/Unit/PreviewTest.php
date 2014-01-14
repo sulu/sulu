@@ -35,9 +35,20 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
     {
         $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
+        $structureManager=$this->prepareStructureManagerMock();
         $this->cache = new ArrayCache();
 
-        $this->preview = new Preview($templating, $this->cache, $mapper, 3600);
+        $this->preview = new Preview($templating, $this->cache, $mapper, $structureManager, 3600);
+    }
+
+    public function prepareStructureManagerMock()
+    {
+        $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
+        $structureManagerMock->expects($this->any())
+            ->method('getStructure')
+            ->will($this->returnValue(true));
+
+        return $structureManagerMock;
     }
 
     public function prepareTemplatingMock()
