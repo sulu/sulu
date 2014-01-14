@@ -1,42 +1,61 @@
-/* line 3, ../scss/modules/base.scss */
+/* line 7, ../scss/modules/base.scss */
+body {
+  background-color: #f1f1f1;
+}
+
+/* line 12, ../scss/modules/base.scss */
 .control-label {
   padding-left: 10px;
   cursor: pointer;
 }
 
 /*----------------------------------------*/
-/* line 10, ../scss/modules/base.scss */
+/* line 19, ../scss/modules/base.scss */
 #content {
-  width: 800px;
+  max-width: 800px;
   margin-left: 300px;
   padding-top: 40px;
 }
-/* line 16, ../scss/modules/base.scss */
+/* line 25, ../scss/modules/base.scss */
 #content h2.mainheadline {
   margin-top: 35px;
 }
-/* line 20, ../scss/modules/base.scss */
+/* line 29, ../scss/modules/base.scss */
 #content h1:first-child {
   margin-top: 0;
 }
-/* line 26, ../scss/modules/base.scss */
-#content #edit-toolbar {
-  z-index: 100;
-  position: fixed;
-  top: 40px;
-  min-width: 800px;
-}
 /* line 33, ../scss/modules/base.scss */
-#content #list-toolbar-container {
-  margin-bottom: 18px;
-}
-/* line 37, ../scss/modules/base.scss */
 #content .content-tabs-content {
   margin-top: 60px;
 }
 
+/* line 41, ../scss/modules/base.scss */
+#edit-toolbar-container {
+  z-index: 100;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding-top: 40px;
+}
+
+/* line 50, ../scss/modules/base.scss */
+#edit-toolbar {
+  max-width: 800px;
+}
+
+/* line 54, ../scss/modules/base.scss */
+#list-toolbar-container {
+  margin-bottom: 18px;
+}
+
+/* line 59, ../scss/modules/base.scss */
+#page-functions + #edit-toolbar .edit-toolbar-left {
+  margin-left: -50px;
+}
+
 /*----------------------------------------*/
-/* line 45, ../scss/modules/base.scss */
+/* line 66, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -44,67 +63,26 @@
 }
 
 /*----------------------------------------*/
-/* line 53, ../scss/modules/base.scss */
+/* line 74, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 62, ../scss/modules/base.scss */
+/* line 83, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 66, ../scss/modules/base.scss */
+/* line 87, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 74, ../scss/modules/base.scss */
+/* line 95, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
-}
-
-/* line 1, ../scss/modules/headerbar.scss */
-.headerbar-left {
-  width: 250px;
-}
-
-/* line 5, ../scss/modules/headerbar.scss */
-.headerbar-mid {
-  width: 820px;
-  margin-left: 25px;
-  color: white;
-}
-
-/* line 11, ../scss/modules/headerbar.scss */
-.account-icon {
-  height: 30px;
-}
-
-/* line 15, ../scss/modules/headerbar.scss */
-.account-text {
-  font-weight: bold;
-  font-size: 14px;
-}
-
-/* line 20, ../scss/modules/headerbar.scss */
-.account-logout {
-  font-size: 12px;
-}
-
-/* line 25, ../scss/modules/headerbar.scss */
-#headerbar-mid-left {
-  font-size: 18px;
-  margin-top: 8px;
-}
-
-/* line 30, ../scss/modules/headerbar.scss */
-#headerbar-mid-right {
-  text-align: right;
-  font-size: 14px;
-  margin-top: 10px;
 }
 
 /* line 2, ../scss/modules/icons.scss */
