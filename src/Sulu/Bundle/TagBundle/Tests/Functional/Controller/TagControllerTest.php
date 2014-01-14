@@ -30,6 +30,12 @@ class TagControllerTest extends DatabaseTestCase
         $tag->setCreated(new \DateTime());
         $tag->setChanged(new \DateTime());
         self::$em->persist($tag);
+
+        $tag = new Tag();
+        $tag->setName('tag2');
+        $tag->setCreated(new \DateTime());
+        $tag->setChanged(new \DateTime());
+        self::$em->persist($tag);
         self::$em->flush();
     }
 
@@ -85,22 +91,22 @@ class TagControllerTest extends DatabaseTestCase
     public function testPost()
     {
         $client = self::createClient();
-        $client->request('POST', '/api/tags', array('name' => 'tag2'));
+        $client->request('POST', '/api/tags', array('name' => 'tag3'));
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('tag2', $response->name);
+        $this->assertEquals('tag3', $response->name);
 
         $client->request(
             'GET',
-            '/api/tags/2'
+            '/api/tags/3'
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('tag2', $response->name);
+        $this->assertEquals('tag3', $response->name);
     }
 
     public function testPut()
@@ -156,5 +162,25 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request('DELETE', '/api/tags/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
+    }
+
+    public function testMerge()
+    {
+        $mockedEventListener = $this->getMock('stdClass', array('onMerge'));
+        $mockedEventListener->expects($this->once())->method('onMerge');
+
+        $client = static::createClient();
+        $client->getContainer()->get('event_dispatcher')->addListener(
+            'tag.merge',
+            array($mockedEventListener, 'onMerge')
+        );
+
+        $client->request('POST', '/api/tags/merge', array('src' => 2, 'dest' => 1));
+
+        $client->request('GET', '/api/tags/1');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/tags/2');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 }
