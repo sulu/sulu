@@ -11,8 +11,10 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use DateTime;
+use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -36,6 +38,20 @@ class PreviewController extends Controller
     {
         $uid = $this->getUserId();
         $content = $this->getPreview()->render($uid, $contentUuid);
+
+        $script = $this->render('SuluContentBundle:Preview:script.html.twig');
+
+        $doc = new DOMDocument();
+        $doc->loadHTML($content);
+        $body = $doc->getElementsByTagName('body');
+        $body = $body->item(0);
+        $dataAuraComponent = $doc->createAttribute('data-aura-component');
+        $dataAuraComponent->value = 'preview@sulucontent';
+        $body->appendChild($dataAuraComponent);
+
+        //TODO append script
+
+        $content = $doc->saveHTML();
 
         return $this->render('SuluContentBundle:Preview:render.html.twig', array('content' => $content));
     }
