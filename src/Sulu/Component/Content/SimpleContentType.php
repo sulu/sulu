@@ -23,9 +23,16 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     private $name;
 
-    function __construct($name)
+    /**
+     * default value if node not have the property
+     * @var mixed
+     */
+    private $defaultValue;
+
+    function __construct($name, $defaultValue = null)
     {
         $this->name = $name;
+        $this->defaultValue = $defaultValue;
     }
 
     public function getName()
@@ -41,7 +48,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        $value = null;
+        $value = $this->defaultValue;
         if ($node->hasProperty($property->getName())) {
             $value = $node->getPropertyValue($property->getName());
         }
