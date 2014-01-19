@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\MediaBundle\Entity\FilePublishLanguage" table="co_file_publish_languages">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="idLocalization" type="integer" column="idLocalization"/> <!-- TODO -->
+        <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\files" inversed-by="publish_languages">
+            <join-columns>
+                <join-column name="idFiles" referenced-column-name="id" nullable="false"/>
+                <join-column name="version" referenced-column-name="version" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
