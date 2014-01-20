@@ -14,7 +14,8 @@ define(function() {
     return {
         content: {
             url: '/admin/content/navigation/content',
-            title: 'content.contents.title'
+            title: 'content.contents.title',
+            template: 'defaultPreview'
         }
     };
 });

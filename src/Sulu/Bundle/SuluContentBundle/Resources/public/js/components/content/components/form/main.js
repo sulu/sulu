@@ -25,8 +25,6 @@ define([], function() {
 
             this.setHeaderBar(true);
             this.listenForChange();
-
-            this.initPreview();
         },
 
         render: function() {
@@ -92,6 +90,10 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('sulu.content.contents.list');
             }, this);
+
+            this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
+                this.initPreview();
+            }, this);
         },
 
         initData: function() {
@@ -130,8 +132,10 @@ define([], function() {
         },
 
         initPreview: function() {
+            window.open('/admin/content/preview/render/' + this.options.data.id);
+
             this.sandbox.dom.on(this.formId, 'focusout', function(e) {
-                var url = '/admin/content/preview/update/0ad908b1-5b26-41ad-a9ac-2fc4371c147d',
+                var url = '/admin/content/preview/update/' + this.options.data.id,
                     $element = $(e.currentTarget);
 
                 this.sandbox.util.ajax({
@@ -141,12 +145,6 @@ define([], function() {
                     data: {
                         property: $element.data('mapperProperty'),
                         value: $element.data('element').getValue()
-                    },
-
-                    success: function(data) {
-                    }.bind(this),
-
-                    error: function(error) {
                     }
                 });
             }.bind(this), "select, input, textarea");
