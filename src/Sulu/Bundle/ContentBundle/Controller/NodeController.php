@@ -180,7 +180,6 @@ class NodeController extends RestController implements ClassResourceInterface
             }
         );
 
-
         return $this->handleView($view);
     }
 

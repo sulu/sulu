@@ -21,6 +21,22 @@ define(function() {
             this.render();
         },
 
+        bindCustomEvents: function() {
+            this.sandbox.on('husky.column-navigation.add', function(parent) {
+                this.sandbox.emit('sulu.content.contents.new', parent);
+            }, this);
+
+            this.sandbox.on('husky.column-navigation.edit', function(item) {
+                this.sandbox.emit('sulu.content.contents.load', item.id);
+            }, this);
+
+            this.sandbox.on('husky.tabs.item.select', function(item) {
+                if (!!item.action) {
+                    this.sandbox.emit('sulu.router.navigate', item.action);
+                }
+            }, this);
+        },
+
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/column'));
 
@@ -52,19 +68,7 @@ define(function() {
                 }
             ]);
 
-            this.sandbox.on('husky.column-navigation.add', function(parent) {
-                this.sandbox.emit('sulu.content.contents.new', parent);
-            }.bind(this));
-
-            this.sandbox.on('husky.column-navigation.edit', function(item) {
-                this.sandbox.emit('sulu.content.contents.load', item.id);
-            }.bind(this));
-
-            this.sandbox.on('husky.tabs.item.select', function(item) {
-                if (!!item.action) {
-                    this.sandbox.emit('sulu.router.navigate', item.action);
-                }
-            }.bind(this));
+            this.bindCustomEvents();
         }
     };
 });
