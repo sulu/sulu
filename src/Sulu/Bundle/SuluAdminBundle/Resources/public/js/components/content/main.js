@@ -23,6 +23,21 @@ define([], function() {
             instanceName: 'content'
         },
 
+        templates = {
+            skeleton: function() {
+                return [
+                    '<div id="edit-toolbar-container">',
+                    '   <div id="page-functions"></div>',
+                    '   <div id="edit-toolbar"></div>',
+                    '</div>',
+                    '<div class="content-tabs-content">',
+                    '   <h1>' + this.options.heading + '</h1>',
+                    '   <div id="content-tabs" />',
+                    '</div>'
+                ].join('');
+            }
+        },
+
         initializeTabs = function() {
             if (this.options.tabsData && this.options.tabsData.items <= 1) {
                 // TODO: do not show tabs if just one item available
@@ -58,7 +73,7 @@ define([], function() {
                 {
                     name: 'edit-toolbar@suluadmin',
                     options: {
-                        el: '#toolbar',
+                        el: '#edit-toolbar',
                         instanceName: this.options.instanceName,
                         forceReload: false
                     }
@@ -75,7 +90,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // skeleton
-            this.sandbox.dom.html(this.$el, '<div id="edit-toolbar"><div id="page-functions"></div><div id="toolbar"></div></div><div class="content-tabs-content"><h1>' + this.options.heading + '</h1><div id="content-tabs" />');
+            this.sandbox.dom.html(this.$el, templates.skeleton.call(this));
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
