@@ -17,6 +17,7 @@ use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
+use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -46,13 +47,9 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     private $userService;
     /**
-     * @var EntityRepository
+     * @var CurrentUserDataInterface
      */
-    private $repositoryMock;
-    /**
-     * @var User
-     */
-    private $userMock;
+    private $currentUserData;
     /**
      * @var ContentMapperInterface
      */
@@ -345,11 +342,23 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             '',
             false
         );
+        $this->currentUserData=$this->getMock(
+            '\Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface'
+        );
+
+        $this->currentUserData
+            ->expects($this->any())
+            ->method('getId')
+            ->will($this->returnValue(1));
 
         $this->userService
             ->expects($this->any())
             ->method('getFullNameByUserId')
             ->will($this->returnValue('Max Mustermann'));
+        $this->userService
+        ->expects($this->any())
+            ->method('getCurrentUserData')
+            ->will($this->returnValue($this->currentUserData));
     }
 
     public function containerCallback()
