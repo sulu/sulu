@@ -39,23 +39,23 @@ body {
   padding-top: 40px;
 }
 
-/* line 50, ../scss/modules/base.scss */
+/* line 49, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 800px;
 }
 
-/* line 54, ../scss/modules/base.scss */
+/* line 53, ../scss/modules/base.scss */
 #list-toolbar-container {
   margin-bottom: 18px;
 }
 
-/* line 59, ../scss/modules/base.scss */
+/* line 58, ../scss/modules/base.scss */
 #page-functions + #edit-toolbar .edit-toolbar-left {
   margin-left: -50px;
 }
 
 /*----------------------------------------*/
-/* line 66, ../scss/modules/base.scss */
+/* line 65, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -63,24 +63,24 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 74, ../scss/modules/base.scss */
+/* line 73, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 83, ../scss/modules/base.scss */
+/* line 82, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 87, ../scss/modules/base.scss */
+/* line 86, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 95, ../scss/modules/base.scss */
+/* line 94, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
@@ -89,11 +89,6 @@ input, select {
 .icon-floppy::after {
   content: "\e444";
   display: inline-block;
-}
-
-/* line 1, ../scss/modules/toolbar.scss */
-#toolbar .edit-toolbar-left {
-  margin-left: -50px;
 }
 
 /* line 1, ../scss/modules/login.scss */
