@@ -1,1 +1,79 @@
-<p>Hello World!</p>
+<style type="text/css">
+    .sulu-preview-highlight {
+        border: red 1px solid;
+    }
+</style>
+
+<script type="text/javascript">
+    var interval = {{ interval }},
+            url = '{{ url }}',
+            http,
+            init = function(type, url, callback) {
+                var http;
+                if (window.XMLHttpRequest) {
+                    http = new XMLHttpRequest();
+                } else if (window.ActiveXObject) {
+                    http = new ActiveXObject("Microsoft.XMLHTTP");
+                } else {
+                    return false;
+                }
+
+                http.open(type, url, true);
+                http.onreadystatechange = callback;
+
+                return http;
+            },
+            startRequest = function() {
+                if (!!http) {
+                    // if not: callback will be called multiple
+                    http.onreadystatechange = null;
+                }
+                // init httpRequest object
+                http = init('GET', url, handleResponse);
+                if (!!http) {
+                    // send request
+                    http.send(null);
+                } else {
+                    throw 'browser not supported';
+                }
+            },
+            handleResponse = function() {
+                // if OK 200
+                if (http.readyState == 4) {
+                    var result = JSON.parse(http.responseText),
+                            content,
+                            elements,
+                            nodeArray;
+
+                    // foreach property which was changed
+                    for (var propertyName in result) {
+                        if (result.hasOwnProperty(propertyName)) {
+                            content = result[propertyName].content;
+
+                            // find rdfa node
+                            elements = document.querySelectorAll('*[property="' + propertyName + '"]');
+
+                            // foreach node
+                            nodeArray = [].slice.call(elements);
+                            nodeArray.forEach(function(element) {
+                                // set content and highlight class
+                                element.innerHTML = content;
+                                element.className += ' sulu-preview-highlight';
+
+                                // remove class after a timeout
+                                setTimeout(function() {
+                                    element.className -= ' sulu-preview-highlight';
+                                }, interval * 2);
+                            });
+                        }
+                    }
+                }
+
+                // start next request in a interval
+                setTimeout(startRequest, interval);
+            };
+
+    // start first request in a interval
+    setTimeout(startRequest, interval);
+
+</script>
