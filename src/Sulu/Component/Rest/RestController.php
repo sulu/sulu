@@ -135,6 +135,17 @@ abstract class RestController extends FOSRestController
             '1'
         );
 
+        // create all link
+        $allLink = $this->replaceOrAddUrlString(
+            $path,
+            $listHelper->getParameterName('pageSize') . '=', null
+        );
+
+        $allLink = $this->replaceOrAddUrlString(
+            $allLink,
+            $listHelper->getParameterName('page') . '=', null
+        );
+
 
         return array(
             'self' => $path,
@@ -165,6 +176,7 @@ abstract class RestController extends FOSRestController
             ) : null,
             'find' => $returnListLinks ? $searchLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
+            'all' => $returnListLinks ? $allLink : null,
         );
     }
 
