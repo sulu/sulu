@@ -132,14 +132,25 @@ define([], function() {
         },
 
         initPreview: function() {
-            window.open('/admin/content/preview/render/' + this.options.data.id);
+            var updateUrl = '/admin/content/preview/' + this.options.data.id,
+                data = this.sandbox.form.getData(this.formId);
+
+            this.sandbox.util.ajax({
+                url: updateUrl,
+                type: 'POST',
+
+                data: {
+                    multiple: data
+                }
+            });
+
+            window.open('/admin/content/preview/' + this.options.data.id + '.html');
 
             this.sandbox.dom.on(this.formId, 'focusout', function(e) {
-                var url = '/admin/content/preview/update/' + this.options.data.id,
-                    $element = $(e.currentTarget);
+                var $element = $(e.currentTarget);
 
                 this.sandbox.util.ajax({
-                    url: url,
+                    url: updateUrl,
                     type: 'POST',
 
                     data: {
