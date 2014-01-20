@@ -55,6 +55,8 @@ class TagController extends RestController implements ClassResourceInterface
     /**
      * Inserts a new tag
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function postAction()
     {
@@ -91,6 +93,8 @@ class TagController extends RestController implements ClassResourceInterface
      * Updates the tag with the given ID
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function putAction($id)
     {
@@ -197,8 +201,8 @@ class TagController extends RestController implements ClassResourceInterface
             $this->get('event_dispatcher')->dispatch(TagEvents::TAG_MERGE, $event);
 
             $view = $this->view(null, 303, array('location' => $destTag->getLinks()['self']));
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
         }
 
         return $this->handleView($view);

@@ -167,7 +167,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
         $client->getContainer()->get('event_dispatcher')->addListener(
-            'tag.delete',
+            'sulu.tag.delete',
             array($mockedEventListener, 'onDelete')
         );
 
@@ -193,7 +193,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
         $client->getContainer()->get('event_dispatcher')->addListener(
-            'tag.merge',
+            'sulu.tag.merge',
             array($mockedEventListener, 'onMerge')
         );
 
