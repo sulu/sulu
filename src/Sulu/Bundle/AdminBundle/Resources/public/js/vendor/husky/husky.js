@@ -25,14 +25,14 @@ var requirejs, require, define;
         apsp = ap.splice,
         isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document),
         isWebWorker = !isBrowser && typeof importScripts !== 'undefined',
-    //PS3 indicates loaded and complete, but need to wait for complete
-    //specifically. Sequence is 'loading', 'loaded', execution,
-    // then 'complete'. The UA check is unfortunate, but not sure how
-    //to feature test w/o causing perf issues.
+        //PS3 indicates loaded and complete, but need to wait for complete
+        //specifically. Sequence is 'loading', 'loaded', execution,
+        // then 'complete'. The UA check is unfortunate, but not sure how
+        //to feature test w/o causing perf issues.
         readyRegExp = isBrowser && navigator.platform === 'PLAYSTATION 3' ?
-            /^complete$/ : /^(complete|loaded)$/,
+                      /^complete$/ : /^(complete|loaded)$/,
         defContextName = '_',
-    //Oh the tragedy, detecting opera. See the usage of isOpera for reason.
+        //Oh the tragedy, detecting opera. See the usage of isOpera for reason.
         isOpera = typeof opera !== 'undefined' && opera.toString() === '[object Opera]',
         contexts = {},
         cfg = {},
@@ -207,9 +207,9 @@ var requirejs, require, define;
                 config: {}
             },
             registry = {},
-        //registry of just enabled modules, to speed
-        //cycle breaking code when lots of modules
-        //are registered, but not activated.
+            //registry of just enabled modules, to speed
+            //cycle breaking code when lots of modules
+            //are registered, but not activated.
             enabledRegistry = {},
             undefEvents = {},
             defQueue = [],
@@ -363,7 +363,7 @@ var requirejs, require, define;
             if (isBrowser) {
                 each(scripts(), function (scriptNode) {
                     if (scriptNode.getAttribute('data-requiremodule') === name &&
-                        scriptNode.getAttribute('data-requirecontext') === context.contextName) {
+                            scriptNode.getAttribute('data-requirecontext') === context.contextName) {
                         scriptNode.parentNode.removeChild(scriptNode);
                         return true;
                     }
@@ -466,8 +466,8 @@ var requirejs, require, define;
             //normalization, stamp it with a unique ID so two matching relative
             //ids that may conflict can be separate.
             suffix = prefix && !pluginModule && !isNormalized ?
-                '_unnormalized' + (unnormalizedCounter += 1) :
-                '';
+                     '_unnormalized' + (unnormalizedCounter += 1) :
+                     '';
 
             return {
                 prefix: prefix,
@@ -478,8 +478,8 @@ var requirejs, require, define;
                 originalName: originalName,
                 isDefine: isDefine,
                 id: (prefix ?
-                    prefix + '!' + normalizedName :
-                    normalizedName) + suffix
+                        prefix + '!' + normalizedName :
+                        normalizedName) + suffix
             };
         }
 
@@ -499,7 +499,7 @@ var requirejs, require, define;
                 mod = getOwn(registry, id);
 
             if (hasProp(defined, id) &&
-                (!mod || mod.defineEmitComplete)) {
+                    (!mod || mod.defineEmitComplete)) {
                 if (name === 'defined') {
                     fn(defined[id]);
                 }
@@ -549,7 +549,7 @@ var requirejs, require, define;
                 //local var ref to defQueue, so cannot just reassign the one
                 //on context.
                 apsp.apply(defQueue,
-                    [defQueue.length - 1, 0].concat(globalDefQueue));
+                           [defQueue.length - 1, 0].concat(globalDefQueue));
                 globalDefQueue = [];
             }
         }
@@ -585,7 +585,7 @@ var requirejs, require, define;
                             // For packages, only support config targeted
                             // at the main module.
                             c = pkg ? getOwn(config.config, mod.map.id + '/' + pkg.main) :
-                                getOwn(config.config, mod.map.id);
+                                      getOwn(config.config, mod.map.id);
                             return  c || {};
                         },
                         exports: defined[mod.map.id]
@@ -631,7 +631,7 @@ var requirejs, require, define;
         function checkLoaded() {
             var map, modId, err, usingPathFallback,
                 waitInterval = config.waitSeconds * 1000,
-            //It is possible to disable the wait interval by using waitSeconds of 0.
+                //It is possible to disable the wait interval by using waitSeconds of 0.
                 expired = waitInterval && (context.startTime + waitInterval) < new Date().getTime(),
                 noLoads = [],
                 reqCalls = [],
@@ -726,9 +726,9 @@ var requirejs, require, define;
             this.depCount = 0;
 
             /* this.exports this.factory
-             this.depMaps = [],
-             this.enabled, this.fetched
-             */
+               this.depMaps = [],
+               this.enabled, this.fetched
+            */
         };
 
         Module.prototype = {
@@ -808,8 +808,8 @@ var requirejs, require, define;
                     context.makeRequire(this.map, {
                         enableBuildCallback: true
                     })(this.shim.deps || [], bind(this, function () {
-                            return map.prefix ? this.callPlugin() : this.load();
-                        }));
+                        return map.prefix ? this.callPlugin() : this.load();
+                    }));
                 } else {
                     //Regular dependency.
                     return map.prefix ? this.callPlugin() : this.load();
@@ -877,9 +877,9 @@ var requirejs, require, define;
                                 //favor a non-undefined return value over exports use.
                                 cjsModule = this.module;
                                 if (cjsModule &&
-                                    cjsModule.exports !== undefined &&
-                                    //Make sure it is not already the exports value
-                                    cjsModule.exports !== this.exports) {
+                                        cjsModule.exports !== undefined &&
+                                        //Make sure it is not already the exports value
+                                        cjsModule.exports !== this.exports) {
                                     exports = cjsModule.exports;
                                 } else if (exports === undefined && this.usingExports) {
                                     //exports already set the defined value.
@@ -932,7 +932,7 @@ var requirejs, require, define;
             callPlugin: function () {
                 var map = this.map,
                     id = map.id,
-                //Map already normalized the prefix.
+                    //Map already normalized the prefix.
                     pluginMap = makeModuleMap(map.prefix);
 
                 //Mark this as a dependency for this plugin, so it
@@ -960,7 +960,7 @@ var requirejs, require, define;
                         //prefix and name should already be normalized, no need
                         //for applying map config again either.
                         normalizedMap = makeModuleMap(map.prefix + '!' + name,
-                            this.map.parentMap);
+                                                      this.map.parentMap);
                         on(normalizedMap,
                             'defined', bind(this, function (value) {
                                 this.init([], function () { return value; }, null, {
@@ -1043,10 +1043,10 @@ var requirejs, require, define;
                             req.exec(text);
                         } catch (e) {
                             return onError(makeError('fromtexteval',
-                                'fromText eval for ' + id +
-                                    ' failed: ' + e,
-                                e,
-                                [id]));
+                                             'fromText eval for ' + id +
+                                            ' failed: ' + e,
+                                             e,
+                                             [id]));
                         }
 
                         if (hasInteractive) {
@@ -1093,9 +1093,9 @@ var requirejs, require, define;
                         //Dependency needs to be converted to a depMap
                         //and wired up to this module.
                         depMap = makeModuleMap(depMap,
-                            (this.map.isDefine ? this.map : this.map.parentMap),
-                            false,
-                            !this.skipMap);
+                                               (this.map.isDefine ? this.map : this.map.parentMap),
+                                               false,
+                                               !this.skipMap);
                         this.depMaps[i] = depMap;
 
                         handler = getOwn(handlers, depMap.id);
@@ -1311,8 +1311,8 @@ var requirejs, require, define;
                             //envs have different conventions: some use a module name,
                             //some use a file name.
                             main: (pkgObj.main || 'main')
-                                .replace(currDirRegExp, '')
-                                .replace(jsSuffixRegExp, '')
+                                  .replace(currDirRegExp, '')
+                                  .replace(jsSuffixRegExp, '')
                         };
                     });
 
@@ -1386,10 +1386,10 @@ var requirejs, require, define;
 
                         if (!hasProp(defined, id)) {
                             return onError(makeError('notloaded', 'Module name "' +
-                                id +
-                                '" has not been loaded yet for context: ' +
-                                contextName +
-                                (relMap ? '' : '. Use require([])')));
+                                        id +
+                                        '" has not been loaded yet for context: ' +
+                                        contextName +
+                                        (relMap ? '' : '. Use require([])')));
                         }
                         return defined[id];
                     }
@@ -1441,7 +1441,7 @@ var requirejs, require, define;
                         }
 
                         return context.nameToUrl(normalize(moduleNamePlusExt,
-                            relMap && relMap.id, true), ext,  true);
+                                                relMap && relMap.id, true), ext,  true);
                     },
 
                     defined: function (id) {
@@ -1541,9 +1541,9 @@ var requirejs, require, define;
                             return;
                         } else {
                             return onError(makeError('nodefine',
-                                'No define call for ' + moduleName,
-                                null,
-                                [moduleName]));
+                                             'No define call for ' + moduleName,
+                                             null,
+                                             [moduleName]));
                         }
                     } else {
                         //A script that does not call define(), so just simulate
@@ -1616,8 +1616,8 @@ var requirejs, require, define;
                 }
 
                 return config.urlArgs ? url +
-                    ((url.indexOf('?') === -1 ? '?' : '&') +
-                        config.urlArgs) : url;
+                                        ((url.indexOf('?') === -1 ? '?' : '&') +
+                                         config.urlArgs) : url;
             },
 
             //Delegates to req.load. Broken out as a separate function to
@@ -1648,7 +1648,7 @@ var requirejs, require, define;
                 //all old browsers will be supported, but this one was easy enough
                 //to support and still makes sense.
                 if (evt.type === 'load' ||
-                    (readyRegExp.test((evt.currentTarget || evt.srcElement).readyState))) {
+                        (readyRegExp.test((evt.currentTarget || evt.srcElement).readyState))) {
                     //Reset interactive script so a script node is not held onto for
                     //to long.
                     interactiveScript = null;
@@ -1801,8 +1801,8 @@ var requirejs, require, define;
      */
     req.createNode = function (config, moduleName, url) {
         var node = config.xhtml ?
-            document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
-            document.createElement('script');
+                document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
+                document.createElement('script');
         node.type = config.scriptType || 'text/javascript';
         node.charset = 'utf-8';
         node.async = true;
@@ -1837,15 +1837,15 @@ var requirejs, require, define;
             //UNFORTUNATELY Opera implements attachEvent but does not follow the script
             //script execution mode.
             if (node.attachEvent &&
-                //Check if node.attachEvent is artificially added by custom script or
-                //natively supported by browser
-                //read https://github.com/jrburke/requirejs/issues/187
-                //if we can NOT find [native code] then it must NOT natively supported.
-                //in IE8, node.attachEvent does not have toString()
-                //Note the test for "[native code" with no closing brace, see:
-                //https://github.com/jrburke/requirejs/issues/273
-                !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) &&
-                !isOpera) {
+                    //Check if node.attachEvent is artificially added by custom script or
+                    //natively supported by browser
+                    //read https://github.com/jrburke/requirejs/issues/187
+                    //if we can NOT find [native code] then it must NOT natively supported.
+                    //in IE8, node.attachEvent does not have toString()
+                    //Note the test for "[native code" with no closing brace, see:
+                    //https://github.com/jrburke/requirejs/issues/273
+                    !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) &&
+                    !isOpera) {
                 //Probably IE. IE (at least 6-8) do not fire
                 //script onload right after executing the script, so
                 //we cannot tie the anonymous define call to a name.
@@ -1898,10 +1898,10 @@ var requirejs, require, define;
                 context.completeLoad(moduleName);
             } catch (e) {
                 context.onError(makeError('importscripts',
-                    'importScripts failed for ' +
-                        moduleName + ' at ' + url,
-                    e,
-                    [moduleName]));
+                                'importScripts failed for ' +
+                                    moduleName + ' at ' + url,
+                                e,
+                                [moduleName]));
             }
         }
     };
@@ -1952,7 +1952,7 @@ var requirejs, require, define;
                 //like a module name.
                 mainScript = mainScript.replace(jsSuffixRegExp, '');
 
-                //If mainScript is still a path, fall back to dataMain
+                 //If mainScript is still a path, fall back to dataMain
                 if (req.jsExtRegExp.test(mainScript)) {
                     mainScript = dataMain;
                 }
@@ -22562,6 +22562,7 @@ define('husky',[
         app.use('./husky_extensions/globalize');
         app.use('./husky_extensions/uri-template');
         app.use('./husky_extensions/ckeditor-extension');
+		app.use('./husky_extensions/typeahead');
 
     }
 
@@ -26217,41 +26218,37 @@ define('__component__$edit-toolbar@husky',[],function() {
  *  auto-complete.load-data ... event to append data
  */
 
-define('__component__$auto-complete@husky',[], function() {
+define('__component__$auto-complete@husky',[], function () {
 
     
 
     var defaults = {
-            url: '',                    // url to load data
-            valueName: 'name',          // propertyName for value
-            minLength: 3,               // min length for request
-            keyControl: true,           // control with up/down key
-            value: null,                // value to display at start
-            excludeItems: [],           // items to filter
-            instanceName: 'undefined'   // name of the component instance
-        },
-        successClass = 'husky-auto-complete-success',
-        failClass = 'husky-auto-complete-error',
-        loadingClass = 'husky-auto-complete-loading';
+        prefetchUrl: '',                                        // url to prefetch data
+        localData: [],                                          // array of local data
+        remoteUrl: '',                                          // url to fetch data if prefetch or local don't have matches
+        GETparameter: 'query',                                  // name for GET-parameter in remote query
+        valueKey: 'name',                                       // JSON-key for value
+        totalKey: 'total',										// JSON-key for total-value
+        resultKey: 'items',										// JSON-key for result
+        typeaheadName: 'name',									// identifier - used by typeahead to cache intelligently
+        value: null,                                            // value to display at start
+        instanceName: 'undefined',                              // name of the component instance
+        noNewValues: false,										// if false input value must be contained in autocomplete-suggestions
+        successClass: 'husky-auto-complete-success',			// success-class if nowNewValues is false
+        failClass: 'husky-auto-complete-error',					// fail-class if noNewValues is false
+        suggestionClass: 'suggestion',                          // CSS-class for autocomplete suggestions
+        suggestionImg: '<img src="../../img/sample.gif" />',    // HTML-Img Tag - Image gets rendered before every suggestion
+        stickToInput: false                                     // If true suggestions are always under the input field
+    };
 
     return {
         data: [],
 
-        getEvent: function(append) {
+        getEvent: function (append) {
             return 'husky.auto-complete.' + append;
         },
 
-        // get url for pattern
-        getUrl: function(pattern) {
-            var delimiter = '?';
-            if (this.options.url.indexOf('?') !== -1) {
-                delimiter = '&';
-            }
-
-            return this.options.url + delimiter + 'search=' + pattern;
-        },
-
-        getValueID: function() {
+        getValueID: function () {
             if (!!this.options.value) {
                 return this.options.value.id;
             } else {
@@ -26259,7 +26256,7 @@ define('__component__$auto-complete@husky',[], function() {
             }
         },
 
-        getValueName: function() {
+        getValueName: function () {
             if (!!this.options.value) {
                 return this.options.value[this.options.valueName];
             } else {
@@ -26267,308 +26264,171 @@ define('__component__$auto-complete@husky',[], function() {
             }
         },
 
-        initialize: function() {
+        initialize: function () {
             this.sandbox.logger.log('initialize', this);
             this.sandbox.logger.log(arguments);
+
+            this._template = null;
+            this.data = null;
+            this.total = 0;
+            this.matched = true;
+            this.matches = [];
 
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
+            this.setTemplate();
+
             this.render();
+            this.setEvents();
         },
 
-        render: function() {
-            this.$el.addClass('dropdown husky-auto-complete');
+        setTemplate: function () {
+            this._template = this.sandbox.util.template('' +
+                '<div class="' + this.options.suggestionClass + '" data-id="<%= id %>">' +
+                '   <div class="border">' +
+                '		<div class="img">' + this.options.suggestionImg + '</div>' +
+                '		<div class="text"><%= name %></div>' +
+                '	</div>' +
+                '</div>');
+        },
+
+        buildTemplate: function (context) {
+            if (this._template !== null) {
+                return this._template(context);
+            }
+        },
+
+        render: function () {
+            this.$el.addClass('husky-auto-complete');
             // init form-element and dropdown menu
-            this.$valueField = $('<input id="'+this.options.instanceName+'" type="text" autofill="false" class="name-value form-element husky-validate" data-id="' + this.getValueID() + '" value="' + this.getValueName() + '"/>');
-            this.$dropDown = $('<div class="dropdown-menu" />');
-            this.$dropDownList = $('<ul/>');
+            this.$valueField = $('<input id="' + this.options.instanceName + '" class="husky-validate" type="text" autofill="false" data-id="' + this.getValueID() + '" value="' + this.getValueName() + '"/>');
             this.$el.append(this.$valueField);
-            this.$el.append(this.$dropDown);
-            this.$dropDown.append(this.$dropDownList);
-            this.hideDropDown();
 
-            // bind dom elements
-            this.bindDOMEvents();
-
-            if (!!this.options.value) {
-                this.successState();
-            }
+            this.bindTypeahead();
         },
 
-        // bind dom elements
-        bindDOMEvents: function() {
-            // turn off all events
-            this.$el.off();
-
-            // input value changed
-            this.$valueField.on('input', this.inputChanged.bind(this));
-
-            // mouse control
-            this.$dropDownList.on('click', 'li', function(event) {
-                var $element = $(event.currentTarget),
-                    id = $element.data('id'),
-                    item = {id: id};
-
-                item[this.options.valueName] = $element.text();
-                this.selectItem(item);
-            }.bind(this));
-
-            // focus in
-            this.$valueField.on('focusin', function() {
-                this.$valueField.trigger('input');
-            }.bind(this));
-
-            // focus out
-            this.$valueField.on('focusout', function() {
-                // FIXME may there is a better solution ???
-                setTimeout(function() {
-                    this.hideDropDown();
-                }.bind(this), 250);
-            }.bind(this));
-
-            // key control
-            if (this.options.keyControl) {
-                this.$valueField.on('keydown', function(event) {
-                    // key 40 = down, key 38 = up, key 13 = enter
-                    if ([40, 38, 13].indexOf(event.which) === -1) {
-                        return;
-                    }
-
-                    event.preventDefault();
-                    if (this.$dropDown.is(':visible')) {
-
-                        if (event.which === 40) {
-                            this.pressKeyDown();
-                        }
-                        else if (event.which === 38) {
-                            this.pressKeyUp();
-                        }
-                        else if (event.which === 13) {
-                            this.pressKeyEnter();
-                        }
-
-                    } else {
-                        // If dropdown not visible => search for given pattern
-                        this.noState();
-                        this.loadData(this.$valueField.val());
-                    }
-                }.bind(this));
-
-                // remove hover class by mouseover
-                this.$dropDownList.on('mouseover', 'li', function() {
-                    this.$dropDownList.children().removeClass('hover');
-                }.bind(this));
-            }
-        },
-
-        // value of input changed
-        inputChanged: function() {
-            this.sandbox.logger.log('inputChanged');
-
-            // value is not success
-            this.noState();
-
-            var val = this.$valueField.val();
-            if (val.length >= this.options.minLength) {
-                this.loadData(val);
-            }
-        },
-
-        // load data from server
-        loadData: function(pattern) {
-            var url = this.getUrl(pattern);
-            this.sandbox.logger.log('load: ' + url);
-            this.loadingState();
-
-            $.ajax({
-                url: url,
-                success: function(response) {
-                    this.sandbox.logger.log('load', 'success');
-
-                    this.noState();
-
-                    // if only one result this is it, if no result hideDropDown, else generateDropDown
-                    this.updateData(response._embedded);
-                    if (this.data.length > 1) {
-                        this.generateDropDown(this.data);
-                    } else if (this.data.length === 1) {
-                        this.selectItem(this.data[0]);
-                    } else {
-                        this.failState();
-                        this.hideDropDown();
-                    }
+        bindTypeahead: function () {
+            this.sandbox.autocomplete.init(this.$valueField, {
+                name: this.options.typeaheadName,
+                local: this.options.localData,
+                valueKey: this.options.valueKey,
+                template: function (context) {
+                    this.matches.push(context);
+                    this.matched = true;
+                    return this.buildTemplate(context);
                 }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log('load', 'error');
-
-                    this.failState();
-                    this.hideDropDown();
-                }.bind(this)
+                prefetch: {
+                    url: this.options.prefetchUrl,
+                    ttl: 1,
+                    filter: function (data) {
+                        this.sandbox.emit(this.getEvent('prefetch-data'));
+                        this.handleData(data);
+                        return this.data;
+                    }.bind(this)
+                },
+                remote: {
+                    url: this.options.remoteUrl + '?' + this.options.GETparameter + '=%QUERY',
+                    beforeSend: function () {
+                        this.sandbox.emit(this.getEvent('remote-data-load'));
+                    }.bind(this),
+                    filter: function (data) {
+                        this.sandbox.emit(this.getEvent('remote-data'));
+                        this.handleData(data);
+                        return this.data;
+                    }.bind(this)
+                }
             });
-
-            this.sandbox.emit(this.getEvent('load-data'));
-        },
-
-        // update global data array
-        updateData: function(newData) {
-            this.data = [];
-            if (!!newData && $.isArray(newData)) {
-                newData.forEach(function(item) {
-                    if (this.isVisible(item)) {
-                        this.data.push(item);
-                    }
-                }.bind(this));
+            if (this.options.stickToInput === false) {
+                this.sandbox.dom.css('.twitter-typeahead', 'position', 'static');
             }
         },
 
-        // generate dropDown with given items
-        generateDropDown: function(items) {
-            this.clearDropDown();
-            items.forEach(function(item) {
-                if (this.isVisible(item)) {
-                    this.$dropDownList.append('<li data-id="' + item.id + '">' + item[this.options.valueName] + '</li>');
-                }
+        setEvents: function () {
+            this.sandbox.dom.on(this.$valueField, 'typeahead:selected', function (event, datum) {
+                this.sandbox.emit(this.getEvent('select'));
+                this.setValueFieldId(datum.id);
             }.bind(this));
-            this.showDropDown();
-        },
 
-        // is item visible (filter)
-        isVisible: function(item) {
-            var result = true;
-            this.options.excludeItems.forEach(function(testItem) {
-                if (parseInt(item.id, 10) === parseInt(testItem.id, 10)) {
-                    result = false;
-                }
+            this.sandbox.dom.on(this.$valueField, 'keydown', function () {
+                this.matched = false;
+                this.matches = [];
+                this.setNoState();
             }.bind(this));
-            return result;
+
+            this.sandbox.dom.on(this.$valueField, 'blur', function () {
+                this.handleBlur();
+            }.bind(this));
         },
 
-        // clear childs of list
-        clearDropDown: function() {
-            // FIXME make it easier
-            this.$dropDown.children('ul').children('li').remove();
-        },
-
-        // make dropDown visible
-        showDropDown: function() {
-            this.sandbox.logger.log('show dropdown');
-            this.$dropDown.show();
-        },
-
-        // hide dropDown
-        hideDropDown: function() {
-            this.sandbox.logger.log('hide dropdown');
-            this.clearDropDown();
-            this.$dropDown.hide();
-        },
-
-        // set class success to container
-        successState: function() {
-            this.sandbox.logger.log('set success');
-            this.clearDropDown();
-            this.$el.parent().removeClass(failClass);
-            this.$el.parent().removeClass(loadingClass);
-            this.$el.parent().addClass(successClass);
-        },
-
-        // remove class success, fail and loading of container
-        noState: function() {
-            this.sandbox.logger.log('remove success and fail');
-            this.$valueField.data('');
-            this.$el.parent().removeClass(failClass);
-            this.$el.parent().removeClass(loadingClass);
-            this.$el.parent().removeClass(successClass);
-        },
-
-        // add class fail to container
-        failState: function() {
-            this.sandbox.logger.log('set fail');
-            this.$el.parent().addClass(failClass);
-            this.$el.parent().removeClass(loadingClass);
-            this.$el.parent().removeClass(successClass);
-        },
-
-        // add class loading to container
-        loadingState: function() {
-            this.sandbox.logger.log('set loading');
-            this.$el.parent().removeClass(failClass);
-            this.$el.parent().addClass(loadingClass);
-            this.$el.parent().removeClass(successClass);
-        },
-
-        // handle key down
-        pressKeyDown: function() {
-            this.sandbox.logger.log('key down');
-
-            // get actual and next element
-            var $actual = this.$dropDownList.children('.hover'),
-                $next = $actual.next();
-
-            // no element selected
-            if ($next.length === 0) {
-                $next = this.$dropDownList.children().first();
-            }
-
-            $actual.removeClass('hover');
-            $next.addClass('hover');
-        },
-
-        // handle key up
-        pressKeyUp: function() {
-            this.sandbox.logger.log('key up');
-
-            // get actual and next element
-            var $actual = this.$dropDownList.children('.hover'),
-                $next = $actual.prev();
-            // no element selected
-            if ($next.length === 0) {
-                $next = this.$dropDownList.children().last();
-            }
-
-            $actual.removeClass('hover');
-            $next.addClass('hover');
-        },
-
-        // handle key enter
-        pressKeyEnter: function() {
-            this.sandbox.logger.log('key enter');
-
-            // if one element selected
-            var $actual = this.$dropDownList.children('.hover'),
-                item, value, childs, that;
-            if ($actual.length === 1) {
-                item = {id: $actual.data('id')};
-                item[this.options.valueName] = $actual.text();
-                this.selectItem(item);
+        handleBlur: function () {
+            if (this.options.noNewValues === true) {
+                if (this.isMatched() === true && this.getClosestMatch() !== null) {
+                    this.setValueFieldValue(this.getClosestMatch().name);
+                    this.setValueFieldId(this.getClosestMatch().id);
+                    this.setSuccessState();
+                } else {
+                    this.setFailState();
+                }
             } else {
-                // if it is one of the list
-                value = this.$valueField.val();
-                childs = this.$dropDownList.children();
-                that = this;
-
-                $(childs).each(function() {
-                    if ($(this).text() === value) {
-                        // found an item select it
-                        var item = {id: $(this).data('id')};
-                        item[that.options.valueName] = $(this).text();
-                        that.selectItem(item);
-                        return false;
-                    }
-                });
+                if (this.isMatchedExactly() === true) {
+                    this.setValueFieldValue(this.getClosestMatch().name);
+                    this.setValueFieldId(this.getClosestMatch().id);
+                }
             }
         },
 
-        // select an item
-        selectItem: function(item) {
-            this.sandbox.logger.log('select item: ' + item.id);
-            // set id to data-id
-            this.$valueField.data('id', item.id);
-            // set value to value
-            this.$valueField.val(item[this.options.valueName]);
+        getClosestMatch: function () {
+            if (!!this.matches.length) {
+                return this.matches[0];
+            }
+            return null;
+        },
 
-            this.hideDropDown();
-            this.successState();
+        getValueFieldValue: function () {
+            return this.sandbox.dom.val(this.$valueField).trim();
+        },
+
+        setValueFieldValue: function (value) {
+            this.sandbox.dom.val(this.$valueField, value);
+        },
+
+        setValueFieldId: function (id) {
+            this.sandbox.dom.attr(this.$valueField, {'data-id': id});
+        },
+
+        isMatched: function () {
+            return this.matched;
+        },
+
+        isMatchedExactly: function () {
+            if (this.isMatched() === true) {
+                if (this.getClosestMatch !== null) {
+                    if (this.getValueFieldValue().toLowerCase() === this.getClosestMatch().name.toLowerCase()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        },
+
+        handleData: function (data) {
+            this.data = data[this.options.resultKey];
+            this.total = data[this.options.totalKey];
+            this.sandbox.logger.log(this.total);
+        },
+
+        setSuccessState: function () {
+            this.sandbox.dom.addClass(this.$el, this.options.successClass);
+        },
+
+        setFailState: function () {
+            this.sandbox.dom.addClass(this.$el, this.options.failClass);
+        },
+
+        setNoState: function () {
+            this.sandbox.dom.removeClass(this.$el, this.options.successClass);
+            this.sandbox.dom.removeClass(this.$el, this.options.failClass);
         }
     };
 });
@@ -27656,13 +27516,13 @@ define('__component__$ckeditor@husky',[], function() {
          * namespace for events
          * @type {string}
          */
-            eventNamespace = 'husky.ckeditor.',
+         eventNamespace = 'husky.ckeditor.',
 
         /**
          * @event husky.column-navigation.loaded
          * @description the component has loaded everything successfully and will be rendered
          */
-            CHANGED = eventNamespace + 'changed',
+         CHANGED = eventNamespace + 'changed',
 
 
         /**
@@ -27691,8 +27551,8 @@ define('__component__$ckeditor@husky',[], function() {
             var config = getConfig.call(this);
             this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
 
-            this.editor.once('change',function(){
-               this.sandbox.emit(CHANGED);
+            this.editor.once('change', function() {
+                this.sandbox.emit(CHANGED);
             }.bind(this));
         }
 
@@ -28555,6 +28415,36 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
 (function() {
 
+	
+
+	if (window.Typeahead) {
+		define('typeahead', [], function() {
+			return window.Typeahead;
+		});
+	} else {
+		require.config({
+			paths: { "typeahead": 'bower_components/typeahead.js/typeahead' },
+			shim: { backbone: { deps: ['jquery'] } }
+		});
+	}
+
+	define('husky_extensions/typeahead',['typeahead'], {
+		name: 'typeahead',
+
+		initialize: function(app) {
+			app.sandbox.autocomplete = {
+
+				init: function(selector, configs) {
+					app.core.dom.$(selector).typeahead(configs);
+				}
+
+			};
+		}
+	});
+})();
+
+(function() {
+
     
 
     require.config({
@@ -28661,6 +28551,8 @@ define('husky_extensions/util',[],function() {
             app.core.util.uniqueId = function(prefix) {
                 return _.uniqueId(prefix);
             };
+
+			app.core.util.template = _.template;
         }
     };
 });
