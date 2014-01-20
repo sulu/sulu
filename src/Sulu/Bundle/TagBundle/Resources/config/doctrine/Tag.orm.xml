@@ -6,7 +6,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
-        <field name="name" type="string" column="name" />
+        <field name="name" type="string" column="name" unique="true" />
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
