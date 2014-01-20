@@ -1,5 +1,6 @@
+@charset "UTF-8";
 /* line 1, ../scss/abstract/abstract-loader.scss */
-.husky-auto-complete-loading label::after, .loading {
+.loading {
   background-image: url("data:image/gif;base64,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");
   width: 16px;
   height: 16px;
@@ -4414,31 +4415,85 @@ a.btn-black {
   font-size: 12px;
 }
 
-/* line 2, ../scss/modules/auto-complete.scss */
-.husky-auto-complete-loading label::after {
-  content: '';
-  font-family: "Glyphicons";
-  z-index: 100;
-  float: right;
-  display: inline-block;
+/* line 9, ../scss/modules/auto-complete.scss */
+.auto-complete-container {
   position: relative;
-  top: 35px;
-  right: 7px;
-  z-index: 1;
+}
+/* line 12, ../scss/modules/auto-complete.scss */
+.auto-complete-container label {
+  cursor: default;
 }
 
+/* line 17, ../scss/modules/auto-complete.scss */
+.wrapper {
+  width: 400px;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 4px 4px 0 0;
+  font-size: 12px;
+}
 /* line 24, ../scss/modules/auto-complete.scss */
-.husky-auto-complete-loading label::after {
-  top: 37px;
+.wrapper input[type="text"] {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
 }
 
-/* line 31, ../scss/modules/auto-complete.scss */
-.husky-auto-complete.dropdown {
+/* line 32, ../scss/modules/auto-complete.scss */
+.twitter-typeahead {
   width: 100%;
 }
-/* line 35, ../scss/modules/auto-complete.scss */
-.husky-auto-complete .dropdown-menu {
-  top: 40px;
+
+/* line 36, ../scss/modules/auto-complete.scss */
+.tt-suggestions {
+  width: 400px;
+  top: 37px;
+  border-top: 1px solid #efefef;
+  background: white;
+}
+
+/* line 43, ../scss/modules/auto-complete.scss */
+.tt-hint {
+  display: none;
+}
+
+/* line 47, ../scss/modules/auto-complete.scss */
+.tt-suggestion {
+  height: 25px;
+  padding: 0 15px;
+}
+/* line 51, ../scss/modules/auto-complete.scss */
+.tt-suggestion .border {
+  border-bottom: 1px solid #efefef;
+  height: 25px;
+  clear: both;
+}
+/* line 55, ../scss/modules/auto-complete.scss */
+.tt-suggestion .border .img {
+  float: left;
+  padding: 5px 10px 0 5px;
+}
+/* line 59, ../scss/modules/auto-complete.scss */
+.tt-suggestion .border .text {
+  float: left;
+  line-height: 25px;
+}
+/* line 64, ../scss/modules/auto-complete.scss */
+.tt-suggestion:last-child .border {
+  border-bottom: none;
+}
+
+/* line 70, ../scss/modules/auto-complete.scss */
+.tt-suggestion:hover,
+.tt-is-under-cursor {
+  background: #dddddd;
+  border-color: transparent;
+}
+
+/* line 75, ../scss/modules/auto-complete.scss */
+.suggestion {
+  color: black;
 }
 
 /* line 5, ../scss/modules/search.scss */
@@ -5100,28 +5155,31 @@ a.btn-black {
 .auto-complete-list-container label {
   cursor: default;
 }
+/* line 18, ../scss/modules/auto-complete-list.scss */
+.auto-complete-list-container .auto-complete-list {
+  font-size: 12px;
+}
 
-/* line 19, ../scss/modules/auto-complete-list.scss */
+/* line 23, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-input {
   display: inline-block;
-  position: relative;
   width: 35%;
 }
-/* line 24, ../scss/modules/auto-complete-list.scss */
+/* line 27, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-input input[type="text"] {
   width: 100%;
   border: 0;
   outline: 0;
 }
 
-/* line 31, ../scss/modules/auto-complete-list.scss */
+/* line 34, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selections {
   position: relative;
   padding: 4px 8px;
   border-radius: 4px;
   background-color: #fff;
 }
-/* line 37, ../scss/modules/auto-complete-list.scss */
+/* line 40, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selections .auto-complete-list-selection {
   display: inline-block;
   margin-top: 2px;
@@ -5132,21 +5190,21 @@ a.btn-black {
   color: #000;
   font-size: 12px;
 }
-/* line 47, ../scss/modules/auto-complete-list.scss */
+/* line 50, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selections .auto-complete-list-selection .icon-remove {
   position: relative;
   top: 2px;
   cursor: pointer;
 }
 
-/* line 55, ../scss/modules/auto-complete-list.scss */
+/* line 58, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions {
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: #ddd;
 }
-/* line 61, ../scss/modules/auto-complete-list.scss */
+/* line 64, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions h5 {
   margin: 0;
   padding: 5px 8px;
@@ -5154,11 +5212,11 @@ a.btn-black {
   color: #999999;
   font-size: 12px;
 }
-/* line 69, ../scss/modules/auto-complete-list.scss */
+/* line 72, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions ul {
   padding: 8px 8px 15px;
 }
-/* line 73, ../scss/modules/auto-complete-list.scss */
+/* line 76, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions li {
   display: inline-block;
   margin-right: 5px;
