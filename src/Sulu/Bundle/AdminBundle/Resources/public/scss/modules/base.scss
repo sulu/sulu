@@ -1,5 +1,14 @@
 $contentWidth : 800px;
 
+
+
+// BODY
+
+body {
+    background-color: $backgroundColor;
+}
+
+
 .control-label {
   padding-left: 10px;
   cursor: pointer;
@@ -9,7 +18,7 @@ $contentWidth : 800px;
 /*----------------------------------------*/
 #content {
 
-  width: $contentWidth;
+  max-width: $contentWidth;
   margin-left: 300px;
   padding-top: 40px;
 
@@ -29,15 +38,26 @@ $contentWidth : 800px;
 
 
 // tabs content
-#edit-toolbar {
+#edit-toolbar-container {
     z-index:100;
     position: fixed;
-    top: 40px;
-    min-width: $contentWidth;
+    top: 0px;
+    width: 100%;
+    background-color: $backgroundColor;
+    padding-top: 40px;
+}
+#edit-toolbar {
+    max-width: $contentWidth;
 }
 
 #list-toolbar-container {
     margin-bottom: 18px;
+}
+
+#page-functions + #edit-toolbar {
+    .edit-toolbar-left {
+        margin-left: -50px;
+    }
 }
 
 // Control elements
