@@ -19,20 +19,22 @@
 #content h1:first-child {
   margin-top: 0;
 }
-/* line 26, ../scss/modules/base.scss */
-#content #edit-toolbar {
+/* line 24, ../scss/modules/base.scss */
+#content .content-tabs-content {
+  margin-top: 60px;
+}
+
+/* line 32, ../scss/modules/base.scss */
+#edit-toolbar {
   z-index: 100;
   position: fixed;
   top: 40px;
   min-width: 800px;
 }
-/* line 33, ../scss/modules/base.scss */
-#content #list-toolbar-container {
+
+/* line 39, ../scss/modules/base.scss */
+#list-toolbar-container {
   margin-bottom: 18px;
-}
-/* line 37, ../scss/modules/base.scss */
-#content .content-tabs-content {
-  margin-top: 60px;
 }
 
 /*----------------------------------------*/
