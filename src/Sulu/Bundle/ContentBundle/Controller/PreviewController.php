@@ -26,20 +26,23 @@ class PreviewController extends Controller
 
     const PREVIEW_ID = 'sulu_content.preview';
 
-    public function startAction($contentUuid)
-    {
-        // TODO workspace
-        // TODO language
-        $uid = $this->getUserId();
-        $this->getPreview()->start($uid, $contentUuid, '', '');
-
-        return new Response();
-    }
-
+    /**
+     * render content for logedin user with data from FORM
+     * @param string $contentUuid
+     * @return Response
+     */
     public function renderAction($contentUuid)
     {
         $uid = $this->getUserId();
-        $content = $this->getPreview()->render($uid, $contentUuid);
+        $preview = $this->getPreview();
+
+        if (!$preview->started($uid, $contentUuid)) {
+            // TODO workspace
+            // TODO language
+            $preview->start($uid, $contentUuid, '', '');
+        }
+
+        $content = $preview->render($uid, $contentUuid);
 
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
@@ -71,17 +74,43 @@ class PreviewController extends Controller
         );
     }
 
+    /**
+     * updates a property in cache
+     * @param string $contentUuid
+     * @param Request $request
+     * @return Response
+     */
     public function updateAction($contentUuid, Request $request)
     {
+        $preview = $this->getPreview();
         $uid = $this->getUserId();
-        $property = $request->get('property');
-        $value = $request->get('value');
 
-        $this->getPreview()->update($uid, $contentUuid, $property, $value);
+        if (!$preview->started($uid, $contentUuid)) {
+            // TODO workspace
+            // TODO language
+            $preview->start($uid, $contentUuid, '', '');
+        }
+
+        $multiple = $request->get('multiple', false);
+
+        if (!$multiple) {
+            $property = $request->get('property');
+            $value = $request->get('value');
+            $preview->update($uid, $contentUuid, $property, $value);
+        } else {
+            foreach ($multiple as $property => $content) {
+                $preview->update($uid, $contentUuid, $property, $content);
+            }
+        }
 
         return new Response();
     }
 
+    /**
+     * returns changes since last request
+     * @param string $contentUuid
+     * @return Response
+     */
     public function changesAction($contentUuid)
     {
         $uid = $this->getUserId();
