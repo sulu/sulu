@@ -53,7 +53,26 @@ class TagController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * returns all tags
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAction()
+    {
+        if ($this->getRequest()->get('flat') == 'true') {
+            // flat structure
+            $view = $this->responseList();
+        } else {
+            $tags = $this->getDoctrine()->getRepository($this->entityName)->findAllTags();
+            $view = $this->view($this->createHalResponse($tags), 200);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
      * Inserts a new tag
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
