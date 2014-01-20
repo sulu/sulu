@@ -146,6 +146,15 @@ class ListRestHelper
     }
 
     /**
+     * returns all field names for a certain entity
+     * @param $entityName
+     * @return array
+     */
+    public function getAllFields($entityName) {
+        return $this->em->getClassMetadata($entityName)->getFieldNames();
+    }
+
+    /**
      * Returns an array with all the fields, which should be contained in the response.
      * If null is returned every field should be contained.
      * @return array|null
