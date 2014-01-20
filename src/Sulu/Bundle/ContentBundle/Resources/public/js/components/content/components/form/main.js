@@ -151,18 +151,27 @@ define([], function() {
             window.open('/admin/content/preview/' + this.options.data.id + '.html');
 
             this.sandbox.dom.on(this.formId, 'focusout', function(e) {
-                var $element = $(e.currentTarget);
-
-                this.sandbox.util.ajax({
-                    url: updateUrl,
-                    type: 'POST',
-
-                    data: {
-                        property: $element.data('mapperProperty'),
-                        value: $element.data('element').getValue()
-                    }
-                });
+                var $element = $(e.currentTarget).data('element').getValue();
+                this.updatePreview.call(this, $element.data('mapperProperty'));
             }.bind(this), "select, input, textarea");
+
+            this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
+                this.updatePreview.call(this, $el.data('mapperProperty'), data);
+            }.bind(this));
+        },
+
+        updatePreview: function(property, value) {
+            var updateUrl = '/admin/content/preview/' + this.options.data.id;
+
+            this.sandbox.util.ajax({
+                url: updateUrl,
+                type: 'POST',
+
+                data: {
+                    property: property,
+                    value: value
+                }
+            });
         }
 
     };
