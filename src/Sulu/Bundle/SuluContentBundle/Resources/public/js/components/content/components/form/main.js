@@ -28,7 +28,7 @@ define([], function() {
         },
 
         render: function() {
-            this.$el.html(this.renderTemplate('/admin/content/template/form/overview'));
+            this.html(this.renderTemplate('/admin/content/template/form/overview'));
 
             var data = this.initData();
             this.createForm(data);
@@ -90,6 +90,7 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('sulu.content.contents.list');
             }, this);
+
         },
 
         initData: function() {
@@ -124,7 +125,11 @@ define([], function() {
             }.bind(this), "select, input");
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "input");
+            }.bind(this), "input,textarea");
+
+            this.sandbox.on('husky.ckeditor.changed', function(){
+                this.setHeaderBar(false);
+            }.bind(this));
         }
 
     };
