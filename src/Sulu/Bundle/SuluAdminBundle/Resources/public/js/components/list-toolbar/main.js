@@ -65,6 +65,24 @@ define([], function() {
                                 {
                                     title: this.sandbox.translate('sulu.list-toolbar.export'),
                                     disabled: true
+                                },
+                                {
+                                    title: this.sandbox.translate('sulu.list-toolbar.column-options'),
+                                    disabled: false,
+                                    callback: function() {
+                                        this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
+                                        this.sandbox.start([
+                                            {
+                                                name: 'column-options@husky',
+                                                options: {
+                                                    el: '#column-options-overlay',
+                                                    url: '/admin/api/contacts/fields',
+                                                    hidden: false,
+                                                    trigger: '.toggle'
+                                                }
+                                            }
+                                        ]);
+                                    }.bind(this)
                                 }
                             ]
                         }
