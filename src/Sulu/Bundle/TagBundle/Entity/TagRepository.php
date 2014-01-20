@@ -37,4 +37,25 @@ class TagRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * Searches for all roles
+     * @return array
+     */
+    public function findAllTags()
+    {
+        try {
+
+            $qb = $this->createQueryBuilder('t');
+
+            $query = $qb->getQuery();
+
+            $result = $query->getResult();
+
+            return $result;
+
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 } 
