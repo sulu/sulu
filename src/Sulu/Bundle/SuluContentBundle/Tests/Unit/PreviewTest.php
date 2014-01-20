@@ -190,7 +190,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $content = $this->preview->getChanges(1, '123-123-123');
 
         // check result
-        $this->assertEquals('aaaa', $content[0]['content']);
+        $this->assertEquals('aaaa', $content['title']['content']);
 
         // check cache
         $this->assertTrue($this->cache->contains('1:123-123-123'));
@@ -232,10 +232,10 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         // update PREVIEW
         $changes = $this->preview->getChanges(1, '123-123-123');
         $this->assertEquals(2, sizeof($changes));
-        $this->assertEquals('New Title', $changes[0]['content']);
-        $this->assertEquals('title', $changes[0]['property']);
-        $this->assertEquals('asdf', $changes[1]['content']);
-        $this->assertEquals('article', $changes[1]['property']);
+        $this->assertEquals('New Title', $changes['title']['content']);
+        $this->assertEquals('title', $changes['title']['property']);
+        $this->assertEquals('asdf', $changes['article']['content']);
+        $this->assertEquals('article', $changes['article']['property']);
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, '123-123-123');
