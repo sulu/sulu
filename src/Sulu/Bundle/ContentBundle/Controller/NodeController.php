@@ -11,21 +11,15 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use PHPCR\NodeInterface;
-use PHPCR\SessionInterface;
-use Sulu\Bundle\ContactBundle\Controller\ContactsController;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\StructureInterface;
+use PHPCR\ItemNotFoundException;
+use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class NodeController extends RestController implements ClassResourceInterface
 {
-    /**
-     * for returning self link in get action
-     * @var string
-     */
-    private $apiPath = '/admin/api/nodes';
 
     /**
      * returns a content item with given UUID as JSON String
@@ -34,22 +28,39 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function getAction($uuid)
     {
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+
         $view = $this->responseGetById(
             $uuid,
-            function ($uuid) {
-                // TODO language
-                // TODO portal
-                $content = $this->getMapper()->load($uuid, 'default', 'en');
-                $result = $content->toArray();
-                $result['_links'] = array('self' => $this->apiPath . '/' . $uuid);
-                $result['creator'] = $this->getContactByUserId($result['creator']);
-                $result['changer'] = $this->getContactByUserId($result['changer']);
-
-                return $result;
+            function ($id) use ($language, $portal) {
+                try {
+                    return $this->getRepository()->getNode($id, $portal, $language);
+                } catch (ItemNotFoundException $ex) {
+                    return null;
+                }
             }
         );
 
         return $this->handleView($view);
+    }
+
+    /**
+     * returns a content item for startpage
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction()
+    {
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+
+        $result = $this->getRepository()->getIndexNode($portal, $language);
+
+        return $this->handleView($this->view($result));
     }
 
     /**
@@ -59,108 +70,70 @@ class NodeController extends RestController implements ClassResourceInterface
     public function cgetAction()
     {
         // TODO pagination
-        $result = array();
-
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
         $parentUuid = $this->getRequest()->get('parent');
-        $depth = $this->getRequest()->get('depth');
+        $depth = $this->getRequest()->get('depth', 1);
+        $depth = intval($depth);
+        $flat = $this->getRequest()->get('flat', 'true');
+        $flat = ($flat === 'true');
 
-        // TODO handle different depths
-        if ($depth == 1) {
-            // TODO language, portal
-            $structures = $this->getMapper()->loadByParent($parentUuid, 'default', 'de');
-            foreach ($structures as $structure) {
-                $tmp = $structure->toArray();
-                $tmp['creator'] = $this->getContactByUserId($tmp['creator']);
-                $tmp['changer'] = $this->getContactByUserId($tmp['changer']);
-
-                // TODO published, linked, type
-                $tmp['published'] = true;
-                $tmp['linked'] = false;
-                $tmp['type'] = 'none';
-
-                // hal spec
-                $tmp['_links'] = array(
-                    'self' => $this->apiPath . '/' . $tmp['id'],
-                    'children' => $this->apiPath . '?parent=' . $tmp['id'] . '&depth=' . $depth
-                );
-                $tmp['_embedded'] = array();
-
-                $result[] = $tmp;
-            }
-        }
-
-        if ($parentUuid !== null) {
-            $parent = $this->getMapper()->load($parentUuid, 'default', 'de')->toArray();
-            $result = array_merge(
-                $parent,
-                array(
-                    '_links' => array(
-                        'self' => $this->apiPath . '/' . $parent['id'],
-                        'children' => $this->apiPath . '?parent=' . $parent['id'] . '&depth=' . $depth
-                    ),
-                    '_embedded' => $result,
-                    'total' => sizeof($result),
-                )
-            );
-        } else {
-            $result = array(
-                '_links' => array(
-                    'children' => $this->apiPath . '?depth=' . $depth
-                ),
-                '_embedded' => $result,
-                'total' => sizeof($result)
-            );
-        }
+        $result = $this->getRepository()->getNodes($parentUuid, $portal, $language, $depth, $flat);
 
         return $this->handleView(
             $this->view($result)
         );
     }
 
+    /**
+     * saves node with given uuid and data
+     * @param $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function putAction($uuid)
     {
         // TODO portal
         // TODO language
-        $templateKey = $this->getRequest()->get('template');
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+        $template = $this->getRequest()->get('template');
+        $data = $this->getRequest()->request->all();
 
-        $structure = $this->getMapper()->save(
-            $this->getRequest()->request->all(),
-            $templateKey,
-            'default',
-            'en',
-            $userId,
-            true,
-            $uuid
-        );
-        $result = $structure->toArray();
-        $result['creator'] = $this->getContactByUserId($result['creator']);
-        $result['changer'] = $this->getContactByUserId($result['changer']);
+        $result = $this->getRepository()->saveNode($data, $template, $portal, $language, $uuid);
 
         return $this->handleView(
-            $this->view(
-                array(
-                    '_links' => array('self' => $this->getRequest()->getUri()),
-                    '_embedded' => array($result),
-                    'total' => 1,
-                )
-            )
+            $this->view($result)
         );
     }
 
-    private function getContactByUserId($id)
+    /**
+     * save action for index page /nodes/index
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cputIndexAction()
     {
-        // Todo performance issue
-        // Todo solve as service
-        $user = $this->getDoctrine()->getRepository('SuluSecurityBundle:User')->find($id);
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+        $template = $this->getRequest()->get('template', 'overview');
+        $data = $this->getRequest()->request->all();
 
-        if ($user !== null) {
-            $contact = $user->getContact();
+        try {
+            if ($data['url'] != '/') {
+                throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
+            }
 
-            return $contact->getFirstname() . " " . $contact->getLastname();
-        } else {
-            return "";
+            $result = $this->getRepository()->saveIndexNode($data, $template, $portal, $language);
+            $view = $this->view($result);
+        } catch (RestException $ex) {
+            $view = $this->view(
+                $ex->toArray(),
+                400
+            );
         }
+
+        return $this->handleView($view);
     }
 
     /**
@@ -170,61 +143,51 @@ class NodeController extends RestController implements ClassResourceInterface
     public function postAction()
     {
         // TODO language
-        $templateKey = $this->getRequest()->get('template');
-        $parentUuid = $this->getRequest()->get('parent');
-
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
-
         // TODO portal
-        $structure = $this->getMapper()->save(
-            $this->getRequest()->request->all(),
-            $templateKey,
-            'default',
-            'en',
-            $userId,
-            true,
-            null,
-            $parentUuid
-        );
-        $result = $structure->toArray();
-        $result['creator'] = $this->getContactByUserId($result['creator']);
-        $result['changer'] = $this->getContactByUserId($result['changer']);
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+        $template = $this->getRequest()->get('template', 'overview');
+        $data = $this->getRequest()->request->all();
+        $parent = $this->getRequest()->get('parent');
+
+        $result = $this->getRepository()->saveNode($data, $template, $portal, $language, null, $parent);
 
         return $this->handleView(
-            $this->view(
-                array(
-                    '_links' => array('self' => $this->getRequest()->getUri()),
-                    '_embedded' => array($result),
-                    'total' => 1,
-                )
-            )
+            $this->view($result)
         );
     }
 
     /**
-     * return content mapper
-     * @return ContentMapperInterface
+     * deletes node with given uuid
+     * @param $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function getMapper()
+    public function deleteAction($uuid)
     {
-        return $this->container->get('sulu.content.mapper');
+        // TODO language
+        // TODO portal
+        $language = $this->getRequest()->get('language', 'en');
+        $portal = $this->getRequest()->get('portal', 'default');
+
+        $view = $this->responseDelete(
+            $uuid,
+            function ($id) use ($language, $portal) {
+                try {
+                    $this->getRepository()->deleteNode($id, $portal, $language);
+                } catch (ItemNotFoundException $ex) {
+                    throw new EntityNotFoundException('Content', $id);
+                }
+            }
+        );
+
+        return $this->handleView($view);
     }
 
     /**
-     * returns phpcr session
-     * @return SessionInterface
+     * @return NodeRepositoryInterface
      */
-    protected function getSession()
+    protected function getRepository()
     {
-        return $this->container->get('sulu.phpcr.session')->getSession();
-    }
-
-    /**
-     * return base content path
-     * @return string
-     */
-    protected function getBasePath()
-    {
-        return $this->container->getParameter('sulu.content.base_path.content');
+        return $this->get('sulu_content.node_repository');
     }
 }
