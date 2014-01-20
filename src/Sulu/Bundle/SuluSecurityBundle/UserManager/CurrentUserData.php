@@ -41,6 +41,15 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     /**
+     * returns id
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->getUser()->getId();
+    }
+
+    /**
      * @return String - returns username
      */
     public function getUserName()
