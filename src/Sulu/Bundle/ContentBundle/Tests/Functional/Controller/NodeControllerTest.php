@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\NodeInterface;
+use PHPCR\SimpleCredentials;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
@@ -108,7 +109,13 @@ class NodeControllerTest extends DatabaseTestCase
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
         $cmf->addNode('routes');
-        $cmf->addNode('contents');
+        $content = $cmf->addNode('contents');
+        $content->setProperty('sulu:template', 'overview');
+        $content->setProperty('sulu:creator', 1);
+        $content->setProperty('sulu:created', new \DateTime());
+        $content->setProperty('sulu:changer', 1);
+        $content->setProperty('sulu:changed', new \DateTime());
+        $content->addMixin('sulu:content');
 
         $this->session->save();
     }
@@ -118,7 +125,6 @@ class NodeControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
-
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
@@ -148,7 +154,7 @@ class NodeControllerTest extends DatabaseTestCase
         $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
         $factory = new $factoryclass();
         $repository = $factory->getRepository($parameters);
-        $credentials = new \PHPCR\SimpleCredentials('admin', 'admin');
+        $credentials = new SimpleCredentials('admin', 'admin');
         $this->session = $repository->login($credentials, 'default');
     }
 
@@ -166,6 +172,7 @@ class NodeControllerTest extends DatabaseTestCase
             NodeHelper::purgeWorkspace($this->session);
             $this->session->save();
         }
+        self::$tool->dropSchema(self::$entities);
         parent::tearDown();
     }
 
@@ -193,14 +200,12 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $item = $response->_embedded[0];
-
-        $this->assertEquals('Testtitle', $item->title);
-        $this->assertEquals('Test', $item->article);
-        $this->assertEquals('/de/test', $item->url);
-        $this->assertEquals(array('tag1', 'tag2'), $item->tags);
-        $this->assertEquals('Max Mustermann', $item->creator);
-        $this->assertEquals('Max Mustermann', $item->changer);
+        $this->assertEquals('Testtitle', $response->title);
+        $this->assertEquals('Test', $response->article);
+        $this->assertEquals('/de/test', $response->url);
+        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/de/test');
@@ -246,20 +251,18 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('POST', '/api/nodes?template=overview', $data1);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
-        $uuid = $response->_embedded[0]->id;
+        $uuid = $response->id;
 
         $client->request('POST', '/api/nodes?template=overview&parent=' . $uuid, $data2);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $item = $response->_embedded[0];
-
-        $this->assertEquals('test-1', $item->title);
-        $this->assertEquals('Test', $item->article);
-        $this->assertEquals('/news/test', $item->url);
-        $this->assertEquals(array('tag1', 'tag2'), $item->tags);
-        $this->assertEquals('Max Mustermann', $item->creator);
-        $this->assertEquals('Max Mustermann', $item->changer);
+        $this->assertEquals('test-1', $response->title);
+        $this->assertEquals('Test', $response->article);
+        $this->assertEquals('/news/test', $response->url);
+        $this->assertEquals(array('tag1', 'tag2'), $response->tags);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/routes/news/test');
@@ -332,6 +335,24 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals($data[0]['article'], $response->article);
     }
 
+    public function testDelete()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->beforeTestGet();
+
+        $client->request('DELETE', '/api/nodes/' . $data[0]['id']);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/nodes/' . $data[0]['id']);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
     public function testPut()
     {
         $client = $this->createClient(
@@ -352,14 +373,12 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $item = $response->_embedded[0];
-
-        $this->assertEquals($data[0]['title'], $item->title);
-        $this->assertEquals($data[0]['tags'], $item->tags);
-        $this->assertEquals($data[0]['url'], $item->url);
-        $this->assertEquals($data[0]['article'], $item->article);
-        $this->assertEquals('Max Mustermann', $item->creator);
-        $this->assertEquals('Max Mustermann', $item->creator);
+        $this->assertEquals($data[0]['title'], $response->title);
+        $this->assertEquals($data[0]['tags'], $response->tags);
+        $this->assertEquals($data[0]['url'], $response->url);
+        $this->assertEquals($data[0]['article'], $response->article);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->creator);
 
         $client->request('GET', '/api/nodes?depth=1');
 
@@ -490,5 +509,183 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, sizeof($items));
         $this->assertEquals($data[4]['title'], $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
+    }
+
+    public function testGetFlat()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->beforeTestTreeGet();
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=1');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=2');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(4, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+
+        $this->assertEquals('test3', $items[2]->title);
+        $this->assertFalse($items[2]->hasSub);
+
+        $this->assertEquals('test4', $items[3]->title);
+        $this->assertTrue($items[3]->hasSub);
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=3');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(5, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+
+        $this->assertEquals('test3', $items[2]->title);
+        $this->assertFalse($items[2]->hasSub);
+
+        $this->assertEquals('test4', $items[3]->title);
+        $this->assertTrue($items[3]->hasSub);
+
+        $this->assertEquals('test5', $items[4]->title);
+        $this->assertFalse($items[4]->hasSub);
+
+        // get child nodes from subNode
+        $client->request('GET', '/api/nodes?depth=3&parent='.$data[3]['id']);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(1, sizeof($items));
+
+        $this->assertEquals('test5', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+    }
+
+    public function testGetTree()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->beforeTestTreeGet();
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=1&flat=false');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(0, sizeof($items[1]->_embedded));
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=2&flat=false');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(2, sizeof($items[1]->_embedded));
+
+        $items = $items[1]->_embedded;
+
+        $this->assertEquals('test3', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test4', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(0, sizeof($items[1]->_embedded));
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=3&flat=false');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals('test1', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test2', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(2, sizeof($items[1]->_embedded));
+
+        $items = $items[1]->_embedded;
+
+        $this->assertEquals('test3', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        $this->assertEquals('test4', $items[1]->title);
+        $this->assertTrue($items[1]->hasSub);
+        $this->assertEquals(1, sizeof($items[1]->_embedded));
+
+        $items = $items[1]->_embedded;
+
+        $this->assertEquals('test5', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
+
+        // get child nodes from subNode
+        $client->request('GET', '/api/nodes?depth=3&flat=false&parent='.$data[3]['id']);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+        $items = $response->_embedded;
+
+        $this->assertEquals(1, sizeof($items));
+
+        $this->assertEquals('test5', $items[0]->title);
+        $this->assertFalse($items[0]->hasSub);
+        $this->assertEquals(0, sizeof($items[0]->_embedded));
     }
 }
