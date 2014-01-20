@@ -87,7 +87,7 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $path = $this->getRequest()->getRequestUri();
-        $pathInfo = $this->getRequest()->getPathInfo();
+//        $pathInfo = $this->getRequest()->getPathInfo();
         $path = $this->replaceOrAddUrlString(
             $path,
             $listHelper->getParameterName('pageSize') . '=',
@@ -97,13 +97,20 @@ abstract class RestController extends FOSRestController
 
         $page = $listHelper->getPage();
 
+        // create sort links
         $sortable = array();
         if ($returnListLinks && count($entities) > 0) {
             $keys = array_keys($entities[0]);
+            // remove page
+            $sortUrl = $this->replaceOrAddUrlString(
+                $path,
+                $listHelper->getParameterName('page') . '=',
+                null
+            );
             foreach ($keys as $key) {
                 if (!in_array($key, $this->unsortable)) {
                     $sortPath = $this->replaceOrAddUrlString(
-                        $pathInfo,
+                        $sortUrl,
                         $listHelper->getParameterName('sortBy') . '=',
                         $key
                     );
@@ -115,6 +122,19 @@ abstract class RestController extends FOSRestController
                 }
             }
         }
+
+        // create search link
+        $searchLink = $this->replaceOrAddUrlString(
+            $path,
+            $listHelper->getParameterName('search') . '=',
+            '{searchString}'
+        );
+        $searchLink = $this->replaceOrAddUrlString(
+            $searchLink,
+            $listHelper->getParameterName('page') . '=',
+            '1'
+        );
+
 
         return array(
             'self' => $path,
@@ -143,6 +163,7 @@ abstract class RestController extends FOSRestController
                 $listHelper->getParameterName('page') . '=',
                 '{page}'
             ) : null,
+            'find' => $returnListLinks ? $searchLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
         );
     }
@@ -150,23 +171,34 @@ abstract class RestController extends FOSRestController
     /**
      * function replaces a url parameter
      * @param $url - the complete url
-     * @param $searchStringBefore - parametername (e.g. page=)
+     * @param $key - parametername (e.g. page=)
      * @param $value - replace value
      * @param bool $add - defines if value should be added
      * @return mixed|string
      */
-    public function replaceOrAddUrlString($url, $searchStringBefore, $value, $add = true)
+    public function replaceOrAddUrlString($url, $key, $value, $add = true)
     {
         if ($value) {
-            if ($pos = strpos($url, $searchStringBefore)) {
-                return preg_replace('/(.*' . $searchStringBefore . ')(\d*)(\&*.*)/', '${1}' . $value . '${3}', $url);
+            if ($pos = strpos($url, $key)) {
+                return preg_replace('/(.*' . $key . ')(\w+)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
                     $and = (strpos($url, '?') === false) ? '?' : '&';
-
-                    return $url . $and . $searchStringBefore . $value;
+                    return $url . $and . $key . $value;
                 }
             }
+        } else {
+            // remove if key exists
+            if ($pos = strpos($url, $key)) {
+                $result = preg_replace('/(.*)([\\?|\&]{1}'.$key.')(\w+)(\&*.*)/', '${1}${4}', $url);
+
+                // if was first variable, redo questionmark
+                if(strpos($url, '?'.$key)) {
+                    $result = preg_replace('/&/', '?', $result, 1);
+                }
+                return $result;
+            }
+
         }
 
         return $url;
