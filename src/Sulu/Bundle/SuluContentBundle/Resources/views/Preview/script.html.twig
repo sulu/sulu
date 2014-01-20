@@ -52,12 +52,6 @@
                             nodeArray.forEach(function(element) {
                                 // set content and highlight class
                                 element.innerHTML = content;
-                                element.className += ' sulu-preview-highlight';
-
-                                // remove class after a timeout
-                                setTimeout(function() {
-                                    element.className -= ' sulu-preview-highlight';
-                                }, interval * 2);
                             });
                         }
                     }

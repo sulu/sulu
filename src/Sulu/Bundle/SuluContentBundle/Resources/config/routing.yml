@@ -19,7 +19,7 @@ sulu_content.resource_locator_get:
     defaults: { _controller: SuluContentBundle:ResourceLocator:get }
 
 sulu_content.preview.render:
-    pattern: /preview/{contentUuid}.html
+    pattern: /preview/{contentUuid}
     methods: GET
     defaults: { _controller: SuluContentBundle:Preview:render }
 

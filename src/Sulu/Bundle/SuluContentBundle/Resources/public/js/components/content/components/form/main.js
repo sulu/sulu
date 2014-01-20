@@ -41,6 +41,7 @@ define([], function() {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
                 this.sandbox.form.setData(this.formId, data);
+                this.initPreview();
             }.bind(this));
         },
 
@@ -92,7 +93,7 @@ define([], function() {
             }, this);
 
             this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
-                this.initPreview();
+                this.openPreviewWindow.call(this);
             }, this);
         },
 
@@ -135,6 +136,10 @@ define([], function() {
             }.bind(this));
         },
 
+        openPreviewWindow: function() {
+            window.open('/admin/content/preview/' + this.options.data.id);
+        },
+
         initPreview: function() {
             var updateUrl = '/admin/content/preview/' + this.options.data.id,
                 data = this.sandbox.form.getData(this.formId);
@@ -148,11 +153,9 @@ define([], function() {
                 }
             });
 
-            window.open('/admin/content/preview/' + this.options.data.id + '.html');
-
             this.sandbox.dom.on(this.formId, 'focusout', function(e) {
-                var $element = $(e.currentTarget).data('element').getValue();
-                this.updatePreview.call(this, $element.data('mapperProperty'));
+                var $element = $(e.currentTarget);
+                this.updatePreview.call(this, $element.data('mapperProperty'), $element.data('element').getValue());
             }.bind(this), "select, input, textarea");
 
             this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
