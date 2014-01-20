@@ -12,8 +12,9 @@ namespace Sulu\Bundle\TagBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 
-class TagRepository extends EntityRepository
+class TagRepository extends EntityRepository implements TagRepositoryInterface
 {
     /**
      * Finds the tag with the given ID
