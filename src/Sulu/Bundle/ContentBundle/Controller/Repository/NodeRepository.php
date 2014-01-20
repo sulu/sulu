@@ -96,9 +96,13 @@ class NodeRepository implements NodeRepositoryInterface
         return $this->userManager->getFullNameByUserId($id);
     }
 
+    /**
+     * returns id of current user
+     * @return int
+     */
     protected function getUserId()
     {
-        return $this->securityContext->getToken()->getUser()->getId();
+        return $this->userManager->getCurrentUserData()->getId();
     }
 
     /**
