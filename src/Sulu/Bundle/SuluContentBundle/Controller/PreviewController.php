@@ -12,11 +12,13 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use DateTime;
 use DOMDocument;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class PreviewController extends Controller
@@ -39,21 +41,34 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $content = $this->getPreview()->render($uid, $contentUuid);
 
-        $script = $this->render('SuluContentBundle:Preview:script.html.twig');
+        $script = $this->render(
+            'SuluContentBundle:Preview:script.html.twig',
+            array(
+                'url' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
+                'contenUuid' => $contentUuid,
+                'interval' => 1000
+            )
+        );
 
         $doc = new DOMDocument();
         $doc->loadHTML($content);
+
         $body = $doc->getElementsByTagName('body');
         $body = $body->item(0);
-        $dataAuraComponent = $doc->createAttribute('data-aura-component');
-        $dataAuraComponent->value = 'preview@sulucontent';
-        $body->appendChild($dataAuraComponent);
 
-        //TODO append script
+        $fragment = $doc->createDocumentFragment();
+        $fragment->appendXML($script->getContent());
+        $body->appendChild($fragment);
+        $doc->formatOutput = TRUE;
 
         $content = $doc->saveHTML();
 
-        return $this->render('SuluContentBundle:Preview:render.html.twig', array('content' => $content));
+        return $this->render(
+            'SuluContentBundle:Preview:render.html.twig',
+            array(
+                'content' => $content
+            )
+        );
     }
 
     public function updateAction($contentUuid, Request $request)
