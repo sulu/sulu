@@ -14,6 +14,10 @@
     "dependencies": {
         "husky": "#develop",
         "backbone-relational": "0.8.*",
-        "globalize": "0.1.*"
+        "globalize": "0.1.*",
+        "jquery": "1.10.*"
+    },
+    "resolutions": {
+        "jquery": "1.10.*"
     }
 }
