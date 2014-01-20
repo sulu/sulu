@@ -30,6 +30,12 @@ class TagControllerTest extends DatabaseTestCase
         $tag->setCreated(new \DateTime());
         $tag->setChanged(new \DateTime());
         self::$em->persist($tag);
+
+        $tag = new Tag();
+        $tag->setName('tag2');
+        $tag->setCreated(new \DateTime());
+        $tag->setChanged(new \DateTime());
+        self::$em->persist($tag);
         self::$em->flush();
     }
 
@@ -85,22 +91,33 @@ class TagControllerTest extends DatabaseTestCase
     public function testPost()
     {
         $client = self::createClient();
-        $client->request('POST', '/api/tags', array('name' => 'tag2'));
+        $client->request('POST', '/api/tags', array('name' => 'tag3'));
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('tag2', $response->name);
+        $this->assertEquals('tag3', $response->name);
 
         $client->request(
             'GET',
-            '/api/tags/2'
+            '/api/tags/3'
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('tag2', $response->name);
+        $this->assertEquals('tag3', $response->name);
+    }
+
+    public function testPostExistingName()
+    {
+        $client = self::createClient();
+        $client->request('POST', '/api/tags', array('name' => 'tag1'));
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
     }
 
     public function testPut()
@@ -124,6 +141,17 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals('tag1_new', $response->name);
     }
 
+    public function testPutExistingName()
+    {
+        $client = self::createClient();
+        $client->request('PUT', '/api/tags/2', array('name' => 'tag1'));
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
+    }
+
     public function testPutNotExisting()
     {
         $client = self::createClient();
@@ -134,9 +162,14 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testDeleteById()
     {
-        // TODO test if event is thrown
+        $mockedEventListener = $this->getMock('stdClass', array('onDelete'));
+        $mockedEventListener->expects($this->once())->method('onDelete');
 
         $client = static::createClient();
+        $client->getContainer()->get('event_dispatcher')->addListener(
+            'sulu.tag.delete',
+            array($mockedEventListener, 'onDelete')
+        );
 
         $client->request('DELETE', '/api/tags/1');
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
@@ -145,11 +178,45 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
 
-    public function testDeleteByNotExisitingId()
+    public function testDeleteByNotExistingId()
     {
         $client = static::createClient();
 
         $client->request('DELETE', '/api/tags/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
+    }
+
+    public function testMerge()
+    {
+        $mockedEventListener = $this->getMock('stdClass', array('onMerge'));
+        $mockedEventListener->expects($this->once())->method('onMerge');
+
+        $client = static::createClient();
+        $client->getContainer()->get('event_dispatcher')->addListener(
+            'sulu.tag.merge',
+            array($mockedEventListener, 'onMerge')
+        );
+
+        $client->request('POST', '/api/tags/merge', array('src' => 2, 'dest' => 1));
+        $this->assertEquals(303, $client->getResponse()->getStatusCode());
+        $this->assertEquals('/admin/api/tags/1', $client->getResponse()->headers->get('location'));
+
+        $client->request('GET', '/api/tags/1');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/tags/2');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testMergeNotExisting()
+    {
+        $client = static::createClient();
+        $client->request('POST', '/api/tags/merge', array('src' => 3, 'dest' => 1));
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "3" not found.', $response->message);
     }
 }
