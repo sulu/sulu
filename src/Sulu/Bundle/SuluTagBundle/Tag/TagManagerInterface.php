@@ -47,9 +47,9 @@ interface TagManagerInterface
 
     /**
      * Deletes the given Tag
-     * @param Tag $tag The tag to delete
+     * @param number $id The tag to delete
      */
-    public function delete($tag);
+    public function delete($id);
 
     /**
      * Merges the source tag into the destination tag.

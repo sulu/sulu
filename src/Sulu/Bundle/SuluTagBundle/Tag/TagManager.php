@@ -10,8 +10,13 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
+use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
+use Sulu\Bundle\TagBundle\Event\TagEvents;
+use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Responsible for centralized Tag Management
@@ -25,9 +30,25 @@ class TagManager implements TagManagerInterface
      */
     private $tagRepository;
 
-    public function __construct(TagRepositoryInterface $tagRepository)
+    /**
+     * @var ObjectManager
+     */
+    private $em;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(
+        TagRepositoryInterface $tagRepository,
+        ObjectManager $em,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->tagRepository = $tagRepository;
+        $this->em = $em;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -70,11 +91,23 @@ class TagManager implements TagManagerInterface
 
     /**
      * Deletes the given Tag
-     * @param Tag $tag The tag to delete
+     * @param number $id The tag to delete
+     * @throws Exception\TagNotFoundException
      */
-    public function delete($tag)
+    public function delete($id)
     {
-        // TODO: Implement delete() method.
+        $tag = $this->tagRepository->findTagById($id);
+
+        if (!$tag) {
+            throw new TagNotFoundException($id);
+        }
+
+        $this->em->remove($tag);
+        $this->em->flush();
+
+        // throw an tag.delete event
+        $event = new TagDeleteEvent($tag);
+        $this->eventDispatcher->dispatch(TagEvents::TAG_DELETE, $event);
     }
 
     /**

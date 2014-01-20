@@ -18,4 +18,4 @@ services:
 
     sulu_tag.tag_manager:
         class: %sulu_tag.tag_manager.class%
-        arguments: ["@sulu_tag.tag_repository"]
+        arguments: ["@sulu_tag.tag_repository", "@doctrine.orm.entity_manager", "@event_dispatcher"]
