@@ -65,12 +65,13 @@ define(function() {
                             type: 'checkbox'
                         },
                         removeRow: false,
+                        sortable: true,
                         tableHead: [
 
-                            {content: this.sandbox.translate('contact.contacts.contactTitle')},
-                            {content: this.sandbox.translate('contact.contacts.firstName')},
-                            {content: this.sandbox.translate('contact.contacts.lastName')},
-                            {content: this.sandbox.translate('contact.contacts.position')}
+                            {content: this.sandbox.translate('contact.contacts.contactTitle'), attribute:'title'},
+                            {content: this.sandbox.translate('contact.contacts.firstName'), attribute:'firstName'},
+                            {content: this.sandbox.translate('contact.contacts.lastName'), attribute:'lastName'},
+                            {content: this.sandbox.translate('contact.contacts.position'), attribute:'position'}
                         ],
                         excludeFields: ['id']
                     }
