@@ -73,6 +73,19 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals('tag1', $response->name);
     }
 
+    public function testList()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/api/tags?flat=true');
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals('tag1', $response->_embedded[0]->name);
+        $this->assertEquals('tag2', $response->_embedded[1]->name);
+    }
+
     public function testGetByIdNotExisting()
     {
         $client = self::createClient();
