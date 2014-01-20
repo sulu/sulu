@@ -24,7 +24,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     private $name;
 
     /**
-     * default value if node not have the property
+     * default value if node does not have the property
      * @var mixed
      */
     private $defaultValue;
@@ -35,6 +35,10 @@ abstract class SimpleContentType implements ContentTypeInterface
         $this->defaultValue = $defaultValue;
     }
 
+    /**
+     * Returns the name of the content type
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
