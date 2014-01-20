@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\Templating\EngineInterface;
 
+// TODO refresh whole page if rdfa not found
+
 class Preview implements PreviewInterface
 {
     /**
