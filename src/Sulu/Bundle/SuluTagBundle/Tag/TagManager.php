@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
+use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -113,11 +114,31 @@ class TagManager implements TagManagerInterface
     /**
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
-     * @param Tag $srcTag The source tag, which will be removed afterwards
-     * @param Tag $destTag The destination tag, which will replace the source tag
+     * @param number $srcTagId The source tag, which will be removed afterwards
+     * @param number $destTagId The destination tag, which will replace the source tag
+     * @throws Exception\TagNotFoundException
+     * @return Tag The new Tag, which is valid for both given tags
      */
-    public function merge($srcTag, $destTag)
+    public function merge($srcTagId, $destTagId)
     {
-        // TODO: Implement merge() method.
+        $srcTag = $this->tagRepository->findTagById($srcTagId);
+        $destTag = $this->tagRepository->findTagById($destTagId);
+
+        if (!$srcTag) {
+            throw new TagNotFoundException($srcTagId);
+        }
+
+        if (!$destTag) {
+            throw new TagNotFoundException($destTagId);
+        }
+
+        $this->em->remove($srcTag);
+        $this->em->flush();
+
+        // throw an tag.merge event
+        $event = new TagMergeEvent($srcTag, $destTag);
+        $this->eventDispatcher->dispatch(TagEvents::TAG_MERGE, $event);
+
+        return $destTag;
     }
 }

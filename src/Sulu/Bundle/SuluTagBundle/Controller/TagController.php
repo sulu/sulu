@@ -13,9 +13,6 @@ namespace Sulu\Bundle\TagBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Entity\TagRepository;
-use Sulu\Bundle\TagBundle\Event\TagEvents;
-use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -181,34 +178,15 @@ class TagController extends RestController implements ClassResourceInterface
     public function postMergeAction()
     {
         try {
-            /** @var TagRepository $tagRepository */
-            $tagRepository = $this->getDoctrine()->getRepository($this->entityName);
-            $em = $this->getDoctrine()->getManager();
-
             $srcTagId = $this->getRequest()->get('src');
             $destTagId = $this->getRequest()->get('dest');
 
-            $srcTag = $tagRepository->findTagById($srcTagId);
-            $destTag = $tagRepository->findTagById($destTagId);
-
-            if (!$srcTag) {
-                throw new EntityNotFoundException($this->entityName, $srcTagId);
-            }
-
-            if (!$destTag) {
-                throw new EntityNotFoundException($this->entityName, $destTagId);
-            }
-
-            $em->remove($srcTag);
-            $em->flush();
-
-            // throw an tag.merge event
-            $event = new TagMergeEvent($srcTag, $destTag);
-            $this->get('event_dispatcher')->dispatch(TagEvents::TAG_MERGE, $event);
+            $destTag = $this->get('sulu_tag.tag_manager')->merge($srcTagId, $destTagId);
 
             $view = $this->view(null, 303, array('location' => $destTag->getLinks()['self']));
-        } catch (EntityNotFoundException $exc) {
-            $view = $this->view($exc->toArray(), 404);
+        } catch (TagNotFoundException $tnfe) {
+            $enfe = new EntityNotFoundException($this->entityName, $tnfe->getId());
+            $view = $this->view($enfe->toArray(), 404);
         }
 
         return $this->handleView($view);

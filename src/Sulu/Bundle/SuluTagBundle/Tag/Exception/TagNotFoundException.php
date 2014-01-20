@@ -33,4 +33,13 @@ class TagNotFoundException extends Exception
         $message = 'The tag with the id "' . $id . '" was not found.';
         parent::__construct($message, 0);
     }
+
+    /**
+     * Returns the id of the tag, which was not found
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 } 
