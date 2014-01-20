@@ -349,7 +349,7 @@ abstract class Structure implements StructureInterface
         if (isset($this->properties[$property])) {
             $value = $this->getProperty($property)->getValue();
 
-            return $value != null;
+            return $value !== null;
         } else {
             return isset($this->$property);
         }

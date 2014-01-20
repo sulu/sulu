@@ -21,7 +21,7 @@ class TextArea extends SimpleContentType
 
     function __construct($template)
     {
-        parent::__construct('TextArea');
+        parent::__construct('TextArea', '');
 
         $this->template = $template;
     }
