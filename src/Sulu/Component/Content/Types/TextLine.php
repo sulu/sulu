@@ -21,7 +21,7 @@ class TextLine extends SimpleContentType
 
     function __construct($template)
     {
-        parent::__construct('TextLine');
+        parent::__construct('TextLine', '');
 
         $this->template = $template;
     }
