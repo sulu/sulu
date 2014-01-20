@@ -28087,9 +28087,9 @@ define('__component__$auto-complete@husky',[], function () {
     };
 });
 
-define('text!husky_components/auto-complete-list/main.html',[],function () { return '<div class="auto-complete-list-container">\r\n    <label>\r\n        <%= label %>\r\n        <div class="auto-complete-list">\r\n            <div class="husky-autocomplete"></div>\r\n            <div class="toggler"></div>\r\n        </div>\r\n    </label>\r\n</div>\r\n';});
+define('text!husky_components/auto-complete-list/main.html',[],function () { return '<div class="auto-complete-list-container">\n    <label>\n        <%= label %>\n        <div class="auto-complete-list">\n            <div class="husky-autocomplete"></div>\n            <div class="toggler"></div>\n        </div>\n    </label>\n</div>\n';});
 
-define('text!husky_components/auto-complete-list/suggestions.html',[],function () { return '<div class="auto-complete-list-suggestions">\r\n    <h5><%= headline %></h5>\r\n    <ul>\r\n    </ul>\r\n</div>\r\n';});
+define('text!husky_components/auto-complete-list/suggestions.html',[],function () { return '<div class="auto-complete-list-suggestions">\n    <h5><%= headline %></h5>\n    <ul>\n    </ul>\n</div>\n';});
 
 /**
  * This file is part of Husky frontend development framework.
@@ -29579,7 +29579,7 @@ define('__component__$ckeditor@husky',[], function() {
             var config = getConfig.call(this);
             this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
 
-            this.editor.once('change', function() {
+            this.editor.on('change', function() {
                 this.sandbox.emit(CHANGED);
             }.bind(this));
         }
