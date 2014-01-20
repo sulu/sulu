@@ -14,9 +14,9 @@ use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
-use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
+use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -162,22 +162,11 @@ class TagController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $tag = $this->getDoctrine()
-                ->getRepository($this->entityName)
-                ->findTagById($id);
-
-            if (!$tag) {
+            try {
+                $this->get('sulu_tag.tag_manager')->delete($id);
+            } catch (TagNotFoundException $tnfe) {
                 throw new EntityNotFoundException($this->entityName, $id);
             }
-
-            $em = $this->getDoctrine()->getManager();
-
-            $em->remove($tag);
-            $em->flush();
-
-            // throw an tag.delete event
-            $event = new TagDeleteEvent($tag);
-            $this->get('event_dispatcher')->dispatch(TagEvents::TAG_DELETE, $event);
         };
 
         $view = $this->responseDelete($id, $delete);
