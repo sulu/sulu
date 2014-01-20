@@ -18,6 +18,11 @@ sulu_content.resource_locator_get:
     pattern: /resourcelocator.json
     defaults: { _controller: SuluContentBundle:ResourceLocator:get }
 
+sulu_content.preview.changes:
+    pattern: /preview/{contentUuid}.json
+    methods: GET
+    defaults: { _controller: SuluContentBundle:Preview:changes }
+
 sulu_content.preview.render:
     pattern: /preview/{contentUuid}
     methods: GET
@@ -27,8 +32,3 @@ sulu_content.preview.update:
     pattern: /preview/{contentUuid}
     methods: POST
     defaults: { _controller: SuluContentBundle:Preview:update }
-
-sulu_content.preview.changes:
-    pattern: /preview/{contentUuid}.json
-    methods: GET
-    defaults: { _controller: SuluContentBundle:Preview:changes }
