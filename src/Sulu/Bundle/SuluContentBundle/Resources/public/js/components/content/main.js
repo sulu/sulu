@@ -31,9 +31,9 @@ define([
         },
 
         bindCustomEvents: function() {
-            // delete contact
-            this.sandbox.on('sulu.content.contents.delete', function() {
-                this.del();
+            // delete content
+            this.sandbox.on('sulu.content.content.delete', function(id) {
+                this.del(id);
             }, this);
 
             // save the current package
@@ -46,12 +46,12 @@ define([
                 this.load(id);
             }, this);
 
-            // add new contact
+            // add new content
             this.sandbox.on('sulu.content.contents.new', function(parent) {
                 this.add(parent);
             }, this);
 
-            // delete selected contacts
+            // delete selected content
             this.sandbox.on('sulu.content.contents.delete', function(ids) {
                 this.delContents(ids);
             }, this);
@@ -76,8 +76,76 @@ define([
                 });
         },
 
-        del: function() {
-            // TODO Delete
+        del: function(id) {
+            this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    if (id !== this.content.get('id')) {
+                        var content = new Content({id: id});
+                        content.destroy({
+                            processData: true,
+
+                            success: function() {
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                            }.bind(this)
+                        });
+                    } else {
+                        this.content.destroy({
+                            processData: true,
+
+                            success: function() {
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                            }.bind(this)
+                        });
+                    }
+                }
+            }.bind(this), this.options.id);
+        },
+
+        showConfirmSingleDeleteDialog: function(callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            var params = {
+                templateType: null,
+                title: 'Warning!',
+                content: 'Do you really want to delete the selected company? All data is going to be lost.',
+                buttonCancelText: 'Cancel',
+                buttonSubmitText: 'Delete'
+            };
+
+            // FIXME translation
+
+            // show dialog
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: params.title,
+                    content: params.content
+                },
+                footer: {
+                    buttonCancelText: params.buttonCancelText,
+                    buttonSubmitText: params.buttonSubmitText
+                },
+                callback: {
+                    submit: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(true);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+
+                        // call callback function
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
+                }
+            }, params.templateType);
         },
 
         save: function(data) {
@@ -86,13 +154,13 @@ define([
 
             // TODO select template
             this.content.saveTemplate(null, 'overview', this.options.parent, {
-                // on success save contacts id
+                // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!this.options.id) {
-                        this.sandbox.emit('sulu.content.contents.saved', model._embedded[0].id);
+                        this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model._embedded[0].id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
@@ -207,7 +275,7 @@ define([
                         ]);
                     }.bind(this),
                     error: function() {
-                        this.sandbox.logger.log("error while fetching contact");
+                        this.sandbox.logger.log("error while fetching content");
                     }.bind(this)
                 });
             } else {

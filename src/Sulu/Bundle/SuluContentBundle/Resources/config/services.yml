@@ -2,6 +2,7 @@ parameters:
     sulu_content.admin.class: Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin
     sulu_content.twig_extension.class: Sulu\Bundle\ContentBundle\Twig\ContentExtension
     sulu_content.admin.content_navigation.class: Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation
+    sulu_content.node_repository.class: Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepository
 
 services:
     sulu_content.admin:
@@ -17,3 +18,6 @@ services:
             - [ setContainer,[ @service_container ] ]
         tags:
             - { name: twig.extension }
+    sulu_content.node_repository:
+        class: %sulu_content.node_repository.class%
+        arguments: [@sulu.content.mapper, @sulu_security.user_manager, @security.context]

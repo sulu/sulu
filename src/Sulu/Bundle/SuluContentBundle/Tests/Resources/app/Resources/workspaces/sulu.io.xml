@@ -12,6 +12,13 @@
         <localization language="de"/>
     </localizations>
 
+    <theme>
+        <key>default</key>
+        <excluded>
+            <template>overview</template>
+        </excluded>
+    </theme>
+
     <portals>
         <portal>
             <name>Sulu CMF AT</name>
@@ -19,13 +26,6 @@
             <resource-locator>
                 <strategy>tree</strategy>
             </resource-locator>
-
-            <theme>
-                <key>default</key>
-                <excluded>
-                    <template>overview</template>
-                </excluded>
-            </theme>
 
             <localizations>
                 <localization language="de" country="at"/>
