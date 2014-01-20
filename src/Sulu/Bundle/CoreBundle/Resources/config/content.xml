@@ -11,6 +11,7 @@
 
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
+        <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
@@ -60,6 +61,9 @@
         </service>
         <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
             <argument>%sulu.content.type.text_area.template%</argument>
+        </service>
+        <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
+            <argument>%sulu.content.type.text_editor.template%</argument>
         </service>
 
         <!-- complex content types -->
