@@ -44,7 +44,10 @@
 
         <script type="text/javascript">
             var SULU = {
-                user: {locale: '{{ user.locale is defined ? user.locale : 'en' }}'}
+                user: {
+                    locale: '{{ user.locale is defined ? user.locale : 'en' }}',
+                    settings: {{ user.settings }}
+                }
             };
         </script>
     </body>
