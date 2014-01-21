@@ -71,7 +71,7 @@ define([], function() {
                                 disabled: true
                             },
                             {
-                                title: this.sandbox.translate('sulu.list-toolbar.column-options'),
+                                title: this.sandbox.translate('list-toolbar.column-options'),
                                 disabled: false,
                                 callback: function() {
 
