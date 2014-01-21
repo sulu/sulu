@@ -254,7 +254,7 @@ class ListQueryBuilder
     {
         // JOIN {parent}.{associationName} {associationPrefix}
         $format = '
-                JOIN %s.%s %s';
+                LEFT JOIN %s.%s %s';
 
         return sprintf($format, $parent, $field, $alias);
     }

@@ -11,9 +11,11 @@
 namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\Listing\ListRestHelper;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Abstract Controller for extracting some required rest functionality
@@ -32,6 +34,140 @@ abstract class RestController extends FOSRestController
      * @var array
      */
     protected $unsortable = array();
+
+
+    /**
+     * contains all fields that should be excluded from api
+     * @var array
+     */
+    protected $fieldsExcluded = array();
+
+    /**
+     * contains all fields that should be hidden by default from api
+     * @var array
+     */
+    protected $fieldsHidden = array();
+
+    /**
+     * contains all field relations
+     * @var array
+     */
+    protected $fieldsRelations = array();
+
+    /**
+     * contains sort order of elements: array(order => fieldName)
+     * @var array
+     */
+    protected $fieldsSortOrder = array();
+
+    /**
+     * contains custom translation keys like array(fieldName => translationKey)
+     * @var array
+     */
+    protected $fieldsTranslationKeys = array();
+
+    /**
+     * contains default translations for some keys
+     * @var array
+     */
+    protected $fieldsDefaultTranslationKeys = array('id'=>'public.id', 'name'=>'public.name');
+
+    /**
+     * standard bundle prefix
+     * @var string
+     */
+    protected $bundlePrefix = '';
+
+
+    /**
+     * Creates a response which contains all fields of the current entity
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function responseFields() {
+        try {
+            /** @var ListRestHelper $listHelper */
+            $listHelper = $this->get('sulu_core.list_rest_helper');
+
+            $fields = $listHelper->getAllFields($this->entityName);
+
+            // excluded fields
+            $fields = array_diff($fields, $this->fieldsExcluded);
+            // relations
+            $fields = array_merge($fields, $this->fieldsRelations);
+            // hide
+            $fields = array_diff($fields, $this->fieldsHidden);
+            // apply sort order
+            $fields = array_diff($fields, $this->fieldsSortOrder);
+            foreach ($this->fieldsSortOrder as $key => $value) {
+                 array_splice($fields, $key, 0, $value);
+            }
+
+            // parsing final array
+            $fieldsArray = $this->addTranslationKeys($fields);
+            $fieldsHiddenArray = $this->addTranslationKeys($this->fieldsHidden, true);
+            $fieldsArray = array_merge($fieldsArray, $fieldsHiddenArray);
+
+
+            $view = $this->view($fieldsArray, 200);
+        } catch (\Exception $e) {
+            $view = $this->view($e->getMessage(), 400);
+        }
+
+        return $this->handleview($view);
+    }
+
+    public function responsePersistSettings() {
+        try {
+            $key = $this->getRequest()->get('key');
+            $data = $this->getRequest()->get('data');
+
+            $userDataServiceId = $this->container->getParameter('sulu_admin.user_data_service');
+            if ($this->has($userDataServiceId)) {
+                /** @var UserManagerInterface $userManager */
+                $userManager = $this->get($userDataServiceId);
+                /** @var CurrentUserDataInterface $userData */
+                $userData = $userManager->getCurrentUserData();
+
+                $userData->setUserSetting($key, $data);
+            }
+            $view = $this->view('',200);
+        } catch (\Exception $e) {
+            $view = $this->view($e->getMessage(),400);
+        }
+
+        return $this->handleView($view);
+    }
+
+
+    /**
+     * creates the translation keys array
+     * @param $fields
+     * @param bool $hidden defines if keys are hidden
+     * @return array
+     */
+    private function addTranslationKeys($fields, $hidden = false) {
+        // add translations
+        $fieldsArray = array();
+        foreach($fields as $field) {
+            if (isset($this->fieldsTranslationKeys[$field])) {
+                $translationkey = $this->fieldsTranslationKeys[$field];
+            }
+            else if (isset($this->fieldsDefaultTranslationKeys[$field])) {
+                $translationkey = $this->fieldsDefaultTranslationKeys[$field];
+            }
+            else {
+                // check translations
+                $translationkey = $this->bundlePrefix.$field;
+            }
+
+            $fieldsArray[] = array(
+                'id' => $field,
+                'translation' => $translationkey,
+                'disabled' => $hidden
+            );
+        }
+        return $fieldsArray;
+    }
 
     /**
      * Lists all the entities or filters the entities by parameters
@@ -73,6 +209,7 @@ abstract class RestController extends FOSRestController
             'total' => count($entities),
         );
     }
+
 
     /**
      * returns HAL-conform _links array
