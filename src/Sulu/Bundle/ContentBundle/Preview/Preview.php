@@ -77,7 +77,7 @@ class Preview implements PreviewInterface
     public function start($userId, $contentUuid, $workspaceKey, $languageCode)
     {
         $content = $this->mapper->load($contentUuid, $workspaceKey, $languageCode);
-        $this->saveStructure($userId, $contentUuid, $content);
+        $this->addStructure($userId, $contentUuid, $content);
 
         return $content;
     }
@@ -120,10 +120,10 @@ class Preview implements PreviewInterface
         if ($content != false) {
             // TODO check for complex content types
             $content->getProperty($property)->setValue($data);
-            $this->saveStructure($userId, $contentUuid, $content);
+            $this->addStructure($userId, $contentUuid, $content);
 
-            $result = $changes = $this->render($userId, $contentUuid, true, $property);
-            if ($result !== false) {
+            $changes = $this->render($userId, $contentUuid, true, $property);
+            if ($changes !== false) {
                 $this->addChanges($userId, $contentUuid, $property, $changes);
             }
 
@@ -196,7 +196,7 @@ class Preview implements PreviewInterface
      * @param StructureInterface $data
      * @return bool
      */
-    private function saveStructure($userId, $contentUuid, $data)
+    private function addStructure($userId, $contentUuid, $data)
     {
         $cacheId = $this->getCacheKey($userId, $contentUuid);
         $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
