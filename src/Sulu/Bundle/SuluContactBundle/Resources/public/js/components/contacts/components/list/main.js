@@ -54,18 +54,22 @@ define(function() {
                     options: {
                         el: this.sandbox.dom.find('#people-list', this.$el),
                         url: '/admin/api/contacts?flat=true&fields=id,title,firstName,lastName,position',
-                        pagination: false,
+                        pagination: true,
+                        paginationOptions: {
+                            pageSize: 4
+                        },
                         selectItem: {
                             type: 'checkbox'
                         },
                         removeRow: false,
                         searchInstanceName:'content',
+                        sortable: true,
                         tableHead: [
 
-                            {content: this.sandbox.translate('contact.contacts.contactTitle')},
-                            {content: this.sandbox.translate('contact.contacts.firstName')},
-                            {content: this.sandbox.translate('contact.contacts.lastName')},
-                            {content: this.sandbox.translate('contact.contacts.position')}
+                            {content: this.sandbox.translate('contact.contacts.contactTitle'), attribute:'title'},
+                            {content: this.sandbox.translate('contact.contacts.firstName'), attribute:'firstName'},
+                            {content: this.sandbox.translate('contact.contacts.lastName'), attribute:'lastName'},
+                            {content: this.sandbox.translate('contact.contacts.position'), attribute:'position'}
                         ],
                         excludeFields: ['id']
                     }

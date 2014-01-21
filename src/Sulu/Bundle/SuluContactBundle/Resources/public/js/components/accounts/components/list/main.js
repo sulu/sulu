@@ -61,13 +61,14 @@ define([
                         el: this.sandbox.dom.find('#companies-list', this.$el),
                         url: '/admin/api/accounts?flat=true&fields=id,name',
                         pagination: false,
+                        sortable: true,
                         selectItem: {
                             type: 'checkbox'
                         },
                         searchInstanceName:'content',
                         removeRow: false,
                         tableHead: [
-                            {content: this.sandbox.translate('contact.accounts.name')}
+                            {content: this.sandbox.translate('contact.accounts.name'), attribute:'name'}
                         ],
                         excludeFields: ['id']
                     }
