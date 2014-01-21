@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -19,7 +20,6 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Makes the users accessible through a rest api
@@ -121,7 +121,7 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Checks if the given password is a valid one
-     * @param $password The password to check
+     * @param string $password The password to check
      * @return bool True if the password is valid, otherwise false
      */
     private function isValidPassword($password)
@@ -170,10 +170,10 @@ class UserController extends RestController implements ClassResourceInterface
             $em->flush();
 
             $view = $this->view($user, 200);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -406,7 +406,7 @@ class UserController extends RestController implements ClassResourceInterface
      * Returns the contact with the given id
      * @param $id
      * @return Contact
-     * @throws \Sulu\Bundle\CoreBundle\Controller\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function getContact($id)
     {

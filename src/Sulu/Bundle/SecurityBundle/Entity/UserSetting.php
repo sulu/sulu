@@ -1,4 +1,12 @@
 <?php
+/*
+* This file is part of the Sulu CMS.
+*
+* (c) MASSIVE ART WebServices GmbH
+*
+* This source file is subject to the MIT license that is bundled
+* with this source code in the file LICENSE.
+*/
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
@@ -24,7 +32,6 @@ class UserSetting
      */
     private $user;
 
-
     /**
      * Set value
      *
@@ -34,14 +41,14 @@ class UserSetting
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
@@ -57,14 +64,14 @@ class UserSetting
     public function setKey($key)
     {
         $this->key = $key;
-    
+
         return $this;
     }
 
     /**
      * Get key
      *
-     * @return string 
+     * @return string
      */
     public function getKey()
     {
@@ -80,14 +87,14 @@ class UserSetting
     public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User
      */
     public function getUser()
     {
