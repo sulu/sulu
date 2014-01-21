@@ -157,12 +157,12 @@ define([], function() {
 
             this.sandbox.dom.on(this.formId, 'focusout', function(e) {
                 var $element = $(e.currentTarget);
-                this.updatePreview.call(this, $element.data('mapperProperty'), $element.data('element').getValue());
+                this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
             }.bind(this), "select, input, textarea");
 
             this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
                 if (!!this.options.data.id) {
-                    this.updatePreview.call(this, $el.data('mapperProperty'), data);
+                    this.updatePreview($el.data('mapperProperty'), data);
                 }
             }.bind(this));
         },
