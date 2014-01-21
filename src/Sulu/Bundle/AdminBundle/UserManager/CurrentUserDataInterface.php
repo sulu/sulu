@@ -60,4 +60,11 @@ interface CurrentUserDataInterface
      * @return mixed
      */
     public function getUserSettings();
+
+    /**
+     * persists the user data to the database
+     * @param $key
+     * @param $value
+     */
+    public function setUserSetting($key, $value);
 } 
