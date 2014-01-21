@@ -37,7 +37,8 @@
                     var result = JSON.parse(http.responseText),
                             content,
                             elements,
-                            nodeArray;
+                            nodeArray,
+                            i;
 
                     // foreach property which was changed
                     for (var propertyName in result) {
@@ -46,12 +47,14 @@
 
                             // find rdfa node
                             elements = document.querySelectorAll('*[property="' + propertyName + '"]');
+                            i = 0;
 
                             // foreach node
                             nodeArray = [].slice.call(elements);
                             nodeArray.forEach(function(element) {
                                 // set content and highlight class
-                                element.innerHTML = content;
+                                element.innerHTML = content[i];
+                                i++;
                             });
                         }
                     }
