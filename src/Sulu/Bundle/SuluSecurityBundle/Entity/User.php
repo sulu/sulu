@@ -358,4 +358,43 @@ class User extends ApiEntity implements UserInterface, Serializable
     {
         return array_values($this->userGroups->toArray());
     }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $userSettings;
+
+
+    /**
+     * Add userSettings
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings
+     * @return User
+     */
+    public function addUserSetting(\Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings)
+    {
+        $this->userSettings[] = $userSettings;
+    
+        return $this;
+    }
+
+    /**
+     * Remove userSettings
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings
+     */
+    public function removeUserSetting(\Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings)
+    {
+        $this->userSettings->removeElement($userSettings);
+    }
+
+    /**
+     * Get userSettings
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserSettings()
+    {
+        return $this->userSettings;
+    }
 }

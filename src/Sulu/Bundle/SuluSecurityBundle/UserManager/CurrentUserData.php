@@ -2,7 +2,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\UserManager;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -18,14 +22,22 @@ class CurrentUserData implements CurrentUserDataInterface
      */
     protected $router;
 
+
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    protected $registry;
+
     /**
      * @param SecurityContextInterface $security
      * @param RouterInterface $router
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $registry
      */
-    public function __construct(SecurityContextInterface $security, RouterInterface $router)
+    public function __construct(SecurityContextInterface $security, RouterInterface $router, Registry $registry)
     {
         $this->security = $security;
         $this->router = $router;
+        $this->registry = $registry;
     }
 
     /**
@@ -90,6 +102,47 @@ class CurrentUserData implements CurrentUserDataInterface
     {
         return $this->getUser()->getLocale();
     }
+
+    /**
+     * returns the settings saved for a user
+     * @return mixed
+     */
+    public function getUserSettings()
+    {
+        return  $this->getUser()->getUserSettings();
+    }
+
+    /**
+     * persists the user data to the database
+     * @param $key
+     * @param $value
+     */
+    public function setUserSetting($key, $value)
+    {
+        $em = $this->registry->getManager();
+        $user = $this->getUser();
+        // encode before persist
+        $data = json_encode($value);
+
+
+        // get setting
+        /** @var UserSetting $setting */
+        $setting = $this->registry
+            ->getRepository('SuluSecurityBundle:UserSetting')
+            ->findOneBy(array('user'=>$user,'key'=>$key));
+
+        // or create new one
+        if (!$setting) {
+            $setting = new UserSetting();
+            $setting->setKey($key);
+            $setting->setUser($user);
+            $em->persist($setting);
+        }
+        // persist setting
+        $setting->setValue($data);
+        $em->flush($setting);
+    }
+
 
     /**
      * Get a user from the Security Context
