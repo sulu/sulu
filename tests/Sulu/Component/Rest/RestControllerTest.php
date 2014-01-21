@@ -277,6 +277,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
             array('find', 'getTotalPages', 'getParameterName', 'getLimit', 'getPage')
         );
+
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
         $listHelper->expects($this->any())->method('getTotalPages')->will($this->returnValue(3));
         $listHelper->expects($this->any())->method('getParameterName')->will(
@@ -289,6 +290,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
                 )
             )
         );
+
         $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(1));
         $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
 
@@ -309,6 +311,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('admin/api/contacts?page=3', $view['_links']['last']);
         $this->assertEquals('admin/api/contacts?page=1', $view['_links']['prev']);
         $this->assertEquals('admin/api/contacts?page=3', $view['_links']['next']);
+        $this->assertEquals('admin/api/contacts', $view['_links']['all']);
         $this->assertEquals('admin/api/contacts?page={page}', $view['_links']['pagination']);
         $this->assertEquals(
             'admin/api/contacts?sortBy=test&sortOrder={sortOrder}',
@@ -320,7 +323,81 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1', $view['pageSize']);
         $this->assertEquals(1, $view['_embedded'][0]['test']);
         $this->assertEquals(2, $view['_embedded'][1]['test']);
+        $this->assertEquals(2, $view['_embedded'][1]['test']);
         $this->assertEquals(3, $view['_embedded'][2]['test']);
+    }
+
+    public function testResponseListForAllValue()
+    {
+        $entities = array(
+            array(
+                'test' => 1
+            ),
+            array(
+                'test' => 2
+            ),
+            array(
+                'test' => 3
+            ),
+            array(
+                'test' => 4
+            ),
+            array(
+                'test' => 5
+            ),
+            array(
+                'test' => 6
+            )
+        );
+
+        $controller = $this->getMockForAbstractClass(
+            '\Sulu\Component\Rest\RestController',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('get', 'getRequest')
+        );
+
+        $listHelper = $this->getMock(
+            '\Sulu\Bundle\Rest\Listing\ListRestHelper',
+            array('find', 'getTotalPages', 'getParameterName', 'getLimit', 'getPage')
+        );
+
+        $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
+        $listHelper->expects($this->any())->method('getTotalPages')->will($this->returnValue(3));
+        $listHelper->expects($this->any())->method('getParameterName')->will(
+            $this->returnValueMap(
+                array(
+                    array('pageSize', 'pageSize'),
+                    array('page', 'page'),
+                    array('sortBy', 'sortBy'),
+                    array('sortOrder', 'sortOrder')
+                )
+            )
+        );
+
+        $listHelper->expects($this->any())->method('getLimit')->will($this->returnValue(4));
+        $listHelper->expects($this->any())->method('getPage')->will($this->returnValue(2));
+
+        $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
+
+        $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
+        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?flat=true&page=2&pageSize=4&orderBy=lastName&sortOrder=asc'));
+        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
+        $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
+
+        $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
+        $method->setAccessible(true);
+
+        $view = $method->invoke($controller, $entities)->getData();
+
+        $this->assertEquals('admin/api/contacts?flat=true&page=2&pageSize=4&orderBy=lastName&sortOrder=asc', $view['_links']['self']);
+        $this->assertEquals('admin/api/contacts?flat=true&page=1&pageSize=4&orderBy=lastName&sortOrder=asc', $view['_links']['prev']);
+        $this->assertEquals('admin/api/contacts?flat=true&page=3&pageSize=4&orderBy=lastName&sortOrder=asc', $view['_links']['next']);
+        $this->assertEquals('admin/api/contacts?flat=true&orderBy=lastName&sortOrder=asc', $view['_links']['all']);
+
     }
 
     public function testCreateHalResponse()
