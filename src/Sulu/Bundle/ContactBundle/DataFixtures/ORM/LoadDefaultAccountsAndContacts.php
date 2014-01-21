@@ -52,6 +52,81 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $manager->flush();
 
         /*
+         * Account 1.1
+         * */
+
+        $emailMassiveartAT = new Email();
+        $emailMassiveartAT->setEmail('office@massiveart.at');
+        $emailMassiveartAT->setEmailType($emailTypeWork);
+        $manager->persist($emailMassiveartAT);
+        $manager->flush();
+
+        $massiveartAT = new Account();
+        $massiveartAT->setName("Massive Art Österreich GmbH");
+        $massiveartAT->addEmail($emailMassiveartAT);
+        $massiveartAT->setCreated(new Datetime());
+        $massiveartAT->setChanged(new Datetime());
+        $massiveartAT->setParent($massiveart);
+        $manager->persist($massiveartAT);
+        $manager->flush();
+
+        /*
+         * Account 1.2
+         * */
+
+        $emailMassiveartDE = new Email();
+        $emailMassiveartDE->setEmail('office@massiveart.de');
+        $emailMassiveartDE->setEmailType($emailTypeWork);
+        $manager->persist($emailMassiveartDE);
+        $manager->flush();
+
+        $massiveartDE = new Account();
+        $massiveartDE->setName("Massive Art Deutschland GmbH");
+        $massiveartDE->addEmail($emailMassiveartDE);
+        $massiveartDE->setCreated(new Datetime());
+        $massiveartDE->setChanged(new Datetime());
+        $massiveartDE->setParent($massiveart);
+        $manager->persist($massiveartDE);
+        $manager->flush();
+
+        /*
+         * Account 2
+         * */
+
+        $emailLovelySystems = new Email();
+        $emailLovelySystems->setEmail('office@lovelysystems.com');
+        $emailLovelySystems->setEmailType($emailTypeWork);
+        $manager->persist($emailLovelySystems);
+        $manager->flush();
+
+        $lovelySystems = new Account();
+        $lovelySystems->setName("Lovely Systems");
+        $lovelySystems->addEmail($emailLovelySystems);
+        $lovelySystems->setCreated(new Datetime());
+        $lovelySystems->setChanged(new Datetime());
+        $manager->persist($lovelySystems);
+        $manager->flush();
+
+        /*
+         * Account 3
+         * */
+
+        $emailZeughaus = new Email();
+        $emailZeughaus->setEmail('office@lovelysystems.com');
+        $emailZeughaus->setEmailType($emailTypeWork);
+        $manager->persist($emailZeughaus);
+        $manager->flush();
+
+        $zeughaus = new Account();
+        $zeughaus->setName("Lovely Systems");
+        $zeughaus->addEmail($emailZeughaus);
+        $zeughaus->setCreated(new Datetime());
+        $zeughaus->setChanged(new Datetime());
+        $manager->persist($zeughaus);
+        $manager->flush();
+
+
+        /*
          * Contact 1
          * */
 
@@ -66,6 +141,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact1->setLastName("Zangerle");
         $contact1->setCreated(new Datetime());
         $contact1->setChanged(new Datetime());
+        $contact1->setTitle('');
+        $contact1->setPosition('');
+        $contact1->setMiddleName('');
         $contact1->addEmail($emailContact1);
         $contact1->setAccount($massiveart);
         $massiveart->addContact($contact1);
@@ -89,6 +167,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact2->setLastName("Wachter");
         $contact2->setCreated(new Datetime());
         $contact2->setChanged(new Datetime());
+        $contact2->setTitle('');
+        $contact2->setPosition('');
+        $contact2->setMiddleName('');
         $contact2->addEmail($emailContact2);
         $contact2->setAccount($massiveart);
         $massiveart->addContact($contact2);
@@ -112,6 +193,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact3->setLastName("Rotter");
         $contact3->setCreated(new Datetime());
         $contact3->setChanged(new Datetime());
+        $contact3->setTitle('');
+        $contact3->setPosition('');
+        $contact3->setMiddleName('');
         $contact3->addEmail($emailContact3);
         $contact3->setAccount($massiveart);
         $massiveart->addContact($contact3);
@@ -135,6 +219,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact4->setLastName("Hiller");
         $contact4->setCreated(new Datetime());
         $contact4->setChanged(new Datetime());
+        $contact4->setTitle('');
+        $contact4->setPosition('');
+        $contact4->setMiddleName('');
         $contact4->addEmail($emailContact4);
         $contact4->setAccount($massiveart);
         $massiveart->addContact($contact4);
@@ -158,6 +245,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact5->setLastName("Moosbrugger");
         $contact5->setCreated(new Datetime());
         $contact5->setChanged(new Datetime());
+        $contact5->setTitle('');
+        $contact5->setPosition('');
+        $contact5->setMiddleName('');
         $contact5->addEmail($emailContact5);
         $contact5->setAccount($massiveart);
         $massiveart->addContact($contact5);
@@ -181,6 +271,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact6->setLastName("Pretz");
         $contact6->setCreated(new Datetime());
         $contact6->setChanged(new Datetime());
+        $contact6->setTitle('');
+        $contact6->setPosition('');
+        $contact6->setMiddleName('');
         $contact6->addEmail($emailContact6);
         $contact6->setAccount($massiveart);
         $massiveart->addContact($contact6);
@@ -204,6 +297,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact7->setLastName("Schedler");
         $contact7->setCreated(new Datetime());
         $contact7->setChanged(new Datetime());
+        $contact7->setTitle('');
+        $contact7->setPosition('');
+        $contact7->setMiddleName('');
         $contact7->addEmail($emailContact7);
         $contact7->setAccount($massiveart);
         $massiveart->addContact($contact7);
@@ -227,6 +323,9 @@ class LoadDefaultAccountsAndContacts extends AbstractFixture implements FixtureI
         $contact8->setLastName("Ebrahimnia");
         $contact8->setCreated(new Datetime());
         $contact8->setChanged(new Datetime());
+        $contact8->setTitle('');
+        $contact8->setPosition('');
+        $contact8->setMiddleName('');
         $contact8->addEmail($emailContact8);
         $contact8->setAccount($massiveart);
         $massiveart->addContact($contact8);
