@@ -28,9 +28,18 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_content');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        // add config preview interval
+        $rootNode
+            ->children()
+                ->arrayNode('preview')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('interval')
+                            ->defaultValue('1000')
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
