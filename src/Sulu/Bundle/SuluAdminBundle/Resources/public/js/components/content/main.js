@@ -20,7 +20,8 @@ define([], function() {
     var defaults = {
             heading: '',
             tabsData: null,
-            instanceName: 'content'
+            instanceName: 'content',
+            template: 'default'
         },
 
         templates = {
@@ -75,7 +76,8 @@ define([], function() {
                     options: {
                         el: '#edit-toolbar',
                         instanceName: this.options.instanceName,
-                        forceReload: false
+                        forceReload: false,
+                        template:this.options.template
                     }
                 }
             ]);

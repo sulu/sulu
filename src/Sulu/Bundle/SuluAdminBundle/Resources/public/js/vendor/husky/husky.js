@@ -26067,6 +26067,10 @@ define('__component__$datagrid@husky',[],function() {
                 tblCellContent,
                 tblCellClass;
 
+            if(!value) {
+                value = '';
+            }
+
             if (this.options.excludeFields.indexOf(key) < 0) {
                 tblCellClasses = [];
                 tblCellContent = (!!value.thumb) ? '<img alt="' + (value.alt || '') + '" src="' + value.thumb + '"/>' : value;
@@ -27502,7 +27506,7 @@ define('__component__$search@husky',[], function() {
         },
         defaults = {
             instanceName: null,
-            placeholderText: 'Search...',
+            placeholderText: 'public.search',
             appearance: 'gray'
         },
 
@@ -27549,7 +27553,7 @@ define('__component__$search@husky',[], function() {
         render: function() {
             this.sandbox.dom.addClass(this.$el, 'search-container');
             this.sandbox.dom.addClass(this.$el, this.options.appearance);
-            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {placeholderText: this.options.placeholderText}));
+            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {placeholderText: this.sandbox.translate(this.options.placeholderText)}));
 
         },
 
@@ -27583,7 +27587,8 @@ define('__component__$search@husky',[], function() {
             }
         },
 
-        submitSearch: function() {
+        submitSearch: function(event) {
+            event.preventDefault();
 
             // get search value
 
@@ -27599,6 +27604,7 @@ define('__component__$search@husky',[], function() {
         },
 
         removeSearch: function(event) {
+            event.preventDefault();
             var $input;
             $input = this.sandbox.dom.next(event.currentTarget, 'input');
 

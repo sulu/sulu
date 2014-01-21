@@ -50,6 +50,7 @@ define([], function() {
                         iconSize: 'large',
                         class: 'highlight-gray',
                         group: 'right',
+                        position: 99,
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.edit-toolbar.delete'),
@@ -60,11 +61,36 @@ define([], function() {
                         ]
                     }
                 ];
+            },
+            defaultPreview: function() {
+                var defaults = templates.default.call(this);
+                defaults.splice(1, 0, {
+                    icon: 'eye-open',
+                    iconSize: 'large',
+                    group: 'right',
+                    position: 1,
+                    items: [
+                        {
+                            title: this.sandbox.translate('sulu.edit-toolbar.new-window'),
+                            callback: function() {
+                                this.sandbox.emit('sulu.edit-toolbar.preview.new-window');
+                            }.bind(this)
+                        }
+                    ]
+                });
+                return defaults;
             }
         },
 
         changeStateCallbacks = {
             default: function(saved, type) {
+                if (!!saved) {
+                    this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
+                } else {
+                    this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
+                }
+            },
+            defaultPreview: function(saved, type) {
                 if (!!saved) {
                     this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
                 } else {
