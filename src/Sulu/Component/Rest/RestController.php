@@ -186,7 +186,6 @@ abstract class RestController extends FOSRestController
 
         $response = array(
             '_links' => $this->getHalLinks($entities, $pages, true),
-            '_' => $this->getHalLinks($entities, $pages, true),
             '_embedded' => $entities,
             'total' => sizeof($entities),
             'page' => $listHelper->getPage(),
