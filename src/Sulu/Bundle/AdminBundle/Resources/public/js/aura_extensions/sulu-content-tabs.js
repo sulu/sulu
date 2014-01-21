@@ -18,7 +18,8 @@ define([], function() {
                                         el: this.options.el,
                                         tabsData: navigation,
                                         heading: this.sandbox.translate(this.content.title),
-                                        contentOptions: this.options
+                                        contentOptions: this.options,
+                                        template: !!this.content.template ? this.content.template : 'default'
                                     }
                                 }
                             ]);
@@ -39,7 +40,7 @@ define([], function() {
                  * @param id - id of current element (used for url generation)
                  * @param callback - returns parsed navigation element
                  */
-                parseContentTabs: function (contentNavigation, id, callback) {
+                parseContentTabs: function(contentNavigation, id, callback) {
                     var navigation, hasNew, hasEdit;
 
                     try {
@@ -51,10 +52,10 @@ define([], function() {
                     }
 
                     // get url from backbone
-                    app.sandbox.emit('navigation.url', function (url) {
+                    app.sandbox.emit('navigation.url', function(url) {
                         var items = [];
                         // check action
-                        app.sandbox.util.foreach(navigation.items, function (content) {
+                        app.sandbox.util.foreach(navigation.items, function(content) {
                             // check DisplayMode (new or edit) and show menu item or don't
                             hasNew = content.contentDisplay.indexOf('new') >= 0;
                             hasEdit = content.contentDisplay.indexOf('edit') >= 0;
@@ -87,7 +88,7 @@ define([], function() {
                  * @param id
                  * @returns {string}
                  */
-                parseActionUrl: function (actionString, url, id) {
+                parseActionUrl: function(actionString, url, id) {
                     // if first char is '/' use absolute url
                     if (actionString.substr(0, 1) === '/') {
                         return actionString.substr(1, actionString.length);

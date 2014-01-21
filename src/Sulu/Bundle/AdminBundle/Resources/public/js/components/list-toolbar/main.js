@@ -111,7 +111,7 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            // load template:
+            // parse template, if it is a string
             if (typeof this.options.template === 'string') {
                 try {
                     this.options.template = JSON.parse(this.options.template);
