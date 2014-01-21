@@ -54,4 +54,17 @@ interface CurrentUserDataInterface
      * @return String
      */
     public function getLocale();
+
+    /**
+     * returns the settings saved for a user
+     * @return mixed
+     */
+    public function getUserSettings();
+
+    /**
+     * persists the user data to the database
+     * @param $key
+     * @param $value
+     */
+    public function setUserSetting($key, $value);
 } 

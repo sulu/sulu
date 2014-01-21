@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\AdminBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\UserSettings;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,10 +27,27 @@ class AdminController extends Controller
             /** @var UserManagerInterface $userManager */
             $userManager = $this->get($serviceId);
             $userData = $userManager->getCurrentUserData();
+
+            // user settings
+            $userSettings = $userData->getUserSettings();
+            $first = true;
+            $userSettingsString = '{';
+            /** @var UserSettings $settings */
+            foreach ($userSettings as $settings) {
+                if (!$first) {
+                    $userSettingsString .= ',';
+                } else {
+                    $first = !$first;
+                }
+                $userSettingsString .= '"'.$settings->getKey().'"' . ':' . $settings->getValue();
+            }
+            $userSettingsString .= '}';
+
             if ($userData->isLoggedIn()) {
                 $user['username'] = $userData->getFullName();
                 $user['logout'] = $userData->getLogoutLink();
                 $user['locale'] = $userData->getLocale();
+                $user['settings'] = $userSettingsString;
             }
         }
 

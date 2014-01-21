@@ -39,9 +39,14 @@
         <div id="dialogContainer" data-aura-component="dialog@suluadmin"></div>
 
         <script type="text/javascript">
+            {% autoescape false %}
             var SULU = {
-                user: {locale: '{{ user.locale is defined ? user.locale : 'en' }}'}
+                user: {
+                    locale: '{{ user.locale is defined ? user.locale : 'en' }}',
+                    settings: {{ user.settings }}
+                }
             };
+            {% endautoescape %}
 
             // CKEditor needs base path to load some other files
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
