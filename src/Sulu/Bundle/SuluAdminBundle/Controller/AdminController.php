@@ -39,7 +39,7 @@ class AdminController extends Controller
                 } else {
                     $first = !$first;
                 }
-                $userSettingsString .= $settings->getKey() . ':' . $settings->getValue();
+                $userSettingsString .= '"'.$settings->getKey().'"' . ':' . $settings->getValue();
             }
             $userSettingsString .= '}';
 
