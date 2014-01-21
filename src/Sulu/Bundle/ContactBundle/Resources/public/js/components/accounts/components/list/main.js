@@ -15,23 +15,23 @@ define([
 
 
     var bindCustomEvents = function() {
-        // navigate to edit contact
-        this.sandbox.on('husky.datagrid.item.click', function(item) {
-            this.sandbox.emit('sulu.contacts.accounts.load', item);
-        }, this);
+            // navigate to edit contact
+            this.sandbox.on('husky.datagrid.item.click', function(item) {
+                this.sandbox.emit('sulu.contacts.accounts.load', item);
+            }, this);
 
-        // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.contacts.accounts.delete', ids);
-            }.bind(this));
-        }, this);
+            // delete clicked
+            this.sandbox.on('sulu.list-toolbar.delete', function() {
+                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                    this.sandbox.emit('sulu.contacts.accounts.delete', ids);
+                }.bind(this));
+            }, this);
 
-        // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('sulu.contacts.accounts.new');
-        }, this);
-    };
+            // add clicked
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('sulu.contacts.accounts.new');
+            }, this);
+        };
 
     return {
 
@@ -50,14 +50,8 @@ define([
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
-            this.sandbox.start([
-                {
-                    name: 'list-toolbar@suluadmin',
-                    options: {
-                        el: '#list-toolbar-container'
-                    }
-                }
-            ]);
+            // init list-toolbar
+            this.sandbox.sulu.initListToolbar.call(this, '#list-toolbar-container','fieldsAccounts', '/admin/api/accounts/fields');
 
             // datagrid
             this.sandbox.start([

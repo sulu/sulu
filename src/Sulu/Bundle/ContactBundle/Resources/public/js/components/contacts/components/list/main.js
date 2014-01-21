@@ -44,14 +44,8 @@ define(function() {
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
-            this.sandbox.start([
-                {
-                    name: 'list-toolbar@suluadmin',
-                    options: {
-                        el: '#list-toolbar-container'
-                    }
-                }
-            ]);
+            // init list-toolbar
+            this.sandbox.sulu.initListToolbar.call(this, '#list-toolbar-container','fieldsContacts', '/admin/api/contacts/fields');
 
             // datagrid
             this.sandbox.start([
