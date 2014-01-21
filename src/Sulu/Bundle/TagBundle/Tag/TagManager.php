@@ -87,6 +87,9 @@ class TagManager implements TagManagerInterface
      * Saves the given Tag
      * @param array $data The data of the tag to save
      * @param number|null $id The id for saving the tag (optional)
+     * @throws Exception\TagNotFoundException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws Exception\TagAlreadyExistsException
      * @return Tag
      */
     public function save($data, $id = null)
@@ -94,13 +97,24 @@ class TagManager implements TagManagerInterface
         $name = $data['name'];
 
         try {
-            $tag = new Tag();
-            $tag->setName($name);
+            // load existing tag if id is given and create a new one otherwise
+            if ($id) {
+                $tag = $this->tagRepository->findTagById($id);
+                if (!$tag) {
+                    throw new TagNotFoundException($id);
+                }
+            } else {
+                $tag = new Tag();
+            }
 
-            $tag->setCreated(new \DateTime());
+            // update data
+            $tag->setName($name);
             $tag->setChanged(new \DateTime());
 
-            $this->em->persist($tag);
+            if (!$id) {
+                $tag->setCreated(new \DateTime());
+                $this->em->persist($tag);
+            }
             $this->em->flush();
 
             return $tag;

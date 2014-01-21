@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
-use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -78,6 +76,10 @@ class TagController extends RestController implements ClassResourceInterface
         $name = $this->getRequest()->get('name');
 
         try {
+            if ($name == null) {
+                throw new MissingArgumentException($this->entityName, 'name');
+            }
+
             $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name));
 
             $view = $this->view($tag, 200);
@@ -107,31 +109,15 @@ class TagController extends RestController implements ClassResourceInterface
                 throw new MissingArgumentException($this->entityName, 'name');
             }
 
-            /** @var Tag $tag */
-            $tag = $this->getDoctrine()
-                ->getRepository($this->entityName)
-                ->findTagById($id);
+            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name), $id);
 
-            if (!$tag) {
-                throw new EntityNotFoundException($this->entityName, $id);
-            } else {
-                $em = $this->getDoctrine()->getManager();
-
-                $tag->setName($name);
-                $tag->setChanged(new \DateTime());
-
-                $em->flush();
-                $view = $this->view($tag, 200);
-            }
-        } catch (DBALException $exc) {
-            if ($exc->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
-                $restException = new RestException('The tag with the name "' . $name . '" already exists.');
-                $view = $this->view($restException->toArray(), 400);
-            } else {
-                throw $exc;
-            }
-        } catch (EntityNotFoundException $exc) {
-            $view = $this->view($exc->toArray(), 404);
+            $view = $this->view($tag, 200);
+        } catch (TagAlreadyExistsException $exc) {
+            $restException = new RestException('The tag with the name "' . $name . '" already exists.');
+            $view = $this->view($restException->toArray(), 400);
+        } catch (TagNotFoundException $exc) {
+            $entityNotFoundException = new EntityNotFoundException($this->entityName, $id);
+            $view = $this->view($entityNotFoundException->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
