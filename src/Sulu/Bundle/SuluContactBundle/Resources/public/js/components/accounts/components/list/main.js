@@ -64,6 +64,7 @@ define([
                         selectItem: {
                             type: 'checkbox'
                         },
+                        searchInstanceName:'content',
                         removeRow: false,
                         tableHead: [
                             {content: this.sandbox.translate('contact.accounts.name')}
