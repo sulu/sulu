@@ -91,14 +91,10 @@ class PreviewController extends Controller
             $preview->start($uid, $contentUuid, '', '');
         }
 
-        $multiple = $request->get('multiple', false);
-
-        if (!$multiple) {
-            $property = $request->get('property');
-            $value = $request->get('value');
-            $preview->update($uid, $contentUuid, $property, $value);
-        } else {
-            foreach ($multiple as $property => $content) {
+        // get changes from request
+        $changes = $request->get('changes', false);
+        if (!!$changes) {
+            foreach ($changes as $property => $content) {
                 $preview->update($uid, $contentUuid, $property, $content);
             }
         }
