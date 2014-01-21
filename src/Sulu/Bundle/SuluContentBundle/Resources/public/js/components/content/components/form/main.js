@@ -41,6 +41,9 @@ define([], function() {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
                 this.sandbox.form.setData(this.formId, data);
+                if (!!this.options.data.id) {
+                    this.initPreview();
+                }
             }.bind(this));
         },
 
@@ -91,6 +94,9 @@ define([], function() {
                 this.sandbox.emit('sulu.content.contents.list');
             }, this);
 
+            this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
+                this.openPreviewWindow();
+            }, this);
         },
 
         initData: function() {
@@ -127,9 +133,54 @@ define([], function() {
                 this.setHeaderBar(false);
             }.bind(this), "input,textarea");
 
-            this.sandbox.on('husky.ckeditor.changed', function(){
+            this.sandbox.on('husky.ckeditor.changed', function() {
                 this.setHeaderBar(false);
             }.bind(this));
+        },
+
+        openPreviewWindow: function() {
+            window.open('/admin/content/preview/' + this.options.data.id);
+        },
+
+        initPreview: function() {
+            var updateUrl = '/admin/content/preview/' + this.options.data.id,
+                data = this.sandbox.form.getData(this.formId);
+
+            this.sandbox.util.ajax({
+                url: updateUrl,
+                type: 'POST',
+
+                data: {
+                    changes: data
+                }
+            });
+
+            this.sandbox.dom.on(this.formId, 'focusout', function(e) {
+                var $element = $(e.currentTarget);
+                this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
+            }.bind(this), "select, input, textarea");
+
+            this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
+                if (!!this.options.data.id) {
+                    this.updatePreview($el.data('mapperProperty'), data);
+                }
+            }.bind(this));
+        },
+
+        updatePreview: function(property, value) {
+            var updateUrl = '/admin/content/preview/' + this.options.data.id,
+                changes = {};
+            changes[property] = value;
+
+
+            this.sandbox.util.ajax({
+                url: updateUrl,
+                type: 'POST',
+
+                data: {
+                    changes: changes
+                }
+            });
         }
 
     };

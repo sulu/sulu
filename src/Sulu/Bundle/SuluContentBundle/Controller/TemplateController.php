@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Sulu\Bundle\ContentBundle\Mapper\ContentMapper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller
