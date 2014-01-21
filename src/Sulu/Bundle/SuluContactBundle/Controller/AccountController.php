@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -36,6 +37,31 @@ class AccountController extends RestController implements ClassResourceInterface
     protected $entityName = 'SuluContactBundle:Account';
 
     protected $unsortable = array();
+
+    protected $fieldsExcluded = array('lft','rgt','depth');
+    protected $fieldsHidden = array('created');
+    protected $fieldsRelations = array('user_username');
+    protected $fieldsSortOrder = array();
+    protected $fieldsTranslationKeys = array();
+    protected $bundlePrefix = 'contact.accounts.';
+
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("accounts/fields")
+     * @return mixed
+     */
+    public function getFieldsAction() {
+        return $this->responseFields();
+    }
+
+    /**
+     * persists a setting
+     * @Put("accounts/fields")
+     */
+    public function putFieldsAction() {
+        return $this->responsePersistSettings();
+    }
 
     /**
      * Shows a single account with the given id
