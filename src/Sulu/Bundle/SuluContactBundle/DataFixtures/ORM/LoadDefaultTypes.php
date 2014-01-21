@@ -8,6 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
@@ -16,7 +17,7 @@ use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 
-class LoadDefaultTypes implements FixtureInterface
+class LoadDefaultTypes extends AbstractFixture implements FixtureInterface
 {
     /**
      * {@inheritDoc}
@@ -49,10 +50,14 @@ class LoadDefaultTypes implements FixtureInterface
         $emailType1->setName('email.home');
         $manager->persist($emailType1);
 
+        $this->addReference('email.type.home', $emailType1);
+
         $emailType2 = new EmailType();
         $emailType2->setId(2);
         $emailType2->setName('email.work');
         $manager->persist($emailType2);
+
+        $this->addReference('email.type.work', $emailType2);
 
 
         $addressType1 = new AddressType();
