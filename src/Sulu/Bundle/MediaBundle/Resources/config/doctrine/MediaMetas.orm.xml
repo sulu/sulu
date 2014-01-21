@@ -8,7 +8,7 @@
         </id>
         <field name="title" type="string" column="name" length="60"/>
         <field name="description" type="text" column="name" nullable="true"/>
-        <field name="idLocalization" type="integer" column="idLocalization"/> <!-- TODO -->
+        <field name="locale" type="string" column="locale" length="5"/>
         <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" inversed-by="locales">
             <join-columns>
                 <join-column name="idMedias" referenced-column-name="id" nullable="false"/>
