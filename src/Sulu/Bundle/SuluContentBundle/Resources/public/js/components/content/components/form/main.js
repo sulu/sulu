@@ -149,7 +149,7 @@ define([], function() {
                 type: 'POST',
 
                 data: {
-                    multiple: data
+                    changes: data
                 }
             });
 
@@ -164,15 +164,17 @@ define([], function() {
         },
 
         updatePreview: function(property, value) {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id;
+            var updateUrl = '/admin/content/preview/' + this.options.data.id,
+                changes = {};
+            changes[property] = value;
+
 
             this.sandbox.util.ajax({
                 url: updateUrl,
                 type: 'POST',
 
                 data: {
-                    property: property,
-                    value: value
+                    changes: changes
                 }
             });
         }
