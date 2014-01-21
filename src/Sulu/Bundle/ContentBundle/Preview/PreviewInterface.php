@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 interface PreviewInterface
 {
