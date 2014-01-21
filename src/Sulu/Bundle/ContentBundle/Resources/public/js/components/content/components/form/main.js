@@ -41,7 +41,9 @@ define([], function() {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
                 this.sandbox.form.setData(this.formId, data);
-                this.initPreview();
+                if (!!this.options.data.id) {
+                    this.initPreview();
+                }
             }.bind(this));
         },
 
@@ -159,7 +161,9 @@ define([], function() {
             }.bind(this), "select, input, textarea");
 
             this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
-                this.updatePreview.call(this, $el.data('mapperProperty'), data);
+                if (!!this.options.data.id) {
+                    this.updatePreview.call(this, $el.data('mapperProperty'), data);
+                }
             }.bind(this));
         },
 
