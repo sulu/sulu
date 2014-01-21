@@ -49,7 +49,7 @@ services:
     sulu_security.user_manager.current_user_data:
         class: %sulu_security.user_manager.current_user_data.class%
         public: false
-        arguments: [@security.context, @router]
+        arguments: [@security.context, @router, @doctrine]
 
     sulu_security.user_manager:
         class: %sulu_security.user_manager.class%
