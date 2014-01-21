@@ -172,10 +172,13 @@ class Preview implements PreviewInterface
             $response = $controller[0]->{$controller[1]}($content, true, $partial);
             $result = $response->getContent();
 
+            // if partial render for property is called
             if ($property != null) {
                 // extract special property
                 $crawler = new Crawler($result);
                 $nodes = $crawler->filter('*[property="' . $property . '"]');
+
+                // if rdfa property not found return false
                 if ($nodes->count() > 0) {
                     $result = $nodes->first()->html();
                 } else {
