@@ -10,16 +10,14 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Serializable;
 use Doctrine\ORM\Mapping as ORM;
-
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
-use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Symfony\Bridge\Doctrine\Tests\Security\User\EntityUserProviderTest;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -81,12 +79,18 @@ class User extends ApiEntity implements UserInterface, Serializable
     private $userGroups;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $userSettings;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -357,5 +361,38 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function getUserGroups()
     {
         return array_values($this->userGroups->toArray());
+    }
+
+    /**
+     * Add userSettings
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings
+     * @return User
+     */
+    public function addUserSetting(\Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings)
+    {
+        $this->userSettings[] = $userSettings;
+
+        return $this;
+    }
+
+    /**
+     * Remove userSettings
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings
+     */
+    public function removeUserSetting(\Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings)
+    {
+        $this->userSettings->removeElement($userSettings);
+    }
+
+    /**
+     * Get userSettings
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserSettings()
+    {
+        return $this->userSettings;
     }
 }

@@ -34,6 +34,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
                 ->leftJoin('user.userGroups', 'userGroups')
+                ->leftJoin('user.userSettings', 'settings')
                 ->leftJoin('userGroups.group', 'grp')
                 ->leftJoin('user.contact', 'contact')
                 ->leftJoin('contact.emails', 'emails')
@@ -41,6 +42,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->addSelect('role')
                 ->addSelect('userGroups')
                 ->addSelect('grp')
+                ->addSelect('settings')
                 ->addSelect('contact')
                 ->addSelect('emails')
                 ->where('user.id=:userId');
@@ -69,6 +71,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->leftJoin('user.userRoles', 'userRoles')
                 ->leftJoin('userRoles.role', 'role')
                 ->leftJoin('user.userGroups', 'userGroups')
+                ->leftJoin('user.userSettings', 'settings')
                 ->leftJoin('userGroups.group', 'grp')
                 ->leftJoin('user.contact', 'contact')
                 ->leftJoin('contact.emails', 'emails')
@@ -76,6 +79,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->addSelect('role')
                 ->addSelect('userGroups')
                 ->addSelect('grp')
+                ->addSelect('settings')
                 ->addSelect('contact')
                 ->addSelect('emails')
                 ->where('user.contact=:contactId');
@@ -111,10 +115,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->leftJoin('role.permissions', 'permissions')
             ->leftJoin('user.userGroups', 'userGroups')
             ->leftJoin('userGroups.group', 'grp')
+            ->leftJoin('user.userSettings', 'settings')
             ->addSelect('userRoles')
             ->addSelect('role')
             ->addSelect('userGroups')
             ->addSelect('grp')
+            ->addSelect('settings')
             ->addSelect('permissions')
             ->where('user.username=:username');
 
