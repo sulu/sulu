@@ -59,6 +59,7 @@ define(function() {
                             type: 'checkbox'
                         },
                         removeRow: false,
+                        searchInstanceName:'content',
                         tableHead: [
 
                             {content: this.sandbox.translate('contact.contacts.contactTitle')},
