@@ -49,7 +49,7 @@ class PreviewController extends Controller
             array(
                 'url' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
                 'contenUuid' => $contentUuid,
-                'interval' => 1000
+                'interval' => $this->container->getParameter('sulu_content.preview.interval')
             )
         );
 
