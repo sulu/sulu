@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
-
     protected $clients;
 
     /**

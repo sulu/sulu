@@ -10,16 +10,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use DateTime;
 use DOMDocument;
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 class PreviewController extends Controller
 {
@@ -62,16 +57,11 @@ class PreviewController extends Controller
         $fragment = $doc->createDocumentFragment();
         $fragment->appendXML($script->getContent());
         $body->appendChild($fragment);
-        $doc->formatOutput = TRUE;
+        $doc->formatOutput = true;
 
         $content = $doc->saveHTML();
 
-        return $this->render(
-            'SuluContentBundle:Preview:render.html.twig',
-            array(
-                'content' => $content
-            )
-        );
+        return new Response($content);
     }
 
     /**

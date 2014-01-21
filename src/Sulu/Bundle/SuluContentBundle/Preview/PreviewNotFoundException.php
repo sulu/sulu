@@ -12,14 +12,20 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Sulu\Component\Rest\Exception\RestException;
 
+/**
+ * This exception is thrown when someone tries to access a preview for a content/user-combination, which does not exist
+ * @package Sulu\Bundle\ContentBundle\Preview
+ */
 class PreviewNotFoundException extends RestException
 {
-
     /**
+     * The id of the user
      * @var int
      */
     private $userId;
+
     /**
+     * The uuid of the content
      * @var string
      */
     private $contentUuid;
@@ -33,6 +39,7 @@ class PreviewNotFoundException extends RestException
     }
 
     /**
+     * Returns the UUID of the content, for which no preview was found
      * @return string
      */
     public function getContentUuid()
@@ -41,6 +48,7 @@ class PreviewNotFoundException extends RestException
     }
 
     /**
+     * Returns the id of the user, for which no preview was found
      * @return int
      */
     public function getUserId()

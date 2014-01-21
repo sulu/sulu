@@ -93,7 +93,7 @@ define([], function() {
             }, this);
 
             this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
-                this.openPreviewWindow.call(this);
+                this.openPreviewWindow();
             }, this);
         },
 

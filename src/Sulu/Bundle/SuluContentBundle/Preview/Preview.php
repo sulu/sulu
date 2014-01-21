@@ -16,7 +16,6 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -209,11 +208,8 @@ class Preview implements PreviewInterface
         $cacheId = $this->getCacheKey($userId, $contentUuid);
         $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
 
-        return $this->cache->save($cacheId, $data, $this->lifeTime) && $this->cache->save(
-            $structureCacheId,
-            $data->getKey(),
-            $this->lifeTime
-        );
+        return $this->cache->save($cacheId, $data, $this->lifeTime) &&
+            $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
     }
 
     /**
@@ -269,6 +265,7 @@ class Preview implements PreviewInterface
         $id = $this->getCacheKey($userId, $contentUuid, 'changes');
         if ($this->cache->contains($id)) {
             $changes = $this->cache->fetch($id);
+            // clean array if changes are read
             $this->cache->save($id, array(), $this->lifeTime);
             return $changes;
         }
