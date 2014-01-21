@@ -11,6 +11,7 @@
 namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\Listing\ListRestHelper;
@@ -115,6 +116,28 @@ abstract class RestController extends FOSRestController
         return $this->handleview($view);
     }
 
+    public function responsePersistSettings() {
+        try {
+            $key = $this->getRequest()->get('key');
+            $data = $this->getRequest()->get('data');
+
+            $userDataServiceId = $this->container->getParameter('sulu_admin.user_data_service');
+            if ($this->has($userDataServiceId)) {
+                /** @var UserManagerInterface $userManager */
+                $userManager = $this->get($userDataServiceId);
+                /** @var CurrentUserDataInterface $userData */
+                $userData = $userManager->getCurrentUserData();
+
+                $userData->setUserSetting($key, $data);
+            }
+            $view = $this->view('',200);
+        } catch (\Exception $e) {
+            $view = $this->view($e->getMessage(),400);
+        }
+
+        return $this->handleView($view);
+    }
+
 
     /**
      * creates the translation keys array
@@ -163,6 +186,7 @@ abstract class RestController extends FOSRestController
 
         $response = array(
             '_links' => $this->getHalLinks($entities, $pages, true),
+            '_' => $this->getHalLinks($entities, $pages, true),
             '_embedded' => $entities,
             'total' => sizeof($entities),
             'page' => $listHelper->getPage(),
