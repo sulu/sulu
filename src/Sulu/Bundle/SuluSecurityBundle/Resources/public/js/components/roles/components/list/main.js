@@ -40,14 +40,9 @@ define(function() {
         initializeDataGrid: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/role/list'));
 
+            this.sandbox.sulu.initListToolbar.call(this, '#list-toolbar-container','fieldsRoles', '/admin/api/roles/fields');
+
             this.sandbox.start([
-                {
-                    name: 'list-toolbar@suluadmin',
-                    options: {
-                        el: '#list-toolbar-container',
-                        instanceName: 'roles'
-                    }
-                },
                 {
                     name: 'datagrid@husky',
                     options: {
