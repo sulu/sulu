@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TagBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -77,27 +78,14 @@ class TagController extends RestController implements ClassResourceInterface
         $name = $this->getRequest()->get('name');
 
         try {
-            $em = $this->getDoctrine()->getManager();
-
-            $tag = new Tag();
-            $tag->setName($name);
-
-            $tag->setCreated(new \DateTime());
-            $tag->setChanged(new \DateTime());
-
-            $em->persist($tag);
-            $em->flush();
+            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name));
 
             $view = $this->view($tag, 200);
-        } catch (DBALException $dbale) {
-            if ($dbale->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
-                $re = new RestException('The tag with the name "' . $name . '" already exists.');
-                $view = $this->view($re->toArray(), 400);
-            } else {
-                throw $dbale;
-            }
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
+        } catch (TagAlreadyExistsException $exc) {
+            $restException = new RestException('The tag with the name "' . $exc->getName() . '" already exists.');
+            $view = $this->view($restException->toArray(), 400);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -135,15 +123,15 @@ class TagController extends RestController implements ClassResourceInterface
                 $em->flush();
                 $view = $this->view($tag, 200);
             }
-        } catch (DBALException $dbale) {
-            if ($dbale->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
-                $re = new RestException('The tag with the name "' . $name . '" already exists.');
-                $view = $this->view($re->toArray(), 400);
+        } catch (DBALException $exc) {
+            if ($exc->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
+                $restException = new RestException('The tag with the name "' . $name . '" already exists.');
+                $view = $this->view($restException->toArray(), 400);
             } else {
-                throw $dbale;
+                throw $exc;
             }
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -184,9 +172,9 @@ class TagController extends RestController implements ClassResourceInterface
             $destTag = $this->get('sulu_tag.tag_manager')->merge($srcTagId, $destTagId);
 
             $view = $this->view(null, 303, array('location' => $destTag->getLinks()['self']));
-        } catch (TagNotFoundException $tnfe) {
-            $enfe = new EntityNotFoundException($this->entityName, $tnfe->getId());
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (TagNotFoundException $exc) {
+            $entityNotFoundException = new EntityNotFoundException($this->entityName, $exc->getId());
+            $view = $this->view($entityNotFoundException->toArray(), 404);
         }
 
         return $this->handleView($view);

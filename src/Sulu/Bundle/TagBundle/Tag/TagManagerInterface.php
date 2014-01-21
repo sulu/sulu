@@ -41,9 +41,11 @@ interface TagManagerInterface
 
     /**
      * Saves the given Tag
-     * @param Tag $tag The tag to save
+     * @param array $data The data of the tag to save
+     * @param number|null $id The id for saving the tag (optional)
+     * @return
      */
-    public function save($tag);
+    public function save($data, $id = null);
 
     /**
      * Deletes the given Tag

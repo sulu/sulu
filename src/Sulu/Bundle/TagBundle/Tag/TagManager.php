@@ -11,11 +11,13 @@
 namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\DBALException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
+use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -83,11 +85,32 @@ class TagManager implements TagManagerInterface
 
     /**
      * Saves the given Tag
-     * @param Tag $tag The tag to save
+     * @param array $data The data of the tag to save
+     * @param number|null $id The id for saving the tag (optional)
+     * @return Tag
      */
-    public function save($tag)
+    public function save($data, $id = null)
     {
-        // TODO: Implement save() method.
+        $name = $data['name'];
+
+        try {
+            $tag = new Tag();
+            $tag->setName($name);
+
+            $tag->setCreated(new \DateTime());
+            $tag->setChanged(new \DateTime());
+
+            $this->em->persist($tag);
+            $this->em->flush();
+
+            return $tag;
+        } catch (DBALException $exc) {
+            if ($exc->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
+                throw new TagAlreadyExistsException($name);
+            } else {
+                throw $exc;
+            }
+        }
     }
 
     /**
