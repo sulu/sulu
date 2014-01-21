@@ -180,7 +180,12 @@ class Preview implements PreviewInterface
 
                 // if rdfa property not found return false
                 if ($nodes->count() > 0) {
-                    $result = $nodes->first()->html();
+                    // create an array of changes
+                    $result = $nodes->each(
+                        function (Crawler $node) {
+                            return $node->html();
+                        }
+                    );
                 } else {
                     return false;
                 }

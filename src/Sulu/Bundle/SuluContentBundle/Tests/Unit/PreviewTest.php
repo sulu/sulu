@@ -147,12 +147,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function render($title, $article, $partial = false)
     {
-        $template = '<h1 property="title">%s</h1><div property="article">%s</div>';
+        $template = '<h1 property="title">%s</h1><h1 property="title">PREF: %s</h1><div property="article">%s</div>';
         if (!$partial) {
             $template = '<html vocab="http://schema.org/" typeof="Content"><body>' . $template . '</body></html>';
         }
 
-        return sprintf($template, $title, $article);
+        return sprintf($template, $title, $title, $article);
     }
 
     protected function tearDown()
@@ -190,7 +190,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $content = $this->preview->getChanges(1, '123-123-123');
 
         // check result
-        $this->assertEquals('aaaa', $content['title']['content']);
+        $this->assertEquals(['aaaa', 'PREF: aaaa'], $content['title']['content']);
 
         // check cache
         $this->assertTrue($this->cache->contains('1:123-123-123'));
@@ -232,9 +232,9 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         // update PREVIEW
         $changes = $this->preview->getChanges(1, '123-123-123');
         $this->assertEquals(2, sizeof($changes));
-        $this->assertEquals('New Title', $changes['title']['content']);
+        $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']['content']);
         $this->assertEquals('title', $changes['title']['property']);
-        $this->assertEquals('asdf', $changes['article']['content']);
+        $this->assertEquals(['asdf'], $changes['article']['content']);
         $this->assertEquals('article', $changes['article']['property']);
 
         // update PREVIEW
