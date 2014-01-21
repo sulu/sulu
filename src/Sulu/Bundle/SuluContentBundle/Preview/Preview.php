@@ -129,7 +129,7 @@ class Preview implements PreviewInterface
 
             return $content;
         } else {
-            throw new PreviewNotFoundException('Preview not found');
+            throw new PreviewNotFoundException($userId, $contentUuid);
         }
     }
 
@@ -146,7 +146,7 @@ class Preview implements PreviewInterface
             $result = $this->readChanges($userId, $contentUuid);
             return $result !== false ? $result : array();
         } else {
-            throw new PreviewNotFoundException('Preview not found');
+            throw new PreviewNotFoundException($userId, $contentUuid);
         }
     }
 
@@ -185,7 +185,7 @@ class Preview implements PreviewInterface
 
             return $result;
         } else {
-            throw new PreviewNotFoundException('Preview not found');
+            throw new PreviewNotFoundException($userId, $contentUuid);
         }
     }
 
