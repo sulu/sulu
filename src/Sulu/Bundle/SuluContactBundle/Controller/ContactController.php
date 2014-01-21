@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use DateTime;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -35,6 +36,31 @@ class ContactController extends RestController implements ClassResourceInterface
     protected $basePath = 'admin/api/contacts';
 
     protected $unsortable = array();
+
+    protected $fieldsExcluded = array();
+    protected $fieldsHidden = array('middleName','created');
+    protected $fieldsRelations = array();
+    protected $fieldsSortOrder = array(0=>'id',1=>'title');
+    protected $fieldsTranslationKeys = array();
+    protected $bundlePrefix = 'contact.contacts.';
+
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("contacts/fields")
+     * @return mixed
+     */
+    public function getFieldsAction() {
+        return $this->responseFields();
+    }
+
+    /**
+     * persists a setting
+     * @Put("contacts/fields")
+     */
+    public function putFieldsAction() {
+        return $this->responsePersistSettings();
+    }
 
     /**
      * lists all contacts
