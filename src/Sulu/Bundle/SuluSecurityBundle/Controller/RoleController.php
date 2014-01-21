@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -28,6 +30,31 @@ class RoleController extends RestController implements ClassResourceInterface
     protected $entityName = 'SuluSecurityBundle:Role';
 
     const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
+
+    protected $fieldsExcluded = array();
+    protected $fieldsHidden = array('changed','created');
+    protected $fieldsRelations = array();
+    protected $fieldsSortOrder = array(0=>'id',1=>'name');
+    protected $fieldsTranslationKeys = array();
+    protected $bundlePrefix = 'security.roles.';
+
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("roles/fields")
+     * @return mixed
+     */
+    public function getFieldsAction() {
+        return $this->responseFields();
+    }
+
+    /**
+     * persists a setting
+     * @Put("roles/fields")
+     */
+    public function putFieldsAction() {
+        return $this->responsePersistSettings();
+    }
 
     /**
      * returns all roles
