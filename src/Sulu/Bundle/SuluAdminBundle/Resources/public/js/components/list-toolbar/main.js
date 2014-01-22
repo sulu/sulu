@@ -36,6 +36,18 @@ define([], function() {
             }
         },
 
+        getObjectIds = function(array, swap) {
+            var temp = swap ? {} : [], i;
+            for (i=0;i<array.length;i++) {
+                if (swap) {
+                    temp[array[i].id] = i;
+                } else {
+                    temp.push(array[i].id);
+                }
+            }
+            return temp;
+        },
+
         templates = {
             default: function() {
                 return[
@@ -75,23 +87,54 @@ define([], function() {
                                 disabled: false,
                                 callback: function() {
 
-                                    this.sandbox.sulu.storage.loadSettings(this.options.columnOptions.key, '', function(loadedData) {
+                                    var userFields = this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
+                                        serverFields = this.options.columnOptions.data,
+                                        settings = [],
+                                        serverindex, userKeys, serverKeys, serverKeysSwap;
 
-                                        this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
-                                        this.sandbox.start([
-                                            {
-                                                name: 'column-options@husky',
-                                                options: {
-                                                    el: '#column-options-overlay',
-                                                    data: loadedData,
-                                                    hidden: false,
-                                                    trigger: '.toggle'
-                                                }
+                                    if (userFields) {
+                                        serverKeys = getObjectIds.call(this, serverFields);
+                                        serverKeysSwap = getObjectIds.call(this, serverFields, true);
+                                        userKeys = getObjectIds.call(this, userFields);
+
+                                        // keep all user settings if they still exist
+                                        this.sandbox.util.foreach(userKeys, function(key, index) {
+                                            serverindex = serverKeys.indexOf(key);
+                                            if (serverindex >= 0) {
+                                                // replace translation
+                                                userFields[index].translation = serverFields[serverindex].translation;
+                                                // add to result
+                                                settings.push(userFields[index]);
+                                                // remove from server keys
+                                                serverKeys.splice(serverindex,1);
                                             }
-                                        ]);
-                                        this.sandbox.once('husky.column-options.saved', function(data) {
-                                            this.sandbox.sulu.storage.saveSettings(this.options.columnOptions.key, data, this.options.columnOptions.url);
                                         }.bind(this));
+                                        // add new ones
+                                        this.sandbox.util.foreach(serverKeys, function(key) {
+                                            settings.push(serverFields[serverKeysSwap[key]]);
+                                        }.bind(this));
+                                    } else {
+                                        settings = serverFields;
+                                    }
+
+
+
+
+
+                                    this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
+                                    this.sandbox.start([
+                                        {
+                                            name: 'column-options@husky',
+                                            options: {
+                                                el: '#column-options-overlay',
+                                                data: settings,
+                                                hidden: false,
+                                                trigger: '.toggle'
+                                            }
+                                        }
+                                    ]);
+                                    this.sandbox.once('husky.column-options.saved', function(data) {
+                                        this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
                                     }.bind(this));
 //
                                 }.bind(this)
