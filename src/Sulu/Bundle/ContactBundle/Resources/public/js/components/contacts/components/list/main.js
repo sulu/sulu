@@ -45,7 +45,7 @@ define(function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
             // init list-toolbar
-            this.sandbox.sulu.initListToolbar.call(this, '#list-toolbar-container','fieldsContacts', '/admin/api/contacts/fields');
+            this.sandbox.sulu.initListToolbar.call(this, '#list-toolbar-container','contactsFields', '/admin/api/contacts/fields');
 
             // datagrid
             this.sandbox.start([
