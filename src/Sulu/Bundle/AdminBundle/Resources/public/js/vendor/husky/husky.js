@@ -26590,7 +26590,7 @@ define('__component__$datagrid@husky',[],function() {
                 url: url,
                 success: function() {
                     this.removeLoader();
-                    this.sandbox.emit(UPDATE, 'updated search');
+                    this.sandbox.emit(UPDATED, 'updated after search');
                 }.bind(this)
             });
         },
@@ -27581,21 +27581,29 @@ define('__component__$search@husky',[], function() {
                 this.sandbox.dom.hide($removeIcon);
             }
 
-            // enter pressed
             if (event.keyCode === 13) {
+                // enter pressed
                 this.submitSearch();
+            } else if (event.keyCode === 27) {
+                // enter pressed
+                this.removeSearch();
             }
+
+
         },
 
         submitSearch: function(event) {
-            event.preventDefault();
+            if (!!event) {
+                event.preventDefault();
+            }
 
             // get search value
 
             var searchString = this.sandbox.dom.val(this.sandbox.dom.find('#search-input', this.$el));
 
-            // check if searchstring is emtpy
+            // if searchstring is emtpy, emit reset
             if (searchString === '') {
+                this.sandbox.emit(RESET.call(this));
                 return;
             }
 
@@ -27604,7 +27612,14 @@ define('__component__$search@husky',[], function() {
         },
 
         removeSearch: function(event) {
-            event.preventDefault();
+            if (!!event) {
+                event.preventDefault();
+            } else {
+                event = {
+                    target: this.sandbox.dom.find('.remove-icon', this.$el),
+                    currentTarget: this.sandbox.dom.find('.remove-icon', this.$el)
+                };
+            }
             var $input;
             $input = this.sandbox.dom.next(event.currentTarget, 'input');
 
@@ -31635,8 +31650,6 @@ define('husky_extensions/util',[],function() {
                     for (var i = -1, length = array.length; ++i < length;) {
                         callbackValue(array[i], i);
                     }
-                } else {
-                    app.sandbox.logger.log('error at util.foreach: no array given');
                 }
             };
 
