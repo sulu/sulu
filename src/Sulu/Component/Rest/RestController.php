@@ -224,13 +224,26 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $path = $this->getRequest()->getRequestUri();
-//        $pathInfo = $this->getRequest()->getPathInfo();
         $path = $this->replaceOrAddUrlString(
             $path,
             $listHelper->getParameterName('pageSize') . '=',
             $listHelper->getLimit(),
             false
         );
+
+        // remove parameters without value
+        foreach ($this->getRequest()->query->all() as $key => $value) {
+            if ($value=='') {
+                // remove from path
+                $path = $this->replaceOrAddUrlString(
+                    $path,
+                    $key . '=',
+                    null,
+                    false
+                );
+            }
+        }
+
 
         $page = $listHelper->getPage();
 
@@ -329,7 +342,7 @@ abstract class RestController extends FOSRestController
     {
         if ($value) {
             if ($pos = strpos($url, $key)) {
-                return preg_replace('/(.*' . $key . ')(\w+)(\&*.*)/', '${1}' . $value . '${3}', $url);
+                return preg_replace('/(.*' . $key . ')(\w*)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
                     $and = (strpos($url, '?') === false) ? '?' : '&';
@@ -339,7 +352,7 @@ abstract class RestController extends FOSRestController
         } else {
             // remove if key exists
             if ($pos = strpos($url, $key)) {
-                $result = preg_replace('/(.*)([\\?|\&]{1}'.$key.')(\w+)(\&*.*)/', '${1}${4}', $url);
+                $result = preg_replace('/(.*)([\\?|\&]{1}'.$key.')(\w*)(\&*.*)/', '${1}${4}', $url);
 
                 // if was first variable, redo questionmark
                 if(strpos($url, '?'.$key)) {
