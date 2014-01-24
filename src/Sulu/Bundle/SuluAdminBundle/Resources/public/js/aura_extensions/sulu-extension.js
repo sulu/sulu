@@ -11,7 +11,18 @@
              *********/
 
             // load settings
-            var settings = app.sandbox.util.extend(true, {}, SULU.user.settings);
+            var settings = app.sandbox.util.extend(true, {}, SULU.user.settings),
+                getObjectIds = function(array, swap) {
+                    var temp = swap ? {} : [], i;
+                    for (i = 0; i < array.length; i++) {
+                        if (swap) {
+                            temp[array[i].id] = i;
+                        } else {
+                            temp.push(array[i].id);
+                        }
+                    }
+                    return temp;
+                };
 
             /**
              * load user settings
@@ -36,6 +47,65 @@
             };
 
             /**
+             * loads an url and matches it against user settings
+             * @param key Defines which setting to compare with
+             * @param attributesArray Defines which Attributes should NOT be taken from settings
+             * @param url Where
+             * @param callback
+             */
+            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, attributesArray, url, callback) {
+
+                this.sandbox.util.load(url)
+                    .then(function(data) {
+                        var userFields = app.sandbox.sulu.getUserSetting(key),
+                            serverFields = data,
+                            settingsArray = [],
+                            serverindex, userKeys, serverKeys, serverKeysSwap;
+
+                        if (userFields) {
+                            serverKeys = getObjectIds.call(this, serverFields);
+                            serverKeysSwap = getObjectIds.call(this, serverFields, true);
+                            userKeys = getObjectIds.call(this, userFields);
+
+                            // keep all user settings if they still exist
+                            this.sandbox.util.foreach(userKeys, function(key, index) {
+                                serverindex = serverKeys.indexOf(key);
+                                if (serverindex >= 0) {
+                                    this.sandbox.util.foreach(attributesArray, function(attribute) {
+                                        // replace attributes with those of settings
+                                        userFields[index][attribute] = serverFields[serverindex][attribute];
+                                    });
+                                    // add to result
+                                    settingsArray.push(userFields[index]);
+                                    // remove from server keys
+                                    serverKeys.splice(serverindex, 1);
+                                }
+                            }.bind(this));
+                            // add new ones
+                            this.sandbox.util.foreach(serverKeys, function(key) {
+                                settingsArray.push(serverFields[serverKeysSwap[key]]);
+                            }.bind(this));
+                        } else {
+                            settingsArray = serverFields;
+                        }
+
+                        settings[key] = settingsArray;
+
+                        /**
+                         * triggered when data was loaded from server
+                         * @event sulu.fields.loaded
+                         * @params {Object} data Fields data
+                         */
+                        app.sandbox.emit('sulu.fields.loaded', data);
+
+                        callback(settingsArray);
+                    }.bind(this));
+
+
+            };
+
+
+            /**
              * returns settings for a specified key
              * @param key
              * @returns {}
@@ -51,7 +121,6 @@
              * @param url Defines where to save data to
              */
             app.sandbox.sulu.saveUserSetting = function(key, value, url) {
-                console.log('SETTING',settings);
                 settings[key] = value;
 
                 var data = {
@@ -71,36 +140,95 @@
                         app.sandbox.logger.log("error", response);
                     }
                 });
-            }
+            };
 
             /*********
              * MISC
              *********/
 
+            app.sandbox.sulu.parseFieldsForDatagrid = function(fields, callback) {
+                var data = [],
+                    urlfields = '',
+                    fieldsCount = 0;
+                app.sandbox.util.foreach(fields, function(field) {
+                    if (field.disabled !== 'true') {
+                        // data
+                        data.push({content: app.sandbox.translate(field.translation), attribute: field.id});
+                        // url
+                        if (fieldsCount > 0) {
+                            urlfields += ',';
+                        }
+                        fieldsCount++;
+                        urlfields += field.id;
+                    } else if (field.id === 'id') {
+                        // url
+                        if (fieldsCount > 0) {
+                            urlfields += ',';
+                        }
+                        fieldsCount++;
+                        urlfields += field.id;
+                    }
+                });
+                callback(data, urlfields);
+            };
+
             /**
              * initializes sulu list-toolbar with column options
-             * @param container
-             * @param key
-             * @param url
+             * @param key Settings key
+             * @param url Url to load fields from
+             * @param options Toolbar-options
              */
-            app.sandbox.sulu.initListToolbar = function(container, key, url) {
-                this.sandbox.util.load(url)
-                    .then(function(data) {
-                        this.sandbox.start([
-                            {
-                                name: 'list-toolbar@suluadmin',
-                                options: {
-                                    el: container,
-                                    columnOptions: {
-                                        data: data,
-                                        key: key,
-                                        url: url
-                                    }
-                                }
-                            }
-                        ]);
-                    }.bind(this));
-            }
+            app.sandbox.sulu.initListToolbarAndList = function(key, url, listtoolbarOptions, datagridOptions) {
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translations'], url, function(data) {
+
+                    var toolbarDefaults = {
+                            columnOptions: {
+                                data: data,
+                                key: key,
+                                url: url
+                            },
+                            instanceName: 'content'
+                        },
+                        toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listtoolbarOptions),
+                        gridDefaults = {
+                            pagination: false,
+                            sortable: true,
+                            selectItem: {
+                                type: 'checkbox'
+                            },
+                            searchInstanceName: 'content',
+                            removeRow: false,
+                            excludeFields: ['']
+                        },
+                        gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
+
+                    //start component
+                    this.sandbox.start([
+                        {
+                            name: 'list-toolbar@suluadmin',
+                            options: toolbarOptions
+                        }
+                    ]);
+
+
+                    // now initialize datagrid
+//                    this.sandbox.sulu.parseFieldsForDatagrid(data, function(tableHead, urlfields) {
+//                        gridOptions.tableHead = tableHead;
+//                        gridOptions.url += '&fields='+urlfields;
+                    gridOptions.fieldsData = data;
+                    gridOptions.columnOptionsInstanceName = this.options.columnOptionsInstanceName ? this.options.columnOptionsInstanceName : toolbarOptions.instanceName;
+
+                    // start datagrid
+                    this.sandbox.start([
+                        {
+                            name: 'datagrid@husky',
+                            options: gridOptions
+                        }
+                    ]);
+//                    }.bind(this));
+
+                }.bind(this));
+            };
         }
     });
 })();
