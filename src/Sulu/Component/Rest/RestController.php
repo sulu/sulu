@@ -278,6 +278,11 @@ abstract class RestController extends FOSRestController
             $path,
             $listHelper->getParameterName('search') . '=',
             '{searchString}'
+        );        // create search link
+        $searchLink = $this->replaceOrAddUrlString(
+            $searchLink,
+            $listHelper->getParameterName('searchFields') . '=',
+            '{searchFields}'
         );
         $searchLink = $this->replaceOrAddUrlString(
             $searchLink,
@@ -294,6 +299,12 @@ abstract class RestController extends FOSRestController
         $allLink = $this->replaceOrAddUrlString(
             $allLink,
             $listHelper->getParameterName('page') . '=', null
+        );
+
+        // create filter link
+        $filterLink = $this->replaceOrAddUrlString(
+            $path,
+            $listHelper->getParameterName('fields') . '=', '{fieldsList}'
         );
 
 
@@ -325,6 +336,7 @@ abstract class RestController extends FOSRestController
                 '{page}'
             ) : null,
             'find' => $returnListLinks ? $searchLink : null,
+            'filter' => $returnListLinks ? $filterLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
             'all' => $returnListLinks ? $allLink : null,
         );
@@ -342,7 +354,7 @@ abstract class RestController extends FOSRestController
     {
         if ($value) {
             if ($pos = strpos($url, $key)) {
-                return preg_replace('/(.*' . $key . ')(\w*)(\&*.*)/', '${1}' . $value . '${3}', $url);
+                return preg_replace('/(.*' . $key . ')([\,|\w]*)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
                     $and = (strpos($url, '?') === false) ? '?' : '&';
@@ -352,7 +364,7 @@ abstract class RestController extends FOSRestController
         } else {
             // remove if key exists
             if ($pos = strpos($url, $key)) {
-                $result = preg_replace('/(.*)([\\?|\&]{1}'.$key.')(\w*)(\&*.*)/', '${1}${4}', $url);
+                $result = preg_replace('/(.*)([\\?|\&]{1}'.$key.')([\,|\w]*)(\&*.*)/', '${1}${4}', $url);
 
                 // if was first variable, redo questionmark
                 if(strpos($url, '?'.$key)) {
