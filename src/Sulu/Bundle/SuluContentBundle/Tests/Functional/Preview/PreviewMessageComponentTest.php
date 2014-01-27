@@ -233,6 +233,60 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testClose()
+    {
+        $i = -1;
+
+        $clientForm = $this->prepareClient(
+            function ($string) use (&$i) {
+                $data = json_decode($string);
+                $this->assertEquals($data->params->msg, 'OK');
+
+                $i++;
+                if ($i == 0) {
+                    $this->assertEquals($data->params->other, false);
+                } else {
+                    $this->assertEquals($data->params->other, true);
+                }
+            },
+            $this->exactly(2),
+            'form'
+        );
+        $clientPreview = $this->prepareClient(
+            function ($string) {
+                $data = json_decode($string);
+                $this->assertEquals($data->params->msg, 'OK');
+                $this->assertEquals($data->params->other, true);
+            },
+            $this->once(),
+            'preview'
+        );
+
+        $this->component->onMessage(
+            $clientForm,
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => '123-123-123',
+                    'type' => 'form',
+                    'params' => array()
+                )
+            )
+        );
+
+        $this->component->onMessage(
+            $clientPreview,
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => '123-123-123',
+                    'type' => 'preview',
+                    'params' => array()
+                )
+            )
+        );
+    }
+
     private function prepareClient(callable $sendCallback, $expects = null, $name = 'CON_1')
     {
         if ($expects == null) {
