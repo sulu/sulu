@@ -39,7 +39,7 @@ class TagController extends RestController implements ClassResourceInterface
         $view = $this->responseGetById(
             $id,
             function ($id) {
-                return $this->get('sulu_tag.tag_manager')->loadById($id);
+                return $this->get('sulu_tag.tag_manager')->findById($id);
             }
         );
 
@@ -56,7 +56,7 @@ class TagController extends RestController implements ClassResourceInterface
             // flat structure
             $view = $this->responseList();
         } else {
-            $tags = $this->get('sulu_tag.tag_manager')->loadAll();
+            $tags = $this->get('sulu_tag.tag_manager')->findAll();
             $view = $this->view($this->createHalResponse($tags), 200);
         }
 

@@ -23,21 +23,28 @@ interface TagManagerInterface
      * Loads all the tags managed in this system
      * @return Tag[]
      */
-    public function loadAll();
+    public function findAll();
 
     /**
      * Loads the tag with the given id
      * @param $id number The id of the tag
      * @return Tag
      */
-    public function loadById($id);
+    public function findById($id);
 
     /**
      * Loads the tag with the given name
      * @param $name
      * @return Tag
      */
-    public function loadByName($name);
+    public function findByName($name);
+
+    /**
+     * Loads the tag with the given name, or creates it, if it does not exist
+     * @param string $name The name to find or create
+     * @return Tag
+     */
+    public function findOrCreateByName($name);
 
     /**
      * Saves the given Tag

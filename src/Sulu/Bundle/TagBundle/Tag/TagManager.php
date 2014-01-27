@@ -58,7 +58,7 @@ class TagManager implements TagManagerInterface
      * Loads all the tags managed in this system
      * @return Tag[]
      */
-    public function loadAll()
+    public function findAll()
     {
         return $this->tagRepository->findAllTags();
     }
@@ -68,7 +68,7 @@ class TagManager implements TagManagerInterface
      * @param $id number The id of the tag
      * @return Tag
      */
-    public function loadById($id)
+    public function findById($id)
     {
         return $this->tagRepository->findTagById($id);
     }
@@ -78,9 +78,25 @@ class TagManager implements TagManagerInterface
      * @param $name
      * @return Tag
      */
-    public function loadByName($name)
+    public function findByName($name)
     {
-        // TODO: Implement loadByName() method.
+        return $this->tagRepository->findTagByName($name);
+    }
+
+    /**
+     * Loads the tag with the given name, or creates it, if it does not exist
+     * @param string $name The name to find or create
+     * @return Tag
+     */
+    public function findOrCreateByName($name)
+    {
+        $tag = $this->findByName($name);
+
+        if (!$tag) {
+            $tag = $this->save(array('name' => $name));
+        }
+
+        return $tag;
     }
 
     /**
