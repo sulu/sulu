@@ -88,7 +88,7 @@ define([], function() {
                             }
                         ]
                     }
-                ]
+                ];
             }
         },
         listener = {
@@ -131,17 +131,13 @@ define([], function() {
             this.options.template = parseTemplate.call(this, this.options.template, templates);
             this.options.listener = parseTemplate.call(this, this.options.listener, listener);
 
-
-
             var $container = this.sandbox.dom.createElement('<div />');
             this.html($container);
-
 
             // see if template has listener set
             if (this.options.listener) {
                 this.options.listener.call(this);
             }
-
 
             this.sandbox.start([
                 {
