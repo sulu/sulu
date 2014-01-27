@@ -193,12 +193,15 @@ class PreviewMessageComponent implements MessageComponentInterface
         // stop preview
         $this->preview->stop($user, $content);
 
-        // get other part
-        /** @var ConnectionInterface $other */
-        $other = $this->content[$id][$otherType];
         // close connection
         $from->close();
-        $other->close();
+
+        // close other part
+        if (isset($this->content[$id][$otherType])) {
+            /** @var ConnectionInterface $other */
+            $other = $this->content[$id][$otherType];
+            $other->close();
+        }
 
         // cleanUp cache
         unset($this->content[$id]);
@@ -206,6 +209,19 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     public function onClose(ConnectionInterface $conn)
     {
+        /** @var ConnectionInterface $other */
+        $other = null;
+        foreach ($this->content as $c) {
+            if ($c['form'] == $conn || isset($c['preview'])) {
+                $other = $c['preview'];
+            } elseif ($c['preview'] == $conn && isset($c['form'])) {
+                $other = $c['form'];
+            }
+        }
+        if ($other != null) {
+            $other->close();
+        }
+
         echo "Connection {$conn->resourceId} has disconnected\n";
     }
 

@@ -250,7 +250,11 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 }
             },
             $this->exactly(2),
-            'form'
+            'form',
+            function () {
+                $this->assertTrue(true);
+            },
+            $this->once()
         );
         $clientPreview = $this->prepareClient(
             function ($string) {
@@ -259,7 +263,38 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($data->params->other, true);
             },
             $this->once(),
-            'preview'
+            'preview',
+            function () {
+                $this->assertTrue(true);
+            },
+            $this->once()
+        );
+
+        $clientForm2 = $this->prepareClient(
+            function ($string) {
+                $data = json_decode($string);
+
+                if ($data->command != 'start') {
+                    // no update will be sent
+                    $this->assertTrue(false);
+                }
+            },
+            $this->any(),
+            'form2',
+            function () {
+            },
+            $this->never()
+        );
+        $this->component->onMessage(
+            $clientForm2,
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => '456-456-456',
+                    'type' => 'form',
+                    'params' => array()
+                )
+            )
         );
 
         $this->component->onMessage(
@@ -285,19 +320,47 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 )
             )
         );
+
+        $this->component->onMessage(
+            $clientForm,
+            json_encode(
+                array(
+                    'command' => 'close',
+                    'content' => '123-123-123',
+                    'type' => 'form',
+                    'params' => array()
+                )
+            )
+        );
     }
 
-    private function prepareClient(callable $sendCallback, $expects = null, $name = 'CON_1')
+    private function prepareClient(
+        callable $sendCallback,
+        $sendExpects = null,
+        $name = 'CON_1',
+        callable $closeCallback = null,
+        $closeExpects = null
+    )
     {
-        if ($expects == null) {
-            $expects = $this->any();
+        if ($sendExpects == null) {
+            $sendExpects = $this->any();
+        }
+        if ($closeExpects == null) {
+            $closeExpects = $this->any();
         }
         $client = $this->getMock('Ratchet\ConnectionInterface');
 
         $client
-            ->expects($expects)
+            ->expects($sendExpects)
             ->method('send')
             ->will($this->returnCallback($sendCallback));
+
+        if ($closeCallback != null) {
+            $client
+                ->expects($closeExpects)
+                ->method('close')
+                ->will($this->returnCallback($closeCallback));
+        }
 
         $client->resourceId = $name;
 
