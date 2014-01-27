@@ -17,8 +17,8 @@ define([], function() {
     var defaults = {
             heading: '',
             template: 'default',
+            listener: 'default',
             instanceName: 'content',
-            listener: null,
             columnOptions: {
                 disabled: false,
                 data: [],
@@ -28,77 +28,96 @@ define([], function() {
 
         templates = {
             default: function() {
-                return {
-                    data: [
-                        {
-                            id: 'add',
-                            icon: 'user-add',
-                            class: 'highlight',
-                            title: 'add',
-                            callback: function() {
-                                this.sandbox.emit('sulu.list-toolbar.add');
-                            }.bind(this)
-                        },
-                        {
-                            id: 'delete',
-                            icon: 'bin',
-                            title: 'delete',
-                            group: '1',
-                            disabled: true,
-                            callback: function() {
-                                this.sandbox.emit('sulu.list-toolbar.delete');
-                            }.bind(this)
-                        },
-                        {
-                            id: 'settings',
-                            icon: 'cogwheel',
-                            group: '1',
-                            items: [
-                                {
-                                    title: this.sandbox.translate('sulu.list-toolbar.import'),
-                                    disabled: true
-                                },
-                                {
-                                    title: this.sandbox.translate('sulu.list-toolbar.export'),
-                                    disabled: true
-                                },
-                                {
-                                    title: this.sandbox.translate('list-toolbar.column-options'),
-                                    disabled: false,
-                                    callback: function() {
-                                        var instanceName;
+                return [
+                    {
+                        id: 'add',
+                        icon: 'user-add',
+                        class: 'highlight',
+                        title: 'add',
+                        callback: function() {
+                            this.sandbox.emit('sulu.list-toolbar.add');
+                        }.bind(this)
+                    },
+                    {
+                        id: 'delete',
+                        icon: 'bin',
+                        title: 'delete',
+                        group: '1',
+                        disabled: true,
+                        callback: function() {
+                            this.sandbox.emit('sulu.list-toolbar.delete');
+                        }.bind(this)
+                    },
+                    {
+                        id: 'settings',
+                        icon: 'cogwheel',
+                        group: '1',
+                        items: [
+                            {
+                                title: this.sandbox.translate('sulu.list-toolbar.import'),
+                                disabled: true
+                            },
+                            {
+                                title: this.sandbox.translate('sulu.list-toolbar.export'),
+                                disabled: true
+                            },
+                            {
+                                title: this.sandbox.translate('list-toolbar.column-options'),
+                                disabled: false,
+                                callback: function() {
+                                    var instanceName;
 
-                                        this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
-                                        this.sandbox.start([
-                                            {
-                                                name: 'column-options@husky',
-                                                options: {
-                                                    el: '#column-options-overlay',
-                                                    data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
-                                                    hidden: false,
-                                                    instanceName: this.options.instanceName,
-                                                    trigger: '.toggle'
-                                                }
+                                    this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
+                                    this.sandbox.start([
+                                        {
+                                            name: 'column-options@husky',
+                                            options: {
+                                                el: '#column-options-overlay',
+                                                data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
+                                                hidden: false,
+                                                instanceName: this.options.instanceName,
+                                                trigger: '.toggle'
                                             }
-                                        ]);
-                                        instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-                                        this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
-                                            this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
-                                        }.bind(this));
-                                    }.bind(this)
-                                }
-                            ]
-                        }
-                    ],
-                    listener: function() {
-                        var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-                        this.sandbox.on('husky.datagrid.number.selections', function(number) {
-                            this.sandbox.emit('husky.list-toolbar.' + instanceName + number > 0 ? 'enable' : 'disable');
-                        });
-                    }.bind(this)
+                                        }
+                                    ]);
+                                    instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
+                                    this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
+                                        this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
+                                    }.bind(this));
+                                }.bind(this)
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        listener = {
+            default: function() {
+                var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '',
+                    postfix;
+                this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                    postfix = number > 0 ? 'enable' : 'disable';
+                    this.sandbox.emit('husky.toolbar.' + instanceName +'item.'+ postfix, 'delete');
+                }.bind(this));
+            }
+        },
+
+        parseTemplate = function(template, defaultTemplates) {
+            // parse template, if it is a string
+            if (typeof template === 'string') {
+                try {
+                   template = JSON.parse(template);
+                } catch (e) {
+                    // load template from variables
+                    if (!!defaultTemplates[template]) {
+                        template = defaultTemplates[template].call(this);
+                    } else {
+                        this.sandbox.logger.log('no template found!');
+                    }
                 }
             }
-        };
+            return template;
+    };
 
     return {
         view: true,
@@ -109,20 +128,10 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            // parse template, if it is a string
-            if (typeof this.options.template === 'string') {
-                try {
-                    this.options.template = JSON.parse(this.options.template);
-                } catch (e) {
-                    if (!!templates[this.options.template]) {
-                        this.options.template = templates[this.options.template].call(this).data;
-                        this.options.listener = templates[this.options.template].call(this).listener;
-                    } else {
-                        this.sandbox.logger.log('no template found!');
-                    }
+            this.options.template = parseTemplate.call(this, this.options.template, templates);
+            this.options.listener = parseTemplate.call(this, this.options.listener, listener);
 
-                }
-            }
+
 
             var $container = this.sandbox.dom.createElement('<div />');
             this.html($container);
@@ -140,7 +149,7 @@ define([], function() {
                     options: {
                         hasSearch: true,
                         el: $container,
-                        data: this.options.template.data,
+                        data: this.options.template,
                         instanceName: this.options.instanceName,
                         searchOptions: {
                             placeholderText: 'public.search'

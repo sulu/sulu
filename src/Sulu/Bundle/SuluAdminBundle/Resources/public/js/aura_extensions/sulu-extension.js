@@ -49,7 +49,7 @@
             /**
              * loads an url and matches it against user settings
              * @param key Defines which setting to compare with
-             * @param attributesArray Defines which Attributes should NOT be taken from settings
+             * @param attributesArray Defines which Attributes should NOT be taken from user-settings and from fields API instead
              * @param url Where
              * @param callback
              */
@@ -146,32 +146,6 @@
              * MISC
              *********/
 
-            app.sandbox.sulu.parseFieldsForDatagrid = function(fields, callback) {
-                var data = [],
-                    urlfields = '',
-                    fieldsCount = 0;
-                app.sandbox.util.foreach(fields, function(field) {
-                    if (field.disabled !== 'true') {
-                        // data
-                        data.push({content: app.sandbox.translate(field.translation), attribute: field.id});
-                        // url
-                        if (fieldsCount > 0) {
-                            urlfields += ',';
-                        }
-                        fieldsCount++;
-                        urlfields += field.id;
-                    } else if (field.id === 'id') {
-                        // url
-                        if (fieldsCount > 0) {
-                            urlfields += ',';
-                        }
-                        fieldsCount++;
-                        urlfields += field.id;
-                    }
-                });
-                callback(data, urlfields);
-            };
-
             /**
              * initializes sulu list-toolbar with column options
              * @param key Settings key
@@ -179,7 +153,7 @@
              * @param options Toolbar-options
              */
             app.sandbox.sulu.initListToolbarAndList = function(key, url, listtoolbarOptions, datagridOptions) {
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translations'], url, function(data) {
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translations','default'], url, function(data) {
 
                     var toolbarDefaults = {
                             columnOptions: {
@@ -211,10 +185,6 @@
                     ]);
 
 
-                    // now initialize datagrid
-//                    this.sandbox.sulu.parseFieldsForDatagrid(data, function(tableHead, urlfields) {
-//                        gridOptions.tableHead = tableHead;
-//                        gridOptions.url += '&fields='+urlfields;
                     gridOptions.fieldsData = data;
                     gridOptions.columnOptionsInstanceName = this.options.columnOptionsInstanceName ? this.options.columnOptionsInstanceName : toolbarOptions.instanceName;
 
