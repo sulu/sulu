@@ -15,7 +15,6 @@ use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent;
-use Sulu\Component\Testing\WebsocketClient;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
