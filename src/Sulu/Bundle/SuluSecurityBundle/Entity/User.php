@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Sulu\Component\Security\UserInterface;
 
 /**
  * User
