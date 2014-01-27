@@ -15,23 +15,23 @@ define([
 
 
     var bindCustomEvents = function() {
-            // navigate to edit contact
-            this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.contacts.accounts.load', item);
-            }, this);
+        // navigate to edit contact
+        this.sandbox.on('husky.datagrid.item.click', function(item) {
+            this.sandbox.emit('sulu.contacts.accounts.load', item);
+        }, this);
 
-            // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.contacts.accounts.delete', ids);
-                }.bind(this));
-            }, this);
+        // delete clicked
+        this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.contacts.accounts.delete', ids);
+            }.bind(this));
+        }, this);
 
-            // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
-                this.sandbox.emit('sulu.contacts.accounts.new');
-            }, this);
-        };
+        // add clicked
+        this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.emit('sulu.contacts.accounts.new');
+        }, this);
+    };
 
     return {
 
@@ -51,29 +51,25 @@ define([
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
             // init list-toolbar
-            this.sandbox.sulu.initListToolbar.call(this, '#list-toolbar-container','accountsFields', '/admin/api/accounts/fields');
-
-            // datagrid
-            this.sandbox.start([
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
                 {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: this.sandbox.dom.find('#companies-list', this.$el),
-                        url: '/admin/api/accounts?flat=true&fields=id,name',
-                        pagination: false,
-                        sortable: true,
-                        selectItem: {
-                            type: 'checkbox'
-                        },
-                        searchInstanceName:'content',
-                        removeRow: false,
-                        tableHead: [
-                            {content: this.sandbox.translate('contact.accounts.name'), attribute:'name'}
-                        ],
-                        excludeFields: ['id']
-                    }
-                }
-            ]);
+                    el: '#list-toolbar-container',
+                    instanceName: 'accounts'
+                },
+                {
+                    el: this.sandbox.dom.find('#companies-list', this.$el),
+                    url: '/admin/api/accounts?flat=true',
+                    pagination: false,
+                    sortable: true,
+                    selectItem: {
+                        type: 'checkbox'
+                    },
+                    searchInstanceName: 'accounts',
+                    removeRow: false,
+                    excludeFields: ['']
+                });
+
         }
+
     };
 });
