@@ -16,10 +16,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
-    /**
-     * @var \SplObjectStorage
-     */
-    protected $clients;
 
     /**
      * @var array
@@ -38,7 +34,6 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     public function __construct(SecurityContextInterface $context, PreviewInterface $preview)
     {
-        $this->clients = new \SplObjectStorage;
         $this->content = array();
 
         $this->context = $context;
@@ -47,9 +42,6 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     public function onOpen(ConnectionInterface $conn)
     {
-        // Store the new connection to send messages to later
-        $this->clients->attach($conn);
-
         echo "Connection {$conn->resourceId} has connected\n";
     }
 
@@ -75,6 +67,9 @@ class PreviewMessageComponent implements MessageComponentInterface
                     break;
                 case 'update':
                     $this->update($from, $msg, $user);
+                    break;
+                case 'close':
+                    $this->close($from, $msg, $user);
                     break;
             }
         }
@@ -140,6 +135,7 @@ class PreviewMessageComponent implements MessageComponentInterface
         $params = $msg->params;
         $id = $user . '-' . $content;
 
+        // if params correct
         if (
             $type == 'form' &&
             isset($params->property) &&
@@ -186,11 +182,30 @@ class PreviewMessageComponent implements MessageComponentInterface
         }
     }
 
+    private function close(ConnectionInterface $from, $msg, $user)
+    {
+        $content = $msg->content;
+        $type = strtolower($msg->type);
+        $otherType = ($type == 'form' ? 'preview' : 'form');
+        $params = $msg->params;
+        $id = $user . '-' . $content;
+
+        // stop preview
+        $this->preview->stop($user, $content);
+
+        // get other part
+        /** @var ConnectionInterface $other */
+        $other = $this->content[$id][$otherType];
+        // close connection
+        $from->close();
+        $other->close();
+
+        // cleanUp cache
+        unset($this->content[$id]);
+    }
+
     public function onClose(ConnectionInterface $conn)
     {
-        // The connection is closed, remove it, as we can no longer send it messages
-        $this->clients->detach($conn);
-
         echo "Connection {$conn->resourceId} has disconnected\n";
     }
 
