@@ -93,12 +93,25 @@ define([], function() {
                                             this.sandbox.sulu.storage.saveSettings(this.options.columnOptions.key, data, this.options.columnOptions.url);
                                         }.bind(this));
                                     }.bind(this));
-//
                                 }.bind(this)
                             }
                         ]
                     }
                 ];
+            },
+            defaultEditableList: function() {
+                var defaults = templates.default.call(this);
+                defaults.splice(1, 0, {
+                    icon: 'floppy-saved',
+                    iconSize: 'large',
+                    group: '1',
+                    title: this.sandbox.translate('sulu.list-toolbar.column-options'),
+                    callback: function() {
+                        this.sandbox.emit('sulu.list-toolbar.delete');
+                        this.sandbox.logger.log('test');
+                    }.bind(this)
+                });
+                return defaults;
             }
         };
 
