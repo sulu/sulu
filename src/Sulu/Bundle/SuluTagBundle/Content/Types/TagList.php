@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\TagBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
@@ -22,13 +23,20 @@ use Sulu\Component\Content\PropertyInterface;
 class TagList extends ComplexContentType
 {
     /**
+     * Responsible for saving the tags in the database
+     * @var TagManagerInterface
+     */
+    private $tagManager;
+
+    /**
      * Holds the template for rendering this content type in the admin
      * @var string
      */
     private $template;
 
-    public function __construct($template)
+    public function __construct(TagManagerInterface $tagManager, $template)
     {
+        $this->tagManager = $tagManager;
         $this->template = $template;
     }
 
@@ -50,7 +58,16 @@ class TagList extends ComplexContentType
      */
     public function get(NodeInterface $node, PropertyInterface $property)
     {
-        // TODO: Implement get() method.
+        $tags = array();
+
+        if ($node->hasProperty($property->getName())) {
+            $tagIds = $node->getPropertyValue($property->getName());
+            foreach ($tagIds as $tagId) {
+                $tags[] = $this->tagManager->findById($tagId)->getName();
+            }
+        }
+
+        $property->setValue($tags);
     }
 
     /**
@@ -61,7 +78,13 @@ class TagList extends ComplexContentType
      */
     public function set(NodeInterface $node, PropertyInterface $property)
     {
-        // TODO: Implement set() method.
+        $tagIds = array();
+
+        foreach ($property->getValue() as $tag) {
+            $tagIds[] = $this->tagManager->findOrCreateByName($tag)->getId();
+        }
+
+        $node->setProperty($property->getName(), $tagIds);
     }
 
     /**

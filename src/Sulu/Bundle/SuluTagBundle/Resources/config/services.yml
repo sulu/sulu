@@ -24,4 +24,4 @@ services:
     # Content types
     sulu.content.type.tag_list:
         class: %sulu.content.type.tag_list.class%
-        arguments: [%sulu.content.type.tag_list.template%]
+        arguments: ["@sulu_tag.tag_manager", %sulu.content.type.tag_list.template%]

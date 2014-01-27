@@ -20,10 +20,17 @@ interface TagRepositoryInterface
 {
     /**
      * Finds the tag with the given ID
-     * @param $id
+     * @param int $id
      * @return Tag
      */
     public function findTagById($id);
+
+    /**
+     * Finds the tag with the given name
+     * @param string $name
+     * @return mixed
+     */
+    public function findTagByName($name);
 
     /**
      * Searches for all roles
