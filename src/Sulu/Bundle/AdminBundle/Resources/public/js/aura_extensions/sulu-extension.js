@@ -32,7 +32,7 @@
              */
             app.sandbox.sulu.loadUserSetting = function(key, url, callback) {
                 if (settings[key]) {
-                    callback(settings[key])
+                    callback(settings[key]);
                 } else {
                     // get from server
                     app.sandbox.util.load(url)
@@ -108,7 +108,7 @@
             /**
              * returns settings for a specified key
              * @param key
-             * @returns {}
+             * @returns mixed
              */
             app.sandbox.sulu.getUserSetting = function(key) {
                 return settings[key] ? settings[key] : null;
@@ -150,9 +150,11 @@
              * initializes sulu list-toolbar with column options
              * @param key Settings key
              * @param url Url to load fields from
-             * @param options Toolbar-options
+             * @param mixed Toolbar-options
+             * @param listToolbarOptions
+             * @param datagridOptions
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, url, listtoolbarOptions, datagridOptions) {
+            app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
                 this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translations','default'], url, function(data) {
 
                     var toolbarDefaults = {
@@ -163,7 +165,7 @@
                             },
                             instanceName: 'content'
                         },
-                        toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listtoolbarOptions),
+                        toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                         gridDefaults = {
                             pagination: false,
                             sortable: true,
@@ -195,7 +197,6 @@
                             options: gridOptions
                         }
                     ]);
-//                    }.bind(this));
 
                 }.bind(this));
             };
