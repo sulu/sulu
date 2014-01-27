@@ -36,14 +36,16 @@ class AccountController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluContactBundle:Account';
 
-    protected $unsortable = array();
+    protected $unsortable = array('lft','rgt','depth');
 
+    protected $fieldsDefault = array('name');
     protected $fieldsExcluded = array('lft','rgt','depth');
     protected $fieldsHidden = array('created');
-    protected $fieldsRelations = array('user_username');
+    protected $fieldsRelations = array();
     protected $fieldsSortOrder = array();
     protected $fieldsTranslationKeys = array();
     protected $bundlePrefix = 'contact.accounts.';
+
 
 
     /**
