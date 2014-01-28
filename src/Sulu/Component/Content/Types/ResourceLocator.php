@@ -43,23 +43,25 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * reads the value for given property out of the database + sets the value of the property
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspace
      * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property)
+    public function get(NodeInterface $node, PropertyInterface $property, $webspace)
     {
-        $value = $this->getResourceLocator($node);
+        $value = $this->getResourceLocator($node ,$webspace);
         $property->setValue($value);
     }
 
     /**
      * reads the value for given property out of the database + sets the value of the property
      * @param NodeInterface $node
+     * @param string $webspaceKey
      * @return mixed
      */
-    public function getResourceLocator(NodeInterface $node)
+    public function getResourceLocator(NodeInterface $node, $webspaceKey)
     {
         try {
-            $value = $this->getStrategy()->loadByContent($node, $this->getPortalKey());
+            $value = $this->getStrategy()->loadByContent($node, $webspaceKey);
         } catch (ResourceLocatorNotFoundException $ex) {
             $value = null;
         }
@@ -70,12 +72,13 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * reads the value for given property out of the database + sets the value of the property
      * @param string $uuid
+     * @param string $webspaceKey
      * @return string
      */
-    public function getResourceLocatorByUuid($uuid)
+    public function getResourceLocatorByUuid($uuid, $webspaceKey)
     {
         try {
-            $value = $this->getStrategy()->loadByContentUuid($uuid, $this->getPortalKey());
+            $value = $this->getStrategy()->loadByContentUuid($uuid, $webspaceKey);
         } catch (ResourceLocatorNotFoundException $ex) {
             $value = null;
         }
@@ -87,19 +90,19 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @param string $webspaceKey
      * @return mixed
      */
-    public function set(NodeInterface $node, PropertyInterface $property)
+    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
         $value = $property->getValue();
         if ($value != null && $value != '') {
-            $old = $this->getResourceLocator($node);
+            $old = $this->getResourceLocator($node, $webspaceKey);
             if ($old !== '/') {
                 if ($old != null) {
-                    $this->getStrategy()->move($old, $value, $this->getPortalKey());
+                    $this->getStrategy()->move($old, $value, $webspaceKey);
                 } else {
-                    $this->getStrategy()->save($node, $value, $this->getPortalKey());
+                    $this->getStrategy()->save($node, $value, $webspaceKey);
                 }
             }
         } else {
@@ -120,11 +123,12 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * returns the node uuid of referenced content node
      * @param string $resourceLocator
+     * @param string $webspaceKey
      * @return string
      */
-    public function loadContentNodeUuid($resourceLocator)
+    public function loadContentNodeUuid($resourceLocator, $webspaceKey)
     {
-        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $this->getPortalKey());
+        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $webspaceKey);
     }
 
     /**
@@ -135,15 +139,6 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     {
         // TODO get strategy from ???
         return $this->strategy;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPortalKey()
-    {
-        // TODO get real portal from portalmanager + request
-        return 'default';
     }
 
     /**

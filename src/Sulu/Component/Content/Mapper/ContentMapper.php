@@ -157,7 +157,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         'property' => $property
                     );
                 } else {
-                    $type->set($node, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
+                    $type->set(
+                        $node,
+                        new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                        $webspaceKey
+                    );
                 }
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
@@ -178,7 +182,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 /** @var PropertyInterface $property */
                 $property = $post['property'];
 
-                $type->set($node, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
+                $type->set(
+                    $node,
+                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                    $webspaceKey
+                );
             } catch (Exception $ex) {
                 // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
@@ -257,7 +265,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         /** @var NodeInterface $node */
         foreach ($parent->getNodes() as $node) {
-            $result = $this->loadByNode($node, $languageCode);
+            $result = $this->loadByNode($node, $languageCode, $webspaceKey);
             $results[] = $result;
             if ($depth > 1) {
                 $children = $this->loadByParentNode($node, $webspaceKey, $languageCode, $depth - 1, $flat);
@@ -284,7 +292,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode);
+        return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
     }
 
     /**
@@ -310,19 +318,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode)
     {
         $session = $this->getSession();
-        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator);
+        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator, $webspaceKey);
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode);
+        return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
     }
 
     /**
      * returns data from given node
      * @param NodeInterface $contentNode
      * @param string $languageCode
+     * @param string $webspaceKey
      * @return StructureInterface
      */
-    private function loadByNode(NodeInterface $contentNode, $languageCode)
+    private function loadByNode(NodeInterface $contentNode, $languageCode, $webspaceKey)
     {
         $templateKey = $contentNode->getPropertyValue('sulu:template');
 
@@ -340,7 +349,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
             $type = $this->getContentType($property->getContentTypeName());
-            $type->get($contentNode, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
+            $type->get(
+                $contentNode,
+                new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                $webspaceKey
+            );
         }
 
         return $structure;
