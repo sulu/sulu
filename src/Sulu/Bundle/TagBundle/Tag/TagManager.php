@@ -20,6 +20,7 @@ use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Responsible for centralized Tag Management
@@ -43,15 +44,22 @@ class TagManager implements TagManagerInterface
      */
     private $eventDispatcher;
 
+    /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
     public function __construct(
         TagRepositoryInterface $tagRepository,
         ObjectManager $em,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        SecurityContextInterface $securityContext
     )
     {
         $this->tagRepository = $tagRepository;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -123,12 +131,16 @@ class TagManager implements TagManagerInterface
                 $tag = new Tag();
             }
 
+            $user = $this->securityContext->getToken()->getUser();
+
             // update data
             $tag->setName($name);
             $tag->setChanged(new \DateTime());
+            $tag->setChanger($user);
 
             if (!$id) {
                 $tag->setCreated(new \DateTime());
+                $tag->setCreator($user);
                 $this->em->persist($tag);
             }
             $this->em->flush();
