@@ -50,6 +50,8 @@ class PHPCRInitCommand extends ContainerAwareCommand
         // init node namespace and types
         $output->writeln('Register namespace');
         $workspace->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $workspace->getNamespaceRegistry()->registerNamespace($this->getContainer()->getParameter('sulu.content.language.namespace'), 'http://sulu.io/phpcr/locale');
+
         $output->writeln('Register node types');
         $workspace->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $workspace->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);

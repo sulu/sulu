@@ -84,6 +84,10 @@ class SuluCoreExtension extends Extension
      */
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
+        // Default Language
+        $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
+        $container->setParameter('sulu.content.language.default', $contentConfig['language']['default']);
+
         // Base Path
         $container->setParameter('sulu.content.base_path.content', $contentConfig['base_path']['content']);
         $container->setParameter('sulu.content.base_path.route', $contentConfig['base_path']['route']);
