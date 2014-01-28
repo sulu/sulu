@@ -67,7 +67,7 @@ abstract class RestController extends FOSRestController
     protected $fieldsTranslationKeys = array();
 
     /**
-     * contains default translations for some keys
+     * contains default translations for some fields
      * @var array
      */
     protected $fieldsDefaultTranslationKeys = array('id' => 'public.id', 'name' => 'public.name');
