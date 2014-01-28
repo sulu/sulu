@@ -11,6 +11,7 @@
 namespace Sulu\Component\Testing;
 
 
+use Sulu\Bundle\CoreBundle\Entity\TestUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,6 +23,18 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class TestUserProvider implements UserProviderInterface
 {
+    /**
+     * @var TestUser
+     */
+    private $user;
+
+    public function __construct() {
+        $this->user = new TestUser();
+        $this->user->setPassword('test');
+        $this->user->setUsername('test');
+        $this->user->setId(1);
+    }
+
     /**
      * Loads the user for the given username.
      *
@@ -39,7 +52,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        return new TestUser();
+        return $this->user;
     }
 
     /**
@@ -57,7 +70,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        return new TestUser();
+        return $this->user;
     }
 
     /**
