@@ -1,0 +1,28 @@
+{
+    "name": "sulu/test-bundle",
+    "type": "sulu-bundle",
+    "description": "Test Bundle for the Sulu CMS",
+    "license": "MIT",
+    "keywords": ["sulu", "test"],
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/sulu-cmf/SuluTestBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.3.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.3.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\TestBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/TestBundle"
+}

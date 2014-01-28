@@ -1,0 +1,7 @@
+parameters:
+#    sulu_test.example.class: Sulu\Bundle\TestBundle\Example
+
+services:
+#    sulu_test.example:
+#        class: %sulu_test.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
