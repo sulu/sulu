@@ -50,7 +50,13 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
             'username' => 'admin',
             'password' => 'admin',
             'workspace' => 'default'
-        ));
+            ),
+            array(
+                'base' => 'cmf',
+                'route' => 'routes',
+                'content' => 'contents'
+            )
+        );
         $this->session = $this->prepareSession();
         $this->prepareRepository();
         $this->prepareTestData();
@@ -93,7 +99,10 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $cmf = $this->session->getRootNode()->addNode('cmf');
         $cmf->addMixin('mix:referenceable');
 
-        $routes = $cmf->addNode('routes');
+        $default = $cmf->addNode('default');
+        $default->addMixin('mix:referenceable');
+
+        $routes = $default->addNode('routes');
         $routes->addMixin('mix:referenceable');
 
         $products = $routes->addNode('products');
@@ -177,7 +186,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->save($this->content1, '/products/news/content1-news', 'default');
         $this->sessionService->getSession()->save();
 
-        $route = '/cmf/routes/products/news/content1-news';
+        $route = '/cmf/default/routes/products/news/content1-news';
 
         $node = $this->session->getNode($route);
         $this->assertTrue($node->getPropertyValue('sulu:content') == $this->content1);
@@ -240,8 +249,8 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default');
         $this->sessionService->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/routes/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/routes/products/asdf/content2-news');
+        $oldNode = $this->session->getNode('/cmf/default/routes/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/default/routes/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
@@ -276,8 +285,8 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $this->mapper->move('/products/news/content2-news', '/products/asdf/content2-news', 'default');
         $this->sessionService->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/routes/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/routes/products/asdf/content2-news');
+        $oldNode = $this->session->getNode('/cmf/default/routes/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/default/routes/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
