@@ -301,6 +301,10 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
+        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $request->query = $query;
+
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
         $method->setAccessible(true);
 
@@ -388,6 +392,10 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
+        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $request->query = $query;
+
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'responseList');
         $method->setAccessible(true);
 
@@ -450,6 +458,10 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
+        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $request->query = $query;
+
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'createHalResponse');
         $method->setAccessible(true);
 
@@ -500,6 +512,10 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/admin/api/contacts'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
+
+        $query = $this->getMock('\Symfony\Component\HttpFoundation\ParameterBag', array('all'));
+        $query->expects($this->any())->method('all')->will($this->returnValue(array()));
+        $request->query = $query;
 
         $method = new \ReflectionMethod('\Sulu\Component\Rest\RestController', 'getHalLinks');
         $method->setAccessible(true);
