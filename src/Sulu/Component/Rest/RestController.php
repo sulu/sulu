@@ -85,6 +85,12 @@ abstract class RestController extends FOSRestController
     protected $fieldsEditable = array();
 
     /**
+     * contains arrays of validation key-value data
+     * @var array
+     */
+    protected $fieldsValidation = array();
+
+    /**
      * standard bundle prefix
      * @var string
      */
@@ -179,6 +185,7 @@ abstract class RestController extends FOSRestController
                 'disabled' => $hidden,
                 'default' => in_array($field, $this->fieldsDefault) ? true : null,
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
+                'validation' => array_key_exists($field, $this->fieldsValidation) ? $this->fieldsValidation[$field] : null,
             );
         }
         return $fieldsArray;
