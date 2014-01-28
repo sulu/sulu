@@ -83,7 +83,7 @@ class PortalRouteProvider implements RouteProviderInterface
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
                     $this->requestAnalyzer->getCurrentResourceLocator(),
-                    $portal->getKey(),
+                    $portal->getWorkspace()->getKey(),
                     $language
                 );
 
