@@ -18,7 +18,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
+use Sulu\Component\PHPCR\SessionFactory\SessionManagerInterface;
 
 class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface
 {

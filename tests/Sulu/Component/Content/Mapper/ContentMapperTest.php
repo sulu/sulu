@@ -28,7 +28,8 @@ use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+use Sulu\Component\PHPCR\SessionManager\SessionManager;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -39,7 +40,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class ContentMapperTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SessionFactoryService
+     * @var SessionManagerInterface
      */
     public $sessionService;
 
@@ -117,7 +118,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
      */
     private function getContainerMock()
     {
-        $this->sessionService = new SessionFactoryService(new RepositoryFactoryJackrabbit(), array(
+        $this->sessionService = new SessionManager(new RepositoryFactoryJackrabbit(), array(
             'url' => 'http://localhost:8080/server',
             'username' => 'admin',
             'password' => 'admin',

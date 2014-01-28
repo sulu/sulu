@@ -21,8 +21,8 @@ use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+use Sulu\Component\PHPCR\SessionManager\SessionManager;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 {
@@ -31,7 +31,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
      */
     private $mapper;
     /**
-     * @var SessionFactoryInterface
+     * @var SessionManagerInterface
      */
     private $sessionService;
     /**
@@ -45,7 +45,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->sessionService = new SessionFactoryService(new RepositoryFactoryJackrabbit(), array(
+        $this->sessionService = new SessionManager(new RepositoryFactoryJackrabbit(), array(
             'url' => 'http://localhost:8080/server',
             'username' => 'admin',
             'password' => 'admin',

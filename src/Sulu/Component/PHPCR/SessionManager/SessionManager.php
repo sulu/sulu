@@ -8,16 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\PHPCR\SessionFactory;
+namespace Sulu\Component\PHPCR\SessionManager;
 
 
 use PHPCR\CredentialsInterface;
+use PHPCR\NodeInterface;
 use PHPCR\RepositoryFactoryInterface;
 use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 
-class SessionFactoryService implements SessionFactoryInterface
+class SessionManager implements SessionManagerInterface
 {
     /**
      * @var RepositoryFactoryInterface
@@ -70,12 +71,29 @@ class SessionFactoryService implements SessionFactoryInterface
 
     /**
      * returns a valid session to interact with a phpcr database
-     * @param string $key
      * @return SessionInterface
      */
-    public function getSession($key = 'default')
+    public function getSession()
     {
         // TODO create session for key
         return $this->session;
+    }
+
+    /**
+     * returns the route node for given webspace
+     * @param string $webspaceKey
+     * @return NodeInterface
+     */
+    public function getRouteNode($webspaceKey = 'default')
+    {
+    }
+
+    /**
+     * returns the content node for given webspace
+     * @param string $webspaceKey
+     * @return NodeInterface
+     */
+    public function getContentNode($webspaceKey = 'default')
+    {
     }
 }
