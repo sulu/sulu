@@ -544,152 +544,180 @@ table {
   cursor: pointer;
 }
 
-/* line 59, ../scss/utilities.scss */
+/* line 58, ../scss/utilities.scss */
+.editable {
+  padding: 4px 7px 4px 7px;
+  margin: 0 0 0 -4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  outline: 0;
+  display: block;
+  height: 30px;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* line 72, ../scss/utilities.scss */
+.editable:focus,
+.editable:active {
+  background: white;
+  border: 1px solid white;
+  outline: 0;
+}
+
+/* line 78, ../scss/utilities.scss */
+.editable:hover {
+  border: 1px solid white;
+  outline: 0;
+}
+
+/* line 87, ../scss/utilities.scss */
 .m-top-5 {
   margin-top: 5px !important;
 }
 
-/* line 62, ../scss/utilities.scss */
+/* line 90, ../scss/utilities.scss */
 .p-top-5 {
   padding-top: 5px !important;
 }
 
-/* line 66, ../scss/utilities.scss */
+/* line 94, ../scss/utilities.scss */
 .m-bottom-5 {
   margin-bottom: 5px !important;
 }
 
-/* line 69, ../scss/utilities.scss */
+/* line 97, ../scss/utilities.scss */
 .p-bottom-5 {
   padding-bottom: 5px !important;
 }
 
-/* line 73, ../scss/utilities.scss */
+/* line 101, ../scss/utilities.scss */
 .m-right-5 {
   margin-right: 5px !important;
 }
 
-/* line 76, ../scss/utilities.scss */
+/* line 104, ../scss/utilities.scss */
 .p-right-5 {
   padding-right: 5px !important;
 }
 
-/* line 80, ../scss/utilities.scss */
+/* line 108, ../scss/utilities.scss */
 .m-left-5 {
   margin-left: 5px !important;
 }
 
-/* line 83, ../scss/utilities.scss */
+/* line 111, ../scss/utilities.scss */
 .p-left-5 {
   padding-left: 5px !important;
 }
 
-/* line 88, ../scss/utilities.scss */
+/* line 116, ../scss/utilities.scss */
 .m-top-10 {
   margin-top: 10px !important;
 }
 
-/* line 92, ../scss/utilities.scss */
+/* line 120, ../scss/utilities.scss */
 .m-bottom-10 {
   margin-bottom: 10px !important;
 }
 
-/* line 96, ../scss/utilities.scss */
+/* line 124, ../scss/utilities.scss */
 .m-right-10 {
   margin-right: 10px !important;
 }
 
-/* line 100, ../scss/utilities.scss */
+/* line 128, ../scss/utilities.scss */
 .m-left-10 {
   margin-left: 10px !important;
 }
 
-/* line 105, ../scss/utilities.scss */
+/* line 133, ../scss/utilities.scss */
 .p-top-10 {
   padding-top: 10px !important;
 }
 
-/* line 110, ../scss/utilities.scss */
+/* line 138, ../scss/utilities.scss */
 .m-top-15 {
   margin-top: 15px !important;
 }
 
-/* line 114, ../scss/utilities.scss */
+/* line 142, ../scss/utilities.scss */
 .m-bottom-15 {
   margin-bottom: 15px !important;
 }
 
-/* line 118, ../scss/utilities.scss */
+/* line 146, ../scss/utilities.scss */
 .m-right-15 {
   margin-right: 15px !important;
 }
 
-/* line 122, ../scss/utilities.scss */
+/* line 150, ../scss/utilities.scss */
 .m-left-15 {
   margin-left: 15px !important;
 }
 
-/* line 127, ../scss/utilities.scss */
+/* line 155, ../scss/utilities.scss */
 .m-top-20 {
   margin-top: 20px !important;
 }
 
-/* line 131, ../scss/utilities.scss */
+/* line 159, ../scss/utilities.scss */
 .m-bottom-20 {
   margin-bottom: 20px !important;
 }
 
-/* line 135, ../scss/utilities.scss */
+/* line 163, ../scss/utilities.scss */
 .m-right-20 {
   margin-right: 20px !important;
 }
 
-/* line 139, ../scss/utilities.scss */
+/* line 167, ../scss/utilities.scss */
 .m-left-20 {
   margin-left: 20px !important;
 }
 
-/* line 145, ../scss/utilities.scss */
+/* line 173, ../scss/utilities.scss */
 .m-top-25 {
   margin-top: 25px !important;
 }
 
-/* line 149, ../scss/utilities.scss */
+/* line 177, ../scss/utilities.scss */
 .m-bottom-25 {
   margin-bottom: 25px !important;
 }
 
-/* line 153, ../scss/utilities.scss */
+/* line 181, ../scss/utilities.scss */
 .m-right-25 {
   margin-right: 25px !important;
 }
 
-/* line 157, ../scss/utilities.scss */
+/* line 185, ../scss/utilities.scss */
 .m-left-25 {
   margin-left: 25px !important;
 }
 
-/* line 162, ../scss/utilities.scss */
+/* line 190, ../scss/utilities.scss */
 .m-top-30 {
   margin-top: 30px !important;
 }
 
-/* line 166, ../scss/utilities.scss */
+/* line 194, ../scss/utilities.scss */
 .m-bottom-30 {
   margin-bottom: 30px !important;
 }
 
-/* line 170, ../scss/utilities.scss */
+/* line 198, ../scss/utilities.scss */
 .m-right-30 {
   margin-right: 30px !important;
 }
 
-/* line 174, ../scss/utilities.scss */
+/* line 202, ../scss/utilities.scss */
 .m-left-30 {
   margin-left: 30px !important;
 }
 
-/* line 182, ../scss/utilities.scss */
+/* line 210, ../scss/utilities.scss */
 .m-height-25 {
   height: 25px !important;
 }
@@ -4664,37 +4692,39 @@ a.btn-black, a.btn-highlight {
 .tt-suggestion {
   height: 25px;
   padding: 0 15px;
+  border-width: 0 2px 0 2px;
+  border-style: solid;
+  border-color: #fff;
 }
-/* line 51, ../scss/modules/auto-complete.scss */
+/* line 54, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border {
   border-bottom: 1px solid #efefef;
   height: 25px;
   clear: both;
 }
-/* line 55, ../scss/modules/auto-complete.scss */
+/* line 58, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border .img {
   float: left;
   margin: 5px 10px 0 5px;
   width: 12px;
 }
-/* line 60, ../scss/modules/auto-complete.scss */
+/* line 63, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border .text {
   float: left;
   line-height: 25px;
 }
-/* line 65, ../scss/modules/auto-complete.scss */
+/* line 68, ../scss/modules/auto-complete.scss */
 .tt-suggestion:last-child .border {
   border-bottom: none;
 }
 
-/* line 71, ../scss/modules/auto-complete.scss */
+/* line 74, ../scss/modules/auto-complete.scss */
 .tt-suggestion:hover,
 .tt-is-under-cursor {
-  background: #cccccc;
-  border-color: transparent;
+  background: #efefef;
 }
 
-/* line 76, ../scss/modules/auto-complete.scss */
+/* line 78, ../scss/modules/auto-complete.scss */
 .suggestion {
   color: black;
 }
@@ -5434,7 +5464,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 42, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-container .tt-suggestions {
-  width: 498px;
+  width: 100%;
 }
 
 /* line 47, ../scss/modules/auto-complete-list.scss */
@@ -5577,4 +5607,13 @@ a.btn-black, a.btn-highlight {
 .husky-dropdown-multiple-select .dropdown-list > ul > li:hover, .husky-dropdown-multiple-select .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected, .column-navigation-wrapper .column-navigation .column .husky-dropdown-multiple-select .dropdown-list > ul > li.selected, .husky-dropdown-multiple-select .dropdown-list > ul > li.hover {
   background-color: #ccc;
   cursor: pointer;
+}
+
+/* line 2, ../scss/modules/datagrid.scss */
+.husky-datagrid table {
+  table-layout: fixed;
+}
+/* line 5, ../scss/modules/datagrid.scss */
+.husky-datagrid table td {
+  overflow: hidden;
 }
