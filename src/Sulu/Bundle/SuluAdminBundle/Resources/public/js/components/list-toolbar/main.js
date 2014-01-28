@@ -97,10 +97,10 @@ define([], function() {
                     iconSize: 'large',
                     group: '1',
                     disabled: true,
-                    title: this.sandbox.translate('sulu.list-toolbar.column-options'),
+                    id: 'save',
+                    title: this.sandbox.translate('sulu.list-toolbar.save'),
                     callback: function() {
-                        this.sandbox.emit('sulu.list-toolbar.delete');
-                        this.sandbox.logger.log('test');
+                        this.sandbox.emit('sulu.list-toolbar.save');
                     }.bind(this)
                 });
                 return defaults;
@@ -116,11 +116,11 @@ define([], function() {
                 }.bind(this));
             },
             defaultEditableList: function(){
+                var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
                 listener.default.call(this);
 
-                this.sandbox.on('husky.datagrid.number.selections', function(number) {
-                    postfix = number > 0 ? 'enable' : 'disable';
-                    this.sandbox.emit('husky.toolbar.' + instanceName +'item.'+ postfix, 'delete');
+                this.sandbox.on('husky.datagrid.data.changed', function() {
+                    this.sandbox.emit('husky.toolbar.' + instanceName +'item.enable', 'save');
                 }.bind(this));
             }
         },
