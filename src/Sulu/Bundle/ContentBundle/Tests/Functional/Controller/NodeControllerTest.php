@@ -7,14 +7,11 @@ use PHPCR\SimpleCredentials;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Symfony\Component\BrowserKit\Client;
-use Symfony\Component\Finder\Finder;
 use Doctrine\ORM\Tools\SchemaTool;
-
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -22,13 +19,6 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\Country;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 
 use DateTime;
 
