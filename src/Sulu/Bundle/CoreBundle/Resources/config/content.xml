@@ -47,7 +47,6 @@
         <!-- rlp mapper -->
         <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
             <argument type="service" id="sulu.phpcr.session"/>
-            <argument>%sulu.content.base_path.route%</argument>
         </service>
 
         <!-- rlp strategies -->
@@ -70,7 +69,6 @@
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument>%sulu.content.type.resource_locator.template%</argument>
-            <argument>%sulu.content.base_path.route%</argument>
         </service>
 
     </services>

@@ -95,11 +95,7 @@ class SessionManager implements SessionManagerInterface
         $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['route'];
         $root = $this->getSession()->getRootNode();
 
-        if ($root->hasNode($path)) {
-            return $root->getNode($path);
-        } else {
-            // TODO create recursivly
-        }
+        return $root->getNode($path);
     }
 
     /**
@@ -112,10 +108,6 @@ class SessionManager implements SessionManagerInterface
         $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['content'];
         $root = $this->getSession()->getRootNode();
 
-        if ($root->hasNode($path)) {
-            return $root->getNode($path);
-        } else {
-            // TODO create recursivly
-        }
+        return $root->getNode($path);
     }
 }
