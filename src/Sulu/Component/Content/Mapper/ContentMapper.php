@@ -14,6 +14,7 @@ use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
@@ -33,6 +34,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @var string
      */
     private $routesBasePath = '/cmf/routes';
+
+    /**
+     * namespace of translation
+     * @var string
+     */
+    private $languageNamespace;
+
+    /**
+     * default language of translation
+     * @var string
+     */
+    private $defaultLanguage;
 
     /**
      * TODO abstract with cleanup from RLPStrategy
@@ -60,10 +73,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         )
     );
 
-    public function __construct($contentBasePath, $routesBasePath)
+    public function __construct($contentBasePath, $routesBasePath, $defaultLanguage, $languageNamespace)
     {
         $this->contentBasePath = $contentBasePath;
         $this->routesBasePath = $routesBasePath;
+        $this->defaultLanguage = $defaultLanguage;
+        $this->languageNamespace = $languageNamespace;
     }
 
     /**
@@ -117,6 +132,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $node = $session->getNodeByIdentifier($uuid);
 
             if (
+                $languageCode == $this->defaultLanguage &&
                 $node->getPath() !== $this->getContentBasePath() &&
                 (!$node->hasProperty('title') || $node->getPropertyValue('title') !== $data['title'])
             ) {
@@ -148,12 +164,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         'property' => $property
                     );
                 } else {
-                    $type->set($node, $property);
+                    $type->set($node, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
                 }
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
                 // if it is not a partial update remove property
-                $type->remove($node, $property);
+                $type->remove($node, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
             }
             // if it is a partial update ignore property
         }
@@ -169,7 +185,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 /** @var PropertyInterface $property */
                 $property = $post['property'];
 
-                $type->set($node, $property);
+                $type->set($node, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
             } catch (Exception $ex) { // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
             }
@@ -313,10 +329,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     /**
      * returns data from given node
      * @param NodeInterface $contentNode
-     * @param string $language
+     * @param string $languageCode
      * @return StructureInterface
      */
-    private function loadByNode(NodeInterface $contentNode, $language)
+    private function loadByNode(NodeInterface $contentNode, $languageCode)
     {
         $templateKey = $contentNode->getPropertyValue('sulu:template');
 
@@ -334,7 +350,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
             $type = $this->getContentType($property->getContentTypeName());
-            $type->get($contentNode, $property);
+            $type->get($contentNode, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
         }
 
         return $structure;
