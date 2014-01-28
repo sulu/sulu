@@ -85,7 +85,11 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $cmf->addMixin('mix:referenceable');
         $this->session->save();
 
-        $this->contents = $cmf->addNode('contents');
+        $default = $cmf->addNode('default');
+        $default->addMixin('mix:referenceable');
+        $this->session->save();
+
+        $this->contents = $default->addNode('contents');
         $this->contents->setProperty('sulu:template', 'overview');
         $this->contents->setProperty('sulu:creator', 1);
         $this->contents->setProperty('sulu:created', new \DateTime());
@@ -94,7 +98,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->contents->addMixin('sulu:content');
         $this->session->save();
 
-        $this->routes = $cmf->addNode('routes');
+        $this->routes = $default->addNode('routes');
         $this->routes->setProperty('sulu:content', $this->contents);
         $this->routes->addMixin('sulu:path');
         $this->session->save();
@@ -104,7 +108,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = $this->getContainerMock();
 
-        $this->mapper = new ContentMapper('/cmf/contents', '/cmf/routes', 'de', 'sulu_locale');
+        $this->mapper = new ContentMapper('de', 'sulu_locale');
         $this->mapper->setContainer($this->container);
 
         $this->prepareSession();
@@ -118,12 +122,20 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
      */
     private function getContainerMock()
     {
-        $this->sessionService = new SessionManager(new RepositoryFactoryJackrabbit(), array(
-            'url' => 'http://localhost:8080/server',
-            'username' => 'admin',
-            'password' => 'admin',
-            'workspace' => 'default'
-        ));
+        $this->sessionService = new SessionManager(
+            new RepositoryFactoryJackrabbit(),
+            array(
+                'url' => 'http://localhost:8080/server',
+                'username' => 'admin',
+                'password' => 'admin',
+                'workspace' => 'test'
+            ),
+            array(
+                'base' => 'cmf',
+                'route' => 'routes',
+                'content' => 'contents'
+            )
+        );
 
         $containerMock = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
         $containerMock->expects($this->any())
@@ -252,7 +264,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $factory = new RepositoryFactoryJackrabbit();
         $repository = $factory->getRepository($parameters);
         $credentials = new SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'default');
+        $this->session = $repository->login($credentials, 'test');
     }
 
     public function prepareRepository()
@@ -284,18 +296,18 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('Test', $content->getProperty('sulu_locale:de-article')->getString());
+        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
@@ -311,7 +323,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -319,7 +331,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
 
         $this->assertEquals('Testtitle', $content->title);
-        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
@@ -335,13 +347,13 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         $contentBefore = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/news/test');
 
         /** @var NodeInterface $contentNode */
         $contentNode = $route->getPropertyValue('sulu:content');
@@ -376,7 +388,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -384,7 +396,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 
         $this->assertEquals('Testtitle', $content->title);
-        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
@@ -400,7 +412,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
@@ -426,7 +438,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -447,7 +459,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
@@ -465,7 +477,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 
         $this->assertEquals('Testtitle', $content->title);
-        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag2', 'tag3'), $content->tags);
         $this->assertEquals(1, $content->creator);
@@ -473,12 +485,12 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('Test', $content->getProperty('sulu_locale:de-article')->getString());
+        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
@@ -494,7 +506,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
@@ -520,7 +532,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -541,7 +553,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
@@ -566,7 +578,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -587,7 +599,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
@@ -620,11 +632,11 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/news/test');
         $content = $route->getPropertyValue('sulu:content');
 
         // old properties exists in node
-        $this->assertEquals('Test', $content->getPropertyValue('sulu_locale:de-article'));
+        $this->assertEquals('default', $content->getPropertyValue('sulu_locale:de-article'));
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
 
         // property of new structure exists
@@ -644,7 +656,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
@@ -660,7 +672,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $content = $this->mapper->loadByResourceLocator('/news/test/test/test', 'default', 'de');
 
         $this->assertEquals('Testtitle', $content->title);
-        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test/test/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
@@ -668,19 +680,19 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test/test/test');
+        $route = $root->getNode('cmf/default/routes/news/test/test/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('Test', $content->getProperty('sulu_locale:de-article')->getString());
+        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
-        $oldRoute = $root->getNode('cmf/routes/news/test');
+        $oldRoute = $root->getNode('cmf/default/routes/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
         $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
@@ -699,14 +711,14 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         // change simple content
-        $data['title'] = 'Test';
+        $data['title'] = 'test';
 
         // update content
         $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
@@ -715,8 +727,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 //        // check read
 //        $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
 //
-//        $this->assertEquals('Test', $content->title);
-//        $this->assertEquals('Test', $content->article);
+//        $this->assertEquals('default', $content->title);
+//        $this->assertEquals('default', $content->article);
 //        $this->assertEquals('/news/test', $content->url);
 //        $this->assertEquals(array('tag1', 'tag2'), $content->tags);
 //        $this->assertEquals(1, $content->creator);
@@ -724,10 +736,10 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $content = $root->getNode('cmf/contents/test');
+        $content = $root->getNode('cmf/default/contents/test');
 
-        $this->assertEquals('Test', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('Test', $content->getProperty('sulu_locale:de-article')->getString());
+        $this->assertEquals('test', $content->getProperty('sulu_locale:de-title')->getString());
+        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
@@ -743,7 +755,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                 'tag2'
             ),
             'url' => '/news/test',
-            'article' => 'Test'
+            'article' => 'default'
         );
 
         // save content
@@ -768,7 +780,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/asdf/test/test', 'default', 'de');
         $this->assertEquals('Testtitle', $content->title);
-        $this->assertEquals('Test', $content->article);
+        $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/asdf/test/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(1, $content->creator);
@@ -776,19 +788,19 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/asdf/test/test');
+        $route = $root->getNode('cmf/default/routes/news/asdf/test/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
-        $this->assertEquals('Test', $content->getProperty('sulu_locale:de-article')->getString());
+        $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
-        $oldRoute = $root->getNode('cmf/routes/news/test');
+        $oldRoute = $root->getNode('cmf/default/routes/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
         $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
@@ -817,7 +829,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-1',
-                'article' => 'Test'
+                'article' => 'default'
             ),
             array(
                 'title' => 'Testnews-2',
@@ -826,7 +838,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-2',
-                'article' => 'Test'
+                'article' => 'default'
             ),
             array(
                 'title' => 'Testnews-2-1',
@@ -835,7 +847,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'Test'
+                'article' => 'default'
             )
         );
 
@@ -866,7 +878,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // check content repository
         $root = $this->session->getRootNode();
-        $contentRootNode = $root->getNode('cmf/contents');
+        $contentRootNode = $root->getNode('cmf/default/contents');
 
         $newsNode = $contentRootNode->getNode('news');
         $this->assertEquals(2, sizeof($newsNode->getNodes()));
@@ -902,7 +914,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-1',
-                'article' => 'Test'
+                'article' => 'default'
             ),
             array(
                 'title' => 'Testnews-2',
@@ -911,7 +923,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-2',
-                'article' => 'Test'
+                'article' => 'default'
             ),
             array(
                 'title' => 'Testnews-2-1',
@@ -920,7 +932,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'Test'
+                'article' => 'default'
             )
         );
 
@@ -1099,7 +1111,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-1',
-                'article' => 'Test'
+                'article' => 'default'
             ),
             array(
                 'title' => 'Testnews-2',
@@ -1108,7 +1120,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-2',
-                'article' => 'Test'
+                'article' => 'default'
             ),
             array(
                 'title' => 'Testnews-2-1',
@@ -1117,7 +1129,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
                     'tag2'
                 ),
                 'url' => '/news/test-2/test-1',
-                'article' => 'Test'
+                'article' => 'default'
             )
         );
 
@@ -1166,6 +1178,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $node = $this->session->getNodeByIdentifier($structure->getUuid());
 
         $this->assertEquals($node->getName(), 'ae-ue-oe-ae-ue-oe');
-        $this->assertEquals($node->getPath(), '/cmf/contents/ae-ue-oe-ae-ue-oe');
+        $this->assertEquals($node->getPath(), '/cmf/default/contents/ae-ue-oe-ae-ue-oe');
     }
 }
