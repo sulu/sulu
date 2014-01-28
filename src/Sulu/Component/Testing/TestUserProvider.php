@@ -82,6 +82,6 @@ class TestUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Sulu\Component\Testing\TestUser';
+        return $class === 'Sulu\Bundle\CoreBundle\Entity\TestUser';
     }
 }
