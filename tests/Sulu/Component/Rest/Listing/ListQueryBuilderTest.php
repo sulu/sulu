@@ -128,7 +128,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT object.field1 object_field1, object.field2 object_field2, otherobject.field3 otherobject_field3 ' .
-            'FROM SuluCoreBundle:Example u JOIN u.object object JOIN u.otherobject otherobject',
+            'FROM SuluCoreBundle:Example u LEFT JOIN u.object object LEFT JOIN u.otherobject otherobject',
             $dql
         );
     }

@@ -67,10 +67,28 @@ abstract class RestController extends FOSRestController
     protected $fieldsTranslationKeys = array();
 
     /**
-     * contains default translations for some keys
+     * contains default translations for some fields
      * @var array
      */
-    protected $fieldsDefaultTranslationKeys = array('id'=>'public.id', 'name'=>'public.name');
+    protected $fieldsDefaultTranslationKeys = array('id' => 'public.id', 'name' => 'public.name');
+
+    /**
+     * contains fields that cannot be hidden and are visible by default
+     * @var array
+     */
+    protected $fieldsDefault = array();
+
+    /**
+     * contains fields that are editable
+     * @var array
+     */
+    protected $fieldsEditable = array();
+
+    /**
+     * contains arrays of validation key-value data
+     * @var array
+     */
+    protected $fieldsValidation = array();
 
     /**
      * standard bundle prefix
@@ -83,7 +101,8 @@ abstract class RestController extends FOSRestController
      * Creates a response which contains all fields of the current entity
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function responseFields() {
+    public function responseFields()
+    {
         try {
             /** @var ListRestHelper $listHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
@@ -99,12 +118,12 @@ abstract class RestController extends FOSRestController
             // apply sort order
             $fields = array_diff($fields, $this->fieldsSortOrder);
             foreach ($this->fieldsSortOrder as $key => $value) {
-                 array_splice($fields, $key, 0, $value);
+                array_splice($fields, $key, 0, $value);
             }
 
-            // parsing final array
-            $fieldsArray = $this->addTranslationKeys($fields);
-            $fieldsHiddenArray = $this->addTranslationKeys($this->fieldsHidden, true);
+            // parsing final array and sets to Default
+            $fieldsArray = $this->addFieldAttributes($fields);
+            $fieldsHiddenArray = $this->addFieldAttributes($this->fieldsHidden, true);
             $fieldsArray = array_merge($fieldsArray, $fieldsHiddenArray);
 
 
@@ -116,7 +135,8 @@ abstract class RestController extends FOSRestController
         return $this->handleview($view);
     }
 
-    public function responsePersistSettings() {
+    public function responsePersistSettings()
+    {
         try {
             $key = $this->getRequest()->get('key');
             $data = $this->getRequest()->get('data');
@@ -130,9 +150,9 @@ abstract class RestController extends FOSRestController
 
                 $userData->setUserSetting($key, $data);
             }
-            $view = $this->view('',200);
+            $view = $this->view('', 200);
         } catch (\Exception $e) {
-            $view = $this->view($e->getMessage(),400);
+            $view = $this->view($e->getMessage(), 400);
         }
 
         return $this->handleView($view);
@@ -140,30 +160,32 @@ abstract class RestController extends FOSRestController
 
 
     /**
-     * creates the translation keys array
+     * creates the translation keys array and sets the default attribute, if set
      * @param $fields
      * @param bool $hidden defines if keys are hidden
      * @return array
      */
-    private function addTranslationKeys($fields, $hidden = false) {
+    private function addFieldAttributes($fields, $hidden = false)
+    {
         // add translations
         $fieldsArray = array();
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             if (isset($this->fieldsTranslationKeys[$field])) {
                 $translationkey = $this->fieldsTranslationKeys[$field];
-            }
-            else if (isset($this->fieldsDefaultTranslationKeys[$field])) {
+            } else if (isset($this->fieldsDefaultTranslationKeys[$field])) {
                 $translationkey = $this->fieldsDefaultTranslationKeys[$field];
-            }
-            else {
+            } else {
                 // check translations
-                $translationkey = $this->bundlePrefix.$field;
+                $translationkey = $this->bundlePrefix . $field;
             }
 
             $fieldsArray[] = array(
                 'id' => $field,
                 'translation' => $translationkey,
-                'disabled' => $hidden
+                'disabled' => $hidden,
+                'default' => in_array($field, $this->fieldsDefault) ? true : null,
+                'editable' => in_array($field, $this->fieldsEditable) ? true : null,
+                'validation' => array_key_exists($field, $this->fieldsValidation) ? $this->fieldsValidation[$field] : null,
             );
         }
         return $fieldsArray;
@@ -224,13 +246,26 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $path = $this->getRequest()->getRequestUri();
-//        $pathInfo = $this->getRequest()->getPathInfo();
         $path = $this->replaceOrAddUrlString(
             $path,
             $listHelper->getParameterName('pageSize') . '=',
             $listHelper->getLimit(),
             false
         );
+
+        // remove parameters without value
+        foreach ($this->getRequest()->query->all() as $key => $value) {
+            if ($value == '') {
+                // remove from path
+                $path = $this->replaceOrAddUrlString(
+                    $path,
+                    $key . '=',
+                    null,
+                    false
+                );
+            }
+        }
+
 
         $page = $listHelper->getPage();
 
@@ -265,6 +300,11 @@ abstract class RestController extends FOSRestController
             $path,
             $listHelper->getParameterName('search') . '=',
             '{searchString}'
+        ); // create search link
+        $searchLink = $this->replaceOrAddUrlString(
+            $searchLink,
+            $listHelper->getParameterName('searchFields') . '=',
+            '{searchFields}'
         );
         $searchLink = $this->replaceOrAddUrlString(
             $searchLink,
@@ -283,35 +323,42 @@ abstract class RestController extends FOSRestController
             $listHelper->getParameterName('page') . '=', null
         );
 
+        // create filter link
+        $filterLink = $this->replaceOrAddUrlString(
+            $path,
+            $listHelper->getParameterName('fields') . '=', '{fieldsList}'
+        );
+
 
         return array(
             'self' => $path,
             'first' => ($pages > 1) ? $this->replaceOrAddUrlString(
-                $path,
-                $listHelper->getParameterName('page') . '=',
-                1
-            ) : null,
+                    $path,
+                    $listHelper->getParameterName('page') . '=',
+                    1
+                ) : null,
             'last' => ($pages > 1) ? $this->replaceOrAddUrlString(
-                $path,
-                $listHelper->getParameterName('page') . '=',
-                $pages
-            ) : null,
+                    $path,
+                    $listHelper->getParameterName('page') . '=',
+                    $pages
+                ) : null,
             'next' => ($page < $pages) ? $this->replaceOrAddUrlString(
-                $path,
-                $listHelper->getParameterName('page') . '=',
-                $page + 1
-            ) : null,
+                    $path,
+                    $listHelper->getParameterName('page') . '=',
+                    $page + 1
+                ) : null,
             'prev' => ($page > 1 && $pages > 1) ? $this->replaceOrAddUrlString(
-                $path,
-                $listHelper->getParameterName('page') . '=',
-                $page - 1
-            ) : null,
+                    $path,
+                    $listHelper->getParameterName('page') . '=',
+                    $page - 1
+                ) : null,
             'pagination' => ($pages > 1) ? $this->replaceOrAddUrlString(
-                $path,
-                $listHelper->getParameterName('page') . '=',
-                '{page}'
-            ) : null,
+                    $path,
+                    $listHelper->getParameterName('page') . '=',
+                    '{page}'
+                ) : null,
             'find' => $returnListLinks ? $searchLink : null,
+            'filter' => $returnListLinks ? $filterLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
             'all' => $returnListLinks ? $allLink : null,
         );
@@ -329,7 +376,7 @@ abstract class RestController extends FOSRestController
     {
         if ($value) {
             if ($pos = strpos($url, $key)) {
-                return preg_replace('/(.*' . $key . ')(\w+)(\&*.*)/', '${1}' . $value . '${3}', $url);
+                return preg_replace('/(.*' . $key . ')([\,|\w]*)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
                     $and = (strpos($url, '?') === false) ? '?' : '&';
@@ -339,10 +386,10 @@ abstract class RestController extends FOSRestController
         } else {
             // remove if key exists
             if ($pos = strpos($url, $key)) {
-                $result = preg_replace('/(.*)([\\?|\&]{1}'.$key.')(\w+)(\&*.*)/', '${1}${4}', $url);
+                $result = preg_replace('/(.*)([\\?|\&]{1}' . $key . ')([\,|\w]*)(\&*.*)/', '${1}${4}', $url);
 
                 // if was first variable, redo questionmark
-                if(strpos($url, '?'.$key)) {
+                if (strpos($url, '?' . $key)) {
                     $result = preg_replace('/&/', '?', $result, 1);
                 }
                 return $result;
