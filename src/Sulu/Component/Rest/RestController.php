@@ -79,6 +79,12 @@ abstract class RestController extends FOSRestController
     protected $fieldsDefault = array();
 
     /**
+     * contains fields that are editable
+     * @var array
+     */
+    protected $fieldsEditable = array();
+
+    /**
      * standard bundle prefix
      * @var string
      */
@@ -172,6 +178,7 @@ abstract class RestController extends FOSRestController
                 'translation' => $translationkey,
                 'disabled' => $hidden,
                 'default' => in_array($field, $this->fieldsDefault) ? true : null,
+                'editable' => in_array($field, $this->fieldsEditable) ? true : null,
             );
         }
         return $fieldsArray;
