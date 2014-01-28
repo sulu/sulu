@@ -49,7 +49,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
-        $this->assertEquals(1, $routes->getIterator()->current()->getDefaults()['content']->getUuid());
+        $this->assertEquals(1, $routes->getIterator()->current()->getDefaults()['structure']->getUuid());
     }
 
     public function testGetCollectionForNotExistingRequest()
