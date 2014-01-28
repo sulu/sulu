@@ -36,16 +36,16 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
     {
         $parent = $this->getRequest()->get('parent');
         $title = $this->getRequest()->get('title');
-        $portal = $this->getRequest()->get('portal');
+        $webspace = $this->getRequest()->get('webspace');
         if ($title == null) {
             throw new MissingArgumentException('ResourceLocator', 'title');
         }
-        if ($portal == null) {
+        if ($webspace == null) {
             throw new MissingArgumentException('ResourceLocator', 'portal');
         }
 
         $result = array(
-            'resourceLocator' => $this->getResourceLocator($title, $parent, $portal)
+            'resourceLocator' => $this->getResourceLocator($title, $parent, $webspace)
         );
 
         $response = new Response(json_encode($result));
