@@ -96,6 +96,7 @@ define([], function() {
                     icon: 'floppy-saved',
                     iconSize: 'large',
                     group: '1',
+                    disabled: true,
                     title: this.sandbox.translate('sulu.list-toolbar.column-options'),
                     callback: function() {
                         this.sandbox.emit('sulu.list-toolbar.delete');
@@ -109,6 +110,14 @@ define([], function() {
             default: function() {
                 var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '',
                     postfix;
+                this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                    postfix = number > 0 ? 'enable' : 'disable';
+                    this.sandbox.emit('husky.toolbar.' + instanceName +'item.'+ postfix, 'delete');
+                }.bind(this));
+            },
+            defaultEditableList: function(){
+                listener.default.call(this);
+
                 this.sandbox.on('husky.datagrid.number.selections', function(number) {
                     postfix = number > 0 ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName +'item.'+ postfix, 'delete');
