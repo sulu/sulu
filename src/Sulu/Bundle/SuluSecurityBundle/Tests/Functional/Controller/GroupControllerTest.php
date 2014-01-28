@@ -14,7 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Component\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 class GroupControllerTest extends DatabaseTestCase
 {
