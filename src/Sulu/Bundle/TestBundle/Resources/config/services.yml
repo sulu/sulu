@@ -1,7 +1,13 @@
 parameters:
-#    sulu_test.example.class: Sulu\Bundle\TestBundle\Example
+    sulu.test_user_provider.class: Sulu\Bundle\TestBundle\Testing\TestUserProvider
+    sulu.test_voter.class: Sulu\Bundle\TestBundle\Testing\TestVoter
 
 services:
-#    sulu_test.example:
-#        class: %sulu_test.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    test_user_provider:
+        class: "%sulu.test_user_provider.class%"
+        arguments: ["@doctrine.orm.entity_manager"]
+    test_voter:
+        class: "%sulu.test_voter.class%"
+        public: false
+        tags:
+            - { name: security.voter }
