@@ -7,7 +7,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
 class ResourceLocatorControllerTest extends DatabaseTestCase
