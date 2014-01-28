@@ -120,6 +120,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $dateTime = new \DateTime();
 
+        $titleProperty = new TranslatedProperty($structure->getProperty(
+            'title'
+        ), $languageCode, $this->languageNamespace);
+
         /** @var NodeInterface $node */
         if ($uuid === null) {
             // create a new node
@@ -134,7 +138,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             if (
                 $languageCode == $this->defaultLanguage &&
                 $node->getPath() !== $this->getContentBasePath() &&
-                (!$node->hasProperty('title') || $node->getPropertyValue('title') !== $data['title'])
+                (
+                    !$node->hasProperty($titleProperty->getName()) ||
+                    $node->getPropertyValue($titleProperty->getName()) !== $data['title']
+                )
             ) {
                 $node->rename($path);
                 // FIXME refresh session here
