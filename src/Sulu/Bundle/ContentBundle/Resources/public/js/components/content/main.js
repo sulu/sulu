@@ -68,7 +68,7 @@ define([
         },
 
         getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&portal=default';
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=sulu_io';
             // TODO portal
             this.sandbox.util.load(url)
                 .then(function(data) {
