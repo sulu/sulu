@@ -21,8 +21,6 @@
 
         <!-- content mapper -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
-            <argument>%sulu.content.base_path.content%</argument>
-            <argument>%sulu.content.base_path.route%</argument>
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
 

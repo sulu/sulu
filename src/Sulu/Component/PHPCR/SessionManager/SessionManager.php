@@ -31,6 +31,11 @@ class SessionManager implements SessionManagerInterface
     private $parameters;
 
     /**
+     * @var string[]
+     */
+    private $nodeNames;
+
+    /**
      * @var RepositoryInterface
      */
     private $repository;
@@ -45,7 +50,7 @@ class SessionManager implements SessionManagerInterface
      */
     private $session;
 
-    function __construct(RepositoryFactoryInterface $factory, $options)
+    function __construct(RepositoryFactoryInterface $factory, $options, $nodeNames)
     {
         $this->options = $this->getOptions($options);
 
@@ -55,6 +60,8 @@ class SessionManager implements SessionManagerInterface
         $this->credentials = new SimpleCredentials($options['username'], $options['password']);
 
         $this->session = $this->repository->login($this->credentials, $options['workspace']);
+
+        $this->nodeNames = $nodeNames;
     }
 
     private function getOptions($options)
@@ -75,7 +82,6 @@ class SessionManager implements SessionManagerInterface
      */
     public function getSession()
     {
-        // TODO create session for key
         return $this->session;
     }
 
@@ -86,6 +92,14 @@ class SessionManager implements SessionManagerInterface
      */
     public function getRouteNode($webspaceKey = 'default')
     {
+        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['route'];
+        $root = $this->getSession()->getRootNode();
+
+        if ($root->hasNode($path)) {
+            return $root->getNode($path);
+        } else {
+            // TODO create recursivly
+        }
     }
 
     /**
@@ -95,5 +109,13 @@ class SessionManager implements SessionManagerInterface
      */
     public function getContentNode($webspaceKey = 'default')
     {
+        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['content'];
+        $root = $this->getSession()->getRootNode();
+
+        if ($root->hasNode($path)) {
+            return $root->getNode($path);
+        } else {
+            // TODO create recursivly
+        }
     }
 }

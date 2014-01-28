@@ -23,17 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
-    /**
-     * base path to save the content
-     * @var string
-     */
-    private $contentBasePath = '/cmf/contents';
-
-    /**
-     * base path to load the route
-     * @var string
-     */
-    private $routesBasePath = '/cmf/routes';
 
     /**
      * namespace of translation
@@ -73,10 +62,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         )
     );
 
-    public function __construct($contentBasePath, $routesBasePath, $defaultLanguage, $languageNamespace)
+    public function __construct($defaultLanguage, $languageNamespace)
     {
-        $this->contentBasePath = $contentBasePath;
-        $this->routesBasePath = $routesBasePath;
         $this->defaultLanguage = $defaultLanguage;
         $this->languageNamespace = $languageNamespace;
     }

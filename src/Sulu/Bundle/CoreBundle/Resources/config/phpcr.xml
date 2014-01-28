@@ -19,6 +19,11 @@
                 <argument key="password">%sulu.phpcr.password%</argument>
                 <argument key="workspace">%sulu.phpcr.workspace%</argument>
             </argument>
+            <argument type="collection">
+                <argument key="base">%sulu.content.node_names.base%</argument>
+                <argument key="content">%sulu.content.node_names.content%</argument>
+                <argument key="route">%sulu.content.node_names.route%</argument>
+            </argument>
         </service>
 
     </services>

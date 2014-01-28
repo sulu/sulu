@@ -88,9 +88,10 @@ class SuluCoreExtension extends Extension
         $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
         $container->setParameter('sulu.content.language.default', $contentConfig['language']['default']);
 
-        // Base Path
-        $container->setParameter('sulu.content.base_path.content', $contentConfig['base_path']['content']);
-        $container->setParameter('sulu.content.base_path.route', $contentConfig['base_path']['route']);
+        // Node names
+        $container->setParameter('sulu.content.node_names.base', $contentConfig['node_names']['base']);
+        $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
+        $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
 
         // Content Types
         $container->setParameter(
