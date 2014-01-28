@@ -33,7 +33,10 @@ define(function() {
                 {
                     name: 'list-toolbar@suluadmin',
                     options: {
-                        el: '#list-toolbar-container'
+                        el: '#list-toolbar-container',
+                        template: 'defaultEditableList',
+                        listener: 'defaultEditableList',
+                        instanceName: 'saveToolbar'
                     }
                 }
             ]);
@@ -44,20 +47,32 @@ define(function() {
                     name: 'datagrid@husky',
                     options: {
                         el: this.sandbox.dom.find('#tags-list', this.$el),
-                        url: '/admin/api/tags?flat=true&fields=id,name',
-                        pagination: false,
+                        url: '/admin/api/tags?flat=false&fields=id,name,changed,creator',
+                        editable: true,
+                        paginationOptions: {
+                            pageSize: 4
+                        },
+                        pagination: true,
                         selectItem: {
                             type: 'checkbox'
                         },
                         removeRow: false,
                         sortable: true,
-                        tableHead: [
-                            {content: this.sandbox.translate('tag.tag'), attribute:'name'}
+                        columns: [
+                            {content: this.sandbox.translate('tag.tag'), width:'40%', attribute:'name',editable: true},
+                            {content: this.sandbox.translate('tag.author'), width:'30%', attribute: ['firstname','lastname'],editable: true},
+                            {content: this.sandbox.translate('tag.changed'),width:'30%', attribute:'changed'}
                         ],
                         excludeFields: ['id']
                     }
                 }
             ]);
+        },
+
+        bindCustomEvents: function(){
+            //sulu.list-toolbar.add
+            //sulu.list-toolbar.save
+            //sulu.list-toolbar.delete
         }
     };
 });
