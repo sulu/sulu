@@ -22,7 +22,14 @@
                         }
                     }
                     return temp;
-                };
+                },
+
+                /**
+                 * triggered when data was loaded from server
+                 * @event sulu.fields.loaded
+                 * @params {Object} data Fields data
+                 */
+                    SULU_FIELDS_LOADED = 'sulu.fields.loaded';
 
             /**
              * load user settings
@@ -90,18 +97,10 @@
                         }
 
                         settings[key] = settingsArray;
-
-                        /**
-                         * triggered when data was loaded from server
-                         * @event sulu.fields.loaded
-                         * @params {Object} data Fields data
-                         */
-                        app.sandbox.emit('sulu.fields.loaded', data);
-
+                        app.sandbox.emit(SULU_FIELDS_LOADED, data);
                         callback(settingsArray);
+
                     }.bind(this));
-
-
             };
 
 
@@ -155,7 +154,7 @@
              * @param datagridOptions
              */
             app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translations','default'], url, function(data) {
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translations', 'default'], url, function(data) {
 
                     var toolbarDefaults = {
                             columnOptions: {
