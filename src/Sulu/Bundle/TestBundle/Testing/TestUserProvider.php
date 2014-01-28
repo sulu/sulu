@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\CoreBundle\Entity\TestUser;
+use Sulu\Bundle\TestBundle\Entity\TestUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,7 +32,6 @@ class TestUserProvider implements UserProviderInterface
         $this->user = new TestUser();
         $this->user->setPassword('test');
         $this->user->setUsername('test');
-        $this->user->setId(1);
 
         $em->persist($this->user);
     }
