@@ -4,6 +4,8 @@ namespace Sulu\Bundle\TagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use JMS\Serializer\Annotation\VirtualProperty;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Tag
@@ -163,5 +165,25 @@ class Tag extends ApiEntity
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("creatorFullName")
+     * @return string
+     */
+    public function getCreatorFullName()
+    {
+        return $this->getCreator()->getFullName();
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("changerFullName")
+     * @return string
+     */
+    public function getChangerFullName()
+    {
+        return $this->getChanger()->getFullName();
     }
 }
