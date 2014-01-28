@@ -25514,6 +25514,7 @@ define('__component__$column-options@husky',[],function() {
  *
  * @param {Object} [options] Configuration object
  * @param {Boolean} [options.autoRemoveHandling] raises an event before a row is removed
+ * @param {Boolean} [options.editable] will not set class is-selectable to prevent hover effect for complete rows
  * @param {String} [options.className] additional classname for the wrapping div
  * @param {Object} [options.data] if no url is provided (some functionality like search & sort will not work)
  * @param {String} [options.defaultMeasureUnit=px] the unit that should be taken
@@ -25530,11 +25531,11 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.selectItem.type] Type of select [checkbox, radio]
  * @param {String} [options.selectItem.width] Width of select column
  * @param {Boolean} [options.sortable] Defines if list is sortable
- * @param {Object} [options.tableHead] configuration of table header
- * @param {String} [options.tableHead.content] column title
- * @param {String} [options.tableHead.width] width of column
- * @param {String} [options.tableHead.class] css class of th
- * @param {String} [options.tableHead.attribute] mapping information to data (if not set it will just iterate of attributes)
+ * @param {Array} [options.columns] configuration array of columns
+ * @param {String} [options.columns.content] column title
+ * @param {String} [options.columns.width] width of column
+ * @param {String} [options.columns.class] css class of th
+ * @param {String} [options.columns.attribute] mapping information to data (if not set it will just iterate of attributes)
  * @param {Boolean} [options.appendTBody] add TBODY to table
  * @param {String} [options.searchInstanceName=null] if set, a listener will be set for the corresponding search event
  * @param {String} [options.url] url to fetch data from
@@ -25550,6 +25551,7 @@ define('__component__$datagrid@husky',[],function() {
      */
     var defaults = {
             autoRemoveHandling: true,
+            editable: false,
             className: 'datagridcontainer',
             elementType: 'table',
             data: null,
@@ -25568,7 +25570,7 @@ define('__component__$datagrid@husky',[],function() {
                 //clickable: false   // defines if background is clickable TODO do not use until fixed
             },
             sortable: false,
-            tableHead: [],
+            columns: [],
             url: null,
             appendTBody: true,   // add TBODY to table
             searchInstanceName: null, // at which search it should be listened to can be null|string|empty_string
@@ -25648,16 +25650,28 @@ define('__component__$datagrid@husky',[],function() {
             UPDATED = namespace + 'updated',
 
         /**
-         * raised when when husky.datagrid.data.get is triggered
+         * raised when husky.datagrid.data.get is triggered
          * @event husky.datagrid.data.provide
          */
             DATA_PROVIDE = namespace + 'data.provide',
 
         /**
-         * raised when when data is sorted
+         * raised when data is sorted
          * @event husky.datagrid.data.sort
          */
             DATA_SORT = namespace + 'data.sort',
+
+        /**
+         * raised when data was saved
+         * @event husky.datagrid.data.saved
+         */
+            DATA_SAVED = namespace + 'data.saved',
+
+        /**
+         * raised when editable list is changed
+         * @event husky.datagrid.data.save
+         */
+            DATA_CHANGED = namespace + 'data.changed',
 
 
     /* PROVIDED EVENTS */
@@ -25693,7 +25707,15 @@ define('__component__$datagrid@husky',[],function() {
          * triggers husky.datagrid.data.provide
          * @event husky.datagrid.data.get
          */
-            DATA_GET = namespace + 'data.get';
+            DATA_GET = namespace + 'data.get',
+
+        /**
+         * used to trigger the save operation of changed data
+         * @event husky.datagrid.data.save
+         */
+            DATA_SAVE = namespace + 'data.save';
+
+
 
     return {
 
@@ -25709,12 +25731,22 @@ define('__component__$datagrid@husky',[],function() {
             this.data = null;
             this.allItemIds = [];
             this.selectedItemIds = [];
-            this.rowStructure = ['id'];
+            this.changedData = {};
+
+            this.rowStructure = [
+                {
+                    attribute: 'id',
+                    editable: false
+                }
+            ];
+
             this.sort = {
                 ascClass: 'icon-arrow-up',
                 descClass: 'icon-arrow-down',
                 additionalClasses: ' m-left-5 small-font'
             };
+
+            this.changedData = [];
 
             // append datagrid to html element
             this.$originalElement = this.sandbox.dom.$(this.options.el);
@@ -25857,7 +25889,7 @@ define('__component__$datagrid@husky',[],function() {
 
             $table = this.sandbox.dom.$('<table/>');
 
-            if (!!this.data.head || !!this.options.tableHead) {
+            if (!!this.data.head || !!this.options.columns) {
                 $thead = this.sandbox.dom.$('<thead/>');
                 $thead.append(this.prepareTableHead());
                 $table.append($thead);
@@ -25875,7 +25907,11 @@ define('__component__$datagrid@husky',[],function() {
             // set html classes
             tblClasses = [];
             tblClasses.push((!!this.options.className && this.options.className !== 'table') ? 'table ' + this.options.className : 'table');
-            tblClasses.push((this.options.selectItem && this.options.selectItem.type === 'checkbox') ? 'is-selectable' : '');
+
+            // when list should not have the hover effect for whole rows do not set the is-selectable class
+            if (!this.options.editable) {
+                tblClasses.push((this.options.selectItem && this.options.selectItem.type === 'checkbox') ? 'is-selectable' : '');
+            }
 
             $table.addClass(tblClasses.join(' '));
 
@@ -25891,7 +25927,7 @@ define('__component__$datagrid@husky',[],function() {
             var tblColumns, tblCellClass, tblColumnWidth, headData, tblCheckboxWidth, widthValues, checkboxValues, dataAttribute, isSortable;
 
             tblColumns = [];
-            headData = this.options.tableHead || this.data.head;
+            headData = this.options.columns || this.data.head;
 
             // add a checkbox to head row
             if (!!this.options.selectItem && this.options.selectItem.type) {
@@ -25920,7 +25956,13 @@ define('__component__$datagrid@husky',[],function() {
                 tblColumns.push('</th>');
             }
 
-            this.rowStructure = ['id'];
+            // reset row structure
+            this.rowStructure = [
+                {
+                    attribute: 'id',
+                    editable: false
+                }
+            ];
 
             headData.forEach(function(column) {
 
@@ -25947,7 +25989,10 @@ define('__component__$datagrid@husky',[],function() {
 
                 // add to row structure when valid entry
                 if (column.attribute !== undefined) {
-                    this.rowStructure.push(column.attribute);
+                    this.rowStructure.push({
+                        attribute: column.attribute,
+                        editable: column.editable
+                    });
                 }
 
                 // add html to table header cell if sortable
@@ -26025,26 +26070,26 @@ define('__component__$datagrid@husky',[],function() {
 
                 !!row.id && this.allItemIds.push(parseInt(row.id, 10));
 
+                // add a checkbox to each row
                 if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
-                    // add a checkbox to each row
                     this.tblColumns.push('<td>', this.templates.checkbox(), '</td>');
-                } else if (!!this.options.selectItem.type && this.options.selectItem.type === 'radio') {
-                    // add a radio to each row
 
+                    // add a radio to each row
+                } else if (!!this.options.selectItem.type && this.options.selectItem.type === 'radio') {
                     this.tblColumns.push('<td>', this.templates.radio({
                         name: 'husky-radio' + radioPrefix
                     }), '</td>');
                 }
 
-                // when row structure contains more elements than the id then use the structure to set values
+                // when row-structure contains more elements than the id then use the structure to set values
                 if (this.rowStructure.length > 1) {
                     this.rowStructure.forEach(function(key) {
-                        this.setValueOfRowCell(key, row[key]);
+                        this.setValueOfRowCell(key.attribute, row[key.attribute], key.editable);
                     }.bind(this));
                 } else {
                     for (key in row) {
                         if (row.hasOwnProperty(key)) {
-                            this.setValueOfRowCell(key, row[key]);
+                            this.setValueOfRowCell(key, row[key], false);
                         }
                     }
                 }
@@ -26062,12 +26107,12 @@ define('__component__$datagrid@husky',[],function() {
          * @param key attribute name
          * @param value attribute value
          */
-        setValueOfRowCell: function(key, value) {
+        setValueOfRowCell: function(key, value, editable) {
             var tblCellClasses,
                 tblCellContent,
                 tblCellClass;
 
-            if(!value) {
+            if (!value) {
                 value = '';
             }
 
@@ -26081,7 +26126,11 @@ define('__component__$datagrid@husky',[],function() {
 
                 tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
 
-                this.tblColumns.push('<td ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                if (!!editable) {
+                    this.tblColumns.push('<td width="30%" data-field="' + key + '" ' + tblCellClass + ' ><span class="editable" contenteditable="true">' + tblCellContent + '</span></td>');
+                } else {
+                    this.tblColumns.push('<td  data-field="' + key + '" ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                }
             } else {
                 this.tblRowAttributes += ' data-' + key + '="' + value + '"';
             }
@@ -26435,6 +26484,11 @@ define('__component__$datagrid@husky',[],function() {
                 this.$element.on('click', 'thead th[data-attribute]', this.changeSorting.bind(this));
             }
 
+            if (!!this.options.editable) {
+                this.$element.on('focusin', '.editable', this.focusOnEditable.bind(this));
+                this.$element.on('focusout', '.editable', this.focusOutEditable.bind(this));
+            }
+
 
             // Todo trigger event when click on clickable area
             // trigger event when click on clickable area
@@ -26549,8 +26603,102 @@ define('__component__$datagrid@husky',[],function() {
                 this.sandbox.on('husky.search' + searchInstanceName, this.triggerSearch.bind(this));
                 this.sandbox.on('husky.search' + searchInstanceName + '.reset', this.triggerSearch.bind(this, ''));
             }
+
+            // listen for save event
+            if (!!this.options.editable) {
+                this.sandbox.on(DATA_SAVE, this.saveChangedData.bind(this));
+            }
+
         },
 
+        /**
+         * Remembers value of previously focused editable field
+         * Is used by isDataChanged to decide wether the value
+         * changed or not
+         */
+        focusOnEditable: function(event) {
+            var $td = this.sandbox.dom.parent(event.currentTarget),
+                $tr = this.sandbox.dom.parent($td),
+                field = this.sandbox.dom.data($td, 'field'),
+                id = this.sandbox.dom.data($tr, 'id'),
+                value = event.currentTarget.innerText;
+
+            this.lastFocusedEditableElement = {
+                id: id,
+                field: field,
+                value: value
+            };
+        },
+
+        /**
+         * Triggered when editable field looses focus
+         */
+        focusOutEditable: function(event) {
+            var $td = this.sandbox.dom.parent(event.currentTarget),
+                $tr = this.sandbox.dom.parent($td),
+                field = this.sandbox.dom.data($td, 'field'),
+                id = this.sandbox.dom.data($tr, 'id'),
+                value = event.currentTarget.innerText,
+                el;
+
+            // last focused object should be same as the one previously left
+            if (this.lastFocusedEditableElement.id === id) {
+                if (this.lastFocusedEditableElement.value !== value) {
+
+                    this.sandbox.emit(DATA_CHANGED);
+
+                    // element already changed in the past and therefor in the changed data array
+                    this.sandbox.util.each(this.changedData, function(index, value) {
+                        if (value.id === id) {
+                            el = value;
+                        }
+                    }.bind(this));
+
+                    // changed for the first time
+                    if (!el) {
+                        el = {};
+                        el.id = id;
+                        el[field] = value;
+
+                        this.changedData.push(el);
+
+                        // changed changes
+                    } else {
+                        el[field] = value;
+                    }
+                }
+            } else {
+                this.sandbox.logger.log("Something went wrong!");
+            }
+
+        },
+
+        /**
+         * Saves the changes for an editable list
+         * Triggered with the husky.datagrid.data.save event
+         */
+        saveChangedData: function() {
+
+            this.sandbox.logger.log("saving data...");
+
+            var url = this.data.links.self,
+                type = 'PATCH';
+
+            if (!!this.changedData && this.changedData.length > 0) {
+                this.sandbox.util.save(url, type, this.changedData)
+                    .then(function() {
+                        this.sandbox.emit(DATA_SAVED);
+                    }.bind(this))
+                    .fail(function() {
+                        this.sandbox.logger.log("failed during save!");
+                    }.bind(this));
+            }
+        },
+
+
+        /**
+         * Provides data of the list to the caller
+         */
         provideData: function() {
             this.sandbox.emit(DATA_PROVIDE, this.data);
         },
@@ -26590,7 +26738,7 @@ define('__component__$datagrid@husky',[],function() {
                 url: url,
                 success: function() {
                     this.removeLoader();
-                    this.sandbox.emit(UPDATE, 'updated search');
+                    this.sandbox.emit(UPDATED, 'updated after search');
                 }.bind(this)
             });
         },
@@ -27569,6 +27717,11 @@ define('__component__$search@husky',[], function() {
 
         },
 
+        resetSearch : function() {
+            this.sandbox.emit(RESET.call(this));
+            this.searchSubmitted = false;
+        },
+
         checkKeyPressed: function(event) {
 
             var $removeIcon;
@@ -27581,36 +27734,57 @@ define('__component__$search@husky',[], function() {
                 this.sandbox.dom.hide($removeIcon);
             }
 
-            // enter pressed
             if (event.keyCode === 13) {
+                // enter pressed
                 this.submitSearch();
+            } else if (event.keyCode === 27) {
+                // escape pressed
+                this.removeSearch();
             }
+
+
         },
 
         submitSearch: function(event) {
-            event.preventDefault();
+            if (!!event) {
+                event.preventDefault();
+            }
 
             // get search value
 
             var searchString = this.sandbox.dom.val(this.sandbox.dom.find('#search-input', this.$el));
 
-            // check if searchstring is emtpy
+            // if searchstring is emtpy, emit reset
             if (searchString === '') {
+                if (this.searchSubmitted) {
+                    this.resetSearch();
+                }
                 return;
             }
+
+            this.searchSubmitted = true;
 
             // emit event
             this.sandbox.emit(SEARCH.call(this), searchString);
         },
 
         removeSearch: function(event) {
-            event.preventDefault();
+            if (!!event) {
+                event.preventDefault();
+            } else {
+                event = {
+                    target: this.sandbox.dom.find('.remove-icon', this.$el),
+                    currentTarget: this.sandbox.dom.find('.remove-icon', this.$el)
+                };
+            }
             var $input;
             $input = this.sandbox.dom.next(event.currentTarget, 'input');
 
             this.sandbox.dom.hide(event.target);
             this.sandbox.dom.val($input, '');
-            this.sandbox.emit(RESET.call(this), '');
+            if (this.searchSubmitted) {
+                this.resetSearch();
+            }
         },
 
         selectInput: function(event) {
@@ -28636,7 +28810,7 @@ define('__component__$auto-complete@husky',[], function () {
         GETparameter: 'query',
         valueKey: 'name',
         totalKey: 'total',
-        resultKey: 'items',
+        resultKey: '_embedded',
         value: null,
         valueName: 'value',
         instanceName: 'undefined',
@@ -29052,7 +29226,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 instanceName: 'undefined',
                 items: [],
                 itemsUrl: '',
-                itemsKey: 'items',
+                itemsKey: '_embedded',
                 suggestions: [],
                 suggestionsHeadline: '',
                 suggestionsUrl: '',
@@ -29306,6 +29480,13 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 }.bind(this)
                             });
                 this.setElementDataTags();
+                this.setDropdownWidth();
+            },
+
+            setDropdownWidth: function() {
+                this.sandbox.dom.css(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), {
+                    width: this.sandbox.dom.width(this.$el)+'px'
+                });
             },
 
             /**
@@ -29332,6 +29513,10 @@ define('__component__$auto-complete-list@husky',[], function() {
                     }
                 }.bind(this));
 
+                this.sandbox.on(createEventName.call(this, 'set-tags'), function(tags) {
+                    this.pushTags(tags);
+                }.bind(this));
+
                 this.sandbox.on(ITEM_ADDED.call(this), function(newTag) {
                     this.setElementDataTags(newTag);
                 }.bind(this));
@@ -29344,12 +29529,14 @@ define('__component__$auto-complete-list@husky',[], function() {
                 this.sandbox.dom.on(this.$input, 'keydown', function(event) {
                     if(event.keyCode === 8 && this.sandbox.dom.val(this.$input).trim() === '') {
                         this.itemDeleteHandler();
+                        this.setElementDataTags();
                     }
                 }.bind(this));
 
                 this.sandbox.dom.on(this.$el, 'click', function(event) {
                     if(this.sandbox.dom.hasClass(event.target, 'tm-tag-remove') === true) {
                         this.itemDeleteHandler();
+                        this.setElementDataTags();
                     }
                 }.bind(this));
 
@@ -29364,12 +29551,12 @@ define('__component__$auto-complete-list@husky',[], function() {
 
             /**
              * Binds the tags to the element
-             * @param neTag {String} newly added tag
+             * @param newTag {String} newly added tag
              */
             setElementDataTags: function(newTag) {
                 var tags = this.sandbox.util.extend([], this.getTags());
-                if (tags.indexOf(newTag) === -1) {
-                    tags = this.sandbox.util.extend([], tags, [newTag]);
+                if (tags.indexOf(newTag) === -1 && typeof newTag !== 'undefined') {
+                    tags = tags.concat([newTag]);
                 }
                 this.sandbox.dom.data(this.$el, this.options.elementTagDataName, tags);
             },
@@ -29621,6 +29808,16 @@ define('__component__$auto-complete-list@husky',[], function() {
                     this.tagApi.tagsManager('pushTag', value);
                 } else {
                     return false;
+                }
+            },
+
+            /**
+             * Pushes an array of items to the list
+             * @param value {Array} array with items to push to the list
+             */
+            pushTags: function(tags) {
+                for (var i = -1, length = tags.length; ++i < length;) {
+                    this.pushTag(tags[i]);
                 }
             },
 
@@ -32048,8 +32245,6 @@ define('husky_extensions/util',[],function() {
                     for (var i = -1, length = array.length; ++i < length;) {
                         callbackValue(array[i], i);
                     }
-                } else {
-                    app.sandbox.logger.log('error at util.foreach: no array given');
                 }
             };
 
@@ -32072,6 +32267,36 @@ define('husky_extensions/util',[],function() {
                 });
 
                 app.sandbox.emit('husky.util.load.data');
+
+                return deferred.promise();
+            };
+
+            app.core.util.save = function(url, type, data) {
+                var deferred = new app.sandbox.data.deferred();
+
+                app.logger.log('save', url);
+
+                app.sandbox.util.ajax({
+
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+
+                    url: url,
+                    type: type,
+                    data: JSON.stringify(data),
+
+                    success: function(data) {
+                        app.logger.log('data saved', data);
+                        deferred.resolve(data);
+                    }.bind(this),
+
+                    error: function(error) {
+                        deferred.reject(error);
+                    }
+                });
+
+                app.sandbox.emit('husky.util.save.data');
 
                 return deferred.promise();
             };
