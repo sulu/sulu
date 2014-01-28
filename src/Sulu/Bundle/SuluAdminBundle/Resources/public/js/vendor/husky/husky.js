@@ -25227,14 +25227,19 @@ define('__component__$column-options@husky',[],function() {
          */
             bindDOMEvents = function() {
 
-            this.sandbox.dom.on(this.options.trigger, 'click', toggleDropdown.bind(this));
-            this.sandbox.dom.on(this.$el, 'click', stopPropagation.bind(this), '.column-options-container'); // prevent from unwanted events
+            this.sandbox.dom.on(this.options.trigger, 'click.column-options', toggleDropdown.bind(this));
+            this.sandbox.dom.on(this.$el, 'click', customStopPropagation.bind(this), '.column-options-container'); // prevent from unwanted events
             this.sandbox.dom.on(this.$el, 'mouseover', onMouseOver.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'mouseout', onMouseOut.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'click', toggleVisibility.bind(this), '.visibility-toggle');
             this.sandbox.dom.on(this.$el, 'click', submit.bind(this), '.save-button');
             this.sandbox.dom.on(this.$el, 'click', hideDropdown.bind(this, true), '.close-button');
         },
+
+        unbindDOMEvents = function() {
+            this.sandbox.dom.off(this.options.trigger, 'click.column-options');
+        },
+
 
         /**
          * custom events
@@ -25312,7 +25317,7 @@ define('__component__$column-options@husky',[],function() {
          * opens dropdown submenu
          * @param event
          */
-            stopPropagation = function(event) {
+            customStopPropagation = function(event) {
             event.preventDefault();
             event.stopPropagation();
         },
@@ -25324,6 +25329,8 @@ define('__component__$column-options@husky',[],function() {
          */
             toggleDropdown = function(event)
         {
+
+            console.log('called');
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -25361,6 +25368,7 @@ define('__component__$column-options@husky',[],function() {
             }
             this.sandbox.dom.hide($container);
             if (this.options.destroyOnClose) {
+                unbindDOMEvents.call(this);
                 this.sandbox.dom.remove(this.$el);
             } else if (rerender) {
                 // reset unsaved changes
@@ -25592,7 +25600,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.columns.attribute] mapping information to data (if not set it will just iterate of attributes)
  * @param {Boolean} [options.appendTBody] add TBODY to table
  * @param {String} [options.searchInstanceName=null] if set, a listener will be set for the corresponding search event
- * @param {String} [options.searchInstanceName=null] if set, a listener will be set for listening for column changes
+ * @param {String} [options.columnOptionsInstanceName=null] if set, a listener will be set for listening for column changes
  * @param {String} [options.url] url to fetch data from
  * @param {String} [options.paginationTemplate] template for pagination
  *
@@ -26717,10 +26725,8 @@ define('__component__$datagrid@husky',[],function() {
             }
 
             // listen to search events
-            if (!!this.options.columnOptionsInstanceName) {
-                if (this.options.columnOptionsInstanceName !== '') {
-                    columnOptionsInstanceName = '.' + this.options.columnOptionsInstanceName;
-                }
+            if (this.options.columnOptionsInstanceName || this.options.columnOptionsInstanceName === '') {
+                columnOptionsInstanceName = (this.options.columnOptionsInstanceName !== '') ? '.' + this.options.columnOptionsInstanceName : '';
                 this.sandbox.on('husky.column-options' + columnOptionsInstanceName+'.saved', this.filterColumns.bind(this));
             }
 
@@ -28320,7 +28326,7 @@ define('__component__$toolbar@husky',[],function() {
                 item = this.items[id];
             if (item.disabled) {
                 item.disabled = false;
-                $domItem = this.sandbox.dom.find('[data-id="'+id+'"]');
+                $domItem = this.sandbox.dom.find('[data-id="'+id+'"]', this.$el);
 
                 if (this.sandbox.dom.is($domItem, 'button')) {
                     this.sandbox.dom.removeAttr($domItem, 'disabled');
@@ -28335,7 +28341,7 @@ define('__component__$toolbar@husky',[],function() {
                 item = this.items[id];
             if (!item.disabled) {
                 item.disabled = true;
-                $domItem = this.sandbox.dom.find('[data-id="'+id+'"]');
+                $domItem = this.sandbox.dom.find('[data-id="'+id+'"]', this.$el);
 
                 if (this.sandbox.dom.is($domItem, 'button')) {
                     this.sandbox.dom.attr($domItem, 'disabled', 'disabled');
