@@ -67,9 +67,10 @@
                         var userFields = app.sandbox.sulu.getUserSetting(key),
                             serverFields = data,
                             settingsArray = [],
-                            serverindex, userKeys, serverKeys, serverKeysSwap;
+                            serverindex, serverindexLeft, userKeys, serverKeysLeft, serverKeys, serverKeysSwap;
 
                         if (userFields) {
+                            serverKeysLeft = getObjectIds.call(this, serverFields);
                             serverKeys = getObjectIds.call(this, serverFields);
                             serverKeysSwap = getObjectIds.call(this, serverFields, true);
                             userKeys = getObjectIds.call(this, userFields);
@@ -85,11 +86,12 @@
                                     // add to result
                                     settingsArray.push(userFields[index]);
                                     // remove from server keys
-                                    serverKeys.splice(serverindex, 1);
+                                    serverindexLeft = serverKeysLeft.indexOf(key);
+                                    serverKeysLeft.splice(serverindexLeft, 1);
                                 }
                             }.bind(this));
                             // add new ones
-                            this.sandbox.util.foreach(serverKeys, function(key) {
+                            this.sandbox.util.foreach(serverKeysLeft, function(key) {
                                 settingsArray.push(serverFields[serverKeysSwap[key]]);
                             }.bind(this));
                         } else {
@@ -146,7 +148,7 @@
              *********/
 
             /**
-             * initializes sulu list-toolbar with column options
+             * initializes sulu list-toolbar with column options and datagrid
              * @param key Settings key
              * @param url Url to load fields from
              * @param mixed Toolbar-options
@@ -154,7 +156,7 @@
              * @param datagridOptions
              */
             app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translations', 'default'], url, function(data) {
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation'], url, function(data) {
 
                     var toolbarDefaults = {
                             columnOptions: {
@@ -171,7 +173,6 @@
                             selectItem: {
                                 type: 'checkbox'
                             },
-                            searchInstanceName: 'content',
                             removeRow: false,
                             excludeFields: ['']
                         },
@@ -187,7 +188,10 @@
 
 
                     gridOptions.fieldsData = data;
-                    gridOptions.columnOptionsInstanceName = this.options.columnOptionsInstanceName ? this.options.columnOptionsInstanceName : toolbarOptions.instanceName;
+                    gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
+                    gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+
+                    console.log("ASFDASDFASDFasf", gridOptions.searchInstanceName);
 
                     // start datagrid
                     this.sandbox.start([
