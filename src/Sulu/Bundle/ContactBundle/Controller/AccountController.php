@@ -42,9 +42,13 @@ class AccountController extends RestController implements ClassResourceInterface
     protected $fieldsExcluded = array('lft','rgt','depth');
     protected $fieldsHidden = array('created');
     protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array();
-    protected $fieldsTranslationKeys = array();
+    protected $fieldsSortOrder = array(0=>'id');
+    protected $fieldsTranslationKeys = array('id'=>'public.id');
+    protected $fieldsEditable = array();
+    protected $fieldsValidation = array();
+
     protected $bundlePrefix = 'contact.accounts.';
+
 
 
 

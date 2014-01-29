@@ -50,7 +50,7 @@ define([
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
 
-            // init list-toolbar
+            // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
                 {
                     el: '#list-toolbar-container',
@@ -63,10 +63,7 @@ define([
                     sortable: true,
                     selectItem: {
                         type: 'checkbox'
-                    },
-                    searchInstanceName: 'accounts',
-                    removeRow: false,
-                    excludeFields: ['']
+                    }
                 });
 
         }
