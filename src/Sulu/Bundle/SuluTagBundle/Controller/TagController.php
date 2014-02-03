@@ -18,6 +18,8 @@ use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 
 /**
@@ -29,6 +31,50 @@ class TagController extends RestController implements ClassResourceInterface
     protected $entityName = 'SuluTagBundle:Tag';
 
     protected $unsortable = array();
+
+    protected $fieldsDefault = array(
+        'name'
+    );
+
+    protected $fieldsExcluded = array();
+
+    protected $fieldsHidden = array(
+        'created', 'id'
+    );
+    protected $fieldsRelations = array(
+        'creator_contact_lastName'
+    );
+    protected $fieldsSortOrder = array(
+        '0' => 'name',
+        '1' => 'creator_contact_lastName',
+        '2' => 'changed'
+    );
+
+    protected $fieldsTranslationKeys = array(
+        'name' => 'tags.name',
+        'creator_contact_lastName' => 'tags.author'
+    );
+
+    protected $bundlePrefix = 'tags.';
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("tags/fields")
+     * @return mixed
+     */
+    public function getFieldsAction() {
+        return $this->responseFields();
+    }
+
+    /**
+     * persists a setting
+     * @Put("tags/fields")
+     */
+    public function putFieldsAction() {
+        return $this->responsePersistSettings();
+    }
+
+
 
     /**
      * Returns a single tag with the given id
@@ -201,5 +247,7 @@ class TagController extends RestController implements ClassResourceInterface
 
         return $this->handleView($view);
     }
+
+
 
 } 
