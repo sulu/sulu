@@ -13,10 +13,12 @@ define(function() {
 
     var bindCustomEvents = function() {
 
+        // add clicked
         this.sandbox.on('sulu.list-toolbar.add', function(){
-            this.sandbox.emit('husky.datagrid.row.add',{ id: '', name: '', changed: '', created: '' });
+            this.sandbox.emit('husky.datagrid.row.add',{ id: '', name: '', changed: '', created: '', author: ''});
         }.bind(this));
 
+        // save clicked
         this.sandbox.on('sulu.list-toolbar.save', function(){
             this.sandbox.emit('husky.datagrid.data.save');
         }.bind(this));
