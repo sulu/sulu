@@ -302,6 +302,20 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testMerge()
     {
+        $tag = new Tag();
+        $tag->setName('tag3');
+        $tag->setCreated(new \DateTime());
+        $tag->setChanged(new \DateTime());
+        self::$em->persist($tag);
+
+        $tag = new Tag();
+        $tag->setName('tag4');
+        $tag->setCreated(new \DateTime());
+        $tag->setChanged(new \DateTime());
+        self::$em->persist($tag);
+
+        self::$em->flush();
+
         $mockedEventListener = $this->getMock('stdClass', array('onMerge'));
         $mockedEventListener->expects($this->once())->method('onMerge');
 
@@ -314,7 +328,7 @@ class TagControllerTest extends DatabaseTestCase
         $client->request(
             'POST',
             '/api/tags/merge',
-            array('src' => 2, 'dest' => 1),
+            array('src' => implode(',', array(2, 3, 4)), 'dest' => 1),
             array(),
             array(
                 'PHP_AUTH_USER' => 'test',
@@ -339,6 +353,30 @@ class TagControllerTest extends DatabaseTestCase
         $client->request(
             'GET',
             '/api/tags/2',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/tags/3',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/tags/4',
             array(),
             array(),
             array(

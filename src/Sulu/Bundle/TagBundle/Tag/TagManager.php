@@ -179,29 +179,36 @@ class TagManager implements TagManagerInterface
     /**
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
-     * @param number $srcTagId The source tag, which will be removed afterwards
+     * @param number $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
      * @throws Exception\TagNotFoundException
-     * @return Tag The new Tag, which is valid for both given tags
+     * @return Tag The new Tag, which is valid for all given tags
      */
-    public function merge($srcTagId, $destTagId)
+    public function merge($srcTagIds, $destTagId)
     {
-        $srcTag = $this->tagRepository->findTagById($srcTagId);
+        $srcTags = array();
+
         $destTag = $this->tagRepository->findTagById($destTagId);
-
-        if (!$srcTag) {
-            throw new TagNotFoundException($srcTagId);
-        }
-
         if (!$destTag) {
             throw new TagNotFoundException($destTagId);
         }
 
-        $this->em->remove($srcTag);
+        foreach ($srcTagIds as $srcTagId) {
+            $srcTag = $this->tagRepository->findTagById($srcTagId);
+
+            if (!$srcTag) {
+                throw new TagNotFoundException($srcTagId);
+            }
+
+            $this->em->remove($srcTag);
+
+            $srcTags[] = $srcTag;
+        }
+
         $this->em->flush();
 
         // throw an tag.merge event
-        $event = new TagMergeEvent($srcTag, $destTag);
+        $event = new TagMergeEvent($srcTags, $destTag);
         $this->eventDispatcher->dispatch(TagEvents::TAG_MERGE, $event);
 
         return $destTag;
