@@ -27,6 +27,10 @@ define([
 
         bindCustomEvents: function() {
 
+                // delete tags
+                this.sandbox.on('sulu.tags.delete', function(ids) {
+                    this.delTags(ids);
+                }, this);
         },
 
         renderList: function() {
@@ -35,6 +39,65 @@ define([
             this.sandbox.start([
                 {name: 'tags/components/list@sulutag', options: { el: $list}}
             ]);
+        },
+
+        delTags: function(ids) {
+            if (ids.length < 1) {
+                this.sandbox.emit('sulu.dialog.error.show', 'No tags selected for Deletion');
+                return;
+            }
+            this.confirmDeleteDialog(function(wasConfirmed) {
+                if (wasConfirmed) {
+                    ids.forEach(function(id) {
+                        var tag = new Tag({id: id});
+                        tag.destroy({
+                            success: function() {
+                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                            }.bind(this),
+                            error: function() {
+                                this.sandbox.logger.log('error while removing tag with id '+id);
+                            }.bind(this)
+                        });
+                    }.bind(this));
+                }
+            }.bind(this));
+        },
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmDeleteDialog: function(callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            // show dialog
+            this.sandbox.emit('sulu.dialog.confirmation.show', {
+                content: {
+                    title: 'Be careful!',
+                    content: '<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>'
+                },
+                footer: {
+                    buttonCancelText: 'Don\'t do it',
+                    buttonSubmitText: 'Do it, I understand'
+                },
+                callback: {
+                    submit: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(true);
+                        }
+                    }.bind(this),
+                    cancel: function() {
+                        this.sandbox.emit('husky.dialog.hide');
+                        if (!!callbackFunction) {
+                            callbackFunction(false);
+                        }
+                    }.bind(this)
+                }
+            });
         }
     };
 });
