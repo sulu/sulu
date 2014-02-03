@@ -209,7 +209,15 @@ define(['app-config'], function(AppConfig) {
             this.ws.onmessage = function(e) {
                 var data = JSON.parse(e.data);
 
-                this.sandbox.logger.log('Message: ' + data);
+                this.sandbox.logger.log('Message:', data);
+            }.bind(this);
+
+            this.ws.onerror = function(e) {
+                this.sandbox.logger.warn(e);
+
+                // no connection can be opened use fallback
+                this.ws = null;
+                this.initAjax();
             }.bind(this);
         },
 

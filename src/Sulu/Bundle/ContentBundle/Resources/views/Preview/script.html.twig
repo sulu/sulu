@@ -8,6 +8,7 @@
             },
             ws = {
                 conn: null,
+                opened: false,
 
                 url: '{{ wsUrl }}',
                 port: '{{ wsPort }}',
@@ -34,6 +35,7 @@
                     // on open
                     this.conn.onopen = function(e) {
                         console.log("Connection established!");
+                        this.opened = true;
 
                         var message = {
                             command: 'start',
@@ -55,7 +57,18 @@
                     }.bind(this);
 
                     this.conn.onclose = function(e) {
-                        window.close();
+                        if (!!this.opened) {
+                            window.close();
+                        }
+                    }.bind(this);
+
+                    this.conn.onerror = function(e) {
+                        console.warn(e);
+
+                        if (!this.opened) {
+                            // no connection can be opened use fallback
+                            ajax.init();
+                        }
                     }.bind(this);
                 }
             },
