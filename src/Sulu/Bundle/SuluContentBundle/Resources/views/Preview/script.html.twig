@@ -1,6 +1,7 @@
 <script type="text/javascript">
-    var interval = {{ interval }},
-            url = '{{ url }}',
+    var conn = new WebSocket('ws://{{ wsUrl }}:{{ wsPort }}'),
+            interval = {{ interval }},
+            url = '{{ ajaxUrl }}',
             http,
             init = function(type, url, callback) {
                 var http;
@@ -34,37 +35,66 @@
             handleResponse = function() {
                 // if OK 200
                 if (http.readyState == 4) {
-                    var result = JSON.parse(http.responseText),
-                            content,
-                            elements,
-                            nodeArray,
-                            i;
+                    var result = JSON.parse(http.responseText);
 
-                    // foreach property which was changed
-                    for (var propertyName in result) {
-                        if (result.hasOwnProperty(propertyName)) {
-                            content = result[propertyName].content;
-
-                            // find rdfa node
-                            elements = document.querySelectorAll('*[property="' + propertyName + '"]');
-                            i = 0;
-
-                            // foreach node
-                            nodeArray = [].slice.call(elements);
-                            nodeArray.forEach(function(element) {
-                                // set content and highlight class
-                                element.innerHTML = content[i];
-                                i++;
-                            });
-                        }
-                    }
+                    handleChanges(result);
                 }
 
                 // start next request in a interval
                 setTimeout(startRequest, interval);
+            },
+            handleChanges = function(changes) {
+                var content,
+                        elements,
+                        nodeArray,
+                        i;
+
+                // foreach property which was changed
+                for (var propertyName in changes) {
+                    if (changes.hasOwnProperty(propertyName)) {
+                        content = changes[propertyName].content;
+
+                        // find rdfa node
+                        elements = document.querySelectorAll('*[property="' + propertyName + '"]');
+                        i = 0;
+
+                        // foreach node
+                        nodeArray = [].slice.call(elements);
+                        nodeArray.forEach(function(element) {
+                            // set content and highlight class
+                            element.innerHTML = content[i];
+                            i++;
+                        });
+                    }
+                }
             };
 
-    // start first request in a interval
-    setTimeout(startRequest, interval);
+    conn.onopen = function(e) {
+        console.log("Connection established!");
 
+        var message = {
+            command: 'start',
+            content: '{{ contenUuid }}',
+            type: 'preview',
+            user: {{ userId }},
+            params: {}
+        };
+        conn.send(JSON.stringify(message));
+    };
+
+    conn.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        console.log(data);
+        if (data.command === 'changes') {
+            handleChanges(data.params);
+        }
+    };
+
+    conn.onclose = function(e) {
+        window.close();
+    };
+    /*
+     // start first request in a interval
+     setTimeout(startRequest, interval);
+     */
 </script>
