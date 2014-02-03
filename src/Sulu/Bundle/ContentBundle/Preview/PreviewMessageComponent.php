@@ -179,7 +179,9 @@ class PreviewMessageComponent implements MessageComponentInterface
                                 'command' => 'changes',
                                 'content' => $content,
                                 'type' => 'preview',
-                                'params' => $changes
+                                'params' => array(
+                                    'changes' => $changes
+                                )
                             )
                         )
                     );

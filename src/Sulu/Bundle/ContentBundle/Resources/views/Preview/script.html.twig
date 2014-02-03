@@ -52,7 +52,7 @@
                         var data = JSON.parse(e.data);
                         console.log(data);
                         if (data.command === 'changes') {
-                            handleChanges(data.params);
+                            handleChanges(data.params.changes);
                         }
                     }.bind(this);
 
