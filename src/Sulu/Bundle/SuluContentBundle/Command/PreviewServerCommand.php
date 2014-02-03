@@ -30,7 +30,7 @@ class PreviewServerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // TODO get from config
-        $port = 9876;
+        $port = $this->getContainer()->getParameter('sulu_content.preview.websocket.port');
 
         /** @var MessageComponentInterface $previewMessageComponent */
         $previewMessageComponent = $this->getMessageComponent();
