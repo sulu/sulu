@@ -8,16 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\PHPCR\SessionFactory;
+namespace Sulu\Component\PHPCR\SessionManager;
 
 
 use PHPCR\CredentialsInterface;
+use PHPCR\NodeInterface;
 use PHPCR\RepositoryFactoryInterface;
 use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 
-class SessionFactoryService implements SessionFactoryInterface
+class SessionManager implements SessionManagerInterface
 {
     /**
      * @var RepositoryFactoryInterface
@@ -28,6 +29,11 @@ class SessionFactoryService implements SessionFactoryInterface
      * @var string
      */
     private $parameters;
+
+    /**
+     * @var string[]
+     */
+    private $nodeNames;
 
     /**
      * @var RepositoryInterface
@@ -44,7 +50,7 @@ class SessionFactoryService implements SessionFactoryInterface
      */
     private $session;
 
-    function __construct(RepositoryFactoryInterface $factory, $options)
+    function __construct(RepositoryFactoryInterface $factory, $options, $nodeNames)
     {
         $this->options = $this->getOptions($options);
 
@@ -54,6 +60,8 @@ class SessionFactoryService implements SessionFactoryInterface
         $this->credentials = new SimpleCredentials($options['username'], $options['password']);
 
         $this->session = $this->repository->login($this->credentials, $options['workspace']);
+
+        $this->nodeNames = $nodeNames;
     }
 
     private function getOptions($options)
@@ -70,12 +78,36 @@ class SessionFactoryService implements SessionFactoryInterface
 
     /**
      * returns a valid session to interact with a phpcr database
-     * @param string $key
      * @return SessionInterface
      */
-    public function getSession($key = 'default')
+    public function getSession()
     {
-        // TODO create session for key
         return $this->session;
+    }
+
+    /**
+     * returns the route node for given webspace
+     * @param string $webspaceKey
+     * @return NodeInterface
+     */
+    public function getRouteNode($webspaceKey = 'default')
+    {
+        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['route'];
+        $root = $this->getSession()->getRootNode();
+
+        return $root->getNode($path);
+    }
+
+    /**
+     * returns the content node for given webspace
+     * @param string $webspaceKey
+     * @return NodeInterface
+     */
+    public function getContentNode($webspaceKey = 'default')
+    {
+        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['content'];
+        $root = $this->getSession()->getRootNode();
+
+        return $root->getNode($path);
     }
 }

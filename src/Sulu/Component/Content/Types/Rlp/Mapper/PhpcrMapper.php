@@ -20,44 +20,35 @@ use PHPCR\WorkspaceInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class PhpcrMapper extends RlpMapper
 {
 
     /**
-     * @var SessionFactoryInterface
+     * @var SessionManagerInterface
      */
-    private $sessionFactory;
+    private $sessionManager;
 
     /**
-     * @var string
+     * @param SessionManagerInterface $sessionManager
      */
-    private $basePath;
-
-    /**
-     * @param SessionFactoryInterface $sessionFactory
-     * @param string $basePath basePath of routes in phpcr
-     */
-    function __construct(SessionFactoryInterface $sessionFactory, $basePath)
+    function __construct(SessionManagerInterface $sessionManager)
     {
-        $this->sessionFactory = $sessionFactory;
-        $this->basePath = $basePath;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of webspace
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
      */
-    public function save(NodeInterface $contentNode, $path, $portalKey)
+    public function save(NodeInterface $contentNode, $path, $webspaceKey)
     {
-        // TODO portal
-        $session = $this->sessionFactory->getSession();
-        $routes = $this->getRoutes($session);
+        $routes = $this->getRoutes($webspaceKey);
 
         // check if route already exists
         if ($this->checkResourceLocator($routes, $path, $contentNode)) {
@@ -84,21 +75,20 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function loadByContent(NodeInterface $contentNode, $portalKey)
+    public function loadByContent(NodeInterface $contentNode, $webspaceKey)
     {
-        // TODO portal
         // search for references with name 'content'
         foreach ($contentNode->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $parent = $ref->getParent();
                 if (false === $parent->getPropertyValue('sulu:history')) {
-                    return $this->getResourceLocator($ref->getParent()->getPath());
+                    return $this->getResourceLocator($ref->getParent()->getPath(), $webspaceKey);
                 }
             }
         }
@@ -109,37 +99,35 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns path for given contentNode
      * @param string $uuid uuid of contentNode
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function loadByContentUuid($uuid, $portalKey)
+    public function loadByContentUuid($uuid, $webspaceKey)
     {
-        $session = $this->sessionFactory->getSession($portalKey);
+        $session = $this->sessionManager->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByContent($contentNode, $portalKey);
+        return $this->loadByContent($contentNode, $webspaceKey);
     }
 
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
      *
      * @return string uuid of content node
      */
-    public function loadByResourceLocator($resourceLocator, $portalKey)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey)
     {
         $resourceLocator = ltrim($resourceLocator, '/');
 
-        // TODO portal
-        $session = $this->sessionFactory->getSession();
-        $routes = $this->getRoutes($session);
+        $routes = $this->getRoutes($webspaceKey);
         if (!$routes->hasNode($resourceLocator) && $resourceLocator !== '') {
             throw new ResourceLocatorNotFoundException();
         }
@@ -162,7 +150,7 @@ class PhpcrMapper extends RlpMapper
                 $realPath = $route->getPropertyValue('sulu:content');
 
                 throw new ResourceLocatorMovedException(
-                    $this->getResourceLocator($realPath->getPath()),
+                    $this->getResourceLocator($realPath->getPath(), $webspaceKey),
                     $realPath->getIdentifier()
                 );
             }
@@ -174,14 +162,12 @@ class PhpcrMapper extends RlpMapper
     /**
      * checks if given path is unique
      * @param string $path
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      * @return bool
      */
-    public function unique($path, $portalKey)
+    public function unique($path, $webspaceKey)
     {
-        // TODO portal
-        $session = $this->sessionFactory->getSession();
-        $routes = $this->getRoutes($session);
+        $routes = $this->getRoutes($webspaceKey);
 
         return $this->isUnique($routes, $path);
     }
@@ -189,14 +175,12 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns a unique path with "-1" if necessary
      * @param string $path
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      * @return string
      */
-    public function getUniquePath($path, $portalKey)
+    public function getUniquePath($path, $webspaceKey)
     {
-        // TODO portal
-        $session = $this->sessionFactory->getSession();
-        $routes = $this->getRoutes($session);
+        $routes = $this->getRoutes($webspaceKey);
 
         if ($this->isUnique($routes, $path)) {
             // path is already unique
@@ -220,22 +204,22 @@ class PhpcrMapper extends RlpMapper
      * creates a new resourcelocator and creates the correct history
      * @param string $src old resource locator
      * @param string $dest new resource locator
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      */
-    public function move($src, $dest, $portalKey)
+    public function move($src, $dest, $webspaceKey)
     {
         // get abs path
-        $absDestPath = $this->getPath($dest);
-        $absSrcPath = $this->getPath($src);
+        $absDestPath = $this->getPath($dest, $webspaceKey);
+        $absSrcPath = $this->getPath($src, $webspaceKey);
 
         // init session
-        $session = $this->sessionFactory->getSession();
+        $session = $this->sessionManager->getSession();
         $rootNode = $session->getRootNode();
         $workspace = $session->getWorkspace();
-        $routes = $this->getRoutes($session);
+        $routes = $this->getRoutes($webspaceKey);
 
         $routeNode = $routes->getNode(ltrim($src, '/'));
         if (!$routeNode->hasProperty('sulu:content')) {
@@ -244,7 +228,7 @@ class PhpcrMapper extends RlpMapper
             $realPath = $routeNode->getPropertyValue('sulu:content');
 
             throw new ResourceLocatorMovedException(
-                $this->getResourceLocator($realPath->getPath()),
+                $this->getResourceLocator($realPath->getPath(), $webspaceKey),
                 $realPath->getIdentifier()
             );
         }
@@ -353,34 +337,38 @@ class PhpcrMapper extends RlpMapper
 
     /**
      * returns base node of routes from phpcr
-     * @param SessionInterface $session current session
+     * @param string $webspaceKey current session
      * @return \PHPCR\NodeInterface base node of routes
      */
-    private function getRoutes(SessionInterface $session)
+    private function getRoutes($webspaceKey)
     {
         // trailing slash
-        return $session->getNode($this->getPath());
+        return $this->sessionManager->getRouteNode($webspaceKey);
     }
 
     /**
      * returns the abspath
      * @param string $relPath
+     * @param string $webspaceKey
      * @return string
      */
-    private function getPath($relPath = '')
+    private function getPath($relPath = '', $webspaceKey)
     {
-        return '/' . ltrim($this->basePath, '/') . ($relPath !== '' ? '/' . ltrim($relPath, '/') : '');
+        $basePath = $this->getRoutes($webspaceKey)->getPath();
+        return '/' . ltrim($basePath, '/') . ($relPath !== '' ? '/' . ltrim($relPath, '/') : '');
     }
 
     /**
      * @param $path
+     * @param $webspaceKey
      * @return string
      */
-    private function getResourceLocator($path)
+    private function getResourceLocator($path, $webspaceKey)
     {
-        if ($path === $this->basePath) {
+        $basePath = $this->getRoutes($webspaceKey)->getPath();
+        if ($path === $basePath) {
             return '/';
         }
-        return substr($path, strlen($this->basePath));
+        return substr($path, strlen($basePath));
     }
 }

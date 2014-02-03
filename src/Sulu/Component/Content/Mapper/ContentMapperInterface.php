@@ -22,7 +22,7 @@ interface ContentMapperInterface
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
@@ -36,7 +36,7 @@ interface ContentMapperInterface
     public function save(
         $data,
         $templateKey,
-        $workspaceKey,
+        $webspaceKey,
         $languageCode,
         $userId,
         $partialUpdate = true,
@@ -48,7 +48,7 @@ interface ContentMapperInterface
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
@@ -60,7 +60,7 @@ interface ContentMapperInterface
     public function saveStartPage(
         $data,
         $templateKey,
-        $workspaceKey,
+        $webspaceKey,
         $languageCode,
         $userId,
         $partialUpdate = true
@@ -69,45 +69,45 @@ interface ContentMapperInterface
     /**
      * returns a list of data from children of given node
      * @param $uuid
-     * @param $workspaceKey
+     * @param $webspaceKey
      * @param $languageCode
      * @param int $depth
      * @param bool $flat
      *
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $workspaceKey, $languageCode, $depth = 1, $flat = true);
+    public function loadByParent($uuid, $webspaceKey, $languageCode, $depth = 1, $flat = true);
 
     /**
      * returns the data from the given id
      * @param string $uuid UUID of the content
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
-    public function load($uuid, $workspaceKey, $languageCode);
+    public function load($uuid, $webspaceKey, $languageCode);
 
     /**
      * returns the data from the given id
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
-    public function loadStartPage($workspaceKey, $languageCode);
+    public function loadStartPage($webspaceKey, $languageCode);
 
     /**
      * returns data from given path
      * @param string $resourceLocator Resource locator
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode
      * @return StructureInterface
      */
-    public function loadByResourceLocator($resourceLocator, $workspaceKey, $languageCode);
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode);
 
     /**
-     * deletes content with subcontent in given workspace
+     * deletes content with subcontent in given webspace
      * @param string $uuid UUID of content
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      */
-    public function delete($uuid, $workspaceKey);
+    public function delete($uuid, $webspaceKey);
 }

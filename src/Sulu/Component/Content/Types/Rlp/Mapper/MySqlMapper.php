@@ -33,10 +33,10 @@ class MySqlMapper extends RlpMapper {
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      * @return int|string id or uuid of new route
      */
-    public function save(NodeInterface $contentNode, $path, $portalKey)
+    public function save(NodeInterface $contentNode, $path, $webspaceKey)
     {
         // TODO: Implement save() method.
     }
@@ -69,10 +69,10 @@ class MySqlMapper extends RlpMapper {
     /**
      * returns a unique path with "-1" if necessary
      * @param string $path
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      * @return string
      */
-    public function getUniquePath($path, $portalKey)
+    public function getUniquePath($path, $webspaceKey)
     {
         // TODO: Implement getUniquePath() method.
     }
@@ -80,14 +80,41 @@ class MySqlMapper extends RlpMapper {
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string uuid of content node
      */
-    public function loadByResourceLocator($resourceLocator, $portalKey)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey)
     {
         // TODO: Implement load() method.
+    }
+
+    /**
+     * returns path for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     *
+     * @return string path
+     */
+    public function loadByContentUuid($uuid, $webspaceKey)
+    {
+        // TODO: Implement loadByContentUuid() method.
+    }
+
+    /**
+     * creates a new resourcelocator and creates the correct history
+     * @param string $src old resource locator
+     * @param string $dest new resource locator
+     * @param string $webspaceKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     */
+    public function move($src, $dest, $webspaceKey)
+    {
+        // TODO: Implement move() method.
     }
 }
