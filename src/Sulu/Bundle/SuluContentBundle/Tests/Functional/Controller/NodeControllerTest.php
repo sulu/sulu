@@ -98,8 +98,9 @@ class NodeControllerTest extends DatabaseTestCase
         $this->session->save();
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
-        $cmf->addNode('routes');
-        $content = $cmf->addNode('contents');
+        $webspace = $cmf->addNode('sulu_io');
+        $webspace->addNode('routes');
+        $content = $webspace->addNode('contents');
         $content->setProperty('sulu:template', 'overview');
         $content->setProperty('sulu:creator', 1);
         $content->setProperty('sulu:created', new \DateTime());
@@ -145,7 +146,7 @@ class NodeControllerTest extends DatabaseTestCase
         $factory = new $factoryclass();
         $repository = $factory->getRepository($parameters);
         $credentials = new SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'default');
+        $this->session = $repository->login($credentials, 'test');
     }
 
     public function prepareRepository()
@@ -303,7 +304,7 @@ class NodeControllerTest extends DatabaseTestCase
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
         for ($i = 0; $i < count($data); $i++) {
-            $data[$i] = $mapper->save($data[$i], 'overview', 'default', 'en', 1)->toArray();
+            $data[$i] = $mapper->save($data[$i], 'overview', 'sulu_io', 'en', 1)->toArray();
         }
 
         return $data;
@@ -452,11 +453,11 @@ class NodeControllerTest extends DatabaseTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
-        $data[0] = $mapper->save($data[0], 'overview', 'default', 'en', 1)->toArray();
-        $data[1] = $mapper->save($data[1], 'overview', 'default', 'en', 1)->toArray();
-        $data[2] = $mapper->save($data[2], 'overview', 'default', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[3] = $mapper->save($data[3], 'overview', 'default', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[4] = $mapper->save($data[4], 'overview', 'default', 'en', 1, true, null, $data[3]['id'])->toArray();
+        $data[0] = $mapper->save($data[0], 'overview', 'sulu_io', 'en', 1)->toArray();
+        $data[1] = $mapper->save($data[1], 'overview', 'sulu_io', 'en', 1)->toArray();
+        $data[2] = $mapper->save($data[2], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
+        $data[3] = $mapper->save($data[3], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
+        $data[4] = $mapper->save($data[4], 'overview', 'sulu_io', 'en', 1, true, null, $data[3]['id'])->toArray();
 
         return $data;
     }
