@@ -169,25 +169,35 @@ class TagController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * TODO: find out why pluralization does not work for this patch action
+     * ISSUE: https://github.com/sulu-cmf/SuluTagBundle/issues/6
      * @Route("/tags", name="tags")
      * updates an array of tags
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function patchAction()
     {
-        /** @var Request $request */
-        $request = $this->getRequest();
-        $i = 0;
-        while ($item = $request->get($i)) {
-            if(isset($item['id'])) {
-                $this->get('sulu_tag.tag_manager')->save($item, $item['id']);
-            } else{
-                $this->get('sulu_tag.tag_manager')->save($item, null);
+
+        try {
+
+            /** @var Request $request */
+            $request = $this->getRequest();
+            $i = 0;
+            while ($item = $request->get($i)) {
+                if (isset($item['id'])) {
+                    $this->get('sulu_tag.tag_manager')->save($item, $item['id']);
+                } else {
+                    $this->get('sulu_tag.tag_manager')->save($item, null);
+                }
+                $i++;
             }
-            $i++;
+            $this->getDoctrine()->getManager()->flush();
+            $view = $this->view(null, 204);
+
+        } catch (TagAlreadyExistsException $exc) {
+            $tagAlreadyExists = new RestException($this->entityName.' '.$exc->getName());
+            $view = $this->view($tagAlreadyExists->toArray(), 400);
         }
-        $this->getDoctrine()->getManager()->flush();
-        $view = $this->view(null, 204);
 
         return $this->handleView($view);
     }

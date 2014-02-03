@@ -25,12 +25,12 @@ class TagAlreadyExistsException extends Exception
     protected $name;
 
     /**
-     * @param int $id The id of the entity, which was not found
+     * @param string $name The name of the tag which already exists
      */
     public function __construct($name)
     {
         $this->name = $name;
-        $message = 'The tag with the id "' . $this->name . '" was not found.';
+        $message = 'The tag with the name "' . $this->name . '" already exists.';
         parent::__construct($message, 0);
     }
 
