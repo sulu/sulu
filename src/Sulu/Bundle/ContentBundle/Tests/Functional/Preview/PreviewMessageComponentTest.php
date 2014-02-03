@@ -119,11 +119,11 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     $this->assertEquals($data->params->other, true);
                     $i++;
                 } elseif ($i == 2 && $data->command == 'changes') {
-                    $this->assertEquals('asdf', $data->params->title->content[0]);
-                    $this->assertEquals('PREF: asdf', $data->params->title->content[1]);
+                    $this->assertEquals('asdf', $data->params->changes->title->content[0]);
+                    $this->assertEquals('PREF: asdf', $data->params->changes->title->content[1]);
                     $i++;
                 } elseif ($i == 3 && $data->command == 'changes') {
-                    $this->assertEquals('qwertz', $data->params->article->content[0]);
+                    $this->assertEquals('qwertz', $data->params->changes->article->content[0]);
                 } else {
                     $this->assertTrue(false);
                 }
