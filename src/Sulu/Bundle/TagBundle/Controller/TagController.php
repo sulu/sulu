@@ -36,6 +36,10 @@ class TagController extends RestController implements ClassResourceInterface
         'name'
     );
 
+    protected $fieldsEditable = array(
+        'name'
+    );
+
     protected $fieldsExcluded = array();
 
     protected $fieldsHidden = array(

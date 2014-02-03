@@ -22,15 +22,12 @@ define(function() {
         }.bind(this));
 
         // delete clicked
-//        this.sandbox.on('sulu.list-toolbar.delete', function() {
-//            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-//                this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-//            }.bind(this));
-//        }, this);
+        this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.tags.delete', ids);
+            }.bind(this));
+        }, this);
 
-
-        // husky.search.saveToolbar
-        // husky.search.saveToolbar.reset
     };
 
     return {
