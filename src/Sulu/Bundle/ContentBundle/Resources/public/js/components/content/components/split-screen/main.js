@@ -17,7 +17,7 @@ define(['app-config'], function(AppConfig) {
                     '<div id="top-toolbar"></div>',
                     '<div id="split-screen">',
                     '<div id="form" class="grid" data-aura-component="content@sulucontent" data-aura-id="', id, '" data-aura-display="form"></div>',
-                    '<div id="preview"><iframe src="http://sulu.lo/admin/content/preview/07b09093-76e3-4eba-8078-7cae802a80ee" width="1024" height="768"></iframe></div>',
+                    '<div id="preview"><iframe src="http://sulu.lo/admin/content/preview/', id, '" width="1024" height="768"></iframe></div>',
                     '</div>'
                 ].join('');
             }
