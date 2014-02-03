@@ -41,10 +41,14 @@ class PreviewController extends Controller
 
         $content = $preview->render($uid, $contentUuid);
 
+        // FIXME make url and port dynamic
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
             array(
-                'url' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
+                'userId' => $uid,
+                'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
+                'wsUrl' => 'localhost',
+                'wsPort' => '9876',
                 'contenUuid' => $contentUuid,
                 'interval' => $this->container->getParameter('sulu_content.preview.interval')
             )
