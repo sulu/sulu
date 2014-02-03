@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
+use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
-
     /**
      * @var array
      */
@@ -32,22 +32,28 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private $preview;
 
-    public function __construct(SecurityContextInterface $context, PreviewInterface $preview)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(SecurityContextInterface $context, PreviewInterface $preview, LoggerInterface $logger)
     {
         $this->content = array();
 
         $this->context = $context;
         $this->preview = $preview;
+        $this->logger = $logger;
     }
 
     public function onOpen(ConnectionInterface $conn)
     {
-        echo "Connection {$conn->resourceId} has connected\n";
+        $this->logger->debug("Connection {$conn->resourceId} has connected");
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        echo "Connection {$from->resourceId} has send a message: {$msg}\n";
+        $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
         $msg = json_decode($msg);
 
         if (
@@ -137,15 +143,12 @@ class PreviewMessageComponent implements MessageComponentInterface
         $id = $user . '-' . $content;
 
         // if params correct
-        if (
-            $type == 'form' &&
-            isset($params->changes)
-        ) {
 
-            foreach ($params->changes as $property => $data) {
-                // update property
-                $this->preview->update($user, $content, $property, $data);
-            }
+        if ($type == 'form' && isset($params->property) && isset($params->data)) {
+            // update property
+            $this->preview->update($user, $content, $params->property, $params->data);
+            // get changes
+            $changes = $this->preview->getChanges($user, $content);
 
             // send ok message
             $from->send(
@@ -160,32 +163,22 @@ class PreviewMessageComponent implements MessageComponentInterface
             );
 
             // if there are some changes
-            if (
-                isset($this->content[$id]) &&
-                isset($this->content[$id]['preview'])
-            ) {
-                // get changes
-                $changes = $this->preview->getChanges($user, $content);
 
-                if (sizeof($changes) > 0) {
-                    // get preview client
-                    /** @var ConnectionInterface $previewClient */
-                    $previewClient = $this->content[$id]['preview'];
-
-                    // send changes command
-                    $previewClient->send(
-                        json_encode(
-                            array(
-                                'command' => 'changes',
-                                'content' => $content,
-                                'type' => 'preview',
-                                'params' => array(
-                                    'changes' => $changes
-                                )
-                            )
+            if (sizeof($changes) > 0 && isset($this->content[$id]) && isset($this->content[$id]['preview'])) {
+                // get preview client
+                /** @var ConnectionInterface $previewClient */
+                $previewClient = $this->content[$id]['preview'];
+                // send changes command
+                $previewClient->send(
+                    json_encode(
+                        array(
+                            'command' => 'changes',
+                            'content' => $content,
+                            'type' => 'preview',
+                            'params' => $changes
                         )
-                    );
-                }
+                    )
+                );
             }
         }
     }
@@ -229,12 +222,12 @@ class PreviewMessageComponent implements MessageComponentInterface
             $other->close();
         }
 
-        echo "Connection {$conn->resourceId} has disconnected\n";
+        $this->logger->debug("Connection {$conn->resourceId} has disconnected");
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        echo "An error has occurred: {$e->getMessage()}\n";
+        $this->logger->error("An error has occurred: {$e->getMessage()}");
 
         $conn->close();
     }

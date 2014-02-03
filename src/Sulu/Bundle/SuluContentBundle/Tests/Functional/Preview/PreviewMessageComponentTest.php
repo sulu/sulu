@@ -389,7 +389,11 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
     {
         $securityContext = $this->prepareSecurityContext();
         $preview = $this->preparePreview();
-        $component = new PreviewMessageComponent($securityContext, $preview);
+        $component = new PreviewMessageComponent(
+            $securityContext,
+            $preview,
+            $this->getMock('\Psr\Log\LoggerInterface')
+        );
 
         return $component;
     }
