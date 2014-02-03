@@ -63,7 +63,7 @@ interface TagManagerInterface
     /**
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
-     * @param number $srcTagIds The source tag, which will be removed afterwards
+     * @param array $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
      * @throws Exception\TagNotFoundException
      * @return Tag The new Tag, which is valid for both given tags
