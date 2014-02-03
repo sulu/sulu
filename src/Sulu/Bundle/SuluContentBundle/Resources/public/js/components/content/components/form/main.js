@@ -171,7 +171,7 @@ define(['app-config'], function(AppConfig) {
                 this.initAjax();
             }
 
-            this.sandbox.dom.on(this.formId, 'focusout', function(e) {
+            this.sandbox.dom.on(this.formId, 'keyup', function(e) {
                 var $element = $(e.currentTarget);
                 this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
             }.bind(this), "select, input, textarea");
