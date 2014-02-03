@@ -75,6 +75,12 @@ define([], function() {
                             callback: function() {
                                 this.sandbox.emit('sulu.edit-toolbar.preview.new-window');
                             }.bind(this)
+                        },
+                        {
+                            title: this.sandbox.translate('sulu.edit-toolbar.split-screen'),
+                            callback: function() {
+                                this.sandbox.emit('sulu.edit-toolbar.preview.split-screen');
+                            }.bind(this)
                         }
                     ]
                 });
