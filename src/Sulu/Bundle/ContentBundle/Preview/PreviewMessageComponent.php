@@ -10,56 +10,223 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
+use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
-    protected $clients;
 
     /**
-     * @var SecurityContext
+     * @var array
+     */
+    protected $content;
+
+    /**
+     * @var SecurityContextInterface
      */
     private $context;
 
-    public function __construct(SecurityContext $context)
+    /**
+     * @var PreviewInterface
+     */
+    private $preview;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(SecurityContextInterface $context, PreviewInterface $preview, LoggerInterface $logger)
     {
-        $this->clients = new \SplObjectStorage;
+        $this->content = array();
+
         $this->context = $context;
+        $this->preview = $preview;
+        $this->logger = $logger;
     }
 
     public function onOpen(ConnectionInterface $conn)
     {
-        // Store the new connection to send messages to later
-        $this->clients->attach($conn);
-
-        echo "New connection! ({$conn->resourceId})\n";
+        $this->logger->debug("Connection {$conn->resourceId} has connected");
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $user = $this->context->getToken()->getUser();
-        echo($msg . " from user id " . $user->getId() . "\n");
-        foreach ($this->clients as $client) {
-            if ($from !== $client) {
-                // The sender is not the receiver, send to each client connected
-                $client->send($msg);
+        $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
+        $msg = json_decode($msg);
+        $user = $this->context->getToken()->getUser()->getId();
+
+        if (
+            isset($msg->command) &&
+            isset($msg->params) &&
+            isset($msg->content) &&
+            isset($msg->type) &&
+            in_array(
+                strtolower($msg->type),
+                array('form', 'preview')
+            )
+        ) {
+            switch ($msg->command) {
+                case 'start':
+                    $this->start($from, $msg, $user);
+                    break;
+                case 'update':
+                    $this->update($from, $msg, $user);
+                    break;
+                case 'close':
+                    $this->close($from, $msg, $user);
+                    break;
             }
         }
     }
 
+    private function start(ConnectionInterface $from, $msg, $user)
+    {
+        $content = $msg->content;
+        $type = strtolower($msg->type);
+
+        // if preview is started
+        if (!$this->preview->started($user, $content)) {
+            // TODO workspace, language
+            $this->preview->start($user, $content, '', '');
+        }
+
+        // generate unique cache id
+        $id = $user . '-' . $content;
+        if (!array_key_exists($id, $this->content)) {
+            $this->content[$id] = array(
+                'content' => $content,
+                'user' => $user
+            );
+        }
+
+        // save client for type
+        $this->content[$id][$type] = $from;
+
+        // inform other part
+        $otherType = ($type == 'form' ? 'preview' : 'form');
+        $other = false;
+        if (isset($this->content[$id][$otherType])) {
+            $other = true;
+            $this->content[$id][$otherType]->send(
+                json_encode(
+                    array(
+                        'command' => 'start',
+                        'content' => $content,
+                        'type' => $type,
+                        'params' => array('msg' => 'OK', 'other' => true)
+                    )
+                )
+            );
+        }
+
+        // send ok message
+        $from->send(
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => $content,
+                    'type' => $type,
+                    'params' => array('msg' => 'OK', 'other' => $other)
+                )
+            )
+        );
+    }
+
+    private function update(ConnectionInterface $from, $msg, $user)
+    {
+        $content = $msg->content;
+        $type = strtolower($msg->type);
+        $params = $msg->params;
+        $id = $user . '-' . $content;
+
+        // if params correct
+        if ($type == 'form' && isset($params->property) && isset($params->data)) {
+            // update property
+            $this->preview->update($user, $content, $params->property, $params->data);
+            // get changes
+            $changes = $this->preview->getChanges($user, $content);
+
+            // send ok message
+            $from->send(
+                json_encode(
+                    array(
+                        'command' => 'update',
+                        'content' => $content,
+                        'type' => 'form',
+                        'params' => array('msg' => 'OK')
+                    )
+                )
+            );
+
+            // if there are some changes
+            if (sizeof($changes) > 0 && isset($this->content[$id]) && isset($this->content[$id]['preview'])) {
+                // get preview client
+                /** @var ConnectionInterface $previewClient */
+                $previewClient = $this->content[$id]['preview'];
+                // send changes command
+                $previewClient->send(
+                    json_encode(
+                        array(
+                            'command' => 'changes',
+                            'content' => $content,
+                            'type' => 'preview',
+                            'params' => $changes
+                        )
+                    )
+                );
+            }
+        }
+    }
+
+    private function close(ConnectionInterface $from, $msg, $user)
+    {
+        $content = $msg->content;
+        $type = strtolower($msg->type);
+        $otherType = ($type == 'form' ? 'preview' : 'form');
+        $params = $msg->params;
+        $id = $user . '-' . $content;
+
+        // stop preview
+        $this->preview->stop($user, $content);
+
+        // close connection
+        $from->close();
+
+        // close other part
+        if (isset($this->content[$id][$otherType])) {
+            /** @var ConnectionInterface $other */
+            $other = $this->content[$id][$otherType];
+            $other->close();
+        }
+
+        // cleanUp cache
+        unset($this->content[$id]);
+    }
+
     public function onClose(ConnectionInterface $conn)
     {
-        // The connection is closed, remove it, as we can no longer send it messages
-        $this->clients->detach($conn);
+        /** @var ConnectionInterface $other */
+        $other = null;
+        foreach ($this->content as $c) {
+            if ($c['form'] == $conn || isset($c['preview'])) {
+                $other = $c['preview'];
+            } elseif ($c['preview'] == $conn && isset($c['form'])) {
+                $other = $c['form'];
+            }
+        }
+        if ($other != null) {
+            $other->close();
+        }
 
-        echo "Connection {$conn->resourceId} has disconnected\n";
+        $this->logger->debug("Connection {$conn->resourceId} has disconnected");
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        echo "An error has occurred: {$e->getMessage()}\n";
+        $this->logger->error("An error has occurred: {$e->getMessage()}");
 
         $conn->close();
     }
