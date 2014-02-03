@@ -36,6 +36,17 @@ define(['app-config'], function(AppConfig) {
                     }.bind(this)
                 },
                 {
+                    id: 3,
+                    icon: 'delete',
+                    container: 'left',
+                    align: 'right',
+                    customClass: 'delete',
+                    callback: function() {
+                        this.sandbox.emit('husky.top-toolbar.delete.loading');
+                        this.sandbox.emit('sulu.preview.delete');
+                    }.bind(this)
+                },
+                {
                     id: 'save',
                     icon: 'floppy-save',
                     container: 'left',
@@ -46,17 +57,6 @@ define(['app-config'], function(AppConfig) {
                     callback: function() {
                         this.sandbox.emit('husky.top-toolbar.save.loading');
                         this.sandbox.emit('sulu.preview.save');
-                    }.bind(this)
-                },
-                {
-                    id: 3,
-                    icon: 'delete',
-                    container: 'left',
-                    align: 'right',
-                    customClass: 'delete',
-                    callback: function() {
-                        this.sandbox.emit('husky.top-toolbar.delete.loading');
-                        this.sandbox.emit('sulu.preview.delete');
                     }.bind(this)
                 }
             ];
