@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\TagBundle\Entity;
 
@@ -33,12 +41,12 @@ class Tag extends ApiEntity
     private $changed;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $creator;
 
@@ -51,14 +59,14 @@ class Tag extends ApiEntity
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -68,7 +76,7 @@ class Tag extends ApiEntity
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -84,14 +92,14 @@ class Tag extends ApiEntity
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -107,14 +115,14 @@ class Tag extends ApiEntity
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -124,20 +132,20 @@ class Tag extends ApiEntity
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param \Sulu\Component\Security\UserInterface $changer
      * @return Tag
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
@@ -147,43 +155,43 @@ class Tag extends ApiEntity
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param \Sulu\Component\Security\UserInterface $creator
      * @return Tag
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * @VirtualProperty
-     * @SerializedName("creatorFullName")
-     * @return string
-     */
-    public function getCreatorFullName()
-    {
-        return $this->getCreator()->getFullName();
-    }
-
-    /**
-     * @VirtualProperty
-     * @SerializedName("changerFullName")
-     * @return string
-     */
-    public function getChangerFullName()
-    {
-        return $this->getChanger()->getFullName();
-    }
+//    /**
+//     * @VirtualProperty
+//     * @SerializedName("creatorFullName")
+//     * @return string
+//     */
+//    public function getCreatorFullName()
+//    {
+//        return $this->getCreator()->getFullName();
+//    }
+//
+//    /**
+//     * @VirtualProperty
+//     * @SerializedName("changerFullName")
+//     * @return string
+//     */
+//    public function getChangerFullName()
+//    {
+//        return $this->getChanger()->getFullName();
+//    }
 }
