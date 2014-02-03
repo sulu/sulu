@@ -186,12 +186,9 @@
                         }
                     ]);
 
-
                     gridOptions.fieldsData = data;
                     gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
                     gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
-
-                    console.log("ASFDASDFASDFasf", gridOptions.searchInstanceName);
 
                     // start datagrid
                     this.sandbox.start([
