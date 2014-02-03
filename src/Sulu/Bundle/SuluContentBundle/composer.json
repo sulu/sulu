@@ -31,7 +31,8 @@
         "symfony/symfony": "2.3.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.3.*",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {
