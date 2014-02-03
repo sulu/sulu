@@ -9,16 +9,16 @@
 
 require.config({
     paths: {
+        'app-config': 'components/app-config/main',
         'cultures': 'vendor/globalize/cultures'
     }
 });
 
-require(['husky'], function(Husky) {
+require(['husky', 'app-config'], function(Husky, AppConfig) {
 
     'use strict';
 
-    // TODO get language from user
-    var language = SULU.user.locale,
+    var language = AppConfig.getUser().locale,
         app;
 
     require(['text!/admin/bundles', 'text!/js/translations/sulu.' + language + '.json'], function(text, messagesText) {
