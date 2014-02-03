@@ -152,10 +152,10 @@ class TagController extends RestController implements ClassResourceInterface
     public function postMergeAction()
     {
         try {
-            $srcTagId = $this->getRequest()->get('src');
+            $srcTagIds = explode(',', $this->getRequest()->get('src'));
             $destTagId = $this->getRequest()->get('dest');
 
-            $destTag = $this->get('sulu_tag.tag_manager')->merge($srcTagId, $destTagId);
+            $destTag = $this->get('sulu_tag.tag_manager')->merge($srcTagIds, $destTagId);
 
             $view = $this->view(null, 303, array('location' => $destTag->getLinks()['self']));
         } catch (TagNotFoundException $exc) {
