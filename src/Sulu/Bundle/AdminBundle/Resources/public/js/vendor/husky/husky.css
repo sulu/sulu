@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* line 7, ../scss/abstract/abstract-loader.scss */
 .is-loading:not(.navigation-column-item) {
   background-image: url("data:image/gif;base64,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");
@@ -551,9 +552,13 @@ table {
   border-radius: 5px;
   outline: 0;
   display: block;
+  height: 30px;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
 }
 
-/* line 68, ../scss/utilities.scss */
+/* line 72, ../scss/utilities.scss */
 .editable:focus,
 .editable:active {
   background: white;
@@ -561,158 +566,158 @@ table {
   outline: 0;
 }
 
-/* line 74, ../scss/utilities.scss */
+/* line 78, ../scss/utilities.scss */
 .editable:hover {
   border: 1px solid white;
   outline: 0;
 }
 
-/* line 83, ../scss/utilities.scss */
+/* line 87, ../scss/utilities.scss */
 .m-top-5 {
   margin-top: 5px !important;
 }
 
-/* line 86, ../scss/utilities.scss */
+/* line 90, ../scss/utilities.scss */
 .p-top-5 {
   padding-top: 5px !important;
 }
 
-/* line 90, ../scss/utilities.scss */
+/* line 94, ../scss/utilities.scss */
 .m-bottom-5 {
   margin-bottom: 5px !important;
 }
 
-/* line 93, ../scss/utilities.scss */
+/* line 97, ../scss/utilities.scss */
 .p-bottom-5 {
   padding-bottom: 5px !important;
 }
 
-/* line 97, ../scss/utilities.scss */
+/* line 101, ../scss/utilities.scss */
 .m-right-5 {
   margin-right: 5px !important;
 }
 
-/* line 100, ../scss/utilities.scss */
+/* line 104, ../scss/utilities.scss */
 .p-right-5 {
   padding-right: 5px !important;
 }
 
-/* line 104, ../scss/utilities.scss */
+/* line 108, ../scss/utilities.scss */
 .m-left-5 {
   margin-left: 5px !important;
 }
 
-/* line 107, ../scss/utilities.scss */
+/* line 111, ../scss/utilities.scss */
 .p-left-5 {
   padding-left: 5px !important;
 }
 
-/* line 112, ../scss/utilities.scss */
+/* line 116, ../scss/utilities.scss */
 .m-top-10 {
   margin-top: 10px !important;
 }
 
-/* line 116, ../scss/utilities.scss */
+/* line 120, ../scss/utilities.scss */
 .m-bottom-10 {
   margin-bottom: 10px !important;
 }
 
-/* line 120, ../scss/utilities.scss */
+/* line 124, ../scss/utilities.scss */
 .m-right-10 {
   margin-right: 10px !important;
 }
 
-/* line 124, ../scss/utilities.scss */
+/* line 128, ../scss/utilities.scss */
 .m-left-10 {
   margin-left: 10px !important;
 }
 
-/* line 129, ../scss/utilities.scss */
+/* line 133, ../scss/utilities.scss */
 .p-top-10 {
   padding-top: 10px !important;
 }
 
-/* line 134, ../scss/utilities.scss */
+/* line 138, ../scss/utilities.scss */
 .m-top-15 {
   margin-top: 15px !important;
 }
 
-/* line 138, ../scss/utilities.scss */
+/* line 142, ../scss/utilities.scss */
 .m-bottom-15 {
   margin-bottom: 15px !important;
 }
 
-/* line 142, ../scss/utilities.scss */
+/* line 146, ../scss/utilities.scss */
 .m-right-15 {
   margin-right: 15px !important;
 }
 
-/* line 146, ../scss/utilities.scss */
+/* line 150, ../scss/utilities.scss */
 .m-left-15 {
   margin-left: 15px !important;
 }
 
-/* line 151, ../scss/utilities.scss */
+/* line 155, ../scss/utilities.scss */
 .m-top-20 {
   margin-top: 20px !important;
 }
 
-/* line 155, ../scss/utilities.scss */
+/* line 159, ../scss/utilities.scss */
 .m-bottom-20 {
   margin-bottom: 20px !important;
 }
 
-/* line 159, ../scss/utilities.scss */
+/* line 163, ../scss/utilities.scss */
 .m-right-20 {
   margin-right: 20px !important;
 }
 
-/* line 163, ../scss/utilities.scss */
+/* line 167, ../scss/utilities.scss */
 .m-left-20 {
   margin-left: 20px !important;
 }
 
-/* line 169, ../scss/utilities.scss */
+/* line 173, ../scss/utilities.scss */
 .m-top-25 {
   margin-top: 25px !important;
 }
 
-/* line 173, ../scss/utilities.scss */
+/* line 177, ../scss/utilities.scss */
 .m-bottom-25 {
   margin-bottom: 25px !important;
 }
 
-/* line 177, ../scss/utilities.scss */
+/* line 181, ../scss/utilities.scss */
 .m-right-25 {
   margin-right: 25px !important;
 }
 
-/* line 181, ../scss/utilities.scss */
+/* line 185, ../scss/utilities.scss */
 .m-left-25 {
   margin-left: 25px !important;
 }
 
-/* line 186, ../scss/utilities.scss */
+/* line 190, ../scss/utilities.scss */
 .m-top-30 {
   margin-top: 30px !important;
 }
 
-/* line 190, ../scss/utilities.scss */
+/* line 194, ../scss/utilities.scss */
 .m-bottom-30 {
   margin-bottom: 30px !important;
 }
 
-/* line 194, ../scss/utilities.scss */
+/* line 198, ../scss/utilities.scss */
 .m-right-30 {
   margin-right: 30px !important;
 }
 
-/* line 198, ../scss/utilities.scss */
+/* line 202, ../scss/utilities.scss */
 .m-left-30 {
   margin-left: 30px !important;
 }
 
-/* line 206, ../scss/utilities.scss */
+/* line 210, ../scss/utilities.scss */
 .m-height-25 {
   height: 25px !important;
 }
@@ -4687,37 +4692,39 @@ a.btn-black, a.btn-highlight {
 .tt-suggestion {
   height: 25px;
   padding: 0 15px;
+  border-width: 0 2px 0 2px;
+  border-style: solid;
+  border-color: #fff;
 }
-/* line 51, ../scss/modules/auto-complete.scss */
+/* line 54, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border {
   border-bottom: 1px solid #efefef;
   height: 25px;
   clear: both;
 }
-/* line 55, ../scss/modules/auto-complete.scss */
+/* line 58, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border .img {
   float: left;
   margin: 5px 10px 0 5px;
   width: 12px;
 }
-/* line 60, ../scss/modules/auto-complete.scss */
+/* line 63, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border .text {
   float: left;
   line-height: 25px;
 }
-/* line 65, ../scss/modules/auto-complete.scss */
+/* line 68, ../scss/modules/auto-complete.scss */
 .tt-suggestion:last-child .border {
   border-bottom: none;
 }
 
-/* line 71, ../scss/modules/auto-complete.scss */
+/* line 74, ../scss/modules/auto-complete.scss */
 .tt-suggestion:hover,
 .tt-is-under-cursor {
-  background: #cccccc;
-  border-color: transparent;
+  background: #efefef;
 }
 
-/* line 76, ../scss/modules/auto-complete.scss */
+/* line 78, ../scss/modules/auto-complete.scss */
 .suggestion {
   color: black;
 }
@@ -5457,7 +5464,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 42, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-container .tt-suggestions {
-  width: 498px;
+  width: 100%;
 }
 
 /* line 47, ../scss/modules/auto-complete-list.scss */
@@ -5600,4 +5607,13 @@ a.btn-black, a.btn-highlight {
 .husky-dropdown-multiple-select .dropdown-list > ul > li:hover, .husky-dropdown-multiple-select .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected, .column-navigation-wrapper .column-navigation .column .husky-dropdown-multiple-select .dropdown-list > ul > li.selected, .husky-dropdown-multiple-select .dropdown-list > ul > li.hover {
   background-color: #ccc;
   cursor: pointer;
+}
+
+/* line 2, ../scss/modules/datagrid.scss */
+.husky-datagrid table {
+  table-layout: fixed;
+}
+/* line 5, ../scss/modules/datagrid.scss */
+.husky-datagrid table td {
+  overflow: hidden;
 }
