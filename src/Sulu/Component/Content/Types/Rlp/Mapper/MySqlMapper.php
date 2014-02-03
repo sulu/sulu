@@ -90,4 +90,31 @@ class MySqlMapper extends RlpMapper {
     {
         // TODO: Implement load() method.
     }
+
+    /**
+     * returns path for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     *
+     * @return string path
+     */
+    public function loadByContentUuid($uuid, $webspaceKey)
+    {
+        // TODO: Implement loadByContentUuid() method.
+    }
+
+    /**
+     * creates a new resourcelocator and creates the correct history
+     * @param string $src old resource locator
+     * @param string $dest new resource locator
+     * @param string $webspaceKey key of portal
+     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     */
+    public function move($src, $dest, $webspaceKey)
+    {
+        // TODO: Implement move() method.
+    }
 }

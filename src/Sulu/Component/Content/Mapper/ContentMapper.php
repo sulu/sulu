@@ -121,14 +121,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
-            if (
-                $languageCode == $this->defaultLanguage &&
-                $node->getPath() !== $this->getContentNode($webspaceKey)->getPath() &&
-                (
-                    !$node->hasProperty($titleProperty->getName()) ||
-                    $node->getPropertyValue($titleProperty->getName()) !== $data['title']
-                )
-            ) {
+            $hasSameLanguage = ($languageCode == $this->defaultLanguage);
+            $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
+            $hasDifferentTitle = !$node->hasProperty($titleProperty->getName()) ||
+                $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
+
+            if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                 $node->rename($path);
                 // FIXME refresh session here
             }

@@ -43,12 +43,12 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * reads the value for given property out of the database + sets the value of the property
      * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @param string $webspace
+     * @param string $webspaceKey
      * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property, $webspace)
+    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
-        $value = $this->getResourceLocator($node ,$webspace);
+        $value = $this->getResourceLocator($node ,$webspaceKey);
         $property->setValue($value);
     }
 
