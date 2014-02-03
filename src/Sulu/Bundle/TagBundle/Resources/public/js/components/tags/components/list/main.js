@@ -21,8 +21,12 @@ define(function() {
             this.sandbox.emit('husky.datagrid.data.save');
         }.bind(this));
 
-        //sulu.list-toolbar.save
-        //sulu.list-toolbar.delete
+        // delete clicked
+//        this.sandbox.on('sulu.list-toolbar.delete', function() {
+//            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+//                this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+//            }.bind(this));
+//        }, this);
 
 
         // husky.search.saveToolbar
@@ -43,44 +47,30 @@ define(function() {
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/tag/template/tag/list'));
 
-            this.sandbox.start([
+            // init list-toolbar and datagrid
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'tagsFields', '/admin/api/tags/fields',
                 {
-                    name: 'list-toolbar@suluadmin',
-                    options: {
-                        el: '#list-toolbar-container',
-                        template: 'defaultEditableList',
-                        listener: 'defaultEditableList',
-                        instanceName: 'saveToolbar'
-                    }
+                    el: '#list-toolbar-container',
+                    template: 'defaultEditableList',
+                    listener: 'defaultEditableList',
+                    instanceName: 'saveToolbar'
+                },
+                {
+                    el: this.sandbox.dom.find('#tags-list', this.$el),
+                    url: '/admin/api/tags?flat=true',
+                    editable: true,
+                    paginationOptions: {
+                        pageSize: 4
+                    },
+                    pagination: true,
+                    selectItem: {
+                        type: 'checkbox'
+                    },
+                    removeRow: false,
+                    sortable: true
                 }
-            ]);
+            );
 
-            // datagrid
-            this.sandbox.start([
-                {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: this.sandbox.dom.find('#tags-list', this.$el),
-                        url: '/admin/api/tags?flat=true&fields=id,name,changed',
-                        editable: true,
-                        paginationOptions: {
-                            pageSize: 4
-                        },
-                        pagination: true,
-                        selectItem: {
-                            type: 'checkbox'
-                        },
-                        removeRow: false,
-                        sortable: true,
-                        columns: [
-                            {content: this.sandbox.translate('tag.tag'), width:'40%', attribute:'name',editable: true},
-                            {content: this.sandbox.translate('tag.author'), width:'30%', attribute: ''},
-                            {content: this.sandbox.translate('tag.changed'),width:'30%', attribute:'changed'}
-                        ],
-                        excludeFields: ['id']
-                    }
-                }
-            ]);
         }
     };
 });
