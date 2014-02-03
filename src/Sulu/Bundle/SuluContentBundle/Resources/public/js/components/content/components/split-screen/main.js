@@ -15,8 +15,10 @@ define(['app-config'], function(AppConfig) {
             skeleton: function(id) {
                 return [
                     '<div id="top-toolbar"></div>',
+                    '<div id="split-screen">',
                     '<div id="form" class="grid" data-aura-component="content@sulucontent" data-aura-id="', id, '" data-aura-display="form"></div>',
-                    '<div id="preview"><iframe src="http://sulu.lo/admin/content/preview/07b09093-76e3-4eba-8078-7cae802a80ee" height="100%" width="100%"></iframe></div>'
+                    '<div id="preview"><iframe src="http://sulu.lo/admin/content/preview/07b09093-76e3-4eba-8078-7cae802a80ee" width="1024" height="768"></iframe></div>',
+                    '</div>'
                 ].join('');
             }
         },
@@ -34,73 +36,28 @@ define(['app-config'], function(AppConfig) {
                     }.bind(this)
                 },
                 {
-                    id: 'state',
-                    icon: 'publish',
-                    container: 'left',
-                    align: 'right',
-                    customClass: 'state',
-                    dynamicIcon: true,
-                    items: [
-                        {
-                            title: 'publish',
-                            selectedIcon: 'publish',
-                            callback: function() {
-                                this.sandbox.emit('husky.top-toolbar.state.loading');
-                                // FIXME only dummy
-                                setTimeout(function() {
-                                    this.sandbox.emit('husky.top-toolbar.state.enable', false, false);
-                                }.bind(this), 1000);
-                            }.bind(this)
-                        },
-                        {
-                            title: 'unpublish',
-                            selectedIcon: 'unpublish',
-                            callback: function() {
-                                this.sandbox.emit('husky.top-toolbar.state.loading');
-                                // FIXME only dummy
-                                setTimeout(function() {
-                                    this.sandbox.emit('husky.top-toolbar.state.enable', false, false);
-                                }.bind(this), 1000);
-                            }
-                        }
-                    ]
-                },
-                {
                     id: 'save',
                     icon: 'floppy-save',
-                    disabledIcon: 'remove',
                     container: 'left',
                     align: 'right',
                     customClass: 'save',
                     highlight: true,
+                    disabled: true,
                     callback: function() {
-                        // TODO save
-                    }
+                        this.sandbox.emit('husky.top-toolbar.save.loading');
+                        this.sandbox.emit('sulu.preview.save');
+                    }.bind(this)
                 },
                 {
-                    id: 'resolution',
-                    container: 'right',
+                    id: 3,
+                    icon: 'delete',
+                    container: 'left',
                     align: 'right',
-                    customClass: 'resolution',
-                    title: '1024 x 768',
-                    dynamicTitle: true,
-                    items: [
-                        {
-                            title: '1024 x 768',
-                            callback: function() {
-                            }
-                        },
-                        {
-                            title: '1280 x 800',
-                            callback: function() {
-                            }
-                        },
-                        {
-                            title: '1920 x 1080',
-                            callback: function() {
-                            }
-                        }
-                    ]
+                    customClass: 'delete',
+                    callback: function() {
+                        this.sandbox.emit('husky.top-toolbar.delete.loading');
+                        this.sandbox.emit('sulu.preview.delete');
+                    }.bind(this)
                 }
             ];
         };
@@ -111,10 +68,31 @@ define(['app-config'], function(AppConfig) {
 
         initialize: function() {
             this.render();
+
+            this.bindCustomEvents();
+        },
+
+        bindCustomEvents: function() {
+            this.sandbox.on('sulu.preview.state.change', function(saved) {
+                if (!!saved) {
+                    this.sandbox.emit('husky.top-toolbar.save.disable', true);
+                } else {
+                    this.sandbox.emit('husky.top-toolbar.save.enable');
+                }
+            }, this);
+
+            this.sandbox.on('sulu.preview.deleted', function(id) {
+                window.close();
+            }, this);
         },
 
         render: function() {
             this.html(templates.skeleton(this.options.id));
+
+            var formWidth = this.sandbox.dom.find('#form').outerWidth() + 10,
+                mainWidth = this.sandbox.dom.find('#split-screen').outerWidth();
+
+            this.sandbox.dom.find('#preview').css('width', mainWidth - formWidth);
 
             this.sandbox.start([
                 {
