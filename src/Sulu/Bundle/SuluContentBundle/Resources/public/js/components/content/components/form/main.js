@@ -157,6 +157,9 @@ define([], function() {
 
             this.sandbox.dom.on(this.formId, 'focusout', function(e) {
                 var $element = $(e.currentTarget);
+                while (!$element.data('element')) {
+                    $element = $element.parent();
+                }
                 this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
             }.bind(this), "select, input, textarea");
 
