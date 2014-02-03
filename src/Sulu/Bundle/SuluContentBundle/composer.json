@@ -25,7 +25,9 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "1.0.*",
 
-        "jms/serializer-bundle": "@dev"
+        "jms/serializer-bundle": "@dev",
+
+        "cboden/ratchet": "dev-master"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
