@@ -82,12 +82,18 @@ define(['app-config'], function(AppConfig) {
                 this.setHeaderBar(true);
             }, this);
 
-            // content saved
+            // content save
             this.sandbox.on('sulu.edit-toolbar.save', function() {
+                this.submit();
+            }, this);
+            this.sandbox.on('sulu.preview.save', function() {
                 this.submit();
             }, this);
 
             // content delete
+            this.sandbox.on('sulu.preview.delete', function() {
+                this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
+            }.bind(this));
             this.sandbox.on('sulu.edit-toolbar.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
             }.bind(this));
@@ -99,6 +105,10 @@ define(['app-config'], function(AppConfig) {
 
             this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
                 this.openPreviewWindow();
+            }, this);
+
+            this.sandbox.on('sulu.edit-toolbar.preview.split-screen', function() {
+                this.openSplitScreen();
             }, this);
         },
 
@@ -123,6 +133,7 @@ define(['app-config'], function(AppConfig) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
                 this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
         },
@@ -143,6 +154,10 @@ define(['app-config'], function(AppConfig) {
 
         openPreviewWindow: function() {
             window.open('/admin/content/preview/' + this.options.data.id);
+        },
+
+        openSplitScreen: function() {
+            window.open('/admin/content/split-screen/' + this.options.data.id);
         },
 
         /**

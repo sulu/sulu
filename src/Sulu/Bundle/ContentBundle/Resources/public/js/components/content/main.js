@@ -86,6 +86,7 @@ define([
 
                             success: function() {
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     } else {
@@ -94,6 +95,7 @@ define([
 
                             success: function() {
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     }

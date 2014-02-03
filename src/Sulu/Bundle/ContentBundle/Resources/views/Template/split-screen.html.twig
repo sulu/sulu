@@ -24,12 +24,32 @@
         <!-- endbuild -->
 
         <style type="text/css">
+            #top-toolbar {
 
+            }
+
+            #split-screen {
+                margin-top: 60px;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+            #form {
+                float: left;
+                width: 440px;
+                margin-right: 10px;
+            }
+
+            #preview {
+                float: left;
+            }
         </style>
     </head>
     <body>
         <main data-aura-component="content/components/split-screen@sulucontent"
                 data-aura-id="{{ contentUuid }}"></main>
+
+        <div id="dialogContainer" data-aura-component="dialog@suluadmin"></div>
 
         <script type="text/javascript">
             {% autoescape false %}
