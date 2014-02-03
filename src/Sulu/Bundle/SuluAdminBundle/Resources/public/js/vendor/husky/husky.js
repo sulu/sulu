@@ -25105,11 +25105,12 @@ define('__component__$button@husky',[], function() {
 
 
 /**
- * @class Toolbar
+ * @class Column-Options
  * @constructor
  *
  * @param {Object} [options] Configuration object
  * @param {String} [options.url] url to fetch data from
+ * @param {String} [options.instanceName] name of the instance - will affect events name
  * @param {Object} [options.data] if no url is provided
  * @param {String} [options.trigger] the dom item which opens the component
  * @param {Object} [options.header] Configuration object for the header
@@ -25119,6 +25120,7 @@ define('__component__$button@husky',[], function() {
  * @param {Boolean} [options.footer.disabled] defines if footer should be shown
  * @param {Boolean} [options.hidden] defines if component should be hidden when component is initialized
  * @param {Boolean} [options.destroyOnClose] will remove the container from dom, when closed
+ * @param {Boolean} [options.backdropClick] will enable/disable a click on backdrop handling
  */
 define('__component__$column-options@husky',[],function() {
 
@@ -25128,6 +25130,7 @@ define('__component__$column-options@husky',[],function() {
             url: null,
             data: [],
             trigger: null,
+            instanceName: null,
             header: {
                 disabled: false,
                 title: 'Column Options'
@@ -25136,6 +25139,7 @@ define('__component__$column-options@husky',[],function() {
                 disabled: false
             },
             hidden: false,
+            backdropClick: false,
             destroyOnClose: true
         },
 
@@ -25144,7 +25148,7 @@ define('__component__$column-options@husky',[],function() {
                 '<li class="column-options-list-item" data-id="<%= id %>" draggable="true">',
                 '   <span class="move">&#8942;</span>',
                 '   <span class="text"><%= title %></span>',
-                '   <span class="icon-half-eye-open visibility-toggle"></span>',
+                '   <span class="<%= toggleIcon %> visibility-toggle"></span>',
                 '</li>'].join(''),
             header: [
                 '<div class="column-options-header">',
@@ -25154,47 +25158,68 @@ define('__component__$column-options@husky',[],function() {
             ].join('')
         },
 
+        iconClasses = {
+            visible: 'icon-half-eye-open',
+            hidden: 'icon-half-eye-close'
+        },
 
-        namespace = 'husky.column-options',
 
         /**
          * triggered when component is completely initialized
-         * @event husky.column-options.initialized
+         * @event husky.column-options[.INSTANCE_NAME].initialized
          */
-            INITIALIZED = namespace + '.initialized',
+            INITIALIZED = function() {
+            return getEventName.call(this, 'initialized');
+
+        },
 
         /**
          * triggered when item was enabled
-         * @event husky.column-options.item.enabled
+         * @event husky.column-options[.INSTANCE_NAME].item.enabled
          * @param {Object} item that was enabled
          */
-            ENABLED = namespace + '.item.enabled',
+            ENABLED = function() {
+            return getEventName.call(this, 'item.enabled');
+
+        },
 
         /**
          * triggered when item was disabled
-         * @event husky.column-options.item.disabled
+         * @event husky.column-options[.INSTANCE_NAME].item.disabled
          * @param {Object} item that was disabled
          */
-            DISABLED = namespace + '.item.disabled',
+            DISABLED = function() {
+            return getEventName.call(this, 'item.disabled');
+
+        },
 
         /**
          * triggered when save was clicked
-         * @event husky.column-options.saved
+         * @event husky.column-options[.INSTANCE_NAME].saved
          * @param {Array} Contains all visible items
          */
-            SAVED = namespace + '.saved',
+            SAVED = function() {
+            return getEventName.call(this, 'saved');
+
+        },
 
         /**
          * used for receiving all visible columns
-         * @event husky.column-options.get-selected
+         * @event husky.column-options[.INSTANCE_NAME].get-selected
          */
-            GET_SELECTED = namespace + '.get-selected',
+            GET_SELECTED = function() {
+            return getEventName.call(this, 'get-selected');
+
+        },
 
         /**
          * used for receiving all columns
-         * @event husky.column-options.get-all
+         * @event husky.column-options[.INSTANCE_NAME].get-all
          */
-            GET_ALL = namespace + '.get-all',
+            GET_ALL = function() {
+            return getEventName.call(this, 'get-all');
+
+        },
 
 
         /**
@@ -25202,8 +25227,8 @@ define('__component__$column-options@husky',[],function() {
          */
             bindDOMEvents = function() {
 
-            this.sandbox.dom.on(this.options.trigger, 'click', toggleDropdown.bind(this));
-            this.sandbox.dom.on(this.$el, 'click', stopPropagation.bind(this), '.column-options-container'); // prevent from unwanted events
+            this.sandbox.dom.on(this.options.trigger, 'click.column-options', toggleDropdown.bind(this));
+            this.sandbox.dom.on(this.$el, 'click', customStopPropagation.bind(this), '.column-options-container'); // prevent from unwanted events
             this.sandbox.dom.on(this.$el, 'mouseover', onMouseOver.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'mouseout', onMouseOut.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'click', toggleVisibility.bind(this), '.visibility-toggle');
@@ -25211,12 +25236,21 @@ define('__component__$column-options@husky',[],function() {
             this.sandbox.dom.on(this.$el, 'click', hideDropdown.bind(this, true), '.close-button');
         },
 
+        unbindDOMEvents = function() {
+            this.sandbox.dom.off(this.options.trigger, 'click.column-options');
+        },
+
+
         /**
          * custom events
          */
             bindCustomEvents = function() {
-            this.sandbox.on(GET_SELECTED, getSelectedItems.bind(this));
-            this.sandbox.on(GET_ALL, getAllItems.bind(this));
+            this.sandbox.on(GET_SELECTED.call(this), getSelectedItems.bind(this));
+            this.sandbox.on(GET_ALL.call(this), getAllItems.bind(this));
+        },
+
+        getEventName = function(postFix) {
+            return 'husky.column-options.' + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
         /**
@@ -25283,8 +25317,7 @@ define('__component__$column-options@husky',[],function() {
          * opens dropdown submenu
          * @param event
          */
-            stopPropagation = function(event) {
-
+            customStopPropagation = function(event) {
             event.preventDefault();
             event.stopPropagation();
         },
@@ -25294,10 +25327,12 @@ define('__component__$column-options@husky',[],function() {
          * opens dropdown submenu
          * @param event
          */
-            toggleDropdown = function(event) {
 
-            event.preventDefault();
-            event.stopPropagation();
+            toggleDropdown = function(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
 
             var $container = this.sandbox.dom.find('.column-options-container', this.$el),
                 isVisible = this.sandbox.dom.is($container, ':visible');
@@ -25306,7 +25341,9 @@ define('__component__$column-options@husky',[],function() {
                 closeDropdown.call(this, $container, true);
             } else {
                 this.sandbox.dom.show($container);
-                this.sandbox.dom.one('body', 'click', closeDropdown.bind(this, $container, true));
+                if (this.options.backdropClick) {
+                    this.sandbox.dom.on(this.sandbox.dom.window, 'click.columnoptions.' + this.options.instanceName, closeDropdown.bind(this, $container, true));
+                }
             }
         },
 
@@ -25324,8 +25361,12 @@ define('__component__$column-options@husky',[],function() {
          * @param rerender - rerender list after close
          */
             closeDropdown = function($container, rerender) {
+            if (this.options.backdropClick) {
+                this.sandbox.dom.off(this.sandbox.dom.window, 'click.columnoptions.' + this.options.instanceName, closeDropdown.bind(this, $container, true));
+            }
             this.sandbox.dom.hide($container);
             if (this.options.destroyOnClose) {
+                unbindDOMEvents.call(this);
                 this.sandbox.dom.remove(this.$el);
             } else if (rerender) {
                 // reset unsaved changes
@@ -25353,7 +25394,7 @@ define('__component__$column-options@husky',[],function() {
             this.options.data = this.data;
 
             getAllItems.call(this, function(items) {
-                this.sandbox.emit(SAVED, items);
+                this.sandbox.emit(SAVED.call(this), items);
                 hideDropdown.call(this);
 
                 this.sandbox.dom.off('body', 'click');
@@ -25377,11 +25418,14 @@ define('__component__$column-options@husky',[],function() {
                 this.items[item.id] = item;
 
                 // append to list
-                $listItem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.listItem, {id: item.id, title: this.sandbox.translate(item.translation)}));
+                $listItem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.listItem, {
+                    id: item.id,
+                    toggleIcon: (item.default === true || item.default === 'true') ? '' : iconClasses.visible,
+                    title: this.sandbox.translate(item.translation)}));
                 this.sandbox.dom.append(this.$list, $listItem);
 
                 // set to disabled
-                if (typeof item.disabled !== 'undefined' && item.disabled !== "false" && item.disabled !== false ) {
+                if (typeof item.disabled !== 'undefined' && item.disabled !== "false" && item.disabled !== false) {
                     toggleVisibility.call(this, {currentTarget: this.sandbox.dom.find('.visibility-toggle', $listItem), doNotEmitEvents: true, preventDefault: function() {
                     }});
                 }
@@ -25399,23 +25443,31 @@ define('__component__$column-options@husky',[],function() {
                 isDisabled = this.sandbox.dom.hasClass($listItem, 'disabled'),
                 id = this.sandbox.dom.data($listItem, 'id'),
                 item = this.items[id],
-                classEyeOpen = 'icon-half-eye-open',
-                classEyeClose = 'icon-half-eye-close';
-
-            this.sandbox.dom.toggleClass($listItem, 'disabled');
+                visible = iconClasses.visible,
+                hidden = iconClasses.hidden;
 
             if (isDisabled) {
-                this.sandbox.dom.removeClass(event.currentTarget, classEyeClose);
-                this.sandbox.dom.prependClass(event.currentTarget, classEyeOpen);
+                // enable
+                this.numVisible++;
+                this.sandbox.dom.removeClass(event.currentTarget, hidden);
+                this.sandbox.dom.prependClass(event.currentTarget, visible);
             } else {
-                this.sandbox.dom.prependClass(event.currentTarget, classEyeClose);
-                this.sandbox.dom.removeClass(event.currentTarget, classEyeOpen);
+                // disable
+                // one column must stay visible
+                if (this.numVisible === 1) {
+                    return;
+                }
+
+                this.numVisible--;
+                this.sandbox.dom.prependClass(event.currentTarget, hidden);
+                this.sandbox.dom.removeClass(event.currentTarget, visible);
             }
 
+            this.sandbox.dom.toggleClass($listItem, 'disabled');
             item.disabled = !isDisabled;
 
             if (!event.doNotEmitEvents) {
-                this.sandbox.emit(isDisabled ? ENABLED : DISABLED, item);
+                this.sandbox.emit(isDisabled ? ENABLED.call(this) : DISABLED.call(this), item);
             }
         };
 
@@ -25456,6 +25508,8 @@ define('__component__$column-options@husky',[],function() {
          */
         render: function(data) {
 
+            this.numVisible = data.length;
+
             this.options.data = data;
             // temporary data save
             this.data = this.sandbox.util.extend(true, [], this.options.data);
@@ -25488,11 +25542,11 @@ define('__component__$column-options@husky',[],function() {
 
             // show on startup
             if (!this.options.hidden) {
-                this.sandbox.dom.show($container);
+                toggleDropdown.call(this);
             }
 
             // initialization finished
-            this.sandbox.emit(INITIALIZED);
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
@@ -25514,6 +25568,11 @@ define('__component__$column-options@husky',[],function() {
  *
  * @param {Object} [options] Configuration object
  * @param {Boolean} [options.autoRemoveHandling] raises an event before a row is removed
+ * @param {Array} [options.fieldsData] fields data will extend url and set tableHead automatically
+ * @param {Object} [options.fieldsData.{}] fields object
+ * @param {String} [options.fieldsData.{}.id] field name
+ * @param {String} [options.fieldsData.{}.translation] translation key which will be translated automatically
+ * @param {String} [options.fieldsData.{}.disabled] either 'true' or 'false'
  * @param {Boolean} [options.editable] will not set class is-selectable to prevent hover effect for complete rows
  * @param {String} [options.className] additional classname for the wrapping div
  * @param {Object} [options.data] if no url is provided (some functionality like search & sort will not work)
@@ -25538,6 +25597,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.columns.attribute] mapping information to data (if not set it will just iterate of attributes)
  * @param {Boolean} [options.appendTBody] add TBODY to table
  * @param {String} [options.searchInstanceName=null] if set, a listener will be set for the corresponding search event
+ * @param {String} [options.columnOptionsInstanceName=null] if set, a listener will be set for listening for column changes
  * @param {String} [options.url] url to fetch data from
  * @param {String} [options.paginationTemplate] template for pagination
  *
@@ -25574,7 +25634,9 @@ define('__component__$datagrid@husky',[],function() {
             url: null,
             appendTBody: true,   // add TBODY to table
             searchInstanceName: null, // at which search it should be listened to can be null|string|empty_string
-            paginationTemplate: '<%=translate("pagination.page")%> <%=i%> <%=translate("pagination.of")%> <%=pages%>'
+            columnOptionsInstanceName: null, // at which search it should be listened to can be null|string|empty_string
+            paginationTemplate: '<%=translate("pagination.page")%> <%=i%> <%=translate("pagination.of")%> <%=pages%>',
+            fieldsData: null
         },
 
         namespace = 'husky.datagrid.',
@@ -25662,6 +25724,12 @@ define('__component__$datagrid@husky',[],function() {
             DATA_SORT = namespace + 'data.sort',
 
         /**
+         * raised when selection of items changes
+         * @event husky.datagrid.number.selections
+         */
+            NUMBER_SELECTIONS = namespace + 'number.selections',
+
+        /**
          * raised when data was saved
          * @event husky.datagrid.data.saved
          */
@@ -25716,7 +25784,6 @@ define('__component__$datagrid@husky',[],function() {
             DATA_SAVE = namespace + 'data.save';
 
 
-
     return {
 
         view: true,
@@ -25734,10 +25801,6 @@ define('__component__$datagrid@husky',[],function() {
             this.changedData = {};
 
             this.rowStructure = [
-                {
-                    attribute: 'id',
-                    editable: false
-                }
             ];
 
             this.sort = {
@@ -25763,11 +25826,20 @@ define('__component__$datagrid@husky',[],function() {
          * Gets the data either via the url or the array
          */
         getData: function() {
+            var fieldsData, url;
 
             if (!!this.options.url) {
+                url = this.options.url;
+
+                // parse fields data
+                if (this.options.fieldsData) {
+                    fieldsData = this.parseFieldsData(this.options.fieldsData);
+                    url += '&fields=' + fieldsData.urlFields;
+                    this.options.columns = fieldsData.columns;
+                }
 
                 this.sandbox.logger.log('load data from url');
-                this.load({ url: this.options.url});
+                this.load({ url: url});
 
             } else if (!!this.options.data.items) {
 
@@ -25778,6 +25850,40 @@ define('__component__$datagrid@husky',[],function() {
                     .appendPagination()
                     .render();
             }
+        },
+
+        /**
+         * parses fields data retreived from api
+         * @param fields
+         * @returns {{columns: Array, urlFields: string}}
+         */
+        parseFieldsData: function(fields) {
+            var data = [],
+                urlfields = '',
+                fieldsCount = 0;
+            this.sandbox.util.foreach(fields, function(field) {
+                if (field.disabled !== 'true' && field.disabled !== true) {
+                    // data
+                    data.push({content: this.sandbox.translate(field.translation), attribute: field.id});
+                    // url
+                    if (fieldsCount > 0) {
+                        urlfields += ',';
+                    }
+                    fieldsCount++;
+                    urlfields += field.id;
+                } else if (field.id === 'id') {
+                    // url
+                    if (fieldsCount > 0) {
+                        urlfields += ',';
+                    }
+                    fieldsCount++;
+                    urlfields += field.id;
+                }
+            }.bind(this));
+            return {
+                columns: data,
+                urlFields: urlfields
+            };
         },
 
         /**
@@ -25935,7 +26041,7 @@ define('__component__$datagrid@husky',[],function() {
                 // default values
                 checkboxValues = [];
                 if (this.options.selectItem.width) {
-                    checkboxValues = this.getNumberAndUnit(this.options.selectItem.width, this.options.defaultMeasureUnit);
+                    checkboxValues = this.getNumberAndUnit(this.options.selectItem.width);
                 }
 
                 tblCheckboxWidth = [];
@@ -25956,20 +26062,14 @@ define('__component__$datagrid@husky',[],function() {
                 tblColumns.push('</th>');
             }
 
-            // reset row structure
-            this.rowStructure = [
-                {
-                    attribute: 'id',
-                    editable: false
-                }
-            ];
+            this.rowStructure = [];
 
             headData.forEach(function(column) {
 
                 tblColumnWidth = '';
                 // get width and measureunit
                 if (!!column.width) {
-                    widthValues = this.getNumberAndUnit(column.width, this.options.defaultMeasureUnit);
+                    widthValues = this.getNumberAndUnit(column.width);
                     tblColumnWidth = ' width="' + widthValues[0] + widthValues[1] + '"';
                 }
 
@@ -26007,16 +26107,21 @@ define('__component__$datagrid@husky',[],function() {
 
             }.bind(this));
 
+            // remove-row entry
+            if (this.options.removeRow) {
+                tblColumns.push('<th width="30px"/>');
+            }
+
             return '<tr>' + tblColumns.join('') + '</tr>';
         },
 
         // returns number and unit
-        getNumberAndUnit: function(numberUnit, defaultUnit) {
+        getNumberAndUnit: function(numberUnit) {
             numberUnit = String(numberUnit);
             var regex = numberUnit.match(/(\d+)\s*(.*)/);
             // no unit , set default
-            if ((!!defaultUnit) && (!regex[2])) {
-                regex[2] = defaultUnit;
+            if (!regex[2]) {
+                regex[2] = this.options.defaultMeasureUnit;
             }
             return [regex[1], regex[2]];
         },
@@ -26062,6 +26167,11 @@ define('__component__$datagrid@husky',[],function() {
                 this.tblColumns = [];
                 this.tblRowAttributes = '';
 
+                // special treatment for id
+                if (!!row.id) {
+                    this.tblRowAttributes += ' data-id="' + row.id + '"';
+                }
+
                 if (!!this.options.className && this.options.className !== '') {
                     radioPrefix = '-' + this.options.className;
                 } else {
@@ -26081,8 +26191,8 @@ define('__component__$datagrid@husky',[],function() {
                     }), '</td>');
                 }
 
-                // when row-structure contains more elements than the id then use the structure to set values
-                if (this.rowStructure.length > 1) {
+                // when row structure contains more elements than the id then use the structure to set values
+                if (this.rowStructure.length) {
                     this.rowStructure.forEach(function(key) {
                         this.setValueOfRowCell(key.attribute, row[key.attribute], key.editable);
                     }.bind(this));
@@ -26127,7 +26237,7 @@ define('__component__$datagrid@husky',[],function() {
                 tblCellClass = (!!tblCellClasses.length) ? 'class="' + tblCellClasses.join(' ') + '"' : '';
 
                 if (!!editable) {
-                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="editable" contenteditable="true">' + tblCellContent + '</span></td>');
+                    this.tblColumns.push('<td width="30%" data-field="' + key + '" ' + tblCellClass + ' ><span class="editable" contenteditable="true">' + tblCellContent + '</span></td>');
                 } else {
                     this.tblColumns.push('<td  data-field="' + key + '" ' + tblCellClass + ' >' + tblCellContent + '</td>');
                 }
@@ -26188,6 +26298,7 @@ define('__component__$datagrid@husky',[],function() {
                         this.sandbox.emit(ITEM_SELECT, event);
                     }
                 }
+                this.sandbox.emit(NUMBER_SELECTIONS, this.selectedItemIds.length);
 
             } else if ($element.attr('type') === 'radio') {
 
@@ -26206,7 +26317,7 @@ define('__component__$datagrid@husky',[],function() {
                 } else {
                     this.sandbox.emit(ITEM_SELECT, event);
                 }
-
+                this.sandbox.emit(NUMBER_SELECTIONS, this.selectedItemIds.length);
             }
         },
 
@@ -26234,6 +26345,7 @@ define('__component__$datagrid@husky',[],function() {
                 this.selectedItemIds = this.allItemIds.slice(0);
                 this.sandbox.emit(ALL_SELECT, this.selectedItemIds);
             }
+            this.sandbox.emit(NUMBER_SELECTIONS, this.selectedItemIds.length);
         },
 
         /**
@@ -26576,7 +26688,7 @@ define('__component__$datagrid@husky',[],function() {
         },
 
         bindCustomEvents: function() {
-            var searchInstanceName = '';
+            var searchInstanceName = '', columnOptionsInstanceName = '';
 
             // listen for private events
             this.sandbox.on(UPDATE, this.updateHandler.bind(this));
@@ -26602,6 +26714,12 @@ define('__component__$datagrid@husky',[],function() {
                 }
                 this.sandbox.on('husky.search' + searchInstanceName, this.triggerSearch.bind(this));
                 this.sandbox.on('husky.search' + searchInstanceName + '.reset', this.triggerSearch.bind(this, ''));
+            }
+
+            // listen to search events
+            if (this.options.columnOptionsInstanceName || this.options.columnOptionsInstanceName === '') {
+                columnOptionsInstanceName = (this.options.columnOptionsInstanceName !== '') ? '.' + this.options.columnOptionsInstanceName : '';
+                this.sandbox.on('husky.column-options' + columnOptionsInstanceName+'.saved', this.filterColumns.bind(this));
             }
 
             // listen for save event
@@ -26733,6 +26851,32 @@ define('__component__$datagrid@husky',[],function() {
             this.addLoader();
             template = this.sandbox.uritemplate.parse(this.data.links.find);
             url = this.sandbox.uritemplate.expand(template, {searchString: searchString, searchFields: searchFields});
+
+            this.load({
+                url: url,
+                success: function() {
+                    this.removeLoader();
+                    this.sandbox.emit(UPDATED, 'updated after search');
+                }.bind(this)
+            });
+        },
+
+
+        /**
+         * is called when columns are changed
+         */
+        filterColumns: function(fieldsData) {
+
+
+            var template, url,
+                parsed = this.parseFieldsData(fieldsData);
+
+            this.addLoader();
+
+            template = this.sandbox.uritemplate.parse(this.data.links.filter);
+            url = this.sandbox.uritemplate.expand(template, {fieldsList: parsed.urlFields.split(',')});
+
+            this.options.columns = parsed.columns;
 
             this.load({
                 url: url,
@@ -28003,6 +28147,47 @@ define('__component__$toolbar@husky',[],function() {
             dropdownComponent: null
         },
 
+
+        /**
+         * triggered when component is completely initialized
+         * @event husky.toolbar[.INSTANCE_NAME].initialized
+         */
+            INITIALIZED = function() {
+            return getEventName.call(this, 'initialized');
+
+        },
+
+        /**
+         * triggered when item got clicked
+         * @event husky.toolbar[.INSTANCE_NAME].item.selected
+         * @param {Object} item
+         */
+            ITEM_SELECTED = function() {
+            return getEventName.call(this, 'item.selected');
+
+        },
+
+        /**
+         * used to enable an item
+         * @event husky.toolbar[.INSTANCE_NAME].item.enable
+         * @param {String} itemId Id of item to enable
+         */
+            ITEM_ENABLE = function() {
+            return getEventName.call(this, 'item.enable');
+
+        },
+
+        /**
+         * used to disable an item
+         * @event husky.toolbar[.INSTANCE_NAME].initialized
+         * @param {String} itemId Id of item to disable
+         */
+            ITEM_DISABLE = function() {
+            return getEventName.call(this, 'item.disable');
+
+        },
+
+
         selectItem = function(event) {
             event.preventDefault();
 
@@ -28020,8 +28205,12 @@ define('__component__$toolbar@husky',[],function() {
             }
         },
 
+        getEventName = function(postFix) {
+            return 'husky.toolbar.' + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        },
+
         triggerSelectEvent = function(item, $parent) {
-            var instanceName, parentId, icon;
+            var parentId, icon;
             parentId = this.sandbox.dom.data($parent, 'id');
 
             if (this.items[parentId].type === "select") {
@@ -28034,14 +28223,18 @@ define('__component__$toolbar@husky',[],function() {
             if (item.callback) {
                 item.callback();
             } else {
-                instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-                this.sandbox.emit('husky.toolbar.' + instanceName + 'item.select', item);
+                this.sandbox.emit(ITEM_SELECTED.call(this), item);
             }
         },
 
         bindDOMEvents = function() {
-            this.sandbox.dom.on(this.options.el, 'click', selectItem.bind(this), 'button:not(:disabled), li');
-            this.sandbox.dom.on(this.options.el, 'click', toggleItem.bind(this), '.dropdown-toggle');
+            this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'button:not(:disabled), li');
+            this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), '.dropdown-toggle');
+        },
+
+        bindCustomEvents = function() {
+            this.sandbox.on(ITEM_ENABLE.call(this), enableItem.bind(this));
+            this.sandbox.on(ITEM_DISABLE.call(this), disableItem.bind(this));
         },
 
         /**
@@ -28117,6 +28310,36 @@ define('__component__$toolbar@husky',[],function() {
 
         hideDropdowns = function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
+        },
+
+        enableItem = function(id) {
+            var $domItem,
+                item = this.items[id];
+            if (item.disabled) {
+                item.disabled = false;
+                $domItem = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el);
+
+                if (this.sandbox.dom.is($domItem, 'button')) {
+                    this.sandbox.dom.removeAttr($domItem, 'disabled');
+                } else {
+                    this.sandbox.dom.removeClass($domItem, 'disabled');
+                }
+            }
+        },
+
+        disableItem = function(id) {
+            var $domItem,
+                item = this.items[id];
+            if (!item.disabled) {
+                item.disabled = true;
+                $domItem = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el);
+
+                if (this.sandbox.dom.is($domItem, 'button')) {
+                    this.sandbox.dom.attr($domItem, 'disabled', 'disabled');
+                } else {
+                    this.sandbox.dom.addClass($domItem, 'disabled');
+                }
+            }
         };
 
     return {
@@ -28127,6 +28350,8 @@ define('__component__$toolbar@husky',[],function() {
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.$el = this.sandbox.dom.$(this.options.el);
+
+            bindCustomEvents.call(this);
 
             // load data and call render
             if (!!this.options.url) {
@@ -28142,6 +28367,7 @@ define('__component__$toolbar@husky',[],function() {
             }
 
             bindDOMEvents.call(this);
+
         },
 
         render: function(data) {
@@ -28232,7 +28458,7 @@ define('__component__$toolbar@husky',[],function() {
             }
 
             // initialization finished
-            this.sandbox.emit('husky.tabs.initialized');
+            this.sandbox.emit(INITIALIZED.call(this));
         }
     };
 
@@ -29480,6 +29706,13 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 }.bind(this)
                             });
                 this.setElementDataTags();
+                this.setDropdownWidth();
+            },
+
+            setDropdownWidth: function() {
+                this.sandbox.dom.css(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), {
+                    width: this.sandbox.dom.width(this.$el)+'px'
+                });
             },
 
             /**
@@ -31776,10 +32009,17 @@ define("html5sortable", function(){});
                 return $(context).remove(selector);
             };
 
-            app.core.dom.attr = function(selector, attributes) {
-                attributes = attributes || {};
-                return $(selector).attr(attributes);
+            app.core.dom.attr = function(selector, attributeName, value) {
+                if (!value && value !== '') {
+                    attributeName = attributeName || {};
+                    return $(selector).attr(attributeName);
+                } else {
+                    return $(selector).attr(attributeName, value);
+                }
             };
+            app.core.dom.removeAttr = function(selector, attributeName) {
+                return $(selector).removeAttr(attributeName);
+            }
 
             app.core.dom.is = function(selector, type) {
                 return $(selector).is(type);
