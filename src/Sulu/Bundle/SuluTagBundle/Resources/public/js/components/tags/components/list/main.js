@@ -13,6 +13,20 @@ define(function() {
 
     var bindCustomEvents = function() {
 
+        this.sandbox.on('sulu.list-toolbar.add', function(){
+            this.sandbox.emit('husky.datagrid.row.add',{ id: '', name: '', changed: '', created: '' });
+        }.bind(this));
+
+        this.sandbox.on('sulu.list-toolbar.save', function(){
+            this.sandbox.emit('husky.datagrid.data.save');
+        }.bind(this));
+
+        //sulu.list-toolbar.save
+        //sulu.list-toolbar.delete
+
+
+        // husky.search.saveToolbar
+        // husky.search.saveToolbar.reset
     };
 
     return {
@@ -47,7 +61,7 @@ define(function() {
                     name: 'datagrid@husky',
                     options: {
                         el: this.sandbox.dom.find('#tags-list', this.$el),
-                        url: '/admin/api/tags?flat=false&fields=id,name,changed,creator',
+                        url: '/admin/api/tags?flat=true&fields=id,name,changed',
                         editable: true,
                         paginationOptions: {
                             pageSize: 4
@@ -60,19 +74,13 @@ define(function() {
                         sortable: true,
                         columns: [
                             {content: this.sandbox.translate('tag.tag'), width:'40%', attribute:'name',editable: true},
-                            {content: this.sandbox.translate('tag.author'), width:'30%', attribute: ['firstname','lastname'],editable: true},
+                            {content: this.sandbox.translate('tag.author'), width:'30%', attribute: ''},
                             {content: this.sandbox.translate('tag.changed'),width:'30%', attribute:'changed'}
                         ],
                         excludeFields: ['id']
                     }
                 }
             ]);
-        },
-
-        bindCustomEvents: function(){
-            //sulu.list-toolbar.add
-            //sulu.list-toolbar.save
-            //sulu.list-toolbar.delete
         }
     };
 });
