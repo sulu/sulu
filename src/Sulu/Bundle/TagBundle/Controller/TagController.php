@@ -10,18 +10,15 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
-use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Entity\TagRepository;
-use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
-use Sulu\Bundle\TagBundle\Event\TagEvents;
-use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
+use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
+use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Route;
 
 /**
  * Makes tag available through
@@ -43,9 +40,7 @@ class TagController extends RestController implements ClassResourceInterface
         $view = $this->responseGetById(
             $id,
             function ($id) {
-                return $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->findTagById($id);
+                return $this->get('sulu_tag.tag_manager')->findById($id);
             }
         );
 
@@ -62,7 +57,8 @@ class TagController extends RestController implements ClassResourceInterface
             // flat structure
             $view = $this->responseList();
         } else {
-            $tags = $this->getDoctrine()->getRepository($this->entityName)->findAllTags();
+            $tags = $this->get('sulu_tag.tag_manager')->findAll();
+
             $view = $this->view($this->createHalResponse($tags), 200);
         }
 
@@ -74,33 +70,26 @@ class TagController extends RestController implements ClassResourceInterface
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function postAction()
     {
         $name = $this->getRequest()->get('name');
 
         try {
-            $em = $this->getDoctrine()->getManager();
+            if ($name == null) {
+                throw new MissingArgumentException($this->entityName, 'name');
+            }
 
-            $tag = new Tag();
-            $tag->setName($name);
-
-            $tag->setCreated(new \DateTime());
-            $tag->setChanged(new \DateTime());
-
-            $em->persist($tag);
-            $em->flush();
+            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name));
 
             $view = $this->view($tag, 200);
-        } catch (DBALException $dbale) {
-            if ($dbale->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
-                $re = new RestException('The tag with the name "' . $name . '" already exists.');
-                $view = $this->view($re->toArray(), 400);
-            } else {
-                throw $dbale;
-            }
-        } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
+        } catch (TagAlreadyExistsException $exc) {
+            $restException = new RestException('The tag with the name "' . $exc->getName() . '" already exists.');
+            $view = $this->view($restException->toArray(), 400);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -110,6 +99,8 @@ class TagController extends RestController implements ClassResourceInterface
      * Updates the tag with the given ID
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function putAction($id)
     {
@@ -120,31 +111,15 @@ class TagController extends RestController implements ClassResourceInterface
                 throw new MissingArgumentException($this->entityName, 'name');
             }
 
-            /** @var Tag $tag */
-            $tag = $this->getDoctrine()
-                ->getRepository($this->entityName)
-                ->findTagById($id);
+            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name), $id);
 
-            if (!$tag) {
-                throw new EntityNotFoundException($this->entityName, $id);
-            } else {
-                $em = $this->getDoctrine()->getManager();
-
-                $tag->setName($name);
-                $tag->setChanged(new \DateTime());
-
-                $em->flush();
-                $view = $this->view($tag, 200);
-            }
-        } catch (DBALException $dbale) {
-            if ($dbale->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
-                $re = new RestException('The tag with the name "' . $name . '" already exists.');
-                $view = $this->view($re->toArray(), 400);
-            } else {
-                throw $dbale;
-            }
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+            $view = $this->view($tag, 200);
+        } catch (TagAlreadyExistsException $exc) {
+            $restException = new RestException('The tag with the name "' . $name . '" already exists.');
+            $view = $this->view($restException->toArray(), 400);
+        } catch (TagNotFoundException $exc) {
+            $entityNotFoundException = new EntityNotFoundException($this->entityName, $id);
+            $view = $this->view($entityNotFoundException->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -160,22 +135,11 @@ class TagController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $tag = $this->getDoctrine()
-                ->getRepository($this->entityName)
-                ->findTagById($id);
-
-            if (!$tag) {
+            try {
+                $this->get('sulu_tag.tag_manager')->delete($id);
+            } catch (TagNotFoundException $tnfe) {
                 throw new EntityNotFoundException($this->entityName, $id);
             }
-
-            $em = $this->getDoctrine()->getManager();
-
-            $em->remove($tag);
-            $em->flush();
-
-            // throw an tag.delete event
-            $event = new TagDeleteEvent($tag);
-            $this->get('event_dispatcher')->dispatch(TagEvents::TAG_DELETE, $event);
         };
 
         $view = $this->responseDelete($id, $delete);
@@ -190,36 +154,42 @@ class TagController extends RestController implements ClassResourceInterface
     public function postMergeAction()
     {
         try {
-            /** @var TagRepository $tagRepository */
-            $tagRepository = $this->getDoctrine()->getRepository($this->entityName);
-            $em = $this->getDoctrine()->getManager();
-
-            $srcTagId = $this->getRequest()->get('src');
+            $srcTagIds = explode(',', $this->getRequest()->get('src'));
             $destTagId = $this->getRequest()->get('dest');
 
-            $srcTag = $tagRepository->findTagById($srcTagId);
-            $destTag = $tagRepository->findTagById($destTagId);
-
-            if (!$srcTag) {
-                throw new EntityNotFoundException($this->entityName, $srcTagId);
-            }
-
-            if (!$destTag) {
-                throw new EntityNotFoundException($this->entityName, $destTagId);
-            }
-
-            $em->remove($srcTag);
-            $em->flush();
-
-            // throw an tag.merge event
-            $event = new TagMergeEvent($srcTag, $destTag);
-            $this->get('event_dispatcher')->dispatch(TagEvents::TAG_MERGE, $event);
+            $destTag = $this->get('sulu_tag.tag_manager')->merge($srcTagIds, $destTagId);
 
             $view = $this->view(null, 303, array('location' => $destTag->getLinks()['self']));
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (TagNotFoundException $exc) {
+            $entityNotFoundException = new EntityNotFoundException($this->entityName, $exc->getId());
+            $view = $this->view($entityNotFoundException->toArray(), 404);
         }
 
         return $this->handleView($view);
     }
+
+    /**
+     * @Route("/tags", name="tags")
+     * updates an array of tags
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction()
+    {
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $i = 0;
+        while ($item = $request->get($i)) {
+            if(isset($item['id'])) {
+                $this->get('sulu_tag.tag_manager')->save($item, $item['id']);
+            } else{
+                $this->get('sulu_tag.tag_manager')->save($item, null);
+            }
+            $i++;
+        }
+        $this->getDoctrine()->getManager()->flush();
+        $view = $this->view(null, 204);
+
+        return $this->handleView($view);
+    }
+
 } 

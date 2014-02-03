@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sulutag: '../../sulutag/js'
+        sulutag: '../../sulutag/js',
+        "type/tagList": '../../sulutag/js/validation/types/tagList'
     }
 });
 
