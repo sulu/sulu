@@ -67,6 +67,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '123-123-123',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -79,6 +80,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '123-123-123',
                     'type' => 'preview',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -149,6 +151,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '456-456-456',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -173,6 +176,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '456-456-456',
                     'type' => 'preview',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -185,6 +189,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '123-123-123',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -197,6 +202,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '123-123-123',
                     'type' => 'preview',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -209,9 +215,11 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'update',
                     'content' => '123-123-123',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array(
-                        'property' => 'title',
-                        'data' => 'asdf'
+                        'changes'=>array(
+                            'title'=> 'asdf'
+                        )
                     )
                 )
             )
@@ -224,6 +232,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'update',
                     'content' => '123-123-123',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array(
                         'property' => 'article',
                         'data' => 'qwertz'
@@ -292,6 +301,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '456-456-456',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -304,6 +314,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '123-123-123',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -316,6 +327,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'start',
                     'content' => '123-123-123',
                     'type' => 'preview',
+                    'user' => '1',
                     'params' => array()
                 )
             )
@@ -328,6 +340,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'command' => 'close',
                     'content' => '123-123-123',
                     'type' => 'form',
+                    'user' => '1',
                     'params' => array()
                 )
             )
