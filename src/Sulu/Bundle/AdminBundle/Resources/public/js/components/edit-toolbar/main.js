@@ -97,12 +97,31 @@ define([], function() {
                     this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
                 }
             }
+        },
+
+        changePaddingLeft = function(paddingLeft) {
+            this.sandbox.dom.css('#edit-toolbar-container', {'padding-left': 50 + paddingLeft});
+
+            emitSizeChange.call(this);
+        },
+
+        resizeListener = function() {
+            var contentWidth = this.sandbox.dom.width('main#content'),
+                $toolbar = this.$find('#edit-toolbar');
+
+
+            if (!this.currentContentWidth || this.currentContentWidth !== contentWidth) {
+                this.sandbox.dom.width($toolbar, contentWidth - 50);
+                this.currentContentWidth = contentWidth;
+            }
         };
 
     return {
         view: true,
 
         initialize: function() {
+
+
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
@@ -133,15 +152,27 @@ define([], function() {
                 {
                     name: 'edit-toolbar@husky',
                     options: {
-                        el: this.options.el,
+                        el: this.$el,
                         pageFunction: this.options.pageFunction,
                         data: this.options.template
                     }
                 }
             ]);
 
+            // resize toolbar
+            resizeListener.call(this);
+
             // bind events (also initializes first component)
             this.bindCustomEvents();
+            this.bindDomEvents();
+        },
+
+        /**
+         * listens to tab events
+         */
+        bindDomEvents: function() {
+            // change size of edit-toolbar
+            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', resizeListener.bind(this));
         },
 
         /**
@@ -151,6 +182,7 @@ define([], function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
             this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', this.changeState.bind(this));
+            this.sandbox.on('husky.navigation.size.changed', changePaddingLeft.bind(this));
         },
 
         changeState: function(type, saved) {
