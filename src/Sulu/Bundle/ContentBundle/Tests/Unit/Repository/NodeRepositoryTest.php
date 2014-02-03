@@ -8,19 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Controller\Repository;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
 use Jackalope\RepositoryFactoryJackrabbit;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
-use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepository;
-use Sulu\Bundle\ContentBundle\Controller\Repository\NodeRepositoryInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
+use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -38,7 +36,6 @@ use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
 use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 {
