@@ -21,7 +21,7 @@ class TextEditor extends SimpleContentType
 
     function __construct($template)
     {
-        parent::__construct('TextEditor');
+        parent::__construct('TextEditor', '');
 
         $this->template = $template;
     }

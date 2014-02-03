@@ -14,6 +14,7 @@ use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
@@ -22,17 +23,18 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
-    /**
-     * base path to save the content
-     * @var string
-     */
-    private $contentBasePath = '/cmf/contents';
 
     /**
-     * base path to load the route
+     * namespace of translation
      * @var string
      */
-    private $routesBasePath = '/cmf/routes';
+    private $languageNamespace;
+
+    /**
+     * default language of translation
+     * @var string
+     */
+    private $defaultLanguage;
 
     /**
      * TODO abstract with cleanup from RLPStrategy
@@ -60,17 +62,17 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         )
     );
 
-    public function __construct($contentBasePath, $routesBasePath)
+    public function __construct($defaultLanguage, $languageNamespace)
     {
-        $this->contentBasePath = $contentBasePath;
-        $this->routesBasePath = $routesBasePath;
+        $this->defaultLanguage = $defaultLanguage;
+        $this->languageNamespace = $languageNamespace;
     }
 
     /**
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
@@ -82,7 +84,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     public function save(
         $data,
         $templateKey,
-        $workspaceKey,
+        $webspaceKey,
         $languageCode,
         $userId,
         $partialUpdate = true,
@@ -91,19 +93,22 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     )
     {
         // TODO localize
-        // TODO workspace
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
 
         if ($parentUuid !== null) {
             $root = $session->getNodeByIdentifier($parentUuid);
         } else {
-            $root = $session->getNode($this->getContentBasePath());
+            $root = $this->getContentNode($webspaceKey);
         }
 
         $path = $this->cleanUp($data['title']);
 
         $dateTime = new \DateTime();
+
+        $titleProperty = new TranslatedProperty($structure->getProperty(
+            'title'
+        ), $languageCode, $this->languageNamespace);
 
         /** @var NodeInterface $node */
         if ($uuid === null) {
@@ -116,10 +121,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
-            if (
-                $node->getPath() !== $this->getContentBasePath() &&
-                (!$node->hasProperty('title') || $node->getPropertyValue('title') !== $data['title'])
-            ) {
+            $hasSameLanguage = ($languageCode == $this->defaultLanguage);
+            $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
+            $hasDifferentTitle = !$node->hasProperty($titleProperty->getName()) ||
+                $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
+
+            if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                 $node->rename($path);
                 // FIXME refresh session here
             }
@@ -148,12 +155,16 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         'property' => $property
                     );
                 } else {
-                    $type->set($node, $property);
+                    $type->set(
+                        $node,
+                        new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                        $webspaceKey
+                    );
                 }
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
                 // if it is not a partial update remove property
-                $type->remove($node, $property);
+                $type->remove($node, new TranslatedProperty($property, $languageCode, $this->languageNamespace));
             }
             // if it is a partial update ignore property
         }
@@ -169,8 +180,13 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 /** @var PropertyInterface $property */
                 $property = $post['property'];
 
-                $type->set($node, $property);
-            } catch (Exception $ex) { // TODO Introduce a PostSaveException, so that we don't have to catch everything
+                $type->set(
+                    $node,
+                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                    $webspaceKey
+                );
+            } catch (Exception $ex) {
+                // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
             }
         }
@@ -190,7 +206,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * saves the given data in the content storage
      * @param array $data The data to be saved
      * @param string $templateKey Name of template
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
@@ -202,56 +218,55 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     public function saveStartPage(
         $data,
         $templateKey,
-        $workspaceKey,
+        $webspaceKey,
         $languageCode,
         $userId,
         $partialUpdate = true
     )
     {
-        $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
-        return $this->save($data, $templateKey, $workspaceKey, $languageCode, $userId, $partialUpdate, $uuid);
+        $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
+        return $this->save($data, $templateKey, $webspaceKey, $languageCode, $userId, $partialUpdate, $uuid);
     }
 
     /**
      * returns a list of data from children of given node
      * @param $uuid
-     * @param $workspaceKey
+     * @param $webspaceKey
      * @param $languageCode
      * @param int $depth
      * @param bool $flat
      *
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $workspaceKey, $languageCode, $depth = 1, $flat = true)
+    public function loadByParent($uuid, $webspaceKey, $languageCode, $depth = 1, $flat = true)
     {
-        // TODO workspace
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
         } else {
-            $root = $this->getSession()->getNode($this->getContentBasePath());
+            $root = $this->getContentNode($webspaceKey);
         }
-        return $this->loadByParentNode($root, $workspaceKey, $languageCode, $depth, $flat);
+        return $this->loadByParentNode($root, $webspaceKey, $languageCode, $depth, $flat);
     }
 
     /**
      * returns a list of data from children of given node
      * @param NodeInterface $parent
-     * @param $workspaceKey
+     * @param $webspaceKey
      * @param $languageCode
      * @param int $depth
      * @param bool $flat
      * @return array
      */
-    private function loadByParentNode(NodeInterface $parent, $workspaceKey, $languageCode, $depth = 1, $flat = true)
+    private function loadByParentNode(NodeInterface $parent, $webspaceKey, $languageCode, $depth = 1, $flat = true)
     {
         $results = array();
 
         /** @var NodeInterface $node */
         foreach ($parent->getNodes() as $node) {
-            $result = $this->loadByNode($node, $languageCode);
+            $result = $this->loadByNode($node, $languageCode, $webspaceKey);
             $results[] = $result;
             if ($depth > 1) {
-                $children = $this->loadByParentNode($node, $workspaceKey, $languageCode, $depth - 1, $flat);
+                $children = $this->loadByParentNode($node, $webspaceKey, $languageCode, $depth - 1, $flat);
                 if ($flat) {
                     $results = array_merge($results, $children);
                 } else {
@@ -266,57 +281,55 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     /**
      * returns the data from the given id
      * @param string $uuid UUID of the content
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
-    public function load($uuid, $workspaceKey, $languageCode)
+    public function load($uuid, $webspaceKey, $languageCode)
     {
-        // TODO workspace
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode);
+        return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
     }
 
     /**
      * returns the data from the given id
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
      * @return StructureInterface
      */
-    public function loadStartPage($workspaceKey, $languageCode)
+    public function loadStartPage($webspaceKey, $languageCode)
     {
-        // TODO workspace
-        $uuid = $this->getSession()->getNode($this->getContentBasePath())->getIdentifier();
+        $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
 
-        return $this->load($uuid, $workspaceKey, $languageCode);
+        return $this->load($uuid, $webspaceKey, $languageCode);
     }
 
     /**
      * returns data from given path
      * @param string $resourceLocator Resource locator
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode
      * @return StructureInterface
      */
-    public function loadByResourceLocator($resourceLocator, $workspaceKey, $languageCode)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode)
     {
-        // TODO workspace
         $session = $this->getSession();
-        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator);
+        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator, $webspaceKey);
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode);
+        return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
     }
 
     /**
      * returns data from given node
      * @param NodeInterface $contentNode
-     * @param string $language
+     * @param string $languageCode
+     * @param string $webspaceKey
      * @return StructureInterface
      */
-    private function loadByNode(NodeInterface $contentNode, $language)
+    private function loadByNode(NodeInterface $contentNode, $languageCode, $webspaceKey)
     {
         $templateKey = $contentNode->getPropertyValue('sulu:template');
 
@@ -334,20 +347,23 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
             $type = $this->getContentType($property->getContentTypeName());
-            $type->get($contentNode, $property);
+            $type->get(
+                $contentNode,
+                new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                $webspaceKey
+            );
         }
 
         return $structure;
     }
 
     /**
-     * deletes content with subcontent in given workspace
+     * deletes content with subcontent in given webspace
      * @param string $uuid UUID of content
-     * @param string $workspaceKey Key of workspace
+     * @param string $webspaceKey Key of webspace
      */
-    public function delete($uuid, $workspaceKey)
+    public function delete($uuid, $webspaceKey)
     {
-        // TODO workspace
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
@@ -400,6 +416,15 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
+     * @param $webspaceKey
+     * @return NodeInterface
+     */
+    protected function getContentNode($webspaceKey)
+    {
+        return $this->container->get('sulu.phpcr.session')->getContentNode($webspaceKey);
+    }
+
+    /**
      * @return SessionInterface
      */
     protected function getSession()
@@ -408,19 +433,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
-     * @return string
+     * @param $webspaceKey
+     * @return NodeInterface
      */
-    protected function getContentBasePath()
+    protected function getRouteNode($webspaceKey)
     {
-        return $this->contentBasePath;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRouteBasePath()
-    {
-        return $this->routesBasePath;
+        return $this->container->get('sulu.phpcr.session')->getRouteNode($webspaceKey);
     }
 
     /**

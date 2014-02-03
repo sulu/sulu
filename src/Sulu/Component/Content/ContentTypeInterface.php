@@ -31,17 +31,19 @@ interface ContentTypeInterface
      * reads the value for given property from the node + sets the value of the property
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspaceKey
      * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property);
+    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey);
 
     /**
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspaceKey
      * @return mixed
      */
-    public function set(NodeInterface $node, PropertyInterface $property);
+    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey);
 
     /**
      * remove property from given node
