@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Controller\Repository;
+namespace Sulu\Bundle\ContentBundle\Repository;
 
 
 interface NodeRepositoryInterface {

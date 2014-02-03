@@ -10,15 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
-use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Controller\TemplateController;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\TextArea;
-use Sulu\Component\Content\Types\TextLine;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
 
 class TemplateControllerTest extends WebTestCase
 {
