@@ -47,7 +47,7 @@ class PreviewController extends Controller
             array(
                 'userId' => $uid,
                 'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
-                'wsUrl' => 'localhost',
+                'wsUrl' => 'ws://localhost',
                 'wsPort' => '9876',
                 'contenUuid' => $contentUuid,
                 'interval' => $this->container->getParameter('sulu_content.preview.interval')

@@ -150,6 +150,17 @@ define(['app-config'], function(AppConfig) {
          * @returns {boolean}
          */
         wsDetection: function() {
+            var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
+            // no support
+            if (support === null) {
+                this.sandbox.logger.log("Your browser doesn't support Websockets.");
+                return false;
+            }
+            // let's invite Firefox to the party.
+            if (window.MozWebSocket) {
+                window.WebSocket = window.MozWebSocket;
+            }
+            // support exists
             return true;
         },
 
