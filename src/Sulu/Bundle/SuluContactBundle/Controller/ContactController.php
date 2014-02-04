@@ -37,6 +37,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
     protected $unsortable = array();
 
+    protected $fieldsDefault = array('lastName');
     protected $fieldsExcluded = array();
     protected $fieldsHidden = array('middleName','created');
     protected $fieldsRelations = array();
