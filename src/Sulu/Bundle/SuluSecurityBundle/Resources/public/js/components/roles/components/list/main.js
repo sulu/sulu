@@ -52,6 +52,7 @@ define(function() {
                             type: 'checkbox'
                         },
                         pagination: false,
+                        searchInstanceName: 'content',
                         removeRow: false,
                         tableHead: [
                             {content: this.sandbox.translate('security.roles.name'), width: "30%"},
