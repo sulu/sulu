@@ -70,7 +70,7 @@ abstract class RestController extends FOSRestController
      * contains default translations for some fields
      * @var array
      */
-    protected $fieldsDefaultTranslationKeys = array('id' => 'public.id', 'name' => 'public.name');
+    protected $fieldsDefaultTranslationKeys = array('id' => 'public.id', 'title' =>'public.title','name' => 'public.name','changed'=>'public.changed','created'=>'public.created');
 
     /**
      * contains fields that cannot be hidden and are visible by default
@@ -89,6 +89,16 @@ abstract class RestController extends FOSRestController
      * @var array
      */
     protected $fieldsValidation = array();
+
+    /**
+     * @var array contains the widths of the fields
+     */
+    protected $fieldsWidth = array();
+
+    /**
+     * @var array contains the default widths of some common fields
+     */
+    protected $fieldsDefaultWidth = array('id'=>'50px', 'changed'=>'140px', 'created'=>'140px');
 
     /**
      * standard bundle prefix
@@ -169,6 +179,7 @@ abstract class RestController extends FOSRestController
     {
         // add translations
         $fieldsArray = array();
+
         foreach ($fields as $field) {
             if (isset($this->fieldsTranslationKeys[$field])) {
                 $translationkey = $this->fieldsTranslationKeys[$field];
@@ -178,6 +189,12 @@ abstract class RestController extends FOSRestController
                 // check translations
                 $translationkey = $this->bundlePrefix . $field;
             }
+            $fieldWidth = null;
+            if (isset($this->fieldsWidth[$field])) {
+                $fieldWidth = $this->fieldsWidth[$field];
+            } else if (isset($this->fieldsDefaultWidth[$field])) {
+                $fieldWidth = $this->fieldsDefaultWidth[$field];
+            }
 
             $fieldsArray[] = array(
                 'id' => $field,
@@ -185,6 +202,7 @@ abstract class RestController extends FOSRestController
                 'disabled' => $hidden,
                 'default' => in_array($field, $this->fieldsDefault) ? true : null,
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
+                'width' => ($fieldWidth != null) ? $fieldWidth : null,
                 'validation' => array_key_exists($field, $this->fieldsValidation) ? $this->fieldsValidation[$field] : null,
             );
         }
