@@ -40,7 +40,7 @@ monolog:
 
 sulu_core:
     phpcr:
-        ~
+        workspace: test
     content:
         templates:
             default_path: %kernel.root_dir%/../Resources/templates

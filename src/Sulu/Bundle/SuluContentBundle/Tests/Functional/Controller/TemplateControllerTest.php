@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
-class TemplateControllerTest extends WebTestCase
+class TemplateControllerTest extends DatabaseTestCase
 {
     public $structureFactoryMock;
     public $container;
