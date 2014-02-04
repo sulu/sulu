@@ -54,9 +54,10 @@ class TagList extends ComplexContentType
      * reads the value for given property from the node + sets the value of the property
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspaceKey
      * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property)
+    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
         $tags = array();
 
@@ -74,9 +75,10 @@ class TagList extends ComplexContentType
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspaceKey
      * @return mixed
      */
-    public function set(NodeInterface $node, PropertyInterface $property)
+    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
         $tagIds = array();
 
