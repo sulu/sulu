@@ -132,7 +132,6 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -186,6 +185,7 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
+
         $client->request('POST', '/api/nodes?template=overview', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -199,14 +199,14 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/de/test');
+        $route = $root->getNode('cmf/sulu_io/routes/de/test');
 
         /** @var NodeInterface $content */
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('Testtitle', $content->getProperty('title')->getString());
-        $this->assertEquals('Test', $content->getProperty('article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:en-title')->getString());
+        $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:en-tags'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -256,14 +256,14 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/routes/news/test');
+        $route = $root->getNode('cmf/sulu_io/routes/news/test');
 
         /** @var NodeInterface $content */
         $content = $route->getPropertyValue('sulu:content');
 
-        $this->assertEquals('test-1', $content->getProperty('title')->getString());
-        $this->assertEquals('Test', $content->getProperty('article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('tags'));
+        $this->assertEquals('test-1', $content->getProperty('sulu_locale:en-title')->getString());
+        $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:en-tags'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
 
