@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class DatabaseTestCase extends WebTestCase
 {
+    protected static $userClasses;
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -34,10 +35,18 @@ abstract class DatabaseTestCase extends WebTestCase
             ->getManager();
 
         self::$tool = new SchemaTool(self::$em);
+
+        self::$userClasses = array(
+            self::$em->getClassMetaData('Sulu\Bundle\TestBundle\Entity\TestUser')
+        );
+
+        self::$tool->dropSchema(self::$userClasses);
+        self::$tool->createSchema(self::$userClasses);
     }
 
     public static function tearDownAfterClass()
     {
+        self::$tool->dropSchema(self::$userClasses);
         self::$em->close();
     }
 }

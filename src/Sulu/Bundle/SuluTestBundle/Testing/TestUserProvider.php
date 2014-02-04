@@ -28,12 +28,17 @@ class TestUserProvider implements UserProviderInterface
      */
     private $user;
 
-    public function __construct(ObjectManager $em) {
-        $this->user = new TestUser();
-        $this->user->setPassword('test');
-        $this->user->setUsername('test');
+    public function __construct(ObjectManager $em)
+    {
+        $this->user = $em->find('Sulu\Bundle\TestBundle\Entity\TestUser', 1);
+        if (!$this->user) {
+            $this->user = new TestUser();
+            $this->user->setPassword('test');
+            $this->user->setUsername('test');
 
-        $em->persist($this->user);
+            $em->persist($this->user);
+            $em->flush($this->user);
+        }
     }
 
     /**
