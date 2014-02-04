@@ -43,7 +43,10 @@ class TagController extends RestController implements ClassResourceInterface
     protected $fieldsExcluded = array();
 
     protected $fieldsHidden = array(
-        'created', 'id'
+        'created',
+        'id',
+        'creator_contact_lastName',
+        'changed'
     );
     protected $fieldsRelations = array(
         'creator_contact_lastName'
@@ -66,7 +69,8 @@ class TagController extends RestController implements ClassResourceInterface
      * @Get("tags/fields")
      * @return mixed
      */
-    public function getFieldsAction() {
+    public function getFieldsAction()
+    {
         return $this->responseFields();
     }
 
@@ -74,10 +78,10 @@ class TagController extends RestController implements ClassResourceInterface
      * persists a setting
      * @Put("tags/fields")
      */
-    public function putFieldsAction() {
+    public function putFieldsAction()
+    {
         return $this->responsePersistSettings();
     }
-
 
 
     /**
@@ -245,7 +249,7 @@ class TagController extends RestController implements ClassResourceInterface
             $view = $this->view(null, 204);
 
         } catch (TagAlreadyExistsException $exc) {
-            $tagAlreadyExists = new RestException($this->entityName.' '.$exc->getName());
+            $tagAlreadyExists = new RestException($this->entityName . ' ' . $exc->getName());
             $view = $this->view($tagAlreadyExists->toArray(), 400);
         }
 
@@ -253,5 +257,4 @@ class TagController extends RestController implements ClassResourceInterface
     }
 
 
-
-} 
+}
