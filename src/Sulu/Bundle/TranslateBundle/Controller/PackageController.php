@@ -12,6 +12,8 @@ namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -26,6 +28,37 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
 class PackageController extends RestController implements ClassResourceInterface
 {
     protected $entityName = 'SuluTranslateBundle:Package';
+
+
+    protected $basePath = 'admin/api/contacts';
+
+    protected $unsortable = array();
+
+    protected $fieldsDefault = array('name');
+    protected $fieldsExcluded = array();
+    protected $fieldsHidden = array();
+    protected $fieldsRelations = array();
+    protected $fieldsSortOrder = array(0=>'id');
+    protected $fieldsTranslationKeys = array();
+    protected $bundlePrefix = 'translate.package.';
+
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("packages/fields")
+     * @return mixed
+     */
+    public function getFieldsAction() {
+        return $this->responseFields();
+    }
+
+    /**
+     * persists a setting
+     * @Put("packages/fields")
+     */
+    public function putFieldsAction() {
+        return $this->responsePersistSettings();
+    }
 
     /**
      * Lists all the catalogues or filters the catalogues by parameters

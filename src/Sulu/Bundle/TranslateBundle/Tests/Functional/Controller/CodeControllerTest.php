@@ -484,7 +484,7 @@ class CodeControllerTest extends DatabaseTestCase
         );
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals(4, $response->total);
+        $this->assertEquals(5, $response->total);
     }
 
     public function testGetListWhere()
