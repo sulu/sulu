@@ -56,10 +56,9 @@ class PreviewMessageComponent implements MessageComponentInterface
     {
         $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
         $msg = json_decode($msg);
-        $user = $this->context->getToken()->getUser()->getId();
 
-        if (
-            isset($msg->command) &&
+        if (isset($msg->command) &&
+            isset($msg->user) &&
             isset($msg->params) &&
             isset($msg->content) &&
             isset($msg->type) &&
@@ -68,6 +67,7 @@ class PreviewMessageComponent implements MessageComponentInterface
                 array('form', 'preview')
             )
         ) {
+            $user = $msg->user;
             switch ($msg->command) {
                 case 'start':
                     $this->start($from, $msg, $user);
@@ -143,11 +143,12 @@ class PreviewMessageComponent implements MessageComponentInterface
         $id = $user . '-' . $content;
 
         // if params correct
-        if ($type == 'form' && isset($params->property) && isset($params->data)) {
-            // update property
-            $this->preview->update($user, $content, $params->property, $params->data);
-            // get changes
-            $changes = $this->preview->getChanges($user, $content);
+        if ($type == 'form' && isset($params->changes)) {
+
+            foreach ($params->changes as $property => $data) {
+                // update property
+                $this->preview->update($user, $content, $property, $data);
+            }
 
             // send ok message
             $from->send(
@@ -162,21 +163,31 @@ class PreviewMessageComponent implements MessageComponentInterface
             );
 
             // if there are some changes
-            if (sizeof($changes) > 0 && isset($this->content[$id]) && isset($this->content[$id]['preview'])) {
-                // get preview client
-                /** @var ConnectionInterface $previewClient */
-                $previewClient = $this->content[$id]['preview'];
-                // send changes command
-                $previewClient->send(
-                    json_encode(
-                        array(
-                            'command' => 'changes',
-                            'content' => $content,
-                            'type' => 'preview',
-                            'params' => $changes
+            if (isset($this->content[$id]) &&
+                isset($this->content[$id]['preview'])
+            ) {
+                // get changes
+                $changes = $this->preview->getChanges($user, $content);
+
+                if (sizeof($changes) > 0) {
+                    // get preview client
+                    /** @var ConnectionInterface $previewClient */
+                    $previewClient = $this->content[$id]['preview'];
+
+                    // send changes command
+                    $previewClient->send(
+                        json_encode(
+                            array(
+                                'command' => 'changes',
+                                'content' => $content,
+                                'type' => 'preview',
+                                'params' => array(
+                                    'changes' => $changes
+                                )
+                            )
                         )
-                    )
-                );
+                    );
+                }
             }
         }
     }
@@ -186,7 +197,6 @@ class PreviewMessageComponent implements MessageComponentInterface
         $content = $msg->content;
         $type = strtolower($msg->type);
         $otherType = ($type == 'form' ? 'preview' : 'form');
-        $params = $msg->params;
         $id = $user . '-' . $content;
 
         // stop preview

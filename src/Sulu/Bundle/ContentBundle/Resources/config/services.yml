@@ -23,8 +23,6 @@ services:
             - [ setContainer,[ @service_container ] ]
         tags:
             - { name: twig.extension }
-    sulu_content.preview.message_component:
-        class: %sulu_content.preview.message_component.class%
     sulu_content.preview.cache:
         public: false
         class: %sulu_content.preview.cache.class%
@@ -32,6 +30,9 @@ services:
     sulu_content.preview:
         class: %sulu_content.preview.class%
         arguments: [@templating, @sulu_content.preview.cache, @sulu.content.mapper, @sulu.content.structure_manager, @controller_resolver, %sulu_content.preview.lifetime%, %sulu_content.preview.template-namespace%]
+    sulu_content.preview.message_component:
+        class: %sulu_content.preview.message_component.class%
+        arguments: [@security.context, @sulu_content.preview]
     sulu_content.node_repository:
         class: %sulu_content.node_repository.class%
         arguments: [@sulu.content.mapper, @sulu_security.user_manager, @security.context]

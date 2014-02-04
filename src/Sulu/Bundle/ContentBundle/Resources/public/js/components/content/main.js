@@ -68,7 +68,7 @@ define([
         },
 
         getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&portal=default';
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=sulu_io';
             // TODO portal
             this.sandbox.util.load(url)
                 .then(function(data) {
@@ -86,6 +86,7 @@ define([
 
                             success: function() {
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     } else {
@@ -94,6 +95,7 @@ define([
 
                             success: function() {
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     }

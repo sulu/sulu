@@ -32,8 +32,7 @@ use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryInterface;
-use Sulu\Component\PHPCR\SessionFactory\SessionFactoryService;
+use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -138,12 +137,12 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         );
 
         // new session (because of jackrabbit bug)
-        $this->sessionService = new SessionFactoryService(new RepositoryFactoryJackrabbit(), array(
+        $this->sessionService = new SessionManager(new RepositoryFactoryJackrabbit(), array(
             'url' => 'http://localhost:8080/server',
             'username' => 'admin',
             'password' => 'admin',
             'workspace' => 'default'
-        ));
+        ), array('base' => 'cmf', 'content' => 'contents', 'route' => 'routes'));
 
         $result = $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
 
@@ -231,12 +230,12 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareServices();
 
-        $this->sessionService = new SessionFactoryService(new RepositoryFactoryJackrabbit(), array(
+        $this->sessionService = new SessionManager(new RepositoryFactoryJackrabbit(), array(
             'url' => 'http://localhost:8080/server',
             'username' => 'admin',
             'password' => 'admin',
             'workspace' => 'default'
-        ));
+        ), array('base' => 'cmf', 'content' => 'contents', 'route' => 'routes'));
 
         $this->containerMock = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
         $this->containerMock

@@ -28,6 +28,11 @@ sulu_content.preview.render:
     methods: GET
     defaults: { _controller: SuluContentBundle:Preview:render }
 
+sulu_content.preview.slitScreen:
+    pattern: /split-screen/{contentUuid}
+    methods: GET
+    defaults: { _controller: SuluContentBundle:Template:splitScreen }
+
 sulu_content.preview.update:
     pattern: /preview/{contentUuid}
     methods: POST
