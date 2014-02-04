@@ -44,6 +44,7 @@ class AdminController extends Controller
             $userSettingsString .= '}';
 
             if ($userData->isLoggedIn()) {
+                $user['id'] = $userData->getId();
                 $user['username'] = $userData->getFullName();
                 $user['logout'] = $userData->getLogoutLink();
                 $user['locale'] = $userData->getLocale();
