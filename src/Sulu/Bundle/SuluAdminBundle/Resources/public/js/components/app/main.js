@@ -16,7 +16,7 @@ define(function() {
         EVENT_CONTENT_SIZE_CHANGE = 'sulu.content.size.change',
 
         changeContentPaddingLeft = function(paddingLeft) {
-            this.sandbox.dom.css('#content', {'padding-left': 50 + paddingLeft});
+            this.sandbox.dom.css('#content', {'margin-left': 50 + paddingLeft});
 
         };
 

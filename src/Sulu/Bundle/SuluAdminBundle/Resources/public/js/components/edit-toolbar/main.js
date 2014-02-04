@@ -83,14 +83,14 @@ define([], function() {
         },
 
         changeStateCallbacks = {
-            default: function(saved, type) {
+            default: function(saved) {
                 if (!!saved) {
                     this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
                 } else {
                     this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
                 }
             },
-            defaultPreview: function(saved, type) {
+            defaultPreview: function(saved) {
                 if (!!saved) {
                     this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
                 } else {
@@ -99,19 +99,15 @@ define([], function() {
             }
         },
 
-        changePaddingLeft = function(paddingLeft) {
-            this.sandbox.dom.css('#edit-toolbar-container', {'padding-left': 50 + paddingLeft});
-
-            emitSizeChange.call(this);
+        changeLeftDistance = function(paddingLeft) {
+            this.sandbox.dom.css('#edit-toolbar-container', {'margin-left': 50 + paddingLeft});
         },
 
         resizeListener = function() {
-            var contentWidth = this.sandbox.dom.width('main#content'),
-                $toolbar = this.$find('#edit-toolbar');
-
+            var contentWidth = this.sandbox.dom.width('main#content');
 
             if (!this.currentContentWidth || this.currentContentWidth !== contentWidth) {
-                this.sandbox.dom.width($toolbar, contentWidth - 50);
+                this.sandbox.dom.width(this.$el, contentWidth);
                 this.currentContentWidth = contentWidth;
             }
         };
@@ -125,7 +121,8 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            var template = this.options.template;
+            var template = this.options.template,
+                contentLeft;
 
             // load template:
             if (typeof template === 'string') {
@@ -159,7 +156,9 @@ define([], function() {
                 }
             ]);
 
-            // resize toolbar
+            contentLeft = this.sandbox.dom.css('main#content', 'margin-left');
+            this.sandbox.dom.css('#edit-toolbar-container', {'margin-left': contentLeft});
+            // initialize width correct gap
             resizeListener.call(this);
 
             // bind events (also initializes first component)
@@ -182,7 +181,7 @@ define([], function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
             this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', this.changeState.bind(this));
-            this.sandbox.on('husky.navigation.size.changed', changePaddingLeft.bind(this));
+            this.sandbox.on('husky.navigation.size.changed', changeLeftDistance.bind(this));
         },
 
         changeState: function(type, saved) {

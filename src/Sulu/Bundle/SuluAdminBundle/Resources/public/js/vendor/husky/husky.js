@@ -24342,7 +24342,7 @@ define('__component__$navigation@husky',[],function() {
 
 
         /**
-         * raised when navigation was un / collapsed
+         * raised when navigation was un / collapsed. only raised when not forced
          * @event husky.navigation.size.changed
          */
             EVENT_SIZE_CHANGED = namespace + 'size.changed'
@@ -24749,7 +24749,9 @@ define('__component__$navigation@husky',[],function() {
             }
             if (this.collapsed) {
                 this.sandbox.emit(EVENT_UNCOLLAPSED, constants.uncollapsedWidth);
-                this.sandbox.emit(EVENT_SIZE_CHANGED, constants.uncollapsedWidth);
+                if (!forced) {
+                    this.sandbox.emit(EVENT_SIZE_CHANGED, constants.uncollapsedWidth);
+                }
                 this.collapsed = !this.collapsed;
             }
         },
@@ -25415,16 +25417,33 @@ define('__component__$column-options@husky',[],function() {
             bindDOMEvents = function() {
 
             this.sandbox.dom.on(this.options.trigger, 'click.column-options', toggleDropdown.bind(this));
-            this.sandbox.dom.on(this.$el, 'click', customStopPropagation.bind(this), '.column-options-container'); // prevent from unwanted events
+            this.sandbox.dom.on(this.$el, 'click', customStopPropagation.bind(this), this.$container); // prevent from unwanted events
             this.sandbox.dom.on(this.$el, 'mouseover', onMouseOver.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'mouseout', onMouseOut.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'click', toggleVisibility.bind(this), '.visibility-toggle');
             this.sandbox.dom.on(this.$el, 'click', submit.bind(this), '.save-button');
             this.sandbox.dom.on(this.$el, 'click', hideDropdown.bind(this, true), '.close-button');
+
+            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', windowResizeListener.bind(this));
         },
 
         unbindDOMEvents = function() {
             this.sandbox.dom.off(this.options.trigger, 'click.column-options');
+        },
+
+    /* adapts window size to window size */
+        windowResizeListener = function() {
+            // position window to the center
+            var elementHeight = this.sandbox.dom.height(this.$container),
+                windowHeight = this.sandbox.dom.height(this.sandbox.dom.window);
+
+            if (elementHeight > windowHeight) {
+                this.sandbox.dom.css(this.$el, {'top': 0});
+            } else {
+                this.sandbox.dom.css(this.$el, {'top': (windowHeight - elementHeight) / 2});
+            }
+            this.sandbox.dom.css(this.$container, {'max-height': windowHeight});
+
         },
 
 
@@ -25521,15 +25540,14 @@ define('__component__$column-options@husky',[],function() {
                 event.stopPropagation();
             }
 
-            var $container = this.sandbox.dom.find('.column-options-container', this.$el),
-                isVisible = this.sandbox.dom.is($container, ':visible');
+                var isVisible = this.sandbox.dom.is(this.$container, ':visible');
 
             if (isVisible) {
-                closeDropdown.call(this, $container, true);
+                closeDropdown.call(this, this.$container, true);
             } else {
-                this.sandbox.dom.show($container);
+                this.sandbox.dom.show(this.$container);
                 if (this.options.backdropClick) {
-                    this.sandbox.dom.on(this.sandbox.dom.window, 'click.columnoptions.' + this.options.instanceName, closeDropdown.bind(this, $container, true));
+                    this.sandbox.dom.on(this.sandbox.dom.window, 'click.columnoptions.' + this.options.instanceName, closeDropdown.bind(this, this.$container, true));
                 }
             }
         },
@@ -25538,8 +25556,7 @@ define('__component__$column-options@husky',[],function() {
          * simply hides container
          */
             hideDropdown = function(reset) {
-            var $container = this.sandbox.dom.find('.column-options-container', this.$el);
-            closeDropdown.call(this, $container, reset);
+            closeDropdown.call(this, this.$container, reset);
         },
 
         /**
@@ -25687,6 +25704,11 @@ define('__component__$column-options@husky',[],function() {
             bindDOMEvents.call(this);
 
             bindCustomEvents.call(this);
+
+
+            // TODO: position on startup
+
+
         },
 
         /**
@@ -25704,24 +25726,24 @@ define('__component__$column-options@husky',[],function() {
             this.sandbox.dom.addClass(this.$el, 'column-options-parent');
 
             // init container
-            var $container = this.sandbox.dom.createElement('<div class="column-options-container" />');
-            this.sandbox.dom.append(this.$el, $container);
+            this.$container = this.sandbox.dom.createElement('<div class="column-options-container" />');
+            this.sandbox.dom.append(this.$el, this.$container);
 
             // render header
             if (!this.options.header.disabled) {
-                this.sandbox.dom.append($container, this.sandbox.template.parse(templates.header, {title: this.options.header.title}));
+                this.sandbox.dom.append(this.$container, this.sandbox.template.parse(templates.header, {title: this.options.header.title}));
             }
 
             // init list
             this.$list = this.sandbox.dom.createElement('<ul class="column-options-list" />');
-            this.sandbox.dom.append($container, this.$list);
+            this.sandbox.dom.append(this.$container, this.$list);
 
             // render list items
             renderItems.call(this);
 
             // render footer
             if (!this.options.footer.disabled) {
-                this.sandbox.dom.append($container, '<div class="column-options-footer"><a href="#" class="icon-half-ok save-button btn btn-highlight"></a></div>');
+                this.sandbox.dom.append(this.$container, '<div class="column-options-footer"><a href="#" class="icon-half-ok save-button btn btn-highlight"></a></div>');
             }
 
             // make list sortables
@@ -25731,6 +25753,9 @@ define('__component__$column-options@husky',[],function() {
             if (!this.options.hidden) {
                 toggleDropdown.call(this);
             }
+
+            // correct vertical alignment
+            windowResizeListener.call(this);
 
             // initialization finished
             this.sandbox.emit(INITIALIZED.call(this));

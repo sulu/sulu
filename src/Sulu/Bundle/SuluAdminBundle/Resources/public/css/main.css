@@ -12,64 +12,63 @@ body {
 /*----------------------------------------*/
 /* line 17, ../scss/modules/base.scss */
 #content {
-  position: relative;
-  left: 300px;
-  margin-right: 50px;
   max-width: 820px;
-  min-width: 460px;
+  min-width: 300px;
+  margin-left: 300px;
   padding-top: 40px;
-  -webkit-transition: padding 0.5s;
-  -moz-transition: padding 0.5s;
-  -o-transition: padding 0.5s;
-  transition: padding 0.5s;
+  margin-right: 50px;
+  -webkit-transition: margin 0.5s;
+  -moz-transition: margin 0.5s;
+  -o-transition: margin 0.5s;
+  transition: margin 0.5s;
 }
-/* line 28, ../scss/modules/base.scss */
+/* line 26, ../scss/modules/base.scss */
 #content h2.mainheadline {
   margin-top: 35px;
 }
-/* line 32, ../scss/modules/base.scss */
+/* line 30, ../scss/modules/base.scss */
 #content h1:first-child {
   margin-top: 0;
 }
-/* line 36, ../scss/modules/base.scss */
+/* line 34, ../scss/modules/base.scss */
 #content .content-tabs-content {
   margin-top: 60px;
 }
 
-/* line 43, ../scss/modules/base.scss */
+/* line 41, ../scss/modules/base.scss */
 #edit-toolbar-container {
-  -webkit-transition: padding 0.5s;
-  -moz-transition: padding 0.5s;
-  -o-transition: padding 0.5s;
-  transition: padding 0.5s;
+  -webkit-transition: margin 0.5s;
+  -moz-transition: margin 0.5s;
+  -o-transition: margin 0.5s;
+  transition: margin 0.5s;
   z-index: 99;
   position: fixed;
   top: 0;
   left: 0;
-  padding-left: 300px;
+  margin-left: 300px;
   width: 100%;
   background-color: #f1f1f1;
   padding-top: 40px;
 }
 
-/* line 55, ../scss/modules/base.scss */
+/* line 53, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 820px;
 }
 
-/* line 59, ../scss/modules/base.scss */
+/* line 57, ../scss/modules/base.scss */
 #list-toolbar-container {
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
-/* line 65, ../scss/modules/base.scss */
+/* line 63, ../scss/modules/base.scss */
 #page-functions + #edit-toolbar .edit-toolbar-left {
   margin-left: -50px;
 }
 
 /*----------------------------------------*/
-/* line 72, ../scss/modules/base.scss */
+/* line 70, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -77,30 +76,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 80, ../scss/modules/base.scss */
+/* line 78, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 87, ../scss/modules/base.scss */
+/* line 85, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 94, ../scss/modules/base.scss */
+/* line 92, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 98, ../scss/modules/base.scss */
+/* line 96, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 105, ../scss/modules/base.scss */
+/* line 103, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
