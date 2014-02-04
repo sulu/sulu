@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 class TagControllerTest extends DatabaseTestCase
 {
@@ -36,6 +36,7 @@ class TagControllerTest extends DatabaseTestCase
         $tag->setCreated(new \DateTime());
         $tag->setChanged(new \DateTime());
         self::$em->persist($tag);
+
         self::$em->flush();
     }
 
@@ -63,7 +64,13 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/tags/1'
+            '/api/tags/1',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -73,12 +80,40 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals('tag1', $response->name);
     }
 
+    public function testList()
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/api/tags?flat=true',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals('tag1', $response->_embedded[0]->name);
+        $this->assertEquals('tag2', $response->_embedded[1]->name);
+    }
+
     public function testGetByIdNotExisting()
     {
         $client = self::createClient();
         $client->request(
             'GET',
-            '/api/tags/10'
+            '/api/tags/10',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -91,7 +126,16 @@ class TagControllerTest extends DatabaseTestCase
     public function testPost()
     {
         $client = self::createClient();
-        $client->request('POST', '/api/tags', array('name' => 'tag3'));
+        $client->request(
+            'POST',
+            '/api/tags',
+            array('name' => 'tag3'),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -112,7 +156,16 @@ class TagControllerTest extends DatabaseTestCase
     public function testPostExistingName()
     {
         $client = self::createClient();
-        $client->request('POST', '/api/tags', array('name' => 'tag1'));
+        $client->request(
+            'POST',
+            '/api/tags',
+            array('name' => 'tag1'),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
@@ -123,7 +176,16 @@ class TagControllerTest extends DatabaseTestCase
     public function testPut()
     {
         $client = self::createClient();
-        $client->request('PUT', '/api/tags/1', array('name' => 'tag1_new'));
+        $client->request(
+            'PUT',
+            '/api/tags/1',
+            array('name' => 'tag1_new'),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -131,7 +193,13 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/tags/1'
+            '/api/tags/1',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -144,7 +212,16 @@ class TagControllerTest extends DatabaseTestCase
     public function testPutExistingName()
     {
         $client = self::createClient();
-        $client->request('PUT', '/api/tags/2', array('name' => 'tag1'));
+        $client->request(
+            'PUT',
+            '/api/tags/2',
+            array('name' => 'tag1'),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
@@ -155,7 +232,16 @@ class TagControllerTest extends DatabaseTestCase
     public function testPutNotExisting()
     {
         $client = self::createClient();
-        $client->request('PUT', '/api/tags/4711', array('name' => 'tag1_new'));
+        $client->request(
+            'PUT',
+            '/api/tags/4711',
+            array('name' => 'tag1_new'),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
@@ -171,10 +257,28 @@ class TagControllerTest extends DatabaseTestCase
             array($mockedEventListener, 'onDelete')
         );
 
-        $client->request('DELETE', '/api/tags/1');
+        $client->request(
+            'DELETE',
+            '/api/tags/1',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/tags/1');
+        $client->request(
+            'GET',
+            '/api/tags/1',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
 
@@ -182,12 +286,35 @@ class TagControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('DELETE', '/api/tags/4711');
+        $client->request(
+            'DELETE',
+            '/api/tags/4711',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
 
     public function testMerge()
     {
+        $tag = new Tag();
+        $tag->setName('tag3');
+        $tag->setCreated(new \DateTime());
+        $tag->setChanged(new \DateTime());
+        self::$em->persist($tag);
+
+        $tag = new Tag();
+        $tag->setName('tag4');
+        $tag->setCreated(new \DateTime());
+        $tag->setChanged(new \DateTime());
+        self::$em->persist($tag);
+
+        self::$em->flush();
+
         $mockedEventListener = $this->getMock('stdClass', array('onMerge'));
         $mockedEventListener->expects($this->once())->method('onMerge');
 
@@ -197,21 +324,81 @@ class TagControllerTest extends DatabaseTestCase
             array($mockedEventListener, 'onMerge')
         );
 
-        $client->request('POST', '/api/tags/merge', array('src' => 2, 'dest' => 1));
+        $client->request(
+            'POST',
+            '/api/tags/merge',
+            array('src' => implode(',', array(2, 3, 4)), 'dest' => 1),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
         $this->assertEquals(303, $client->getResponse()->getStatusCode());
         $this->assertEquals('/admin/api/tags/1', $client->getResponse()->headers->get('location'));
 
-        $client->request('GET', '/api/tags/1');
+        $client->request(
+            'GET',
+            '/api/tags/1',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/tags/2');
+        $client->request(
+            'GET',
+            '/api/tags/2',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/tags/3',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/tags/4',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     public function testMergeNotExisting()
     {
         $client = static::createClient();
-        $client->request('POST', '/api/tags/merge', array('src' => 3, 'dest' => 1));
+        $client->request(
+            'POST',
+            '/api/tags/merge',
+            array('src' => 3, 'dest' => 1),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 

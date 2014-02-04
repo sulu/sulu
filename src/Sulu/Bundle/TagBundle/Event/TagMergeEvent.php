@@ -21,9 +21,9 @@ class TagMergeEvent extends Event
 {
     /**
      * The deleted Tag
-     * @var Tag
+     * @var array
      */
-    protected $srcTag;
+    protected $srcTags;
 
     /**
      * The Tag the deleted Tag got merged into
@@ -32,12 +32,12 @@ class TagMergeEvent extends Event
     protected $destTag;
 
     /**
-     * @param Tag $srcTag The deleted Tag
+     * @param array $srcTags The deleted Tag
      * @param Tag $destTag The Tag the deleted Tag got merged into
      */
-    public function __construct(Tag $srcTag, Tag $destTag)
+    public function __construct(array $srcTags, Tag $destTag)
     {
-        $this->srcTag = $srcTag;
+        $this->srcTags = $srcTags;
         $this->destTag = $destTag;
     }
 
@@ -45,9 +45,9 @@ class TagMergeEvent extends Event
      * Returns the Tag which got deleted
      * @return Tag
      */
-    public function getSrcTag()
+    public function getSrcTags()
     {
-        return $this->srcTag;
+        return $this->srcTags;
     }
 
     /**
