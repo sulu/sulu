@@ -21,7 +21,11 @@ class TemplateController extends Controller
 
         return $this->render(
             'SuluContentBundle:Template:content.html.twig',
-            array('template' => $template)
+            array(
+                'template' => $template,
+                'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
+                'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port')
+            )
         );
     }
 

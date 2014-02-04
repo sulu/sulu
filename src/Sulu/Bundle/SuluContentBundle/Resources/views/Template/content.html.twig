@@ -11,3 +11,9 @@
         {% endif %}
     {% endfor %}
 </form>
+
+<script type="text/javascript">
+    (function() {
+        App.emit('sulu.preview.set-params', '{{ wsUrl }}', '{{ wsPort }}');
+    })();
+</script>
