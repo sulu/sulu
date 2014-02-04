@@ -12,12 +12,12 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     var templates = {
-            skeleton: function(id) {
+            skeleton: function(id, url) {
                 return [
                     '<div id="top-toolbar"></div>',
                     '<div id="split-screen">',
                     '<div id="form" class="grid" data-aura-component="content@sulucontent" data-aura-id="', id, '" data-aura-display="form"></div>',
-                    '<div id="preview"><iframe src="http://sulu.lo/admin/content/preview/', id, '" width="1024" height="768"></iframe></div>',
+                    '<div id="preview"><iframe src="', url, '/admin/content/preview/', id, '" width="1024" height="768"></iframe></div>',
                     '</div>'
                 ].join('');
             }
@@ -87,7 +87,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         render: function() {
-            this.html(templates.skeleton(this.options.id));
+            this.html(templates.skeleton(this.options.id, this.options.url));
 
             var formWidth = this.sandbox.dom.find('#form').outerWidth() + 10,
                 mainWidth = this.sandbox.dom.find('#split-screen').outerWidth();

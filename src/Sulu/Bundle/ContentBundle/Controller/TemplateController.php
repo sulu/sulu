@@ -81,7 +81,8 @@ class TemplateController extends Controller
         return array(
             'name' => $this->container->getParameter('sulu_admin.name'),
             'user' => $user,
-            'contentUuid' => $contentUuid
+            'contentUuid' => $contentUuid,
+            'url' => 'http://' . $this->getRequest()->getHttpHost()
         );
     }
 
