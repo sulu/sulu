@@ -41,7 +41,7 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
             throw new MissingArgumentException('ResourceLocator', 'title');
         }
         if ($webspace == null) {
-            throw new MissingArgumentException('ResourceLocator', 'portal');
+            throw new MissingArgumentException('ResourceLocator', 'webspace');
         }
 
         $result = array(

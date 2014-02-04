@@ -50,8 +50,7 @@ class PreviewMessageComponent implements MessageComponentInterface
         echo "Connection {$from->resourceId} has send a message: {$msg}\n";
         $msg = json_decode($msg);
 
-        if (
-            isset($msg->command) &&
+        if (isset($msg->command) &&
             isset($msg->user) &&
             isset($msg->params) &&
             isset($msg->content) &&
@@ -137,8 +136,7 @@ class PreviewMessageComponent implements MessageComponentInterface
         $id = $user . '-' . $content;
 
         // if params correct
-        if (
-            $type == 'form' &&
+        if ($type == 'form' &&
             isset($params->changes)
         ) {
 
@@ -160,8 +158,7 @@ class PreviewMessageComponent implements MessageComponentInterface
             );
 
             // if there are some changes
-            if (
-                isset($this->content[$id]) &&
+            if (isset($this->content[$id]) &&
                 isset($this->content[$id]['preview'])
             ) {
                 // get changes
