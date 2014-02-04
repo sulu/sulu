@@ -34,17 +34,23 @@ class PreviewController extends Controller
         if (!$preview->started($uid, $contentUuid)) {
             // TODO workspace
             // TODO language
-            $preview->start($uid, $contentUuid, '', '');
+            $language = $this->getRequest()->get('language', 'en');
+            $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+            $preview->start($uid, $contentUuid, $webspace, $language);
         }
 
         $content = $preview->render($uid, $contentUuid);
 
+        // FIXME make url and port dynamic
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
             array(
-                'url' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
+                'userId' => $uid,
+                'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
+                'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
+                'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
                 'contenUuid' => $contentUuid,
-                'interval' => $this->container->getParameter('sulu_content.preview.interval')
+                'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval')
             )
         );
 
@@ -78,7 +84,9 @@ class PreviewController extends Controller
         if (!$preview->started($uid, $contentUuid)) {
             // TODO workspace
             // TODO language
-            $preview->start($uid, $contentUuid, '', '');
+            $language = $this->getRequest()->get('language', 'en');
+            $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+            $preview->start($uid, $contentUuid, $webspace, $language);
         }
 
         // get changes from request

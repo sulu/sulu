@@ -7,13 +7,16 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
     return {
 
         view: true,
+
+        // if ws != null then use it
+        ws: null,
 
         templates: ['/admin/content/template/form/overview'],
 
@@ -142,20 +145,33 @@ define([], function() {
             window.open('/admin/content/preview/' + this.options.data.id);
         },
 
+        /**
+         * returns true if there is a websocket
+         * @returns {boolean}
+         */
+        wsDetection: function() {
+            var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
+            // no support
+            if (support === null) {
+                this.sandbox.logger.log("Your browser doesn't support Websockets.");
+                return false;
+            }
+            // let's invite Firefox to the party.
+            if (window.MozWebSocket) {
+                window.WebSocket = window.MozWebSocket;
+            }
+            // support exists
+            return true;
+        },
+
         initPreview: function() {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id,
-                data = this.sandbox.form.getData(this.formId);
+            if (this.wsDetection()) {
+                this.initWs();
+            } else {
+                this.initAjax();
+            }
 
-            this.sandbox.util.ajax({
-                url: updateUrl,
-                type: 'POST',
-
-                data: {
-                    changes: data
-                }
-            });
-
-            this.sandbox.dom.on(this.formId, 'focusout', function(e) {
+            this.sandbox.dom.on(this.formId, 'keyup', function(e) {
                 var $element = $(e.currentTarget);
                 while (!$element.data('element')) {
                     $element = $element.parent();
@@ -170,11 +186,57 @@ define([], function() {
             }.bind(this));
         },
 
+        initAjax: function() {
+            var data = this.sandbox.form.getData(this.formId);
+
+            this.updateAjax(data);
+        },
+
+        initWs: function() {
+            // FIXME parameter?
+            this.ws = new WebSocket('ws://localhost:9876');
+            this.ws.onopen = function() {
+                this.sandbox.logger.log('Connection established!');
+
+                // send start command
+                var message = {
+                    command: 'start',
+                    content: this.options.data.id,
+                    type: 'form',
+                    user: AppConfig.getUser().id,
+                    params: {}
+                };
+                this.ws.send(JSON.stringify(message));
+            }.bind(this);
+
+            this.ws.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+
+                this.sandbox.logger.log('Message:', data);
+            }.bind(this);
+
+            this.ws.onerror = function(e) {
+                this.sandbox.logger.warn(e);
+
+                // no connection can be opened use fallback
+                this.ws = null;
+                this.initAjax();
+            }.bind(this);
+        },
+
         updatePreview: function(property, value) {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id,
-                changes = {};
+            var changes = {};
             changes[property] = value;
 
+            if (this.ws !== null) {
+                this.updateWs(changes);
+            } else {
+                this.updateAjax(changes);
+            }
+        },
+
+        updateAjax: function(changes) {
+            var updateUrl = '/admin/content/preview/' + this.options.data.id;
 
             this.sandbox.util.ajax({
                 url: updateUrl,
@@ -184,6 +246,17 @@ define([], function() {
                     changes: changes
                 }
             });
+        },
+
+        updateWs: function(changes) {
+            var message = {
+                command: 'update',
+                content: this.options.data.id,
+                type: 'form',
+                user: AppConfig.getUser().id,
+                params: {changes: changes}
+            };
+            this.ws.send(JSON.stringify(message));
         }
 
     };

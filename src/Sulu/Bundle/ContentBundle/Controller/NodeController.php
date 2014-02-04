@@ -31,13 +31,13 @@ class NodeController extends RestController implements ClassResourceInterface
         // TODO language
         // TODO portal
         $language = $this->getRequest()->get('language', 'en');
-        $portal = $this->getRequest()->get('portal', 'default');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $portal) {
+            function ($id) use ($language, $webspace) {
                 try {
-                    return $this->getRepository()->getNode($id, $portal, $language);
+                    return $this->getRepository()->getNode($id, $webspace, $language);
                 } catch (ItemNotFoundException $ex) {
                     return null;
                 }
@@ -56,9 +56,9 @@ class NodeController extends RestController implements ClassResourceInterface
         // TODO language
         // TODO portal
         $language = $this->getRequest()->get('language', 'en');
-        $portal = $this->getRequest()->get('portal', 'default');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
-        $result = $this->getRepository()->getIndexNode($portal, $language);
+        $result = $this->getRepository()->getIndexNode($webspace, $language);
 
         return $this->handleView($this->view($result));
     }
@@ -69,16 +69,19 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        // TODO pagination
+        // TODO language
+        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
-        $portal = $this->getRequest()->get('portal', 'default');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+
         $parentUuid = $this->getRequest()->get('parent');
         $depth = $this->getRequest()->get('depth', 1);
         $depth = intval($depth);
         $flat = $this->getRequest()->get('flat', 'true');
         $flat = ($flat === 'true');
 
-        $result = $this->getRepository()->getNodes($parentUuid, $portal, $language, $depth, $flat);
+        // TODO pagination
+        $result = $this->getRepository()->getNodes($parentUuid, $webspace, $language, $depth, $flat);
 
         return $this->handleView(
             $this->view($result)
@@ -95,11 +98,11 @@ class NodeController extends RestController implements ClassResourceInterface
         // TODO portal
         // TODO language
         $language = $this->getRequest()->get('language', 'en');
-        $portal = $this->getRequest()->get('portal', 'default');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
         $data = $this->getRequest()->request->all();
 
-        $result = $this->getRepository()->saveNode($data, $template, $portal, $language, $uuid);
+        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, $uuid);
 
         return $this->handleView(
             $this->view($result)
@@ -115,7 +118,7 @@ class NodeController extends RestController implements ClassResourceInterface
         // TODO language
         // TODO portal
         $language = $this->getRequest()->get('language', 'en');
-        $portal = $this->getRequest()->get('portal', 'default');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
         $data = $this->getRequest()->request->all();
 
@@ -124,7 +127,7 @@ class NodeController extends RestController implements ClassResourceInterface
                 throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
             }
 
-            $result = $this->getRepository()->saveIndexNode($data, $template, $portal, $language);
+            $result = $this->getRepository()->saveIndexNode($data, $template, $webspace, $language);
             $view = $this->view($result);
         } catch (RestException $ex) {
             $view = $this->view(
@@ -145,12 +148,12 @@ class NodeController extends RestController implements ClassResourceInterface
         // TODO language
         // TODO portal
         $language = $this->getRequest()->get('language', 'en');
-        $portal = $this->getRequest()->get('portal', 'default');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
         $data = $this->getRequest()->request->all();
         $parent = $this->getRequest()->get('parent');
 
-        $result = $this->getRepository()->saveNode($data, $template, $portal, $language, null, $parent);
+        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, null, $parent);
 
         return $this->handleView(
             $this->view($result)
@@ -167,13 +170,13 @@ class NodeController extends RestController implements ClassResourceInterface
         // TODO language
         // TODO portal
         $language = $this->getRequest()->get('language', 'en');
-        $portal = $this->getRequest()->get('portal', 'default');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
         $view = $this->responseDelete(
             $uuid,
-            function ($id) use ($language, $portal) {
+            function ($id) use ($language, $webspace) {
                 try {
-                    $this->getRepository()->deleteNode($id, $portal, $language);
+                    $this->getRepository()->deleteNode($id, $webspace, $language);
                 } catch (ItemNotFoundException $ex) {
                     throw new EntityNotFoundException('Content', $id);
                 }

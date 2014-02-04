@@ -17,7 +17,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
-
     /**
      * @var array
      */
@@ -56,10 +55,10 @@ class PreviewMessageComponent implements MessageComponentInterface
     {
         $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
         $msg = json_decode($msg);
-        $user = $this->context->getToken()->getUser()->getId();
 
         if (
             isset($msg->command) &&
+            isset($msg->user) &&
             isset($msg->params) &&
             isset($msg->content) &&
             isset($msg->type) &&
@@ -68,6 +67,7 @@ class PreviewMessageComponent implements MessageComponentInterface
                 array('form', 'preview')
             )
         ) {
+            $user = $msg->user;
             switch ($msg->command) {
                 case 'start':
                     $this->start($from, $msg, $user);
@@ -143,6 +143,7 @@ class PreviewMessageComponent implements MessageComponentInterface
         $id = $user . '-' . $content;
 
         // if params correct
+
         if ($type == 'form' && isset($params->property) && isset($params->data)) {
             // update property
             $this->preview->update($user, $content, $params->property, $params->data);
@@ -162,6 +163,7 @@ class PreviewMessageComponent implements MessageComponentInterface
             );
 
             // if there are some changes
+
             if (sizeof($changes) > 0 && isset($this->content[$id]) && isset($this->content[$id]['preview'])) {
                 // get preview client
                 /** @var ConnectionInterface $previewClient */
@@ -186,7 +188,6 @@ class PreviewMessageComponent implements MessageComponentInterface
         $content = $msg->content;
         $type = strtolower($msg->type);
         $otherType = ($type == 'form' ? 'preview' : 'form');
-        $params = $msg->params;
         $id = $user . '-' . $content;
 
         // stop preview
