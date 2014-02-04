@@ -73,3 +73,11 @@ security:
         sulu:
             pattern: ^/admin
             anonymous: ~
+
+sulu_core:
+    phpcr:
+        workspace: test
+    portal:
+        ~
+    content:
+        ~

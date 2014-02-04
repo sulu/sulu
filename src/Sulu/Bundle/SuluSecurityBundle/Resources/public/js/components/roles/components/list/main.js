@@ -40,28 +40,22 @@ define(function() {
         initializeDataGrid: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/role/list'));
 
-            this.sandbox.sulu.initListToolbar.call(this, '#list-toolbar-container','fieldsRoles', '/admin/api/roles/fields');
-
-            this.sandbox.start([
+            // init list-toolbar and datagrid
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'rolesFields', '/admin/api/roles/fields',
                 {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: this.sandbox.dom.find('#roles-list'),
-                        url: '/admin/api/roles?flat=true&fields=id,name,system',
-                        selectItem: {
-                            type: 'checkbox'
-                        },
-                        pagination: false,
-                        searchInstanceName: 'content',
-                        removeRow: false,
-                        tableHead: [
-                            {content: this.sandbox.translate('security.roles.name'), width: "30%"},
-                            {content: this.sandbox.translate('security.roles.system')}
-                        ],
-                        excludeFields: ['id']
-                    }
+                    el: '#list-toolbar-container',
+                    instanceName: 'roles'
+                },
+                {
+                    el: this.sandbox.dom.find('#roles-list', this.$el),
+                    url: '/admin/api/roles?flat=true',
+                    selectItem: {
+                        type: 'checkbox'
+                    },
+                    sortable: true
                 }
-            ]);
+            );
+
         }
     };
 });
