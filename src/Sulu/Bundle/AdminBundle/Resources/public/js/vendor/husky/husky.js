@@ -30705,8 +30705,8 @@ define('__component__$password-fields@husky',[], function() {
  * @constructor
  *
  * @params {Object} [options] Configuration object
- * @params {Number} [options.wrapper.height] height of container
- * @params {Number} [options.column.width] width of a column in within the navigation
+ * @params {Number} [options.wrapper.height] height of container in percentage
+ * @params {Number} [options.column.width] width of a column in within the navigation in pixels
  * @params {Number} [options.scrollBarWidth] with of scrollbar
  * @params {String} [options.url] url to load data
  * @params {String} [options.selected] id of selected element - needed to restore state
@@ -30718,7 +30718,7 @@ define('__component__$column-navigation@husky',[], function() {
 
     var defaults = {
             wrapper: {
-                height: 300
+                height: 70
             },
             column: {
                 width: 250
@@ -30800,13 +30800,14 @@ define('__component__$column-navigation@husky',[], function() {
          * Renders basic structure (wrapper) of column navigation
          */
         render: function() {
-            var $add, $settings, $wrapper;
+            var $add, $settings, $wrapper, height;
 
             $wrapper = this.sandbox.dom.$(this.template.wrapper());
             this.sandbox.dom.append(this.$element, $wrapper);
 
             // navigation container
-            this.$columnContainer = this.sandbox.dom.$(this.template.columnContainer());
+            height = this.sandbox.dom.height(window) * this.options.wrapper.height/100;
+            this.$columnContainer = this.sandbox.dom.$(this.template.columnContainer(height));
             this.sandbox.dom.append($wrapper, this.$columnContainer);
 
             // options container - add and settings button
@@ -30950,7 +30951,7 @@ define('__component__$column-navigation@husky',[], function() {
                 this.sandbox.dom.attr(this.$addColumn, 'id', 'column-' + newColumn);
                 this.$addColumn = null;
             } else { // create new column
-                $column = this.sandbox.dom.$(this.template.column(newColumn, this.options.wrapper.height, this.options.column.width));
+                $column = this.sandbox.dom.$(this.template.column(newColumn, this.options.column.width));
             }
 
             return $column;
@@ -31114,7 +31115,7 @@ define('__component__$column-navigation@husky',[], function() {
 
             if (!this.$addColumn && !selectedItem.hasSub) {
                 // append empty column to add subpages
-                this.$addColumn = this.sandbox.dom.createElement(this.template.column(column + 1, this.options.wrapper.height, this.options.column.width));
+                this.$addColumn = this.sandbox.dom.createElement(this.template.column(column + 1, this.options.column.width));
                 this.sandbox.dom.append(this.$columnContainer, this.$addColumn);
             }
         },
@@ -31181,12 +31182,12 @@ define('__component__$column-navigation@husky',[], function() {
                 return '<div class="column-navigation-wrapper"></div>';
             },
             
-            columnContainer: function() {
-                return ['<div class="column-navigation"></div>'].join('');
+            columnContainer: function(height) {
+                return ['<div class="column-navigation" style="height:'+height+'px"></div>'].join('');
             },
 
-            column: function(columnNumber, height, width) {
-                return ['<div data-column="', columnNumber, '" class="column" id="column-', columnNumber, '" style="height:', height, 'px; width: ', width, 'px"><ul></ul></div>'].join('');
+            column: function(columnNumber, width) {
+                return ['<div data-column="', columnNumber, '" class="column" id="column-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
             },
 
             item: function(width, data) {
