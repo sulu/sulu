@@ -5652,67 +5652,69 @@ a.btn-black, a.btn-highlight {
 /* line 5, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-label {
   background: #cccccc;
-  padding: 10px;
+  padding: 5px 5px 5px 10px;
   border-radius: 6px;
+  clear: both;
+  font-size: 12px;
 }
 /* line 11, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-label .checkbox {
+  padding-right: 20px;
+}
+/* line 14, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-label .dropdown-toggle {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+/* line 21, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list {
   width: 100%;
   /*display: inline-block;*/
-  border: 1px solid #ccc;
   position: absolute;
   top: 20px;
   left: 0;
-  margin-top: 20px;
+  margin-top: 5px;
   background-color: #FFF;
-  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 3px 3px 0 0 #cccccc;
   z-index: 95;
 }
-/* line 24, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list::after, .husky-dropdown-multiple-select .dropdown-list::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: -10px;
-  left: 5px;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #FFF;
+/* line 32, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list .check {
+  float: left;
+  width: 20px;
+  margin-right: 10px;
+  padding-top: 3px;
 }
 /* line 38, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list::before {
-  top: -11px;
-  left: 4px;
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-bottom: 11px solid #ccc;
+.husky-dropdown-multiple-select .dropdown-list .item-value {
+  float: left;
+  line-height: 30px;
 }
-/* line 47, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list.dropdown-align-right {
-  left: auto !important;
-  right: 0;
-}
-/* line 51, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::after, .husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::before {
-  left: auto !important;
-  right: 5px;
-}
-/* line 57, ../scss/modules/dropdown-multiple-select.scss */
+/* line 43, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 62, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list > ul > li {
-  padding: 5px 10px;
+/* line 48, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul input {
+  margin: 0;
 }
-/* line 66, ../scss/modules/dropdown-multiple-select.scss */
+/* line 52, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul > li {
+  padding: 0px 10px 0px 20px;
+  clear: both;
+  height: 30px;
+}
+/* line 58, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list > ul > li:hover, .husky-dropdown-multiple-select .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected, .column-navigation-wrapper .column-navigation .column .husky-dropdown-multiple-select .dropdown-list > ul > li.selected, .husky-dropdown-multiple-select .dropdown-list > ul > li.hover {
-  background-color: #ccc;
+  background-color: #249fbe;
   cursor: pointer;
+}
+/* line 62, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul > li:hover .item-value, .husky-dropdown-multiple-select .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected .item-value, .column-navigation-wrapper .column-navigation .column .husky-dropdown-multiple-select .dropdown-list > ul > li.selected .item-value {
+  color: white;
 }
 
 /* line 5, ../scss/modules/top-toolbar.scss */
