@@ -156,6 +156,11 @@ class NodeControllerTest extends DatabaseTestCase
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
+            'sulu_locale',
+            'http://sulu.io/phpcr/locale'
+        );
     }
 
     protected function tearDown()
@@ -572,7 +577,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertFalse($items[4]->hasSub);
 
         // get child nodes from subNode
-        $client->request('GET', '/api/nodes?depth=3&parent='.$data[3]['id']);
+        $client->request('GET', '/api/nodes?depth=3&parent=' . $data[3]['id']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -669,7 +674,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(0, sizeof($items[0]->_embedded));
 
         // get child nodes from subNode
-        $client->request('GET', '/api/nodes?depth=3&flat=false&parent='.$data[3]['id']);
+        $client->request('GET', '/api/nodes?depth=3&flat=false&parent=' . $data[3]['id']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;

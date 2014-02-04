@@ -308,6 +308,11 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
         $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
+            'sulu_locale',
+            'http://sulu.io/phpcr/locale'
+        );
         $this->session->save();
 
         NodeHelper::purgeWorkspace($this->session);
