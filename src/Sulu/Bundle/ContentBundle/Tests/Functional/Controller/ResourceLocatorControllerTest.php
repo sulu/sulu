@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
+use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
@@ -12,6 +13,11 @@ use Symfony\Bundle\FrameworkBundle\Client;
 
 class ResourceLocatorControllerTest extends DatabaseTestCase
 {
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
     /**
      * @var Client
      */
@@ -33,8 +39,9 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         $this->session->save();
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
-        $cmf->addNode('routes');
-        $cmf->addNode('contents');
+        $webspace = $cmf->addNode('default');
+        $webspace->addNode('routes');
+        $webspace->addNode('contents');
 
         $this->session->save();
 
@@ -56,7 +63,7 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         $factory = new $factoryclass();
         $repository = $factory->getRepository($parameters);
         $credentials = new \PHPCR\SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'default');
+        $this->session = $repository->login($credentials, 'test');
     }
 
     public function prepareRepository()
