@@ -125,6 +125,7 @@ abstract class RestController extends FOSRestController
             $fields = array_merge($fields, $this->fieldsRelations);
             // hide
             $fields = array_diff($fields, $this->fieldsHidden);
+            $fields = array_merge($fields, $this->fieldsHidden); // put at last position
             // apply sort order
             $fields = array_diff($fields, $this->fieldsSortOrder);
             foreach ($this->fieldsSortOrder as $key => $value) {
@@ -132,10 +133,7 @@ abstract class RestController extends FOSRestController
             }
 
             // parsing final array and sets to Default
-            $fieldsArray = $this->addFieldAttributes($fields);
-            $fieldsHiddenArray = $this->addFieldAttributes($this->fieldsHidden, true);
-            $fieldsArray = array_merge($fieldsArray, $fieldsHiddenArray);
-
+            $fieldsArray = $this->addFieldAttributes($fields, $this->fieldsHidden);
 
             $view = $this->view($fieldsArray, 200);
         } catch (\Exception $e) {
@@ -175,7 +173,7 @@ abstract class RestController extends FOSRestController
      * @param bool $hidden defines if keys are hidden
      * @return array
      */
-    private function addFieldAttributes($fields, $hidden = false)
+    private function addFieldAttributes($fields, $fieldsHidden)
     {
         // add translations
         $fieldsArray = array();
@@ -199,7 +197,7 @@ abstract class RestController extends FOSRestController
             $fieldsArray[] = array(
                 'id' => $field,
                 'translation' => $translationkey,
-                'disabled' => $hidden,
+                'disabled' => in_array($field, $fieldsHidden) ? true : false,
                 'default' => in_array($field, $this->fieldsDefault) ? true : null,
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
                 'width' => ($fieldWidth != null) ? $fieldWidth : null,
