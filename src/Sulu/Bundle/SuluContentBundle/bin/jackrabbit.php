@@ -8,7 +8,6 @@
  * with this source code in the file LICENSE.
  */
 
-
 include_once "vendor/autoload.php";
 
 $options = array(
@@ -37,7 +36,6 @@ if (!$repo->getDescriptor(PHPCR\RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT
 
     die();
 }
-
 
 try {
     $workspace->createWorkspace('test');

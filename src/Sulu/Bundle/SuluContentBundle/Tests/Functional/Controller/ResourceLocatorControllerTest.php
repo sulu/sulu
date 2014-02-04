@@ -39,7 +39,7 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         $this->session->save();
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
-        $webspace = $cmf->addNode('default');
+        $webspace = $cmf->addNode('sulu_io');
         $webspace->addNode('routes');
         $webspace->addNode('contents');
 
@@ -136,33 +136,33 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
-        $data[0] = $mapper->save($data[0], 'overview', 'default', 'en', 1)->toArray();
-        $data[1] = $mapper->save($data[1], 'overview', 'default', 'en', 1)->toArray();
-        $data[2] = $mapper->save($data[2], 'overview', 'default', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[3] = $mapper->save($data[3], 'overview', 'default', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[4] = $mapper->save($data[4], 'overview', 'default', 'en', 1, true, null, $data[3]['id'])->toArray();
+        $data[0] = $mapper->save($data[0], 'overview', 'sulu_io', 'en', 1)->toArray();
+        $data[1] = $mapper->save($data[1], 'overview', 'sulu_io', 'en', 1)->toArray();
+        $data[2] = $mapper->save($data[2], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
+        $data[3] = $mapper->save($data[3], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
+        $data[4] = $mapper->save($data[4], 'overview', 'sulu_io', 'en', 1, true, null, $data[3]['id'])->toArray();
 
         return $data;
     }
 
     public function testGet()
     {
-        $this->client->request('GET', '/content/resourcelocator.json?title=test&webspace=default');
+        $this->client->request('GET', '/content/resourcelocator.json?title=test&webspace=sulu_io');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&title=test&webspace=default');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&title=test&webspace=sulu_io');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/products/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&title=test&webspace=default');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&title=test&webspace=sulu_io');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-2', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&title=test&webspace=default');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&title=test&webspace=sulu_io');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);

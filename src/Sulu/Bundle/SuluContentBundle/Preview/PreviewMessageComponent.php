@@ -17,7 +17,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
-
     /**
      * @var array
      */
