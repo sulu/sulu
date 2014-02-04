@@ -17,6 +17,8 @@ define(['app-config'], function(AppConfig) {
 
         // if ws != null then use it
         ws: null,
+        wsUrl: '',
+        wsPort: '',
 
         templates: ['/admin/content/template/form/overview'],
 
@@ -31,13 +33,13 @@ define(['app-config'], function(AppConfig) {
         },
 
         render: function() {
+            this.bindCustomEvents();
+            
             this.html(this.renderTemplate('/admin/content/template/form/overview'));
-
             var data = this.initData();
             this.createForm(data);
 
             this.bindDomEvents();
-            this.bindCustomEvents();
         },
 
         createForm: function(data) {
@@ -93,10 +95,10 @@ define(['app-config'], function(AppConfig) {
             // content delete
             this.sandbox.on('sulu.preview.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
-            }.bind(this));
+            }, this);
             this.sandbox.on('sulu.edit-toolbar.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
-            }.bind(this));
+            }, this);
 
             // back to list
             this.sandbox.on('sulu.edit-toolbar.back', function() {
@@ -109,6 +111,12 @@ define(['app-config'], function(AppConfig) {
 
             this.sandbox.on('sulu.edit-toolbar.preview.split-screen', function() {
                 this.openSplitScreen();
+            }, this);
+
+            // set preview params
+            this.sandbox.on('sulu.preview.set-params', function(url, port) {
+                this.wsUrl = url;
+                this.wsPort = port;
             }, this);
         },
 
@@ -206,7 +214,9 @@ define(['app-config'], function(AppConfig) {
 
         initWs: function() {
             // FIXME parameter?
-            this.ws = new WebSocket('ws://localhost:9876');
+            var url = this.wsUrl + ':' + this.wsPort;
+            this.sandbox.logger.log('Connect to url: ' + url);
+            this.ws = new WebSocket(url);
             this.ws.onopen = function() {
                 this.sandbox.logger.log('Connection established!');
 
