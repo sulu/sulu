@@ -25,7 +25,7 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
-use Sulu\Component\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 class AccountControllerTest extends DatabaseTestCase
 {

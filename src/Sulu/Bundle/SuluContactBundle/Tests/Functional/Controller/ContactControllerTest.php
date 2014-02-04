@@ -22,7 +22,7 @@ use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Component\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 class ContactControllerTest extends DatabaseTestCase
 {
