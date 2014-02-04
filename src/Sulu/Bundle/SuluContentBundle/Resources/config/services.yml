@@ -32,7 +32,7 @@ services:
         arguments: [@templating, @sulu_content.preview.cache, @sulu.content.mapper, @sulu.content.structure_manager, @controller_resolver, %sulu_content.preview.lifetime%, %sulu_content.preview.template-namespace%]
     sulu_content.preview.message_component:
         class: %sulu_content.preview.message_component.class%
-        arguments: [@security.context, @sulu_content.preview]
+        arguments: [@security.context, @sulu_content.preview, @logger]
     sulu_content.node_repository:
         class: %sulu_content.node_repository.class%
         arguments: [@sulu.content.mapper, @sulu_security.user_manager, @security.context]

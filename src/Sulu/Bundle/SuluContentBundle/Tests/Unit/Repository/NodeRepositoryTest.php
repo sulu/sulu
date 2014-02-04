@@ -33,6 +33,7 @@ use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -59,7 +60,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     private $nodeRepository;
     /**
-     * @var SessionFactoryInterface
+     * @var SessionManagerInterface
      */
     private $sessionService;
     /**
@@ -99,14 +100,14 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             'article' => 'Test'
         );
 
-        return $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        return $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
     }
 
     public function testGet()
     {
         $structure = $this->prepareGetTestData();
 
-        $result = $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
+        $result = $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
 
         $this->assertEquals($structure->getProperty('title')->getValue(), $result['title']);
         $this->assertEquals($structure->getProperty('url')->getValue(), $result['url']);
@@ -116,10 +117,10 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $structure = $this->prepareGetTestData();
 
-        $this->nodeRepository->deleteNode($structure->getUuid(), 'default');
+        $this->nodeRepository->deleteNode($structure->getUuid(), 'sulu_io');
 
         $this->setExpectedException('PHPCR\ItemNotFoundException');
-        $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
+        $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
     }
 
     public function testSave()
@@ -131,8 +132,8 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
                 'title' => 'asdf'
             ),
             'overview',
-            'default',
-            'de',
+            'sulu_io',
+            'en',
             $structure->getUuid()
         );
 
@@ -141,10 +142,10 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             'url' => 'http://localhost:8080/server',
             'username' => 'admin',
             'password' => 'admin',
-            'workspace' => 'default'
+            'workspace' => 'test'
         ), array('base' => 'cmf', 'content' => 'contents', 'route' => 'routes'));
 
-        $result = $this->nodeRepository->getNode($structure->getUuid(), 'default', 'en');
+        $result = $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
 
         $this->assertEquals('asdf', $result['title']);
         $this->assertEquals($structure->getProperty('url')->getValue(), $result['url']);
@@ -165,13 +166,13 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
                 'article' => 'Test'
             ),
             'overview',
-            'default',
-            'de',
+            'sulu_io',
+            'en',
             null,
             $structure->getUuid()
         );
 
-        $result = $this->nodeRepository->getNode($node['id'], 'default', 'en');
+        $result = $this->nodeRepository->getNode($node['id'], 'sulu_io', 'en');
 
         $this->assertEquals('asdf', $result['title']);
         $this->assertEquals('/news/test/asdf', $result['url']);
@@ -187,13 +188,13 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
                 'article' => 'Test'
             ),
             'overview',
-            'default',
-            'de',
+            'sulu_io',
+            'en',
             null,
             null
         );
 
-        $result = $this->nodeRepository->getNode($node['id'], 'default', 'en');
+        $result = $this->nodeRepository->getNode($node['id'], 'sulu_io', 'en');
 
         $this->assertEquals('asdf', $result['title']);
         $this->assertEquals('/asdf', $result['url']);
@@ -207,11 +208,11 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->nodeRepository->saveIndexNode(
             $data,
             'overview',
-            'default',
-            'de'
+            'sulu_io',
+            'en'
         );
 
-        $index = $this->nodeRepository->getIndexNode('default', 'de');
+        $index = $this->nodeRepository->getIndexNode('sulu_io', 'en');
 
         $this->assertEquals('Testtitle', $index['title']);
     }
@@ -234,7 +235,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             'url' => 'http://localhost:8080/server',
             'username' => 'admin',
             'password' => 'admin',
-            'workspace' => 'default'
+            'workspace' => 'test'
         ), array('base' => 'cmf', 'content' => 'contents', 'route' => 'routes'));
 
         $this->containerMock = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
@@ -283,13 +284,16 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     private function prepareMapper()
     {
-        $this->mapper = new ContentMapper('/cmf/contents', '/cmf/routes');
+        $this->mapper = new ContentMapper('en', 'sulu_locale');
         $this->mapper->setContainer($this->containerMock);
 
         $this->prepareSession();
         $this->prepareRepository();
 
-        $this->resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionService, '/cmf/routes')), 'not in use');
+        $this->resourceLocator = new ResourceLocator(
+            new TreeStrategy(
+                new PhpcrMapper($this->sessionService, '/cmf/sulu_io/routes')
+            ), 'not in use');
     }
 
     private function prepareSession()
@@ -298,7 +302,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $factory = new RepositoryFactoryJackrabbit();
         $repository = $factory->getRepository($parameters);
         $credentials = new SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'default');
+        $this->session = $repository->login($credentials, 'test');
     }
 
     public function prepareRepository()
@@ -320,10 +324,12 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $cmf = $this->session->getRootNode()->addNode('cmf');
         $cmf->addMixin('mix:referenceable');
 
-        $routes = $cmf->addNode('routes');
+        $webspace = $cmf->addNode('sulu_io');
+
+        $routes = $webspace->addNode('routes');
         $routes->addMixin('mix:referenceable');
 
-        $contents = $cmf->addNode('contents');
+        $contents = $webspace->addNode('contents');
         $contents->addMixin('sulu:content');
         $contents->setProperty('sulu:creator', 1);
         $contents->setProperty('sulu:created', new \DateTime());
@@ -343,7 +349,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             '',
             false
         );
-        $this->currentUserData=$this->getMock(
+        $this->currentUserData = $this->getMock(
             '\Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface'
         );
 
@@ -357,7 +363,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             ->method('getFullNameByUserId')
             ->will($this->returnValue('Max Mustermann'));
         $this->userService
-        ->expects($this->any())
+            ->expects($this->any())
             ->method('getCurrentUserData')
             ->will($this->returnValue($this->currentUserData));
     }
