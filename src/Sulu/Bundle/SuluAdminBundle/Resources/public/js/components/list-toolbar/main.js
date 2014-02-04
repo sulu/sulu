@@ -89,6 +89,21 @@ define([], function() {
                         ]
                     }
                 ];
+            },
+            defaultEditableList: function() {
+                var defaults = templates.default.call(this);
+                defaults.splice(1, 0, {
+                    icon: 'floppy-saved',
+                    iconSize: 'large',
+                    group: '1',
+                    disabled: true,
+                    id: 'save',
+                    title: this.sandbox.translate('sulu.list-toolbar.save'),
+                    callback: function() {
+                        this.sandbox.emit('sulu.list-toolbar.save');
+                    }.bind(this)
+                });
+                return defaults;
             }
         },
         listener = {
@@ -98,6 +113,14 @@ define([], function() {
                 this.sandbox.on('husky.datagrid.number.selections', function(number) {
                     postfix = number > 0 ? 'enable' : 'disable';
                     this.sandbox.emit('husky.toolbar.' + instanceName +'item.'+ postfix, 'delete');
+                }.bind(this));
+            },
+            defaultEditableList: function(){
+                var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
+                listener.default.call(this);
+
+                this.sandbox.on('husky.datagrid.data.changed', function() {
+                    this.sandbox.emit('husky.toolbar.' + instanceName +'item.enable', 'save');
                 }.bind(this));
             }
         },
