@@ -95,6 +95,7 @@ class TagControllerTest extends DatabaseTestCase
             )
         );
 
+
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
@@ -405,5 +406,128 @@ class TagControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "3" not found.', $response->message);
+    }
+
+    public function testPatch()
+    {
+        $client = self::createClient();
+        $client->request(
+            'PATCH',
+            '/api/tags',
+            array(
+                array(
+                    'name' => 'tag3'
+                ),
+                array(
+                    'name' => 'tag4'
+                ),
+                array(
+                    'name' => 'tag5'
+                ),
+                array(
+                    'name' => 'tag6'
+                )
+            ),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/tags?flat=true',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(6, $response->total);
+        $this->assertEquals('tag1', $response->_embedded[0]->name);
+        $this->assertEquals('tag2', $response->_embedded[1]->name);
+        $this->assertEquals('tag3', $response->_embedded[2]->name);
+        $this->assertEquals('tag4', $response->_embedded[3]->name);
+        $this->assertEquals('tag5', $response->_embedded[4]->name);
+        $this->assertEquals('tag6', $response->_embedded[5]->name);
+
+    }
+
+    public function testPatchExistingAsNew()
+    {
+        $client = self::createClient();
+        $client->request(
+            'PATCH',
+            '/api/tags',
+            array(
+                array(
+                    'name' => 'tag1'
+                ),
+                array(
+                    'name' => 'tag2'
+                )
+            ),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+
+    }
+
+    public function testPatchExistingChange()
+    {
+        $client = self::createClient();
+        $client->request(
+            'PATCH',
+            '/api/tags',
+            array(
+                array(
+                    'id' => 1,
+                    'name' => 'tag11'
+                ),
+                array(
+                    'id' => 2,
+                    'name' => 'tag22'
+                )
+            ),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/tags?flat=true',
+            array(),
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test'
+            )
+        );
+
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals('tag11', $response->_embedded[0]->name);
+        $this->assertEquals('tag22', $response->_embedded[1]->name);
+
     }
 }
