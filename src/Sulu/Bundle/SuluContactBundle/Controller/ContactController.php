@@ -37,10 +37,11 @@ class ContactController extends RestController implements ClassResourceInterface
 
     protected $unsortable = array();
 
+    protected $fieldsDefault = array('lastName');
     protected $fieldsExcluded = array();
-    protected $fieldsHidden = array('middleName','created');
+    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday');
     protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0=>'id',1=>'title');
+    protected $fieldsSortOrder = array(0 => 'id', 1 => 'title');
     protected $fieldsTranslationKeys = array();
     protected $bundlePrefix = 'contact.contacts.';
 
@@ -50,7 +51,8 @@ class ContactController extends RestController implements ClassResourceInterface
      * @Get("contacts/fields")
      * @return mixed
      */
-    public function getFieldsAction() {
+    public function getFieldsAction()
+    {
         return $this->responseFields();
     }
 
@@ -58,7 +60,8 @@ class ContactController extends RestController implements ClassResourceInterface
      * persists a setting
      * @Put("contacts/fields")
      */
-    public function putFieldsAction() {
+    public function putFieldsAction()
+    {
         return $this->responsePersistSettings();
     }
 
@@ -69,7 +72,7 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        if ($this->getRequest()->get('flat')=='true') {
+        if ($this->getRequest()->get('flat') == 'true') {
             // flat structure
             $view = $this->responseList();
         } else {
