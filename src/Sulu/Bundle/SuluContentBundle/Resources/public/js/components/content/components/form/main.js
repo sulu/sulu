@@ -7,13 +7,18 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
     return {
 
         view: true,
+
+        // if ws != null then use it
+        ws: null,
+        wsUrl: '',
+        wsPort: '',
 
         templates: ['/admin/content/template/form/overview'],
 
@@ -28,13 +33,13 @@ define([], function() {
         },
 
         render: function() {
+            this.bindCustomEvents();
+            
             this.html(this.renderTemplate('/admin/content/template/form/overview'));
-
             var data = this.initData();
             this.createForm(data);
 
             this.bindDomEvents();
-            this.bindCustomEvents();
         },
 
         createForm: function(data) {
@@ -79,15 +84,21 @@ define([], function() {
                 this.setHeaderBar(true);
             }, this);
 
-            // content saved
+            // content save
             this.sandbox.on('sulu.edit-toolbar.save', function() {
+                this.submit();
+            }, this);
+            this.sandbox.on('sulu.preview.save', function() {
                 this.submit();
             }, this);
 
             // content delete
+            this.sandbox.on('sulu.preview.delete', function() {
+                this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
+            }, this);
             this.sandbox.on('sulu.edit-toolbar.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
-            }.bind(this));
+            }, this);
 
             // back to list
             this.sandbox.on('sulu.edit-toolbar.back', function() {
@@ -96,6 +107,16 @@ define([], function() {
 
             this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
                 this.openPreviewWindow();
+            }, this);
+
+            this.sandbox.on('sulu.edit-toolbar.preview.split-screen', function() {
+                this.openSplitScreen();
+            }, this);
+
+            // set preview params
+            this.sandbox.on('sulu.preview.set-params', function(url, port) {
+                this.wsUrl = url;
+                this.wsPort = port;
             }, this);
         },
 
@@ -120,6 +141,7 @@ define([], function() {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
                 this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
         },
@@ -142,20 +164,37 @@ define([], function() {
             window.open('/admin/content/preview/' + this.options.data.id);
         },
 
+        openSplitScreen: function() {
+            window.open('/admin/content/split-screen/' + this.options.data.id);
+        },
+
+        /**
+         * returns true if there is a websocket
+         * @returns {boolean}
+         */
+        wsDetection: function() {
+            var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
+            // no support
+            if (support === null) {
+                this.sandbox.logger.log("Your browser doesn't support Websockets.");
+                return false;
+            }
+            // let's invite Firefox to the party.
+            if (window.MozWebSocket) {
+                window.WebSocket = window.MozWebSocket;
+            }
+            // support exists
+            return true;
+        },
+
         initPreview: function() {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id,
-                data = this.sandbox.form.getData(this.formId);
+            if (this.wsDetection()) {
+                this.initWs();
+            } else {
+                this.initAjax();
+            }
 
-            this.sandbox.util.ajax({
-                url: updateUrl,
-                type: 'POST',
-
-                data: {
-                    changes: data
-                }
-            });
-
-            this.sandbox.dom.on(this.formId, 'focusout', function(e) {
+            this.sandbox.dom.on(this.formId, 'keyup', function(e) {
                 var $element = $(e.currentTarget);
                 while (!$element.data('element')) {
                     $element = $element.parent();
@@ -170,11 +209,59 @@ define([], function() {
             }.bind(this));
         },
 
+        initAjax: function() {
+            var data = this.sandbox.form.getData(this.formId);
+
+            this.updateAjax(data);
+        },
+
+        initWs: function() {
+            // FIXME parameter?
+            var url = this.wsUrl + ':' + this.wsPort;
+            this.sandbox.logger.log('Connect to url: ' + url);
+            this.ws = new WebSocket(url);
+            this.ws.onopen = function() {
+                this.sandbox.logger.log('Connection established!');
+
+                // send start command
+                var message = {
+                    command: 'start',
+                    content: this.options.data.id,
+                    type: 'form',
+                    user: AppConfig.getUser().id,
+                    params: {}
+                };
+                this.ws.send(JSON.stringify(message));
+            }.bind(this);
+
+            this.ws.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+
+                this.sandbox.logger.log('Message:', data);
+            }.bind(this);
+
+            this.ws.onerror = function(e) {
+                this.sandbox.logger.warn(e);
+
+                // no connection can be opened use fallback
+                this.ws = null;
+                this.initAjax();
+            }.bind(this);
+        },
+
         updatePreview: function(property, value) {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id,
-                changes = {};
+            var changes = {};
             changes[property] = value;
 
+            if (this.ws !== null) {
+                this.updateWs(changes);
+            } else {
+                this.updateAjax(changes);
+            }
+        },
+
+        updateAjax: function(changes) {
+            var updateUrl = '/admin/content/preview/' + this.options.data.id;
 
             this.sandbox.util.ajax({
                 url: updateUrl,
@@ -184,6 +271,17 @@ define([], function() {
                     changes: changes
                 }
             });
+        },
+
+        updateWs: function(changes) {
+            var message = {
+                command: 'update',
+                content: this.options.data.id,
+                type: 'form',
+                user: AppConfig.getUser().id,
+                params: {changes: changes}
+            };
+            this.ws.send(JSON.stringify(message));
         }
 
     };

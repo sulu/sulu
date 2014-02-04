@@ -1,70 +1,159 @@
 <script type="text/javascript">
-    var interval = {{ interval }},
-            url = '{{ url }}',
-            http,
-            init = function(type, url, callback) {
-                var http;
-                if (window.XMLHttpRequest) {
-                    http = new XMLHttpRequest();
-                } else if (window.ActiveXObject) {
-                    http = new ActiveXObject("Microsoft.XMLHTTP");
+    var init = function() {
+                if (ws.supported()) {
+                    ws.init();
                 } else {
-                    return false;
-                }
-
-                http.open(type, url, true);
-                http.onreadystatechange = callback;
-
-                return http;
-            },
-            startRequest = function() {
-                if (!!http) {
-                    // if not: callback will be called multiple
-                    http.onreadystatechange = null;
-                }
-                // init httpRequest object
-                http = init('GET', url, handleResponse);
-                if (!!http) {
-                    // send request
-                    http.send(null);
-                } else {
-                    throw 'browser not supported';
+                    ajax.init();
                 }
             },
-            handleResponse = function() {
-                // if OK 200
-                if (http.readyState == 4) {
-                    var result = JSON.parse(http.responseText),
-                            content,
-                            elements,
-                            nodeArray,
-                            i;
+            ws = {
+                conn: null,
+                opened: false,
 
-                    // foreach property which was changed
-                    for (var propertyName in result) {
-                        if (result.hasOwnProperty(propertyName)) {
-                            content = result[propertyName].content;
+                url: '{{ wsUrl }}',
+                port: '{{ wsPort }}',
 
-                            // find rdfa node
-                            elements = document.querySelectorAll('*[property="' + propertyName + '"]');
-                            i = 0;
+                supported: function() {
+                    var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
+                    // no support
+                    if (support === null) {
+                        console.log("Your browser doesn't support Websockets.");
+                        return false;
+                    }
+                    // let's invite Firefox to the party.
+                    if (window.MozWebSocket) {
+                        window.WebSocket = window.MozWebSocket;
+                    }
+                    // support exists
+                    return true;
+                },
 
-                            // foreach node
-                            nodeArray = [].slice.call(elements);
-                            nodeArray.forEach(function(element) {
-                                // set content and highlight class
-                                element.innerHTML = content[i];
-                                i++;
-                            });
+                init: function() {
+                    // create websocket
+                    this.conn = new WebSocket(this.url + ':' + this.port);
+
+                    // on open
+                    this.conn.onopen = function(e) {
+                        console.log("Connection established!");
+                        this.opened = true;
+
+                        var message = {
+                            command: 'start',
+                            content: '{{ contenUuid }}',
+                            type: 'preview',
+                            user: {{ userId }},
+                            params: {}
+                        };
+                        this.conn.send(JSON.stringify(message));
+                    }.bind(this);
+
+                    // on message
+                    this.conn.onmessage = function(e) {
+                        var data = JSON.parse(e.data);
+                        console.log(data);
+                        if (data.command === 'changes') {
+                            handleChanges(data.params.changes);
                         }
+                    }.bind(this);
+
+                    this.conn.onclose = function(e) {
+                        if (!!this.opened) {
+                            window.close();
+                        }
+                    }.bind(this);
+
+                    this.conn.onerror = function(e) {
+                        console.warn(e);
+
+                        if (!this.opened) {
+                            // no connection can be opened use fallback
+                            ajax.init();
+                        }
+                    }.bind(this);
+                }
+            },
+            ajax = {
+                http: null,
+
+                // config
+                interval: {{ interval }},
+                url: '{{ ajaxUrl }}',
+
+                init: function() {
+                    setTimeout(this.request.bind(this), this.interval);
+                },
+
+                getHttp: function(type, url, callback) {
+                    var http;
+                    if (window.XMLHttpRequest) {
+                        http = new XMLHttpRequest();
+                    } else if (window.ActiveXObject) {
+                        http = new ActiveXObject("Microsoft.XMLHTTP");
+                    } else {
+                        console.log('no ajax supported');
+                        return false;
+                    }
+
+                    http.open(type, url, true);
+                    http.onreadystatechange = callback.bind(this);
+
+                    return http;
+                },
+
+                request: function() {
+                    if (!!this.http) {
+                        // if not: callback will be called multiple
+                        this.http.onreadystatechange = null;
+                    }
+                    // init httpRequest object
+                    this.http = this.getHttp('GET', this.url, this.response);
+                    if (!!this.http) {
+                        // send request
+                        this.http.send(null);
+                    } else {
+                        throw 'browser not supported';
+                    }
+                },
+
+                response: function() {
+                    // if OK 200
+                    if (this.http.readyState == 4) {
+                        var result = JSON.parse(this.http.responseText);
+
+                        handleChanges(result);
+                    }
+
+                    // start next request in a interval
+                    setTimeout(this.request.bind(this), this.interval);
+                }
+            },
+            handleChanges = function(changes) {
+                var content,
+                    elements,
+                    nodeArray,
+                    i;
+
+                // foreach property which was changed
+                for (var propertyName in changes) {
+                    if (changes.hasOwnProperty(propertyName)) {
+                        content = changes[propertyName].content;
+
+                        // find rdfa node
+                        elements = document.querySelectorAll('*[property="' + propertyName + '"]');
+                        i = 0;
+
+                        // foreach node
+                        nodeArray = [].slice.call(elements);
+                        nodeArray.forEach(function(element) {
+                            // set content and highlight class
+                            element.innerHTML = content[i];
+                            i++;
+                        });
                     }
                 }
-
-                // start next request in a interval
-                setTimeout(startRequest, interval);
             };
 
-    // start first request in a interval
-    setTimeout(startRequest, interval);
-
+    (function() {
+        init();
+    })();
 </script>
