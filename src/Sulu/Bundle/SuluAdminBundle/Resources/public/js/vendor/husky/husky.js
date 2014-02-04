@@ -16405,7 +16405,7 @@ define('form/util',[], function() {
         isValueField: function(el) {
             var $el = $(el);
 
-            return $el.is('input', 'select', 'textarea', 'option', 'button');
+            return $el.is('input, select, textarea, option, button');
         },
 
         /**
