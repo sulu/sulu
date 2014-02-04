@@ -56,10 +56,11 @@ define([], function() {
                         name: 'auto-complete@husky',
                         options: {
                             el: '#company',
-                            url: '/admin/api/accounts?searchFields=id,name',
+                            remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
+                            getParameter: 'search',
                             value: !!data.parent ? data.parent : null,
-                            excludeItems: excludeItem,
-                            instanceName: 'companyInput'
+                            instanceName: 'companyInput',
+                            valueName: 'name'
                         }
                     }
                 ]);
@@ -207,7 +208,7 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.parent = {
-                        id: this.sandbox.dom.data('#company .name-value', 'id')
+                        id: this.sandbox.dom.data('#companyInput', 'id')
                     };
 
                     this.sandbox.logger.log('data', data);
