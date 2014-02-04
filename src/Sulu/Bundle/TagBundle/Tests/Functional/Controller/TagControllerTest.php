@@ -46,7 +46,6 @@ class TagControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
         );
 
         self::$tool->dropSchema(self::$entities);
