@@ -11,7 +11,7 @@ define(function() {
 
     'use strict';
 
-    var bindCustomEvents = function() {
+    var bindCustomEvents = function(instanceNameToolbar) {
 
         // add clicked
         this.sandbox.on('sulu.list-toolbar.add', function(){
@@ -20,6 +20,7 @@ define(function() {
 
         // save clicked
         this.sandbox.on('sulu.list-toolbar.save', function(){
+            this.sandbox.emit('husky.toolbar.'+instanceNameToolbar+'.item.disable', 'save');
             this.sandbox.emit('husky.datagrid.data.save');
         }.bind(this));
 
@@ -35,12 +36,13 @@ define(function() {
     return {
 
         view: true,
+        instanceNameToolbar: 'saveToolbar',
 
         templates: ['/admin/tag/template/tag/list'],
 
         initialize: function() {
             this.render();
-            bindCustomEvents.call(this);
+            bindCustomEvents.call(this, this.instanceNameToolbar);
         },
 
         render: function() {
@@ -52,12 +54,13 @@ define(function() {
                     el: '#list-toolbar-container',
                     template: 'defaultEditableList',
                     listener: 'defaultEditableList',
-                    instanceName: 'saveToolbar'
+                    instanceName: this.instanceNameToolbar
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
                     editable: true,
+                    validation: true,
                     paginationOptions: {
                         pageSize: 4
                     },
