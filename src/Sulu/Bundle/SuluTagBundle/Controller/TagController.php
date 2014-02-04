@@ -18,6 +18,9 @@ use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Route;
 
 /**
  * Makes tag available through
@@ -28,6 +31,58 @@ class TagController extends RestController implements ClassResourceInterface
     protected $entityName = 'SuluTagBundle:Tag';
 
     protected $unsortable = array();
+
+    protected $fieldsDefault = array(
+        'name'
+    );
+
+    protected $fieldsEditable = array(
+        'name'
+    );
+
+    protected $fieldsExcluded = array();
+
+    protected $fieldsHidden = array(
+        'created',
+        'id',
+        'creator_contact_lastName',
+        'changed'
+    );
+    protected $fieldsRelations = array(
+        'creator_contact_lastName'
+    );
+    protected $fieldsSortOrder = array(
+        '0' => 'name',
+        '1' => 'creator_contact_lastName',
+        '2' => 'changed'
+    );
+
+    protected $fieldsTranslationKeys = array(
+        'name' => 'tags.name',
+        'creator_contact_lastName' => 'tags.author'
+    );
+
+    protected $bundlePrefix = 'tags.';
+
+    /**
+     * returns all fields that can be used by list
+     * @Get("tags/fields")
+     * @return mixed
+     */
+    public function getFieldsAction()
+    {
+        return $this->responseFields();
+    }
+
+    /**
+     * persists a setting
+     * @Put("tags/fields")
+     */
+    public function putFieldsAction()
+    {
+        return $this->responsePersistSettings();
+    }
+
 
     /**
      * Returns a single tag with the given id
@@ -57,6 +112,7 @@ class TagController extends RestController implements ClassResourceInterface
             $view = $this->responseList();
         } else {
             $tags = $this->get('sulu_tag.tag_manager')->findAll();
+
             $view = $this->view($this->createHalResponse($tags), 200);
         }
 
@@ -165,4 +221,40 @@ class TagController extends RestController implements ClassResourceInterface
 
         return $this->handleView($view);
     }
-} 
+
+    /**
+     * TODO: find out why pluralization does not work for this patch action
+     * ISSUE: https://github.com/sulu-cmf/SuluTagBundle/issues/6
+     * @Route("/tags", name="tags")
+     * updates an array of tags
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction()
+    {
+
+        try {
+
+            /** @var Request $request */
+            $request = $this->getRequest();
+            $i = 0;
+            while ($item = $request->get($i)) {
+                if (isset($item['id'])) {
+                    $this->get('sulu_tag.tag_manager')->save($item, $item['id']);
+                } else {
+                    $this->get('sulu_tag.tag_manager')->save($item, null);
+                }
+                $i++;
+            }
+            $this->getDoctrine()->getManager()->flush();
+            $view = $this->view(null, 204);
+
+        } catch (TagAlreadyExistsException $exc) {
+            $tagAlreadyExists = new RestException($this->entityName . ' ' . $exc->getName());
+            $view = $this->view($tagAlreadyExists->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+
+}
