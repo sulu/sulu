@@ -16,12 +16,12 @@ body {
 /*----------------------------------------*/
 #content {
 
-    max-width: $contentMaxWidth + $contentPaddingLeft + $contentPaddingRight;
-    min-width: $contenMinWidth + $contentPaddingLeft + $contentPaddingRight;
-    padding-left: $contentPaddingLeft;
+    max-width: $contentMaxWidth;
+    min-width: $contenMinWidth;
+    margin-left: $contentPaddingLeft;
     padding-top: $contentPaddingTop;
-    padding-right: $contentPaddingRight;
-    @include single-transition(padding,  $transitionDuration);
+    margin-right: $contentPaddingRight;
+    @include single-transition(margin,  $transitionDuration);
 
     h2.mainheadline {
         margin-top: 35px;
@@ -39,12 +39,12 @@ body {
 
 // tabs content
 #edit-toolbar-container {
-    @include single-transition(padding,  $transitionDuration);
+    @include single-transition(margin,  $transitionDuration);
     z-index: 99;
     position: fixed;
     top: 0;
     left: 0;
-    padding-left: $contentPaddingLeft;
+    margin-left: $contentPaddingLeft;
     width: 100%;
     background-color: $backgroundColor;
     padding-top: $contentPaddingTop;
