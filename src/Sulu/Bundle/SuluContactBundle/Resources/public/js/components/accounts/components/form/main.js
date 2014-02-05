@@ -50,7 +50,7 @@ define([], function() {
                 if (!!this.options.data.id) {
                     excludeItem.push({id: this.options.data.id});
                 }
-
+                console.log(data);
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
@@ -60,7 +60,9 @@ define([], function() {
                             getParameter: 'search',
                             value: !!data.parent ? data.parent : null,
                             instanceName: 'companyInput',
-                            valueName: 'name'
+                            valueName: 'name',
+                            noNewValues: true,
+                            excludes: [{id: data.id, name: data.name}]
                         }
                     }
                 ]);
