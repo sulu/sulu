@@ -46,7 +46,7 @@ define([], function() {
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
                 var data = this.initData();
-                console.log(data.account);
+
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
@@ -56,7 +56,9 @@ define([], function() {
                             getParameter: 'search',
                             value: data.account,
                             instanceName:'companyInput',
-                            valueName: 'name'
+                            valueName: 'name',
+                            noNewValues: true,
+                            excludes: [{id: data.id, name: data.name}]
                         }
                     }
                 ]);
