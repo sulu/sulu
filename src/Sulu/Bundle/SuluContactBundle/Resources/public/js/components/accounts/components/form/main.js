@@ -50,7 +50,7 @@ define([], function() {
                 if (!!this.options.data.id) {
                     excludeItem.push({id: this.options.data.id});
                 }
-                console.log(data);
+
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
