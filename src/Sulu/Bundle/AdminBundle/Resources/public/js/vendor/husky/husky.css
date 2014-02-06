@@ -488,6 +488,18 @@ table {
   }
 }
 
+/* line 20, ../scss/animations.scss */
+.highlight-animation {
+  -webkit-animation: HIGHLIGHT-ANIMATION 1500ms;
+  /* Safari 4+ */
+  -moz-animation: HIGHLIGHT-ANIMATION 1500ms;
+  /* Fx 5+ */
+  -o-animation: HIGHLIGHT-ANIMATION 1500ms;
+  /* Opera 12+ */
+  animation: HIGHLIGHT-ANIMATION 1500ms;
+  /* IE 10+ */
+}
+
 /* line 7, ../scss/utilities.scss */
 .pull-right {
   float: right !important;
@@ -781,6 +793,74 @@ h5 {
 /* line 66, ../scss/typo.scss */
 .small-font {
   font-size: 12px;
+}
+
+/* line 4, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu, .husky-top-toolbar .top-toolbar-dropdown-menu {
+  background-color: white;
+  border: 1px solid #cccccc;
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  min-width: 160px;
+  list-style: none;
+  padding: 5px 0;
+  margin-top: -7px;
+  margin-left: 0px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
+}
+/* line 23, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu.right-aligned, .husky-top-toolbar .right-aligned.top-toolbar-dropdown-menu {
+  left: auto;
+  right: 0;
+}
+/* line 28, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li, .husky-top-toolbar .top-toolbar-dropdown-menu li {
+  display: list-item;
+  float: none;
+  height: 30px;
+  line-height: 30px;
+  white-space: nowrap;
+}
+/* line 36, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li.is-selected, .husky-top-toolbar .top-toolbar-dropdown-menu li.is-selected, .custom-dropdown-menu li:hover, .husky-top-toolbar .top-toolbar-dropdown-menu li:hover, .custom-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected, .column-navigation-wrapper .column-navigation .column ul .custom-dropdown-menu li.selected, .husky-top-toolbar .top-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected, .column-navigation-wrapper .column-navigation .column ul .husky-top-toolbar .top-toolbar-dropdown-menu li.selected {
+  background-color: #249fbe;
+  cursor: pointer;
+}
+/* line 39, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li.is-selected a, .husky-top-toolbar .top-toolbar-dropdown-menu li.is-selected a, .custom-dropdown-menu li:hover a, .husky-top-toolbar .top-toolbar-dropdown-menu li:hover a, .custom-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected a, .column-navigation-wrapper .column-navigation .column ul .custom-dropdown-menu li.selected a, .husky-top-toolbar .top-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected a, .column-navigation-wrapper .column-navigation .column ul .husky-top-toolbar .top-toolbar-dropdown-menu li.selected a {
+  color: white;
+}
+/* line 45, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li.disabled:hover, .husky-top-toolbar .top-toolbar-dropdown-menu li.disabled:hover, .custom-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.disabled.selected, .column-navigation-wrapper .column-navigation .column ul .custom-dropdown-menu li.disabled.selected, .husky-top-toolbar .top-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.disabled.selected, .column-navigation-wrapper .column-navigation .column ul .husky-top-toolbar .top-toolbar-dropdown-menu li.disabled.selected, .custom-dropdown-menu li.disabled, .husky-top-toolbar .top-toolbar-dropdown-menu li.disabled {
+  cursor: default;
+  background-color: inherit;
+}
+/* line 48, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li.disabled:hover a, .husky-top-toolbar .top-toolbar-dropdown-menu li.disabled:hover a, .custom-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.disabled.selected a, .column-navigation-wrapper .column-navigation .column ul .custom-dropdown-menu li.disabled.selected a, .husky-top-toolbar .top-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.disabled.selected a, .column-navigation-wrapper .column-navigation .column ul .husky-top-toolbar .top-toolbar-dropdown-menu li.disabled.selected a, .custom-dropdown-menu li.disabled a, .husky-top-toolbar .top-toolbar-dropdown-menu li.disabled a {
+  cursor: default;
+  color: #999999;
+}
+/* line 54, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li:active, .husky-top-toolbar .top-toolbar-dropdown-menu li:active {
+  background-color: #28b1d3;
+}
+/* line 58, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li.divider, .husky-top-toolbar .top-toolbar-dropdown-menu li.divider {
+  height: 1px;
+  margin: 5px 0;
+  overflow: hidden;
+  background-color: #dddddd;
+}
+/* line 65, ../scss/dropdown-menu.scss */
+.custom-dropdown-menu li a, .husky-top-toolbar .top-toolbar-dropdown-menu li a {
+  clear: both;
+  text-align: left;
 }
 
 @font-face {
@@ -2937,236 +3017,252 @@ h5 {
 }
 
 /* line 14, ../scss/modules/icons.scss */
+.icon-tag::after {
+  content: "\E066";
+  display: inline-block;
+}
+
+/* line 21, ../scss/modules/icons.scss */
 .icon-remove::after, .auto-complete-list-selection .tm-tag-remove::after {
   content: "\E208";
   display: inline-block;
 }
 
-/* line 21, ../scss/modules/icons.scss */
+/* line 28, ../scss/modules/icons.scss */
 .icon-add::after {
   content: "\E191";
   display: inline-block;
 }
 
-/* line 28, ../scss/modules/icons.scss */
+/* line 35, ../scss/modules/icons.scss */
 .icon-down::after {
   content: "\e159";
   display: inline-block;
 }
 
-/* line 35, ../scss/modules/icons.scss */
+/* line 42, ../scss/modules/icons.scss */
 .icon-search::after, .search-container .search-icon::after {
   content: "\e028";
   display: inline-block;
 }
 
-/* line 42, ../scss/modules/icons.scss */
+/* line 49, ../scss/modules/icons.scss */
 .icon-circle-remove::after {
   content: "\e193";
   display: inline-block;
 }
 
-/* line 49, ../scss/modules/icons.scss */
+/* line 56, ../scss/modules/icons.scss */
 .icon-circle-arrow-down::after {
   content: "\e220";
   display: inline-block;
 }
 
-/* line 56, ../scss/modules/icons.scss */
+/* line 63, ../scss/modules/icons.scss */
 .icon-circle-ok::after {
   content: "\e199";
   display: inline-block;
 }
 
-/* line 63, ../scss/modules/icons.scss */
+/* line 70, ../scss/modules/icons.scss */
 .icon-circle-plus::after {
   content: "\e191";
   display: inline-block;
 }
 
-/* line 70, ../scss/modules/icons.scss */
+/* line 77, ../scss/modules/icons.scss */
 .icon-edit::after {
   content: "\e151";
   display: inline-block;
 }
 
-/* line 77, ../scss/modules/icons.scss */
+/* line 84, ../scss/modules/icons.scss */
 .icon-edit-pen::after {
   content: "\270f";
   display: inline-block;
 }
 
-/* line 84, ../scss/modules/icons.scss */
+/* line 91, ../scss/modules/icons.scss */
 .icon-settings::after {
   content: "\e281";
   display: inline-block;
 }
 
-/* line 91, ../scss/modules/icons.scss */
+/* line 98, ../scss/modules/icons.scss */
 .icon-cogwheel::after {
   content: "\e137";
   display: inline-block;
 }
 
-/* line 98, ../scss/modules/icons.scss */
+/* line 105, ../scss/modules/icons.scss */
 .icon-cogwheels::after {
   content: "\e138";
   display: inline-block;
 }
 
-/* line 105, ../scss/modules/icons.scss */
+/* line 112, ../scss/modules/icons.scss */
 .icon-caution::after {
   content: "\e197";
   display: inline-block;
 }
 
-/* line 112, ../scss/modules/icons.scss */
+/* line 119, ../scss/modules/icons.scss */
 .icon-contact-book::after {
   content: "\e089";
   display: inline-block;
 }
 
-/* line 119, ../scss/modules/icons.scss */
+/* line 126, ../scss/modules/icons.scss */
 .icon-parents::after {
   content: "\e025";
   display: inline-block;
 }
 
-/* line 125, ../scss/modules/icons.scss */
+/* line 132, ../scss/modules/icons.scss */
 .icon-keys {
   cursor: pointer;
 }
-/* line 127, ../scss/modules/icons.scss */
+/* line 134, ../scss/modules/icons.scss */
 .icon-keys::after {
   content: "\e045";
   display: inline-block;
 }
 
-/* line 134, ../scss/modules/icons.scss */
+/* line 140, ../scss/modules/icons.scss */
+.icon-floppy-save {
+  cursor: pointer;
+}
+/* line 142, ../scss/modules/icons.scss */
+.icon-floppy-save::after {
+  content: "\e447";
+  display: inline-block;
+}
+
+/* line 149, ../scss/modules/icons.scss */
 .icon-building::after {
   content: "\e090";
   display: inline-block;
 }
 
-/* line 141, ../scss/modules/icons.scss */
+/* line 156, ../scss/modules/icons.scss */
 .icon-bank::after {
   content: "\e264";
   display: inline-block;
 }
 
-/* line 148, ../scss/modules/icons.scss */
+/* line 163, ../scss/modules/icons.scss */
 .icon-book::after {
   content: "\e072";
   display: inline-block;
 }
 
-/* line 155, ../scss/modules/icons.scss */
+/* line 170, ../scss/modules/icons.scss */
 .icon-book-open::after {
   content: "\e352";
   display: inline-block;
 }
 
-/* line 162, ../scss/modules/icons.scss */
+/* line 177, ../scss/modules/icons.scss */
 .icon-view::after {
   content: "\e052";
   display: inline-block;
 }
 
-/* line 169, ../scss/modules/icons.scss */
+/* line 184, ../scss/modules/icons.scss */
 .icon-delete::after {
   content: "\e017";
   display: inline-block;
 }
 
-/* line 176, ../scss/modules/icons.scss */
+/* line 191, ../scss/modules/icons.scss */
 .icon-live::after {
   content: "\e033";
   display: inline-block;
 }
 
-/* line 183, ../scss/modules/icons.scss */
+/* line 198, ../scss/modules/icons.scss */
 .icon-security::after {
   content: "\e205";
   display: inline-block;
 }
 
-/* line 190, ../scss/modules/icons.scss */
+/* line 205, ../scss/modules/icons.scss */
 .icon-chevron-right::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e080";
   display: inline-block;
 }
 
-/* line 198, ../scss/modules/icons.scss */
+/* line 213, ../scss/modules/icons.scss */
 .icon-chevron-left::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e079";
   display: inline-block;
 }
 
-/* line 206, ../scss/modules/icons.scss */
+/* line 221, ../scss/modules/icons.scss */
 .icon-chevron-down::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e114";
   display: inline-block;
 }
 
-/* line 214, ../scss/modules/icons.scss */
+/* line 229, ../scss/modules/icons.scss */
 .icon-chevron-up::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e113";
   display: inline-block;
 }
 
-/* line 222, ../scss/modules/icons.scss */
+/* line 237, ../scss/modules/icons.scss */
 .icon-archive::after {
   content: "\e150";
   display: inline-block;
 }
 
-/* line 229, ../scss/modules/icons.scss */
+/* line 244, ../scss/modules/icons.scss */
 .icon-check::after {
   content: "\e153";
   display: inline-block;
 }
 
-/* line 236, ../scss/modules/icons.scss */
+/* line 251, ../scss/modules/icons.scss */
 .icon-adjust-alt::after {
   content: "\e140";
   display: inline-block;
 }
 
-/* line 243, ../scss/modules/icons.scss */
+/* line 258, ../scss/modules/icons.scss */
 .icon-list::after {
   content: "\e115";
   display: inline-block;
 }
 
-/* line 250, ../scss/modules/icons.scss */
+/* line 265, ../scss/modules/icons.scss */
 .icon-items::after {
   content: "\e319";
   display: inline-block;
 }
 
-/* line 257, ../scss/modules/icons.scss */
+/* line 272, ../scss/modules/icons.scss */
 .icon-star::after {
   content: "\e050";
   display: inline-block;
 }
 
-/* line 264, ../scss/modules/icons.scss */
+/* line 279, ../scss/modules/icons.scss */
 .icon-globe::after {
   content: "\e341";
   display: inline-block;
 }
 
-/* line 271, ../scss/modules/icons.scss */
+/* line 286, ../scss/modules/icons.scss */
 .icon-dashboard::after {
   content: "\e332";
   display: inline-block;
 }
 
-/* line 278, ../scss/modules/icons.scss */
+/* line 293, ../scss/modules/icons.scss */
 .icon-arrow-down::after {
   content: "\e224";
   display: inline-block;
@@ -3177,7 +3273,7 @@ h5 {
   transform: rotate(90deg);
 }
 
-/* line 291, ../scss/modules/icons.scss */
+/* line 306, ../scss/modules/icons.scss */
 .icon-arrow-up::after {
   content: "\e225";
   display: inline-block;
@@ -3188,118 +3284,146 @@ h5 {
   transform: rotate(90deg);
 }
 
-/* line 304, ../scss/modules/icons.scss */
+/* line 319, ../scss/modules/icons.scss */
 .icon-arrow::after {
   content: "\e223";
   display: inline-block;
 }
 
-/* line 311, ../scss/modules/icons.scss */
+/* line 326, ../scss/modules/icons.scss */
 .icon-internal-link::after {
   content: "\e051";
   display: inline-block;
 }
 
-/* line 318, ../scss/modules/icons.scss */
+/* line 333, ../scss/modules/icons.scss */
 .icon-external-link::after {
   content: "\e242";
   display: inline-block;
 }
 
-/* line 325, ../scss/modules/icons.scss */
+/* line 340, ../scss/modules/icons.scss */
 .icon-shadow-node::after {
   content: "\e223";
   display: inline-block;
 }
 
-/* line 332, ../scss/modules/icons.scss */
+/* line 347, ../scss/modules/icons.scss */
 .icon-user-add::after {
   content: "\e007";
   display: inline-block;
 }
 
-/* line 339, ../scss/modules/icons.scss */
+/* line 354, ../scss/modules/icons.scss */
 .icon-bin::after {
   content: "\e017";
   display: inline-block;
 }
 
-/* line 346, ../scss/modules/icons.scss */
+/* line 361, ../scss/modules/icons.scss */
 .icon-retweet::after {
   content: "\e081";
   display: inline-block;
 }
 
-/* line 353, ../scss/modules/icons.scss */
+/* line 368, ../scss/modules/icons.scss */
 .icon-file-import::after {
   content: "\e359";
   display: inline-block;
 }
 
-/* line 360, ../scss/modules/icons.scss */
+/* line 375, ../scss/modules/icons.scss */
 .icon-file-export::after {
   content: "\e360";
   display: inline-block;
 }
 
-/* line 367, ../scss/modules/icons.scss */
+/* line 382, ../scss/modules/icons.scss */
 .icon-show-thumbnails::after {
   content: "\e157";
   display: inline-block;
 }
 
-/* line 374, ../scss/modules/icons.scss */
+/* line 389, ../scss/modules/icons.scss */
 .icon-eye-open::after {
   content: "\e052";
   display: inline-block;
 }
 
-/* line 381, ../scss/modules/icons.scss */
+/* line 396, ../scss/modules/icons.scss */
 .icon-half-eye-open::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e105";
   display: inline-block;
 }
 
-/* line 389, ../scss/modules/icons.scss */
+/* line 404, ../scss/modules/icons.scss */
 .icon-half-eye-close::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e106";
   display: inline-block;
 }
 
-/* line 397, ../scss/modules/icons.scss */
+/* line 412, ../scss/modules/icons.scss */
 .icon-floppy-save::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e175";
   display: inline-block;
 }
 
-/* line 405, ../scss/modules/icons.scss */
+/* line 420, ../scss/modules/icons.scss */
 .icon-floppy-saved::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e173";
   display: inline-block;
 }
 
-/* line 413, ../scss/modules/icons.scss */
+/* line 428, ../scss/modules/icons.scss */
 .icon-half-ok::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e013";
   display: inline-block;
 }
 
-/* line 421, ../scss/modules/icons.scss */
+/* line 436, ../scss/modules/icons.scss */
 .icon-half-remove::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e014";
   display: inline-block;
 }
 
-/* line 429, ../scss/modules/icons.scss */
+/* line 444, ../scss/modules/icons.scss */
 .icon-remove2::after {
   content: "\e208";
   display: inline-block;
+}
+
+/* line 451, ../scss/modules/icons.scss */
+.icon-publish::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid white;
+  background: #62c400;
+  position: relative;
+  top: 2px;
+  left: 0px;
+}
+
+/* line 466, ../scss/modules/icons.scss */
+.icon-unpublish::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid white;
+  background: #ad0710;
+  position: relative;
+  top: 2px;
+  left: 0px;
 }
 
 /* line 8, ../scss/modules/core.scss */
@@ -3353,9 +3477,9 @@ hr.divider {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 3px 3px 0px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.15) 3px 3px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0.15) 3px 3px 0px 0px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
 }
 /* line 28, ../scss/modules/column-options.scss */
 .column-options-container.right-aligned {
@@ -3662,15 +3786,16 @@ label.large {
 /* line 58, ../scss/modules/form.scss */
 label .form-element {
   margin-top: 5px;
+  border: 1px solid #cccccc;
 }
-/* line 62, ../scss/modules/form.scss */
+/* line 63, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
 }
 
-/* line 71, ../scss/modules/form.scss */
+/* line 72, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 14px;
   height: 14px;
@@ -3678,13 +3803,13 @@ label.inline {
   opacity: 0;
   cursor: pointer;
 }
-/* line 86, ../scss/modules/form.scss */
+/* line 87, ../scss/modules/form.scss */
 .custom-checkbox:checked + .custom-checkbox-icon::after, .custom-checkbox.is-checked + .custom-checkbox-icon::after {
   content: "\e207";
   position: relative;
   top: -3px;
 }
-/* line 94, ../scss/modules/form.scss */
+/* line 95, ../scss/modules/form.scss */
 .custom-checkbox + .custom-checkbox-icon {
   display: inline-block;
   width: 14px;
@@ -3698,27 +3823,27 @@ label.inline {
   vertical-align: middle;
 }
 
-/* line 113, ../scss/modules/form.scss */
+/* line 114, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 117, ../scss/modules/form.scss */
+/* line 118, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 121, ../scss/modules/form.scss */
+/* line 122, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 125, ../scss/modules/form.scss */
+/* line 126, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 129, ../scss/modules/form.scss */
+/* line 130, ../scss/modules/form.scss */
 textarea.form-element {
   width: 100%;
   height: 40px;
@@ -3728,7 +3853,7 @@ textarea.form-element {
   font-family: inherit;
 }
 
-/* line 141, ../scss/modules/form.scss */
+/* line 142, ../scss/modules/form.scss */
 .custom-radio {
   width: 18px;
   height: 18px;
@@ -3736,7 +3861,7 @@ textarea.form-element {
   opacity: 0;
   cursor: pointer;
 }
-/* line 153, ../scss/modules/form.scss */
+/* line 154, ../scss/modules/form.scss */
 .custom-radio:checked + .custom-radio-icon::after, .custom-radio.is-checked + .custom-radio-icon::after {
   content: "";
   display: block;
@@ -3745,7 +3870,7 @@ textarea.form-element {
   border-radius: 18px;
   background-color: #999;
 }
-/* line 164, ../scss/modules/form.scss */
+/* line 165, ../scss/modules/form.scss */
 .custom-radio + .custom-radio-icon {
   display: inline-block;
   width: 18px;
@@ -4449,9 +4574,9 @@ li a.navigation-settings-icon {
   box-sizing: border-box;
   border-radius: 4px;
   background-color: #cccccc;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 0 0;
-  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 0 0;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 2px 0 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 0 2px 0 0;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 0 2px 0 0;
+  box-shadow: rgba(0, 0, 0, 0.08) 0 2px 0 0;
 }
 /* line 6, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-nav:after {
@@ -4633,9 +4758,9 @@ li a.navigation-settings-icon {
   padding: 5px 0;
   margin-top: -7px;
   margin-left: 0px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 0px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 0px 0px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
 /* line 208, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu.right-aligned {
@@ -4683,18 +4808,6 @@ li a.navigation-settings-icon {
 .edit-toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
-}
-
-/* line 260, ../scss/modules/edit-toolbar.scss */
-.highlight-animation {
-  -webkit-animation: HIGHLIGHT-ANIMATION 1500ms;
-  /* Safari 4+ */
-  -moz-animation: HIGHLIGHT-ANIMATION 1500ms;
-  /* Fx 5+ */
-  -o-animation: HIGHLIGHT-ANIMATION 1500ms;
-  /* Opera 12+ */
-  animation: HIGHLIGHT-ANIMATION 1500ms;
-  /* IE 10+ */
 }
 
 /* line 1, ../scss/modules/page-functions.scss */
@@ -4746,7 +4859,7 @@ table {
 .table thead th {
   vertical-align: bottom;
   color: #999999;
-  font-size: 18px;
+  font-size: 16px;
 }
 /* line 30, ../scss/modules/tables.scss */
 .table thead th a {
@@ -4894,7 +5007,16 @@ a.btn-black, a.btn-highlight {
   cursor: default;
 }
 
-/* line 17, ../scss/modules/auto-complete.scss */
+/* line 18, ../scss/modules/auto-complete.scss */
+.husky-auto-complete input[type="text"] {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  margin: 4px 0;
+}
+
+/* line 27, ../scss/modules/auto-complete.scss */
 .wrapper {
   width: 400px;
   background: white;
@@ -4902,20 +5024,13 @@ a.btn-black, a.btn-highlight {
   border-radius: 4px 4px 0 0;
   font-size: 12px;
 }
-/* line 24, ../scss/modules/auto-complete.scss */
-.wrapper input[type="text"] {
-  width: 100%;
-  border: 0;
-  outline: 0;
-  background: transparent;
-}
 
-/* line 32, ../scss/modules/auto-complete.scss */
+/* line 35, ../scss/modules/auto-complete.scss */
 .twitter-typeahead {
   width: 100%;
 }
 
-/* line 36, ../scss/modules/auto-complete.scss */
+/* line 39, ../scss/modules/auto-complete.scss */
 .tt-suggestions {
   width: 400px;
   top: 37px;
@@ -4923,48 +5038,52 @@ a.btn-black, a.btn-highlight {
   background: white;
 }
 
-/* line 43, ../scss/modules/auto-complete.scss */
+/* line 46, ../scss/modules/auto-complete.scss */
 .tt-hint {
   display: none;
 }
 
-/* line 47, ../scss/modules/auto-complete.scss */
+/* line 50, ../scss/modules/auto-complete.scss */
 .tt-suggestion {
   height: 25px;
-  padding: 0 15px;
+  padding: 0 6px;
   border-width: 0 2px 0 2px;
   border-style: solid;
   border-color: #fff;
 }
-/* line 54, ../scss/modules/auto-complete.scss */
+/* line 57, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border {
   border-bottom: 1px solid #efefef;
   height: 25px;
   clear: both;
 }
-/* line 58, ../scss/modules/auto-complete.scss */
-.tt-suggestion .border .img {
+/* line 61, ../scss/modules/auto-complete.scss */
+.tt-suggestion .border .icon {
+  display: block;
   float: left;
-  margin: 5px 10px 0 5px;
+  margin: 0 10px 0 10px;
   width: 12px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
 }
-/* line 63, ../scss/modules/auto-complete.scss */
+/* line 70, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border .text {
   float: left;
   line-height: 25px;
 }
-/* line 68, ../scss/modules/auto-complete.scss */
+/* line 75, ../scss/modules/auto-complete.scss */
 .tt-suggestion:last-child .border {
   border-bottom: none;
 }
 
-/* line 74, ../scss/modules/auto-complete.scss */
+/* line 81, ../scss/modules/auto-complete.scss */
 .tt-suggestion:hover,
 .tt-is-under-cursor {
   background: #efefef;
 }
 
-/* line 78, ../scss/modules/auto-complete.scss */
+/* line 85, ../scss/modules/auto-complete.scss */
 .suggestion {
   color: black;
 }
@@ -5263,9 +5382,9 @@ a.btn-black, a.btn-highlight {
   padding: 5px 0;
   margin-top: -7px;
   margin-left: 0px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 0px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 0px 0px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
 /* line 234, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu.right-aligned {
@@ -5574,50 +5693,51 @@ a.btn-black, a.btn-highlight {
 /* line 11, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column {
   border-right: 1px solid #cccccc;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   display: inline-block;
   font-size: 0;
+  height: 100%;
 }
-/* line 18, ../scss/modules/column-navigation.scss */
+/* line 19, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   font-size: 14px;
 }
-/* line 24, ../scss/modules/column-navigation.scss */
+/* line 25, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li {
-  padding: 15px 25px;
+  padding: 15px 11px 15px 15px;
   height: 50px;
 }
-/* line 29, ../scss/modules/column-navigation.scss */
+/* line 30, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li:hover, .column-navigation-wrapper .column-navigation .column ul li.selected {
   background-color: #f1f1f1;
 }
-/* line 35, ../scss/modules/column-navigation.scss */
+/* line 36, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.selected .item-text {
   font-weight: bold;
 }
-/* line 40, ../scss/modules/column-navigation.scss */
+/* line 41, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .inactive {
   color: #999999;
 }
-/* line 44, ../scss/modules/column-navigation.scss */
+/* line 45, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .not-published {
   color: #fda502;
   margin-top: 2px;
   font-size: 40px;
 }
-/* line 52, ../scss/modules/column-navigation.scss */
+/* line 53, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text {
   padding-top: 2px;
 }
-/* line 56, ../scss/modules/column-navigation.scss */
+/* line 57, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text.ghost {
   color: #999999;
 }
-/* line 60, ../scss/modules/column-navigation.scss */
+/* line 61, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .ghost {
   background: #009fc0;
   padding: 0 2px;
@@ -5625,7 +5745,7 @@ a.btn-black, a.btn-highlight {
   color: white;
   border-radius: 3px;
 }
-/* line 68, ../scss/modules/column-navigation.scss */
+/* line 69, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .edit {
   margin-right: 5px;
   background-color: #009fc0;
@@ -5634,13 +5754,14 @@ a.btn-black, a.btn-highlight {
   color: white;
   border-radius: 3px;
 }
-/* line 77, ../scss/modules/column-navigation.scss */
+/* line 78, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .arrow {
   display: inline-block;
-  width: 20px;
+  width: 11px;
+  font-size: 10px;
   vertical-align: middle;
 }
-/* line 85, ../scss/modules/column-navigation.scss */
+/* line 87, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .add {
   background-color: #009fc0;
   padding: 5px 0;
@@ -5649,7 +5770,7 @@ a.btn-black, a.btn-highlight {
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
 }
-/* line 95, ../scss/modules/column-navigation.scss */
+/* line 97, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .settings {
   background-color: #cccccc;
   padding: 5px 0;
@@ -5667,71 +5788,79 @@ a.btn-black, a.btn-highlight {
   margin: 0;
   list-style: none;
 }
-/* line 9, ../scss/modules/auto-complete-list.scss */
-.auto-complete-list-container .arrow-down,
-.auto-complete-list-container .arrow-up {
+/* line 8, ../scss/modules/auto-complete-list.scss */
+.auto-complete-list-container .toggler {
   position: absolute;
-  right: 10px;
-  bottom: 13px;
+  right: 0px;
+  bottom: 3px;
   content: "";
   display: inline-block;
-  height: 0;
-  margin-left: 5px;
-  width: 0;
+  height: 20px;
+  width: auto;
+  padding: 5px 10px;
   cursor: pointer;
+  text-align: center;
 }
-/* line 21, ../scss/modules/auto-complete-list.scss */
-.auto-complete-list-container .arrow-down {
+/* line 22, ../scss/modules/auto-complete-list.scss */
+.auto-complete-list-container .arrow-down span,
+.auto-complete-list-container .arrow-up span {
+  width: 0;
+  height: 0;
+  display: block;
+}
+/* line 28, ../scss/modules/auto-complete-list.scss */
+.auto-complete-list-container .arrow-down span {
   border-left: 4px solid rgba(0, 0, 0, 0);
   border-right: 4px solid rgba(0, 0, 0, 0);
   border-top: 6px solid #000000;
 }
-/* line 27, ../scss/modules/auto-complete-list.scss */
-.auto-complete-list-container .arrow-up {
+/* line 34, ../scss/modules/auto-complete-list.scss */
+.auto-complete-list-container .arrow-up span {
   border-left: 4px solid rgba(0, 0, 0, 0);
   border-right: 4px solid rgba(0, 0, 0, 0);
   border-bottom: 6px solid #000000;
 }
-/* line 33, ../scss/modules/auto-complete-list.scss */
+/* line 40, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-container label {
   cursor: default;
 }
-/* line 37, ../scss/modules/auto-complete-list.scss */
+/* line 44, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-container .auto-complete-list {
   font-size: 12px;
   min-height: 30px;
   border-radius: 4px 4px 0 0;
 }
-/* line 42, ../scss/modules/auto-complete-list.scss */
+/* line 49, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-container .tt-suggestions {
   width: 100%;
 }
 
-/* line 47, ../scss/modules/auto-complete-list.scss */
+/* line 54, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list {
-  padding: 4px 8px;
+  padding: 1px 8px;
   border-radius: 4px;
   background-color: #fff;
 }
-/* line 52, ../scss/modules/auto-complete-list.scss */
+/* line 59, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list input[type="text"] {
-  margin: 5px 10px 5px 0;
+  margin: 7px 10px 7px 0;
   width: 100px;
   border: 0;
   outline: 0;
 }
 
-/* line 60, ../scss/modules/auto-complete-list.scss */
+/* line 67, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection {
   display: inline-block;
-  margin: 2px 5px 2px 0;
-  padding: 0 4px;
+  margin: 4px 5px 4px 0;
+  padding: 0 4px 2px 4px;
   border-radius: 2px;
   background-color: #ccc;
   color: #000;
   font-size: 12px;
+  line-height: normal;
 }
-/* line 69, ../scss/modules/auto-complete-list.scss */
+/* line 77, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove {
   font-family: "Glyphicons";
   position: relative;
@@ -5742,14 +5871,14 @@ a.btn-black, a.btn-highlight {
   color: black;
 }
 
-/* line 81, ../scss/modules/auto-complete-list.scss */
+/* line 89, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions {
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: #ddd;
 }
-/* line 87, ../scss/modules/auto-complete-list.scss */
+/* line 95, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions h5 {
   margin: 0;
   padding: 5px 8px;
@@ -5757,12 +5886,12 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 12px;
 }
-/* line 95, ../scss/modules/auto-complete-list.scss */
+/* line 103, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions ul {
   padding: 8px 8px 15px;
   margin: 0;
 }
-/* line 100, ../scss/modules/auto-complete-list.scss */
+/* line 108, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions li {
   display: inline-block;
   margin-right: 5px;
@@ -5773,7 +5902,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   cursor: pointer;
 }
-/* line 111, ../scss/modules/auto-complete-list.scss */
+/* line 119, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions .deactivated {
   cursor: auto;
   color: #999999;
@@ -5786,73 +5915,270 @@ a.btn-black, a.btn-highlight {
 /* line 5, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-label {
   background: #cccccc;
-  padding: 10px;
+  padding: 5px 5px 5px 10px;
   border-radius: 6px;
+  clear: both;
+  font-size: 12px;
 }
 /* line 11, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-label .checkbox {
+  padding-right: 20px;
+}
+/* line 14, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-label .dropdown-toggle {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+/* line 21, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list {
   width: 100%;
   /*display: inline-block;*/
-  border: 1px solid #ccc;
   position: absolute;
   top: 20px;
   left: 0;
-  margin-top: 20px;
+  margin-top: 5px;
   background-color: #FFF;
-  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 3px 3px 0 0 #cccccc;
   z-index: 95;
 }
-/* line 24, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list::after, .husky-dropdown-multiple-select .dropdown-list::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: -10px;
-  left: 5px;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #FFF;
+/* line 32, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list .check {
+  float: left;
+  width: 20px;
+  margin-right: 10px;
+  padding-top: 3px;
 }
 /* line 38, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list::before {
-  top: -11px;
-  left: 4px;
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-bottom: 11px solid #ccc;
+.husky-dropdown-multiple-select .dropdown-list .item-value {
+  float: left;
+  line-height: 30px;
 }
-/* line 47, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list.dropdown-align-right {
-  left: auto !important;
-  right: 0;
-}
-/* line 51, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::after, .husky-dropdown-multiple-select .dropdown-list.dropdown-align-right::before {
-  left: auto !important;
-  right: 5px;
-}
-/* line 57, ../scss/modules/dropdown-multiple-select.scss */
+/* line 43, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 62, ../scss/modules/dropdown-multiple-select.scss */
-.husky-dropdown-multiple-select .dropdown-list > ul > li {
-  padding: 5px 10px;
+/* line 48, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul input {
+  margin: 0;
 }
-/* line 66, ../scss/modules/dropdown-multiple-select.scss */
+/* line 52, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul > li {
+  padding: 0px 10px 0px 20px;
+  clear: both;
+  height: 30px;
+}
+/* line 58, ../scss/modules/dropdown-multiple-select.scss */
 .husky-dropdown-multiple-select .dropdown-list > ul > li:hover, .husky-dropdown-multiple-select .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected, .column-navigation-wrapper .column-navigation .column .husky-dropdown-multiple-select .dropdown-list > ul > li.selected, .husky-dropdown-multiple-select .dropdown-list > ul > li.hover {
-  background-color: #ccc;
+  background-color: #249fbe;
   cursor: pointer;
 }
-
-/* line 2, ../scss/modules/datagrid.scss */
-.husky-datagrid table {
-  table-layout: fixed;
+/* line 62, ../scss/modules/dropdown-multiple-select.scss */
+.husky-dropdown-multiple-select .dropdown-list > ul > li:hover .item-value, .husky-dropdown-multiple-select .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected .item-value, .column-navigation-wrapper .column-navigation .column .husky-dropdown-multiple-select .dropdown-list > ul > li.selected .item-value {
+  color: white;
 }
+
+/* line 5, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: #3e3e3e;
+  z-index: 10000;
+  clear: both;
+  text-align: center;
+}
+/* line 16, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .top-toolbar-left {
+  float: left;
+  width: 470px;
+  height: 100%;
+}
+/* line 21, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .top-toolbar-middle {
+  float: left;
+  height: 100%;
+}
+/* line 25, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .top-toolbar-right {
+  float: right;
+  width: 470px;
+  height: 100%;
+}
+/* line 31, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .left-list,
+.husky-top-toolbar .right-list {
+  height: 30px;
+  list-style: none outside none;
+  margin: 10px 0;
+  padding: 0;
+}
+/* line 37, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .left-list {
+  float: left;
+}
+/* line 39, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .left-list .button {
+  float: left;
+}
+/* line 43, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .right-list {
+  float: right;
+}
+/* line 45, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .right-list .button {
+  float: right;
+}
+/* line 49, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .button {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  display: block;
+  border: 1px solid #999999;
+  border-radius: 3px;
+  font-size: 12px;
+  height: 30px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+/* line 60, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .button a {
+  color: white;
+  text-decoration: none;
+}
+/* line 64, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .button *:focus {
+  outline: none;
+}
+/* line 67, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .button *::-moz-focus-inner {
+  border: 0;
+}
+/* line 71, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .exit {
+  font-size: 18px;
+  line-height: 30px;
+  border: none;
+  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+/* line 78, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .exit .loading {
+  margin-top: 5px;
+}
+/* line 82, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .resolution {
+  border: 1px solid #999999;
+  border-radius: 3px;
+  font-size: 12px;
+  height: 30px;
+  cursor: pointer;
+  padding-top: 5px;
+  width: 105px;
+  margin-right: 10px;
+}
+/* line 91, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .resolution .top-toolbar-dropdown-menu {
+  left: auto;
+  right: 0;
+}
+/* line 95, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .resolution .loading {
+  margin-top: -1px;
+}
+/* line 99, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .save {
+  font-size: 16px;
+  margin-right: 20px;
+  width: 40px;
+}
+/* line 104, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .delete {
+  font-size: 14px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  width: 40px;
+}
+/* line 111, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .delete .loading {
+  margin-left: -3px;
+}
+/* line 115, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .state {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-width: 0;
+  width: 50px;
+}
+/* line 120, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .state .dropdown-toggle:after {
+  margin-left: 3px;
+}
+/* line 124, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .highlight {
+  background: #249fbe;
+  border-color: #249fbe;
+}
+/* line 128, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .disabled {
+  background: #999999;
+  border-color: #999999;
+  cursor: auto;
+}
+/* line 132, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .disabled * {
+  cursor: auto;
+}
+/* line 136, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .loading {
+  display: block;
+  margin-left: -1px;
+  cursor: auto;
+}
+/* line 140, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .loading * {
+  cursor: auto;
+}
+/* line 144, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .dropdown-toggle:after {
+  border-left: 4px solid rgba(0, 0, 0, 0);
+  border-right: 4px solid rgba(0, 0, 0, 0);
+  border-top: 6px solid white;
+  content: "";
+  display: inline-block;
+  height: 0;
+  margin-left: 8px;
+  position: relative;
+  top: -1px;
+  width: 0;
+}
+/* line 156, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .top-toolbar-dropdown-menu {
+  display: none;
+  text-align: left;
+}
+/* line 160, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .top-toolbar-dropdown-menu li {
+  padding-left: 15px;
+}
+/* line 163, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .top-toolbar-dropdown-menu a {
+  color: black;
+  text-decoration: none;
+}
+/* line 168, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .is-expanded .top-toolbar-dropdown-menu {
+  display: block;
+}
+
 /* line 5, ../scss/modules/datagrid.scss */
 .husky-datagrid table td {
   overflow: hidden;
@@ -5865,4 +6191,27 @@ a.btn-black, a.btn-highlight {
 /* line 15, ../scss/modules/datagrid.scss */
 .husky-datagrid thead th {
   padding-top: 0;
+  font-weight: normal;
+}
+/* line 19, ../scss/modules/datagrid.scss */
+.husky-datagrid thead th.is-sortable {
+  color: black;
+  cursor: pointer;
+}
+/* line 23, ../scss/modules/datagrid.scss */
+.husky-datagrid thead th.is-selected {
+  font-weight: bold;
+}
+/* line 33, ../scss/modules/datagrid.scss */
+.husky-datagrid.overflow table {
+  position: relative;
+}
+/* line 37, ../scss/modules/datagrid.scss */
+.husky-datagrid.overflow .select-all {
+  position: absolute;
+  left: 0;
+}
+/* line 44, ../scss/modules/datagrid.scss */
+.husky-datagrid.overflow .table-container {
+  overflow: auto;
 }
