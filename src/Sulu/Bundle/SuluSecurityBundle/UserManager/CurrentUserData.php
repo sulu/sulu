@@ -176,14 +176,14 @@ class CurrentUserData implements CurrentUserDataInterface
     }
 
     public function toArray() {
-        $user = array();
-        $user['id'] = $this->getId();
-        $user['username'] = $this->getUserName();
-        $user['fullname'] = $this->getFullName();
-        $user['icon'] = $this->getUserIcon();
-        $user['logout'] = $this->getLogoutLink();
-        $user['locale'] = $this->getLocale();
-        $user['settings'] = json_encode($this->getUserSettings());
-        return $user;
+        return array(
+            'id' => $this->getId(),
+            'username' => $this->getUserName(),
+            'fullname' => $this->getFullName(),
+            'icon' => $this->getUserIcon(),
+            'logout' => $this->getLogoutLink(),
+            'locale' => $this->getLocale(),
+            'settings' => json_encode($this->getUserSettings())
+        );
     }
 }

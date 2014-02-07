@@ -22,6 +22,9 @@ class UserManager implements UserManagerInterface
      * @var Registry
      */
     private $doctrine;
+    /**
+     * @var CurrentUserDataInterface
+     */
     private $currentUserData;
 
     function __construct(Registry $doctrine, CurrentUserDataInterface $currentUserData)
