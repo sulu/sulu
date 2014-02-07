@@ -56,8 +56,8 @@ interface CurrentUserDataInterface
     public function getLocale();
 
     /**
-     * returns the settings saved for a user
-     * @return mixed
+     * returns the settings saved for a user as key value pair array
+     * @return array
      */
     public function getUserSettings();
 
