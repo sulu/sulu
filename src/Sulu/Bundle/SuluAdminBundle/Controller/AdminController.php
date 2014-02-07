@@ -26,22 +26,7 @@ class AdminController extends Controller
         if ($this->has($serviceId)) {
             /** @var UserManagerInterface $userManager */
             $userManager = $this->get($serviceId);
-            $userData = $userManager->getCurrentUserData();
-
-            if ($userData->isLoggedIn()) {
-
-                // user settings
-                $userSettings = $userData->getUserSettings();
-                $userSettingsString = json_encode($userSettings);
-
-                $user['id'] = $userData->getId();
-                $user['username'] = $userData->getFullName();
-                $user['logout'] = $userData->getLogoutLink();
-                $user['locale'] = $userData->getLocale();
-                $user['settings'] = $userSettingsString;
-            } else {
-                return $this->forward('SuluAdminBundle:Security:login');
-            }
+            $user = $userManager->getCurrentUserData()->toArray();
         }
 
         // render template
