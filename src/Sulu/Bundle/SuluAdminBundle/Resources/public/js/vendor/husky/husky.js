@@ -25904,7 +25904,11 @@ define('__component__$datagrid@husky',[],function() {
             validation: false, // TODO does not work for added rows
             validationDebug: false,
             startTabIndex: 1,
-            columnMinWidth: '50px'
+            columnMinWidth: '70px'
+        },
+
+        constants = {
+            marginRight: 50
         },
 
         namespace = 'husky.datagrid.',
@@ -26279,6 +26283,8 @@ define('__component__$datagrid@husky',[],function() {
             if (!!params && typeof params.success === 'function') {
                 params.success(response);
             }
+
+            this.windowResizeListener();
         },
 
         /**
@@ -26388,7 +26394,7 @@ define('__component__$datagrid@husky',[],function() {
                 }
 
                 tblColumns.push(
-                    '<th class="select-all" ', 'style="' + checkboxValues.number + checkboxValues.unit + '"', ' >');
+                    '<th class="select-all" ', 'style="width:' + checkboxValues.number + checkboxValues.unit + '"', ' >');
 
                 if (this.options.selectItem.type === 'checkbox') {
                     tblColumns.push(this.templates.checkbox({ id: 'select-all' }));
@@ -26427,6 +26433,7 @@ define('__component__$datagrid@husky',[],function() {
 
                 }
                 tblColumnStyle.push('min-width:' + minWidth);
+                column.minWidth = minWidth;
 
                 // get width and measureunit
                 if (!!column.width) {
@@ -26549,9 +26556,9 @@ define('__component__$datagrid@husky',[],function() {
 
                 // when row structure contains more elements than the id then use the structure to set values
                 if (this.rowStructure.length) {
-                    this.rowStructure.forEach(function(key) {
+                    this.rowStructure.forEach(function(key, index) {
                         key.editable = key.editable || false;
-                        this.createRowCell(key.attribute, row[key.attribute], key.editable, key.validation);
+                        this.createRowCell(key.attribute, row[key.attribute], key.editable, key.validation, index);
                     }.bind(this));
                 } else {
                     for (key in row) {
@@ -26575,9 +26582,10 @@ define('__component__$datagrid@husky',[],function() {
          * @param value attribute value
          * @param editable flag whether field is editable or not
          */
-        createRowCell: function(key, value, editable, validation) {
+        createRowCell: function(key, value, editable, validation, index) {
             var tblCellClasses,
                 tblCellContent,
+                tblCellStyle,
                 tblCellClass,
                 k,
                 validationAttr = '';
@@ -26602,12 +26610,14 @@ define('__component__$datagrid@husky',[],function() {
                     }
                 }
 
+                tblCellStyle = 'style="max-width:' + this.options.columns[index].minWidth + '"';
+
                 if (!!editable) {
-                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="editable" contenteditable="true" ' + validationAttr + ' tabindex="' + this.tabIndex + '">' + tblCellContent + '</span></td>');
+                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="editable"  contenteditable="true" ' + validationAttr + ' tabindex="' + this.tabIndex + '">' + tblCellContent + '</span></td>');
 
                     this.tabIndex++;
                 } else {
-                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span  class="table-cell" ' + tblCellStyle + '>' + tblCellContent + '</span></td>');
                 }
             } else {
                 this.tblRowAttributes += ' data-' + key + '="' + value + '"';
@@ -27319,17 +27329,27 @@ define('__component__$datagrid@husky',[],function() {
 
             var tableWidth = this.sandbox.dom.width(this.$table),
                 tableOffset = this.sandbox.dom.offset(this.$table),
-                windowWidth = this.sandbox.dom.width(this.sandbox.dom.window);
+                contentWidth = this.sandbox.dom.width(this.$el),
+                windowWidth = this.sandbox.dom.width(this.sandbox.dom.window),
+                finalWidth;
 
+            tableOffset.right = tableOffset.left + tableWidth;
 
-            // TODO: if table > content size
+            // TODO: REMOVE
+            constants.marginRight = 50;
 
+            // if table is greater than max content width
+            if (tableWidth > contentWidth && contentWidth !== windowWidth - tableOffset.left) {
+                console.log(tableWidth, contentWidth);
+                this.sandbox.dom.addClass(this.$element, 'oversized');
+            }
 
-            // TODO: if table > as window size
-            if (tableOffset.left+tableWidth > windowWidth) {
-                if (windowWidth-tableOffset.left >= this.sandbox.dom.width(this.$el)) {
-                    this.sandbox.dom.width(this.$tableContainer, windowWidth-tableOffset.left);
-                }
+            // tablecontainer should have width of table
+            finalWidth = tableWidth;
+
+            // if table > window-size
+            if (tableOffset.right  > windowWidth) {
+                finalWidth = windowWidth - tableOffset.left;
                 if (!this.sandbox.dom.hasClass(this.$element, 'overflow')) {
                     this.sandbox.dom.addClass(this.$element, 'overflow');
                 }
@@ -27338,10 +27358,15 @@ define('__component__$datagrid@husky',[],function() {
                     this.sandbox.dom.scrollLeft(this.$element, 0);
                     this.sandbox.dom.removeClass(this.$element, 'overflow');
                 }
-                if (windowWidth-tableOffset.left >= this.sandbox.dom.width(this.$el)) {
-                    this.sandbox.dom.width(this.$tableContainer, '100%');
-                }
             }
+
+            // width is never smaller than content width
+            if (finalWidth < contentWidth) {
+                finalWidth = contentWidth;
+            }
+
+            // husky-datagrid should always have width of tablecontainer (to keep pagination on most right border)
+            this.sandbox.dom.width(this.$element, finalWidth);
         },
 
         /**

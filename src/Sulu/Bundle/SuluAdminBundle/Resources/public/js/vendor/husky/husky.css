@@ -6202,16 +6202,27 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid thead th.is-selected {
   font-weight: bold;
 }
-/* line 33, ../scss/modules/datagrid.scss */
+/* line 28, ../scss/modules/datagrid.scss */
+.husky-datagrid thead .table-container {
+  width: 100%;
+}
+/* line 34, ../scss/modules/datagrid.scss */
+.husky-datagrid.oversized .table-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  white-space: nowrap;
+}
+/* line 45, ../scss/modules/datagrid.scss */
 .husky-datagrid.overflow table {
   position: relative;
 }
-/* line 37, ../scss/modules/datagrid.scss */
+/* line 49, ../scss/modules/datagrid.scss */
 .husky-datagrid.overflow .select-all {
   position: absolute;
   left: 0;
 }
-/* line 44, ../scss/modules/datagrid.scss */
+/* line 54, ../scss/modules/datagrid.scss */
 .husky-datagrid.overflow .table-container {
   overflow: auto;
 }
