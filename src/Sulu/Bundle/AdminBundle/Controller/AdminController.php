@@ -26,30 +26,7 @@ class AdminController extends Controller
         if ($this->has($serviceId)) {
             /** @var UserManagerInterface $userManager */
             $userManager = $this->get($serviceId);
-            $userData = $userManager->getCurrentUserData();
-
-            // user settings
-            $userSettings = $userData->getUserSettings();
-            $first = true;
-            $userSettingsString = '{';
-            /** @var UserSettings $settings */
-            foreach ($userSettings as $settings) {
-                if (!$first) {
-                    $userSettingsString .= ',';
-                } else {
-                    $first = !$first;
-                }
-                $userSettingsString .= '"'.$settings->getKey().'"' . ':' . $settings->getValue();
-            }
-            $userSettingsString .= '}';
-
-            if ($userData->isLoggedIn()) {
-                $user['id'] = $userData->getId();
-                $user['username'] = $userData->getFullName();
-                $user['logout'] = $userData->getLogoutLink();
-                $user['locale'] = $userData->getLocale();
-                $user['settings'] = $userSettingsString;
-            }
+            $user = $userManager->getCurrentUserData()->toArray();
         }
 
         // render template
