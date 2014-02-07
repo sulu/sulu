@@ -45,7 +45,8 @@ class CurrentUserData implements CurrentUserDataInterface
      */
     public function isLoggedIn()
     {
-        if( $this->security->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
+
+        if( $this->getUser() && $this->security->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
             return true;
         } else {
             return false;
@@ -109,7 +110,11 @@ class CurrentUserData implements CurrentUserDataInterface
      */
     public function getUserSettings()
     {
-        return  $this->getUser()->getUserSettings();
+        $settingsArray = array();
+        foreach($this->getUser()->getUserSettings()->toArray() as $setting) {
+            $settingsArray[$setting->getKey()] = json_decode($setting->getValue());
+        };
+        return $settingsArray;
     }
 
     /**
