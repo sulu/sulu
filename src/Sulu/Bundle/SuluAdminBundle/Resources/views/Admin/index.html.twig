@@ -24,7 +24,7 @@
             {#<header data-aura-component="header@husky" {% if user.username is defined %} data-aura-user-name="{{ user.username }}" {% endif %}{% if user.logout is defined %} data-aura-logout-url="{{ user.logout }}" {% endif %}></header>#}
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
                 {% if user.username is defined %}
-                data-aura-footer-template="<div>{{ user.username }}</div>
+                data-aura-footer-template="<div>{{ user.fullname }}</div>
                 {% endif %}
                 {% if user.logout is defined %}
                 <div><a href='{{ user.logout }}'>logout</a></div>
