@@ -56,17 +56,7 @@ class TemplateController extends Controller
 
             // user settings
             $userSettings = $userData->getUserSettings();
-            $first = true;
-            $userSettingsString = '{';
-            foreach ($userSettings as $settings) {
-                if (!$first) {
-                    $userSettingsString .= ',';
-                } else {
-                    $first = !$first;
-                }
-                $userSettingsString .= '"' . $settings->getKey() . '"' . ':' . $settings->getValue();
-            }
-            $userSettingsString .= '}';
+            $userSettingsString = json_encode($userSettings);
 
             if ($userData->isLoggedIn()) {
                 $user['id'] = $userData->getId();
