@@ -52,19 +52,7 @@ class TemplateController extends Controller
         if ($this->has($serviceId)) {
             /** @var UserManagerInterface $userManager */
             $userManager = $this->get($serviceId);
-            $userData = $userManager->getCurrentUserData();
-
-            // user settings
-            $userSettings = $userData->getUserSettings();
-            $userSettingsString = json_encode($userSettings);
-
-            if ($userData->isLoggedIn()) {
-                $user['id'] = $userData->getId();
-                $user['username'] = $userData->getFullName();
-                $user['logout'] = $userData->getLogoutLink();
-                $user['locale'] = $userData->getLocale();
-                $user['settings'] = $userSettingsString;
-            }
+            $user = $userManager->getCurrentUserData()->toArray();
         }
 
         // render template
