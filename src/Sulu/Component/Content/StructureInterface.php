@@ -18,6 +18,9 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
  */
 interface StructureInterface extends \JsonSerializable
 {
+    const STATE_TEST = 1;
+    const STATE_PUBLISH = 2;
+
     /**
      * id of node
      * @return int
@@ -129,6 +132,7 @@ interface StructureInterface extends \JsonSerializable
     public function setHasChildren($hasChildren);
 
     /**
+     * returns true if node has children
      * @return boolean
      */
     public function getHasChildren();
@@ -139,9 +143,22 @@ interface StructureInterface extends \JsonSerializable
     public function setChildren($children);
 
     /**
+     * returns children array
      * @return StructureInterface[]
      */
     public function getChildren();
+
+    /**
+     * @param int $state
+     * @return int
+     */
+    public function setState($state);
+
+    /**
+     * returns state of node
+     * @return int
+     */
+    public function getState();
 
     /**
      * returns an array of property value pairs

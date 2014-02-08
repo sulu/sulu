@@ -92,6 +92,12 @@ abstract class Structure implements StructureInterface
     private $changed;
 
     /**
+     * state of node
+     * @var int
+     */
+    private $state;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -104,6 +110,9 @@ abstract class Structure implements StructureInterface
         $this->view = $view;
         $this->controller = $controller;
         $this->cacheLifeTime = $cacheLifeTime;
+
+        // default state is test
+        $this->state = StructureInterface::STATE_TEST;
     }
 
     /**
@@ -297,6 +306,24 @@ abstract class Structure implements StructureInterface
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * @param int $state
+     * @return int
+     */
+    public function setState($state)
+    {
+        $this->state = $state
+    }
+
+    /**
+     * returns state of node
+     * @return int
+     */
+    public function getState()
+    {
+        return $this->state;
     }
 
     /**
