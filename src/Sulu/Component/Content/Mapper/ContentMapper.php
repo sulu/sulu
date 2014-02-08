@@ -377,10 +377,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     {
         $templateKey = $contentNode->getPropertyValue('sulu:template');
 
-        // TODO localize
         $structure = $this->getStructure($templateKey);
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setState($contentNode->getPropertyValue('sulu:state'));
         $structure->setCreator($contentNode->getPropertyValue('sulu:creator'));
         $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
         $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
