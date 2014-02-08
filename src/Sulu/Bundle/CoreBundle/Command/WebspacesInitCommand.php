@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle\Command;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
@@ -68,6 +69,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             // create basic nodes
             $content = $this->createRecursive($contentsPath, $root);
             $content->setProperty('sulu:template', $template);
+            $content->setProperty('sulu:state', StructureInterface::STATE_TEST);
             $content->setProperty('sulu:creator', $userId);
             $content->setProperty('sulu:created', new \DateTime());
             $content->setProperty('sulu:changer', $userId);
