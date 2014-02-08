@@ -314,7 +314,7 @@ abstract class Structure implements StructureInterface
      */
     public function setState($state)
     {
-        $this->state = $state
+        $this->state = $state;
     }
 
     /**
