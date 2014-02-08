@@ -136,6 +136,13 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('sulu:changer', $userId);
         $node->setProperty('sulu:changed', $dateTime);
 
+        if (isset($data['state'])) {
+            $this->changeState($node, $data['state']);
+        } else {
+            // set default to test
+            $this->changeState($node, StructureInterface::STATE_TEST);
+        }
+
         $postSave = array();
 
         // go through every property in the template
@@ -200,6 +207,43 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
         return $structure;
+    }
+
+    /**
+     * change state of given node
+     * @param NodeInterface $node node to change state
+     * @param int $state new state
+     */
+    private function changeState(NodeInterface $node, $state)
+    {
+        if ($state !== StructureInterface::STATE_TEST && $state !== StructureInterface::STATE_PUBLISHED) {
+            throw new StateNotFoundException();
+        }
+
+        // no state (new node) set state
+        if (!$node->hasProperty('sulu:state')) {
+            $node->setProperty('sulu:state', $state);
+        } else {
+            $oldState = $node->getPropertyValue('sulu:state');
+
+
+            if ($oldState === $state) {
+                // do nothing
+                return;
+            } elseif (
+                // from test to published
+                $oldState === StructureInterface::STATE_TEST &&
+                $state === StructureInterface::STATE_PUBLISHED
+            ) {
+                $node->setProperty('sulu:state', $state);
+            } elseif (
+                // from published to test
+                $oldState === StructureInterface::STATE_PUBLISHED &&
+                $state === StructureInterface::STATE_TEST
+            ) {
+                throw new StateTransitionException();
+            }
+        }
     }
 
     /**

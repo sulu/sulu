@@ -19,7 +19,7 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 interface StructureInterface extends \JsonSerializable
 {
     const STATE_TEST = 1;
-    const STATE_PUBLISH = 2;
+    const STATE_PUBLISHED = 2;
 
     /**
      * id of node
