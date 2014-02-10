@@ -33,6 +33,12 @@ class SuluContentExtension extends Extension
         $container->setParameter('sulu_content.preview.fallback.interval', $config['preview']['fallback']['interval']);
         $container->setParameter('sulu_content.preview.websocket.port', $config['preview']['websocket']['port']);
 
+        $container->setParameter(
+            'sulu.content.type.smart_content.template',
+            $config['types']['smart_content']['template']
+
+        );
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
