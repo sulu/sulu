@@ -237,19 +237,21 @@ class TagController extends RestController implements ClassResourceInterface
 
         try {
 
+            $tags = array();
+
             /** @var Request $request */
             $request = $this->getRequest();
             $i = 0;
             while ($item = $request->get($i)) {
                 if (isset($item['id'])) {
-                    $this->get('sulu_tag.tag_manager')->save($item, $item['id']);
+                    $tags[] = $this->get('sulu_tag.tag_manager')->save($item, $item['id']);
                 } else {
-                    $this->get('sulu_tag.tag_manager')->save($item, null);
+                    $tags[] = $this->get('sulu_tag.tag_manager')->save($item, null);
                 }
                 $i++;
             }
             $this->getDoctrine()->getManager()->flush();
-            $view = $this->view(null, 204);
+            $view = $this->view($tags, 200);
 
         } catch (TagAlreadyExistsException $exc) {
             $tagAlreadyExists = new RestException($this->entityName.' '.$exc->getName());

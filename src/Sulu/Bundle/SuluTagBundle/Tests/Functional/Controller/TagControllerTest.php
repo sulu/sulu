@@ -436,7 +436,13 @@ class TagControllerTest extends DatabaseTestCase
             )
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('tag3', $response[0]->name);
+        $this->assertEquals('tag4', $response[1]->name);
+        $this->assertEquals('tag5', $response[2]->name);
+        $this->assertEquals('tag6', $response[3]->name);
 
         $client->request(
             'GET',
@@ -510,7 +516,11 @@ class TagControllerTest extends DatabaseTestCase
             )
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('tag11', $response[0]->name);
+        $this->assertEquals('tag22', $response[1]->name);
 
         $client->request(
             'GET',
