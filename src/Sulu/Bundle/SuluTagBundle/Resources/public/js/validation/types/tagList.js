@@ -21,7 +21,10 @@ define([
 
             typeInterface = {
                 setValue: function(value) {
-                    App.emit('husky.auto-complete-list.' + this.options.instanceName + '.set-tags', value);
+                    // FIXME: do not use timeout, fix timing issue
+                    setTimeout(function() {
+                        App.emit('husky.auto-complete-list.' + this.options.instanceName + '.set-tags', value);
+                    }.bind(this), 50);
                 },
 
                 getValue: function() {
