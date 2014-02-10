@@ -14,18 +14,19 @@ define(function() {
     var bindCustomEvents = function(instanceNameToolbar) {
 
         // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function(){
-            this.sandbox.emit('husky.datagrid.row.add',{ id: '', name: '', changed: '', created: '', author: ''});
+        this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.emit('husky.datagrid.row.add', { id: '', name: '', changed: '', created: '', author: ''});
         }.bind(this));
 
         // save clicked
-        this.sandbox.on('sulu.list-toolbar.save', function(){
-            this.sandbox.emit('husky.toolbar.'+instanceNameToolbar+'.item.disable', 'save');
+        this.sandbox.on('sulu.list-toolbar.save', function() {
+            this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'save');
             this.sandbox.emit('husky.datagrid.data.save');
         }.bind(this));
 
         // delete clicked
         this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'delete');
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.emit('sulu.tags.delete', ids);
             }.bind(this));
