@@ -61,7 +61,7 @@ define(function() {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
                     editable: true,
-                    validation: true,
+                    validation: false,
                     paginationOptions: {
                         pageSize: 4
                     },
