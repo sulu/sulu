@@ -52,13 +52,20 @@ class TagManager implements TagManagerInterface
     public function __construct(
         TagRepositoryInterface $tagRepository,
         ObjectManager $em,
-        EventDispatcherInterface $eventDispatcher,
-        SecurityContextInterface $securityContext
+        EventDispatcherInterface $eventDispatcher
     )
     {
         $this->tagRepository = $tagRepository;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * Sets the security context, which is required for saving the creator and changer information
+     * @param SecurityContextInterface $securityContext
+     */
+    public function setSecurityContext(SecurityContextInterface $securityContext)
+    {
         $this->securityContext = $securityContext;
     }
 
