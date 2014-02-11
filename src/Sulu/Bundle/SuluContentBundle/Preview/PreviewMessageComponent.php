@@ -23,11 +23,6 @@ class PreviewMessageComponent implements MessageComponentInterface
     protected $content;
 
     /**
-     * @var SecurityContextInterface
-     */
-    private $context;
-
-    /**
      * @var PreviewInterface
      */
     private $preview;
@@ -37,11 +32,10 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private $logger;
 
-    public function __construct(SecurityContextInterface $context, PreviewInterface $preview, LoggerInterface $logger)
+    public function __construct(PreviewInterface $preview, LoggerInterface $logger)
     {
         $this->content = array();
 
-        $this->context = $context;
         $this->preview = $preview;
         $this->logger = $logger;
     }
