@@ -171,7 +171,8 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
+        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('name', $response->field);
     }
 
     public function testPut()
@@ -227,7 +228,8 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
+        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('name', $response->field);
     }
 
     public function testPutNotExisting()
@@ -489,6 +491,10 @@ class TagControllerTest extends DatabaseTestCase
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('name', $response->field);
 
     }
 
