@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation\Exclude;
  * Container for SmartContent, holds the config for a smart content, and lazy loads the structures meeting its criteria
  * @package Sulu\Bundle\ContentBundle\Content
  */
-class SmartContentContainer
+class SmartContentContainer implements \Serializable
 {
     /**
      * The node repository, which is needed for lazy loading the smart content data
@@ -40,7 +40,8 @@ class SmartContentContainer
      */
     private $data = null;
 
-    public function __construct(NodeRepositoryInterface $nodeRepository) {
+    public function __construct(NodeRepositoryInterface $nodeRepository)
+    {
         $this->nodeRepository = $nodeRepository;
     }
 
@@ -69,9 +70,57 @@ class SmartContentContainer
     public function getData()
     {
         if ($this->data === null) {
-            $this->nodeRepository->getSmartContentNodes($this->getConfig());
+            // TODO use correct language and workspace
+            $this->data = $this->nodeRepository->getSmartContentNodes($this->getConfig(), 'en', 'sulu_io');
         }
 
         return $this->data;
+    }
+
+    public function __get($name)
+    {
+        switch ($name) {
+            case 'data':
+                return $this->getData();
+            case 'config':
+                return $this->getConfig();
+        }
+    }
+
+    public function __isset($name)
+    {
+        return ($name == 'data' || $name == 'config');
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize(
+            array(
+                'data' => $this->getData(),
+                'config' => $this->getConfig()
+            )
+        );
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        $values = unserialize($serialized);
+        $this->data = $values['data'];
+        $this->config = $values['config'];
     }
 }
