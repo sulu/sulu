@@ -100,7 +100,7 @@ class SmartContentContainer implements \Serializable
      */
     public function serialize()
     {
-        return serialize(
+        return json_encode(
             array(
                 'data' => $this->getData(),
                 'config' => $this->getConfig()
@@ -119,7 +119,7 @@ class SmartContentContainer implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $values = unserialize($serialized);
+        $values = json_decode($serialized, true);
         $this->data = $values['data'];
         $this->config = $values['config'];
     }
