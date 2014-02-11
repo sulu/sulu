@@ -28,7 +28,10 @@ define([], function() {
     var defaults = {
             heading: '',
             template: 'default',
-            instanceName: 'content'
+            parentTemplate: null,
+            instanceName: 'content',
+            changeStateCallback: null,
+            parentChangeStateCallback: null
         },
 
         templates = {
@@ -40,6 +43,7 @@ define([], function() {
                         disabledIcon: 'floppy-saved',
                         iconSize: 'large',
                         class: 'highlight',
+                        'position': 1,
                         disabled: true,
                         callback: function() {
                             this.sandbox.emit('sulu.edit-toolbar.save');
@@ -48,9 +52,8 @@ define([], function() {
                     {
                         icon: 'cogwheel',
                         iconSize: 'large',
-                        class: 'highlight-gray',
-                        group: 'right',
-                        position: 99,
+                        group: 'left',
+                        position: 30,
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.edit-toolbar.delete'),
@@ -61,32 +64,9 @@ define([], function() {
                         ]
                     }
                 ];
-            },
-            defaultPreview: function() {
-                var defaults = templates.default.call(this);
-                defaults.splice(1, 0, {
-                    icon: 'eye-open',
-                    iconSize: 'large',
-                    group: 'right',
-                    position: 1,
-                    items: [
-                        {
-                            title: this.sandbox.translate('sulu.edit-toolbar.new-window'),
-                            callback: function() {
-                                this.sandbox.emit('sulu.edit-toolbar.preview.new-window');
-                            }.bind(this)
-                        },
-                        {
-                            title: this.sandbox.translate('sulu.edit-toolbar.split-screen'),
-                            callback: function() {
-                                this.sandbox.emit('sulu.edit-toolbar.preview.split-screen');
-                            }.bind(this)
-                        }
-                    ]
-                });
-                return defaults;
             }
         },
+
 
         changeStateCallbacks = {
             default: function(saved, type) {
@@ -103,6 +83,30 @@ define([], function() {
                     this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
                 }
             }
+        },
+
+        getTemplate = function(template) {
+            var templateObj = template;
+            if (typeof template === 'string') {
+                try {
+                    templateObj = JSON.parse(template);
+                } catch (e) {
+                    if (!!templates[template]) {
+                        templateObj = templates[template].call(this);
+                    } else {
+                        this.sandbox.logger.log('no template found!');
+                    }
+                }
+            }
+            return templateObj;
+        },
+
+        getChangeStateCallback = function(template) {
+            if (!!changeStateCallbacks[template]) {
+                return changeStateCallbacks[template];
+            } else {
+                this.sandbox.logger.log('no template found!');
+            }
         };
 
     return {
@@ -112,27 +116,25 @@ define([], function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            var template = this.options.template;
+            var template = this.options.template,
+                parentTemplate = this.options.parentTemplate;
 
-            // load template:
-            if (typeof template === 'string') {
-                try {
-                    this.options.template = JSON.parse(template);
-                } catch (e) {
-                    if (!!templates[template]) {
-                        this.options.template = templates[template].call(this);
-                    } else {
-                        this.sandbox.logger.log('no template found!');
-                    }
-                }
-            }
+            // load templates:
+            this.options.template = getTemplate.call(this, template);
 
             if (!this.options.changeStateCallback || typeof this.options.changeStateCallback !== 'function') {
-                if (!!changeStateCallbacks[template]) {
-                    this.options.changeStateCallback = changeStateCallbacks[template];
-                } else {
-                    this.sandbox.logger.log('no template found!');
+                this.options.changeStateCallback = getChangeStateCallback.call(this, template);
+            }
+
+            if (this.options.parentTemplate !== null) {
+
+                this.options.parentTemplate = getTemplate.call(this, parentTemplate);
+
+                if (!this.options.parentChangeStateCallback || typeof this.options.parentChangeStateCallback !== 'function') {
+                    this.options.parentChangeStateCallback = getChangeStateCallback.call(this, parentTemplate);
                 }
+
+                this.options.template = this.options.template.concat(this.options.parentTemplate);
             }
 
             this.sandbox.start([
@@ -160,7 +162,12 @@ define([], function() {
         },
 
         changeState: function(type, saved) {
-            this.options.changeStateCallback.call(this, saved, type);
+            if (typeof this.options.changeStateCallback === 'function') {
+                this.options.changeStateCallback.call(this, saved, type);
+            }
+            if (typeof this.options.parentChangeStateCallback === 'function') {
+                this.options.parentChangeStateCallback.call(this, saved, type);
+            }
         }
     };
 });
