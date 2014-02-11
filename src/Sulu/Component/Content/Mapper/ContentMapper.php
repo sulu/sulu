@@ -322,6 +322,21 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
     }
 
+    public function loadBySql2($sql2, $languageCode, $webspaceKey)
+    {
+        $structures = array();
+
+        $queryManager = $this->getSession()->getWorkspace()->getQueryManager();
+        $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
+        $result = $query->execute();
+
+        foreach ($result->getNodes() as $node) {
+            $structures[] = $this->loadByNode($node, $languageCode, $webspaceKey);
+        }
+
+        return $structures;
+    }
+
     /**
      * returns data from given node
      * @param NodeInterface $contentNode
