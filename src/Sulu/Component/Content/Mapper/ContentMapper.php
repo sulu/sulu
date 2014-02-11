@@ -121,6 +121,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $node->setProperty('sulu:created', $dateTime);
 
             $node->addMixin('sulu:content');
+
+            $state = StructureInterface::STATE_TEST;
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
@@ -140,13 +142,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('sulu:changed', $dateTime);
 
         // do not state transition for root (contents) node
-        if ($node->getDepth() > 3) {
-            if (isset($state)) {
-                $this->changeState($node, $state, $structure);
-            } else {
-                // set default to test
-                $this->changeState($node, StructureInterface::STATE_TEST, $structure);
-            }
+        if ($node->getDepth() > 3 && isset($state)) {
+            $this->changeState($node, $state, $structure);
         }
 
         $postSave = array();
