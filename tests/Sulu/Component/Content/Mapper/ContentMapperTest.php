@@ -1232,4 +1232,76 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid());
         $this->assertEquals(StructureInterface::STATE_TEST, $data4->getState());
     }
+
+    public function testStateInheritance()
+    {
+        $data = array(
+            array(
+                'title' => 't1'
+            ),
+            array(
+                'title' => 't1-t1'
+            ),
+            array(
+                'title' => 't1-t1-t1'
+            ),
+            array(
+                'title' => 't1-t2'
+            )
+        );
+
+        $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $d1->getUuid());
+        $d3 = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $d2->getUuid());
+        $d4 = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $d1->getUuid());
+
+        // default TEST
+        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getState());
+        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getState());
+        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x3->getState());
+        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getState());
+
+        // t1-t1-t1 to PUBLISHED (t1-t1-t1 TEST -> because t1-t1 is TEST -> inheritance)
+        $data[2]['state'] = 2;
+        $d3 = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, $d3->getUuid());
+
+        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getState());
+        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getState());
+        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x3->getState());
+        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getState());
+
+        // t1-t1 to PUBLISHED (t1-t1-t1 PUBLISHED -> because t1-t1 is PUBLISHED -> inheritance)
+        $data[1]['state'] = 2;
+        $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, $d2->getUuid());
+
+        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x1->getState());
+        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x2->getState());
+        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x3->getState());
+        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getState());
+
+        // t1 to PUBLISHED
+        $data[0]['state'] = 2;
+        $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1, true, $d1->getUuid());
+
+        $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x1->getState());
+        $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x2->getState());
+        $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x3->getState());
+        $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
+        $this->assertEquals(StructureInterface::STATE_TEST, $x4->getState());
+    }
 }
