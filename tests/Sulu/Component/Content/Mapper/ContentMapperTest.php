@@ -1183,10 +1183,9 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadBySql2()
     {
-        $data = $this->prepareTreeTestData();
+        $this->prepareTreeTestData();
 
         // get root children
-        $children = $this->mapper->loadByParent(null, 'default', 'de');
         $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'en', 'default');
 
         $this->assertEquals(5, sizeof($result));
