@@ -39,4 +39,4 @@ services:
         arguments: [@sulu.content.mapper, @sulu_security.user_manager, @security.context]
     sulu.content.type.smart_content:
         class: %sulu.content.type.smart_content.class%
-        arguments: [%sulu.content.type.smart_content.template%]
+        arguments: [@sulu_content.node_repository, @sulu_tag.tag_manager, %sulu.content.type.smart_content.template%]
