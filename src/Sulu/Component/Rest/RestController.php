@@ -96,6 +96,11 @@ abstract class RestController extends FOSRestController
     protected $fieldsWidth = array();
 
     /**
+     * @var array contains the widths of the fields
+     */
+    protected $fieldsMinWidth = array();
+
+    /**
      * @var array contains the default widths of some common fields
      */
     protected $fieldsDefaultWidth = array('id'=>'50px', 'changed'=>'140px', 'created'=>'140px');
@@ -167,10 +172,9 @@ abstract class RestController extends FOSRestController
     }
 
 
-    /**
-     * creates the translation keys array and sets the default attribute, if set
+    /**creates the translation keys array and sets the default attribute, if set
      * @param $fields
-     * @param bool $hidden defines if keys are hidden
+     * @param $fieldsHidden
      * @return array
      */
     private function addFieldAttributes($fields, $fieldsHidden)
@@ -201,6 +205,7 @@ abstract class RestController extends FOSRestController
                 'default' => in_array($field, $this->fieldsDefault) ? true : null,
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
                 'width' => ($fieldWidth != null) ? $fieldWidth : null,
+                'minWidth' => array_key_exists($field, $this->fieldsMinWidth) ? $this->fieldsMinWidth[$field] : null,
                 'validation' => array_key_exists($field, $this->fieldsValidation) ? $this->fieldsValidation[$field] : null,
             );
         }
