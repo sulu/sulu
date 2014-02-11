@@ -122,7 +122,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
             $node->addMixin('sulu:content');
 
-            $state = StructureInterface::STATE_TEST;
+            if (!isset($state)) {
+                $state = StructureInterface::STATE_TEST;
+            }
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
