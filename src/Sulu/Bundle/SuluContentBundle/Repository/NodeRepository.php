@@ -164,11 +164,13 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey)
     {
-        $sql2 = 'SELECT * FROM [sulu:content] as c WHERE c.[title] = \'asdf\'';
+        $sql2 = 'SELECT * FROM [sulu:content] as c';
 
 
 
-        return $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey);
+        $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey);
+
+        return $nodes;
     }
 
     /**
