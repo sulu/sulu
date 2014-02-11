@@ -77,8 +77,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
-     * @param string $parentUuid uuid of parent node
      * @param string $uuid uuid of node if exists
+     * @param string $parentUuid uuid of parent node
+     * @param null $state state of node
      *
      * @return StructureInterface
      */
@@ -90,7 +91,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $userId,
         $partialUpdate = true,
         $uuid = null,
-        $parentUuid = null
+        $parentUuid = null,
+        $state = null
     )
     {
         // TODO localize
@@ -137,8 +139,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('sulu:changer', $userId);
         $node->setProperty('sulu:changed', $dateTime);
 
-        if (isset($data['state'])) {
-            $this->changeState($node, $data['state'], $structure);
+        if (isset($state)) {
+            $this->changeState($node, $state, $structure);
         } else {
             // set default to test
             $this->changeState($node, StructureInterface::STATE_TEST, $structure);
@@ -394,6 +396,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
         $structure->setHasChildren($contentNode->hasNodes());
 
+        $structure->setState($this->getInheritedState($contentNode));
+
         // go through every property in the template
         /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
@@ -526,5 +530,33 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $clean = str_replace('//', '/', $clean);
 
         return $clean;
+    }
+
+    private function getInheritedState(NodeInterface $contentNode)
+    {
+        // if test then return it
+        if ($contentNode->getPropertyValue('sulu:state') === StructureInterface::STATE_TEST) {
+            return StructureInterface::STATE_TEST;
+        }
+
+        $session = $this->getSession();
+        $workspace = $session->getWorkspace();
+        $queryManager = $workspace->getQueryManager();
+
+        $sql = 'SELECT *
+                FROM  [sulu:content] as parent INNER JOIN [sulu:content] as child
+                    ON ISDESCENDANTNODE(child, parent)
+                WHERE child.[jcr:uuid]="' . $contentNode->getIdentifier() . '"';
+
+        $query = $queryManager->createQuery($sql, 'JCR-SQL2');
+        $result = $query->execute();
+
+        foreach ($result->getNodes() as $node) {
+            if ($node->getPropertyValue('sulu:state') === StructureInterface::STATE_TEST) {
+                return StructureInterface::STATE_TEST;
+            }
+        }
+
+        return StructureInterface::STATE_PUBLISHED;
     }
 }

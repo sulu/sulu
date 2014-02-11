@@ -26,8 +26,9 @@ interface ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
-     * @param string $parentUuid uuid of parent node
      * @param string $uuid uuid of node if exists
+     * @param string $parentUuid uuid of parent node
+     * @param null $state state of node
      *
      * @throws \PHPCR\ItemExistsException if new title already exists
      *
@@ -41,7 +42,8 @@ interface ContentMapperInterface
         $userId,
         $partialUpdate = true,
         $uuid = null,
-        $parentUuid = null
+        $parentUuid = null,
+        $state = null
     );
 
     /**

@@ -69,7 +69,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             // create basic nodes
             $content = $this->createRecursive($contentsPath, $root);
             $content->setProperty('sulu:template', $template);
-            $content->setProperty('sulu:state', StructureInterface::STATE_TEST);
+            $content->setProperty('sulu:state', StructureInterface::STATE_PUBLISHED);
             $content->setProperty('sulu:creator', $userId);
             $content->setProperty('sulu:created', new \DateTime());
             $content->setProperty('sulu:changer', $userId);

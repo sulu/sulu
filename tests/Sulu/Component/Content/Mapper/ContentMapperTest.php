@@ -90,7 +90,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->session->save();
 
         $this->contents = $default->addNode('contents');
-        $this->contents->setProperty('sulu:state', StructureInterface::STATE_TEST);
+        $this->contents->setProperty('sulu:state', StructureInterface::STATE_PUBLISHED);
         $this->contents->setProperty('sulu:template', 'overview');
         $this->contents->setProperty('sulu:creator', 1);
         $this->contents->setProperty('sulu:created', new \DateTime());
@@ -1209,27 +1209,24 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // save with state PUBLISHED
         $data2 = array(
-            'title' => 't2',
-            'state' => 2
+            'title' => 't2'
         );
-        $data2 = $this->mapper->save($data2, 'overview', 'default', 'de', 1);
+        $data2 = $this->mapper->save($data2, 'overview', 'default', 'de', 1, true, null, null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getState());
 
         // change state from TEST to PUBLISHED
         $data3 = array(
-            'title' => 't1',
-            'state' => 2
+            'title' => 't1'
         );
-        $data3 = $this->mapper->save($data3, 'overview', 'default', 'de', 1, true, $data1->getUuid());
+        $data3 = $this->mapper->save($data3, 'overview', 'default', 'de', 1, true, $data1->getUuid(), null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data3->getState());
 
         // change state from PUBLISHED to TEST (exception)
         $this->setExpectedException('\Sulu\Component\Content\Exception\StateTransitionException');
         $data4 = array(
-            'title' => 't2',
-            'state' => 1
+            'title' => 't2'
         );
-        $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid());
+        $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid(), null, 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data4->getState());
     }
 
@@ -1266,8 +1263,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(StructureInterface::STATE_TEST, $x4->getState());
 
         // t1-t1-t1 to PUBLISHED (t1-t1-t1 TEST -> because t1-t1 is TEST -> inheritance)
-        $data[2]['state'] = 2;
-        $d3 = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, $d3->getUuid());
+        $d3 = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, $d3->getUuid(), null, 2);
 
         $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
         $this->assertEquals(StructureInterface::STATE_TEST, $x1->getState());
@@ -1280,20 +1276,20 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         // t1-t1 to PUBLISHED (t1-t1-t1 PUBLISHED -> because t1-t1 is PUBLISHED -> inheritance)
         $data[1]['state'] = 2;
-        $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, $d2->getUuid());
+        $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, $d2->getUuid(), null, 2);
 
         $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
         $this->assertEquals(StructureInterface::STATE_TEST, $x1->getState());
         $x2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x2->getState());
+        $this->assertEquals(StructureInterface::STATE_TEST, $x2->getState());
         $x3 = $this->mapper->load($d3->getUuid(), 'default', 'de');
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x3->getState());
+        $this->assertEquals(StructureInterface::STATE_TEST, $x3->getState());
         $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
         $this->assertEquals(StructureInterface::STATE_TEST, $x4->getState());
 
         // t1 to PUBLISHED
         $data[0]['state'] = 2;
-        $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1, true, $d1->getUuid());
+        $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1, true, $d1->getUuid(), null, 2);
 
         $x1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $x1->getState());
