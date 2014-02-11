@@ -10,10 +10,11 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Exception\StateNotFoundException;
+use Sulu\Component\Content\Exception\StateTransitionException;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -137,10 +138,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('sulu:changed', $dateTime);
 
         if (isset($data['state'])) {
-            $this->changeState($node, $data['state']);
+            $this->changeState($node, $data['state'], $structure);
         } else {
             // set default to test
-            $this->changeState($node, StructureInterface::STATE_TEST);
+            $this->changeState($node, StructureInterface::STATE_TEST, $structure);
         }
 
         $postSave = array();
@@ -213,8 +214,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * change state of given node
      * @param NodeInterface $node node to change state
      * @param int $state new state
+     * @param \Sulu\Component\Content\StructureInterface $structure
+     *
+     * @throws StateNotFoundException
+     * @throws StateTransitionException
      */
-    private function changeState(NodeInterface $node, $state)
+    private function changeState(NodeInterface $node, $state, StructureInterface $structure)
     {
         if ($state !== StructureInterface::STATE_TEST && $state !== StructureInterface::STATE_PUBLISHED) {
             throw new StateNotFoundException();
@@ -223,6 +228,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // no state (new node) set state
         if (!$node->hasProperty('sulu:state')) {
             $node->setProperty('sulu:state', $state);
+            $structure->setState($state);
         } else {
             $oldState = $node->getPropertyValue('sulu:state');
 
@@ -236,6 +242,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $state === StructureInterface::STATE_PUBLISHED
             ) {
                 $node->setProperty('sulu:state', $state);
+                $structure->setState($state);
             } elseif (
                 // from published to test
                 $oldState === StructureInterface::STATE_PUBLISHED &&
