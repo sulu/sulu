@@ -152,13 +152,24 @@ interface StructureInterface extends \JsonSerializable
      * @param int $state
      * @return int
      */
-    public function setState($state);
+    public function setNodeState($state);
 
     /**
      * returns state of node
      * @return int
      */
-    public function getState();
+    public function getNodeState();
+
+    /**
+     * @param int $globalState
+     */
+    public function setGlobalState($globalState);
+
+    /**
+     * returns global state of node (with inheritance)
+     * @return int
+     */
+    public function getGlobalState();
 
     /**
      * returns an array of property value pairs

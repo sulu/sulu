@@ -95,7 +95,13 @@ abstract class Structure implements StructureInterface
      * state of node
      * @var int
      */
-    private $state;
+    private $nodeState;
+
+    /**
+     * global state of node (with inheritance)
+     * @var int
+     */
+    private $globalState;
 
     /**
      * @param $key string
@@ -112,7 +118,7 @@ abstract class Structure implements StructureInterface
         $this->cacheLifeTime = $cacheLifeTime;
 
         // default state is test
-        $this->state = StructureInterface::STATE_TEST;
+        $this->nodeState = StructureInterface::STATE_TEST;
     }
 
     /**
@@ -312,18 +318,35 @@ abstract class Structure implements StructureInterface
      * @param int $state
      * @return int
      */
-    public function setState($state)
+    public function setNodeState($state)
     {
-        $this->state = $state;
+        $this->nodeState = $state;
     }
 
     /**
      * returns state of node
      * @return int
      */
-    public function getState()
+    public function getNodeState()
     {
-        return $this->state;
+        return $this->nodeState;
+    }
+
+    /**
+     * @param int $globalState
+     */
+    public function setGlobalState($globalState)
+    {
+        $this->globalState = $globalState;
+    }
+
+    /**
+     * returns global state of node (with inheritance)
+     * @return int
+     */
+    public function getGlobalState()
+    {
+        return $this->globalState;
     }
 
     /**
@@ -402,7 +425,8 @@ abstract class Structure implements StructureInterface
     {
         $result = array(
             'id' => $this->uuid,
-            'state' => $this->getState(),
+            'nodeState' => $this->getNodeState(),
+            'globalState' => $this->getNodeState(),
             'hasSub' => $this->hasChildren,
             'creator' => $this->creator,
             'changer' => $this->changer,

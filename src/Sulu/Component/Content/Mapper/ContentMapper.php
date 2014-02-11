@@ -139,11 +139,14 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('sulu:changer', $userId);
         $node->setProperty('sulu:changed', $dateTime);
 
-        if (isset($state)) {
-            $this->changeState($node, $state, $structure);
-        } else {
-            // set default to test
-            $this->changeState($node, StructureInterface::STATE_TEST, $structure);
+        // do not state transition for root (contents) node
+        if ($node->getDepth() > 3) {
+            if (isset($state)) {
+                $this->changeState($node, $state, $structure);
+            } else {
+                // set default to test
+                $this->changeState($node, StructureInterface::STATE_TEST, $structure);
+            }
         }
 
         $postSave = array();
@@ -209,6 +212,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue('sulu:created'));
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
+        $structure->setGlobalState($this->getInheritedState($node));
+
         return $structure;
     }
 
@@ -230,7 +235,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // no state (new node) set state
         if (!$node->hasProperty('sulu:state')) {
             $node->setProperty('sulu:state', $state);
-            $structure->setState($state);
+            $structure->setNodeState($state);
         } else {
             $oldState = $node->getPropertyValue('sulu:state');
 
@@ -244,7 +249,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $state === StructureInterface::STATE_PUBLISHED
             ) {
                 $node->setProperty('sulu:state', $state);
-                $structure->setState($state);
+                $structure->setNodeState($state);
             } elseif (
                 // from published to test
                 $oldState === StructureInterface::STATE_PUBLISHED &&
@@ -389,14 +394,14 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure = $this->getStructure($templateKey);
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setState($contentNode->getPropertyValue('sulu:state'));
+        $structure->setNodeState($contentNode->getPropertyValue('sulu:state'));
         $structure->setCreator($contentNode->getPropertyValue('sulu:creator'));
         $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
         $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
         $structure->setHasChildren($contentNode->hasNodes());
 
-        $structure->setState($this->getInheritedState($contentNode));
+        $structure->setGlobalState($this->getInheritedState($contentNode));
 
         // go through every property in the template
         /** @var PropertyInterface $property */
