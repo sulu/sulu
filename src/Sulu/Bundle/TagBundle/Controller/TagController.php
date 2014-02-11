@@ -22,6 +22,8 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 
+use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
+
 /**
  * Makes tag available through
  * @package Sulu\Bundle\TagBundle\Controller
@@ -147,8 +149,8 @@ class TagController extends RestController implements ClassResourceInterface
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
-            $restException = new RestException('The tag with the name "' . $exc->getName() . '" already exists.');
-            $view = $this->view($restException->toArray(), 400);
+            $cvExistsException = new ConstraintViolationException('A tag with the name "'.$exc->getName().'"already exists!','name');
+            $view = $this->view($cvExistsException->toArray(), 400);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -176,8 +178,8 @@ class TagController extends RestController implements ClassResourceInterface
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
-            $restException = new RestException('The tag with the name "' . $name . '" already exists.');
-            $view = $this->view($restException->toArray(), 400);
+            $cvExistsException = new ConstraintViolationException('A tag with the name "'.$exc->getName().'"already exists!','name');
+            $view = $this->view($cvExistsException->toArray(), 400);
         } catch (TagNotFoundException $exc) {
             $entityNotFoundException = new EntityNotFoundException($this->entityName, $id);
             $view = $this->view($entityNotFoundException->toArray(), 404);
@@ -258,8 +260,8 @@ class TagController extends RestController implements ClassResourceInterface
             $view = $this->view($tags, 200);
 
         } catch (TagAlreadyExistsException $exc) {
-            $tagAlreadyExists = new RestException($this->entityName . ' ' . $exc->getName());
-            $view = $this->view($tagAlreadyExists->toArray(), 400);
+            $cvExistsException = new ConstraintViolationException('A tag with the name "'.$exc->getName().'"already exists!','name');
+            $view = $this->view($cvExistsException->toArray(), 400);
         }
 
         return $this->handleView($view);
