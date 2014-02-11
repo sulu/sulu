@@ -34,6 +34,15 @@ interface NodeRepositoryInterface {
     public function getNodes($parent, $portalKey, $languageCode, $depth = 1, $flat = true);
 
     /**
+     * Returns the content of a smartcontent configuration
+     * @param array $smartContentConfig The config of the smart content
+     * @param string $languageCode The desired language code
+     * @param string $webspaceKey The webspace key
+     * @return mixed
+     */
+    public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey);
+
+    /**
      * returns start node for given portal
      * @param string $portalKey
      * @param string $languageCode
@@ -51,7 +60,7 @@ interface NodeRepositoryInterface {
      * @param string $parentUuid
      * @return array
      */
-    public function saveNode($data, $templateKey, $portalKey, $languageCode, $uuid = null);
+    public function saveNode($data, $templateKey, $portalKey, $languageCode, $userId, $uuid = null, $parentUuid = null);
 
     /**
      * save start page of given portal
@@ -61,7 +70,7 @@ interface NodeRepositoryInterface {
      * @param string $languageCode
      * @return array
      */
-    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode);
+    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode, $userId);
     
     /**
      * removes given node

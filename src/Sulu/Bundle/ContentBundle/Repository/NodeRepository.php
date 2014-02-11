@@ -10,13 +10,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Jackalope\NotImplementedException;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class NodeRepository implements NodeRepositoryInterface
 {
@@ -31,25 +27,11 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    /**
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    private $securityContext;
-
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
     function __construct(
-        ContentMapperInterface $mapper,
-        UserManagerInterface $userManager,
-        SecurityContextInterface $securityContext
+        ContentMapperInterface $mapper
     )
     {
         $this->mapper = $mapper;
-        $this->userManager = $userManager;
-        $this->securityContext = $securityContext;
     }
 
     /**
@@ -71,10 +53,6 @@ class NodeRepository implements NodeRepositoryInterface
     {
         $result = $structure->toArray();
 
-        // replace creator, changer
-        $result['creator'] = $this->getFullNameByUserId($structure->getCreator());
-        $result['changer'] = $this->getFullNameByUserId($structure->getChanger());
-
         // add default empty embedded property
         $result['_embedded'] = array();
         // add api links
@@ -84,25 +62,6 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $result;
-    }
-
-    /**
-     * returns user fullName
-     * @param integer $id userId
-     * @return string
-     */
-    protected function getFullNameByUserId($id)
-    {
-        return $this->userManager->getFullNameByUserId($id);
-    }
-
-    /**
-     * returns id of current user
-     * @return int
-     */
-    protected function getUserId()
-    {
-        return $this->userManager->getCurrentUserData()->getId();
     }
 
     /**
@@ -148,14 +107,14 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $languageCode
      * @return array
      */
-    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode)
+    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode, $userId)
     {
         $structure = $this->getMapper()->saveStartPage(
             $data,
             $templateKey,
             $portalKey,
             $languageCode,
-            $this->getUserId()
+            $userId
         );
 
         return $this->prepareNode($structure);
@@ -197,6 +156,22 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
+     * Returns the content of a smartcontent configuration
+     * @param array $smartContentConfig The config of the smart content
+     * @param string $languageCode The desired language code
+     * @param string $webspaceKey The webspace key
+     * @return mixed
+     */
+    public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey)
+    {
+        $sql2 = 'SELECT * FROM [sulu:content] as c WHERE c.[title] = \'asdf\'';
+
+
+
+        return $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey);
+    }
+
+    /**
      * @param StructureInterface[] $nodes
      * @return array
      */
@@ -224,14 +199,14 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $parentUuid
      * @return array
      */
-    public function saveNode($data, $templateKey, $portalKey, $languageCode, $uuid = null, $parentUuid = null)
+    public function saveNode($data, $templateKey, $portalKey, $languageCode, $userId, $uuid = null, $parentUuid = null)
     {
         $node = $this->getMapper()->save(
             $data,
             $templateKey,
             $portalKey,
             $languageCode,
-            $this->getUserId(),
+            $userId,
             true,
             $uuid,
             $parentUuid

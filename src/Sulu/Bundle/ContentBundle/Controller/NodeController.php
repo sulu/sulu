@@ -102,7 +102,14 @@ class NodeController extends RestController implements ClassResourceInterface
         $template = $this->getRequest()->get('template');
         $data = $this->getRequest()->request->all();
 
-        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, $uuid);
+        $result = $this->getRepository()->saveNode(
+            $data,
+            $template,
+            $webspace,
+            $language,
+            $this->getUser()->getId(),
+            $uuid
+        );
 
         return $this->handleView(
             $this->view($result)
@@ -127,7 +134,13 @@ class NodeController extends RestController implements ClassResourceInterface
                 throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
             }
 
-            $result = $this->getRepository()->saveIndexNode($data, $template, $webspace, $language);
+            $result = $this->getRepository()->saveIndexNode(
+                $data,
+                $template,
+                $webspace,
+                $language,
+                $this->getUser()->getId()
+            );
             $view = $this->view($result);
         } catch (RestException $ex) {
             $view = $this->view(
@@ -153,7 +166,15 @@ class NodeController extends RestController implements ClassResourceInterface
         $data = $this->getRequest()->request->all();
         $parent = $this->getRequest()->get('parent');
 
-        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, null, $parent);
+        $result = $this->getRepository()->saveNode(
+            $data,
+            $template,
+            $webspace,
+            $language,
+            $this->getUser()->getId(),
+            null,
+            $parent
+        );
 
         return $this->handleView(
             $this->view($result)
