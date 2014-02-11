@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
+use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 //FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
 interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
@@ -24,9 +26,37 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
      */
     private $smartContent;
 
+    /**
+     * @var NodeRepository
+     */
+    private $nodeRepository;
+
+    /**
+     * @var TagManagerInterface
+     */
+    private $tagManager;
+
     public function setUp()
     {
-        $this->smartContent = new SmartContent('SuluContentBundle:Template:content-types/smart_content.html.twig');
+        $this->nodeRepository = $this->getMockForAbstractClass(
+            'Sulu\Bundle\ContentBundle\Repository\NodeRepository',
+            array(),
+            '',
+            false
+        );
+
+        $this->tagManager = $this->getMockForAbstractClass(
+            'Sulu\Bundle\TagBundle\Tag\TagManagerInterface',
+            array(),
+            '',
+            false
+        );
+
+        $this->smartContent = new SmartContent(
+            $this->nodeRepository,
+            $this->tagManager,
+            'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
     }
 
     public function testTemplate()

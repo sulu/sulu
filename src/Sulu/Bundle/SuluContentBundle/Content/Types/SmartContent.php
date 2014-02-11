@@ -11,6 +11,9 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
+use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
 
@@ -19,10 +22,25 @@ use Sulu\Component\Content\PropertyInterface;
  */
 class SmartContent extends ComplexContentType
 {
+    /**
+     * @var NodeRepositoryInterface
+     */
+    private $nodeRepository;
+
+    /**
+     * @var TagManagerInterface
+     */
+    private $tagManager;
+
+    /**
+     * @var string
+     */
     private $template;
 
-    function __construct($template)
+    function __construct(NodeRepositoryInterface $nodeRepository, TagManagerInterface $tagManager, $template)
     {
+        $this->nodeRepository = $nodeRepository;
+        $this->tagManager = $tagManager;
         $this->template = $template;
     }
 
@@ -54,7 +72,14 @@ class SmartContent extends ComplexContentType
      */
     public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
-        // TODO: Implement get() method.
+        $smartContent = new SmartContentContainer($this->nodeRepository);
+        $smartContent->setConfig(
+            json_decode(
+                $node->getPropertyValueWithDefault($property->getName(), '{}'),
+                true
+            )
+        );
+        $property->setValue($smartContent);
     }
 
     /**
@@ -66,7 +91,18 @@ class SmartContent extends ComplexContentType
      */
     public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
-        $node->setProperty($property->getName(), json_encode($property->getValue()));
+        $value = $property->getValue();
+
+        $resolvedTags = array();
+        if (!empty($value['tags'])) {
+            foreach ($value['tags'] as $tagName) {
+                $resolvedTags[] = $this->tagManager->findByName($tagName)->getId();
+            }
+
+            $value['tags'] = $resolvedTags;
+        }
+
+        $node->setProperty($property->getName(), json_encode($value));
     }
 
     /**
