@@ -150,12 +150,12 @@ define([
             }, params.templateType);
         },
 
-        save: function(data) {
+        save: function(data, template) {
             // TODO: show loading icon
             this.content.set(data);
 
             // TODO select template
-            this.content.saveTemplate(null, 'overview', this.options.parent, {
+            this.content.saveTemplate(null, template, this.options.parent, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();

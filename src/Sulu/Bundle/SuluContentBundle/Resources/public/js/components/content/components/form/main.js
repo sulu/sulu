@@ -20,7 +20,8 @@ define(['app-config'], function(AppConfig) {
         wsUrl: '',
         wsPort: '',
 
-        templates: ['/admin/content/template/form/overview'],
+        templates: ['/admin/content/template/form'],
+        template: '',
 
         initialize: function() {
             this.saved = true;
@@ -34,8 +35,8 @@ define(['app-config'], function(AppConfig) {
 
         render: function() {
             this.bindCustomEvents();
-            
-            this.html(this.renderTemplate('/admin/content/template/form/overview'));
+
+            this.html(this.renderTemplate('/admin/content/template/form'));
             var data = this.initData();
             this.createForm(data);
 
@@ -45,11 +46,15 @@ define(['app-config'], function(AppConfig) {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-                this.sandbox.form.setData(this.formId, data);
-                if (!!this.options.data.id) {
-                    this.initPreview();
-                }
+                this.setFormData(data);
             }.bind(this));
+        },
+
+        setFormData: function(data) {
+            this.sandbox.form.setData(this.formId, data);
+            if (!!this.options.data.id) {
+                this.initPreview();
+            }
         },
 
         bindDomEvents: function() {
@@ -118,6 +123,15 @@ define(['app-config'], function(AppConfig) {
                 this.wsUrl = url;
                 this.wsPort = port;
             }, this);
+
+            // set default template
+            this.sandbox.on('sulu.content.contents.default-template', function(name, index) {
+                this.template = name;
+                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', index);
+            }, this);
+
+            // change template
+            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', this.changeTemplate, this);
         },
 
         initData: function() {
@@ -132,8 +146,27 @@ define(['app-config'], function(AppConfig) {
 
                 this.sandbox.logger.log('data', data);
 
-                this.sandbox.emit('sulu.content.contents.save', data);
+                this.sandbox.emit('sulu.content.contents.save', data, this.template);
             }
+        },
+
+        changeTemplate: function(item) {
+            if (this.template === item.key) {
+                return;
+            }
+            this.template = item.key;
+
+            require(['text!/admin/content/template/form/' + item.key + '.html'], function(template) {
+                var defaults = {
+                        translate: this.sandbox.translate
+                    },
+                    context = this.sandbox.util.extend({}, defaults),
+                    tpl = this.sandbox.util.template(template, context);
+
+                this.html(tpl);
+                var data = this.initData();
+                this.createForm(data);
+            }.bind(this));
         },
 
         // @var Bool saved - defines if saved state should be shown
