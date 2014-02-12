@@ -142,11 +142,11 @@ class PreviewMessageComponent implements MessageComponentInterface
         $id = $user . '-' . $content;
 
         // if params correct
-        if ($type == 'form' && isset($params->changes)) {
+        if ($type == 'form' && isset($params->changes) && isset($params->template)) {
 
             foreach ($params->changes as $property => $data) {
                 // update property
-                $this->preview->update($user, $content, $property, $data);
+                $this->preview->update($user, $content, $property, $data, $params->template);
             }
 
             // send ok message

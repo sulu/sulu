@@ -321,7 +321,7 @@ define(['app-config'], function(AppConfig) {
                 content: this.options.data.id,
                 type: 'form',
                 user: AppConfig.getUser().id,
-                params: {changes: changes}
+                params: {changes: changes, template: this.template}
             };
             this.ws.send(JSON.stringify(message));
         }
