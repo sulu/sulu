@@ -234,8 +234,81 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'type' => 'form',
                     'user' => '1',
                     'params' => array(
-                        'property' => 'article',
-                        'data' => 'qwertz'
+                        'changes' => array(
+                            'article' => 'qwertz'
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    public function testUpdateTemplate()
+    {
+        $clientForm = $this->prepareClient(
+            function ($string) {
+                $data = json_decode($string);
+            },
+            $this->any(),
+            'form',
+            function () {
+                $this->assertTrue(true);
+            },
+            $this->any()
+        );
+        $clientPreview = $this->prepareClient(
+            function ($string) {
+                $data = json_decode($string);
+                if ($data->command === 'changes') {
+                    $this->assertTrue($data->params->changes->reload);
+                }
+            },
+            $this->count(2),
+            'preview',
+            function () {
+                $this->assertTrue(true);
+            },
+            $this->any()
+        );
+
+        $this->component->onMessage(
+            $clientForm,
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => '123-123-123',
+                    'type' => 'form',
+                    'user' => '1',
+                    'params' => array()
+                )
+            )
+        );
+
+        $this->component->onMessage(
+            $clientPreview,
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => '123-123-123',
+                    'type' => 'preview',
+                    'user' => '1',
+                    'params' => array()
+                )
+            )
+        );
+        $this->component->onMessage(
+            $clientForm,
+            json_encode(
+                array(
+                    'command' => 'update',
+                    'content' => '123-123-123',
+                    'type' => 'form',
+                    'user' => '1',
+                    'params' => array(
+                        'template' => 'simple',
+                        'changes' => array(
+                            'article' => 'qwertz'
+                        )
                     )
                 )
             )
@@ -456,7 +529,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
         $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
         $structureManagerMock->expects($this->any())
             ->method('getStructure')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue($this->prepareStructureMock(2)));
 
         return $structureManagerMock;
     }
@@ -473,7 +546,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
 
     public function prepareMapperMock()
     {
-        $structure = $this->prepareStructureMock();
+        $structure = $this->prepareStructureMock(1);
         $mapper = $this->getMock('\Sulu\Component\Content\Mapper\ContentMapperInterface');
         $mapper->expects($this->any())
             ->method('load')
@@ -482,11 +555,11 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
         return $mapper;
     }
 
-    public function prepareStructureMock()
+    public function prepareStructureMock($i)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
-            array('overview', 'asdf', 'asdf', 2400)
+            array($i === 1 ? 'overview' : 'simple', 'asdf', 'asdf', 2400)
         );
 
         $method = new ReflectionMethod(
@@ -516,7 +589,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
         );
 
         $structureMock->getProperty('title')->setValue('Title');
-        $structureMock->getProperty('article')->setValue('Lorem Ipsum dolorem apsum');
+        if ($i === 1) {
+            $structureMock->getProperty('article')->setValue('Lorem Ipsum dolorem apsum');
+        }
 
         return $structureMock;
     }
