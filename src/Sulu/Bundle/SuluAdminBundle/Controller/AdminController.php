@@ -26,32 +26,21 @@ class AdminController extends Controller
         if ($this->has($serviceId)) {
             /** @var UserManagerInterface $userManager */
             $userManager = $this->get($serviceId);
-            $userData = $userManager->getCurrentUserData();
+            if ($userManager->getCurrentUserData()->isLoggedIn()) {
+                $user = $userManager->getCurrentUserData()->toArray();
 
-            if ($userData->isLoggedIn()) {
-
-                // user settings
-                $userSettings = $userData->getUserSettings();
-                $userSettingsString = json_encode($userSettings);
-
-                $user['id'] = $userData->getId();
-                $user['username'] = $userData->getFullName();
-                $user['logout'] = $userData->getLogoutLink();
-                $user['locale'] = $userData->getLocale();
-                $user['settings'] = $userSettingsString;
+                // render template
+                return $this->render(
+                    'SuluAdminBundle:Admin:index.html.twig',
+                    array(
+                        'name' => $this->container->getParameter('sulu_admin.name'),
+                        'user' => $user
+                    )
+                );
             } else {
-                return $this->forward('SuluAdminBundle:Security:login');
+                return $this->redirect($this->generateUrl('sulu_admin.login'));
             }
         }
-
-        // render template
-        return $this->render(
-            'SuluAdminBundle:Admin:index.html.twig',
-            array(
-                'name' => $this->container->getParameter('sulu_admin.name'),
-                'user' => $user
-            )
-        );
     }
 
     /**
