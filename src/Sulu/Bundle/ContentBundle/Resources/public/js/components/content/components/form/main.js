@@ -36,7 +36,7 @@ define(['app-config'], function(AppConfig) {
 
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
-                // this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
             }
         },
 
@@ -153,12 +153,12 @@ define(['app-config'], function(AppConfig) {
 
         changeTemplate: function(item) {
             if (typeof item === 'string') {
-                item = {key: item};
+                item = {template: item};
             }
-            if (this.template === item.key) {
+            if (this.template === item.template) {
                 return;
             }
-            this.template = item.key;
+            this.template = item.template;
 
             this.setHeaderBar(false);
 
@@ -170,7 +170,7 @@ define(['app-config'], function(AppConfig) {
                 }
             }
 
-            require(['text!/admin/content/template/form/' + item.key + '.html'], function(template) {
+            require(['text!/admin/content/template/form/' + item.template + '.html'], function(template) {
                 var defaults = {
                         translate: this.sandbox.translate
                     },
@@ -195,7 +195,6 @@ define(['app-config'], function(AppConfig) {
             }
             this.saved = saved;
         },
-
 
         listenForChange: function() {
             this.sandbox.dom.on(this.formId, 'change', function() {
