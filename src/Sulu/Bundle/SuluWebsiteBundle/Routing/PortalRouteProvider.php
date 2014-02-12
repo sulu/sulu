@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Routing;
 use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Workspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,20 +81,27 @@ class PortalRouteProvider implements RouteProviderInterface
             // Set current theme
             $this->activeTheme->setName($portal->getWorkspace()->getTheme()->getKey());
 
+            $error = false;
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
                     $this->requestAnalyzer->getCurrentResourceLocator(),
                     $portal->getWorkspace()->getKey(),
                     $language
                 );
+                if ($content->getGlobalState() === StructureInterface::STATE_TEST) {
+                    $error = true;
+                } else {
+                    $route = new Route($request->getRequestUri(), array(
+                        '_controller' => $content->getController(),
+                        'structure' => $content
+                    ));
 
-                $route = new Route($request->getRequestUri(), array(
-                    '_controller' => $content->getController(),
-                    'structure' => $content
-                ));
-
-                $collection->add($content->getKey() . '_' . uniqid(), $route);
+                    $collection->add($content->getKey() . '_' . uniqid(), $route);
+                }
             } catch (ResourceLocatorNotFoundException $rlnfe) {
+                $error = true;
+            }
+            if ($error) {
                 $route = new Route($request->getRequestUri(), array(
                     '_controller' => 'SuluWebsiteBundle:Default:error404',
                     'path' => $request->getRequestUri()

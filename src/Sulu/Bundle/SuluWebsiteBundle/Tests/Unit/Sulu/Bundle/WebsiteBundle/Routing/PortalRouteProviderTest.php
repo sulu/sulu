@@ -19,6 +19,41 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
+    public function testStateTEST()
+    {
+        // Set up test
+        $path = '/';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $workspace = new Workspace();
+        $workspace->setTheme($theme);
+        $portal->setWorkspace($workspace);
+        $localization = new Localization();
+        $localization->setLanguage('de');
+
+        $structure = $this->getStructureMock($uuid, 1);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $localization);
+        $activeTheme = $this->getActiveThemeMock();
+
+        $contentMapper = $this->getContentMapperMock($structure);
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
+
+        $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Default:error404', $route->getDefaults()['_controller']);
+        $this->assertEquals('/', $route->getDefaults()['path']);
+    }
+
     public function testGetCollectionForRequest()
     {
         // Set up test
@@ -123,7 +158,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getStructureMock($uuid)
+    protected function getStructureMock($uuid, $state = 2)
     {
         $structure = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\StructureInterface',
@@ -132,10 +167,11 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('getUuid')
+            array('getUuid', 'getGlobalState')
         );
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
+        $structure->expects($this->any())->method('getGlobalState')->will($this->returnValue($state));
 
         return $structure;
     }
