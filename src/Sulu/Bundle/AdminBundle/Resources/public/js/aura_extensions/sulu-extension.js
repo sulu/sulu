@@ -90,13 +90,6 @@
                                     }
                                     settingsArray.push(newSetting);
 
-//                                    this.sandbox.util.foreach(attributesArray, function(attribute) {
-//                                        // replace attributes with those of settings
-//                                        userFields[index][attribute] = serverFields[serverindex][attribute];
-//                                    });
-//
-//                                    // add to result
-//                                    settingsArray.push(userFields[index]);
                                     // remove from server keys
                                     serverindexLeft = serverKeysLeft.indexOf(key);
                                     serverKeysLeft.splice(serverindexLeft, 1);
@@ -190,7 +183,7 @@
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
-                    //start component
+                    //start list-toolbar component
                     this.sandbox.start([
                         {
                             name: 'list-toolbar@suluadmin',
@@ -201,6 +194,7 @@
                     gridOptions.fieldsData = data;
                     gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
                     gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+                    gridOptions.contentContainer = '#content';
 
                     // start datagrid
                     this.sandbox.start([

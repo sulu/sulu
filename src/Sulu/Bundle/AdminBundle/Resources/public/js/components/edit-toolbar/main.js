@@ -187,7 +187,7 @@ define([], function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
             this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', this.changeState.bind(this));
-            this.sandbox.on('husky.navigation.size.changed', changeLeftDistance.bind(this));
+            this.sandbox.on('husky.navigation.size.change', changeLeftDistance.bind(this));
         },
 
         changeState: function(type, saved) {
