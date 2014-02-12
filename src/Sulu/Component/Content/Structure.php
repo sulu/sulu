@@ -347,9 +347,7 @@ abstract class Structure implements StructureInterface
     public function __isset($property)
     {
         if (isset($this->properties[$property])) {
-            $value = $this->getProperty($property)->getValue();
-
-            return $value !== null;
+            return true;
         } else {
             return isset($this->$property);
         }
@@ -375,6 +373,7 @@ abstract class Structure implements StructureInterface
     {
         $result = array(
             'id' => $this->uuid,
+            'template' => $this->getKey(),
             'hasSub' => $this->hasChildren,
             'creator' => $this->creator,
             'changer' => $this->changer,
