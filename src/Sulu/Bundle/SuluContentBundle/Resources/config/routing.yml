@@ -6,6 +6,10 @@ sulu_content.content_form.default:
     pattern: /template/form.html
     defaults: { _controller: SuluContentBundle:Template:content }
 
+sulu_content.template.get:
+    pattern: /template
+    defaults: { _controller: SuluContentBundle:Template:get }
+
 sulu_content.content_navigation:
     path: /navigation/content
     defaults: { _controller: SuluContentBundle:Navigation:content }

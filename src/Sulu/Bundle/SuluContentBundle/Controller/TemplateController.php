@@ -13,9 +13,23 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class TemplateController extends Controller
 {
+    public function getAction()
+    {
+        /** @var StructureManagerInterface $structureManager */
+        $structureManager = $this->get('sulu.content.structure_manager');
+        $templates = $structureManager->getStructures();
+        $data = array(
+            '_embedded' => $templates,
+            'total' => sizeof($templates),
+        );
+        return new JsonResponse($data);
+    }
+
     public function contentAction($key = null)
     {
         $templateIndex = null;
