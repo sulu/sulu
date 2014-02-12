@@ -20,7 +20,6 @@ define(['app-config'], function(AppConfig) {
         wsUrl: '',
         wsPort: '',
 
-        templates: ['/admin/content/template/form'],
         template: '',
 
         initialize: function() {
@@ -35,12 +34,10 @@ define(['app-config'], function(AppConfig) {
         render: function() {
             this.bindCustomEvents();
 
-            this.html(this.renderTemplate('/admin/content/template/form'));
-            var data = this.initData();
-            this.createForm(data);
-
-            this.bindDomEvents();
-            this.listenForChange();
+            if (!!this.options.data.template) {
+                this.changeTemplate(this.options.data.template);
+                // this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+            }
         },
 
         createForm: function(data) {
@@ -155,10 +152,15 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplate: function(item) {
+            if (typeof item === 'string') {
+                item = {key: item};
+            }
             if (this.template === item.key) {
                 return;
             }
             this.template = item.key;
+
+            this.setHeaderBar(false);
 
             require(['text!/admin/content/template/form/' + item.key + '.html'], function(template) {
                 var defaults = {
