@@ -126,7 +126,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             var template = this.options.template,
-                contentLeft;
+                contentLeft, $container;
 
             // load template:
             if (typeof template === 'string') {
@@ -149,11 +149,14 @@ define([], function() {
                 }
             }
 
+            $container = this.sandbox.dom.createElement('<div />');
+            this.html($container);
+
             this.sandbox.start([
                 {
                     name: 'edit-toolbar@husky',
                     options: {
-                        el: this.$el,
+                        el: $container,
                         pageFunction: this.options.pageFunction,
                         data: this.options.template
                     }
