@@ -800,68 +800,6 @@ h5 {
   font-size: 12px;
 }
 
-/* line 1, ../scss/overlay.scss */
-.overlay-container {
-  width: 400px;
-  position: fixed;
-  top: 0;
-  left: 50%;
-  margin-left: -200px;
-  background-color: white;
-  border: 0px solid #cccccc;
-  z-index: 1000;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
-}
-/* line 12, ../scss/overlay.scss */
-.overlay-container.right-aligned {
-  left: auto;
-  right: 0;
-}
-
-/* line 18, ../scss/overlay.scss */
-.overlay-header {
-  padding: 15px 40px 15px 20px;
-  min-height: 50px;
-  border-bottom: 1px solid #dddddd;
-  position: relative;
-}
-/* line 24, ../scss/overlay.scss */
-.overlay-header .title {
-  color: #999999;
-  font-size: 23px;
-  padding-right: 10px;
-  vertical-align: text-top;
-}
-/* line 31, ../scss/overlay.scss */
-.overlay-header .close-button {
-  position: absolute;
-  top: 17px;
-  right: 20px;
-  font-size: 20px;
-  float: right;
-  text-decoration: none;
-  color: black;
-}
-
-/* line 43, ../scss/overlay.scss */
-.overlay-footer {
-  padding: 10px 0;
-  border-top: 1px solid #cccccc;
-  text-align: center;
-}
-/* line 48, ../scss/overlay.scss */
-.overlay-footer .save-button {
-  display: inline-block;
-}
-
-/* line 53, ../scss/overlay.scss */
-.overlay-content {
-  padding-left: 0;
-  margin: 10px 20px;
-}
-
 /* line 4, ../scss/dropdown-menu.scss */
 .custom-dropdown-menu, .husky-top-toolbar .top-toolbar-dropdown-menu {
   background-color: white;
@@ -928,6 +866,77 @@ h5 {
 .custom-dropdown-menu li a, .husky-top-toolbar .top-toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
+}
+
+/* line 1, ../scss/modules/overlay.scss */
+.husky-overlay-container {
+  width: 400px;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  background-color: white;
+  border: 0px solid #cccccc;
+  z-index: 1000;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+}
+/* line 11, ../scss/modules/overlay.scss */
+.husky-overlay-container.right-aligned {
+  left: auto;
+  right: 0;
+}
+
+/* line 17, ../scss/modules/overlay.scss */
+.draggable .overlay-header {
+  cursor: move;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+
+/* line 22, ../scss/modules/overlay.scss */
+.overlay-header {
+  padding: 15px 40px 15px 20px;
+  min-height: 50px;
+  border-bottom: 1px solid #dddddd;
+  position: relative;
+}
+/* line 28, ../scss/modules/overlay.scss */
+.overlay-header .title {
+  color: #999999;
+  font-size: 23px;
+  padding-right: 10px;
+  vertical-align: text-top;
+}
+/* line 35, ../scss/modules/overlay.scss */
+.overlay-header .close-button {
+  position: absolute;
+  top: 17px;
+  right: 20px;
+  font-size: 20px;
+  float: right;
+  text-decoration: none;
+  color: black;
+}
+
+/* line 47, ../scss/modules/overlay.scss */
+.overlay-footer {
+  padding: 10px 0;
+  border-top: 1px solid #cccccc;
+  text-align: center;
+}
+/* line 52, ../scss/modules/overlay.scss */
+.overlay-footer .save-button {
+  display: inline-block;
+}
+
+/* line 57, ../scss/modules/overlay.scss */
+.overlay-content {
+  padding-left: 0;
+  margin: 10px 20px;
 }
 
 @font-face {
@@ -4467,9 +4476,10 @@ li a.navigation-settings-icon {
 .navigation.collapsed footer {
   opacity: 0;
   height: 0;
+  margin: 0;
 }
 
-/* line 446, ../scss/modules/navigation.scss */
+/* line 447, ../scss/modules/navigation.scss */
 .navigation-tooltip {
   position: absolute;
   height: 30px;
@@ -4481,7 +4491,7 @@ li a.navigation-settings-icon {
   color: white;
   background-color: #3e3e3e;
 }
-/* line 457, ../scss/modules/navigation.scss */
+/* line 458, ../scss/modules/navigation.scss */
 .navigation-tooltip::before {
   content: ' ';
   position: absolute;
@@ -4494,7 +4504,7 @@ li a.navigation-settings-icon {
   border-right: 10px solid #3e3e3e;
 }
 
-/* line 471, ../scss/modules/navigation.scss */
+/* line 472, ../scss/modules/navigation.scss */
 .navigation {
   -webkit-transition: width 0.5s;
   -moz-transition: width 0.5s;
@@ -4502,7 +4512,7 @@ li a.navigation-settings-icon {
   transition: width 0.5s;
 }
 
-/* line 475, ../scss/modules/navigation.scss */
+/* line 476, ../scss/modules/navigation.scss */
 .navigation-items {
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
@@ -4510,7 +4520,7 @@ li a.navigation-settings-icon {
   transition: all 0.5s;
 }
 
-/* line 478, ../scss/modules/navigation.scss */
+/* line 479, ../scss/modules/navigation.scss */
 .navigation-items * {
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
@@ -4518,14 +4528,14 @@ li a.navigation-settings-icon {
   transition: all 0.5s;
 }
 
-/* line 482, ../scss/modules/navigation.scss */
+/* line 483, ../scss/modules/navigation.scss */
 .navigation-header {
   -webkit-transition: margin 0.5s;
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 485, ../scss/modules/navigation.scss */
+/* line 486, ../scss/modules/navigation.scss */
 .navigation-header .navigation-header-title {
   -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
@@ -4533,14 +4543,14 @@ li a.navigation-settings-icon {
   transition: opacity 0.5s;
 }
 
-/* line 490, ../scss/modules/navigation.scss */
+/* line 491, ../scss/modules/navigation.scss */
 .navigation-search {
   -webkit-transition: margin 0.5s;
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 492, ../scss/modules/navigation.scss */
+/* line 493, ../scss/modules/navigation.scss */
 .navigation-search input {
   -webkit-transition: width 0.5s;
   -moz-transition: width 0.5s;
@@ -4548,7 +4558,7 @@ li a.navigation-settings-icon {
   transition: width 0.5s;
 }
 
-/* line 498, ../scss/modules/navigation.scss */
+/* line 499, ../scss/modules/navigation.scss */
 .section-headline,
 .section-headline * {
   -webkit-transition: all 0.5s;
@@ -4557,7 +4567,7 @@ li a.navigation-settings-icon {
   transition: all 0.5s;
 }
 
-/* line 502, ../scss/modules/navigation.scss */
+/* line 503, ../scss/modules/navigation.scss */
 .navigation-item-title {
   -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
@@ -4565,7 +4575,7 @@ li a.navigation-settings-icon {
   transition: opacity 0.5s;
 }
 
-/* line 506, ../scss/modules/navigation.scss */
+/* line 507, ../scss/modules/navigation.scss */
 .search-icon {
   -webkit-transition: color 0.5s;
   -moz-transition: color 0.5s;
@@ -4573,7 +4583,7 @@ li a.navigation-settings-icon {
   transition: color 0.5s;
 }
 
-/* line 511, ../scss/modules/navigation.scss */
+/* line 512, ../scss/modules/navigation.scss */
 .navigation:not(.collapsed) * {
   opacity: 1;
 }
@@ -6256,26 +6266,27 @@ a.btn-black, a.btn-highlight {
 .smart-overlay-content .sortMethod {
   margin-top: 25px;
 }
-/* line 160, ../scss/modules/smart-content.scss */
-.smart-overlay-content input.limit-to {
+/* line 161, ../scss/modules/smart-content.scss */
+.smart-overlay-content input.limit-to,
+.smart-overlay-content input.data-source {
   height: 30px;
   width: 100%;
   padding-left: 10px;
 }
-/* line 165, ../scss/modules/smart-content.scss */
+/* line 166, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tags.disabled {
   display: none;
 }
-/* line 168, ../scss/modules/smart-content.scss */
+/* line 169, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list {
   border: 1px solid #cccccc;
   border-radius: 4px 4px 0 0;
 }
-/* line 171, ../scss/modules/smart-content.scss */
+/* line 172, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list input {
   margin: 7px 0 0 0;
 }
-/* line 174, ../scss/modules/smart-content.scss */
+/* line 175, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list .tt-suggestions {
   width: 360px;
 }
