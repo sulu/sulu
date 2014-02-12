@@ -11,7 +11,10 @@ define(function() {
 
     'use strict';
 
-    var router;
+    var router,
+        changeContentPaddingLeft = function(paddingLeft) {
+            this.sandbox.dom.css('#content', {'margin-left': 50 + paddingLeft});
+        };
 
     return {
         name: 'Sulu App',
@@ -39,7 +42,11 @@ define(function() {
                 }.bind(this));
 
                 this.bindCustomEvents();
+                this.bindDomEvents();
             }
+        },
+
+        bindDomEvents: function() {
         },
 
         bindCustomEvents: function() {
@@ -70,12 +77,17 @@ define(function() {
                 this.emitNavigationEvent(event);
             }.bind(this));
 
-
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
                 callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
+
+
+            // layout
+            // responsive listeners
+            this.sandbox.on('husky.navigation.size.change', changeContentPaddingLeft.bind(this));
         },
+
 
         emitNavigationEvent: function(event) {
 

@@ -1,5 +1,4 @@
-$contentWidth : 800px;
-
+@import "compass/css3/transition";
 
 
 // BODY
@@ -8,50 +7,56 @@ body {
     background-color: $backgroundColor;
 }
 
-
 .control-label {
-  padding-left: 10px;
-  cursor: pointer;
+    padding-left: 10px;
+    cursor: pointer;
 }
 
 // Content
 /*----------------------------------------*/
 #content {
 
-  max-width: $contentWidth;
-  margin-left: 300px;
-  padding-top: 40px;
+    max-width: $contentMaxWidth;
+    min-width: $contenMinWidth;
+    margin-left: $contentPaddingLeft;
+    padding-top: $contentPaddingTop;
+    margin-right: $contentPaddingRight;
+    @include single-transition(margin,  $transitionDuration);
 
-  h2.mainheadline {
-    margin-top: 35px;
-  }
+    h2.mainheadline {
+        margin-top: 35px;
+    }
 
-  h1:first-child {
-      margin-top: 0;
-  }
+    h1:first-child {
+        margin-top: 0;
+    }
 
-  .content-tabs-content {
-    margin-top: 60px;
-  }
+    .content-tabs-content {
+        margin-top: 60px;
+    }
 
 }
-
 
 // tabs content
 #edit-toolbar-container {
-    z-index:100;
+    @include single-transition(margin,  $transitionDuration);
+    z-index: 99;
     position: fixed;
-    top: 0px;
+    top: 0;
+    left: 0;
+    margin-left: $contentPaddingLeft;
     width: 100%;
     background-color: $backgroundColor;
-    padding-top: 40px;
+    padding-top: $contentPaddingTop;
 }
+
 #edit-toolbar {
-    max-width: $contentWidth;
+    max-width: $contentMaxWidth;
 }
 
 #list-toolbar-container {
-    margin-bottom: 18px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 #page-functions + #edit-toolbar {
@@ -63,34 +68,38 @@ body {
 // Control elements
 /*----------------------------------------*/
 .control-label {
-  padding-left: 5px;
-  padding-right: 5px;
-  cursor: pointer;
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
 }
 
 // font family Helvetica / Arial for user generated content
 /*----------------------------------------*/
 input, select {
-  font-family: Helvetica, Arial;
+    font-family: Helvetica, Arial;
 }
 
+// Utility
+/*----------------------------------------*/
 
+.navigation-container {
+    z-index: 101;
+}
 
 // Utility
 /*----------------------------------------*/
 
 .pointer {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .block {
-  display:block;
+    display: block;
 }
-
 
 // Additional Margins
 /*----------------------------------------*/
 
 .m-top-1 {
-  margin-top: 1px !important;
+    margin-top: 1px !important;
 }

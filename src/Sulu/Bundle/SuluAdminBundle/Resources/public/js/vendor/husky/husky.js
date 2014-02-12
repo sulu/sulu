@@ -24445,9 +24445,10 @@ define('__component__$navigation@husky',[],function() {
             resizeWidth: 800,
             forceCollapse: false
         },
-        constants = {
-            uncollapsedWidth: 250,
-            collapsedWidth: 50
+        CONSTANTS = {
+            UNCOLLAPSED_WIDTH: 250,
+            COLLAPSED_WIDTH: 50,
+            TRANSITIONEND_EVENT: 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd'
         },
 
         namespace = 'husky.navigation.',
@@ -24482,7 +24483,14 @@ define('__component__$navigation@husky',[],function() {
 
 
         /**
-         * raised when navigation was un / collapsed. only raised when not forced
+         * raised when navigation collapse / uncollapse of navigation is triggered. called before transition starts
+         * only raised when not forced
+         * @event husky.navigation.size.change
+         */
+            EVENT_SIZE_CHANGE = namespace + 'size.change',
+
+        /**
+         * raised when navigation was un / collapsed. called when transition is finished. only raised when not forced
          * @event husky.navigation.size.changed
          */
             EVENT_SIZE_CHANGED = namespace + 'size.changed'
@@ -24638,7 +24646,7 @@ define('__component__$navigation@husky',[],function() {
 
             // collapse events
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeListener.bind(this));
-            this.sandbox.dom.on(this.$el, 'click', this.showCollapsedSearch.bind(this), '.navigation.a #navigation-search a.search-icon');
+            this.sandbox.dom.on(this.$el, 'click', this.showCollapsedSearch.bind(this), '.navigation #navigation-search a.search-icon');
             this.sandbox.dom.on(this.$el, 'click', this.collapse.bind(this), '.navigation.collapseIcon .navigation-close-icon');
 
 
@@ -24648,6 +24656,13 @@ define('__component__$navigation@husky',[],function() {
             }.bind(this), '.navigation.collapsed .navigation-search');
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showToolTip.bind(this, ''), '.navigation.collapsed .navigation-items');
             this.sandbox.dom.on(this.$el, 'mouseleave', this.hideToolTip.bind(this), '.navigation.collapsed .navigation-items, .navigation.collapsed .navigation-search');
+
+            this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function(event) {
+                this.sandbox.emit(EVENT_SIZE_CHANGED, this.sandbox.dom.width(this.$navigation));
+            }.bind(this));
+            this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function(event) {
+                event.stopPropagation();
+            }.bind(this),'.navigation *');
         },
 
         /**
@@ -24792,7 +24807,7 @@ define('__component__$navigation@husky',[],function() {
                 this.sandbox.dom.removeClass($toggle, 'icon-chevron-right');
                 this.sandbox.dom.prependClass($toggle, 'icon-chevron-down');
 
-                this.sandbox.dom.one($items, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', this.checkBottomHit.bind(this));
+                this.sandbox.dom.one($items, CONSTANTS.TRANSITIONEND_EVENT, this.checkBottomHit.bind(this));
             }
 
             // emit event
@@ -24869,8 +24884,8 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.dom.addClass(this.$navigation, 'collapsed');
             this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
             if (!this.collapsed) {
-                this.sandbox.emit(EVENT_COLLAPSED, constants.collapsedWidth);
-                this.sandbox.emit(EVENT_SIZE_CHANGED, constants.collapsedWidth);
+                this.sandbox.emit(EVENT_COLLAPSED, CONSTANTS.COLLAPSED_WIDTH);
+                this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.COLLAPSED_WIDTH);
                 this.collapsed = !this.collapsed;
             }
         },
@@ -24885,9 +24900,9 @@ define('__component__$navigation@husky',[],function() {
                 this.collapseBack = false;
             }
             if (this.collapsed) {
-                this.sandbox.emit(EVENT_UNCOLLAPSED, constants.uncollapsedWidth);
+                this.sandbox.emit(EVENT_UNCOLLAPSED, CONSTANTS.UNCOLLAPSED_WIDTH);
                 if (!forced) {
-                    this.sandbox.emit(EVENT_SIZE_CHANGED, constants.uncollapsedWidth);
+                    this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.UNCOLLAPSED_WIDTH);
                 }
                 this.collapsed = !this.collapsed;
             }
@@ -25950,6 +25965,8 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.url] url to fetch data from
  * @param {String} [options.paginationTemplate] template for pagination
  * @param {Boolean} [options.validation] enables validation for datagrid
+ * @param {String} [options.columnMinWidth] sets the minimal width of table columns
+ * @param {String|Object} [options.contentContainer] the container which holds the datagrid; this options resizes the contentContainer for responsiveness
  */
 define('__component__$datagrid@husky',[],function() {
 
@@ -25972,6 +25989,7 @@ define('__component__$datagrid@husky',[],function() {
                 pageSize: null,
                 showPages: null
             },
+            contentContainer: null,
             removeRow: true,
             selectItem: {
                 type: null,      // checkbox, radiobutton
@@ -25988,7 +26006,12 @@ define('__component__$datagrid@husky',[],function() {
             fieldsData: null,
             validation: false, // TODO does not work for added rows
             validationDebug: false,
-            startTabIndex: 1
+            startTabIndex: 1,
+            columnMinWidth: '70px'
+        },
+
+        constants = {
+            marginRight: 0
         },
 
         namespace = 'husky.datagrid.',
@@ -26113,6 +26136,12 @@ define('__component__$datagrid@husky',[],function() {
             UPDATE = namespace + 'update',
 
         /**
+         * used to update the table width and its containers due to responsiveness
+         * @event husky.datagrid.update.table
+         */
+            UPDATE_TABLE = namespace + 'update.table',
+
+        /**
          * used to add a row
          * @event husky.datagrid.row.add
          * @param {String} id of the row to be removed
@@ -26143,7 +26172,45 @@ define('__component__$datagrid@husky',[],function() {
          * used to trigger the save operation of changed data
          * @event husky.datagrid.data.save
          */
-            DATA_SAVE = namespace + 'data.save';
+            DATA_SAVE = namespace + 'data.save',
+
+
+        /**
+         * calculates the width of a text by creating a tablehead element and measure its width
+         * @param text
+         * @param classArray
+         */
+            getTextWidth = function(text, classArray, isSortable) {
+
+            var elWidth, el,
+                sortIconWidth = 0,
+                paddings = 16;
+            // handle css classes
+            if (!classArray) {
+                classArray = [];
+            }
+            if (isSortable) {
+                classArray.push('is-sortable');
+                sortIconWidth = 18 + 5;
+            }
+            classArray.push('is-selected');
+
+            el = this.sandbox.dom.createElement('<table style="width:auto"><thead><tr><th class="' + classArray.join(',') + '">' + text + '</th></tr></thead></table>');
+            this.sandbox.dom.css(el, {
+                'position': 'absolute',
+                'visibility': 'hidden',
+                'height': 'auto',
+                'width': 'auto'
+            });
+            this.sandbox.dom.append('body', el);
+
+            // text width + paddings and sorting icon
+            elWidth = this.sandbox.dom.width(el) + paddings + sortIconWidth;
+
+            this.sandbox.dom.remove(el);
+
+            return elWidth;
+        };
 
 
     return {
@@ -26162,8 +26229,13 @@ define('__component__$datagrid@husky',[],function() {
             this.data = null;
             this.allItemIds = [];
             this.selectedItemIds = [];
+            this.selectedDomIds = [];
             this.changedData = {};
             this.rowStructure = [];
+
+            if (!!this.options.contentContainer) {
+                this.originalMaxWidth = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
+            }
 
             this.domId = 0;
             this.elId = this.sandbox.dom.attr(this.$el, 'id');
@@ -26299,7 +26371,7 @@ define('__component__$datagrid@husky',[],function() {
         /**
          * Initializes the rendering of the datagrid
          */
-        initRender: function(response, params){
+        initRender: function(response, params) {
             // TODO adjust when new api is finished and no backwards compatibility needed
             if (!!response.items) {
                 this.data = response;
@@ -26323,6 +26395,8 @@ define('__component__$datagrid@husky',[],function() {
             if (!!params && typeof params.success === 'function') {
                 params.success(response);
             }
+
+            this.windowResizeListener();
         },
 
         /**
@@ -26365,7 +26439,9 @@ define('__component__$datagrid@husky',[],function() {
                 // TODO this.$element = this.prepareList();
                 this.sandbox.logger.log("list is not yet implemented!");
             } else {
-                this.$element.append(this.prepareTable());
+                this.$tableContainer = this.sandbox.dom.createElement('<div class="table-container"/>');
+                this.sandbox.dom.append(this.$element, this.$tableContainer);
+                this.sandbox.dom.append(this.$tableContainer, this.prepareTable());
             }
 
             return this;
@@ -26378,10 +26454,10 @@ define('__component__$datagrid@husky',[],function() {
         prepareTable: function() {
             var $table, $thead, $tbody, tblClasses;
 
-            $table = this.sandbox.dom.$('<table' + (!!this.options.validationDebug ? 'data-debug="true"' : '' ) + '/>');
+            this.$table = $table = this.sandbox.dom.createElement('<table' + (!!this.options.validationDebug ? 'data-debug="true"' : '' ) + '/>');
 
             if (!!this.data.head || !!this.options.columns) {
-                $thead = this.sandbox.dom.$('<thead/>');
+                $thead = this.sandbox.dom.createElement('<thead/>');
                 $thead.append(this.prepareTableHead());
                 $table.append($thead);
             }
@@ -26391,8 +26467,8 @@ define('__component__$datagrid@husky',[],function() {
                 if (!!this.options.appendTBody) {
                     $tbody = this.sandbox.dom.$('<tbody/>');
                 }
-                $tbody.append(this.prepareTableRows());
-                $table.append($tbody);
+                this.sandbox.dom.append($tbody, this.prepareTableRows());
+                this.sandbox.dom.append($table, $tbody);
             }
 
             // set html classes
@@ -26415,7 +26491,8 @@ define('__component__$datagrid@husky',[],function() {
          */
 
         prepareTableHead: function() {
-            var tblColumns, tblCellClass, tblColumnWidth, headData, tblCheckboxWidth, widthValues, checkboxValues, dataAttribute, isSortable;
+            var tblColumns, tblCellClass, headData, widthValues, checkboxValues, dataAttribute, isSortable,
+                tblColumnStyle, minWidth;
 
             tblColumns = [];
             headData = this.options.columns || this.data.head;
@@ -26424,21 +26501,14 @@ define('__component__$datagrid@husky',[],function() {
             if (!!this.options.selectItem && this.options.selectItem.type) {
 
                 // default values
-                checkboxValues = [];
                 if (this.options.selectItem.width) {
                     checkboxValues = this.getNumberAndUnit(this.options.selectItem.width);
                 }
 
-                tblCheckboxWidth = [];
-                tblCheckboxWidth.push(
-                    'width =',
-                    checkboxValues[0],
-                    checkboxValues[1]
-                );
-
+                minWidth = checkboxValues.number + checkboxValues.unit;
 
                 tblColumns.push(
-                    '<th class="select-all" ', tblCheckboxWidth.join(""), ' >');
+                    '<th class="select-all" ', 'style="width:' + minWidth + ';max-width:' + minWidth + ';min-width:' + minWidth + ';"', ' >');
 
                 if (this.options.selectItem.type === 'checkbox') {
                     tblColumns.push(this.templates.checkbox({ id: 'select-all' }));
@@ -26450,13 +26520,6 @@ define('__component__$datagrid@husky',[],function() {
             this.rowStructure = [];
 
             headData.forEach(function(column) {
-
-                tblColumnWidth = '';
-                // get width and measureunit
-                if (!!column.width) {
-                    widthValues = this.getNumberAndUnit(column.width);
-                    tblColumnWidth = ' width="' + widthValues[0] + widthValues[1] + '"';
-                }
 
                 isSortable = false;
 
@@ -26472,6 +26535,27 @@ define('__component__$datagrid@husky',[],function() {
                     }.bind(this));
                 }
 
+                // calculate width
+                tblColumnStyle = [];
+                if (column.width) {
+                    minWidth = column.width;
+                } else if (column.minWidth) {
+                    minWidth = column.minWidth;
+                } else {
+                    minWidth = getTextWidth.call(this, column.content, [], isSortable);
+                    minWidth = (minWidth > this.getNumberAndUnit(this.options.columnMinWidth).number) ? minWidth + 'px' : this.options.columnMinWidth;
+
+                }
+                tblColumnStyle.push('min-width:' + minWidth);
+                column.minWidth = minWidth;
+
+                // get width and measureunit
+                if (!!column.width) {
+                    widthValues = this.getNumberAndUnit(column.width);
+                    tblColumnStyle.push('max-width:' + widthValues.number + widthValues.unit);
+                    tblColumnStyle.push('width:' + widthValues.number + widthValues.unit);
+                }
+
                 // add to row structure when valid entry
                 if (column.attribute !== undefined) {
                     this.rowStructure.push({
@@ -26484,24 +26568,28 @@ define('__component__$datagrid@husky',[],function() {
                 // add html to table header cell if sortable
                 if (!!isSortable) {
                     dataAttribute = ' data-attribute="' + column.attribute + '"';
-                    tblCellClass = ((!!column.class) ? ' class="' + column.class + ' pointer"' : ' class="pointer"');
-                    tblColumns.push('<th' + tblCellClass + tblColumnWidth + dataAttribute + '>' + column.content + '<span></span></th>');
+                    tblCellClass = ((!!column.class) ? ' class="' + column.class + ' is-sortable"' : ' class="is-sortable"');
+                    tblColumns.push('<th' + tblCellClass + ' style="' + tblColumnStyle.join(';') + '" ' + dataAttribute + '>' + column.content + '<span></span></th>');
                 } else {
                     tblCellClass = ((!!column.class) ? ' class="' + column.class + '"' : '');
-                    tblColumns.push('<th' + tblCellClass + tblColumnWidth + '>' + column.content + '</th>');
+                    tblColumns.push('<th' + tblCellClass + ' style="' + tblColumnStyle.join(';') + '" >' + column.content + '</th>');
                 }
 
             }.bind(this));
 
             // remove-row entry
             if (this.options.removeRow) {
-                tblColumns.push('<th width="30px"/>');
+                tblColumns.push('<th style="width:30px"/>');
             }
 
             return '<tr>' + tblColumns.join('') + '</tr>';
         },
 
-        // returns number and unit
+        /**
+         * returns number and unit
+         * @param numberUnit
+         * @returns {{number: {Number}, unit: {String}}}
+         */
         getNumberAndUnit: function(numberUnit) {
             numberUnit = String(numberUnit);
             var regex = numberUnit.match(/(\d+)\s*(.*)/);
@@ -26509,7 +26597,7 @@ define('__component__$datagrid@husky',[],function() {
             if (!regex[2]) {
                 regex[2] = this.options.defaultMeasureUnit;
             }
-            return [regex[1], regex[2]];
+            return {number: parseInt(regex[1], 10), unit: regex[2]};
         },
 
         /**
@@ -26553,7 +26641,7 @@ define('__component__$datagrid@husky',[],function() {
 
                 var radioPrefix, key;
                 this.tblColumns = [];
-                this.tblRowAttributes = ' data-dom-id="'+this.options.instance+'-'+this.domId+'"';
+                this.tblRowAttributes = ' data-dom-id="dom-' + this.options.instance + '-' + this.domId + '"';
                 this.domId++;
 
                 // special treatment for id
@@ -26582,9 +26670,9 @@ define('__component__$datagrid@husky',[],function() {
 
                 // when row structure contains more elements than the id then use the structure to set values
                 if (this.rowStructure.length) {
-                    this.rowStructure.forEach(function(key) {
+                    this.rowStructure.forEach(function(key, index) {
                         key.editable = key.editable || false;
-                        this.createRowCell(key.attribute, row[key.attribute], key.editable, key.validation);
+                        this.createRowCell(key.attribute, row[key.attribute], key.editable, key.validation, index);
                     }.bind(this));
                 } else {
                     for (key in row) {
@@ -26608,9 +26696,10 @@ define('__component__$datagrid@husky',[],function() {
          * @param value attribute value
          * @param editable flag whether field is editable or not
          */
-        createRowCell: function(key, value, editable, validation) {
+        createRowCell: function(key, value, editable, validation, index) {
             var tblCellClasses,
                 tblCellContent,
+                tblCellStyle,
                 tblCellClass,
                 k,
                 validationAttr = '';
@@ -26635,12 +26724,14 @@ define('__component__$datagrid@husky',[],function() {
                     }
                 }
 
+                tblCellStyle = 'style="max-width:' + this.options.columns[index].minWidth + '"';
+
                 if (!!editable) {
-                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ><span class="editable" contenteditable="true" ' + validationAttr + ' tabindex="' + this.tabIndex + '">' + tblCellContent + '</span></td>');
+                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ' + tblCellStyle + ' ><span class="editable"  contenteditable="true" ' + validationAttr + ' tabindex="' + this.tabIndex + '">' + tblCellContent + '</span></td>');
 
                     this.tabIndex++;
                 } else {
-                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' >' + tblCellContent + '</td>');
+                    this.tblColumns.push('<td data-field="' + key + '" ' + tblCellClass + ' ' + tblCellStyle + '>' + tblCellContent + '</td>');
                 }
             } else {
                 this.tblRowAttributes += ' data-' + key + '="' + value + '"';
@@ -26653,6 +26744,7 @@ define('__component__$datagrid@husky',[],function() {
         resetItemSelection: function() {
             this.allItemIds = [];
             this.selectedItemIds = [];
+            this.selectedDomIds = [];
         },
 
         /**
@@ -26663,15 +26755,16 @@ define('__component__$datagrid@husky',[],function() {
 
             // Todo review handling of events for new rows in datagrid (itemId empty?)
 
-            var $element, itemId, oldSelectionId;
+            var $element, itemId, oldSelectionId, parentTr;
 
             $element = this.sandbox.dom.$(event.currentTarget);
 
             if (!$element.is('input')) {
-                $element = $element.parent().find('input');
+                $element = this.sandbox.dom.find('input', this.sandbox.dom.parent($element));
             }
 
-            itemId = $element.parents('tr').data('id');
+            parentTr = this.sandbox.dom.parents($element, 'tr');
+            itemId = this.sandbox.dom.data(parentTr, 'id');
 
             if ($element.attr('type') === 'checkbox') {
 
@@ -26736,6 +26829,7 @@ define('__component__$datagrid@husky',[],function() {
                     .prop('checked', false);
 
                 this.selectedItemIds = [];
+                this.selectedDomIds = [];
                 this.sandbox.emit(ALL_DESELECT, null);
 
             } else {
@@ -26763,11 +26857,11 @@ define('__component__$datagrid@husky',[],function() {
             // add new row to validation context and add contraints to element
             $editableFields = this.sandbox.dom.find('.editable', $row);
 
-            this.sandbox.util.foreach($editableFields, function($el,i){
-                this.sandbox.form.addField('#'+this.elId,$el);
+            this.sandbox.util.foreach($editableFields, function($el, i) {
+                this.sandbox.form.addField('#' + this.elId, $el);
                 validation = this.options.columns[i].validation;
-                for(var key in validation){
-                    this.sandbox.form.addConstraint('#'+this.elId,$el, key, {key: validation[key]});
+                for (var key in validation) {
+                    this.sandbox.form.addConstraint('#' + this.elId, $el, key, {key: validation[key]});
                 }
             }.bind(this));
         },
@@ -26817,13 +26911,13 @@ define('__component__$datagrid@husky',[],function() {
             domId = this.sandbox.dom.data($tblRow, 'dom-id');
 
             // remove row elements from validation
-            $editableElements = this.sandbox.dom.find('.editable',$tblRow);
-            this.sandbox.util.each($editableElements, function(index, $element){
-                this.sandbox.form.removeField('#'+this.elId, $element);
+            $editableElements = this.sandbox.dom.find('.editable', $tblRow);
+            this.sandbox.util.each($editableElements, function(index, $element) {
+                this.sandbox.form.removeField('#' + this.elId, $element);
             }.bind(this));
 
             // remove deleted row from changedData
-            if(!!this.changedData && !!this.changedData[domId]){
+            if (!!this.changedData && !!this.changedData[domId]) {
                 delete this.changedData[domId];
             }
 
@@ -27027,6 +27121,8 @@ define('__component__$datagrid@husky',[],function() {
                 this.$element.on('focusout', '.editable', this.focusOutEditable.bind(this));
             }
 
+            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.windowResizeListener.bind(this));
+
 
             // Todo trigger event when click on clickable area
             // trigger event when click on clickable area
@@ -27102,7 +27198,7 @@ define('__component__$datagrid@husky',[],function() {
 
             if (!!attribute) {
 
-                this.sandbox.dom.addClass($element, 'bold');
+                this.sandbox.dom.addClass($element, 'is-selected');
 
                 if (direction === 'asc') {
                     this.sandbox.dom.addClass($span, this.sort.ascClass + this.sort.additionalClasses);
@@ -27116,6 +27212,8 @@ define('__component__$datagrid@husky',[],function() {
         bindCustomEvents: function() {
             var searchInstanceName = '', columnOptionsInstanceName = '';
 
+            this.sandbox.on('husky.navigation.size.changed', this.windowResizeListener.bind(this));
+
             // listen for private events
             this.sandbox.on(UPDATE, this.updateHandler.bind(this));
 
@@ -27127,6 +27225,8 @@ define('__component__$datagrid@husky',[],function() {
             // trigger selectedItems
             this.sandbox.on(ITEMS_GET_SELECTED, this.getSelectedItemsIds.bind(this));
 
+            // checks tablel width
+            this.sandbox.on(UPDATE_TABLE, this.windowResizeListener.bind(this));
 
             this.sandbox.on(DATA_GET, this.provideData.bind(this));
 
@@ -27152,7 +27252,6 @@ define('__component__$datagrid@husky',[],function() {
             if (!!this.options.editable) {
                 this.sandbox.on(DATA_SAVE, this.saveChangedData.bind(this));
             }
-
         },
 
         /**
@@ -27195,7 +27294,7 @@ define('__component__$datagrid@husky',[],function() {
                     this.sandbox.emit(DATA_CHANGED);
 
                     // element already changed in the past and therefor in the changed data array
-                    for(key in this.changedData){
+                    for (key in this.changedData) {
                         if (key === domId) {
                             el = this.changedData[key];
                         }
@@ -27240,7 +27339,7 @@ define('__component__$datagrid@husky',[],function() {
 
             this.sandbox.logger.log("saving data...");
 
-            for(key in this.changedData){
+            for (key in this.changedData) {
                 data.push(this.changedData[key]);
             }
 
@@ -27321,6 +27420,11 @@ define('__component__$datagrid@husky',[],function() {
 
             this.options.columns = parsed.columns;
 
+            this.sandbox.dom.width(this.$element, '100%');
+            if (!!this.options.contentContainer) {
+                this.sandbox.dom.css(this.options.contentContainer, 'max-width', '');
+            }
+
             this.load({
                 url: url,
                 success: function() {
@@ -27345,6 +27449,76 @@ define('__component__$datagrid@husky',[],function() {
             }
         },
 
+        /**
+         * this function is responsible for responsiveness of datagrid and is called everytime after resizing window and after initialization
+         */
+        windowResizeListener: function() {
+
+            var firstRow, finalWidth,
+                content = !!this.options.contentContainer ? this.options.contentContainer : this.$el,
+                tableWidth = this.sandbox.dom.width(this.$table),
+                tableOffset = this.sandbox.dom.offset(this.$table),
+                contentWidth = this.sandbox.dom.width(content),
+                windowWidth = this.sandbox.dom.width(this.sandbox.dom.window),
+                overlaps = false,
+                originalMaxWidth = contentWidth,
+                marginRight = constants.marginRight;
+
+            tableOffset.right = tableOffset.left + tableWidth;
+
+
+            if (!!this.options.contentContainer) {
+                // get original max-width and right margin
+                originalMaxWidth = this.originalMaxWidth;
+                marginRight = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'margin-right')).number;
+            }
+
+            // if table is greater than max content width
+            if (tableWidth > originalMaxWidth && contentWidth < windowWidth - tableOffset.left) {
+                // adding this class, forces table cells to shorten long words
+                this.sandbox.dom.addClass(this.$element, 'oversized');
+                overlaps = true;
+                // reset table width and offset
+                tableWidth = this.sandbox.dom.width(this.$table);
+                tableOffset.right = tableOffset.left + tableWidth;
+            }
+
+            // tablecontainer should have width of table in normal cases
+            finalWidth = tableWidth;
+
+            // if table > window-size set width to available space
+            if (tableOffset.right + marginRight > windowWidth) {
+                finalWidth = windowWidth - tableOffset.left;
+            } else {
+                // set scroll position back
+                this.sandbox.dom.scrollLeft(this.$element, 0);
+            }
+
+            // width is not allowed to be smaller than the width of content
+            if (finalWidth < contentWidth) {
+                finalWidth = contentWidth;
+            }
+
+            // if contentContainer is set, adapt maximum size
+            if (!!this.options.contentContainer) {
+                this.sandbox.dom.css(this.options.contentContainer, 'max-width', finalWidth);
+                finalWidth = this.sandbox.dom.width(this.options.contentContainer);
+                if (!overlaps) {
+                    // if table does not overlap border, set content to original width
+                    this.sandbox.dom.css(this.options.contentContainer, 'max-width', '');
+                }
+            }
+
+            // now set width
+            this.sandbox.dom.width(this.$element, finalWidth);
+
+            // check scrollwidth and add class
+            if (this.$tableContainer.get(0).scrollWidth > finalWidth) {
+                this.sandbox.dom.addClass(this.$tableContainer, 'overflow');
+            } else {
+                this.sandbox.dom.removeClass(this.$tableContainer, 'overflow');
+            }
+        },
 
         /**
          * Adds loading icon and keeps width and height
@@ -27382,7 +27556,6 @@ define('__component__$datagrid@husky',[],function() {
         templates: {
 
             showAll: function(total, elementsLabel, showAllLabel, id) {
-
                 return ['<div class="show-all grid-col-4 m-top-10">', total, ' ', elementsLabel, ' (<a id="' + id + '" href="">', showAllLabel, '</a>)</div>'].join('');
             },
 
@@ -34157,7 +34330,7 @@ define('husky_extensions/collection',[],function() {
             };
 
             app.core.dom.css = function(selector, style, value) {
-                if (!!value) {
+                if (typeof value !== 'undefined') {
                     return $(selector).css(style, value);
                 } else {
                     return $(selector).css(style);
@@ -34197,7 +34370,7 @@ define('husky_extensions/collection',[],function() {
             };
 
             app.core.dom.width = function(selector, value) {
-                if (!!value) {
+                if (typeof value !== 'undefined') {
                     return $(selector).width(value);
                 } else {
                     return $(selector).width();
@@ -34373,6 +34546,10 @@ define('husky_extensions/collection',[],function() {
                 return $(selector).show();
             };
 
+            app.core.dom.map = function(selector, callback) {
+                return $(selector).map(callback);
+            };
+
             app.core.dom.toggle = function(selector) {
                 return $(selector).toggle();
             };
@@ -34409,7 +34586,6 @@ define('husky_extensions/collection',[],function() {
                     return $(selector).scrollLeft();
                 }
             };
-
 
             app.core.dom.scrollAnimate = function(position, selector) {
                 if (!!selector) {
