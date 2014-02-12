@@ -30,7 +30,6 @@ define(['app-config'], function(AppConfig) {
             this.render();
 
             this.setHeaderBar(true);
-            this.listenForChange();
         },
 
         render: function() {
@@ -41,6 +40,7 @@ define(['app-config'], function(AppConfig) {
             this.createForm(data);
 
             this.bindDomEvents();
+            this.listenForChange();
         },
 
         createForm: function(data) {
@@ -74,13 +74,17 @@ define(['app-config'], function(AppConfig) {
             var title = this.sandbox.dom.val('#title'),
                 url = '#url';
 
-            this.sandbox.dom.addClass(url, 'is-loading');
-            this.sandbox.dom.css(url, 'background-position', '99%');
+            if (title !== '') {
+                this.sandbox.dom.addClass(url, 'is-loading');
+                this.sandbox.dom.css(url, 'background-position', '99%');
 
-            this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
-                this.sandbox.dom.removeClass(url, 'is-loading');
-                this.sandbox.dom.val(url, rl);
-            }.bind(this));
+                this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
+                    this.sandbox.dom.removeClass(url, 'is-loading');
+                    this.sandbox.dom.val(url, rl);
+                }.bind(this));
+            } else {
+                this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            }
         },
 
         bindCustomEvents: function() {
@@ -166,6 +170,9 @@ define(['app-config'], function(AppConfig) {
                 this.html(tpl);
                 var data = this.initData();
                 this.createForm(data);
+
+                this.bindDomEvents();
+                this.listenForChange();
             }.bind(this));
         },
 

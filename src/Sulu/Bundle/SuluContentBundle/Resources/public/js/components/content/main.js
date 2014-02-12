@@ -9,8 +9,7 @@
 
 define([
     'sulucontent/model/content',
-    'text!/admin/content/navigation/content'
-], function(Content, ContentNavigation) {
+], function(Content) {
 
     'use strict';
 
@@ -37,8 +36,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.content.contents.save', function(data, template) {
+                this.save(data, template);
             }, this);
 
             // wait for navigation events
@@ -154,7 +153,6 @@ define([
             // TODO: show loading icon
             this.content.set(data);
 
-            // TODO select template
             this.content.saveTemplate(null, template, this.options.parent, {
                 // on success save contents id
                 success: function(response) {
