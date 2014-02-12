@@ -16,6 +16,44 @@ define([
 
     return {
 
+        stateDropdowns: {
+            none: function() {
+                return [{'id': 'test',
+                    'title': this.sandbox.translate('edit-toolbar.state-test'),
+                    'icon': 'test',
+                    'callback': function() {
+                        return true;
+                    }.bind(this)
+                }];
+            },
+            test: function() {
+                return [{'id': 'test',
+                    'title': this.sandbox.translate('edit-toolbar.state-test'),
+                    'icon': 'test',
+                    'callback': function() {
+                        return true;
+                    }.bind(this)
+                },
+                    {
+                        'id': 'publish',
+                        'title': this.sandbox.translate('edit-toolbar.state-publish'),
+                        'icon': 'publish',
+                        'callback': function() {
+                            this.changeState(2);
+                        }.bind(this)
+                    }];
+            },
+            publish: function() {
+                return [{'id': 'publish',
+                    'title': this.sandbox.translate('edit-toolbar.state-publish'),
+                    'icon': 'publish',
+                    'callback': function() {
+                        return true;
+                    }.bind(this)
+                }];
+            }
+        },
+
         initialize: function() {
             this.bindCustomEvents();
 
@@ -65,6 +103,29 @@ define([
             this.sandbox.on('sulu.content.contents.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
             }, this);
+
+            // return dropdown state
+            this.sandbox.on('sulu.content.contents.getDropdownForState', function(state, callback) {
+                callback(this.getDropdownForState(state));
+            }, this);
+        },
+
+        getDropdownForState: function(state) {
+            var arrReturn = [];
+            switch(state) {
+                case 0:
+                    arrReturn = this.stateDropdowns.none.call(this);
+                    break;
+                case 1:
+                    arrReturn = this.stateDropdowns.test.call(this);
+                    break;
+                case 2:
+                    arrReturn = this.stateDropdowns.publish.call(this);
+                    break;
+                default:
+                    this.sandbox.logger.log('No dropdown-template for state', state);
+            }
+            return arrReturn;
         },
 
         getResourceLocator: function(title, callback) {
@@ -150,12 +211,27 @@ define([
             }, params.templateType);
         },
 
+        changeState: function(state) {
+            this.sandbox.emit('sulu.content.contents.state.change');
+
+            // TODO select template
+            this.content.saveTemplate(null, 'overview', this.options.parent, state, {
+                // on success save contents id
+                success: function(response) {
+                    this.sandbox.emit('sulu.content.contents.state.changed', state);
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
+        },
+
         save: function(data) {
             // TODO: show loading icon
             this.content.set(data);
 
             // TODO select template
-            this.content.saveTemplate(null, 'overview', this.options.parent, {
+            this.content.saveTemplate(null, 'overview', this.options.parent, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
