@@ -133,6 +133,7 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
             self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -400,14 +401,13 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->_embedded[1]->creator);
     }
 
-    private function beforeTestTreeGet()
+    private function buildTree()
     {
         $data = array(
             array(
                 'title' => 'test1',
                 'tags' => array(
                     'tag1',
-                    'tag2'
                 ),
                 'url' => '/test1',
                 'article' => 'Test'
@@ -415,7 +415,6 @@ class NodeControllerTest extends DatabaseTestCase
             array(
                 'title' => 'test2',
                 'tags' => array(
-                    'tag1',
                     'tag2'
                 ),
                 'url' => '/test2',
@@ -434,7 +433,6 @@ class NodeControllerTest extends DatabaseTestCase
                 'title' => 'test4',
                 'tags' => array(
                     'tag1',
-                    'tag2'
                 ),
                 'url' => '/test4',
                 'article' => 'Test'
@@ -453,11 +451,23 @@ class NodeControllerTest extends DatabaseTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
-        $data[0] = $mapper->save($data[0], 'overview', 'sulu_io', 'en', 1)->toArray();
-        $data[1] = $mapper->save($data[1], 'overview', 'sulu_io', 'en', 1)->toArray();
-        $data[2] = $mapper->save($data[2], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[3] = $mapper->save($data[3], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[4] = $mapper->save($data[4], 'overview', 'sulu_io', 'en', 1, true, null, $data[3]['id'])->toArray();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $client->request('POST', '/api/nodes?template=overview', $data[0]);
+        $data[0] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview', $data[1]);
+        $data[1] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[2]);
+        $data[2] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[3]);
+        $data[3] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview&parent='.$data[3]['id'], $data[4]);
+        $data[4] = (array) json_decode($client->getResponse()->getContent());
 
         return $data;
     }
@@ -471,7 +481,7 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $data = $this->beforeTestTreeGet();
+        $data = $this->buildTree();
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1');
@@ -517,7 +527,7 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $data = $this->beforeTestTreeGet();
+        $data = $this->buildTree();
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1');
@@ -597,7 +607,7 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $data = $this->beforeTestTreeGet();
+        $data = $this->buildTree();
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&flat=false');
@@ -684,5 +694,53 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test5', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
         $this->assertEquals(0, sizeof($items[0]->_embedded));
+    }
+
+    public function testSmartContent()
+    {
+        $this->buildTree();
+
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+
+        $client->request('GET', '/api/nodes/smartcontent');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(6, sizeof($response));
+
+        $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, sizeof($response));
+
+        $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2&includeSubFolders=true');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(3, sizeof($response));
+
+        $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2&includeSubFolders=true&limitResult=2');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, sizeof($response));
+
+        $client->request('GET', '/api/nodes/smartcontent?tags=tag1');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(4, sizeof($response));
+
+        $client->request('GET', '/api/nodes/smartcontent?tags=tag2');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(3, sizeof($response));
+
+        $client->request('GET', '/api/nodes/smartcontent?tags=tag1,tag2');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, sizeof($response));
     }
 }
