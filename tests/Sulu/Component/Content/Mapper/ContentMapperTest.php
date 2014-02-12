@@ -1185,9 +1185,12 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareTreeTestData();
 
-        // get root children
         $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'en', 'default');
 
         $this->assertEquals(5, sizeof($result));
+
+        $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'en', 'default', 2);
+
+        $this->assertEquals(2, sizeof($result));
     }
 }
