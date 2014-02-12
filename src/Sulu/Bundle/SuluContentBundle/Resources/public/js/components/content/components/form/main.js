@@ -162,6 +162,14 @@ define(['app-config'], function(AppConfig) {
 
             this.setHeaderBar(false);
 
+            if (!!this.sandbox.form.getObject(this.formId)) {
+                var tmp = this.options.data;
+                this.options.data = this.sandbox.form.getData(this.formId);
+                if (!!tmp.id) {
+                    this.options.data.id = tmp.id;
+                }
+            }
+
             require(['text!/admin/content/template/form/' + item.key + '.html'], function(template) {
                 var defaults = {
                         translate: this.sandbox.translate
@@ -175,8 +183,6 @@ define(['app-config'], function(AppConfig) {
 
                 this.bindDomEvents();
                 this.listenForChange();
-
-                this.updatePreview();
             }.bind(this));
         },
 
@@ -239,11 +245,13 @@ define(['app-config'], function(AppConfig) {
             }
 
             this.sandbox.dom.on(this.formId, 'keyup', function(e) {
-                var $element = $(e.currentTarget);
-                while (!$element.data('element')) {
-                    $element = $element.parent();
+                if (!!this.options.data.id) {
+                    var $element = $(e.currentTarget);
+                    while (!$element.data('element')) {
+                        $element = $element.parent();
+                    }
+                    this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
                 }
-                this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
             }.bind(this), "select, input, textarea");
 
             this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
