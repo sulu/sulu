@@ -38,9 +38,7 @@ define(function () {
             },
             {
                 'id': 'state',
-                'icon': 'test',
                 'group': 'right',
-                'title': App.translate('sulu.edit-toolbar.test'),
                 'class': 'highlight-gray',
                 'position': 2,
                 'type': 'select'
