@@ -22,16 +22,28 @@ class NodeRepository implements NodeRepositoryInterface
     private $mapper;
 
     /**
+     * The name of the root node of PHPCR
+     * @var string
+     */
+    private $baseNodeName;
+
+    /**
+     * The name of the content nodes in PHPCR
+     * @var string
+     */
+    private $contentNodeName;
+
+    /**
      * for returning self link in get action
      * @var string
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    function __construct(
-        ContentMapperInterface $mapper
-    )
+    function __construct(ContentMapperInterface $mapper, $baseNodeName, $contentNodeName)
     {
         $this->mapper = $mapper;
+        $this->baseNodeName = $baseNodeName;
+        $this->contentNodeName = $contentNodeName;
     }
 
     /**
@@ -164,11 +176,42 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey)
     {
-        $sql2 = 'SELECT * FROM [sulu:content] as c';
+        // build sql2 query
+        $sql2 = 'SELECT * FROM [sulu:content] AS c';
+        $sql2Where = array();
 
+        // build where clause for datasource
+        if (isset($smartContentConfig['dataSource']) && !empty($smartContentConfig['dataSource'])) {
+            $sqlFunction =
+                (isset($smartContentConfig['includeSubFolders']) && $smartContentConfig['includeSubFolders'])
+                    ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
+            $dataSource = '/' . $this->baseNodeName . '/' . $webspaceKey . '/' . $this->contentNodeName;
+            $dataSource .= $smartContentConfig['dataSource'];
+            $sql2Where[] = $sqlFunction . '(\'' . $dataSource . '\')';
+        }
 
+        // build where clause for tags
+        if (!empty($smartContentConfig['tags'])) {
+            foreach ($smartContentConfig['tags'] as $tag) {
+                $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-tags] = ' . $tag;
+            }
+        }
 
-        $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey);
+        // build order clause
+
+        // append where clause to sql2 query
+        if (!empty($sql2Where)) {
+            $sql2 .= ' WHERE ' . join(' AND ', $sql2Where);
+        }
+
+        // set limit if given
+        $limit = null;
+        if (isset($smartContentConfig['limitResult'])) {
+            $limit = $smartContentConfig['limitResult'];
+        }
+
+        // execute query and return results
+        $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $limit);
 
         return $nodes;
     }
