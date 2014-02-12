@@ -119,7 +119,7 @@ class Preview implements PreviewInterface
         $content = $this->loadStructure($userId, $contentUuid);
 
         if ($content != false) {
-            if ($template !== null || $content->getKey() === $template) {
+            if ($template !== null && $content->getKey() !== $template) {
                 $content = $this->updateTemplate($content, $template);
                 $this->addReload($userId, $contentUuid);
             }
@@ -304,12 +304,7 @@ class Preview implements PreviewInterface
      */
     private function addReload($userId, $contentUuid)
     {
-        $id = $this->getCacheKey($userId, $contentUuid, 'changes');
-        $changes = array(
-            'reload' => true
-        );
-        $this->cache->save($id, $changes, $this->lifeTime);
-
+        $this->addChanges($userId, $contentUuid, 'reload', true);
     }
 
     /**

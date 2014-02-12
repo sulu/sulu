@@ -175,6 +175,8 @@ define(['app-config'], function(AppConfig) {
 
                 this.bindDomEvents();
                 this.listenForChange();
+
+                this.updatePreview();
             }.bind(this));
         },
 
@@ -274,6 +276,8 @@ define(['app-config'], function(AppConfig) {
                     params: {}
                 };
                 this.ws.send(JSON.stringify(message));
+
+                this.updatePreview();
             }.bind(this);
 
             this.ws.onmessage = function(e) {
@@ -293,7 +297,11 @@ define(['app-config'], function(AppConfig) {
 
         updatePreview: function(property, value) {
             var changes = {};
-            changes[property] = value;
+            if (!!property && !!value) {
+                changes[property] = value;
+            } else {
+                changes = this.sandbox.form.getData(this.formId);
+            }
 
             if (this.ws !== null) {
                 this.updateWs(changes);
