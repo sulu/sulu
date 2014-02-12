@@ -67,12 +67,6 @@ abstract class RestController extends FOSRestController
     protected $fieldsTranslationKeys = array();
 
     /**
-     * contains default translations for some fields
-     * @var array
-     */
-    protected $fieldsDefaultTranslationKeys = array('id' => 'public.id', 'title' =>'public.title','name' => 'public.name','changed'=>'public.changed','created'=>'public.created');
-
-    /**
      * contains fields that cannot be hidden and are visible by default
      * @var array
      */
@@ -103,7 +97,13 @@ abstract class RestController extends FOSRestController
     /**
      * @var array contains the default widths of some common fields
      */
-    protected $fieldsDefaultWidth = array('id'=>'50px', 'changed'=>'140px', 'created'=>'140px');
+    private $fieldsDefaultWidth = array();
+
+    /**
+     * contains default translations for some fields
+     * @var array
+     */
+    private $fieldsDefaultTranslationKeys = array();
 
     /**
      * standard bundle prefix
@@ -119,6 +119,10 @@ abstract class RestController extends FOSRestController
     public function responseFields()
     {
         try {
+
+            $this->fieldsDefaultTranslationKeys = $this->container->getParameter('sulu.fields_defaults.translations');
+            $this->fieldsDefaultWidth = $this->container->getParameter('sulu.fields_defaults.widths');
+
             /** @var ListRestHelper $listHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
 
