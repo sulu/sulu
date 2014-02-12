@@ -122,8 +122,6 @@ define([], function() {
         view: true,
 
         initialize: function() {
-
-
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 

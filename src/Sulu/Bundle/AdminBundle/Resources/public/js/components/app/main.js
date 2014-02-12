@@ -12,12 +12,8 @@ define(function() {
     'use strict';
 
     var router,
-
-        EVENT_CONTENT_SIZE_CHANGE = 'sulu.content.size.change',
-
         changeContentPaddingLeft = function(paddingLeft) {
             this.sandbox.dom.css('#content', {'margin-left': 50 + paddingLeft});
-
         };
 
     return {
@@ -46,8 +42,6 @@ define(function() {
                 }.bind(this));
 
                 this.bindCustomEvents();
-
-
                 this.bindDomEvents();
             }
         },
@@ -82,7 +76,6 @@ define(function() {
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
                 this.emitNavigationEvent(event);
             }.bind(this));
-
 
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
