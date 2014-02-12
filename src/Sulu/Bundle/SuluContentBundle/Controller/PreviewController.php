@@ -88,12 +88,13 @@ class PreviewController extends Controller
             $webspace = $this->getRequest()->get('webspace', 'sulu_io');
             $preview->start($uid, $contentUuid, $webspace, $language);
         }
+        $template = $this->getRequest()->get('template');
 
         // get changes from request
         $changes = $request->get('changes', false);
         if (!!$changes) {
             foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $property, $content);
+                $preview->update($uid, $contentUuid, $property, $content, $template);
             }
         }
 

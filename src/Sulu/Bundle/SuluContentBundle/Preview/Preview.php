@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -108,17 +109,22 @@ class Preview implements PreviewInterface
      * @param string $contentUuid
      * @param string $property propertyName which was changed
      * @param mixed $data new data
+     * @param string|null $template template key
      * @return \Sulu\Component\Content\StructureInterface
      * @throws PreviewNotFoundException
      */
-    public function update($userId, $contentUuid, $property, $data)
+    public function update($userId, $contentUuid, $property, $data, $template = null)
     {
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
 
         if ($content != false) {
-            // TODO check for complex content types
-            $content->getProperty($property)->setValue($data);
+            if ($template !== null || $content->getKey() === $template) {
+                $content = $this->updateTemplate($content, $template);
+                $this->addReload($userId, $contentUuid);
+            }
+
+            $this->setValue($content, $property, $data);
             $this->addStructure($userId, $contentUuid, $content);
 
             $changes = $this->render($userId, $contentUuid, true, $property);
@@ -130,6 +136,41 @@ class Preview implements PreviewInterface
         } else {
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
+    }
+
+    /**
+     * @param StructureInterface $content
+     * @param $template
+     *
+     * @return StructureInterface
+     */
+    private function updateTemplate(StructureInterface $content, $template)
+    {
+        /** @var StructureInterface $newContent */
+        $newContent = $this->structureManager->getStructure($template);
+        /** @var PropertyInterface $property */
+        foreach ($newContent->getProperties() as $property) {
+            if ($content->hasProperty($property->getName())) {
+                $this->setValue(
+                    $newContent,
+                    $property->getName(),
+                    $this->getValue($content, $property->getName())
+                );
+            }
+        }
+        return $newContent;
+    }
+
+    private function setValue(StructureInterface $content, $property, $value)
+    {
+        // TODO check for complex content types
+        $content->getProperty($property)->setValue($value);
+    }
+
+    private function getValue(StructureInterface $content, $property)
+    {
+        // TODO check for complex content types
+        return $content->getProperty($property)->getValue();
     }
 
     /**
@@ -247,11 +288,28 @@ class Preview implements PreviewInterface
 
         if (!$changes) {
             $changes = array();
+        } elseif (isset($changes['reload']) && $changes['reload'] === true) {
+            return;
         }
 
         $changes[$property] = array('property' => $property, 'content' => $content);
 
         $this->cache->save($id, $changes, $this->lifeTime);
+    }
+
+    /**
+     * adds a reload event to changes
+     * @param $userId
+     * @param $contentUuid
+     */
+    private function addReload($userId, $contentUuid)
+    {
+        $id = $this->getCacheKey($userId, $contentUuid, 'changes');
+        $changes = array(
+            'reload' => true
+        );
+        $this->cache->save($id, $changes, $this->lifeTime);
+
     }
 
     /**
