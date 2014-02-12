@@ -213,7 +213,7 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:en-tags'));
+        $this->assertEquals(array(1, 2), $content->getPropertyValue('sulu_locale:en-tags'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -270,7 +270,7 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('test-1', $content->getProperty('sulu_locale:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:en-tags'));
+        $this->assertEquals(array(1, 2), $content->getPropertyValue('sulu_locale:en-tags'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
 
@@ -304,8 +304,17 @@ class NodeControllerTest extends DatabaseTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+
         for ($i = 0; $i < count($data); $i++) {
-            $data[$i] = $mapper->save($data[$i], 'overview', 'sulu_io', 'en', 1)->toArray();
+            $client->request('POST', '/api/nodes?template=overview', $data[$i]);
+            $data[$i] = (array) json_decode($client->getResponse()->getContent());
         }
 
         return $data;
@@ -447,9 +456,6 @@ class NodeControllerTest extends DatabaseTestCase
                 'article' => 'Test'
             )
         );
-
-        /** @var ContentMapperInterface $mapper */
-        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
         $client = $this->createClient(
             array(),

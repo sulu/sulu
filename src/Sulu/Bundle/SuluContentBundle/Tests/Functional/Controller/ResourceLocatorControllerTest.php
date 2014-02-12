@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
+use Doctrine\ORM\Tools\SchemaTool;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -13,6 +14,11 @@ use Symfony\Bundle\FrameworkBundle\Client;
 
 class ResourceLocatorControllerTest extends DatabaseTestCase
 {
+    /**
+     * @var array
+     */
+    protected static $entities;
+
     /**
      * @var SessionInterface
      */
@@ -30,6 +36,7 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
 
     protected function setUp()
     {
+        $this->setUpSchema();
         $this->prepareSession();
 
         NodeHelper::purgeWorkspace($this->session);
@@ -54,6 +61,19 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
         );
 
         $this->data = $this->prepareRepositoryContent();
+    }
+
+    private function setUpSchema()
+    {
+        self::$tool = new SchemaTool(self::$em);
+
+        self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
+        );
+
+        self::$tool->dropSchema(self::$entities);
+        self::$tool->createSchema(self::$entities);
     }
 
     private function prepareSession()
@@ -133,14 +153,23 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
             )
         );
 
-        /** @var ContentMapperInterface $mapper */
-        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
-
-        $data[0] = $mapper->save($data[0], 'overview', 'sulu_io', 'en', 1)->toArray();
-        $data[1] = $mapper->save($data[1], 'overview', 'sulu_io', 'en', 1)->toArray();
-        $data[2] = $mapper->save($data[2], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[3] = $mapper->save($data[3], 'overview', 'sulu_io', 'en', 1, true, null, $data[1]['id'])->toArray();
-        $data[4] = $mapper->save($data[4], 'overview', 'sulu_io', 'en', 1, true, null, $data[3]['id'])->toArray();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $client->request('POST', '/api/nodes?template=overview', $data[0]);
+        $data[0] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview', $data[1]);
+        $data[1] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[2]);
+        $data[2] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[3]);
+        $data[3] = (array) json_decode($client->getResponse()->getContent());
+        $client->request('POST', '/api/nodes?template=overview&parent='.$data[3]['id'], $data[4]);
+        $data[4] = (array) json_decode($client->getResponse()->getContent());
 
         return $data;
     }
