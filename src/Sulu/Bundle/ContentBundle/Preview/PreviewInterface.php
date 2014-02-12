@@ -45,10 +45,10 @@ interface PreviewInterface
      * @param string $contentUuid
      * @param string $property propertyName which was changed
      * @param mixed $data new data
+     * @param string|null $template template key
      * @return \Sulu\Component\Content\StructureInterface
-     * @throws PreviewNotFoundException
      */
-    public function update($userId, $contentUuid, $property, $data);
+    public function update($userId, $contentUuid, $property, $data, $template = null);
 
     /**
      * returns pending changes for given user and content

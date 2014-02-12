@@ -133,22 +133,26 @@
                     nodeArray,
                     i;
 
-                // foreach property which was changed
-                for (var propertyName in changes) {
-                    if (changes.hasOwnProperty(propertyName)) {
-                        content = changes[propertyName].content;
+                if (!!changes.reload) {
+                    location.reload();
+                } else {
+                    // foreach property which was changed
+                    for (var propertyName in changes) {
+                        if (changes.hasOwnProperty(propertyName)) {
+                            content = changes[propertyName].content;
 
-                        // find rdfa node
-                        elements = document.querySelectorAll('*[property="' + propertyName + '"]');
-                        i = 0;
+                            // find rdfa node
+                            elements = document.querySelectorAll('*[property="' + propertyName + '"]');
+                            i = 0;
 
-                        // foreach node
-                        nodeArray = [].slice.call(elements);
-                        nodeArray.forEach(function(element) {
-                            // set content and highlight class
-                            element.innerHTML = content[i];
-                            i++;
-                        });
+                            // foreach node
+                            nodeArray = [].slice.call(elements);
+                            nodeArray.forEach(function(element) {
+                                // set content and highlight class
+                                element.innerHTML = content[i];
+                                i++;
+                            });
+                        }
                     }
                 }
             };

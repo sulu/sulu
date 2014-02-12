@@ -303,7 +303,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         updateAjax: function(changes) {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id;
+            var updateUrl = '/admin/content/preview/' + this.options.data.id + '?template=' + this.template;
 
             this.sandbox.util.ajax({
                 url: updateUrl,
