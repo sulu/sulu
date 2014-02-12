@@ -92,7 +92,7 @@ define(function() {
 
             // layout
             // responsive listeners
-            this.sandbox.on('husky.navigation.size.changed', changeContentPaddingLeft.bind(this));
+            this.sandbox.on('husky.navigation.size.change', changeContentPaddingLeft.bind(this));
         },
 
 
