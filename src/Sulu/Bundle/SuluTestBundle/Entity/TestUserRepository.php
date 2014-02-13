@@ -22,7 +22,7 @@ use Doctrine\ORM\Query;
  * Repository for the User, implementing some additional functions
  * for querying objects
  */
-class UserRepository extends EntityRepository implements UserRepositoryInterface
+class TestUserRepository extends EntityRepository implements UserRepositoryInterface
 {
     /**
      * {@inheritdoc}
