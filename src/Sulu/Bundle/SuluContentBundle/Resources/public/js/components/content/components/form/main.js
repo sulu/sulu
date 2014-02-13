@@ -38,9 +38,7 @@ define(['app-config'], function(AppConfig) {
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
                 // FIXME items not loaded
-                setTimeout(function() {
-                    this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
-                }.bind(this), 200);
+                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
             } else {
                 this.changeTemplate();
             }
@@ -134,10 +132,7 @@ define(['app-config'], function(AppConfig) {
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                // FIXME items not loaded
-                setTimeout(function() {
-                    this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
-                }.bind(this), 200);
+                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
             }, this);
 
             // change template
