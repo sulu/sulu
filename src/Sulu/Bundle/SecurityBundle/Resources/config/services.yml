@@ -14,8 +14,7 @@ parameters:
     sulu_security.admin.content_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation
     sulu_security.admin.roles_navigation.class: Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation
     sulu_security.permission_voter.class: Sulu\Bundle\SecurityBundle\Permission\PermissionVoter
-    sulu_security.user_manager.class: Sulu\Bundle\SecurityBundle\UserManager\UserManager
-    sulu_security.user_manager.current_user_data.class: Sulu\Bundle\SecurityBundle\UserManager\CurrentUserData
+    sulu_security.user_repository.class: Sulu\Bundle\SecurityBundle\Entity\UserRepository
 
 services:
     sulu_security.admin:
@@ -46,11 +45,8 @@ services:
         tags:
             - { name: security.voter }
 
-    sulu_security.user_manager.current_user_data:
-        class: %sulu_security.user_manager.current_user_data.class%
-        public: false
-        arguments: [@security.context, @router, @doctrine]
-
-    sulu_security.user_manager:
-        class: %sulu_security.user_manager.class%
-        arguments: [@doctrine, @sulu_security.user_manager.current_user_data]
+    sulu_security.user_repository:
+        class: %sulu_security.user_repository.class%
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments: ["SuluSecurityBundle:User"]
