@@ -1,6 +1,7 @@
 parameters:
-    sulu_test.test_user_repository.class: Sulu\Bundle\TestBundle\Entity\TestUserRepository
+    sulu.test_user_provider.class: Sulu\Bundle\TestBundle\Testing\TestUserProvider
     sulu.test_voter.class: Sulu\Bundle\TestBundle\Testing\TestVoter
+    sulu_test.test_user_repository.class: Sulu\Bundle\TestBundle\Entity\TestUserRepository
 
 services:
     test_user_provider:
