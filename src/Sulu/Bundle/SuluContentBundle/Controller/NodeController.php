@@ -28,8 +28,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function getAction($uuid)
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
@@ -53,8 +51,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function indexAction()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
@@ -69,8 +65,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
@@ -95,8 +89,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function putAction($uuid)
     {
-        // TODO portal
-        // TODO language
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
@@ -115,8 +107,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function cputIndexAction()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
@@ -145,8 +135,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function postAction()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
