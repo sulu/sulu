@@ -37,7 +37,6 @@ define(['app-config'], function(AppConfig) {
 
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
-                // FIXME items not loaded
                 this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
             } else {
                 this.changeTemplate();

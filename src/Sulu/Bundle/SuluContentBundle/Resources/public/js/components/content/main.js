@@ -80,7 +80,7 @@ define([
                 if (wasConfirmed) {
                     if (id !== this.content.get('id')) {
                         var content = new Content({id: id});
-                        content.destroy({
+                        content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
 
                             success: function() {
@@ -89,7 +89,7 @@ define([
                             }.bind(this)
                         });
                     } else {
-                        this.content.destroy({
+                        this.content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
 
                             success: function() {
@@ -194,7 +194,7 @@ define([
                     // TODO: show loading icon
                     ids.forEach(function(id) {
                         var content = new Content({id: id});
-                        content.destroy({
+                        content.fullDestroy(this.options.webspace, this.options.language, {
                             success: function() {
                                 this.sandbox.emit('husky.datagrid.row.remove', id);
                             }.bind(this),
