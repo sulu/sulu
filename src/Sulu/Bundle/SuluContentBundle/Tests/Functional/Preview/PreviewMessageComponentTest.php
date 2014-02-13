@@ -260,7 +260,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
             function ($string) {
                 $data = json_decode($string);
                 if ($data->command === 'changes') {
-                    $this->assertTrue($data->params->changes->reload);
+                    $this->assertTrue($data->params->changes->reload->content);
                 }
             },
             $this->exactly(2),
@@ -331,7 +331,6 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     $this->assertEquals($data->params->other, true);
                 }
             },
-            $this->exactly(2),
             $this->exactly(2),
             'form',
             function () {
