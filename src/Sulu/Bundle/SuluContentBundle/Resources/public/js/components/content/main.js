@@ -160,7 +160,7 @@ define([
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
@@ -278,7 +278,15 @@ define([
                 this.content.fullFetch(this.options.webspace, this.options.language, {
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'content/components/form@sulucontent', options: { el: $form, data: model.toJSON()}}
+                            {
+                                name: 'content/components/form@sulucontent',
+                                options: {
+                                    el: $form,
+                                    data: model.toJSON(),
+                                    webspace: this.options.webspace,
+                                    language: this.options.language
+                                }
+                            }
                         ]);
                     }.bind(this),
                     error: function() {
@@ -287,7 +295,15 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'content/components/form@sulucontent', options: { el: $form, data: this.content.toJSON()}}
+                    {
+                        name: 'content/components/form@sulucontent',
+                        options: {
+                            el: $form,
+                            data: this.content.toJSON(),
+                            webspace: this.options.webspace,
+                            language: this.options.language
+                        }
+                    }
                 ]);
             }
 
