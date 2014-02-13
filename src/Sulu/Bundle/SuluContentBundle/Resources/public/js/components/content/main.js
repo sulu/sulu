@@ -16,41 +16,40 @@ define([
 
     return {
 
-        stateDropdowns: {
-            none: function() {
-                return [{'id': 'test',
-                    'title': this.sandbox.translate('edit-toolbar.state-test'),
-                    'icon': 'test',
-                    'callback': function() {
-                        return true;
-                    }.bind(this)
-                }];
-            },
-            test: function() {
-                return [{'id': 'test',
-                    'title': this.sandbox.translate('edit-toolbar.state-test'),
-                    'icon': 'test',
-                    'callback': function() {
-                        return true;
-                    }.bind(this)
-                },
-                    {
+        stateDropdownItems: {
+            publish: function() {
+                return {
                         'id': 'publish',
                         'title': this.sandbox.translate('edit-toolbar.state-publish'),
                         'icon': 'publish',
                         'callback': function() {
                             this.changeState(2);
                         }.bind(this)
-                    }];
+                    };
+            },
+            test: function() {
+                return {
+                    'id': 'test',
+                    'title': this.sandbox.translate('edit-toolbar.state-test'),
+                    'icon': 'test',
+                    'callback': function() {
+                        this.changeState(1);
+                    }.bind(this)
+                };
+            }
+        },
+
+        stateDropdownTemplates: {
+            none: function() {
+                return [];
+            },
+            test: function() {
+                return [
+                    this.stateDropdownItems.publish.call(this)
+                ];
             },
             publish: function() {
-                return [{'id': 'publish',
-                    'title': this.sandbox.translate('edit-toolbar.state-publish'),
-                    'icon': 'publish',
-                    'callback': function() {
-                        return true;
-                    }.bind(this)
-                }];
+                return [];
             }
         },
 
@@ -104,28 +103,46 @@ define([
                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
             }, this);
 
-            // return dropdown state
+            // return dropdown for state
             this.sandbox.on('sulu.content.contents.getDropdownForState', function(state, callback) {
                 callback(this.getDropdownForState(state));
             }, this);
+
+            // return dropdown-item for state
+            this.sandbox.on('sulu.content.contents.getStateDropdownItem', function(state, callback) {
+                callback(this.getStateDropdownItem(state));
+            }, this);
         },
 
-        getDropdownForState: function(state) {
-            var arrReturn = [];
-            switch(state) {
+        getStateWithId: function(id) {
+            var strReturn = '';
+            switch(id) {
                 case 0:
-                    arrReturn = this.stateDropdowns.none.call(this);
+                    strReturn = 'none';
                     break;
                 case 1:
-                    arrReturn = this.stateDropdowns.test.call(this);
+                    strReturn = 'test';
                     break;
                 case 2:
-                    arrReturn = this.stateDropdowns.publish.call(this);
+                    strReturn = 'publish';
                     break;
                 default:
-                    this.sandbox.logger.log('No dropdown-template for state', state);
+                    this.sandbox.logger.log('No state for id', id);
             }
-            return arrReturn;
+            return strReturn;
+        },
+
+        getDropdownForState: function(stateId) {
+            var state = this.getStateWithId(stateId);
+            return this.stateDropdownTemplates[state].call(this);
+        },
+
+        getStateDropdownItem: function(stateId) {
+            // return test state as default;
+            stateId = (stateId === 0) ? 1 : stateId;
+
+            var state = this.getStateWithId(stateId);
+            return this.stateDropdownItems[state].call(this);
         },
 
         getResourceLocator: function(title, callback) {
