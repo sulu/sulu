@@ -37,7 +37,10 @@ define(['app-config'], function(AppConfig) {
 
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
-                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+                // FIXME items not loaded
+                setTimeout(function() {
+                    this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+                }.bind(this), 200);
             } else {
                 this.changeTemplate();
             }
@@ -134,7 +137,7 @@ define(['app-config'], function(AppConfig) {
                 // FIXME items not loaded
                 setTimeout(function() {
                     this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
-                }.bind(this), 50);
+                }.bind(this), 200);
             }, this);
 
             // change template
@@ -304,13 +307,13 @@ define(['app-config'], function(AppConfig) {
                     }
                     this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
                 }
-            }.bind(this), "select, input, textarea");
+            }.bind(this), '.preview-update');
 
-            this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
+            this.sandbox.on('sulu.preview.update', function(property, value) {
                 if (!!this.options.data.id) {
-                    this.updatePreview($el.data('mapperProperty'), data);
+                    this.updatePreview(property, value);
                 }
-            }.bind(this));
+            }, this);
         },
 
         initAjax: function() {
@@ -333,6 +336,8 @@ define(['app-config'], function(AppConfig) {
                     content: this.options.data.id,
                     type: 'form',
                     user: AppConfig.getUser().id,
+                    webspace: this.options.webspace,
+                    language: this.options.language,
                     params: {}
                 };
                 this.ws.send(JSON.stringify(message));
@@ -371,7 +376,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         updateAjax: function(changes) {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id + '?template=' + this.template;
+            var updateUrl = '/admin/content/preview/' + this.options.data.id + '?template=' + this.template + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
 
             this.sandbox.util.ajax({
                 url: updateUrl,
@@ -389,6 +394,8 @@ define(['app-config'], function(AppConfig) {
                 content: this.options.data.id,
                 type: 'form',
                 user: AppConfig.getUser().id,
+                webspace: this.options.webspace,
+                language: this.options.language,
                 params: {changes: changes, template: this.template}
             };
             this.ws.send(JSON.stringify(message));
