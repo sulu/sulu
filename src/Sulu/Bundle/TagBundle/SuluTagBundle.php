@@ -16,10 +16,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluTagBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new TagManagerCompilerPass());
-    }
 }

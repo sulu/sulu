@@ -19,6 +19,7 @@ use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
+use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -45,12 +46,13 @@ class TagManager implements TagManagerInterface
     private $eventDispatcher;
 
     /**
-     * @var SecurityContextInterface
+     * @var UserRepositoryInterface
      */
-    private $securityContext;
+    private $userRepository;
 
     public function __construct(
         TagRepositoryInterface $tagRepository,
+        UserRepositoryInterface $userRepository,
         ObjectManager $em,
         EventDispatcherInterface $eventDispatcher
     )
@@ -58,15 +60,7 @@ class TagManager implements TagManagerInterface
         $this->tagRepository = $tagRepository;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * Sets the security context, which is required for saving the creator and changer information
-     * @param SecurityContextInterface $securityContext
-     */
-    public function setSecurityContext(SecurityContextInterface $securityContext)
-    {
-        $this->securityContext = $securityContext;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -99,31 +93,23 @@ class TagManager implements TagManagerInterface
     }
 
     /**
-     * Loads the tag with the given name, or creates it, if it does not exist
-     * @param string $name The name to find or create
-     * @return Tag
+     * {@inheritdoc}
      */
-    public function findOrCreateByName($name)
+    public function findOrCreateByName($name, $userId)
     {
         $tag = $this->findByName($name);
 
         if (!$tag) {
-            $tag = $this->save(array('name' => $name));
+            $tag = $this->save(array('name' => $name), $userId);
         }
 
         return $tag;
     }
 
     /**
-     * Saves the given Tag
-     * @param array $data The data of the tag to save
-     * @param number|null $id The id for saving the tag (optional)
-     * @throws Exception\TagNotFoundException
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws Exception\TagAlreadyExistsException
-     * @return Tag
+     * {@inheritdoc}
      */
-    public function save($data, $id = null)
+    public function save($data, $userId, $id = null)
     {
         $name = $data['name'];
 
@@ -138,7 +124,7 @@ class TagManager implements TagManagerInterface
                 $tag = new Tag();
             }
 
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->userRepository->findUserById($userId);
 
             // update data
             $tag->setName($name);
