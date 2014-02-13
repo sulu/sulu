@@ -67,7 +67,6 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
     public function findAllTags()
     {
         try {
-
             $qb = $this->createQueryBuilder('t');
 
             $query = $qb->getQuery();
