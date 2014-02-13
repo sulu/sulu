@@ -10,26 +10,22 @@
 .husky-auto-complete-error label, .husky-validate-error label,
 .husky-auto-complete-error .control-label,
 .husky-validate-error .control-label {
-  color: #b94a48;
+  color: #AD0710;
 }
 /* line 7, ../scss/abstract/abstract-validation.scss */
 .husky-auto-complete-error .husky-validate:not(label), .husky-validate-error .husky-validate:not(label) {
-  border-color: #953b39;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+  border-color: #AD0710;
+  border-width: 2px;
 }
 
-/* line 30, ../scss/abstract/abstract-validation.scss */
-.husky-auto-complete-success label, .husky-validate-success label,
-.husky-auto-complete-success .control-label,
-.husky-validate-success .control-label {
-  color: #468847;
-}
-/* line 34, ../scss/abstract/abstract-validation.scss */
+/* line 28, ../scss/abstract/abstract-validation.scss */
 .husky-auto-complete-success .husky-validate:not(label):not(span):not(p), .husky-validate-success .husky-validate:not(label):not(span):not(p) {
-  border-color: #356635;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+  border-color: #1FCA23;
+  border-width: 2px;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21--%20Generated%20by%20IcoMoon.io%20--%3E%0A%3C%21DOCTYPE%20svg%20PUBLIC%20%22-//W3C//DTD%20SVG%201.1//EN%22%20%22http%3A//www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd%22%3E%0A%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%3Cg%3E%0A%3C/g%3E%0A%09%3Cpath%20d%3D%22M13.5%202l-7.5%207.5-3.5-3.5-2.5%202.5%206%206%2010-10z%22%20fill%3D%22%231fca23%22%20/%3E%0A%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 30px;
 }
 
 /*! normalize.css v2.1.2 | MIT License | git.io/normalize */
@@ -3840,7 +3836,7 @@ hr.divider {
   width: 100%;
   height: 30px;
   margin: 10px 0;
-  border: 1px solid white;
+  border: 1px solid #cccccc;
   padding: 0 5px;
   font-size: 14px;
   border-radius: 3px;
@@ -3866,42 +3862,63 @@ hr.divider {
 }
 
 /* line 35, ../scss/modules/form.scss */
+#cke_ckeditor {
+  margin: 10px 0 20px !important;
+}
+/* line 37, ../scss/modules/form.scss */
+#cke_ckeditor.cke_chrome {
+  box-shadow: none !important;
+  border: 0 !important;
+}
+/* line 42, ../scss/modules/form.scss */
+#cke_ckeditor .cke_inner {
+  border: 1px solid #cccccc !important;
+}
+/* line 46, ../scss/modules/form.scss */
+#cke_ckeditor .cke_inner,
+#cke_ckeditor .cke_wysiwyg_frame {
+  border-bottom-left-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
+}
+
+/* line 55, ../scss/modules/form.scss */
 input[type="text"].input-round {
   border-radius: 30px;
 }
 
-/* line 40, ../scss/modules/form.scss */
+/* line 61, ../scss/modules/form.scss */
+input
 .input-description {
   margin-top: -5px;
   font-size: 10px;
   color: #999999;
 }
 
-/* line 48, ../scss/modules/form.scss */
+/* line 69, ../scss/modules/form.scss */
 label {
   display: block;
   font-size: 14px;
   color: #999999;
   cursor: pointer;
 }
-/* line 54, ../scss/modules/form.scss */
+/* line 75, ../scss/modules/form.scss */
 label.large {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 59, ../scss/modules/form.scss */
+/* line 80, ../scss/modules/form.scss */
 label .form-element {
   margin-top: 5px;
   border: 1px solid #cccccc;
 }
-/* line 64, ../scss/modules/form.scss */
+/* line 85, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
 }
 
-/* line 73, ../scss/modules/form.scss */
+/* line 94, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 14px;
   height: 14px;
@@ -3909,13 +3926,13 @@ label.inline {
   opacity: 0;
   cursor: pointer;
 }
-/* line 88, ../scss/modules/form.scss */
+/* line 108, ../scss/modules/form.scss */
 .custom-checkbox:checked + .custom-checkbox-icon::after, .custom-checkbox.is-checked + .custom-checkbox-icon::after {
   content: "\e207";
   position: relative;
   top: -3px;
 }
-/* line 96, ../scss/modules/form.scss */
+/* line 116, ../scss/modules/form.scss */
 .custom-checkbox + .custom-checkbox-icon {
   display: inline-block;
   width: 14px;
@@ -3929,27 +3946,27 @@ label.inline {
   vertical-align: middle;
 }
 
-/* line 115, ../scss/modules/form.scss */
+/* line 135, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 119, ../scss/modules/form.scss */
+/* line 139, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 123, ../scss/modules/form.scss */
+/* line 143, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 127, ../scss/modules/form.scss */
+/* line 147, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 131, ../scss/modules/form.scss */
+/* line 151, ../scss/modules/form.scss */
 textarea.form-element {
   width: 100%;
   height: 40px;
@@ -3959,7 +3976,7 @@ textarea.form-element {
   font-family: inherit;
 }
 
-/* line 143, ../scss/modules/form.scss */
+/* line 162, ../scss/modules/form.scss */
 .custom-radio {
   width: 18px;
   height: 18px;
@@ -3967,7 +3984,7 @@ textarea.form-element {
   opacity: 0;
   cursor: pointer;
 }
-/* line 155, ../scss/modules/form.scss */
+/* line 174, ../scss/modules/form.scss */
 .custom-radio:checked + .custom-radio-icon::after, .custom-radio.is-checked + .custom-radio-icon::after {
   content: "";
   display: block;
@@ -3976,7 +3993,7 @@ textarea.form-element {
   border-radius: 18px;
   background-color: #999;
 }
-/* line 166, ../scss/modules/form.scss */
+/* line 185, ../scss/modules/form.scss */
 .custom-radio + .custom-radio-icon {
   display: inline-block;
   width: 18px;
@@ -3984,7 +4001,7 @@ textarea.form-element {
   margin-left: -18px;
   padding: 2px;
   border-radius: 18px;
-  border: 1px solid white;
+  border: 1px solid #cccccc;
   background-color: #fff;
   text-align: center;
   line-height: 1;
@@ -5299,29 +5316,34 @@ a.btn-black, a.btn-highlight {
 /* line 7, ../scss/modules/tabs.scss */
 .tabs-container ul {
   width: 100%;
-  padding: 0 0 5px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
   border-bottom: 2px solid #cccccc;
 }
-/* line 12, ../scss/modules/tabs.scss */
+/* line 14, ../scss/modules/tabs.scss */
 .tabs-container ul li {
   display: inline;
   list-style-type: none;
+  height: 20px;
 }
-/* line 16, ../scss/modules/tabs.scss */
+/* line 19, ../scss/modules/tabs.scss */
 .tabs-container ul li a {
   color: black;
   font-weight: bold;
   text-decoration: none;
+  font-size: 16px;
+  line-height: 20px;
 }
-/* line 21, ../scss/modules/tabs.scss */
+/* line 26, ../scss/modules/tabs.scss */
 .tabs-container ul li a:hover {
   color: #666666;
 }
-/* line 27, ../scss/modules/tabs.scss */
+/* line 32, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected a {
   color: #249fbe;
 }
-/* line 32, ../scss/modules/tabs.scss */
+/* line 37, ../scss/modules/tabs.scss */
 .tabs-container ul li:not(:last-child) {
   padding-right: 30px;
 }
