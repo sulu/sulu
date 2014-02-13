@@ -333,6 +333,15 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * returns true if state of site is "published"
+     * @return boolean
+     */
+    public function getPublished()
+    {
+        return ($this->nodeState === 2);
+    }
+
+    /**
      * @param int $globalState
      */
     public function setGlobalState($globalState)
@@ -427,6 +436,7 @@ abstract class Structure implements StructureInterface
             'id' => $this->uuid,
             'nodeState' => $this->getNodeState(),
             'globalState' => $this->getNodeState(),
+            'published' => $this->getPublished(),
             'hasSub' => $this->hasChildren,
             'creator' => $this->creator,
             'changer' => $this->changer,
