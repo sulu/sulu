@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content;
 
 
-use string;
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
