@@ -263,7 +263,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     $this->assertTrue($data->params->changes->reload);
                 }
             },
-            $this->count(2),
+            $this->exactly(2),
             'preview',
             function () {
                 $this->assertTrue(true);
@@ -331,6 +331,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     $this->assertEquals($data->params->other, true);
                 }
             },
+            $this->exactly(2),
             $this->exactly(2),
             'form',
             function () {
