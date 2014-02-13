@@ -3488,13 +3488,14 @@ h5 {
   height: 14px;
   border-radius: 50%;
   border: 1px solid white;
-  background: #62c400;
+  background: #1fca23;
+  font-size: medium !important;
   position: relative;
-  top: 2px;
+  top: -2px;
   left: 0px;
 }
 
-/* line 473, ../scss/modules/icons.scss */
+/* line 474, ../scss/modules/icons.scss */
 .icon-unpublish::after {
   content: "";
   display: inline-block;
@@ -3503,12 +3504,28 @@ h5 {
   border-radius: 50%;
   border: 1px solid white;
   background: #ad0710;
+  font-size: medium !important;
   position: relative;
-  top: 2px;
+  top: -2px;
   left: 0px;
 }
 
-/* line 488, ../scss/modules/icons.scss */
+/* line 490, ../scss/modules/icons.scss */
+.icon-test::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid white;
+  background: #febc2f;
+  font-size: medium !important;
+  position: relative;
+  top: -2px;
+  left: 0px;
+}
+
+/* line 506, ../scss/modules/icons.scss */
 .icon-right-arrow::after {
   content: "\e212";
   display: inline-block;
@@ -3832,7 +3849,7 @@ hr.divider {
 /* line 15, ../scss/modules/form.scss */
 .form-element:focus {
   outline: 0;
-  border-color: #efefef;
+  border-color: #cccccc;
 }
 /* line 20, ../scss/modules/form.scss */
 .form-element.input-large {
@@ -4629,17 +4646,23 @@ li a.navigation-settings-icon {
 }
 
 /* line 45, ../scss/modules/dropdown.scss */
+.dropdown-align-right {
+  right: 0;
+  left: inherit;
+}
+
+/* line 50, ../scss/modules/dropdown.scss */
 .dropdown-footer {
   border-top: 1px solid #ccc;
   padding: 10px 10px;
 }
 
-/* line 50, ../scss/modules/dropdown.scss */
+/* line 55, ../scss/modules/dropdown.scss */
 .dropdown-toggle {
   display: block;
   cursor: pointer;
 }
-/* line 53, ../scss/modules/dropdown.scss */
+/* line 58, ../scss/modules/dropdown.scss */
 .dropdown-toggle::after {
   content: "";
   display: inline-block;
@@ -4812,28 +4835,27 @@ li a.navigation-settings-icon {
 .edit-toolbar-item a .icon, .edit-toolbar-item a.icon {
   font-size: 18px;
   padding-right: 0px;
-  line-height: 1;
   vertical-align: middle;
 }
-/* line 168, ../scss/modules/edit-toolbar.scss */
+/* line 167, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item a .icon.large, .edit-toolbar-item a.icon.large {
   font-size: 20px;
 }
-/* line 171, ../scss/modules/edit-toolbar.scss */
+/* line 170, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item a .icon.small, .edit-toolbar-item a.icon.small {
   font-size: 12px;
 }
-/* line 176, ../scss/modules/edit-toolbar.scss */
+/* line 175, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item a .title {
   font-size: 14px;
 }
-/* line 180, ../scss/modules/edit-toolbar.scss */
+/* line 179, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-item a .icon + .title:not(:empty) {
   padding-left: 10px;
 }
 
 /**  dropdown **/
-/* line 189, ../scss/modules/edit-toolbar.scss */
+/* line 188, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu {
   background-color: white;
   border: 1px solid #cccccc;
@@ -4852,12 +4874,12 @@ li a.navigation-settings-icon {
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
-/* line 208, ../scss/modules/edit-toolbar.scss */
+/* line 207, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 213, ../scss/modules/edit-toolbar.scss */
+/* line 212, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li {
   display: list-item;
   float: none;
@@ -4865,36 +4887,36 @@ li a.navigation-settings-icon {
   line-height: 30px;
   white-space: nowrap;
 }
-/* line 221, ../scss/modules/edit-toolbar.scss */
+/* line 220, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.is-selected, .edit-toolbar-dropdown-menu li:hover, .edit-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected, .column-navigation-wrapper .column-navigation .column ul .edit-toolbar-dropdown-menu li.selected {
   background-color: #249fbe;
 }
-/* line 223, ../scss/modules/edit-toolbar.scss */
+/* line 222, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.is-selected a, .edit-toolbar-dropdown-menu li:hover a, .edit-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.selected a, .column-navigation-wrapper .column-navigation .column ul .edit-toolbar-dropdown-menu li.selected a {
   color: white;
 }
-/* line 229, ../scss/modules/edit-toolbar.scss */
+/* line 228, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.disabled:hover, .edit-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.disabled.selected, .column-navigation-wrapper .column-navigation .column ul .edit-toolbar-dropdown-menu li.disabled.selected, .edit-toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 232, ../scss/modules/edit-toolbar.scss */
+/* line 231, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.disabled:hover a, .edit-toolbar-dropdown-menu .column-navigation-wrapper .column-navigation .column ul li.disabled.selected a, .column-navigation-wrapper .column-navigation .column ul .edit-toolbar-dropdown-menu li.disabled.selected a, .edit-toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999999;
 }
-/* line 238, ../scss/modules/edit-toolbar.scss */
+/* line 237, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li:active {
   background-color: #28b1d3;
 }
-/* line 242, ../scss/modules/edit-toolbar.scss */
+/* line 241, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #dddddd;
 }
-/* line 249, ../scss/modules/edit-toolbar.scss */
+/* line 248, ../scss/modules/edit-toolbar.scss */
 .edit-toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;
@@ -5090,62 +5112,66 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
 }
 
-/* line 9, ../scss/modules/auto-complete.scss */
+/* line 1, ../scss/modules/auto-complete.scss */
 .auto-complete-container {
   position: relative;
 }
-/* line 12, ../scss/modules/auto-complete.scss */
+/* line 4, ../scss/modules/auto-complete.scss */
 .auto-complete-container label {
   cursor: default;
 }
 
+/* line 9, ../scss/modules/auto-complete.scss */
+.husky-auto-complete {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  margin-top: 10px;
+  font-size: 12px;
+  background: white;
+  border-radius: 4px 4px 0 0;
+}
 /* line 18, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"] {
-  width: 100%;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  margin: 4px 0;
-}
-
-/* line 27, ../scss/modules/auto-complete.scss */
-.wrapper {
-  width: 400px;
-  background: white;
-  padding: 4px 8px;
   border-radius: 4px 4px 0 0;
-  font-size: 12px;
+  margin: 0;
 }
 
-/* line 35, ../scss/modules/auto-complete.scss */
+/* line 29, ../scss/modules/auto-complete.scss */
 .twitter-typeahead {
   width: 100%;
 }
 
-/* line 39, ../scss/modules/auto-complete.scss */
+/* line 33, ../scss/modules/auto-complete.scss */
 .tt-suggestions {
-  width: 400px;
+  width: 100%;
   top: 37px;
-  border-top: 1px solid #efefef;
   background: white;
 }
 
-/* line 46, ../scss/modules/auto-complete.scss */
+/* line 39, ../scss/modules/auto-complete.scss */
+.tt-dropdown-menu {
+  width: 100%;
+  border: 1px solid #cccccc;
+  margin-top: -1px;
+}
+
+/* line 45, ../scss/modules/auto-complete.scss */
 .tt-hint {
   display: none;
 }
 
-/* line 50, ../scss/modules/auto-complete.scss */
+/* line 49, ../scss/modules/auto-complete.scss */
 .tt-suggestion {
   height: 25px;
+  width: 100%;
   padding: 0 6px;
-  border-width: 0 2px 0 2px;
+  border-width: 0 0px 0 0px;
   border-style: solid;
   border-color: #fff;
 }
 /* line 57, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border {
-  border-bottom: 1px solid #efefef;
   height: 25px;
   clear: both;
 }
@@ -5172,10 +5198,16 @@ a.btn-black, a.btn-highlight {
 /* line 81, ../scss/modules/auto-complete.scss */
 .tt-suggestion:hover,
 .tt-is-under-cursor {
-  background: #efefef;
+  background: #249fbe;
+}
+/* line 83, ../scss/modules/auto-complete.scss */
+.tt-suggestion:hover .border,
+.tt-is-under-cursor .border {
+  border: 0;
+  color: white;
 }
 
-/* line 85, ../scss/modules/auto-complete.scss */
+/* line 90, ../scss/modules/auto-complete.scss */
 .suggestion {
   color: black;
 }
@@ -5771,11 +5803,7 @@ a.btn-black, a.btn-highlight {
   }
 }
 
-/* line 1, ../scss/modules/column-navigation.scss */
-.column-navigation-wrapper {
-  overflow: hidden;
-}
-/* line 4, ../scss/modules/column-navigation.scss */
+/* line 3, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation {
   background-color: white;
   border: 1px solid #cccccc;
@@ -5783,7 +5811,7 @@ a.btn-black, a.btn-highlight {
   overflow-y: hidden;
   white-space: nowrap;
 }
-/* line 11, ../scss/modules/column-navigation.scss */
+/* line 10, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column {
   border-right: 1px solid #cccccc;
   overflow-y: auto;
@@ -5792,45 +5820,45 @@ a.btn-black, a.btn-highlight {
   font-size: 0;
   height: 100%;
 }
-/* line 19, ../scss/modules/column-navigation.scss */
+/* line 18, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   font-size: 14px;
 }
-/* line 25, ../scss/modules/column-navigation.scss */
+/* line 24, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li {
   padding: 15px 11px 15px 15px;
   height: 50px;
 }
-/* line 30, ../scss/modules/column-navigation.scss */
+/* line 29, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li:hover, .column-navigation-wrapper .column-navigation .column ul li.selected {
   background-color: #f1f1f1;
 }
-/* line 36, ../scss/modules/column-navigation.scss */
+/* line 35, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.selected .item-text {
   font-weight: bold;
 }
-/* line 41, ../scss/modules/column-navigation.scss */
+/* line 40, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .inactive {
   color: #999999;
 }
-/* line 45, ../scss/modules/column-navigation.scss */
+/* line 44, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .not-published {
   color: #fda502;
   margin-top: 2px;
   font-size: 40px;
 }
-/* line 53, ../scss/modules/column-navigation.scss */
+/* line 52, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text {
   padding-top: 2px;
 }
-/* line 57, ../scss/modules/column-navigation.scss */
+/* line 56, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text.ghost {
   color: #999999;
 }
-/* line 61, ../scss/modules/column-navigation.scss */
+/* line 60, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .ghost {
   background: #009fc0;
   padding: 0 2px;
@@ -5838,7 +5866,7 @@ a.btn-black, a.btn-highlight {
   color: white;
   border-radius: 3px;
 }
-/* line 69, ../scss/modules/column-navigation.scss */
+/* line 68, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .edit {
   margin-right: 5px;
   background-color: #009fc0;
@@ -5847,14 +5875,14 @@ a.btn-black, a.btn-highlight {
   color: white;
   border-radius: 3px;
 }
-/* line 78, ../scss/modules/column-navigation.scss */
+/* line 77, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .arrow {
   display: inline-block;
   width: 11px;
   font-size: 10px;
   vertical-align: middle;
 }
-/* line 87, ../scss/modules/column-navigation.scss */
+/* line 86, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .add {
   background-color: #009fc0;
   padding: 5px 0;
@@ -5863,7 +5891,7 @@ a.btn-black, a.btn-highlight {
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
 }
-/* line 97, ../scss/modules/column-navigation.scss */
+/* line 96, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .settings {
   background-color: #cccccc;
   padding: 5px 0;
@@ -5922,27 +5950,38 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   min-height: 30px;
   border-radius: 4px 4px 0 0;
+  margin: 0;
 }
-/* line 49, ../scss/modules/auto-complete-list.scss */
+/* line 50, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-container .tt-suggestions {
   width: 100%;
 }
 
-/* line 54, ../scss/modules/auto-complete-list.scss */
+/* line 55, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list {
   padding: 1px 8px;
   border-radius: 4px;
   background-color: #fff;
 }
-/* line 59, ../scss/modules/auto-complete-list.scss */
-.auto-complete-list input[type="text"] {
+/* line 60, ../scss/modules/auto-complete-list.scss */
+.auto-complete-list .husky-auto-complete {
+  background: none;
+  border-radius: 0;
+  position: static;
+  margin: 0;
+}
+/* line 66, ../scss/modules/auto-complete-list.scss */
+.auto-complete-list .husky-auto-complete input[type="text"] {
   margin: 7px 10px 7px 0;
+  padding: 0;
   width: 100px;
   border: 0;
   outline: 0;
+  border-radius: 0;
+  height: auto;
 }
 
-/* line 67, ../scss/modules/auto-complete-list.scss */
+/* line 78, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection {
   display: inline-block;
   margin: 4px 5px 4px 0;
@@ -5953,7 +5992,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   line-height: normal;
 }
-/* line 77, ../scss/modules/auto-complete-list.scss */
+/* line 88, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove {
   font-family: "Glyphicons";
   position: relative;
@@ -5964,14 +6003,14 @@ a.btn-black, a.btn-highlight {
   color: black;
 }
 
-/* line 89, ../scss/modules/auto-complete-list.scss */
+/* line 100, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions {
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: #ddd;
 }
-/* line 95, ../scss/modules/auto-complete-list.scss */
+/* line 106, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions h5 {
   margin: 0;
   padding: 5px 8px;
@@ -5979,12 +6018,12 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 12px;
 }
-/* line 103, ../scss/modules/auto-complete-list.scss */
+/* line 114, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions ul {
   padding: 8px 8px 15px;
   margin: 0;
 }
-/* line 108, ../scss/modules/auto-complete-list.scss */
+/* line 119, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions li {
   display: inline-block;
   margin-right: 5px;
@@ -5995,7 +6034,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   cursor: pointer;
 }
-/* line 119, ../scss/modules/auto-complete-list.scss */
+/* line 130, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions .deactivated {
   cursor: auto;
   color: #999999;
@@ -6136,11 +6175,15 @@ a.btn-black, a.btn-highlight {
   left: 0px;
 }
 /* line 49, ../scss/modules/smart-content.scss */
+.smart-content .loader {
+  padding: 50px 0;
+}
+/* line 52, ../scss/modules/smart-content.scss */
 .smart-content .no-content {
   text-align: center;
   height: 210px;
 }
-/* line 53, ../scss/modules/smart-content.scss */
+/* line 56, ../scss/modules/smart-content.scss */
 .smart-content .no-content .icon-file {
   display: block;
   position: absolute;
@@ -6152,141 +6195,139 @@ a.btn-black, a.btn-highlight {
   font-size: 125px;
   color: #efefef;
 }
-/* line 64, ../scss/modules/smart-content.scss */
+/* line 67, ../scss/modules/smart-content.scss */
 .smart-content .no-content .text {
   padding-top: 160px;
   font-weight: bold;
   color: #e4e4e4;
   font-size: 24px;
 }
-/* line 71, ../scss/modules/smart-content.scss */
+/* line 74, ../scss/modules/smart-content.scss */
 .smart-content .items-list {
   list-style-type: none;
   margin: 0;
   padding: 0 20px;
 }
-/* line 75, ../scss/modules/smart-content.scss */
+/* line 78, ../scss/modules/smart-content.scss */
 .smart-content .items-list li {
   font-size: 14px;
   line-height: 50px;
   border-bottom: 1px solid #cccccc;
 }
-/* line 80, ../scss/modules/smart-content.scss */
+/* line 83, ../scss/modules/smart-content.scss */
 .smart-content .items-list li .num {
   color: #999999;
   padding-right: 10px;
 }
-/* line 84, ../scss/modules/smart-content.scss */
+/* line 87, ../scss/modules/smart-content.scss */
 .smart-content .items-list li:last-child {
   border-width: 2px;
 }
 
-/* line 91, ../scss/modules/smart-content.scss */
+/* line 94, ../scss/modules/smart-content.scss */
 .smart-footer {
   padding: 15px 20px 30px 20px;
   line-height: 14px;
   color: #999999;
   font-size: 12px;
 }
-/* line 96, ../scss/modules/smart-content.scss */
+/* line 99, ../scss/modules/smart-content.scss */
 .smart-footer span {
   padding-right: 5px;
 }
-/* line 99, ../scss/modules/smart-content.scss */
+/* line 102, ../scss/modules/smart-content.scss */
 .smart-footer .view-toggler {
   color: black;
   cursor: pointer;
 }
 
-/* line 106, ../scss/modules/smart-content.scss */
+/* line 109, ../scss/modules/smart-content.scss */
 .smart-content-overlay .overlay-header {
   margin-bottom: 15px;
 }
-/* line 109, ../scss/modules/smart-content.scss */
+/* line 112, ../scss/modules/smart-content.scss */
 .smart-content-overlay .overlay-footer {
   margin-top: 5px;
 }
 
-/* line 114, ../scss/modules/smart-content.scss */
+/* line 117, ../scss/modules/smart-content.scss */
 .smart-overlay-content {
   height: 100%;
   font-size: 12px;
 }
-/* line 118, ../scss/modules/smart-content.scss */
+/* line 121, ../scss/modules/smart-content.scss */
 .smart-overlay-content .desc {
   font-size: 14px;
   color: #999999;
   padding-bottom: 5px;
   display: block;
 }
-/* line 124, ../scss/modules/smart-content.scss */
+/* line 127, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item, .smart-overlay-content .item-half {
   margin-bottom: 25px;
   min-height: 55px;
 }
-/* line 128, ../scss/modules/smart-content.scss */
+/* line 131, ../scss/modules/smart-content.scss */
 .smart-overlay-content label {
   color: black;
   font-size: 12px;
 }
-/* line 132, ../scss/modules/smart-content.scss */
+/* line 135, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item-half {
   float: left;
   width: 170px;
 }
-/* line 136, ../scss/modules/smart-content.scss */
+/* line 139, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item {
   padding-right: 20px;
 }
-/* line 139, ../scss/modules/smart-content.scss */
+/* line 142, ../scss/modules/smart-content.scss */
 .smart-overlay-content .left {
   margin-right: 20px;
 }
-/* line 142, ../scss/modules/smart-content.scss */
+/* line 145, ../scss/modules/smart-content.scss */
 .smart-overlay-content .full {
   padding-right: 0;
 }
-/* line 145, ../scss/modules/smart-content.scss */
+/* line 148, ../scss/modules/smart-content.scss */
 .smart-overlay-content .check {
   margin-top: 25px;
 }
-/* line 147, ../scss/modules/smart-content.scss */
+/* line 150, ../scss/modules/smart-content.scss */
 .smart-overlay-content .check .description {
   padding-left: 10px;
 }
-/* line 150, ../scss/modules/smart-content.scss */
+/* line 153, ../scss/modules/smart-content.scss */
 .smart-overlay-content .check .custom-checkbox-icon {
   margin-bottom: 2px;
 }
-/* line 153, ../scss/modules/smart-content.scss */
+/* line 156, ../scss/modules/smart-content.scss */
 .smart-overlay-content .check.disabled {
   display: none;
 }
-/* line 157, ../scss/modules/smart-content.scss */
+/* line 160, ../scss/modules/smart-content.scss */
 .smart-overlay-content .sortMethod {
   margin-top: 25px;
 }
-/* line 161, ../scss/modules/smart-content.scss */
+/* line 164, ../scss/modules/smart-content.scss */
 .smart-overlay-content input.limit-to,
 .smart-overlay-content input.data-source {
-  height: 30px;
-  width: 100%;
   padding-left: 10px;
+  border-radius: 0;
 }
-/* line 166, ../scss/modules/smart-content.scss */
+/* line 168, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tags.disabled {
   display: none;
 }
-/* line 169, ../scss/modules/smart-content.scss */
+/* line 171, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list {
-  border: 1px solid #cccccc;
   border-radius: 4px 4px 0 0;
 }
-/* line 172, ../scss/modules/smart-content.scss */
+/* line 173, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list input {
   margin: 7px 0 0 0;
 }
-/* line 175, ../scss/modules/smart-content.scss */
+/* line 176, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list .tt-suggestions {
   width: 360px;
 }
@@ -6433,32 +6474,36 @@ a.btn-black, a.btn-highlight {
 .husky-top-toolbar .state .dropdown-toggle:after {
   margin-left: 3px;
 }
-/* line 124, ../scss/modules/top-toolbar.scss */
+/* line 123, ../scss/modules/top-toolbar.scss */
+.husky-top-toolbar .state .icon::after {
+  top: 2px;
+}
+/* line 127, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .highlight {
   background: #249fbe;
   border-color: #249fbe;
 }
-/* line 128, ../scss/modules/top-toolbar.scss */
+/* line 131, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .disabled {
   background: #999999;
   border-color: #999999;
   cursor: auto;
 }
-/* line 132, ../scss/modules/top-toolbar.scss */
+/* line 135, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .disabled * {
   cursor: auto;
 }
-/* line 136, ../scss/modules/top-toolbar.scss */
+/* line 139, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .loading {
   display: block;
   margin-left: -1px;
   cursor: auto;
 }
-/* line 140, ../scss/modules/top-toolbar.scss */
+/* line 143, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .loading * {
   cursor: auto;
 }
-/* line 144, ../scss/modules/top-toolbar.scss */
+/* line 147, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .dropdown-toggle:after {
   border-left: 4px solid rgba(0, 0, 0, 0);
   border-right: 4px solid rgba(0, 0, 0, 0);
@@ -6471,21 +6516,21 @@ a.btn-black, a.btn-highlight {
   top: -1px;
   width: 0;
 }
-/* line 156, ../scss/modules/top-toolbar.scss */
+/* line 159, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .top-toolbar-dropdown-menu {
   display: none;
   text-align: left;
 }
-/* line 160, ../scss/modules/top-toolbar.scss */
+/* line 163, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .top-toolbar-dropdown-menu li {
   padding-left: 15px;
 }
-/* line 163, ../scss/modules/top-toolbar.scss */
+/* line 166, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .top-toolbar-dropdown-menu a {
   color: black;
   text-decoration: none;
 }
-/* line 168, ../scss/modules/top-toolbar.scss */
+/* line 171, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar .is-expanded .top-toolbar-dropdown-menu {
   display: block;
 }
