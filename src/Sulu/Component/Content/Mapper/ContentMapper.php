@@ -155,9 +155,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         'property' => $property
                     );
                 } else {
-                    $type->set(
+                    $type->write(
                         $node,
                         new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                        $userId,
                         $webspaceKey
                     );
                 }
@@ -180,9 +181,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 /** @var PropertyInterface $property */
                 $property = $post['property'];
 
-                $type->set(
+                $type->write(
                     $node,
                     new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                    $userId,
                     $webspaceKey
                 );
             } catch (Exception $ex) {
@@ -373,7 +375,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
             $type = $this->getContentType($property->getContentTypeName());
-            $type->get(
+            $type->read(
                 $contentNode,
                 new TranslatedProperty($property, $languageCode, $this->languageNamespace),
                 $webspaceKey
