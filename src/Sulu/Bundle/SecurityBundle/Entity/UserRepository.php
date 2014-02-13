@@ -12,20 +12,21 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 
 /**
  * Repository for the User, implementing some additional functions
  * for querying objects
  */
-class UserRepository extends EntityRepository implements UserProviderInterface
+class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public function findUserById($id)
     {
         try {
