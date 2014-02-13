@@ -101,8 +101,6 @@ class NodeController extends RestController implements ClassResourceInterface
         $limitResult = $this->getRequest()->get('limitResult', null);
         $tagNames = $this->getRequest()->get('tags', null);
 
-        // check request
-
         // resolve tag names
         $resolvedTags = array();
 
@@ -112,7 +110,10 @@ class NodeController extends RestController implements ClassResourceInterface
         if (isset($tagNames)) {
             $tags = explode(',', $tagNames);
             foreach ($tags as $tag) {
-                $resolvedTags[] = $tagManager->findByName($tag)->getId();
+                $resolvedTag = $tagManager->findByName($tag);
+                if ($resolvedTag) {
+                    $resolvedTags[] = $resolvedTag->getId();
+                }
             }
         }
 
@@ -143,7 +144,7 @@ class NodeController extends RestController implements ClassResourceInterface
             );
         }
 
-        return $this->handleView($this->view($structures));
+        return $this->handleView($this->view(array('_embedded' => $structures)));
     }
 
     /**
