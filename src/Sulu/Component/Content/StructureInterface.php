@@ -161,6 +161,12 @@ interface StructureInterface extends \JsonSerializable
     public function getNodeState();
 
     /**
+     * returns true if state of site is "published"
+     * @return boolean
+     */
+    public function getPublished();
+
+    /**
      * @param int $globalState
      */
     public function setGlobalState($globalState);
