@@ -32,20 +32,12 @@ class TemplateController extends Controller
 
     public function contentAction($key = null)
     {
+        $fireEvent = false;
         $templateIndex = null;
         if ($key === null) {
             // TODO extract to config
             $key = 'overview';
-            /** @var StructureManagerInterface $structureManager */
-            $structureManager = $this->get('sulu.content.structure_manager');
-            $i = 0;
-            foreach ($structureManager->getStructures() as $structure) {
-                if ($structure->getKey() === $key) {
-                    $templateIndex = $i;
-                    break;
-                }
-                $i++;
-            }
+            $fireEvent = true;
         }
 
         $template = $this->getTemplateStructure($key);
@@ -57,7 +49,7 @@ class TemplateController extends Controller
                 'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
                 'templateKey' => $key,
-                'templateIndex' => $templateIndex
+                'fireEvent' => $fireEvent
             )
         );
     }
