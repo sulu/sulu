@@ -168,6 +168,8 @@ define(['app-config'], function(AppConfig) {
                 if (!!tmp.id) {
                     this.options.data.id = tmp.id;
                 }
+
+                this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
             }
 
             require(['text!/admin/content/template/form/' + item.template + '.html'], function(template) {
