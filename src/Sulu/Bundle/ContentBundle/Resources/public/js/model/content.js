@@ -16,10 +16,16 @@ define([
     return new RelationalModel({
         urlRoot: '/admin/api/nodes',
 
-        saveTemplate: function(attributes, template, parent, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?template=' + template + (!!parent ? '& parent=' + parent : '')});
+        fullSave: function(template, webspace, language, attributes, parent, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + '&template=' + template + (!!parent ? '&parent=' + parent : '')});
 
             return this.save.call(this, attributes, options);
+        },
+
+        fullFetch: function(webspace, language, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+
+            return this.fetch.call(this, options);
         },
 
         defaults: function() {
