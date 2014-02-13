@@ -30,9 +30,6 @@ use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
@@ -1355,5 +1352,18 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
         $this->assertTrue($result->getShowInNavigation());
         $this->assertTrue($content->getShowInNavigation());
+    }
+
+    public function testLoadBySql2()
+    {
+        $this->prepareTreeTestData();
+
+        $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'en', 'default');
+
+        $this->assertEquals(5, sizeof($result));
+
+        $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'en', 'default', 2);
+
+        $this->assertEquals(2, sizeof($result));
     }
 }

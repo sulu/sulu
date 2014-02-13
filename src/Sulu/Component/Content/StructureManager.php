@@ -12,10 +12,8 @@ namespace Sulu\Component\Content;
 
 
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
-use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
@@ -99,5 +97,21 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
         // overwrite the default values with the given options
         $this->options = array_merge($this->options, $options);
+    }
+
+    /**
+     * @return StructureInterface[]
+     */
+    public function getStructures()
+    {
+        $result = array();
+        $files = glob($this->options['template_dir'].'/*.xml', GLOB_BRACE);
+        foreach($files as $file) {
+            $key = str_replace($this->options['template_dir'], '', $file);
+            $key = str_replace('/', '', $key);
+            $key = str_replace('.xml', '', $key);
+            $result[] = $this->getStructure($key);
+        }
+        return $result;
     }
 }

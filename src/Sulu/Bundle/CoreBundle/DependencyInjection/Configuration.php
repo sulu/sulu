@@ -33,6 +33,8 @@ class Configuration implements ConfigurationInterface
         $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
         $this->getPortalConfiguration($children);
+        $this->getFieldsConfiguration($children);
+        $children->end();
 
         return $treeBuilder;
     }
@@ -72,6 +74,36 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('workspace')
                     ->defaultValue('default')
+                ->end()
+            ->end()
+        ->end();
+    }
+
+    /**
+     * @param NodeBuilder $rootNode
+     */
+    private function getFieldsConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->arrayNode('fields_defaults')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('translations')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('id')->defaultValue('public.id')->end()
+                        ->scalarNode('title')->defaultValue('public.title')->end()
+                        ->scalarNode('name')->defaultValue('public.name')->end()
+                        ->scalarNode('created')->defaultValue('public.created')->end()
+                        ->scalarNode('changed')->defaultValue('public.changed')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('widths')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('id')->defaultValue('50px')->end()
+                        ->scalarNode('created')->defaultValue('140px')->end()
+                        ->scalarNode('changed')->defaultValue('140px')->end()
+                    ->end()
                 ->end()
             ->end()
         ->end();

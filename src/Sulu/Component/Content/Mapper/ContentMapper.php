@@ -175,9 +175,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         'property' => $property
                     );
                 } else {
-                    $type->set(
+                    $type->write(
                         $node,
                         new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                        $userId,
                         $webspaceKey
                     );
                 }
@@ -200,9 +201,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 /** @var PropertyInterface $property */
                 $property = $post['property'];
 
-                $type->set(
+                $type->write(
                     $node,
                     new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                    $userId,
                     $webspaceKey
                 );
             } catch (Exception $ex) {
@@ -389,6 +391,32 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
+     * returns the content returned by the given sql2 query as structures
+     * @param string $sql2 The query, which returns the content
+     * @param string $languageCode The language code
+     * @param string $webspaceKey The webspace key
+     * @param int $limit Limits the number of returned rows
+     * @return StructureInterface[]
+     */
+    public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
+    {
+        $structures = array();
+
+        $queryManager = $this->getSession()->getWorkspace()->getQueryManager();
+        $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
+        if ($limit) {
+            $query->setLimit($limit);
+        }
+        $result = $query->execute();
+
+        foreach ($result->getNodes() as $node) {
+            $structures[] = $this->loadByNode($node, $languageCode, $webspaceKey);
+        }
+
+        return $structures;
+    }
+
+    /**
      * returns data from given node
      * @param NodeInterface $contentNode
      * @param string $languageCode
@@ -416,7 +444,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         /** @var PropertyInterface $property */
         foreach ($structure->getProperties() as $property) {
             $type = $this->getContentType($property->getContentTypeName());
-            $type->get(
+            $type->read(
                 $contentNode,
                 new TranslatedProperty($property, $languageCode, $this->languageNamespace),
                 $webspaceKey

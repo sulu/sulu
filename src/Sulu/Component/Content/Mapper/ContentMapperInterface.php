@@ -107,6 +107,16 @@ interface ContentMapperInterface
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode);
 
     /**
+     * returns the content returned by the given sql2 query as structures
+     * @param string $sql2 The query, which returns the content
+     * @param string $languageCode The language code
+     * @param string $webspaceKey The webspace key
+     * @param int $limit Limits the number of returned rows
+     * @return StructureInterface[]
+     */
+    public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null);
+
+    /**
      * deletes content with subcontent in given webspace
      * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
