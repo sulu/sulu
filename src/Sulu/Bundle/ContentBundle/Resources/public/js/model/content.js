@@ -28,6 +28,12 @@ define([
             return this.fetch.call(this, options);
         },
 
+        fullDestroy: function(webspace, language, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+
+            return this.destroy.call(this, options);
+        },
+
         defaults: function() {
             return {
             };

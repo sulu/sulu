@@ -155,8 +155,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($uuid)
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
