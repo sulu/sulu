@@ -53,7 +53,7 @@ class ShowInNavigationPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getName()
     {
-        return 'sulu:show-in-navigation';
+        return 'sulu:showInNavigation';
     }
 
     /**
@@ -201,7 +201,7 @@ class ShowInNavigationPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getRequiredType()
     {
-        return PropertyType::LONG;
+        return PropertyType::BOOLEAN;
     }
 
     /**

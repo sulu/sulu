@@ -153,7 +153,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $this->changeState($node, $state, $structure);
         }
         if (isset($showInNavigation)) {
-            $node->setProperty('sulu:show-in-navigation', $showInNavigation);
+            $node->setProperty('sulu:showInNavigation', $showInNavigation);
         }
 
         $postSave = array();
@@ -219,7 +219,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue('sulu:created'));
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
-        $structure->setShowInNavigation($node->getPropertyValue('sulu:show-in-navigation'));
+        $structure->setShowInNavigation($node->getPropertyValue('sulu:showInNavigation'));
         $structure->setGlobalState($this->getInheritedState($node));
 
         return $structure;
