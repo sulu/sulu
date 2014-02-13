@@ -17,13 +17,9 @@ define(function() {
             return {
                 url: '/admin/content/navigation/content',
                 title: 'content.contents.title',
-                extendTemplate: 'default',
+                parentTemplate: 'default',
                 template: function() {
-                    if (!!result.options.id) {
-                        return [];
-                    }
-                    return [
-                        {
+                    var preview = {
                             icon: 'eye-open',
                             iconSize: 'large',
                             group: 'right',
@@ -32,7 +28,7 @@ define(function() {
                                 {
                                     title: this.sandbox.translate('sulu.edit-toolbar.new-window'),
                                     callback: function() {
-                                        result.sandbox.emit('sulu.edit-toolbar.preview.new-window');
+                                        this.sandbox.emit('sulu.edit-toolbar.preview.new-window');
                                     }.bind(this)
                                 },
                                 {
@@ -43,7 +39,7 @@ define(function() {
                                 }
                             ]
                         },
-                        {
+                        template = {
                             id: 'template',
                             icon: 'tag',
                             iconSize: 'large',
@@ -58,13 +54,17 @@ define(function() {
                                 translate: true,
                                 languageNamespace: 'template.',
                                 callback: function(item) {
-                                    result.sandbox.emit('sulu.edit-toolbar.dropdown.template.item-clicked', item);
+                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.template.item-clicked', item);
                                 }.bind(this)
                             }
-                        }
-                    ];
+                        };
+                    if (!this.options.id) {
+                        return [template];
+                    } else {
+                        return [template, preview];
+                    }
                 }.bind(this)
             };
-        }.bind(this)
+        }
     };
 });
