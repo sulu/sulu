@@ -46,7 +46,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * @param string $webspaceKey
      * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
         $value = $this->getResourceLocator($node ,$webspaceKey);
         $property->setValue($value);
@@ -90,10 +90,11 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param int $userId
      * @param string $webspaceKey
      * @return mixed
      */
-    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey)
     {
         $value = $property->getValue();
         if ($value != null && $value != '') {

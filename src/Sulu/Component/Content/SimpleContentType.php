@@ -51,7 +51,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      * @param string $webspaceKey
      * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
         $value = $this->defaultValue;
         if ($node->hasProperty($property->getName())) {
@@ -67,10 +67,11 @@ abstract class SimpleContentType implements ContentTypeInterface
      * save the value from given property
      * @param NodeInterface $node to set data
      * @param PropertyInterface $property property to get data
+     * @param int $userId
      * @param string $webspaceKey
      * @return mixed
      */
-    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey)
     {
         $value = $property->getValue();
         if ($value != null) {
