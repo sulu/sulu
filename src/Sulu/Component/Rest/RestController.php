@@ -67,12 +67,6 @@ abstract class RestController extends FOSRestController
     protected $fieldsTranslationKeys = array();
 
     /**
-     * contains default translations for some fields
-     * @var array
-     */
-    protected $fieldsDefaultTranslationKeys = array('id' => 'public.id', 'name' => 'public.name');
-
-    /**
      * contains fields that cannot be hidden and are visible by default
      * @var array
      */
@@ -91,6 +85,27 @@ abstract class RestController extends FOSRestController
     protected $fieldsValidation = array();
 
     /**
+     * @var array contains the widths of the fields
+     */
+    protected $fieldsWidth = array();
+
+    /**
+     * @var array contains the widths of the fields
+     */
+    protected $fieldsMinWidth = array();
+
+    /**
+     * @var array contains the default widths of some common fields
+     */
+    private $fieldsDefaultWidth = array();
+
+    /**
+     * contains default translations for some fields
+     * @var array
+     */
+    private $fieldsDefaultTranslationKeys = array();
+
+    /**
      * standard bundle prefix
      * @var string
      */
@@ -104,6 +119,10 @@ abstract class RestController extends FOSRestController
     public function responseFields()
     {
         try {
+
+            $this->fieldsDefaultTranslationKeys = $this->container->getParameter('sulu.fields_defaults.translations');
+            $this->fieldsDefaultWidth = $this->container->getParameter('sulu.fields_defaults.widths');
+
             /** @var ListRestHelper $listHelper */
             $listHelper = $this->get('sulu_core.list_rest_helper');
 
@@ -115,6 +134,7 @@ abstract class RestController extends FOSRestController
             $fields = array_merge($fields, $this->fieldsRelations);
             // hide
             $fields = array_diff($fields, $this->fieldsHidden);
+            $fields = array_merge($fields, $this->fieldsHidden); // put at last position
             // apply sort order
             $fields = array_diff($fields, $this->fieldsSortOrder);
             foreach ($this->fieldsSortOrder as $key => $value) {
@@ -122,10 +142,7 @@ abstract class RestController extends FOSRestController
             }
 
             // parsing final array and sets to Default
-            $fieldsArray = $this->addFieldAttributes($fields);
-            $fieldsHiddenArray = $this->addFieldAttributes($this->fieldsHidden, true);
-            $fieldsArray = array_merge($fieldsArray, $fieldsHiddenArray);
-
+            $fieldsArray = $this->addFieldAttributes($fields, $this->fieldsHidden);
 
             $view = $this->view($fieldsArray, 200);
         } catch (\Exception $e) {
@@ -159,16 +176,16 @@ abstract class RestController extends FOSRestController
     }
 
 
-    /**
-     * creates the translation keys array and sets the default attribute, if set
+    /**creates the translation keys array and sets the default attribute, if set
      * @param $fields
-     * @param bool $hidden defines if keys are hidden
+     * @param $fieldsHidden
      * @return array
      */
-    private function addFieldAttributes($fields, $hidden = false)
+    private function addFieldAttributes($fields, $fieldsHidden)
     {
         // add translations
         $fieldsArray = array();
+
         foreach ($fields as $field) {
             if (isset($this->fieldsTranslationKeys[$field])) {
                 $translationkey = $this->fieldsTranslationKeys[$field];
@@ -178,13 +195,21 @@ abstract class RestController extends FOSRestController
                 // check translations
                 $translationkey = $this->bundlePrefix . $field;
             }
+            $fieldWidth = null;
+            if (isset($this->fieldsWidth[$field])) {
+                $fieldWidth = $this->fieldsWidth[$field];
+            } else if (isset($this->fieldsDefaultWidth[$field])) {
+                $fieldWidth = $this->fieldsDefaultWidth[$field];
+            }
 
             $fieldsArray[] = array(
                 'id' => $field,
                 'translation' => $translationkey,
-                'disabled' => $hidden,
+                'disabled' => in_array($field, $fieldsHidden) ? true : false,
                 'default' => in_array($field, $this->fieldsDefault) ? true : null,
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
+                'width' => ($fieldWidth != null) ? $fieldWidth : null,
+                'minWidth' => array_key_exists($field, $this->fieldsMinWidth) ? $this->fieldsMinWidth[$field] : null,
                 'validation' => array_key_exists($field, $this->fieldsValidation) ? $this->fieldsValidation[$field] : null,
             );
         }
