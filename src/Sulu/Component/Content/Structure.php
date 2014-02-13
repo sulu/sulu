@@ -462,6 +462,7 @@ abstract class Structure implements StructureInterface
             'nodeState' => $this->getNodeState(),
             'globalState' => $this->getNodeState(),
             'published' => $this->getPublished(),
+            'showInNavigation' => $this->getShowInNavigation(),
             'hasSub' => $this->hasChildren,
             'creator' => $this->creator,
             'changer' => $this->changer,
