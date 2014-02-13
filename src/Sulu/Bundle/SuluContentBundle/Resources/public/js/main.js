@@ -28,9 +28,9 @@ define({
 
         // list all contacts
         sandbox.mvc.routes.push({
-            route: 'content/contents',
-            callback: function() {
-                this.html('<div data-aura-component="content@sulucontent" data-aura-display="column"/>');
+            route: 'content/contents/:webspace/:language',
+            callback: function(webspace, language) {
+                this.html('<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-display="column"/>');
             }
         });
 

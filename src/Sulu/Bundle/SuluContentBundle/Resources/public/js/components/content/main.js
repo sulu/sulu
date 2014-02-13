@@ -257,7 +257,14 @@ define([
             var $column = this.sandbox.dom.createElement('<div id="contacts-column-container"/>');
             this.html($column);
             this.sandbox.start([
-                {name: 'content/components/column@sulucontent', options: { el: $column}}
+                {
+                    name: 'content/components/column@sulucontent',
+                    options: {
+                        el: $column,
+                        webspace: this.options.webspace,
+                        language: this.options.language
+                    }
+                }
             ]);
         },
 
