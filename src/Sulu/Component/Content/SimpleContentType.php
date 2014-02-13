@@ -64,6 +64,18 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
+     * sets the value of the property with the data given
+     * @param mixed $data
+     * @param PropertyInterface $property
+     * @param $webspaceKey
+     * @return mixed
+     */
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey)
+    {
+        $property->setValue($data);
+    }
+
+    /**
      * save the value from given property
      * @param NodeInterface $node to set data
      * @param PropertyInterface $property property to get data

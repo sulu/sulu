@@ -37,6 +37,15 @@ interface ContentTypeInterface
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey);
 
     /**
+     * sets the value of the property with the data given
+     * @param mixed $data
+     * @param PropertyInterface $property
+     * @param $webspaceKey
+     * @return mixed
+     */
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey);
+
+    /**
      * save the value from given property
      * @param NodeInterface $node
      * @param PropertyInterface $property

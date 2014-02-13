@@ -53,6 +53,18 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
+     * sets the value of the property with the data given
+     * @param mixed $data
+     * @param PropertyInterface $property
+     * @param $webspaceKey
+     * @return mixed
+     */
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey)
+    {
+        $property->setValue($data);
+    }
+
+    /**
      * reads the value for given property out of the database + sets the value of the property
      * @param NodeInterface $node
      * @param string $webspaceKey
