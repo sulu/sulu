@@ -31,11 +31,15 @@ body {
   margin-top: 0;
 }
 /* line 34, ../scss/modules/base.scss */
+#content #content-tabs {
+  margin-top: 40px;
+}
+/* line 38, ../scss/modules/base.scss */
 #content .content-tabs-content {
-  margin-top: 60px;
+  margin-top: 80px;
 }
 
-/* line 41, ../scss/modules/base.scss */
+/* line 45, ../scss/modules/base.scss */
 #edit-toolbar-container {
   -webkit-transition: margin 0.5s;
   -moz-transition: margin 0.5s;
@@ -51,24 +55,34 @@ body {
   padding-top: 40px;
 }
 
-/* line 53, ../scss/modules/base.scss */
+/* line 57, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 820px;
 }
 
-/* line 57, ../scss/modules/base.scss */
+/* line 61, ../scss/modules/base.scss */
 #list-toolbar-container {
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
-/* line 63, ../scss/modules/base.scss */
+/* line 66, ../scss/modules/base.scss */
+#content-tabs-component {
+  margin-top: 40px;
+}
+/* line 70, ../scss/modules/base.scss */
+#content-tabs-component #cke_texteditor,
+#content-tabs-component .form-element {
+  margin: 10px 0 20px;
+}
+
+/* line 76, ../scss/modules/base.scss */
 #page-functions + #edit-toolbar .edit-toolbar-left {
   margin-left: -50px;
 }
 
 /*----------------------------------------*/
-/* line 70, ../scss/modules/base.scss */
+/* line 83, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -76,30 +90,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 78, ../scss/modules/base.scss */
+/* line 91, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 85, ../scss/modules/base.scss */
+/* line 98, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 92, ../scss/modules/base.scss */
+/* line 105, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 96, ../scss/modules/base.scss */
+/* line 109, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 103, ../scss/modules/base.scss */
+/* line 116, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
