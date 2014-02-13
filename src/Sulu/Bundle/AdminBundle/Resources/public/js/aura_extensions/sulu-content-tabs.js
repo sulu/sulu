@@ -5,6 +5,9 @@ define([], function() {
     return function(app) {
         app.components.before('initialize', function() {
             if (!!this.content) {
+                if (typeof this.content === 'function') {
+                    this.content = this.content.call(this);
+                }
                 this.sandbox.util.load(this.content.url)
                     .then(function(data) {
                         var contentNavigation = JSON.parse(data);
