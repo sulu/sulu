@@ -35,8 +35,7 @@ class TemplateController extends Controller
         $fireEvent = false;
         $templateIndex = null;
         if ($key === null) {
-            // TODO extract to config
-            $key = 'overview';
+            $key = $this->container->getParameter('sulu_content.template.default');
             $fireEvent = true;
         }
 

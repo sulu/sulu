@@ -30,7 +30,11 @@ class Configuration implements ConfigurationInterface
 
         // add config preview interval
         $rootNode
+            ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('default_template')
+                    ->defaultValue('overview')
+                ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
                     ->children()
