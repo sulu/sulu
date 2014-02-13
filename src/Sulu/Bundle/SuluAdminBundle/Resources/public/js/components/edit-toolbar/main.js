@@ -75,13 +75,6 @@ define([], function() {
                 } else {
                     this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
                 }
-            },
-            defaultPreview: function(saved, type) {
-                if (!!saved) {
-                    this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
-                } else {
-                    this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
-                }
             }
         },
 
@@ -97,6 +90,8 @@ define([], function() {
                         this.sandbox.logger.log('no template found!');
                     }
                 }
+            } else if (typeof templateObj === 'function') {
+                templateObj = template();
             }
             return templateObj;
         },
