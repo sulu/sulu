@@ -313,6 +313,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
+        $this->assertEquals(false, $content->getPropertyValue('sulu:showInNavigation'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -338,6 +339,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(false, $content->getShowInNavigation());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
@@ -1314,5 +1316,44 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $x4 = $this->mapper->load($d4->getUuid(), 'default', 'de');
         $this->assertEquals(StructureInterface::STATE_TEST, $x4->getGlobalState());
         $this->assertEquals(StructureInterface::STATE_TEST, $x4->getNodeState());
+    }
+
+    public function testShowInNavigation()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'default'
+        );
+
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, null, null, null, true);
+        $content = $this->mapper->load($result->getUuid(), 'default', 'de');
+
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/default/routes/news/test');
+        $node = $route->getPropertyValue('sulu:content');
+
+        $this->assertTrue($node->getPropertyValue('sulu:showInNavigation'));
+        $this->assertTrue($result->getShowInNavigation());
+        $this->assertTrue($content->getShowInNavigation());
+
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid(), null, null, false);
+        $content = $this->mapper->load($result->getUuid(), 'default', 'de');
+        $this->assertFalse($result->getShowInNavigation());
+        $this->assertFalse($content->getShowInNavigation());
+
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
+        $content = $this->mapper->load($result->getUuid(), 'default', 'de');
+        $this->assertFalse($result->getShowInNavigation());
+        $this->assertFalse($content->getShowInNavigation());
+
+        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid(), null, null, true);
+        $content = $this->mapper->load($result->getUuid(), 'default', 'de');
+        $this->assertTrue($result->getShowInNavigation());
+        $this->assertTrue($content->getShowInNavigation());
     }
 }
