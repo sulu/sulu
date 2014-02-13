@@ -117,6 +117,6 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->smartContent->set($node, $property, 'test');
+        $this->smartContent->write($node, $property, 0, 'test');
     }
 }
