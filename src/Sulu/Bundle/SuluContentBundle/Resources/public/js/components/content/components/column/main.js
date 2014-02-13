@@ -60,7 +60,7 @@ define(function() {
                                 },
                                 {
                                     "title": "Home page",
-                                    "action": "content/contents/edit:index/details"
+                                    "action": 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:index/details'
                                 }
                             ]
                         }
