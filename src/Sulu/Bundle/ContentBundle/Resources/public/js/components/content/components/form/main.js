@@ -46,8 +46,17 @@ define(['app-config'], function(AppConfig) {
 
         setStateDropdown: function(data) {
             var state = data.nodeState || 0;
+
+            // get the dropdownds
             this.sandbox.emit('sulu.content.contents.getDropdownForState', state, function(items) {
-                this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items, 0);
+                if (items.length > 0) {
+                    this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items);
+                }
+            }.bind(this));
+
+            // set the current state
+            this.sandbox.emit('sulu.content.contents.getStateDropdownItem', state, function(item) {
+                this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
             }.bind(this));
         },
 
