@@ -46,6 +46,11 @@ class SuluCoreExtension extends Extension
             $this->initWorkspace($config['portal'], $container, $loader);
         }
 
+        // Default Fields
+        if (isset($config['fields_defaults'])) {
+            $this->initFields($config['fields_defaults'], $container, $loader);
+        }
+
         $loader->load('rest.xml');
     }
 
@@ -58,6 +63,17 @@ class SuluCoreExtension extends Extension
     {
         $container->setParameter('sulu_core.workspace.config_dir', $workspaceConfig['config_dir']);
         $loader->load('workspace.xml');
+    }
+
+    /**
+     * @param $workspaceConfig
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
+    private function initFields($workspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $container->setParameter('sulu.fields_defaults.translations', $workspaceConfig['translations']);
+        $container->setParameter('sulu.fields_defaults.widths', $workspaceConfig['widths']);
     }
 
     /**

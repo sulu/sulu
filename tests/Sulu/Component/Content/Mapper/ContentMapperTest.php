@@ -1180,4 +1180,17 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($node->getName(), 'ae-ue-oe-ae-ue-oe');
         $this->assertEquals($node->getPath(), '/cmf/default/contents/ae-ue-oe-ae-ue-oe');
     }
+
+    public function testLoadBySql2()
+    {
+        $this->prepareTreeTestData();
+
+        $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'en', 'default');
+
+        $this->assertEquals(5, sizeof($result));
+
+        $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'en', 'default', 2);
+
+        $this->assertEquals(2, sizeof($result));
+    }
 }
