@@ -37,6 +37,8 @@ define(['app-config'], function(AppConfig) {
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
                 this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+            } else {
+                this.changeTemplate();
             }
         },
 
@@ -126,9 +128,9 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // set default template
-            this.sandbox.on('sulu.content.contents.default-template', function(name, index) {
+            this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', index);
+                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
             }, this);
 
             // change template
@@ -155,10 +157,12 @@ define(['app-config'], function(AppConfig) {
             if (typeof item === 'string') {
                 item = {template: item};
             }
-            if (this.template === item.template) {
+            if (!!item && this.template === item.template) {
                 return;
             }
-            this.template = item.template;
+            if (!!item) {
+                this.template = item.template;
+            }
 
             this.setHeaderBar(false);
 
@@ -172,7 +176,14 @@ define(['app-config'], function(AppConfig) {
                 this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
             }
 
-            require(['text!/admin/content/template/form/' + item.template + '.html'], function(template) {
+            var url = 'text!/admin/content/template/form';
+            if (!!item) {
+                url += '/' + item.template + '.html';
+            } else {
+                url += '.html';
+            }
+
+            require([url], function(template) {
                 var defaults = {
                         translate: this.sandbox.translate
                     },
