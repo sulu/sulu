@@ -62,12 +62,12 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
             }, this);
         },
 
         getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=sulu_io';
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace;
             // TODO portal
             this.sandbox.util.load(url)
                 .then(function(data) {
@@ -84,7 +84,7 @@ define([
                             processData: true,
 
                             success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
@@ -93,7 +93,7 @@ define([
                             processData: true,
 
                             success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
@@ -153,7 +153,7 @@ define([
             // TODO: show loading icon
             this.content.set(data);
 
-            this.content.saveTemplate(null, template, this.options.parent, {
+            this.content.fullSave(template, this.options.webspace, this.options.language, null, this.options.parent, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -171,14 +171,14 @@ define([
 
         load: function(id) {
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + id + '/details');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/details');
         },
 
         add: function(parent) {
             if (!!parent) {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/add:' + parent.id + '/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/details');
             } else {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/add/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/details');
             }
         },
 
@@ -275,7 +275,7 @@ define([
             this.content = new Content();
             if (!!this.options.id) {
                 this.content = new Content({id: this.options.id});
-                this.content.fetch({
+                this.content.fullFetch(this.options.webspace, this.options.language, {
                     success: function(model) {
                         this.sandbox.start([
                             {name: 'content/components/form@sulucontent', options: { el: $form, data: model.toJSON()}}
