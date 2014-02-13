@@ -37,7 +37,6 @@ define(['app-config'], function(AppConfig) {
 
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
-                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
             } else {
                 this.changeTemplate();
             }
@@ -89,7 +88,7 @@ define(['app-config'], function(AppConfig) {
 
         bindCustomEvents: function() {
             // content saved
-            this.sandbox.on('sulu.content.contents.saved', function(id) {
+            this.sandbox.on('sulu.content.contents.saved', function() {
                 this.setHeaderBar(true);
             }, this);
 
@@ -168,8 +167,9 @@ define(['app-config'], function(AppConfig) {
                     }
                     this.setHeaderBar(false);
 
+                    var tmp, url;
                     if (!!this.sandbox.form.getObject(this.formId)) {
-                        var tmp = this.options.data;
+                        tmp = this.options.data;
                         this.options.data = this.sandbox.form.getData(this.formId);
                         if (!!tmp.id) {
                             this.options.data.id = tmp.id;
@@ -178,7 +178,7 @@ define(['app-config'], function(AppConfig) {
                         this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
                     }
 
-                    var url = 'text!/admin/content/template/form';
+                    url = 'text!/admin/content/template/form';
                     if (!!item) {
                         url += '/' + item.template + '.html';
                     } else {
@@ -190,14 +190,16 @@ define(['app-config'], function(AppConfig) {
                                 translate: this.sandbox.translate
                             },
                             context = this.sandbox.util.extend({}, defaults),
-                            tpl = this.sandbox.util.template(template, context);
+                            tpl = this.sandbox.util.template(template, context),
+                            data = this.initData();
 
                         this.html(tpl);
-                        var data = this.initData();
                         this.createForm(data);
 
                         this.bindDomEvents();
                         this.listenForChange();
+
+                        this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
                     }.bind(this));
                 }.bind(this),
                 showDialog = function() {
