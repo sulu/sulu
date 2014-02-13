@@ -715,37 +715,36 @@ class NodeControllerTest extends DatabaseTestCase
         );
 
         $client->request('GET', '/api/nodes/smartcontent');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(6, sizeof($response));
 
         $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(2, sizeof($response));
 
         $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2&includeSubFolders=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(3, sizeof($response));
 
         $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2&includeSubFolders=true&limitResult=2');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(2, sizeof($response));
 
         $client->request('GET', '/api/nodes/smartcontent?tags=tag1');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(4, sizeof($response));
 
         $client->request('GET', '/api/nodes/smartcontent?tags=tag2');
-        $response = json_decode($client->getResponse()->getContent());
-
+        $response = json_decode($client->getResponse()->getContent())->_embedded;
         $this->assertEquals(3, sizeof($response));
 
         $client->request('GET', '/api/nodes/smartcontent?tags=tag1,tag2');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(2, sizeof($response));
     }

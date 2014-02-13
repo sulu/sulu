@@ -64,32 +64,50 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * reads the value for given property from the node + sets the value of the property
-     * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @return mixed
+     * @param $data
      */
-    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    protected function setData($data, PropertyInterface $property)
     {
         $smartContent = new SmartContentContainer($this->nodeRepository);
-        $smartContent->setConfig(
-            json_decode(
-                $node->getPropertyValueWithDefault($property->getName(), '{}'),
-                true
-            )
-        );
+        $smartContent->setConfig($data);
         $property->setValue($smartContent);
     }
 
     /**
-     * save the value from given property
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    {
+        $this->setData(
+            json_decode(
+                $node->getPropertyValueWithDefault($property->getName(), '{}'),
+                true
+            ),
+            $property
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey)
+    {
+        if (!empty($data['tags'])) {
+            foreach ($data['tags'] as $tagName) {
+                $resolvedTags[] = $this->tagManager->findByName($tagName)->getId();
+            }
+
+            $data['tags'] = $resolvedTags;
+        }
+
+        $this->setData($data, $property);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey)
     {
         $value = $property->getValue();
 

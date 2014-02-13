@@ -17,6 +17,8 @@ use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Types\TextArea;
+use Sulu\Component\Content\Types\TextLine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -34,13 +36,32 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $container = $this->prepareContainerMock();
         $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
         $structureManager=$this->prepareStructureManagerMock();
         $controllerResolver = $this->prepareControllerResolver();
         $this->cache = new ArrayCache();
 
-        $this->preview = new Preview($templating, $this->cache, $mapper, $structureManager, $controllerResolver, 3600);
+        $this->preview = new Preview($container, $templating, $this->cache, $mapper, $structureManager, $controllerResolver, 3600);
+    }
+
+    public function prepareContainerMock()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+
+        $container->expects($this->any())
+            ->method('get')
+            ->will(
+                $this->returnValueMap(
+                    array(
+                        array('sulu.content.type.text_line', 1, new TextLine('')),
+                        array('sulu.content.type.text_area', 1, new TextArea(''))
+                    )
+                )
+            );
+
+        return $container;
     }
 
     public function prepareControllerResolver()
@@ -63,7 +84,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
         $structureManagerMock->expects($this->any())
             ->method('getStructure')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue($this->prepareStructureMock()));
 
         return $structureManagerMock;
     }
@@ -185,8 +206,8 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $this->preview->start(1, '123-123-123', 'default', 'en');
-        $this->preview->update(1, '123-123-123', 'title', 'aaaa');
+        $this->preview->start(1, '123-123-123', '', 'default', 'en');
+        $this->preview->update(1, '123-123-123', '',  'title', 'aaaa');
         $content = $this->preview->getChanges(1, '123-123-123');
 
         // check result
@@ -221,11 +242,11 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
-        $content = $this->preview->update(1, '123-123-123', 'title', 'New Title');
+        $content = $this->preview->update(1, '123-123-123', '', 'title', 'New Title');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
-        $content = $this->preview->update(1, '123-123-123', 'article', 'asdf');
+        $content = $this->preview->update(1, '123-123-123', '', 'article', 'asdf');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('asdf', $content->article);
 

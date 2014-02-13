@@ -136,11 +136,12 @@ class PreviewMessageComponent implements MessageComponentInterface
         $id = $user . '-' . $content;
 
         // if params correct
-        if ($type == 'form' && isset($params->changes)) {
+        // FIXME implement error handling
+        if ($type == 'form' && isset($params->changes) && isset($msg->webspace)) {
 
             foreach ($params->changes as $property => $data) {
                 // update property
-                $this->preview->update($user, $content, $property, $data);
+                $this->preview->update($user, $content, $msg->webspaceKey, $property, $data);
             }
 
             // send ok message
