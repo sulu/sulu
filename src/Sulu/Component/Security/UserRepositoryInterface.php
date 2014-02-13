@@ -18,5 +18,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 interface UserRepositoryInterface extends UserProviderInterface
 {
+    /**
+     * Returns the user with the given id
+     * @param int $id The user to find
+     * @return UserInterface
+     */
     public function findUserById($id);
 } 
