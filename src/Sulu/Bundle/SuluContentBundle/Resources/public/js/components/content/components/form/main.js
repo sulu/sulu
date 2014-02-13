@@ -130,7 +130,10 @@ define(['app-config'], function(AppConfig) {
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
+                // FIXME items not loaded
+                setTimeout(function() {
+                    this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
+                }.bind(this), 50);
             }, this);
 
             // change template
