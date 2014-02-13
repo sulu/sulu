@@ -172,6 +172,17 @@ interface StructureInterface extends \JsonSerializable
     public function getGlobalState();
 
     /**
+     * returns true if this node is shown in navigation
+     * @return boolean
+     */
+    public function getShowInNavigation();
+
+    /**
+     * @param boolean $showInNavigation
+     */
+    public function setShowInNavigation($showInNavigation);
+
+    /**
      * returns an array of property value pairs
      * @return array
      */

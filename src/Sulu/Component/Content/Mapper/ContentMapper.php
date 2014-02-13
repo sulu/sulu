@@ -81,6 +81,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param string $parentUuid uuid of parent node
      * @param null $state state of node
      *
+     * @param null $showInNavigation
      * @return StructureInterface
      */
     public function save(
@@ -92,7 +93,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $partialUpdate = true,
         $uuid = null,
         $parentUuid = null,
-        $state = null
+        $state = null,
+        $showInNavigation = null
     )
     {
         // TODO localize
@@ -125,6 +127,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             if (!isset($state)) {
                 $state = StructureInterface::STATE_TEST;
             }
+            if (!isset($showInNavigation)) {
+                $showInNavigation = false;
+            }
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
@@ -146,6 +151,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // do not state transition for root (contents) node
         if ($node->getDepth() > 3 && isset($state)) {
             $this->changeState($node, $state, $structure);
+        }
+        if (isset($showInNavigation)) {
+            $node->setProperty('sulu:show-in-navigation', $showInNavigation);
         }
 
         $postSave = array();
@@ -211,6 +219,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue('sulu:created'));
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
+        $structure->setShowInNavigation($node->getPropertyValue('sulu:show-in-navigation'));
         $structure->setGlobalState($this->getInheritedState($node));
 
         return $structure;

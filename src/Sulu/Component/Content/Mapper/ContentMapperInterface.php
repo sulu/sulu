@@ -30,8 +30,7 @@ interface ContentMapperInterface
      * @param string $parentUuid uuid of parent node
      * @param null $state state of node
      *
-     * @throws \PHPCR\ItemExistsException if new title already exists
-     *
+     * @param null $showInNavigation
      * @return StructureInterface
      */
     public function save(
@@ -43,7 +42,8 @@ interface ContentMapperInterface
         $partialUpdate = true,
         $uuid = null,
         $parentUuid = null,
-        $state = null
+        $state = null,
+        $showInNavigation = null
     );
 
     /**

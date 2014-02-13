@@ -104,6 +104,12 @@ abstract class Structure implements StructureInterface
     private $globalState;
 
     /**
+     * should be shown in navigation or not
+     * @var boolean
+     */
+    private $showInNavigation;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -119,6 +125,8 @@ abstract class Structure implements StructureInterface
 
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
+        // default hide in navigation
+        $this->showInNavigation = false;
     }
 
     /**
@@ -347,6 +355,23 @@ abstract class Structure implements StructureInterface
     public function getGlobalState()
     {
         return $this->globalState;
+    }
+
+    /**
+     * returns true if this node is shown in navigation
+     * @return boolean
+     */
+    public function getShowInNavigation()
+    {
+        return $this->showInNavigation;
+    }
+
+    /**
+     * @param boolean $showInNavigation
+     */
+    public function setShowInNavigation($showInNavigation)
+    {
+        $this->showInNavigation = $showInNavigation;
     }
 
     /**

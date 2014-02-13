@@ -176,6 +176,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
         return array(
             new TemplatePropertyDefinition(),
             new StatePropertyDefinition(),
+            new ShowInNavigationPropertyDefinition(),
             new ChangedPropertyDefinition(),
             new ChangerPropertyDefinition(),
             new CreatedPropertyDefinition(),
