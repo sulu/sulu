@@ -51,19 +51,16 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * reads the value for given property from the node + sets the value of the property
-     * @param NodeInterface $node
+     * Sets the given array as values on the property
+     * @param array $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    protected function setData(array $data, PropertyInterface $property)
     {
         $tags = array();
 
-        if ($node->hasProperty($property->getName())) {
-            $tagIds = $node->getPropertyValue($property->getName());
-            foreach ($tagIds as $tagId) {
+        if (!empty($data)) {
+            foreach ($data as $tagId) {
                 $tags[] = $this->tagManager->findById($tagId)->getName();
             }
         }
@@ -72,18 +69,30 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * save the value from given property
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    {
+        $this->setData($node->getPropertyValueWithDefault($property->getName(), array()), $property);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey)
+    {
+        $this->setData($data, $property);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey)
     {
         $tagIds = array();
 
         foreach ($property->getValue() as $tag) {
-            $tagIds[] = $this->tagManager->findOrCreateByName($tag)->getId();
+            $tagIds[] = $this->tagManager->findOrCreateByName($tag, $userId)->getId();
         }
 
         $node->setProperty($property->getName(), $tagIds);
