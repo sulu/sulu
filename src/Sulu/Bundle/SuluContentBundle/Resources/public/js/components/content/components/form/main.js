@@ -206,12 +206,12 @@ define(['app-config'], function(AppConfig) {
                 showDialog = function() {
                     this.sandbox.emit('sulu.dialog.confirmation.show', {
                         content: {
-                            title: 'Change Template',
-                            content: 'You have unchanged Data.<br/>Do you want to leave this site?'
+                            title: this.sandbox.translate('content.template.dialog.title'),
+                            content: this.sandbox.translate('content.template.dialog.content')
                         },
                         footer: {
-                            buttonCancelText: 'Cancel',
-                            buttonSubmitText: 'Yes'
+                            buttonCancelText: this.sandbox.translate('content.template.dialog.cancel-button'),
+                            buttonSubmitText: this.sandbox.translate('content.template.dialog.submit-button')
                         },
                         callback: {
                             submit: function() {
