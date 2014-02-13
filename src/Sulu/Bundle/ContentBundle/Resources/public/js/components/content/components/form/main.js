@@ -21,6 +21,7 @@ define(['app-config'], function(AppConfig) {
         wsPort: '',
 
         template: '',
+        contentChanged: false,
 
         initialize: function() {
             this.saved = true;
@@ -163,43 +164,73 @@ define(['app-config'], function(AppConfig) {
             if (!!item && this.template === item.template) {
                 return;
             }
-            if (!!item) {
-                this.template = item.template;
-            }
 
-            this.setHeaderBar(false);
+            var doIt = function() {
+                    if (!!item) {
+                        this.template = item.template;
+                    }
+                    this.setHeaderBar(false);
 
-            if (!!this.sandbox.form.getObject(this.formId)) {
-                var tmp = this.options.data;
-                this.options.data = this.sandbox.form.getData(this.formId);
-                if (!!tmp.id) {
-                    this.options.data.id = tmp.id;
-                }
+                    if (!!this.sandbox.form.getObject(this.formId)) {
+                        var tmp = this.options.data;
+                        this.options.data = this.sandbox.form.getData(this.formId);
+                        if (!!tmp.id) {
+                            this.options.data.id = tmp.id;
+                        }
 
-                this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
-            }
+                        this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
+                    }
 
-            var url = 'text!/admin/content/template/form';
-            if (!!item) {
-                url += '/' + item.template + '.html';
+                    var url = 'text!/admin/content/template/form';
+                    if (!!item) {
+                        url += '/' + item.template + '.html';
+                    } else {
+                        url += '.html';
+                    }
+
+                    require([url], function(template) {
+                        var defaults = {
+                                translate: this.sandbox.translate
+                            },
+                            context = this.sandbox.util.extend({}, defaults),
+                            tpl = this.sandbox.util.template(template, context);
+
+                        this.html(tpl);
+                        var data = this.initData();
+                        this.createForm(data);
+
+                        this.bindDomEvents();
+                        this.listenForChange();
+                    }.bind(this));
+                }.bind(this),
+                showDialog = function() {
+                    this.sandbox.emit('sulu.dialog.confirmation.show', {
+                        content: {
+                            title: 'Change Template',
+                            content: 'You have unchanged Data.<br/>Do you want to leave this site?'
+                        },
+                        footer: {
+                            buttonCancelText: 'Cancel',
+                            buttonSubmitText: 'Yes'
+                        },
+                        callback: {
+                            submit: function() {
+                                this.sandbox.emit('husky.dialog.hide');
+
+                                doIt();
+                            }.bind(this),
+                            cancel: function() {
+                                this.sandbox.emit('husky.dialog.hide');
+                            }.bind(this)
+                        }
+                    }, null);
+                }.bind(this);
+
+            if (this.template !== '' && this.contentChanged) {
+                showDialog();
             } else {
-                url += '.html';
+                doIt();
             }
-
-            require([url], function(template) {
-                var defaults = {
-                        translate: this.sandbox.translate
-                    },
-                    context = this.sandbox.util.extend({}, defaults),
-                    tpl = this.sandbox.util.template(template, context);
-
-                this.html(tpl);
-                var data = this.initData();
-                this.createForm(data);
-
-                this.bindDomEvents();
-                this.listenForChange();
-            }.bind(this));
         },
 
         // @var Bool saved - defines if saved state should be shown
@@ -210,18 +241,24 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
+            if (this.saved) {
+                this.contentChanged = false;
+            }
         },
 
         listenForChange: function() {
             this.sandbox.dom.on(this.formId, 'change', function() {
                 this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this), "select, input");
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this), "input,textarea");
 
             this.sandbox.on('husky.ckeditor.changed', function() {
                 this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this));
         },
 
