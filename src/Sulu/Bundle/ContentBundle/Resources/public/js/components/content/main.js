@@ -127,7 +127,7 @@ define([
                     strReturn = 'publish';
                     break;
                 default:
-                    this.sandbox.logger.log('No state for id', id);
+                    this.sandbox.logger.error('No state for id', id);
             }
             return strReturn;
         },
