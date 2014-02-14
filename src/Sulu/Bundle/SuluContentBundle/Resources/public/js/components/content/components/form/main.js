@@ -23,6 +23,8 @@ define(['app-config'], function(AppConfig) {
         template: '',
         contentChanged: false,
 
+        hiddenTemplate: true,
+
         initialize: function() {
             this.saved = true;
 
@@ -131,6 +133,10 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
                 this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
+                if (this.hiddenTemplate) {
+                    this.hiddenTemplate = false;
+                    this.sandbox.emit('husky.edit-toolbar.item.show', 'template');
+                }
             }, this);
 
             // change template
@@ -200,6 +206,10 @@ define(['app-config'], function(AppConfig) {
                         this.listenForChange();
 
                         this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+                        if (this.hiddenTemplate) {
+                            this.hiddenTemplate = false;
+                            this.sandbox.emit('husky.edit-toolbar.item.show', 'template');
+                        }
                     }.bind(this));
                 }.bind(this),
                 showDialog = function() {
