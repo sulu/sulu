@@ -39,8 +39,7 @@ define(function() {
                                 }
                             ]
                         },
-                        state =
-                        {
+                        state = {
                             'id': 'state',
                             'group': 'right',
                             'class': 'highlight-gray',
