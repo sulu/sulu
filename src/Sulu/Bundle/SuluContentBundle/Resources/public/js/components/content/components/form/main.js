@@ -44,6 +44,22 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
+        setStateDropdown: function(data) {
+            var state = data.nodeState || 0;
+
+            // get the dropdownds
+            this.sandbox.emit('sulu.content.contents.getDropdownForState', state, function(items) {
+                if (items.length > 0) {
+                    this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items);
+                }
+            }.bind(this));
+
+            // set the current state
+            this.sandbox.emit('sulu.content.contents.getStateDropdownItem', state, function(item) {
+                this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
+            }.bind(this));
+        },
+
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
@@ -145,6 +161,19 @@ define(['app-config'], function(AppConfig) {
 
             // change template
             this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', this.changeTemplate, this);
+
+            // set state button in loading state
+            this.sandbox.on('sulu.content.contents.state.change', function() {
+                this.sandbox.emit('husky.edit-toolbar.item.loading', 'state');
+            }, this);
+
+            // change dropdown if state has changed
+            this.sandbox.on('sulu.content.contents.state.changed', function(state) {
+                this.sandbox.emit('sulu.content.contents.getDropdownForState', state, function(items) {
+                    this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items, 0);
+                }.bind(this));
+                this.sandbox.emit('husky.edit-toolbar.item.enable', 'state');
+            }.bind(this));
         },
 
         initData: function() {
@@ -211,6 +240,7 @@ define(['app-config'], function(AppConfig) {
                             data = this.initData();
 
                         this.html(tpl);
+                        this.setStateDropdown(data);
                         this.createForm(data);
 
                         this.bindDomEvents();
