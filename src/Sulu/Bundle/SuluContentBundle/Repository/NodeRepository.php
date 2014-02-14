@@ -168,7 +168,7 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * Returns the content of a smartcontent configuration
+     * Returns the content of a smart content configuration
      * @param array $smartContentConfig The config of the smart content
      * @param string $languageCode The desired language code
      * @param string $webspaceKey The webspace key
@@ -179,6 +179,7 @@ class NodeRepository implements NodeRepositoryInterface
         // build sql2 query
         $sql2 = 'SELECT * FROM [sulu:content] AS c';
         $sql2Where = array();
+        $sql2Order = array();
 
         // build where clause for datasource
         if (isset($smartContentConfig['dataSource']) && !empty($smartContentConfig['dataSource'])) {
@@ -198,10 +199,23 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         // build order clause
+        if (!empty($smartContentConfig['sortBy'])) {
+            foreach ($smartContentConfig['sortBy'] as $sortColumn) {
+                // TODO implement more generic
+                $sql2Order[] = 'c.[sulu:' . $sortColumn . ']';
+            }
+        }
 
         // append where clause to sql2 query
         if (!empty($sql2Where)) {
             $sql2 .= ' WHERE ' . join(' AND ', $sql2Where);
+        }
+
+        // append order clause
+        if (!empty($sql2Order)) {
+            $sortOrder = (isset($smartContentConfig['sortMethod']) && $smartContentConfig['sortMethod'] == 'asc')
+                ? 'ASC' : 'DESC';
+            $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
         }
 
         // set limit if given
@@ -235,14 +249,7 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * save node with given uuid or creates a new one
-     * @param array $data
-     * @param string $templateKey
-     * @param string $portalKey
-     * @param string $languageCode
-     * @param string $uuid
-     * @param string $parentUuid
-     * @return array
+     * {@inheritdoc}
      */
     public function saveNode($data, $templateKey, $portalKey, $languageCode, $userId, $uuid = null, $parentUuid = null)
     {

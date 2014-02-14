@@ -100,6 +100,8 @@ class NodeController extends RestController implements ClassResourceInterface
         $includeSubFolders = $this->getRequest()->get('includeSubFolders', 'false');
         $limitResult = $this->getRequest()->get('limitResult', null);
         $tagNames = $this->getRequest()->get('tags', null);
+        $sortBy = $this->getRequest()->get('sortBy', null);
+        $sortMethod = $this->getRequest()->get('sortMethod', 'asc');
 
         // resolve tag names
         $resolvedTags = array();
@@ -117,11 +119,22 @@ class NodeController extends RestController implements ClassResourceInterface
             }
         }
 
+        // get sort columns
+        $sortColumns = array();
+        if (isset($sortBy)) {
+            $columns = explode(',', $sortBy);
+            foreach ($columns as $column) {
+                $sortColumns[] = $column;
+            }
+        }
+
         $smartContentConfig = array(
             'dataSource' => $dataSource,
             'includeSubFolders' => ($includeSubFolders == 'false') ? false : true,
             'limitResult' => $limitResult,
-            'tags' => $resolvedTags
+            'tags' => $resolvedTags,
+            'sortBy' => $sortColumns,
+            'sortMethod' => $sortMethod
         );
 
         $languageCode = 'en';

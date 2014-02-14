@@ -56,6 +56,7 @@ interface NodeRepositoryInterface {
      * @param string $templateKey
      * @param string $portalKey
      * @param string $languageCode
+     * @param $userId
      * @param string $uuid
      * @param string $parentUuid
      * @return array
@@ -68,6 +69,7 @@ interface NodeRepositoryInterface {
      * @param string $templateKey
      * @param string $portalKey
      * @param string $languageCode
+     * @param $userId
      * @return array
      */
     public function saveIndexNode($data, $templateKey, $portalKey, $languageCode, $userId);
