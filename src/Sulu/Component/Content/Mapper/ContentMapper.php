@@ -69,6 +69,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     private $showInNavigationProperty;
 
+    /**
+     * @var PropertyInterface
+     */
+    private $stateProperty;
+
     public function __construct($defaultLanguage, $languageNamespace)
     {
         $this->defaultLanguage = $defaultLanguage;
@@ -76,6 +81,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         // init show in navigation property
         $this->showInNavigationProperty = new Property('showInNavigaiton', 'none');
+        $this->stateProperty = new Property('state', 'none');
     }
 
     /**
@@ -159,11 +165,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         // do not state transition for root (contents) node
         if ($node->getDepth() > 3 && isset($state)) {
-            $this->changeState($node, $state, $structure);
+            $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
+            $this->changeState($node, $state, $structure, $translatedStateProperty->getName());
         }
         if (isset($showInNavigation)) {
-            $translatedProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
-            $node->setProperty($translatedProperty->getName(), $showInNavigation);
+            $translatedSINProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
+            $node->setProperty($translatedSINProperty->getName(), $showInNavigation);
         }
 
         $postSave = array();
@@ -243,22 +250,23 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param NodeInterface $node node to change state
      * @param int $state new state
      * @param \Sulu\Component\Content\StructureInterface $structure
+     * @param string $statePropertyName
      *
-     * @throws StateNotFoundException
-     * @throws StateTransitionException
+     * @throws \Sulu\Component\Content\Exception\StateTransitionException
+     * @throws \Sulu\Component\Content\Exception\StateNotFoundException
      */
-    private function changeState(NodeInterface $node, $state, StructureInterface $structure)
+    private function changeState(NodeInterface $node, $state, StructureInterface $structure, $statePropertyName)
     {
         if ($state !== StructureInterface::STATE_TEST && $state !== StructureInterface::STATE_PUBLISHED) {
             throw new StateNotFoundException();
         }
 
         // no state (new node) set state
-        if (!$node->hasProperty('sulu:state')) {
-            $node->setProperty('sulu:state', $state);
+        if (!$node->hasProperty($statePropertyName)) {
+            $node->setProperty($statePropertyName, $state);
             $structure->setNodeState($state);
         } else {
-            $oldState = $node->getPropertyValue('sulu:state');
+            $oldState = $node->getPropertyValue($statePropertyName);
 
 
             if ($oldState === $state) {
@@ -269,7 +277,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $oldState === StructureInterface::STATE_TEST &&
                 $state === StructureInterface::STATE_PUBLISHED
             ) {
-                $node->setProperty('sulu:state', $state);
+                $node->setProperty($statePropertyName, $state);
                 $structure->setNodeState($state);
             } elseif (
                 // from published to test
@@ -440,8 +448,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $structure = $this->getStructure($templateKey);
 
+        $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
+
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setNodeState($contentNode->getPropertyValue('sulu:state'));
+        $structure->setNodeState($contentNode->getPropertyValue($translatedStateProperty->getName()));
         $structure->setCreator($contentNode->getPropertyValue('sulu:creator'));
         $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
         $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
@@ -586,10 +596,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         return $clean;
     }
 
-    private function getInheritedState(NodeInterface $contentNode)
+    private function getInheritedState(NodeInterface $contentNode, $statePropertyName)
     {
         // if test then return it
-        if ($contentNode->getPropertyValue('sulu:state') === StructureInterface::STATE_TEST) {
+        if ($contentNode->getPropertyValue($statePropertyName) === StructureInterface::STATE_TEST) {
             return StructureInterface::STATE_TEST;
         }
 
@@ -606,7 +616,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $result = $query->execute();
 
         foreach ($result->getNodes() as $node) {
-            if ($node->getPropertyValue('sulu:state') === StructureInterface::STATE_TEST) {
+            if ($node->getPropertyValue($statePropertyName) === StructureInterface::STATE_TEST) {
                 return StructureInterface::STATE_TEST;
             }
         }
