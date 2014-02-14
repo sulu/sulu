@@ -71,7 +71,7 @@ class TagList extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $this->setData($node->getPropertyValueWithDefault($property->getName(), array()), $property);
     }
@@ -79,7 +79,7 @@ class TagList extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode)
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $this->setData($data, $property);
     }
@@ -87,7 +87,14 @@ class TagList extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode)
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    )
     {
         $tagIds = array();
 
@@ -99,11 +106,9 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * remove property from given node
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
+     * {@inheritdoc}
      */
-    public function remove(NodeInterface $node, PropertyInterface $property)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // TODO: Implement remove() method.
     }
