@@ -190,7 +190,7 @@ define(['app-config'], function(AppConfig) {
                 if (this.options.id === 'index') {
                     showInNavigation = true;
                 } else {
-                    showInNavigation = this.sandbox.dom.attr('#show-in-navigation', 'checked');
+                    showInNavigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
                 }
 
                 this.sandbox.logger.log('data', data);
