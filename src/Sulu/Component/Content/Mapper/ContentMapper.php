@@ -65,6 +65,15 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     );
 
     /**
+     * excepted states
+     * @var array
+     */
+    private $states = array(
+        StructureInterface::STATE_PUBLISHED,
+        StructureInterface::STATE_TEST
+    );
+
+    /**
      * @var PropertyInterface
      */
     private $showInNavigationProperty;
@@ -260,7 +269,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     private function changeState(NodeInterface $node, $state, StructureInterface $structure, $statePropertyName)
     {
-        if ($state !== StructureInterface::STATE_TEST && $state !== StructureInterface::STATE_PUBLISHED) {
+        if (!in_array($state, $this->states)) {
             throw new StateNotFoundException($state);
         }
 
