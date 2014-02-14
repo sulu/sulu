@@ -314,7 +314,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     )
     {
         $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
-        return $this->save($data, $templateKey, $webspaceKey, $languageCode, $userId, $partialUpdate, $uuid);
+        return $this->save(
+            $data,
+            $templateKey,
+            $webspaceKey,
+            $languageCode,
+            $userId,
+            $partialUpdate,
+            $uuid,
+            null,
+            StructureInterface::STATE_PUBLISHED,
+            true
+        );
     }
 
     /**
@@ -392,7 +403,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     {
         $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
 
-        return $this->load($uuid, $webspaceKey, $languageCode);
+        $startPage = $this->load($uuid, $webspaceKey, $languageCode);
+        $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
+        $startPage->setGlobalState(StructureInterface::STATE_PUBLISHED);
+        $startPage->setShowInNavigation(true);
+        return $startPage;
     }
 
     /**
