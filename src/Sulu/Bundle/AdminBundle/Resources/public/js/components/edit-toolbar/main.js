@@ -69,7 +69,7 @@ define([], function() {
 
 
         changeStateCallbacks = {
-            default: function(saved, type) {
+            default: function(saved) {
                 if (!!saved) {
                     this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
                 } else {
@@ -102,6 +102,19 @@ define([], function() {
             } else {
                 this.sandbox.logger.log('no template found!');
             }
+        },
+
+        changeLeftDistance = function(paddingLeft) {
+            this.sandbox.dom.css('#edit-toolbar-container', {'margin-left': 50 + paddingLeft});
+        },
+
+        resizeListener = function() {
+            var contentWidth = this.sandbox.dom.width('main#content');
+
+            if (!this.currentContentWidth || this.currentContentWidth !== contentWidth) {
+                this.sandbox.dom.width(this.$el, contentWidth);
+                this.currentContentWidth = contentWidth;
+            }
         };
 
     return {
@@ -112,7 +125,8 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             var template = this.options.template,
-                parentTemplate = this.options.parentTemplate;
+                parentTemplate = this.options.parentTemplate,
+                contentLeft, $container;
 
             // load templates:
             this.options.template = getTemplate.call(this, template);
@@ -132,19 +146,36 @@ define([], function() {
                 this.options.template = this.options.template.concat(this.options.parentTemplate);
             }
 
+            $container = this.sandbox.dom.createElement('<div />');
+            this.html($container);
+
             this.sandbox.start([
                 {
                     name: 'edit-toolbar@husky',
                     options: {
-                        el: this.options.el,
+                        el: $container,
                         pageFunction: this.options.pageFunction,
                         data: this.options.template
                     }
                 }
             ]);
 
+            contentLeft = this.sandbox.dom.css('main#content', 'margin-left');
+            this.sandbox.dom.css('#edit-toolbar-container', {'margin-left': contentLeft});
+            // initialize width correct gap
+            resizeListener.call(this);
+
             // bind events (also initializes first component)
             this.bindCustomEvents();
+            this.bindDomEvents();
+        },
+
+        /**
+         * listens to tab events
+         */
+        bindDomEvents: function() {
+            // change size of edit-toolbar
+            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', resizeListener.bind(this));
         },
 
         /**
@@ -154,6 +185,7 @@ define([], function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
             this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', this.changeState.bind(this));
+            this.sandbox.on('husky.navigation.size.change', changeLeftDistance.bind(this));
         },
 
         changeState: function(type, saved) {
