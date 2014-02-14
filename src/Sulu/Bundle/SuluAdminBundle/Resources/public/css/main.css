@@ -70,19 +70,20 @@ body {
 #content-tabs-component {
   margin-top: 40px;
 }
-/* line 70, ../scss/modules/base.scss */
+/* line 71, ../scss/modules/base.scss */
 #content-tabs-component #cke_texteditor,
+#content-tabs-component .auto-complete-list,
 #content-tabs-component .form-element {
   margin: 10px 0 20px;
 }
 
-/* line 76, ../scss/modules/base.scss */
+/* line 77, ../scss/modules/base.scss */
 #page-functions + #edit-toolbar .edit-toolbar-left {
   margin-left: -50px;
 }
 
 /*----------------------------------------*/
-/* line 83, ../scss/modules/base.scss */
+/* line 84, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -90,30 +91,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 91, ../scss/modules/base.scss */
+/* line 92, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 98, ../scss/modules/base.scss */
+/* line 99, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 105, ../scss/modules/base.scss */
+/* line 106, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 109, ../scss/modules/base.scss */
+/* line 110, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 116, ../scss/modules/base.scss */
+/* line 117, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
