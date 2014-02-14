@@ -50,7 +50,7 @@ define([], function() {
                 if (!!this.options.data.id) {
                     excludeItem.push({id: this.options.data.id});
                 }
-
+                console.log(data, 'marcelmoos');
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
@@ -59,7 +59,7 @@ define([], function() {
                             remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
                             getParameter: 'search',
                             value: !!data.parent ? data.parent : null,
-                            instanceName: 'companyInput',
+                            instanceName: 'companyAccount' + data.id,
                             valueName: 'name',
                             noNewValues: true,
                             excludes: [{id: data.id, name: data.name}]
