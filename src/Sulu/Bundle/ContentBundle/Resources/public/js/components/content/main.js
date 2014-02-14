@@ -282,6 +282,7 @@ define([
                                 name: 'content/components/form@sulucontent',
                                 options: {
                                     el: $form,
+                                    id: this.options.id,
                                     data: model.toJSON(),
                                     webspace: this.options.webspace,
                                     language: this.options.language
