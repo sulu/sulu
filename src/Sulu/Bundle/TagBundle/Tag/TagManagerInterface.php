@@ -71,4 +71,18 @@ interface TagManagerInterface
      * @return Tag The new Tag, which is valid for both given tags
      */
     public function merge($srcTagIds, $destTagId);
+
+    /**
+     * Resolves tag ids to names
+     * @param $tagIds
+     * @return array
+     */
+    public function resolveTagIds($tagIds);
+
+    /**
+     * Resolves tag names to ids
+     * @param $tagNames
+     * @return array
+     */
+    public function resolveTagNames($tagNames);
 } 

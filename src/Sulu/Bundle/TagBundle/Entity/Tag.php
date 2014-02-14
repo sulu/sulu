@@ -84,6 +84,18 @@ class Tag extends ApiEntity
     }
 
     /**
+     * Set id
+     * @param int $id
+     * @return Tag
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set created
      *
      * @param \DateTime $created
