@@ -20,7 +20,7 @@
     </xs:complexType>
     <xs:complexType name="localizationType" mixed="true">
         <xs:sequence>
-            <xs:element type="localizationType" name="localization" minOccurs="0"/>
+            <xs:element type="localizationType" name="localization" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="language" use="required"/>
         <xs:attribute type="xs:string" name="country" use="optional"/>

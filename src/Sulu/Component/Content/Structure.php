@@ -92,6 +92,24 @@ abstract class Structure implements StructureInterface
     private $changed;
 
     /**
+     * state of node
+     * @var int
+     */
+    private $nodeState;
+
+    /**
+     * global state of node (with inheritance)
+     * @var int
+     */
+    private $globalState;
+
+    /**
+     * should be shown in navigation or not
+     * @var boolean
+     */
+    private $showInNavigation;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -104,6 +122,11 @@ abstract class Structure implements StructureInterface
         $this->view = $view;
         $this->controller = $controller;
         $this->cacheLifeTime = $cacheLifeTime;
+
+        // default state is test
+        $this->nodeState = StructureInterface::STATE_TEST;
+        // default hide in navigation
+        $this->showInNavigation = false;
     }
 
     /**
@@ -300,6 +323,68 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * @param int $state
+     * @return int
+     */
+    public function setNodeState($state)
+    {
+        $this->nodeState = $state;
+    }
+
+    /**
+     * returns state of node
+     * @return int
+     */
+    public function getNodeState()
+    {
+        return $this->nodeState;
+    }
+
+    /**
+     * returns true if state of site is "published"
+     * @return boolean
+     */
+    public function getPublished()
+    {
+        return ($this->nodeState === StructureInterface::STATE_PUBLISHED);
+    }
+
+    /**
+     * sets the global state of node (with inheritance)
+     * @param int $globalState
+     */
+    public function setGlobalState($globalState)
+    {
+        $this->globalState = $globalState;
+    }
+
+    /**
+     * returns global state of node (with inheritance)
+     * @return int
+     */
+    public function getGlobalState()
+    {
+        return $this->globalState;
+    }
+
+    /**
+     * returns true if this node is shown in navigation
+     * @return boolean
+     */
+    public function getShowInNavigation()
+    {
+        return $this->showInNavigation;
+    }
+
+    /**
+     * @param boolean $showInNavigation
+     */
+    public function setShowInNavigation($showInNavigation)
+    {
+        $this->showInNavigation = $showInNavigation;
+    }
+
+    /**
      * returns an array of properties
      * @return array
      */
@@ -373,6 +458,10 @@ abstract class Structure implements StructureInterface
     {
         $result = array(
             'id' => $this->uuid,
+            'nodeState' => $this->getNodeState(),
+            'globalState' => $this->getNodeState(),
+            'published' => $this->getPublished(),
+            'showInNavigation' => $this->getShowInNavigation(),
             'template' => $this->getKey(),
             'hasSub' => $this->hasChildren,
             'creator' => $this->creator,

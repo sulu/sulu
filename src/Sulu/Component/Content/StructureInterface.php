@@ -18,6 +18,9 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
  */
 interface StructureInterface extends \JsonSerializable
 {
+    const STATE_TEST = 1;
+    const STATE_PUBLISHED = 2;
+
     /**
      * id of node
      * @return int
@@ -129,6 +132,7 @@ interface StructureInterface extends \JsonSerializable
     public function setHasChildren($hasChildren);
 
     /**
+     * returns true if node has children
      * @return boolean
      */
     public function getHasChildren();
@@ -139,9 +143,50 @@ interface StructureInterface extends \JsonSerializable
     public function setChildren($children);
 
     /**
+     * returns children array
      * @return StructureInterface[]
      */
     public function getChildren();
+
+    /**
+     * @param int $state
+     * @return int
+     */
+    public function setNodeState($state);
+
+    /**
+     * returns state of node
+     * @return int
+     */
+    public function getNodeState();
+
+    /**
+     * returns true if state of site is "published"
+     * @return boolean
+     */
+    public function getPublished();
+
+    /**
+     * @param int $globalState
+     */
+    public function setGlobalState($globalState);
+
+    /**
+     * returns global state of node (with inheritance)
+     * @return int
+     */
+    public function getGlobalState();
+
+    /**
+     * returns true if this node is shown in navigation
+     * @return boolean
+     */
+    public function getShowInNavigation();
+
+    /**
+     * @param boolean $showInNavigation
+     */
+    public function setShowInNavigation($showInNavigation);
 
     /**
      * returns an array of property value pairs
