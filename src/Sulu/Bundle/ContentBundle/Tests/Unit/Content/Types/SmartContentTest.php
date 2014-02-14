@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
+use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -49,13 +50,32 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             'Sulu\Bundle\TagBundle\Tag\TagManagerInterface',
             array(),
             '',
-            false
+            false,
+            true,
+            true,
+            array('resolveTagIds', 'resolveTagNames')
         );
 
         $this->smartContent = new SmartContent(
             $this->nodeRepository,
             $this->tagManager,
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
+        );
+
+        $this->tagManager->expects($this->any())->method('resolveTagIds')->will(
+            $this->returnValueMap(
+                array(
+                    array(array(1, 2), array('Tag1', 'Tag2'))
+                )
+            )
+        );
+
+        $this->tagManager->expects($this->any())->method('resolveTagName')->will(
+            $this->returnValueMap(
+                array(
+                    array(array('Tag1', 'Tag2'), array(1, 2))
+                )
+            )
         );
     }
 
@@ -67,7 +87,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSet()
+    public function testWrite()
     {
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
@@ -78,6 +98,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             true,
             array('setProperty')
         );
+
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\PropertyInterface',
             array(),
@@ -118,5 +139,56 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->smartContent->write($node, $property, 0, 'test');
+    }
+
+    public function testRead()
+    {
+        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager);
+        $smartContentContainer->setConfig(
+            array(
+                'tags' => array('Tag1', 'Tag2'),
+                'limitResult' => '2'
+            )
+        );
+
+        $node = $this->getMockForAbstractClass(
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getPropertyValueWithDefault')
+        );
+
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setValue')
+        );
+
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
+            $this->returnValueMap(
+                array(
+                    array('property', '{}', '{"tags":[1,2],"limitResult":"2"}')
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->exactly(2))->method('setValue')->with($smartContentContainer);
+
+        $this->smartContent->read($node, $property, 'test');
+
+        $this->smartContent->readForPreview(
+            array('tags' => array('Tag1', 'Tag2'), 'limitResult' => 2),
+            $property,
+            'test'
+        );
     }
 }
