@@ -3861,28 +3861,32 @@ hr.divider {
   color: #999999;
 }
 
-/* line 36, ../scss/modules/form.scss */
-#cke_ckeditor.cke_chrome {
-  box-shadow: none;
-  border: 0;
+/* line 35, ../scss/modules/form.scss */
+.cke {
+  margin: 10px 0 20px !important;
 }
-/* line 41, ../scss/modules/form.scss */
-#cke_ckeditor .cke_inner {
-  border: 1px solid #cccccc;
+/* line 37, ../scss/modules/form.scss */
+.cke.cke_chrome {
+  box-shadow: none !important;
+  border: 0 !important;
 }
-/* line 45, ../scss/modules/form.scss */
-#cke_ckeditor .cke_inner,
-#cke_ckeditor .cke_wysiwyg_frame {
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+/* line 42, ../scss/modules/form.scss */
+.cke .cke_inner {
+  border: 1px solid #cccccc !important;
+}
+/* line 46, ../scss/modules/form.scss */
+.cke .cke_inner,
+.cke .cke_wysiwyg_frame {
+  border-bottom-left-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
 }
 
-/* line 54, ../scss/modules/form.scss */
+/* line 53, ../scss/modules/form.scss */
 input[type="text"].input-round {
   border-radius: 30px;
 }
 
-/* line 60, ../scss/modules/form.scss */
+/* line 59, ../scss/modules/form.scss */
 input
 .input-description {
   margin-top: -5px;
@@ -3890,31 +3894,31 @@ input
   color: #999999;
 }
 
-/* line 68, ../scss/modules/form.scss */
+/* line 67, ../scss/modules/form.scss */
 label {
   display: block;
   font-size: 14px;
   color: #999999;
   cursor: pointer;
 }
-/* line 74, ../scss/modules/form.scss */
+/* line 73, ../scss/modules/form.scss */
 label.large {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 79, ../scss/modules/form.scss */
+/* line 78, ../scss/modules/form.scss */
 label .form-element {
   margin-top: 5px;
   border: 1px solid #cccccc;
 }
-/* line 84, ../scss/modules/form.scss */
+/* line 83, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
 }
 
-/* line 93, ../scss/modules/form.scss */
+/* line 92, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 14px;
   height: 14px;
@@ -3922,13 +3926,13 @@ label.inline {
   opacity: 0;
   cursor: pointer;
 }
-/* line 107, ../scss/modules/form.scss */
+/* line 106, ../scss/modules/form.scss */
 .custom-checkbox:checked + .custom-checkbox-icon::after, .custom-checkbox.is-checked + .custom-checkbox-icon::after {
   content: "\e207";
   position: relative;
   top: -3px;
 }
-/* line 115, ../scss/modules/form.scss */
+/* line 114, ../scss/modules/form.scss */
 .custom-checkbox + .custom-checkbox-icon {
   display: inline-block;
   width: 14px;
@@ -3942,27 +3946,27 @@ label.inline {
   vertical-align: middle;
 }
 
-/* line 134, ../scss/modules/form.scss */
+/* line 133, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 138, ../scss/modules/form.scss */
+/* line 137, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 142, ../scss/modules/form.scss */
+/* line 141, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 146, ../scss/modules/form.scss */
+/* line 145, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 150, ../scss/modules/form.scss */
+/* line 149, ../scss/modules/form.scss */
 textarea.form-element {
   width: 100%;
   height: 40px;
@@ -3972,7 +3976,7 @@ textarea.form-element {
   font-family: inherit;
 }
 
-/* line 161, ../scss/modules/form.scss */
+/* line 160, ../scss/modules/form.scss */
 .custom-radio {
   width: 18px;
   height: 18px;
@@ -3980,7 +3984,7 @@ textarea.form-element {
   opacity: 0;
   cursor: pointer;
 }
-/* line 173, ../scss/modules/form.scss */
+/* line 172, ../scss/modules/form.scss */
 .custom-radio:checked + .custom-radio-icon::after, .custom-radio.is-checked + .custom-radio-icon::after {
   content: "";
   display: block;
@@ -3989,7 +3993,7 @@ textarea.form-element {
   border-radius: 18px;
   background-color: #999;
 }
-/* line 184, ../scss/modules/form.scss */
+/* line 183, ../scss/modules/form.scss */
 .custom-radio + .custom-radio-icon {
   display: inline-block;
   width: 18px;
@@ -5150,35 +5154,45 @@ a.btn-black, a.btn-highlight {
 }
 /* line 18, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"] {
+  width: 100%;
+  border: 1px solid #cccccc;
+  outline: 0;
+  background: white;
+  padding: 4px 8px;
   border-radius: 4px 4px 0 0;
   margin: 0;
+  height: 30px;
+}
+/* line 28, ../scss/modules/auto-complete.scss */
+.husky-auto-complete input[type="text"]:focus {
+  outline: 0 none;
 }
 
-/* line 29, ../scss/modules/auto-complete.scss */
+/* line 34, ../scss/modules/auto-complete.scss */
 .twitter-typeahead {
   width: 100%;
 }
 
-/* line 33, ../scss/modules/auto-complete.scss */
+/* line 38, ../scss/modules/auto-complete.scss */
 .tt-suggestions {
   width: 100%;
   top: 37px;
   background: white;
 }
 
-/* line 39, ../scss/modules/auto-complete.scss */
+/* line 44, ../scss/modules/auto-complete.scss */
 .tt-dropdown-menu {
   width: 100%;
   border: 1px solid #cccccc;
   margin-top: -1px;
 }
 
-/* line 45, ../scss/modules/auto-complete.scss */
+/* line 50, ../scss/modules/auto-complete.scss */
 .tt-hint {
   display: none;
 }
 
-/* line 49, ../scss/modules/auto-complete.scss */
+/* line 54, ../scss/modules/auto-complete.scss */
 .tt-suggestion {
   height: 25px;
   width: 100%;
@@ -5187,12 +5201,12 @@ a.btn-black, a.btn-highlight {
   border-style: solid;
   border-color: #fff;
 }
-/* line 57, ../scss/modules/auto-complete.scss */
+/* line 62, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border {
   height: 25px;
   clear: both;
 }
-/* line 61, ../scss/modules/auto-complete.scss */
+/* line 66, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border .icon {
   display: block;
   float: left;
@@ -5202,29 +5216,29 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   line-height: 25px;
 }
-/* line 70, ../scss/modules/auto-complete.scss */
+/* line 75, ../scss/modules/auto-complete.scss */
 .tt-suggestion .border .text {
   float: left;
   line-height: 25px;
 }
-/* line 75, ../scss/modules/auto-complete.scss */
+/* line 80, ../scss/modules/auto-complete.scss */
 .tt-suggestion:last-child .border {
   border-bottom: none;
 }
 
-/* line 81, ../scss/modules/auto-complete.scss */
+/* line 86, ../scss/modules/auto-complete.scss */
 .tt-suggestion:hover,
 .tt-is-under-cursor {
   background: #249fbe;
 }
-/* line 83, ../scss/modules/auto-complete.scss */
+/* line 88, ../scss/modules/auto-complete.scss */
 .tt-suggestion:hover .border,
 .tt-is-under-cursor .border {
   border: 0;
   color: white;
 }
 
-/* line 90, ../scss/modules/auto-complete.scss */
+/* line 95, ../scss/modules/auto-complete.scss */
 .suggestion {
   color: black;
 }
@@ -5984,17 +5998,19 @@ a.btn-black, a.btn-highlight {
   padding: 1px 8px;
   border-radius: 4px;
   background-color: #fff;
+  margin: 0;
+  border: 1px solid #cccccc;
 }
-/* line 60, ../scss/modules/auto-complete-list.scss */
+/* line 62, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete {
   background: none;
   border-radius: 0;
   position: static;
   margin: 0;
 }
-/* line 66, ../scss/modules/auto-complete-list.scss */
+/* line 68, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete input[type="text"] {
-  margin: 7px 10px 7px 0;
+  margin: 7px 10px 7px 0 !important;
   padding: 0;
   width: 100px;
   border: 0;
@@ -6003,7 +6019,7 @@ a.btn-black, a.btn-highlight {
   height: auto;
 }
 
-/* line 78, ../scss/modules/auto-complete-list.scss */
+/* line 80, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection {
   display: inline-block;
   margin: 4px 5px 4px 0;
@@ -6014,7 +6030,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   line-height: normal;
 }
-/* line 88, ../scss/modules/auto-complete-list.scss */
+/* line 90, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove {
   font-family: "Glyphicons";
   position: relative;
@@ -6025,14 +6041,14 @@ a.btn-black, a.btn-highlight {
   color: black;
 }
 
-/* line 100, ../scss/modules/auto-complete-list.scss */
+/* line 102, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions {
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: #ddd;
 }
-/* line 106, ../scss/modules/auto-complete-list.scss */
+/* line 108, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions h5 {
   margin: 0;
   padding: 5px 8px;
@@ -6040,12 +6056,12 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 12px;
 }
-/* line 114, ../scss/modules/auto-complete-list.scss */
+/* line 116, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions ul {
   padding: 8px 8px 15px;
   margin: 0;
 }
-/* line 119, ../scss/modules/auto-complete-list.scss */
+/* line 121, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions li {
   display: inline-block;
   margin-right: 5px;
@@ -6056,7 +6072,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   cursor: pointer;
 }
-/* line 130, ../scss/modules/auto-complete-list.scss */
+/* line 132, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions .deactivated {
   cursor: auto;
   color: #999999;
