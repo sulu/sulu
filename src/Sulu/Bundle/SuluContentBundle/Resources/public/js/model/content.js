@@ -16,8 +16,8 @@ define([
     return new RelationalModel({
         urlRoot: '/admin/api/nodes',
 
-        saveTemplate: function(attributes, template, parent, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?template=' + template + (!!parent ? '& parent=' + parent : '')});
+        saveTemplate: function(attributes, template, parent, state, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?template=' + template + (!!parent ? '&parent=' + parent : '') + (!!state ? '&state=' + state : '')});
 
             return this.save.call(this, attributes, options);
         },
