@@ -53,6 +53,9 @@ define(['app-config'], function(AppConfig) {
 
         setFormData: function(data) {
             this.sandbox.form.setData(this.formId, data);
+            if (this.options.id === 'index') {
+                this.sandbox.dom.remove('#show-in-navigation-container');
+            }
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.showInNavigation);
             if (!!this.options.data.id) {
                 this.initPreview();
@@ -153,7 +156,13 @@ define(['app-config'], function(AppConfig) {
 
             if (this.sandbox.form.validate(this.formId)) {
                 var data = this.sandbox.form.getData(this.formId),
+                    showInNavigation;
+
+                if (this.options.id === 'index') {
+                    showInNavigation = true;
+                } else {
                     showInNavigation = this.sandbox.dom.attr('#show-in-navigation', 'checked');
+                }
 
                 this.sandbox.logger.log('data', data);
 
