@@ -229,6 +229,7 @@ define(['app-config'], function(AppConfig) {
                             data = this.initData();
 
                         this.html(tpl);
+                        this.setStateDropdown(data);
                         this.createForm(data);
 
                         this.bindDomEvents();
