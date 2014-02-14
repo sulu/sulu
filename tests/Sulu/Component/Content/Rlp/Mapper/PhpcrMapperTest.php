@@ -49,7 +49,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
             'url' => 'http://localhost:8080/server',
             'username' => 'admin',
             'password' => 'admin',
-            'workspace' => 'default'
+            'workspace' => 'test'
             ),
             array(
                 'base' => 'cmf',
@@ -86,7 +86,7 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
         $credentials = new SimpleCredentials('admin', 'admin');
 
         /** @var SessionInterface $session */
-        $session = $repository->login($credentials, 'default');
+        $session = $repository->login($credentials, 'test');
 
         NodeHelper::purgeWorkspace($session);
         $session->save();
