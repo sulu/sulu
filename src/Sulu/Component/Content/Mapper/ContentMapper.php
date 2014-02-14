@@ -260,7 +260,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     private function changeState(NodeInterface $node, $state, StructureInterface $structure, $statePropertyName)
     {
         if ($state !== StructureInterface::STATE_TEST && $state !== StructureInterface::STATE_PUBLISHED) {
-            throw new StateNotFoundException();
+            throw new StateNotFoundException($state);
         }
 
         // no state (new node) set state
@@ -286,7 +286,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $oldState === StructureInterface::STATE_PUBLISHED &&
                 $state === StructureInterface::STATE_TEST
             ) {
-                throw new StateTransitionException();
+                throw new StateTransitionException($oldState, $state);
             }
         }
     }
