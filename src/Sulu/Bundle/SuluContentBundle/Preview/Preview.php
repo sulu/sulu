@@ -114,7 +114,7 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function update($userId, $contentUuid, $webspaceKey, $property, $data)
+    public function update($userId, $contentUuid, $webspaceKey, $languageCode, $property, $data)
     {
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
@@ -122,7 +122,7 @@ class Preview implements PreviewInterface
         if ($content != false) {
             $propertyInstance = $content->getProperty($property);
             $contentType = $this->getContentType($propertyInstance->getContentTypeName());
-            $contentType->readForPreview($data, $propertyInstance, $webspaceKey);
+            $contentType->readForPreview($data, $propertyInstance, $webspaceKey, $languageCode, null);
 
             $content->getProperty($property)->setValue($propertyInstance->getValue());
             $this->addStructure($userId, $contentUuid, $content);

@@ -64,12 +64,19 @@ class SmartContent extends ComplexContentType
     }
 
     /**
-     * @param PropertyInterface $property
      * @param $data
+     * @param PropertyInterface $property
+     * @param string $webspaceKey
+     * @param string $languageCode
      */
-    protected function setData($data, PropertyInterface $property)
+    protected function setData($data, PropertyInterface $property, $webspaceKey, $languageCode)
     {
-        $smartContent = new SmartContentContainer($this->nodeRepository, $this->tagManager);
+        $smartContent = new SmartContentContainer(
+            $this->nodeRepository,
+            $this->tagManager,
+            $webspaceKey,
+            $languageCode
+        );
         $smartContent->setConfig($data);
         $property->setValue($smartContent);
     }
@@ -77,7 +84,7 @@ class SmartContent extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
 
@@ -85,21 +92,28 @@ class SmartContent extends ComplexContentType
             $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);
         }
 
-        $this->setData($data, $property);
+        $this->setData($data, $property, $webspaceKey, $languageCode);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey)
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $this->setData($data, $property);
+        $this->setData($data, $property, $webspaceKey, $languageCode);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey)
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    )
     {
         $value = $property->getValue();
 
@@ -114,8 +128,11 @@ class SmartContent extends ComplexContentType
      * remove property from given node
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      */
-    public function remove(NodeInterface $node, PropertyInterface $property)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // TODO: Implement remove() method.
     }

@@ -36,6 +36,18 @@ class SmartContentContainer implements \Serializable
     private $tagManager;
 
     /**
+     * The key of the webspace for this smartcontent instance
+     * @var string
+     */
+    private $webspaceKey;
+
+    /**
+     * The code of the language for this smartcontent instance
+     * @var string
+     */
+    private $languageCode;
+
+    /**
      * Contains all the configuration for the smart content
      * @var array
      */
@@ -48,10 +60,23 @@ class SmartContentContainer implements \Serializable
      */
     private $data = null;
 
-    public function __construct(NodeRepositoryInterface $nodeRepository, TagManagerInterface $tagManager)
+    /**
+     * @param NodeRepositoryInterface $nodeRepository
+     * @param TagManagerInterface $tagManager
+     * @param string $webspaceKey
+     * @param string $languageCode
+     */
+    public function __construct(
+        NodeRepositoryInterface $nodeRepository,
+        TagManagerInterface $tagManager,
+        $webspaceKey,
+        $languageCode
+    )
     {
         $this->nodeRepository = $nodeRepository;
         $this->tagManager = $tagManager;
+        $this->webspaceKey = $webspaceKey;
+        $this->languageCode = $languageCode;
     }
 
     /**
@@ -81,10 +106,12 @@ class SmartContentContainer implements \Serializable
         if ($this->data === null) {
             // resolve tagNames to ids for loading data
             $config = $this->getConfig();
-            $config['tags'] = $this->tagManager->resolveTagNames($config['tags']);
+            if (!empty($config['tags'])) {
+                $config['tags'] = $this->tagManager->resolveTagNames($config['tags']);
+            }
 
             // TODO use correct language and workspace
-            $this->data = $this->nodeRepository->getSmartContentNodes($config, 'en', 'sulu_io');
+            $this->data = $this->nodeRepository->getSmartContentNodes($config, $this->languageCode, $this->webspaceKey);
         }
 
         return $this->data;

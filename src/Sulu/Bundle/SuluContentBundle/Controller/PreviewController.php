@@ -94,7 +94,7 @@ class PreviewController extends Controller
         $changes = $request->get('changes', false);
         if (!!$changes) {
             foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $webspace, $property, $content);
+                $preview->update($uid, $contentUuid, $webspace, $language, $property, $content);
             }
         }
 
