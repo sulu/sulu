@@ -214,7 +214,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         $node,
                         new TranslatedProperty($property, $languageCode, $this->languageNamespace),
                         $userId,
-                        $webspaceKey
+                        $webspaceKey,
+                        $languageCode
                     );
                 }
             } elseif (!$partialUpdate) {
@@ -240,7 +241,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                     $node,
                     new TranslatedProperty($property, $languageCode, $this->languageNamespace),
                     $userId,
-                    $webspaceKey
+                    $webspaceKey,
+                    $languageCode
                 );
             } catch (Exception $ex) {
                 // TODO Introduce a PostSaveException, so that we don't have to catch everything
@@ -530,7 +532,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $type->read(
                 $contentNode,
                 new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                $webspaceKey
+                $webspaceKey,
+                $languageCode
             );
         }
 

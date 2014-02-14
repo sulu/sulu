@@ -32,18 +32,20 @@ interface ContentTypeInterface
      * @param NodeInterface $node
      * @param PropertyInterface $property
      * @param string $webspaceKey
+     * @param string $languageCode
      * @return mixed
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey);
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode);
 
     /**
      * sets the value of the property with the data given
      * @param mixed $data
      * @param PropertyInterface $property
      * @param $webspaceKey
+     * @param $languageCode
      * @return mixed
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey);
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode);
 
     /**
      * save the value from given property
@@ -51,9 +53,10 @@ interface ContentTypeInterface
      * @param PropertyInterface $property
      * @param int $userId
      * @param string $webspaceKey
+     * @param string $languageCode
      * @return mixed
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey);
+    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode);
 
     /**
      * remove property from given node
