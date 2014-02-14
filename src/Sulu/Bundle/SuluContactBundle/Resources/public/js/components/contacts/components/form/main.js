@@ -52,9 +52,13 @@ define([], function() {
                         name: 'auto-complete@husky',
                         options: {
                             el: '#company',
-                            url: '/admin/api/accounts?flat=true&searchFields=id,name',
+                            remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
+                            getParameter: 'search',
                             value: data.account,
-                            instanceName:'company-input'
+                            instanceName:'companyInput',
+                            valueName: 'name',
+                            noNewValues: true,
+                            excludes: [{id: data.id, name: data.name}]
                         }
                     }
                 ]);
@@ -191,10 +195,10 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.account = {
-                        id: this.sandbox.dom.data('#company .name-value', 'id')
+                        id: this.sandbox.dom.data('#companyInput', 'id')
                     };
 
-                    this.sandbox.logger.log('data', data);
+                    this.sandbox.logger.log('log data', data);
 
                     this.sandbox.emit('sulu.contacts.contacts.save', data);
                 }
