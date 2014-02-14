@@ -80,8 +80,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $this->languageNamespace = $languageNamespace;
 
         // init show in navigation property
-        $this->showInNavigationProperty = new Property('showInNavigaiton', 'none');
-        $this->stateProperty = new Property('state', 'none');
+        $this->showInNavigationProperty = new Property('sulu-showInNavigation', 'none');
+        $this->stateProperty = new Property('sulu-state', 'none');
     }
 
     /**
@@ -238,9 +238,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue('sulu:created'));
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
-        $translatedProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
-        $structure->setShowInNavigation($node->getPropertyValue($translatedProperty->getName()));
-        $structure->setGlobalState($this->getInheritedState($node));
+        $translatedSINProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
+        $structure->setShowInNavigation($node->getPropertyValueWithDefault($translatedSINProperty->getName(), false));
+
+        $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
+        $structure->setGlobalState($this->getInheritedState($node, $translatedStateProperty->getName()));
 
         return $structure;
     }
@@ -451,16 +453,25 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setNodeState($contentNode->getPropertyValue($translatedStateProperty->getName()));
+        $structure->setNodeState(
+            $contentNode->getPropertyValueWithDefault(
+                $translatedStateProperty->getName(),
+                StructureInterface::STATE_TEST
+            )
+        );
         $structure->setCreator($contentNode->getPropertyValue('sulu:creator'));
         $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
         $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
         $structure->setHasChildren($contentNode->hasNodes());
 
-        $translatedProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
-        $structure->setShowInNavigation($contentNode->getPropertyValue($translatedProperty->getName()));
-        $structure->setGlobalState($this->getInheritedState($contentNode));
+        $translatedSINProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
+        $structure->setShowInNavigation(
+            $contentNode->getPropertyValueWithDefault($translatedSINProperty->getName(), false)
+        );
+
+        $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
+        $structure->setGlobalState($this->getInheritedState($contentNode, $translatedStateProperty->getName()));
 
         // go through every property in the template
         /** @var PropertyInterface $property */
@@ -599,7 +610,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName)
     {
         // if test then return it
-        if ($contentNode->getPropertyValue($statePropertyName) === StructureInterface::STATE_TEST) {
+        if ($contentNode->getPropertyValueWithDefault(
+                $statePropertyName,
+                StructureInterface::STATE_TEST
+            ) === StructureInterface::STATE_TEST
+        ) {
             return StructureInterface::STATE_TEST;
         }
 
@@ -615,8 +630,16 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $query = $queryManager->createQuery($sql, 'JCR-SQL2');
         $result = $query->execute();
 
+        /** @var \PHPCR\NodeInterface $node */
         foreach ($result->getNodes() as $node) {
-            if ($node->getPropertyValue($statePropertyName) === StructureInterface::STATE_TEST) {
+            // exclude /cmf/sulu_io/contents
+            if (
+                $node->getDepth() > 3 &&
+                $node->getPropertyValueWithDefault(
+                    $statePropertyName,
+                    StructureInterface::STATE_TEST
+                ) === StructureInterface::STATE_TEST
+            ) {
                 return StructureInterface::STATE_TEST;
             }
         }

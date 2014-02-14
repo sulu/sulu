@@ -307,8 +307,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
-        $this->assertEquals(false, $content->getPropertyValue('sulu:showInNavigation'));
+        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
+        $this->assertEquals(false, $content->getPropertyValue('sulu_locale:de-sulu-showInNavigation'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -450,7 +450,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('thats a new test', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('thats cool', 'tag2', 'tag3'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
+        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -499,7 +499,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
+        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -548,7 +548,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $content->hasProperty('sulu_locale:de-article'));
         $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
+        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -596,7 +596,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $content->hasProperty('sulu_locale:de-article'));
         $this->assertEquals(false, $content->hasProperty('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
+        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -754,7 +754,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
+        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
     }
@@ -810,7 +810,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('default', $content->getProperty('sulu_locale:de-article')->getString());
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu:template'));
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu:state'));
+        $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
 
@@ -1332,7 +1332,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $route = $root->getNode('cmf/default/routes/news/test');
         $node = $route->getPropertyValue('sulu:content');
 
-        $this->assertTrue($node->getPropertyValue('sulu:showInNavigation'));
+        $this->assertTrue($node->getPropertyValue('sulu_locale:de-sulu-showInNavigation'));
         $this->assertTrue($result->getShowInNavigation());
         $this->assertTrue($content->getShowInNavigation());
 
