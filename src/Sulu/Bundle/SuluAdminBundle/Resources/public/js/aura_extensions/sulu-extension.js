@@ -67,6 +67,7 @@
                         var userFields = app.sandbox.sulu.getUserSetting(key),
                             serverFields = data,
                             settingsArray = [],
+                            newSetting,
                             serverindex, serverindexLeft, userKeys, serverKeysLeft, serverKeys, serverKeysSwap;
 
                         if (userFields) {
@@ -77,14 +78,18 @@
 
                             // keep all user settings if they still exist
                             this.sandbox.util.foreach(userKeys, function(key, index) {
+                                // get index of setting from server fields
                                 serverindex = serverKeys.indexOf(key);
                                 if (serverindex >= 0) {
-                                    this.sandbox.util.foreach(attributesArray, function(attribute) {
-                                        // replace attributes with those of settings
-                                        userFields[index][attribute] = serverFields[serverindex][attribute];
-                                    });
-                                    // add to result
-                                    settingsArray.push(userFields[index]);
+
+                                    newSetting = serverFields[serverindex];
+                                    for (var attrname in userFields[index]) {
+                                        if (attributesArray.indexOf(attrname)<0) {
+                                            newSetting[attrname] = userFields[index][attrname];
+                                        }
+                                    }
+                                    settingsArray.push(newSetting);
+
                                     // remove from server keys
                                     serverindexLeft = serverKeysLeft.indexOf(key);
                                     serverKeysLeft.splice(serverindexLeft, 1);
@@ -156,7 +161,7 @@
              * @param datagridOptions
              */
             app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation'], url, function(data) {
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation', 'width'], url, function(data) {
 
                     var toolbarDefaults = {
                             columnOptions: {
@@ -178,7 +183,7 @@
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
-                    //start component
+                    //start list-toolbar component
                     this.sandbox.start([
                         {
                             name: 'list-toolbar@suluadmin',
@@ -186,10 +191,10 @@
                         }
                     ]);
 
-
                     gridOptions.fieldsData = data;
                     gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
                     gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+                    gridOptions.contentContainer = '#content';
 
                     // start datagrid
                     this.sandbox.start([
