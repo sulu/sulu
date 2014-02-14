@@ -194,7 +194,7 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.account = {
-                        id: this.sandbox.dom.data('#companyInput', 'id')
+                        id: this.sandbox.dom.data('#company input', 'id')
                     };
 
                     this.sandbox.logger.log('log data', data);
