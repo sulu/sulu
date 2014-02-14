@@ -22,8 +22,8 @@ define(function() {
                     var preview = {
                             icon: 'eye-open',
                             iconSize: 'large',
-                            group: 'right',
-                            position: 1,
+                            group: 'left',
+                            position: 20,
                             items: [
                                 {
                                     title: this.sandbox.translate('sulu.edit-toolbar.new-window'),
@@ -38,6 +38,13 @@ define(function() {
                                     }.bind(this)
                                 }
                             ]
+                        },
+                        state = {
+                            'id': 'state',
+                            'group': 'right',
+                            'class': 'highlight-gray',
+                            'position': 2,
+                            'type': 'select'
                         },
                         template = {
                             id: 'template',
@@ -60,9 +67,9 @@ define(function() {
                             }
                         };
                     if (!this.options.id) {
-                        return [template];
+                        return [template, state];
                     } else {
-                        return [template, preview];
+                        return [template, preview, state];
                     }
                 }.bind(this)
             };
