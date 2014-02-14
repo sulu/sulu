@@ -21,7 +21,8 @@ define([], function() {
             heading: '',
             tabsData: null,
             instanceName: 'content',
-            template: 'default'
+            template: 'default',
+            parentTemplate: null
         },
 
         templates = {
@@ -77,7 +78,8 @@ define([], function() {
                         el: '#edit-toolbar',
                         instanceName: this.options.instanceName,
                         forceReload: false,
-                        template:this.options.template
+                        template: this.options.template,
+                        parentTemplate: this.options.parentTemplate
                     }
                 }
             ]);
