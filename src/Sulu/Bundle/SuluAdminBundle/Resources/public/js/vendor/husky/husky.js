@@ -35341,6 +35341,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-       }
-    };
-});
