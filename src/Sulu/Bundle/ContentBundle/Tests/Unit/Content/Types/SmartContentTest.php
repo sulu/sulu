@@ -138,12 +138,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->smartContent->write($node, $property, 0, 'test');
+        $this->smartContent->write($node, $property, 0, 'test', 'en', 's');
     }
 
     public function testRead()
     {
-        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager);
+        $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager, 'test', 'en', 's');
         $smartContentContainer->setConfig(
             array(
                 'tags' => array('Tag1', 'Tag2'),
@@ -183,12 +183,14 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $property->expects($this->exactly(2))->method('setValue')->with($smartContentContainer);
 
-        $this->smartContent->read($node, $property, 'test');
+        $this->smartContent->read($node, $property, 'test', 'en', 's');
 
         $this->smartContent->readForPreview(
             array('tags' => array('Tag1', 'Tag2'), 'limitResult' => 2),
             $property,
-            'test'
+            'test',
+            'en',
+            's'
         );
     }
 }

@@ -206,8 +206,8 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $this->preview->start(1, '123-123-123', '', 'default', 'en');
-        $this->preview->update(1, '123-123-123', '',  'title', 'aaaa');
+        $this->preview->start(1, '123-123-123', '', 'en', 'default', 'en');
+        $this->preview->update(1, '123-123-123', '', 'en', 'title', 'aaaa');
         $content = $this->preview->getChanges(1, '123-123-123');
 
         // check result
@@ -242,11 +242,11 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
-        $content = $this->preview->update(1, '123-123-123', '', 'title', 'New Title');
+        $content = $this->preview->update(1, '123-123-123', '', 'en', 'title', 'New Title');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
-        $content = $this->preview->update(1, '123-123-123', '', 'article', 'asdf');
+        $content = $this->preview->update(1, '123-123-123', '', 'en', 'article', 'asdf');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('asdf', $content->article);
 
