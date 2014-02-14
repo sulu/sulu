@@ -92,9 +92,10 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
+        $showInNavigation = $this->getRequest()->get('showInNavigation');
         $data = $this->getRequest()->request->all();
 
-        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, $uuid);
+        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, $uuid, null, $showInNavigation);
 
         return $this->handleView(
             $this->view($result)
@@ -138,10 +139,11 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
+        $showInNavigation = $this->getRequest()->get('showInNavigation');
         $data = $this->getRequest()->request->all();
         $parent = $this->getRequest()->get('parent');
 
-        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, null, $parent);
+        $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, null, $parent, null, $showInNavigation);
 
         return $this->handleView(
             $this->view($result)
