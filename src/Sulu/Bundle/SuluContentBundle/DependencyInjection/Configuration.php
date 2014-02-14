@@ -52,6 +52,19 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('types')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('smart_content')
+                            ->addDefaultsIfNotSet()
+                                ->children()
+                                    ->scalarNode('template')
+                                        ->defaultValue('SuluContentBundle:Template:content-types/smart_content.html.twig')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
