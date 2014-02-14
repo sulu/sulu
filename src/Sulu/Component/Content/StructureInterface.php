@@ -178,6 +178,17 @@ interface StructureInterface extends \JsonSerializable
     public function getGlobalState();
 
     /**
+     * @param \DateTime $publishedDate
+     */
+    public function setPublishedDate($publishedDate);
+
+    /**
+     * returns first published date
+     * @return \DateTime
+     */
+    public function getPublishedDate();
+
+    /**
      * returns true if this node is shown in navigation
      * @return boolean
      */

@@ -104,6 +104,12 @@ abstract class Structure implements StructureInterface
     private $globalState;
 
     /**
+     * first published
+     * @var DateTime
+     */
+    private $publishedDate;
+
+    /**
      * should be shown in navigation or not
      * @var boolean
      */
@@ -125,6 +131,7 @@ abstract class Structure implements StructureInterface
 
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
+        $this->publishedDate = null;
         // default hide in navigation
         $this->showInNavigation = false;
     }
@@ -365,6 +372,23 @@ abstract class Structure implements StructureInterface
     public function getGlobalState()
     {
         return $this->globalState;
+    }
+
+    /**
+     * @param \DateTime $publishedDate
+     */
+    public function setPublishedDate($publishedDate)
+    {
+        $this->publishedDate = $publishedDate;
+    }
+
+    /**
+     * returns first published date
+     * @return \DateTime
+     */
+    public function getPublishedDate()
+    {
+        return $this->publishedDate;
     }
 
     /**

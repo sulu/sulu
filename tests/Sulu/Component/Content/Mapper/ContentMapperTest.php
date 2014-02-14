@@ -1204,6 +1204,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
         $data1 = $this->mapper->save($data1, 'overview', 'default', 'de', 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data1->getNodeState());
+        $this->assertNull($data1->getPublishedDate());
+        $this->assertFalse($data1->getPublished());
 
         // save with state PUBLISHED
         $data2 = array(
@@ -1211,6 +1213,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
         $data2 = $this->mapper->save($data2, 'overview', 'default', 'de', 1, true, null, null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getNodeState());
+        $this->assertNotNull($data2->getPublishedDate());
+        $this->assertTrue($data2->getPublished());
 
         // change state from TEST to PUBLISHED
         $data3 = array(
@@ -1218,6 +1222,9 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
         $data3 = $this->mapper->save($data3, 'overview', 'default', 'de', 1, true, $data1->getUuid(), null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data3->getNodeState());
+        $this->assertNotNull($data3->getPublishedDate());
+        $this->assertTrue($data3->getPublished());
+        $this->assertTrue($data3->getPublishedDate() > $data2->getPublishedDate());
 
         // change state from PUBLISHED to TEST (exception)
         $this->setExpectedException('\Sulu\Component\Content\Exception\StateTransitionException');

@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -83,14 +84,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     private $stateProperty;
 
+    /**
+     * @var PropertyInterface
+     */
+    private $publishedDateProperty;
+
     public function __construct($defaultLanguage, $languageNamespace)
     {
         $this->defaultLanguage = $defaultLanguage;
         $this->languageNamespace = $languageNamespace;
 
-        // init show in navigation property
+        // properties
         $this->showInNavigationProperty = new Property('sulu-showInNavigation', 'none');
         $this->stateProperty = new Property('sulu-state', 'none');
+        $this->publishedDateProperty = new Property('sulu-publishedDate', 'none');
     }
 
     /**
@@ -172,22 +179,37 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('sulu:changer', $userId);
         $node->setProperty('sulu:changed', $dateTime);
 
+        // init state property
+        $translatedStateProperty = new TranslatedProperty(
+            $this->stateProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
+        // init published date Property
+        $translatedPublishedDateProperty = new TranslatedProperty(
+            $this->publishedDateProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
+        // init show in navigation property
+        $translatedShowInNavigationProperty = new TranslatedProperty(
+            $this->showInNavigationProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
+
         // do not state transition for root (contents) node
         $contentRootNode = $this->getContentNode($webspaceKey);
         if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
-            $translatedStateProperty = new TranslatedProperty(
-                $this->stateProperty,
-                $languageCode,
-                $this->languageNamespace
+            $this->changeState(
+                $node,
+                $state,
+                $structure,
+                $translatedStateProperty->getName(),
+                $translatedPublishedDateProperty->getName()
             );
-            $this->changeState($node, $state, $structure, $translatedStateProperty->getName());
         }
         if (isset($showInNavigation)) {
-            $translatedShowInNavigationProperty = new TranslatedProperty(
-                $this->showInNavigationProperty,
-                $languageCode,
-                $this->languageNamespace
-            );
             $node->setProperty($translatedShowInNavigationProperty->getName(), $showInNavigation);
         }
 
@@ -256,21 +278,15 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue('sulu:created'));
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
-        $translatedShowInNavigationProperty = new TranslatedProperty(
-            $this->showInNavigationProperty,
-            $languageCode,
-            $this->languageNamespace
-        );
         $structure->setShowInNavigation(
             $node->getPropertyValueWithDefault($translatedShowInNavigationProperty->getName(), false)
         );
-
-        $translatedStateProperty = new TranslatedProperty(
-            $this->stateProperty,
-            $languageCode,
-            $this->languageNamespace
+        $structure->setGlobalState(
+            $this->getInheritedState($node, $translatedStateProperty->getName(), $webspaceKey)
         );
-        $structure->setGlobalState($this->getInheritedState($node, $translatedStateProperty->getName(), $webspaceKey));
+        $structure->setPublishedDate(
+            $node->getPropertyValueWithDefault($translatedPublishedDateProperty->getName(), null)
+        );
 
         return $structure;
     }
@@ -281,11 +297,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param int $state new state
      * @param \Sulu\Component\Content\StructureInterface $structure
      * @param string $statePropertyName
+     * @param string $publishedDatePropertyName
      *
      * @throws \Sulu\Component\Content\Exception\StateTransitionException
      * @throws \Sulu\Component\Content\Exception\StateNotFoundException
      */
-    private function changeState(NodeInterface $node, $state, StructureInterface $structure, $statePropertyName)
+    private function changeState(
+        NodeInterface $node,
+        $state,
+        StructureInterface $structure,
+        $statePropertyName,
+        $publishedDatePropertyName
+    )
     {
         if (!in_array($state, $this->states)) {
             throw new StateNotFoundException($state);
@@ -295,6 +318,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         if (!$node->hasProperty($statePropertyName)) {
             $node->setProperty($statePropertyName, $state);
             $structure->setNodeState($state);
+
+            // published => set only once
+            if ($state === StructureInterface::STATE_PUBLISHED && !$node->hasProperty($publishedDatePropertyName)) {
+                $node->setProperty($publishedDatePropertyName, new DateTime());
+            }
         } else {
             $oldState = $node->getPropertyValue($statePropertyName);
 
@@ -308,6 +336,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             ) {
                 $node->setProperty($statePropertyName, $state);
                 $structure->setNodeState($state);
+
+                // set only once
+                if (!$node->hasProperty($publishedDatePropertyName)) {
+                    $node->setProperty($publishedDatePropertyName, new DateTime());
+                }
             } elseif (
                 // from published to test
                 $oldState === StructureInterface::STATE_PUBLISHED &&
@@ -492,11 +525,25 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $structure = $this->getStructure($templateKey);
 
+        //init state property
         $translatedStateProperty = new TranslatedProperty(
             $this->stateProperty,
             $languageCode,
             $this->languageNamespace
         );
+        // init translated published date property
+        $translatedPublishedDateProperty = new TranslatedProperty(
+            $this->publishedDateProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
+        // init translated show in navigation proeperty
+        $translatedShowInNavigationProperty = new TranslatedProperty(
+            $this->showInNavigationProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
+
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setNodeState(
             $contentNode->getPropertyValueWithDefault(
@@ -510,17 +557,14 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
         $structure->setHasChildren($contentNode->hasNodes());
 
-        $translatedShowInNavigationProperty = new TranslatedProperty(
-            $this->showInNavigationProperty,
-            $languageCode,
-            $this->languageNamespace
-        );
         $structure->setShowInNavigation(
             $contentNode->getPropertyValueWithDefault($translatedShowInNavigationProperty->getName(), false)
         );
-
         $structure->setGlobalState(
             $this->getInheritedState($contentNode, $translatedStateProperty->getName(), $webspaceKey)
+        );
+        $structure->setPublishedDate(
+            $contentNode->getPropertyValueWithDefault($translatedPublishedDateProperty->getName(), null)
         );
 
         // go through every property in the template
