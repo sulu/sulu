@@ -71,7 +71,7 @@ class TagList extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode)
     {
         $this->setData($node->getPropertyValueWithDefault($property->getName(), array()), $property);
     }
@@ -79,7 +79,7 @@ class TagList extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey)
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode)
     {
         $this->setData($data, $property);
     }
@@ -87,7 +87,7 @@ class TagList extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey)
+    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode)
     {
         $tagIds = array();
 
