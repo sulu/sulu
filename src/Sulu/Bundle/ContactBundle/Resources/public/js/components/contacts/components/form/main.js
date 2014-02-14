@@ -55,10 +55,9 @@ define([], function() {
                             remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
                             getParameter: 'search',
                             value: data.account,
-                            instanceName:'companyInput',
+                            instanceName:'companyContact' + data.id,
                             valueName: 'name',
-                            noNewValues: true,
-                            excludes: [{id: data.id, name: data.name}]
+                            noNewValues: true
                         }
                     }
                 ]);
