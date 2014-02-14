@@ -222,9 +222,18 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $languageCode
      * @param string $uuid
      * @param string $parentUuid
+     * @param int $state
      * @return array
      */
-    public function saveNode($data, $templateKey, $portalKey, $languageCode, $uuid = null, $parentUuid = null, $state = null)
+    public function saveNode(
+        $data,
+        $templateKey,
+        $portalKey,
+        $languageCode,
+        $uuid = null,
+        $parentUuid = null,
+        $state = null
+    )
     {
         $node = $this->getMapper()->save(
             $data,
