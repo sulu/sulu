@@ -101,7 +101,9 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
         $state = $this->getRequest()->get('state');
-        $state = intval($state);
+        if ($state !== null) {
+            $state = intval($state);
+        }
         $data = $this->getRequest()->request->all();
 
         $result = $this->getRepository()->saveNode($data, $template, $webspace, $language, $uuid, null, $state);
