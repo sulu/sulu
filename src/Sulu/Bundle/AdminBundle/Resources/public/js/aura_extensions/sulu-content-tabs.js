@@ -5,6 +5,9 @@ define([], function() {
     return function(app) {
         app.components.before('initialize', function() {
             if (!!this.content) {
+                if (typeof this.content === 'function') {
+                    this.content = this.content.call(this);
+                }
                 this.sandbox.util.load(this.content.url)
                     .then(function(data) {
                         var contentNavigation = JSON.parse(data);
@@ -19,7 +22,8 @@ define([], function() {
                                         tabsData: navigation,
                                         heading: this.sandbox.translate(this.content.title),
                                         contentOptions: this.options,
-                                        template: !!this.content.template ? this.content.template : 'default'
+                                        template: !!this.content.template ? this.content.template : 'default',
+                                        parentTemplate: !!this.content.parentTemplate ? this.content.parentTemplate : null
                                     }
                                 }
                             ]);
