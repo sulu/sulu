@@ -47,7 +47,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $this->defaultValue;
         if ($node->hasProperty($property->getName())) {
@@ -62,7 +62,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode)
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $property->setValue($data);
     }
@@ -70,13 +70,20 @@ abstract class SimpleContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode)
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    )
     {
         $value = $property->getValue();
         if ($value != null) {
             $node->setProperty($property->getName(), $property->getValue());
         } else {
-            $this->remove($node, $property);
+            $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
     }
 
@@ -85,7 +92,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      * @param NodeInterface $node
      * @param PropertyInterface $property
      */
-    public function remove(NodeInterface $node, PropertyInterface $property)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // if exist remove property of node
         if ($node->hasProperty($property->getName())) {

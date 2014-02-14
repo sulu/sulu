@@ -42,16 +42,16 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $value = $this->getResourceLocator($node ,$webspaceKey);
+        $value = $this->getResourceLocator($node, $webspaceKey);
         $property->setValue($value);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode)
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $property->setValue($data);
     }
@@ -93,7 +93,14 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode)
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    )
     {
         $value = $property->getValue();
         if ($value != null && $value != '') {
@@ -106,16 +113,14 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
                 }
             }
         } else {
-            $this->remove($node, $property);
+            $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
     }
 
     /**
-     * remove property from given node
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
+     * {@inheritdoc}
      */
-    public function remove(NodeInterface $node, PropertyInterface $property)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // TODO: Implement remove() method.
     }
