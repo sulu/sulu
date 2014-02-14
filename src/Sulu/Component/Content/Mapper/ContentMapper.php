@@ -164,7 +164,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $node->setProperty('sulu:changed', $dateTime);
 
         // do not state transition for root (contents) node
-        if ($node->getDepth() > 3 && isset($state)) {
+        $contentRootNode = $this->getContentNode($webspaceKey);
+        if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
             $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
             $this->changeState($node, $state, $structure, $translatedStateProperty->getName());
         }
@@ -242,7 +243,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setShowInNavigation($node->getPropertyValueWithDefault($translatedSINProperty->getName(), false));
 
         $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
-        $structure->setGlobalState($this->getInheritedState($node, $translatedStateProperty->getName()));
+        $structure->setGlobalState($this->getInheritedState($node, $translatedStateProperty->getName(), $webspaceKey));
 
         return $structure;
     }
@@ -466,7 +467,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure = $this->getStructure($templateKey);
 
         $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
-
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setNodeState(
             $contentNode->getPropertyValueWithDefault(
@@ -485,8 +485,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $contentNode->getPropertyValueWithDefault($translatedSINProperty->getName(), false)
         );
 
-        $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
-        $structure->setGlobalState($this->getInheritedState($contentNode, $translatedStateProperty->getName()));
+        $structure->setGlobalState(
+            $this->getInheritedState($contentNode, $translatedStateProperty->getName(), $webspaceKey)
+        );
 
         // go through every property in the template
         /** @var PropertyInterface $property */
@@ -622,8 +623,14 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         return $clean;
     }
 
-    private function getInheritedState(NodeInterface $contentNode, $statePropertyName)
+    private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)
     {
+        // index page is default PUBLISHED
+        $contentRootNode = $this->getContentNode($webspaceKey);
+        if ($contentNode->getName() === $contentRootNode->getPath()) {
+            return StructureInterface::STATE_PUBLISHED;
+        }
+
         // if test then return it
         if ($contentNode->getPropertyValueWithDefault(
                 $statePropertyName,
@@ -649,7 +656,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         foreach ($result->getNodes() as $node) {
             // exclude /cmf/sulu_io/contents
             if (
-                $node->getDepth() > 3 &&
+                $node->getPath() !== $contentRootNode->getPath() &&
                 $node->getPropertyValueWithDefault(
                     $statePropertyName,
                     StructureInterface::STATE_TEST
