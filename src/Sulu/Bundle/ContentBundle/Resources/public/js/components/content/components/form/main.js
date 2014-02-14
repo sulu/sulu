@@ -33,10 +33,10 @@ define(['app-config'], function(AppConfig) {
         },
 
         render: function() {
+            this.bindCustomEvents();
+
             this.html(this.renderTemplate('/admin/content/template/form/overview'));
             var data = this.initData();
-
-            this.bindCustomEvents();
 
             this.setStateDropdown(data);
             this.createForm(data);
