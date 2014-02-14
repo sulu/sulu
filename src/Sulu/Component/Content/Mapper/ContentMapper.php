@@ -16,6 +16,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Exception\StateTransitionException;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
@@ -63,10 +64,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         )
     );
 
+    /**
+     * @var PropertyInterface
+     */
+    private $showInNavigationProperty;
+
     public function __construct($defaultLanguage, $languageNamespace)
     {
         $this->defaultLanguage = $defaultLanguage;
         $this->languageNamespace = $languageNamespace;
+
+        // init show in navigation property
+        $this->showInNavigationProperty = new Property('showInNavigaiton', 'none');
     }
 
     /**
@@ -153,7 +162,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $this->changeState($node, $state, $structure);
         }
         if (isset($showInNavigation)) {
-            $node->setProperty('sulu:showInNavigation', $showInNavigation);
+            $translatedProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
+            $node->setProperty($translatedProperty->getName(), $showInNavigation);
         }
 
         $postSave = array();
@@ -221,7 +231,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue('sulu:created'));
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
-        $structure->setShowInNavigation($node->getPropertyValue('sulu:showInNavigation'));
+        $translatedProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
+        $structure->setShowInNavigation($node->getPropertyValue($translatedProperty->getName()));
         $structure->setGlobalState($this->getInheritedState($node));
 
         return $structure;
@@ -437,7 +448,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
         $structure->setHasChildren($contentNode->hasNodes());
 
-        $structure->setShowInNavigation($contentNode->getPropertyValue('sulu:showInNavigation'));
+        $translatedProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
+        $structure->setShowInNavigation($contentNode->getPropertyValue($translatedProperty->getName()));
         $structure->setGlobalState($this->getInheritedState($contentNode));
 
         // go through every property in the template

@@ -88,7 +88,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->contents = $default->addNode('contents');
         $this->contents->setProperty('sulu:state', StructureInterface::STATE_PUBLISHED);
-        $this->contents->setProperty('sulu:showInNavigation', false);
         $this->contents->setProperty('sulu:template', 'overview');
         $this->contents->setProperty('sulu:creator', 1);
         $this->contents->setProperty('sulu:created', new \DateTime());
