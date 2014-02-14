@@ -32,18 +32,34 @@ interface ContentTypeInterface
      * @param NodeInterface $node
      * @param PropertyInterface $property
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return mixed
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey);
+    public function read(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    );
 
     /**
      * sets the value of the property with the data given
      * @param mixed $data
      * @param PropertyInterface $property
      * @param $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return mixed
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey);
+    public function readForPreview(
+        $data,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    );
 
     /**
      * save the value from given property
@@ -51,16 +67,35 @@ interface ContentTypeInterface
      * @param PropertyInterface $property
      * @param int $userId
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return mixed
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey);
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    );
 
     /**
      * remove property from given node
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return
      */
-    public function remove(NodeInterface $node, PropertyInterface $property);
+    public function remove(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    );
 
     /**
      * returns a template to render a form
