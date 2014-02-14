@@ -346,10 +346,11 @@ abstract class Structure implements StructureInterface
      */
     public function getPublished()
     {
-        return ($this->nodeState === 2);
+        return ($this->nodeState === StructureInterface::STATE_PUBLISHED);
     }
 
     /**
+     * sets the global state of node (with inheritance)
      * @param int $globalState
      */
     public function setGlobalState($globalState)

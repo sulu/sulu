@@ -165,12 +165,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         // do not state transition for root (contents) node
         if ($node->getDepth() > 3 && isset($state)) {
-            $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
+            $translatedStateProperty = new TranslatedProperty(
+                $this->stateProperty,
+                $languageCode,
+                $this->languageNamespace
+            );
             $this->changeState($node, $state, $structure, $translatedStateProperty->getName());
         }
         if (isset($showInNavigation)) {
-            $translatedSINProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
-            $node->setProperty($translatedSINProperty->getName(), $showInNavigation);
+            $translatedShowInNavigationProperty = new TranslatedProperty(
+                $this->showInNavigationProperty,
+                $languageCode,
+                $this->languageNamespace
+            );
+            $node->setProperty($translatedShowInNavigationProperty->getName(), $showInNavigation);
         }
 
         $postSave = array();
@@ -238,10 +246,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue('sulu:created'));
         $structure->setChanged($node->getPropertyValue('sulu:changed'));
 
-        $translatedSINProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
-        $structure->setShowInNavigation($node->getPropertyValueWithDefault($translatedSINProperty->getName(), false));
+        $translatedShowInNavigationProperty = new TranslatedProperty(
+            $this->showInNavigationProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
+        $structure->setShowInNavigation(
+            $node->getPropertyValueWithDefault($translatedShowInNavigationProperty->getName(), false)
+        );
 
-        $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
+        $translatedStateProperty = new TranslatedProperty(
+            $this->stateProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
         $structure->setGlobalState($this->getInheritedState($node, $translatedStateProperty->getName()));
 
         return $structure;
@@ -269,7 +287,6 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $structure->setNodeState($state);
         } else {
             $oldState = $node->getPropertyValue($statePropertyName);
-
 
             if ($oldState === $state) {
                 // do nothing
@@ -465,12 +482,20 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
         $structure->setHasChildren($contentNode->hasNodes());
 
-        $translatedSINProperty = new TranslatedProperty($this->showInNavigationProperty, $languageCode, $this->languageNamespace);
+        $translatedShowInNavigationProperty = new TranslatedProperty(
+            $this->showInNavigationProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
         $structure->setShowInNavigation(
-            $contentNode->getPropertyValueWithDefault($translatedSINProperty->getName(), false)
+            $contentNode->getPropertyValueWithDefault($translatedShowInNavigationProperty->getName(), false)
         );
 
-        $translatedStateProperty = new TranslatedProperty($this->stateProperty, $languageCode, $this->languageNamespace);
+        $translatedStateProperty = new TranslatedProperty(
+            $this->stateProperty,
+            $languageCode,
+            $this->languageNamespace
+        );
         $structure->setGlobalState($this->getInheritedState($contentNode, $translatedStateProperty->getName()));
 
         // go through every property in the template
