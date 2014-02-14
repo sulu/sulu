@@ -47,6 +47,7 @@ define(function() {
                             position: 1,
                             type: 'select',
                             title: '',
+                            hidden: true,
                             itemsOption: {
                                 url: '/admin/content/template',
                                 titleAttribute: 'template',
