@@ -57,8 +57,7 @@ define([], function() {
                             value: data.account,
                             instanceName:'companyInput',
                             valueName: 'name',
-                            noNewValues: true,
-                            excludes: [{id: data.id, name: data.name}]
+                            noNewValues: true
                         }
                     }
                 ]);
