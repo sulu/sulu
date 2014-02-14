@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Content;
 
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\StructureInterface;
 use JMS\Serializer\Annotation\Exclude;
 
@@ -28,6 +29,13 @@ class SmartContentContainer implements \Serializable
     private $nodeRepository;
 
     /**
+     * Required for resolving the Tags to ids
+     * @var TagManagerInterface
+     * @Exclude
+     */
+    private $tagManager;
+
+    /**
      * Contains all the configuration for the smart content
      * @var array
      */
@@ -40,9 +48,10 @@ class SmartContentContainer implements \Serializable
      */
     private $data = null;
 
-    public function __construct(NodeRepositoryInterface $nodeRepository)
+    public function __construct(NodeRepositoryInterface $nodeRepository, TagManagerInterface $tagManager)
     {
         $this->nodeRepository = $nodeRepository;
+        $this->tagManager = $tagManager;
     }
 
     /**
@@ -70,8 +79,12 @@ class SmartContentContainer implements \Serializable
     public function getData()
     {
         if ($this->data === null) {
+            // resolve tagNames to ids for loading data
+            $config = $this->getConfig();
+            $config['tags'] = $this->tagManager->resolveTagNames($config['tags']);
+
             // TODO use correct language and workspace
-            $this->data = $this->nodeRepository->getSmartContentNodes($this->getConfig(), 'en', 'sulu_io');
+            $this->data = $this->nodeRepository->getSmartContentNodes($config, 'en', 'sulu_io');
         }
 
         return $this->data;

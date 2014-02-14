@@ -69,7 +69,7 @@ class SmartContent extends ComplexContentType
      */
     protected function setData($data, PropertyInterface $property)
     {
-        $smartContent = new SmartContentContainer($this->nodeRepository);
+        $smartContent = new SmartContentContainer($this->nodeRepository, $this->tagManager);
         $smartContent->setConfig($data);
         $property->setValue($smartContent);
     }
@@ -79,13 +79,13 @@ class SmartContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
     {
-        $this->setData(
-            json_decode(
-                $node->getPropertyValueWithDefault($property->getName(), '{}'),
-                true
-            ),
-            $property
-        );
+        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+
+        if (!empty($data['tags'])) {
+            $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);
+        }
+
+        $this->setData($data, $property);
     }
 
     /**
@@ -93,14 +93,6 @@ class SmartContent extends ComplexContentType
      */
     public function readForPreview($data, PropertyInterface $property, $webspaceKey)
     {
-        if (!empty($data['tags'])) {
-            foreach ($data['tags'] as $tagName) {
-                $resolvedTags[] = $this->tagManager->findByName($tagName)->getId();
-            }
-
-            $data['tags'] = $resolvedTags;
-        }
-
         $this->setData($data, $property);
     }
 
@@ -111,13 +103,8 @@ class SmartContent extends ComplexContentType
     {
         $value = $property->getValue();
 
-        $resolvedTags = array();
         if (!empty($value['tags'])) {
-            foreach ($value['tags'] as $tagName) {
-                $resolvedTags[] = $this->tagManager->findByName($tagName)->getId();
-            }
-
-            $value['tags'] = $resolvedTags;
+            $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
         }
 
         $node->setProperty($property->getName(), json_encode($value));

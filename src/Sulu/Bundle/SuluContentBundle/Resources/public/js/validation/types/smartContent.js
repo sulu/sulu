@@ -20,7 +20,7 @@ define([
 
             subType = {
                 setValue: function(value) {
-                    // TODO set values
+                    App.emit('husky.smart-content.' + options.instanceName + '.external-configs', value.config);
                 },
 
                 getValue: function() {
