@@ -210,7 +210,7 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.parent = {
-                        id: this.sandbox.dom.data('#companyInput', 'id')
+                        id: this.sandbox.dom.data('#company input', 'id')
                     };
 
                     this.sandbox.logger.log('data', data);
