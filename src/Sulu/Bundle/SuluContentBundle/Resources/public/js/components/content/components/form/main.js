@@ -72,7 +72,7 @@ define(['app-config'], function(AppConfig) {
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
-            this.sandbox.dom.attr('#show-in-navigation', 'checked', data.showInNavigation);
+            this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
             if (!!this.options.data.id) {
                 this.initPreview();
             }
@@ -185,17 +185,17 @@ define(['app-config'], function(AppConfig) {
 
             if (this.sandbox.form.validate(this.formId)) {
                 var data = this.sandbox.form.getData(this.formId),
-                    showInNavigation;
+                    navigation;
 
                 if (this.options.id === 'index') {
-                    showInNavigation = true;
+                    navigation = true;
                 } else {
-                    showInNavigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+                    navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
                 }
 
                 this.sandbox.logger.log('data', data);
 
-                this.sandbox.emit('sulu.content.contents.save', data, this.template, showInNavigation);
+                this.sandbox.emit('sulu.content.contents.save', data, this.template, navigation);
             }
         },
 

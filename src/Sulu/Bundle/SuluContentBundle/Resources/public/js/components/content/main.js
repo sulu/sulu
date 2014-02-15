@@ -73,8 +73,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template, showInNavigation) {
-                this.save(data, template, showInNavigation);
+            this.sandbox.on('sulu.content.contents.save', function(data, template, navigation) {
+                this.save(data, template, navigation);
             }, this);
 
             // wait for navigation events
@@ -242,11 +242,11 @@ define([
             });
         },
 
-        save: function(data, template, showInNavigation) {
+        save: function(data, template, navigation) {
             // TODO: show loading icon
             this.content.set(data);
 
-            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, showInNavigation, null, {
+            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
