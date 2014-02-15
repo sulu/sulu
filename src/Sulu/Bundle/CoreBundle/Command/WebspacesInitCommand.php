@@ -105,9 +105,9 @@ class WebspacesInitCommand extends ContainerAwareCommand
         }
     }
 
-    private function setBasicLocalizationProperties(Localization $Localization, NodeInterface $node, $template, $userId)
+    private function setBasicLocalizationProperties(Localization $localization, NodeInterface $node, $template, $userId)
     {
-        $this->properties->setLanguage($Localization->getLocalization());
+        $this->properties->setLanguage($localization->getLocalization());
         $node->setProperty($this->properties->getName('template'), $template);
         $node->setProperty($this->properties->getName('changer'), $userId);
         $node->setProperty($this->properties->getName('changed'), new DateTime());
@@ -118,8 +118,10 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
         $node->setProperty($this->properties->getName('publishedDate'), new DateTime());
 
-        foreach ($Localization->getChildren() as $local) {
-            $this->setBasicLocalizationProperties($local, $node, $template, $userId);
+        if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
+            foreach ($localization->getChildren() as $local) {
+                $this->setBasicLocalizationProperties($local, $node, $template, $userId);
+            }
         }
     }
 
