@@ -35,7 +35,7 @@ class TemplateController extends Controller
         $fireEvent = false;
         $templateIndex = null;
         if ($key === null) {
-            $key = $this->container->getParameter('sulu_content.template.default');
+            $key = $this->container->getParameter('sulu.content.template.default');
             $fireEvent = true;
         }
 
