@@ -151,14 +151,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             'title'
         ), $languageCode, $this->languageNamespace);
 
-        /** @var NodeInterface $node */
-        if ($uuid === null) {
-            // create a new node
-            $node = $root->addNode($path);
+        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state, &$showInNavigation) {
             $node->setProperty($this->properties->getName('creator'), $userId);
             $node->setProperty($this->properties->getName('created'), $dateTime);
-
-            $node->addMixin('sulu:content');
 
             if (!isset($state)) {
                 $state = StructureInterface::STATE_TEST;
@@ -166,8 +161,21 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             if (!isset($showInNavigation)) {
                 $showInNavigation = false;
             }
+        };
+
+        /** @var NodeInterface $node */
+        if ($uuid === null) {
+            // create a new node
+            $node = $root->addNode($path);
+            $newTranslatedNode($node);
+
+            $node->addMixin('sulu:content');
+
         } else {
             $node = $session->getNodeByIdentifier($uuid);
+            if (!$node->hasProperty($this->properties->getName('template'))) {
+                $newTranslatedNode($node);
+            }
 
             $hasSameLanguage = ($languageCode == $this->defaultLanguage);
             $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
@@ -250,7 +258,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                     $userId,
                     $webspaceKey
                 );
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
             }
