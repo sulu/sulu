@@ -1234,12 +1234,13 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($data3->getPublishedDate() > $data2->getPublishedDate());
 
         // change state from PUBLISHED to TEST (exception)
-        $this->setExpectedException('\Sulu\Component\Content\Exception\StateTransitionException');
         $data4 = array(
             'title' => 't2'
         );
         $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid(), null, 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data4->getNodeState());
+        $this->assertNull($data4->getPublishedDate());
+        $this->assertFalse($data4->getPublished());
     }
 
     public function testStateInheritance()

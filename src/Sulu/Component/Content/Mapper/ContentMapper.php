@@ -328,7 +328,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $oldState === StructureInterface::STATE_PUBLISHED &&
                 $state === StructureInterface::STATE_TEST
             ) {
-                throw new StateTransitionException($oldState, $state);
+                $node->setProperty($statePropertyName, $state);
+                $structure->setNodeState($state);
+
+                // set published date to null
+                $node->getProperty($publishedDatePropertyName)->remove();
             }
         }
     }
