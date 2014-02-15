@@ -89,6 +89,10 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function putAction($uuid)
     {
+        if($uuid === 'index'){
+            return $this->putIndex();
+        }
+
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
@@ -115,11 +119,7 @@ class NodeController extends RestController implements ClassResourceInterface
         );
     }
 
-    /**
-     * save action for index page /nodes/index
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function cputIndexAction()
+    private function putIndex()
     {
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
