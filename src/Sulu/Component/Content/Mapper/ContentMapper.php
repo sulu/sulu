@@ -558,6 +558,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $structure = $this->getStructure($templateKey);
 
+        $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
+
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);

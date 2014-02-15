@@ -222,6 +222,17 @@ interface StructureInterface extends \JsonSerializable
     public function setNavigation($showInNavigation);
 
     /**
+     * @param boolean $hasTranslation
+     */
+    public function setHasTranslation($hasTranslation);
+
+    /**
+     * return true if structure translation is valid
+     * @return boolean
+     */
+    public function getHasTranslation();
+
+    /**
      * returns an array of property value pairs
      * @return array
      */

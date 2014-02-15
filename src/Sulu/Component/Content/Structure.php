@@ -128,6 +128,12 @@ abstract class Structure implements StructureInterface
     private $navigation;
 
     /**
+     * structure translation is valid
+     * @var boolean
+     */
+    private $hasTranslation;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -452,6 +458,23 @@ abstract class Structure implements StructureInterface
     public function setNavigation($showInNavigation)
     {
         $this->navigation = $showInNavigation;
+    }
+
+    /**
+     * @param boolean $hasTranslation
+     */
+    public function setHasTranslation($hasTranslation)
+    {
+        $this->hasTranslation = $hasTranslation;
+    }
+
+    /**
+     * return true if structure translation is valid
+     * @return boolean
+     */
+    public function getHasTranslation()
+    {
+        return $this->hasTranslation;
     }
 
     /**
