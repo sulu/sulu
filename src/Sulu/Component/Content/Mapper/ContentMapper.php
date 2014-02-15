@@ -92,7 +92,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 'creator',
                 'state',
                 'template',
-                'showInNavigation',
+                'navigation',
                 'publishedDate'
             ),
             $this->languageNamespace
@@ -192,7 +192,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             );
         }
         if (isset($showInNavigation)) {
-            $node->setProperty($this->properties->getName('showInNavigation'), $showInNavigation);
+            $node->setProperty($this->properties->getName('navigation'), $showInNavigation);
         }
 
         $postSave = array();
@@ -260,8 +260,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setCreated($node->getPropertyValue($this->properties->getName('created')));
         $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
 
-        $structure->setShowInNavigation(
-            $node->getPropertyValueWithDefault($this->properties->getName('showInNavigation'), false)
+        $structure->setNavigation(
+            $node->getPropertyValueWithDefault($this->properties->getName('navigation'), false)
         );
         $structure->setGlobalState(
             $this->getInheritedState($node, $this->properties->getName('state'), $webspaceKey)
@@ -448,7 +448,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $startPage = $this->load($uuid, $webspaceKey, $languageCode);
         $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
         $startPage->setGlobalState(StructureInterface::STATE_PUBLISHED);
-        $startPage->setShowInNavigation(true);
+        $startPage->setNavigation(true);
         return $startPage;
     }
 
@@ -522,8 +522,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 StructureInterface::STATE_TEST
             )
         );
-        $structure->setShowInNavigation(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('showInNavigation'), false)
+        $structure->setNavigation(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('navigation'), false)
         );
         $structure->setGlobalState(
             $this->getInheritedState($contentNode, $this->properties->getName('state'), $webspaceKey)

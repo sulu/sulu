@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle\Command;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Workspace\Localization;
 use Sulu\Component\Workspace\Manager\WorkspaceManagerInterface;
 use Sulu\Component\Workspace\Workspace;
@@ -20,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use \DateTime;
 
 /**
  * Creates default routes in PHPCR for webspaces
@@ -57,7 +59,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 'creator',
                 'state',
                 'template',
-                'showInNavigation',
+                'navigation',
                 'publishedDate'
             ),
             $this->getContainer()->getParameter('sulu.content.language.namespace')
@@ -107,6 +109,14 @@ class WebspacesInitCommand extends ContainerAwareCommand
     {
         $this->properties->setLanguage($Localization);
         $node->setProperty($this->properties->getName('template'), $template);
+        $node->setProperty($this->properties->getName('changer'), $userId);
+        $node->setProperty($this->properties->getName('changed'), new DateTime());
+        $node->setProperty($this->properties->getName('creator'), $userId);
+        $node->setProperty($this->properties->getName('created'), new DateTime());
+
+        $node->setProperty($this->properties->getName('navigation'), true);
+        $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
+        $node->setProperty($this->properties->getName('publishedDate'), new DateTime());
     }
 
     /**

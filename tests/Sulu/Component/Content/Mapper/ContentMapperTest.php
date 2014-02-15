@@ -314,7 +314,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue('sulu_locale:de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue('sulu_locale:de-sulu-template'));
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getPropertyValue('sulu_locale:de-sulu-state'));
-        $this->assertEquals(false, $content->getPropertyValue('sulu_locale:de-sulu-showInNavigation'));
+        $this->assertEquals(false, $content->getPropertyValue('sulu_locale:de-sulu-navigation'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
     }
@@ -340,7 +340,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
         $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
-        $this->assertEquals(false, $content->getShowInNavigation());
+        $this->assertEquals(false, $content->getNavigation());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
@@ -1346,24 +1346,24 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         $route = $root->getNode('cmf/default/routes/news/test');
         $node = $route->getPropertyValue('sulu:content');
 
-        $this->assertTrue($node->getPropertyValue('sulu_locale:de-sulu-showInNavigation'));
-        $this->assertTrue($result->getShowInNavigation());
-        $this->assertTrue($content->getShowInNavigation());
+        $this->assertTrue($node->getPropertyValue('sulu_locale:de-sulu-navigation'));
+        $this->assertTrue($result->getNavigation());
+        $this->assertTrue($content->getNavigation());
 
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid(), null, null, false);
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
-        $this->assertFalse($result->getShowInNavigation());
-        $this->assertFalse($content->getShowInNavigation());
+        $this->assertFalse($result->getNavigation());
+        $this->assertFalse($content->getNavigation());
 
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
-        $this->assertFalse($result->getShowInNavigation());
-        $this->assertFalse($content->getShowInNavigation());
+        $this->assertFalse($result->getNavigation());
+        $this->assertFalse($content->getNavigation());
 
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid(), null, null, true);
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
-        $this->assertTrue($result->getShowInNavigation());
-        $this->assertTrue($content->getShowInNavigation());
+        $this->assertTrue($result->getNavigation());
+        $this->assertTrue($content->getNavigation());
     }
 
     public function testLoadBySql2()

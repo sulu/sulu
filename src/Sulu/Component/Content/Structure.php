@@ -113,7 +113,7 @@ abstract class Structure implements StructureInterface
      * should be shown in navigation or not
      * @var boolean
      */
-    private $showInNavigation;
+    private $navigation;
 
     /**
      * @param $key string
@@ -133,7 +133,7 @@ abstract class Structure implements StructureInterface
         $this->nodeState = StructureInterface::STATE_TEST;
         $this->publishedDate = null;
         // default hide in navigation
-        $this->showInNavigation = false;
+        $this->navigation = false;
     }
 
     /**
@@ -395,17 +395,17 @@ abstract class Structure implements StructureInterface
      * returns true if this node is shown in navigation
      * @return boolean
      */
-    public function getShowInNavigation()
+    public function getNavigation()
     {
-        return $this->showInNavigation;
+        return $this->navigation;
     }
 
     /**
      * @param boolean $showInNavigation
      */
-    public function setShowInNavigation($showInNavigation)
+    public function setNavigation($showInNavigation)
     {
-        $this->showInNavigation = $showInNavigation;
+        $this->navigation = $showInNavigation;
     }
 
     /**
@@ -485,7 +485,7 @@ abstract class Structure implements StructureInterface
             'nodeState' => $this->getNodeState(),
             'globalState' => $this->getNodeState(),
             'published' => $this->getPublished(),
-            'showInNavigation' => $this->getShowInNavigation(),
+            'navigation' => $this->getNavigation(),
             'template' => $this->getKey(),
             'hasSub' => $this->hasChildren,
             'creator' => $this->creator,

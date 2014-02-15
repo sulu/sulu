@@ -192,12 +192,12 @@ interface StructureInterface extends \JsonSerializable
      * returns true if this node is shown in navigation
      * @return boolean
      */
-    public function getShowInNavigation();
+    public function getNavigation();
 
     /**
      * @param boolean $showInNavigation
      */
-    public function setShowInNavigation($showInNavigation);
+    public function setNavigation($showInNavigation);
 
     /**
      * returns an array of property value pairs
