@@ -46,9 +46,12 @@ interface PreviewInterface
      * @param string $property propertyName which was changed
      * @param mixed $data new data
      * @param string|null $template template key
+     * @param string $webspaceKey
+     * @param string $language
+     * @throws PreviewNotFoundException
      * @return \Sulu\Component\Content\StructureInterface
      */
-    public function update($userId, $contentUuid, $property, $data, $template = null);
+    public function update($userId, $contentUuid, $property, $data, $template = null, $webspaceKey, $language);
 
     /**
      * returns pending changes for given user and content
