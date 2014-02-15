@@ -9,15 +9,14 @@
  */
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 
-class LoadDefaultTypes extends AbstractFixture implements FixtureInterface
+class LoadDefaultTypes extends AbstractFixture implements  OrderedFixtureInterface
 {
     /**
      * {@inheritDoc}
@@ -59,7 +58,6 @@ class LoadDefaultTypes extends AbstractFixture implements FixtureInterface
 
         $this->addReference('email.type.work', $emailType2);
 
-
         $addressType1 = new AddressType();
         $addressType1->setId(1);
 
@@ -74,7 +72,6 @@ class LoadDefaultTypes extends AbstractFixture implements FixtureInterface
         $addressType2->setId(2);
         $addressType2->setName('address.work');
         $manager->persist($addressType2);
-
 
         $urlType1 = new UrlType();
         $urlType1->setId(1);
