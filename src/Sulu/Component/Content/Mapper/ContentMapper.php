@@ -514,6 +514,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
 
         $structure = $this->getStructure($templateKey);
 
+        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setCreator($contentNode->getPropertyValue($this->properties->getName('creator')));
         $structure->setChanger($contentNode->getPropertyValue($this->properties->getName('changer')));
         $structure->setCreated($contentNode->getPropertyValue($this->properties->getName('created')));

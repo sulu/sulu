@@ -335,6 +335,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
 
+        $this->assertNotNull($content->getUuid());
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
