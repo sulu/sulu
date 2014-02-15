@@ -17,6 +17,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Workspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -99,6 +100,8 @@ class PortalRouteProvider implements RouteProviderInterface
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
             } catch (ResourceLocatorNotFoundException $rlnfe) {
+                $error = true;
+            } catch (Exception $ex) {
                 $error = true;
             }
             if ($error) {

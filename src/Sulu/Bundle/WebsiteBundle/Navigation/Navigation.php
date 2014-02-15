@@ -39,7 +39,7 @@ class Navigation implements NavigationInterface
      */
     public function getNavigation($parent, $webspace, $language, $depth = 1, $preview = false)
     {
-        $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false);
+        $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true);
 
         return $this->generateNavigation($contents, $preview);
     }
