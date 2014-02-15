@@ -52,6 +52,21 @@ abstract class WebsiteController extends Controller
         return $response;
     }
 
+    protected function renderError($template, $parameters, $code = 404)
+    {
+        $content = $this->renderView(
+            $template,
+            $parameters
+        );
+
+        $response = new Response();
+        $response->setStatusCode($code);
+
+        $response->setContent($content);
+
+        return $response;
+    }
+
     protected function renderBlock($template, $block, $attributes = array())
     {
         $twig = $this->get('twig');
