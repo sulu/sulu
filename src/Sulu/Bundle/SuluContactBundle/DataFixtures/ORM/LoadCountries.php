@@ -9,14 +9,11 @@
  */
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Country;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 
-class LoadCountries implements FixtureInterface
+class LoadCountries implements FixtureInterface, OrderedFixtureInterface
 {
     /**
      * {@inheritDoc}
@@ -33,7 +30,7 @@ class LoadCountries implements FixtureInterface
         $doc->load($file);
 
         $xpath = new DOMXpath($doc);
-        $elements = $xpath->query("/Countries/Country");
+        $elements = $xpath->query('/Countries/Country');
 
         if (!is_null($elements)) {
             /** @var $element DOMNode */
@@ -66,7 +63,7 @@ class LoadCountries implements FixtureInterface
      */
     public function getOrder()
     {
-        return 2;
+        return 1;
     }
 
 }
