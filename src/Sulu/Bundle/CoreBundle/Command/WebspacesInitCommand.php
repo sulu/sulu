@@ -107,7 +107,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
     private function setBasicLocalizationProperties(Localization $Localization, NodeInterface $node, $template, $userId)
     {
-        $this->properties->setLanguage($Localization);
+        $this->properties->setLanguage($Localization->getLocalization());
         $node->setProperty($this->properties->getName('template'), $template);
         $node->setProperty($this->properties->getName('changer'), $userId);
         $node->setProperty($this->properties->getName('changed'), new DateTime());
@@ -117,6 +117,10 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $node->setProperty($this->properties->getName('navigation'), true);
         $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
         $node->setProperty($this->properties->getName('publishedDate'), new DateTime());
+
+        foreach ($Localization->getChildren() as $local) {
+            $this->setBasicLocalizationProperties($local, $node, $template, $userId);
+        }
     }
 
     /**

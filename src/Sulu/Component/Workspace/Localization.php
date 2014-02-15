@@ -140,6 +140,6 @@ class Localization
      */
     public function __toString()
     {
-        return $this->language . ($this->country !== '' ? '_' . $this->country : '');
+        return $this->getLocalization();
     }
 }
