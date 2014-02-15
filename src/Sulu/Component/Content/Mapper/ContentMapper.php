@@ -384,16 +384,24 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param int $depth
      * @param bool $flat
      *
+     * @param bool $ignoreExceptions
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $webspaceKey, $languageCode, $depth = 1, $flat = true)
+    public function loadByParent(
+        $uuid,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $ignoreExceptions = false
+    )
     {
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
         } else {
             $root = $this->getContentNode($webspaceKey);
         }
-        return $this->loadByParentNode($root, $webspaceKey, $languageCode, $depth, $flat);
+        return $this->loadByParentNode($root, $webspaceKey, $languageCode, $depth, $flat, $ignoreExceptions);
     }
 
     /**
@@ -403,22 +411,44 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param $languageCode
      * @param int $depth
      * @param bool $flat
+     * @param bool $ignoreExceptions
+     * @throws \Exception
      * @return array
      */
-    private function loadByParentNode(NodeInterface $parent, $webspaceKey, $languageCode, $depth = 1, $flat = true)
+    private function loadByParentNode(
+        NodeInterface $parent,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $ignoreExceptions = false
+    )
     {
         $results = array();
 
         /** @var NodeInterface $node */
         foreach ($parent->getNodes() as $node) {
-            $result = $this->loadByNode($node, $languageCode, $webspaceKey);
-            $results[] = $result;
-            if ($depth > 1) {
-                $children = $this->loadByParentNode($node, $webspaceKey, $languageCode, $depth - 1, $flat);
-                if ($flat) {
-                    $results = array_merge($results, $children);
-                } else {
-                    $result->setChildren($children);
+            try {
+                $result = $this->loadByNode($node, $languageCode, $webspaceKey);
+                $results[] = $result;
+                if ($depth > 1) {
+                    $children = $this->loadByParentNode(
+                        $node,
+                        $webspaceKey,
+                        $languageCode,
+                        $depth - 1,
+                        $flat,
+                        $ignoreExceptions
+                    );
+                    if ($flat) {
+                        $results = array_merge($results, $children);
+                    } else {
+                        $result->setChildren($children);
+                    }
+                }
+            } catch (Exception $ex) {
+                if (!$ignoreExceptions) {
+                    throw $ex;
                 }
             }
         }

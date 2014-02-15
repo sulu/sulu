@@ -76,9 +76,17 @@ interface ContentMapperInterface
      * @param int $depth
      * @param bool $flat
      *
+     * @param bool $ignoreExceptions
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $webspaceKey, $languageCode, $depth = 1, $flat = true);
+    public function loadByParent(
+        $uuid,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $ignoreExceptions = false
+    );
 
     /**
      * returns the data from the given id
