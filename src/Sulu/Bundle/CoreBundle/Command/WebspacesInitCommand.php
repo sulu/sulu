@@ -107,7 +107,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
     private function setBasicLocalizationProperties(Localization $localization, NodeInterface $node, $template, $userId)
     {
-        $this->properties->setLanguage($localization->getLocalization());
+        $this->properties->setLanguage(str_replace('-', '_', $localization->getLocalization()));
         $node->setProperty($this->properties->getName('template'), $template);
         $node->setProperty($this->properties->getName('changer'), $userId);
         $node->setProperty($this->properties->getName('changed'), new DateTime());

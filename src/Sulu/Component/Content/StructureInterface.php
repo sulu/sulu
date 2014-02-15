@@ -22,6 +22,28 @@ interface StructureInterface extends \JsonSerializable
     const STATE_PUBLISHED = 2;
 
     /**
+     * @param string $language
+     */
+    public function setLanguage($language);
+
+    /**
+     * returns language of node
+     * @return string
+     */
+    public function getLanguage();
+
+    /**
+     * @param string $webspace
+     */
+    public function setWebspace($webspace);
+
+    /**
+     * returns webspace of node
+     * @return string
+     */
+    public function getWebspace();
+
+    /**
      * id of node
      * @return int
      */

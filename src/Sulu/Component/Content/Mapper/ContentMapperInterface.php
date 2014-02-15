@@ -30,7 +30,7 @@ interface ContentMapperInterface
      * @param string $parentUuid uuid of parent node
      * @param int $state state of node
      * @param string $showInNavigation
-     * 
+     *
      * @return StructureInterface
      */
     public function save(
