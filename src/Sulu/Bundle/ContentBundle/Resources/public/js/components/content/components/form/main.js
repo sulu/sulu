@@ -306,7 +306,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         openSplitScreen: function() {
-            window.open('/admin/content/split-screen/' + this.options.data.id);
+            window.open('/admin/content/split-screen/' + this.options.webspace + '/' + this.options.language + '/' + this.options.data.id);
         },
 
         /**

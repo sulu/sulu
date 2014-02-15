@@ -12,11 +12,11 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     var templates = {
-            skeleton: function(id, url) {
+            skeleton: function(id, url, webspace, language) {
                 return [
                     '<div id="top-toolbar"></div>',
                     '<div id="split-screen">',
-                    '<div id="form" class="grid" data-aura-component="content@sulucontent" data-aura-id="', id, '" data-aura-display="form"></div>',
+                    '<div id="form" class="grid" data-aura-component="content@sulucontent" data-aura-id="', id, '" data-aura-webspace="', webspace, '" data-aura-language="', language, '" data-aura-display="form"></div>',
                     '<div id="preview"><iframe src="', url, '/admin/content/preview/', id, '" width="1024" height="768"></iframe></div>',
                     '</div>'
                 ].join('');
@@ -81,13 +81,13 @@ define(['app-config'], function(AppConfig) {
                 }
             }, this);
 
-            this.sandbox.on('sulu.preview.deleted', function(id) {
+            this.sandbox.on('sulu.preview.deleted', function() {
                 window.close();
             }, this);
         },
 
         render: function() {
-            this.html(templates.skeleton(this.options.id, this.options.url));
+            this.html(templates.skeleton(this.options.id, this.options.url, this.options.webspace, this.options.language));
 
             var formWidth = this.sandbox.dom.find('#form').outerWidth() + 10,
                 mainWidth = this.sandbox.dom.find('#split-screen').outerWidth();
