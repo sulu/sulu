@@ -109,9 +109,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param bool $partialUpdate ignore missing property
      * @param string $uuid uuid of node if exists
      * @param string $parentUuid uuid of parent node
-     * @param null $state state of node
+     * @param int $state state of node
+     * @param string $showInNavigation
      *
-     * @param null $showInNavigation
      * @return StructureInterface
      */
     public function save(
