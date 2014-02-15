@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Bundle\WebsiteBundle\Navigation\Navigation;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,5 +57,13 @@ abstract class WebsiteController extends Controller
         $twig = $this->get('twig');
         $template = $twig->loadTemplate($template);
         return $template->renderBlock($block, $attributes);
+    }
+
+    protected function getMainNavigation(StructureInterface $structure, $depth = 1, $preview = false)
+    {
+        /** @var Navigation $navigation */
+        $navigation = $this->get('sulu_website.navigation');
+
+        return $navigation->getMainNavigation($structure->getWebspace(), $structure->getLanguage(), $depth, $preview);
     }
 } 
