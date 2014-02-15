@@ -53,11 +53,17 @@ class TemplateController extends Controller
         );
     }
 
-    public function splitScreenAction($contentUuid)
+    public function splitScreenAction($webspace, $language, $contentUuid)
     {
         return $this->render(
             'SuluContentBundle:Template:split-screen.html.twig',
-            $this->getTemplateVarsSplitScreen($contentUuid)
+            array_merge(
+                $this->getTemplateVarsSplitScreen($contentUuid),
+                array(
+                    'webspace'=> $webspace,
+                    'language' => $language
+                )
+            )
         );
     }
 
