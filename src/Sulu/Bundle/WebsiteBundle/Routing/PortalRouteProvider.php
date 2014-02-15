@@ -89,7 +89,7 @@ class PortalRouteProvider implements RouteProviderInterface
                     $portal->getWorkspace()->getKey(),
                     $language
                 );
-                if ($content->getGlobalState() === StructureInterface::STATE_TEST) {
+                if ($content->getGlobalState() === StructureInterface::STATE_TEST || !$content->getHasTranslation()) {
                     $error = true;
                 } else {
                     $route = new Route($request->getRequestUri(), array(
@@ -100,8 +100,6 @@ class PortalRouteProvider implements RouteProviderInterface
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
             } catch (ResourceLocatorNotFoundException $rlnfe) {
-                $error = true;
-            } catch (Exception $ex) {
                 $error = true;
             }
             if ($error) {
