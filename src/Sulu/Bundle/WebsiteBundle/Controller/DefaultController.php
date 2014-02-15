@@ -43,17 +43,13 @@ class DefaultController extends WebsiteController
 
     public function error404Action()
     {
-        $content = $this->renderView(
+        return $this->renderError(
             'ClientWebsiteBundle:Website:error404.html.twig',
-            array('path' => $this->getRequest()->get('path'))
+            array(
+                'path' => $this->getRequest()->get('path'),
+                'navigation' => array()
+            )
         );
-
-        $response = new Response();
-        $response->setStatusCode(404);
-
-        $response->setContent($content);
-
-        return $response;
     }
 
     public function redirectAction()
