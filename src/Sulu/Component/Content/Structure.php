@@ -20,16 +20,16 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 abstract class Structure implements StructureInterface
 {
     /**
-     * webspace of node
+     * webspaceKey of node
      * @var string
      */
-    private $webspace;
+    private $webspaceKey;
 
     /**
-     * language of node
+     * languageCode of node
      * @var string
      */
-    private $language;
+    private $languageCode;
 
     /**
      * unique key of template
@@ -160,35 +160,35 @@ abstract class Structure implements StructureInterface
     /**
      * @param string $language
      */
-    public function setLanguage($language)
+    public function setLanguageCode($language)
     {
-        $this->language = $language;
+        $this->languageCode = $language;
     }
 
     /**
      * returns language of node
      * @return string
      */
-    public function getLanguage()
+    public function getLanguageCode()
     {
-        return $this->language;
+        return $this->languageCode;
     }
 
     /**
      * @param string $webspace
      */
-    public function setWebspace($webspace)
+    public function setWebspaceKey($webspace)
     {
-        $this->webspace = $webspace;
+        $this->webspaceKey = $webspace;
     }
 
     /**
      * returns webspace of node
      * @return string
      */
-    public function getWebspace()
+    public function getWebspaceKey()
     {
-        return $this->webspace;
+        return $this->webspaceKey;
     }
 
     /**

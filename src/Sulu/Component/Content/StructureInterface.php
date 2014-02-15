@@ -24,24 +24,24 @@ interface StructureInterface extends \JsonSerializable
     /**
      * @param string $language
      */
-    public function setLanguage($language);
+    public function setLanguageCode($language);
 
     /**
      * returns language of node
      * @return string
      */
-    public function getLanguage();
+    public function getLanguageCode();
 
     /**
      * @param string $webspace
      */
-    public function setWebspace($webspace);
+    public function setWebspaceKey($webspace);
 
     /**
      * returns webspace of node
      * @return string
      */
-    public function getWebspace();
+    public function getWebspaceKey();
 
     /**
      * id of node

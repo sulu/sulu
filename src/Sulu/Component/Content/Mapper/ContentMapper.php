@@ -255,8 +255,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-        $structure->setWebspace($webspaceKey);
-        $structure->setLanguage($languageCode);
+        $structure->setWebspaceKey($webspaceKey);
+        $structure->setLanguageCode($languageCode);
         $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
         $structure->setChanger($node->getPropertyValue($this->properties->getName('changer')));
         $structure->setCreated($node->getPropertyValue($this->properties->getName('created')));
@@ -517,8 +517,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure = $this->getStructure($templateKey);
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setWebspace($webspaceKey);
-        $structure->setLanguage($languageCode);
+        $structure->setWebspaceKey($webspaceKey);
+        $structure->setLanguageCode($languageCode);
         $structure->setCreator($contentNode->getPropertyValue($this->properties->getName('creator')));
         $structure->setChanger($contentNode->getPropertyValue($this->properties->getName('changer')));
         $structure->setCreated($contentNode->getPropertyValue($this->properties->getName('created')));
