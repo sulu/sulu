@@ -230,9 +230,7 @@ define([
         changeState: function(state) {
             this.sandbox.emit('sulu.content.contents.state.change');
 
-            // TODO select template
-            this.content.fullSave(null, this.options.webspace, this.options.language, null, state, null, null, {
-                // on success save contents id
+            this.content.stateSave(this.options.webspace, this.options.language, state, null, {
                 success: function() {
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                 }.bind(this),
