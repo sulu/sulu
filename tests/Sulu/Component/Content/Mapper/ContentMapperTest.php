@@ -111,7 +111,7 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = $this->getContainerMock();
 
-        $this->mapper = new ContentMapper('de', 'sulu_locale');
+        $this->mapper = new ContentMapper('de', 'default_template', 'sulu_locale');
         $this->mapper->setContainer($this->container);
 
         $this->prepareSession();

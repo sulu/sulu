@@ -38,6 +38,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     private $defaultLanguage;
 
     /**
+     * default template
+     * @var string
+     */
+    private $defaultTemplate;
+
+    /**
      * TODO abstract with cleanup from RLPStrategy
      * replacers for cleanup
      * @var array
@@ -75,9 +81,10 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     private $properties;
 
 
-    public function __construct($defaultLanguage, $languageNamespace)
+    public function __construct($defaultLanguage, $defaultTemplate, $languageNamespace)
     {
         $this->defaultLanguage = $defaultLanguage;
+        $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
 
         // properties
@@ -539,17 +546,17 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         // create translated properties
         $this->properties->setLanguage($languageCode);
 
-        $templateKey = $contentNode->getPropertyValue($this->properties->getName('template'));
+        $templateKey = $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate);
 
         $structure = $this->getStructure($templateKey);
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
-        $structure->setCreator($contentNode->getPropertyValue($this->properties->getName('creator')));
-        $structure->setChanger($contentNode->getPropertyValue($this->properties->getName('changer')));
-        $structure->setCreated($contentNode->getPropertyValue($this->properties->getName('created')));
-        $structure->setChanged($contentNode->getPropertyValue($this->properties->getName('changed')));
+        $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
+        $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
+        $structure->setCreated($contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime()));
+        $structure->setChanged($contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime()));
         $structure->setHasChildren($contentNode->hasNodes());
 
         $structure->setNodeState(
