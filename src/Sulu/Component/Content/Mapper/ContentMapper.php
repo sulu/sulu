@@ -15,14 +15,11 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\StateNotFoundException;
-use Sulu\Component\Content\Exception\StateTransitionException;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
@@ -446,7 +443,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                         $result->setChildren($children);
                     }
                 }
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 if (!$ignoreExceptions) {
                     throw $ex;
                 }
