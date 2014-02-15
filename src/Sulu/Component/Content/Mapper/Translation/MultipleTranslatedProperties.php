@@ -14,6 +14,10 @@ namespace Sulu\Component\Content\Mapper\Translation;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 
+/**
+ * enables to translate multiple properties
+ * @package Sulu\Component\Content\Mapper\Translation
+ */
 class MultipleTranslatedProperties
 {
     /**
