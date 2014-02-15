@@ -110,18 +110,28 @@ class Preview implements PreviewInterface
      * @param string $property propertyName which was changed
      * @param mixed $data new data
      * @param string|null $template template key
-     * @return \Sulu\Component\Content\StructureInterface
+     * @param string $webspaceKey
+     * @param string $language
      * @throws PreviewNotFoundException
+     * @return \Sulu\Component\Content\StructureInterface
      */
-    public function update($userId, $contentUuid, $property, $data, $template = null)
+    public function update($userId, $contentUuid, $property, $data, $template = null, $webspaceKey, $language)
     {
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
 
         if ($content != false) {
             if ($template !== null && $content->getKey() !== $template) {
-                $content = $this->updateTemplate($content, $template);
+                $content = $this->updateTemplate($content, $template, $webspaceKey, $language);
                 $this->addReload($userId, $contentUuid);
+            }
+
+            if ($webspaceKey !== $content->getWebspaceKey()) {
+                $content->setWebspaceKey($webspaceKey);
+            }
+
+            if ($language !== $content->getLanguageCode()) {
+                $content->setLanguageCode($language);
             }
 
             $this->setValue($content, $property, $data);
@@ -140,14 +150,18 @@ class Preview implements PreviewInterface
 
     /**
      * @param StructureInterface $content
-     * @param $template
+     * @param string $template
+     * @param string $webspaceKey
+     * @param string $language
      *
      * @return StructureInterface
      */
-    private function updateTemplate(StructureInterface $content, $template)
+    private function updateTemplate(StructureInterface $content, $template, $webspaceKey, $language)
     {
         /** @var StructureInterface $newContent */
         $newContent = $this->structureManager->getStructure($template);
+        $newContent->setWebspaceKey($webspaceKey);
+        $newContent->setLanguageCode($language);
         /** @var PropertyInterface $property */
         foreach ($newContent->getProperties() as $property) {
             if ($content->hasProperty($property->getName())) {
