@@ -72,9 +72,11 @@ class Navigation implements NavigationInterface
             if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
                 $children = $this->generateNavigation($content->getChildren(), $preview);
             }
-            $result[] = new NavigationItem(
-                $content->title, $content->title, $content->url, $children, $content->getUuid()
-            );
+            if ($preview || ($content->getPublished() && $content->getNavigation() !== false)) {
+                $result[] = new NavigationItem(
+                    $content->title, $content->title, $content->url, $children, $content->getUuid()
+                );
+            }
         }
 
         return $result;

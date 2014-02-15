@@ -64,6 +64,6 @@ abstract class WebsiteController extends Controller
         /** @var Navigation $navigation */
         $navigation = $this->get('sulu_website.navigation');
 
-        return $navigation->getMainNavigation($structure->getWebspace(), $structure->getLanguage(), $depth, $preview);
+        return $navigation->getMainNavigation($structure->getWebspaceKey(), $structure->getLanguageCode(), $depth, $preview);
     }
 } 
