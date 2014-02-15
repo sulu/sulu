@@ -96,7 +96,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
-        $showInNavigation = $this->getRequest()->get('showInNavigation');
+        $navigation = $this->getRequest()->get('navigation');
         $state = $this->getRequest()->get('state');
         if ($state !== null) {
             $state = intval($state);
@@ -111,7 +111,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $uuid,
             null,   // parentUuid
             $state,
-            $showInNavigation
+            $navigation
         );
 
         return $this->handleView(
@@ -152,7 +152,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
-        $showInNavigation = $this->getRequest()->get('showInNavigation');
+        $navigation = $this->getRequest()->get('navigation');
         $parent = $this->getRequest()->get('parent');
         $data = $this->getRequest()->request->all();
 
@@ -164,7 +164,7 @@ class NodeController extends RestController implements ClassResourceInterface
             null, // uuid
             $parent,
             null, // state
-            $showInNavigation
+            $navigation
         );
 
         return $this->handleView(
