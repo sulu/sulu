@@ -28,9 +28,9 @@ interface ContentMapperInterface
      * @param bool $partialUpdate ignore missing property
      * @param string $uuid uuid of node if exists
      * @param string $parentUuid uuid of parent node
-     * @param null $state state of node
+     * @param int $state state of node
+     * @param string $showInNavigation
      *
-     * @param null $showInNavigation
      * @return StructureInterface
      */
     public function save(
@@ -76,9 +76,17 @@ interface ContentMapperInterface
      * @param int $depth
      * @param bool $flat
      *
+     * @param bool $ignoreExceptions
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $webspaceKey, $languageCode, $depth = 1, $flat = true);
+    public function loadByParent(
+        $uuid,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $ignoreExceptions = false
+    );
 
     /**
      * returns the data from the given id

@@ -20,6 +20,18 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 abstract class Structure implements StructureInterface
 {
     /**
+     * webspaceKey of node
+     * @var string
+     */
+    private $webspaceKey;
+
+    /**
+     * languageCode of node
+     * @var string
+     */
+    private $languageCode;
+
+    /**
      * unique key of template
      * @var string
      */
@@ -104,10 +116,22 @@ abstract class Structure implements StructureInterface
     private $globalState;
 
     /**
+     * first published
+     * @var DateTime
+     */
+    private $published;
+
+    /**
      * should be shown in navigation or not
      * @var boolean
      */
-    private $showInNavigation;
+    private $navigation;
+
+    /**
+     * structure translation is valid
+     * @var boolean
+     */
+    private $hasTranslation;
 
     /**
      * @param $key string
@@ -125,8 +149,9 @@ abstract class Structure implements StructureInterface
 
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
+        $this->published = null;
         // default hide in navigation
-        $this->showInNavigation = false;
+        $this->navigation = false;
     }
 
     /**
@@ -136,6 +161,40 @@ abstract class Structure implements StructureInterface
     protected function add(PropertyInterface $property)
     {
         $this->properties[$property->getName()] = $property;
+    }
+
+    /**
+     * @param string $language
+     */
+    public function setLanguageCode($language)
+    {
+        $this->languageCode = $language;
+    }
+
+    /**
+     * returns language of node
+     * @return string
+     */
+    public function getLanguageCode()
+    {
+        return $this->languageCode;
+    }
+
+    /**
+     * @param string $webspace
+     */
+    public function setWebspaceKey($webspace)
+    {
+        $this->webspaceKey = $webspace;
+    }
+
+    /**
+     * returns webspace of node
+     * @return string
+     */
+    public function getWebspaceKey()
+    {
+        return $this->webspaceKey;
     }
 
     /**
@@ -344,7 +403,7 @@ abstract class Structure implements StructureInterface
      * returns true if state of site is "published"
      * @return boolean
      */
-    public function getPublished()
+    public function getPublishedState()
     {
         return ($this->nodeState === StructureInterface::STATE_PUBLISHED);
     }
@@ -368,20 +427,54 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * @param \DateTime $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+    }
+
+    /**
+     * returns first published date
+     * @return \DateTime
+     */
+    public function getPublished()
+    {
+        return $this->published;
+    }
+
+    /**
      * returns true if this node is shown in navigation
      * @return boolean
      */
-    public function getShowInNavigation()
+    public function getNavigation()
     {
-        return $this->showInNavigation;
+        return $this->navigation;
     }
 
     /**
      * @param boolean $showInNavigation
      */
-    public function setShowInNavigation($showInNavigation)
+    public function setNavigation($showInNavigation)
     {
-        $this->showInNavigation = $showInNavigation;
+        $this->navigation = $showInNavigation;
+    }
+
+    /**
+     * @param boolean $hasTranslation
+     */
+    public function setHasTranslation($hasTranslation)
+    {
+        $this->hasTranslation = $hasTranslation;
+    }
+
+    /**
+     * return true if structure translation is valid
+     * @return boolean
+     */
+    public function getHasTranslation()
+    {
+        return $this->hasTranslation;
     }
 
     /**
@@ -459,9 +552,10 @@ abstract class Structure implements StructureInterface
         $result = array(
             'id' => $this->uuid,
             'nodeState' => $this->getNodeState(),
-            'globalState' => $this->getNodeState(),
             'published' => $this->getPublished(),
-            'showInNavigation' => $this->getShowInNavigation(),
+            'globalState' => $this->getNodeState(),
+            'publishedState' => $this->getPublishedState(),
+            'navigation' => $this->getNavigation(),
             'template' => $this->getKey(),
             'hasSub' => $this->hasChildren,
             'creator' => $this->creator,

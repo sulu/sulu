@@ -10,17 +10,16 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\StateNotFoundException;
-use Sulu\Component\Content\Exception\StateTransitionException;
+use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
@@ -37,6 +36,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @var string
      */
     private $defaultLanguage;
+
+    /**
+     * default template
+     * @var string
+     */
+    private $defaultTemplate;
 
     /**
      * TODO abstract with cleanup from RLPStrategy
@@ -73,24 +78,29 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         StructureInterface::STATE_TEST
     );
 
-    /**
-     * @var PropertyInterface
-     */
-    private $showInNavigationProperty;
+    private $properties;
 
-    /**
-     * @var PropertyInterface
-     */
-    private $stateProperty;
 
-    public function __construct($defaultLanguage, $languageNamespace)
+    public function __construct($defaultLanguage, $defaultTemplate, $languageNamespace)
     {
         $this->defaultLanguage = $defaultLanguage;
+        $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
 
-        // init show in navigation property
-        $this->showInNavigationProperty = new Property('sulu-showInNavigation', 'none');
-        $this->stateProperty = new Property('sulu-state', 'none');
+        // properties
+        $this->properties = new MultipleTranslatedProperties(
+            array(
+                'changer',
+                'changed',
+                'created',
+                'creator',
+                'state',
+                'template',
+                'navigation',
+                'published'
+            ),
+            $this->languageNamespace
+        );
     }
 
     /**
@@ -103,9 +113,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param bool $partialUpdate ignore missing property
      * @param string $uuid uuid of node if exists
      * @param string $parentUuid uuid of parent node
-     * @param null $state state of node
+     * @param int $state state of node
+     * @param string $showInNavigation
      *
-     * @param null $showInNavigation
      * @return StructureInterface
      */
     public function save(
@@ -121,7 +131,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $showInNavigation = null
     )
     {
-        // TODO localize
+        // create translated properties
+        $this->properties->setLanguage($languageCode);
+
         $structure = $this->getStructure($templateKey);
         $session = $this->getSession();
 
@@ -139,14 +151,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             'title'
         ), $languageCode, $this->languageNamespace);
 
-        /** @var NodeInterface $node */
-        if ($uuid === null) {
-            // create a new node
-            $node = $root->addNode($path);
-            $node->setProperty('sulu:creator', $userId);
-            $node->setProperty('sulu:created', $dateTime);
-
-            $node->addMixin('sulu:content');
+        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state, &$showInNavigation) {
+            $node->setProperty($this->properties->getName('creator'), $userId);
+            $node->setProperty($this->properties->getName('created'), $dateTime);
 
             if (!isset($state)) {
                 $state = StructureInterface::STATE_TEST;
@@ -154,8 +161,21 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             if (!isset($showInNavigation)) {
                 $showInNavigation = false;
             }
+        };
+
+        /** @var NodeInterface $node */
+        if ($uuid === null) {
+            // create a new node
+            $node = $root->addNode($path);
+            $newTranslatedNode($node);
+
+            $node->addMixin('sulu:content');
+
         } else {
             $node = $session->getNodeByIdentifier($uuid);
+            if (!$node->hasProperty($this->properties->getName('template'))) {
+                $newTranslatedNode($node);
+            }
 
             $hasSameLanguage = ($languageCode == $this->defaultLanguage);
             $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
@@ -167,28 +187,24 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 // FIXME refresh session here
             }
         }
-        $node->setProperty('sulu:template', $templateKey);
+        $node->setProperty($this->properties->getName('template'), $templateKey);
 
-        $node->setProperty('sulu:changer', $userId);
-        $node->setProperty('sulu:changed', $dateTime);
+        $node->setProperty($this->properties->getName('changer'), $userId);
+        $node->setProperty($this->properties->getName('changed'), $dateTime);
 
         // do not state transition for root (contents) node
         $contentRootNode = $this->getContentNode($webspaceKey);
         if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
-            $translatedStateProperty = new TranslatedProperty(
-                $this->stateProperty,
-                $languageCode,
-                $this->languageNamespace
+            $this->changeState(
+                $node,
+                $state,
+                $structure,
+                $this->properties->getName('state'),
+                $this->properties->getName('published')
             );
-            $this->changeState($node, $state, $structure, $translatedStateProperty->getName());
         }
         if (isset($showInNavigation)) {
-            $translatedShowInNavigationProperty = new TranslatedProperty(
-                $this->showInNavigationProperty,
-                $languageCode,
-                $this->languageNamespace
-            );
-            $node->setProperty($translatedShowInNavigationProperty->getName(), $showInNavigation);
+            $node->setProperty($this->properties->getName('navigation'), $showInNavigation);
         }
 
         $postSave = array();
@@ -252,7 +268,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                     $languageCode,
                     null
                 );
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
             }
@@ -261,26 +277,22 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-        $structure->setCreator($node->getPropertyValue('sulu:creator'));
-        $structure->setChanger($node->getPropertyValue('sulu:changer'));
-        $structure->setCreated($node->getPropertyValue('sulu:created'));
-        $structure->setChanged($node->getPropertyValue('sulu:changed'));
+        $structure->setWebspaceKey($webspaceKey);
+        $structure->setLanguageCode($languageCode);
+        $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
+        $structure->setChanger($node->getPropertyValue($this->properties->getName('changer')));
+        $structure->setCreated($node->getPropertyValue($this->properties->getName('created')));
+        $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
 
-        $translatedShowInNavigationProperty = new TranslatedProperty(
-            $this->showInNavigationProperty,
-            $languageCode,
-            $this->languageNamespace
+        $structure->setNavigation(
+            $node->getPropertyValueWithDefault($this->properties->getName('navigation'), false)
         );
-        $structure->setShowInNavigation(
-            $node->getPropertyValueWithDefault($translatedShowInNavigationProperty->getName(), false)
+        $structure->setGlobalState(
+            $this->getInheritedState($node, $this->properties->getName('state'), $webspaceKey)
         );
-
-        $translatedStateProperty = new TranslatedProperty(
-            $this->stateProperty,
-            $languageCode,
-            $this->languageNamespace
+        $structure->setPublished(
+            $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
-        $structure->setGlobalState($this->getInheritedState($node, $translatedStateProperty->getName(), $webspaceKey));
 
         return $structure;
     }
@@ -291,11 +303,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param int $state new state
      * @param \Sulu\Component\Content\StructureInterface $structure
      * @param string $statePropertyName
+     * @param string $publishedPropertyName
      *
      * @throws \Sulu\Component\Content\Exception\StateTransitionException
      * @throws \Sulu\Component\Content\Exception\StateNotFoundException
      */
-    private function changeState(NodeInterface $node, $state, StructureInterface $structure, $statePropertyName)
+    private function changeState(
+        NodeInterface $node,
+        $state,
+        StructureInterface $structure,
+        $statePropertyName,
+        $publishedPropertyName
+    )
     {
         if (!in_array($state, $this->states)) {
             throw new StateNotFoundException($state);
@@ -305,6 +324,11 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         if (!$node->hasProperty($statePropertyName)) {
             $node->setProperty($statePropertyName, $state);
             $structure->setNodeState($state);
+
+            // published => set only once
+            if ($state === StructureInterface::STATE_PUBLISHED && !$node->hasProperty($publishedPropertyName)) {
+                $node->setProperty($publishedPropertyName, new DateTime());
+            }
         } else {
             $oldState = $node->getPropertyValue($statePropertyName);
 
@@ -318,12 +342,21 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             ) {
                 $node->setProperty($statePropertyName, $state);
                 $structure->setNodeState($state);
+
+                // set only once
+                if (!$node->hasProperty($publishedPropertyName)) {
+                    $node->setProperty($publishedPropertyName, new DateTime());
+                }
             } elseif (
                 // from published to test
                 $oldState === StructureInterface::STATE_PUBLISHED &&
                 $state === StructureInterface::STATE_TEST
             ) {
-                throw new StateTransitionException($oldState, $state);
+                $node->setProperty($statePropertyName, $state);
+                $structure->setNodeState($state);
+
+                // set published date to null
+                $node->getProperty($publishedPropertyName)->remove();
             }
         }
     }
@@ -373,16 +406,24 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param int $depth
      * @param bool $flat
      *
+     * @param bool $ignoreExceptions
      * @return StructureInterface[]
      */
-    public function loadByParent($uuid, $webspaceKey, $languageCode, $depth = 1, $flat = true)
+    public function loadByParent(
+        $uuid,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $ignoreExceptions = false
+    )
     {
         if ($uuid != null) {
             $root = $this->getSession()->getNodeByIdentifier($uuid);
         } else {
             $root = $this->getContentNode($webspaceKey);
         }
-        return $this->loadByParentNode($root, $webspaceKey, $languageCode, $depth, $flat);
+        return $this->loadByParentNode($root, $webspaceKey, $languageCode, $depth, $flat, $ignoreExceptions);
     }
 
     /**
@@ -392,22 +433,44 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param $languageCode
      * @param int $depth
      * @param bool $flat
+     * @param bool $ignoreExceptions
+     * @throws \Exception
      * @return array
      */
-    private function loadByParentNode(NodeInterface $parent, $webspaceKey, $languageCode, $depth = 1, $flat = true)
+    private function loadByParentNode(
+        NodeInterface $parent,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $ignoreExceptions = false
+    )
     {
         $results = array();
 
         /** @var NodeInterface $node */
         foreach ($parent->getNodes() as $node) {
-            $result = $this->loadByNode($node, $languageCode, $webspaceKey);
-            $results[] = $result;
-            if ($depth > 1) {
-                $children = $this->loadByParentNode($node, $webspaceKey, $languageCode, $depth - 1, $flat);
-                if ($flat) {
-                    $results = array_merge($results, $children);
-                } else {
-                    $result->setChildren($children);
+            try {
+                $result = $this->loadByNode($node, $languageCode, $webspaceKey);
+                $results[] = $result;
+                if ($depth === null || $depth > 1) {
+                    $children = $this->loadByParentNode(
+                        $node,
+                        $webspaceKey,
+                        $languageCode,
+                        $depth !== null ? $depth - 1 : null,
+                        $flat,
+                        $ignoreExceptions
+                    );
+                    if ($flat) {
+                        $results = array_merge($results, $children);
+                    } else {
+                        $result->setChildren($children);
+                    }
+                }
+            } catch (\Exception $ex) {
+                if (!$ignoreExceptions) {
+                    throw $ex;
                 }
             }
         }
@@ -443,7 +506,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $startPage = $this->load($uuid, $webspaceKey, $languageCode);
         $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
         $startPage->setGlobalState(StructureInterface::STATE_PUBLISHED);
-        $startPage->setShowInNavigation(true);
+        $startPage->setNavigation(true);
         return $startPage;
     }
 
@@ -498,39 +561,38 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     private function loadByNode(NodeInterface $contentNode, $languageCode, $webspaceKey)
     {
-        $templateKey = $contentNode->getPropertyValue('sulu:template');
+        // create translated properties
+        $this->properties->setLanguage($languageCode);
+
+        $templateKey = $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate);
 
         $structure = $this->getStructure($templateKey);
 
-        $translatedStateProperty = new TranslatedProperty(
-            $this->stateProperty,
-            $languageCode,
-            $this->languageNamespace
-        );
+        $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
+
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setWebspaceKey($webspaceKey);
+        $structure->setLanguageCode($languageCode);
+        $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
+        $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
+        $structure->setCreated($contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime()));
+        $structure->setChanged($contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime()));
+        $structure->setHasChildren($contentNode->hasNodes());
+
         $structure->setNodeState(
             $contentNode->getPropertyValueWithDefault(
-                $translatedStateProperty->getName(),
+                $this->properties->getName('state'),
                 StructureInterface::STATE_TEST
             )
         );
-        $structure->setCreator($contentNode->getPropertyValue('sulu:creator'));
-        $structure->setChanger($contentNode->getPropertyValue('sulu:changer'));
-        $structure->setCreated($contentNode->getPropertyValue('sulu:created'));
-        $structure->setChanged($contentNode->getPropertyValue('sulu:changed'));
-        $structure->setHasChildren($contentNode->hasNodes());
-
-        $translatedShowInNavigationProperty = new TranslatedProperty(
-            $this->showInNavigationProperty,
-            $languageCode,
-            $this->languageNamespace
+        $structure->setNavigation(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('navigation'), false)
         );
-        $structure->setShowInNavigation(
-            $contentNode->getPropertyValueWithDefault($translatedShowInNavigationProperty->getName(), false)
-        );
-
         $structure->setGlobalState(
-            $this->getInheritedState($contentNode, $translatedStateProperty->getName(), $webspaceKey)
+            $this->getInheritedState($contentNode, $this->properties->getName('state'), $webspaceKey)
+        );
+        $structure->setPublished(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
 
         // go through every property in the template

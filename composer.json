@@ -4,6 +4,7 @@
     "description": "Symfony bundle that provides basic core functionality",
     "license": "MIT",
     "keywords": ["core", "sulu"],
+    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -21,7 +22,8 @@
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {

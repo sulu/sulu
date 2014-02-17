@@ -134,4 +134,12 @@ class Localization
 
         return $localization;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getLocalization();
+    }
 }

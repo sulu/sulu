@@ -22,6 +22,28 @@ interface StructureInterface extends \JsonSerializable
     const STATE_PUBLISHED = 2;
 
     /**
+     * @param string $language
+     */
+    public function setLanguageCode($language);
+
+    /**
+     * returns language of node
+     * @return string
+     */
+    public function getLanguageCode();
+
+    /**
+     * @param string $webspace
+     */
+    public function setWebspaceKey($webspace);
+
+    /**
+     * returns webspace of node
+     * @return string
+     */
+    public function getWebspaceKey();
+
+    /**
      * id of node
      * @return int
      */
@@ -164,7 +186,7 @@ interface StructureInterface extends \JsonSerializable
      * returns true if state of site is "published"
      * @return boolean
      */
-    public function getPublished();
+    public function getPublishedState();
 
     /**
      * @param int $globalState
@@ -178,15 +200,37 @@ interface StructureInterface extends \JsonSerializable
     public function getGlobalState();
 
     /**
+     * @param \DateTime $published
+     */
+    public function setPublished($published);
+
+    /**
+     * returns first published date
+     * @return \DateTime
+     */
+    public function getPublished();
+
+    /**
      * returns true if this node is shown in navigation
      * @return boolean
      */
-    public function getShowInNavigation();
+    public function getNavigation();
 
     /**
      * @param boolean $showInNavigation
      */
-    public function setShowInNavigation($showInNavigation);
+    public function setNavigation($showInNavigation);
+
+    /**
+     * @param boolean $hasTranslation
+     */
+    public function setHasTranslation($hasTranslation);
+
+    /**
+     * return true if structure translation is valid
+     * @return boolean
+     */
+    public function getHasTranslation();
 
     /**
      * returns an array of property value pairs
