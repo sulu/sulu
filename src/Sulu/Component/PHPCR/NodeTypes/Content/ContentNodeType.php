@@ -173,13 +173,7 @@ class ContentNodeType implements NodeTypeDefinitionInterface
      */
     public function getDeclaredPropertyDefinitions()
     {
-        return array(
-            new TemplatePropertyDefinition(),
-            new ChangedPropertyDefinition(),
-            new ChangerPropertyDefinition(),
-            new CreatedPropertyDefinition(),
-            new CreatorPropertyDefinition()
-        );
+        return array();
     }
 
     /**

@@ -22,6 +22,7 @@
         <!-- content mapper -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
             <argument>%sulu.content.language.default%</argument>
+            <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
 
             <call method="setContainer">
