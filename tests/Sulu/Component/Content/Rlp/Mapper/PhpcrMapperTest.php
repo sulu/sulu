@@ -16,6 +16,7 @@ use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use \PHPUnit_Framework_TestCase;
+use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
@@ -24,7 +25,7 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class PhpcrMapperTest extends PHPUnit_Framework_TestCase
+class PhpcrMapperTest extends PhpcrTestCase
 {
     /**
      * @var RlpMapperInterface
@@ -45,88 +46,10 @@ class PhpcrMapperTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->sessionService = new SessionManager(new RepositoryFactoryJackrabbit(), array(
-            'url' => 'http://localhost:8080/server',
-            'username' => 'admin',
-            'password' => 'admin',
-            'workspace' => 'default'
-            ),
-            array(
-                'base' => 'cmf',
-                'route' => 'routes',
-                'content' => 'contents'
-            )
-        );
-        $this->session = $this->prepareSession();
-        $this->prepareRepository();
-        $this->prepareTestData();
-        $this->mapper = new PhpcrMapper($this->sessionService, '/cmf/routes');
-    }
+        $this->prepareMapper();
 
-    public function prepareRepository()
-    {
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-    }
-
-    public function tearDown()
-    {
-        if (isset($this->session)) {
-            NodeHelper::purgeWorkspace($this->session);
-            $this->session->save();
-        }
-    }
-
-    private function prepareSession()
-    {
-        $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
-        $factory = new RepositoryFactoryJackrabbit();
-        $repository = $factory->getRepository($parameters);
-        $credentials = new SimpleCredentials('admin', 'admin');
-
-        /** @var SessionInterface $session */
-        $session = $repository->login($credentials, 'default');
-
-        NodeHelper::purgeWorkspace($session);
-        $session->save();
-
-        return $session;
-    }
-
-    private function prepareTestData()
-    {
-        $cmf = $this->session->getRootNode()->addNode('cmf');
-        $cmf->addMixin('mix:referenceable');
-
-        $default = $cmf->addNode('default');
-        $default->addMixin('mix:referenceable');
-
-        $routes = $default->addNode('routes');
-        $routes->addMixin('mix:referenceable');
-
-        $products = $routes->addNode('products');
-        $products->addMixin('mix:referenceable');
-
-        $machines = $products->addNode('machines');
-        $machines->addMixin('mix:referenceable');
-
-        $machines1 = $products->addNode('machines-1');
-        $machines1->addMixin('mix:referenceable');
-
-        $drill = $machines->addNode('drill');
-        $drill->addMixin('mix:referenceable');
-
-        $drill1 = $machines->addNode('drill-1');
-        $drill1->addMixin('mix:referenceable');
-
-        $contents = $cmf->addNode('contents');
-        $contents->addMixin('mix:referenceable');
-
-        $this->content1 = $contents->addNode('content1');
+        $this->content1 = $this->contents->addNode('content1');
         $this->content1->addMixin('mix:referenceable');
-
-        $this->session->save();
     }
 
     public function testUnique()
