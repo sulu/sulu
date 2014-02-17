@@ -840,6 +840,9 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, sizeof($testNewsChildren));
 
         $this->assertEquals('Testnews-2-1', $testNewsChildren[0]->title);
+
+        $nodes = $this->mapper->loadByParent($root->getUuid(), 'default', 'de', null);
+        $this->assertEquals(3, sizeof($nodes));
     }
 
     public function testLoadByParentFlat()

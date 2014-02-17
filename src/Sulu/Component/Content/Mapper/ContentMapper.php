@@ -443,12 +443,12 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             try {
                 $result = $this->loadByNode($node, $languageCode, $webspaceKey);
                 $results[] = $result;
-                if ($depth > 1) {
+                if ($depth === null || $depth > 1) {
                     $children = $this->loadByParentNode(
                         $node,
                         $webspaceKey,
                         $languageCode,
-                        $depth - 1,
+                        $depth !== null ? $depth - 1 : null,
                         $flat,
                         $ignoreExceptions
                     );
