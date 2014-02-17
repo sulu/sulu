@@ -21,10 +21,14 @@ define([
             subType = {
                 setValue: function(value) {
                     var config = App.util.extend(true, {}, value.config);
-                    config.preSelectedSortBy = config.sortBy[0];
-                    delete config.sortBy;
-                    config.preSelectedSortMethod = config.sortMethod;
-                    delete config.sortMethod;
+                    if (!!config.sortBy) {
+                        config.preSelectedSortBy = config.sortBy[0];
+                        delete config.sortBy;
+                    }
+                    if (!!config.sortMethod) {
+                        config.preSelectedSortMethod = config.sortMethod;
+                        delete config.sortMethod;
+                    }
                     config.tagsAutoCompleteUrl = '/admin/api/tags';
                     App.emit('husky.smart-content.' + options.instanceName + '.external-configs', config);
                 },
