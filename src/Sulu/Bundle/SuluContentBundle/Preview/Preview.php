@@ -229,7 +229,8 @@ class Preview implements PreviewInterface
             // if partial render for property is called
             if ($property != null) {
                 // extract special property
-                $crawler = new Crawler($result);
+                $crawler = new Crawler();
+                $crawler->addHtmlContent($result, 'UTF-8');
                 $nodes = $crawler->filter('*[property="' . $property . '"]');
 
                 // if rdfa property not found return false
