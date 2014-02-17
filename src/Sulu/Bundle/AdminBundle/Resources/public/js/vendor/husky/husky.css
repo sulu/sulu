@@ -6365,10 +6365,6 @@ a.btn-black, a.btn-highlight {
 .smart-overlay-content .tag-list input {
   margin: 7px 0 0 0;
 }
-/* line 176, ../scss/modules/smart-content.scss */
-.smart-overlay-content .tag-list .tt-suggestions {
-  width: 360px;
-}
 
 /* line 5, ../scss/modules/top-toolbar.scss */
 .husky-top-toolbar {
