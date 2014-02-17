@@ -19,6 +19,12 @@ define([
         var defaults = {},
 
             subType = {
+                initializeSub: function() {
+                    App.on('husky.smart-content.' + options.instanceName + '.input-retrieved', function(data) {
+                        App.emit('sulu.preview.update', App.dom.data($el, 'mapperProperty'), App.dom.data($el, 'smart-content'));
+                    }.bind(this));
+                },
+
                 setValue: function(value) {
                     var config = App.util.extend(true, {}, value.config);
                     if (!!config.sortBy) {
