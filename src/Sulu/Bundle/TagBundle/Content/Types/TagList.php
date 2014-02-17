@@ -57,15 +57,7 @@ class TagList extends ComplexContentType
      */
     protected function setData(array $data, PropertyInterface $property)
     {
-        $tags = array();
-
-        if (!empty($data)) {
-            foreach ($data as $tagId) {
-                $tags[] = $this->tagManager->findById($tagId)->getName();
-            }
-        }
-
-        $property->setValue($tags);
+        $property->setValue($data);
     }
 
     /**
@@ -73,7 +65,8 @@ class TagList extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $this->setData($node->getPropertyValueWithDefault($property->getName(), array()), $property);
+        $tags = $this->tagManager->resolveTagIds($node->getPropertyValueWithDefault($property->getName(), array()));
+        $this->setData($tags, $property);
     }
 
     /**
