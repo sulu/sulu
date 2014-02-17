@@ -119,7 +119,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareStructureManager()
     {
-        if ($this->structureManager !== null) {
+        if ($this->structureManager === null) {
             $this->structureManager = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
             $this->structureManager->expects($this->any())
                 ->method('getStructure')
@@ -148,7 +148,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareSecurityContext()
     {
-        if ($this->securityContext !== null) {
+        if ($this->securityContext === null) {
             $userMock = $this->getMock('\Sulu\Component\Security\UserInterface');
             $userMock->expects($this->any())
                 ->method('getId')
@@ -171,7 +171,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareSessionManager()
     {
-        if ($this->sessionManager !== null) {
+        if ($this->sessionManager === null) {
             $this->sessionManager = new SessionManager(
                 new RepositoryFactoryJackrabbit(),
                 array(
@@ -194,7 +194,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareContainer()
     {
-        if ($this->container !== null) {
+        if ($this->container === null) {
             $this->container = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
             $this->container->expects($this->any())
                 ->method('get')
@@ -225,7 +225,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareSession()
     {
-        if ($this->session !== null) {
+        if ($this->session === null) {
             $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
             $factory = new RepositoryFactoryJackrabbit();
             $repository = $factory->getRepository($parameters);
@@ -241,7 +241,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareRepository()
     {
-        if ($this->contents !== null) {
+        if ($this->contents === null) {
             $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
             $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
                 'sulu_locale',
