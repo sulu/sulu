@@ -45,13 +45,9 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * reads the value for given property out of the database + sets the value of the property
-     * @param NodeInterface $node to get data
-     * @param PropertyInterface $property to set data
-     * @param string $webspaceKey
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $this->defaultValue;
         if ($node->hasProperty($property->getName())) {
@@ -64,32 +60,30 @@ abstract class SimpleContentType implements ContentTypeInterface
     }
 
     /**
-     * sets the value of the property with the data given
-     * @param mixed $data
-     * @param PropertyInterface $property
-     * @param $webspaceKey
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey)
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $property->setValue($data);
     }
 
     /**
-     * save the value from given property
-     * @param NodeInterface $node to set data
-     * @param PropertyInterface $property property to get data
-     * @param int $userId
-     * @param string $webspaceKey
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey)
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    )
     {
         $value = $property->getValue();
         if ($value != null) {
             $node->setProperty($property->getName(), $property->getValue());
         } else {
-            $this->remove($node, $property);
+            $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
     }
 
@@ -98,7 +92,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      * @param NodeInterface $node
      * @param PropertyInterface $property
      */
-    public function remove(NodeInterface $node, PropertyInterface $property)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // if exist remove property of node
         if ($node->hasProperty($property->getName())) {

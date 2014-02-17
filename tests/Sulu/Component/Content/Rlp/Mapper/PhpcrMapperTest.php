@@ -28,18 +28,6 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 class PhpcrMapperTest extends PhpcrTestCase
 {
     /**
-     * @var RlpMapperInterface
-     */
-    private $mapper;
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionService;
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    /**
      * @var NodeInterface
      */
     private $content1;
