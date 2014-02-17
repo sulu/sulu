@@ -186,7 +186,7 @@ interface StructureInterface extends \JsonSerializable
      * returns true if state of site is "published"
      * @return boolean
      */
-    public function getPublished();
+    public function getPublishedState();
 
     /**
      * @param int $globalState
@@ -200,15 +200,15 @@ interface StructureInterface extends \JsonSerializable
     public function getGlobalState();
 
     /**
-     * @param \DateTime $publishedDate
+     * @param \DateTime $published
      */
-    public function setPublishedDate($publishedDate);
+    public function setPublished($published);
 
     /**
      * returns first published date
      * @return \DateTime
      */
-    public function getPublishedDate();
+    public function getPublished();
 
     /**
      * returns true if this node is shown in navigation

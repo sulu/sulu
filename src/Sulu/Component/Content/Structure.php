@@ -119,7 +119,7 @@ abstract class Structure implements StructureInterface
      * first published
      * @var DateTime
      */
-    private $publishedDate;
+    private $published;
 
     /**
      * should be shown in navigation or not
@@ -149,7 +149,7 @@ abstract class Structure implements StructureInterface
 
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
-        $this->publishedDate = null;
+        $this->published = null;
         // default hide in navigation
         $this->navigation = false;
     }
@@ -403,7 +403,7 @@ abstract class Structure implements StructureInterface
      * returns true if state of site is "published"
      * @return boolean
      */
-    public function getPublished()
+    public function getPublishedState()
     {
         return ($this->nodeState === StructureInterface::STATE_PUBLISHED);
     }
@@ -427,20 +427,20 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @param \DateTime $publishedDate
+     * @param \DateTime $published
      */
-    public function setPublishedDate($publishedDate)
+    public function setPublished($published)
     {
-        $this->publishedDate = $publishedDate;
+        $this->published = $published;
     }
 
     /**
      * returns first published date
      * @return \DateTime
      */
-    public function getPublishedDate()
+    public function getPublished()
     {
-        return $this->publishedDate;
+        return $this->published;
     }
 
     /**
@@ -552,8 +552,9 @@ abstract class Structure implements StructureInterface
         $result = array(
             'id' => $this->uuid,
             'nodeState' => $this->getNodeState(),
-            'globalState' => $this->getNodeState(),
             'published' => $this->getPublished(),
+            'globalState' => $this->getNodeState(),
+            'publishedState' => $this->getPublishedState(),
             'navigation' => $this->getNavigation(),
             'template' => $this->getKey(),
             'hasSub' => $this->hasChildren,

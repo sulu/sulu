@@ -97,7 +97,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 'state',
                 'template',
                 'navigation',
-                'publishedDate'
+                'published'
             ),
             $this->languageNamespace
         );
@@ -200,7 +200,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $state,
                 $structure,
                 $this->properties->getName('state'),
-                $this->properties->getName('publishedDate')
+                $this->properties->getName('published')
             );
         }
         if (isset($showInNavigation)) {
@@ -280,8 +280,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setGlobalState(
             $this->getInheritedState($node, $this->properties->getName('state'), $webspaceKey)
         );
-        $structure->setPublishedDate(
-            $node->getPropertyValueWithDefault($this->properties->getName('publishedDate'), null)
+        $structure->setPublished(
+            $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
 
         return $structure;
@@ -293,7 +293,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      * @param int $state new state
      * @param \Sulu\Component\Content\StructureInterface $structure
      * @param string $statePropertyName
-     * @param string $publishedDatePropertyName
+     * @param string $publishedPropertyName
      *
      * @throws \Sulu\Component\Content\Exception\StateTransitionException
      * @throws \Sulu\Component\Content\Exception\StateNotFoundException
@@ -303,7 +303,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $state,
         StructureInterface $structure,
         $statePropertyName,
-        $publishedDatePropertyName
+        $publishedPropertyName
     )
     {
         if (!in_array($state, $this->states)) {
@@ -316,8 +316,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
             $structure->setNodeState($state);
 
             // published => set only once
-            if ($state === StructureInterface::STATE_PUBLISHED && !$node->hasProperty($publishedDatePropertyName)) {
-                $node->setProperty($publishedDatePropertyName, new DateTime());
+            if ($state === StructureInterface::STATE_PUBLISHED && !$node->hasProperty($publishedPropertyName)) {
+                $node->setProperty($publishedPropertyName, new DateTime());
             }
         } else {
             $oldState = $node->getPropertyValue($statePropertyName);
@@ -334,8 +334,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $structure->setNodeState($state);
 
                 // set only once
-                if (!$node->hasProperty($publishedDatePropertyName)) {
-                    $node->setProperty($publishedDatePropertyName, new DateTime());
+                if (!$node->hasProperty($publishedPropertyName)) {
+                    $node->setProperty($publishedPropertyName, new DateTime());
                 }
             } elseif (
                 // from published to test
@@ -346,7 +346,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $structure->setNodeState($state);
 
                 // set published date to null
-                $node->getProperty($publishedDatePropertyName)->remove();
+                $node->getProperty($publishedPropertyName)->remove();
             }
         }
     }
@@ -581,8 +581,8 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $structure->setGlobalState(
             $this->getInheritedState($contentNode, $this->properties->getName('state'), $webspaceKey)
         );
-        $structure->setPublishedDate(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('publishedDate'), null)
+        $structure->setPublished(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
 
         // go through every property in the template

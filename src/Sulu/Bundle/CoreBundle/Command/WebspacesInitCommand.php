@@ -60,7 +60,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 'state',
                 'template',
                 'navigation',
-                'publishedDate'
+                'published'
             ),
             $this->getContainer()->getParameter('sulu.content.language.namespace')
         );
@@ -116,7 +116,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
         $node->setProperty($this->properties->getName('navigation'), true);
         $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
-        $node->setProperty($this->properties->getName('publishedDate'), new DateTime());
+        $node->setProperty($this->properties->getName('published'), new DateTime());
 
         if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
             foreach ($localization->getChildren() as $local) {

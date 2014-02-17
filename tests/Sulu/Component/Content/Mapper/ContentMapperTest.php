@@ -1214,8 +1214,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
         $data1 = $this->mapper->save($data1, 'overview', 'default', 'de', 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data1->getNodeState());
-        $this->assertNull($data1->getPublishedDate());
-        $this->assertFalse($data1->getPublished());
+        $this->assertNull($data1->getPublished());
+        $this->assertFalse($data1->getPublishedState());
 
         // save with state PUBLISHED
         $data2 = array(
@@ -1223,8 +1223,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
         $data2 = $this->mapper->save($data2, 'overview', 'default', 'de', 1, true, null, null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getNodeState());
-        $this->assertNotNull($data2->getPublishedDate());
-        $this->assertTrue($data2->getPublished());
+        $this->assertNotNull($data2->getPublished());
+        $this->assertTrue($data2->getPublishedState());
 
         sleep(1);
         // change state from TEST to PUBLISHED
@@ -1233,9 +1233,9 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
         $data3 = $this->mapper->save($data3, 'overview', 'default', 'de', 1, true, $data1->getUuid(), null, 2);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data3->getNodeState());
-        $this->assertNotNull($data3->getPublishedDate());
-        $this->assertTrue($data3->getPublished());
-        $this->assertTrue($data3->getPublishedDate() > $data2->getPublishedDate());
+        $this->assertNotNull($data3->getPublished());
+        $this->assertTrue($data3->getPublishedState());
+        $this->assertTrue($data3->getPublished() > $data2->getPublished());
 
         // change state from PUBLISHED to TEST (exception)
         $data4 = array(
@@ -1243,8 +1243,8 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         );
         $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid(), null, 1);
         $this->assertEquals(StructureInterface::STATE_TEST, $data4->getNodeState());
-        $this->assertNull($data4->getPublishedDate());
-        $this->assertFalse($data4->getPublished());
+        $this->assertNull($data4->getPublished());
+        $this->assertFalse($data4->getPublishedState());
     }
 
     public function testStateInheritance()
