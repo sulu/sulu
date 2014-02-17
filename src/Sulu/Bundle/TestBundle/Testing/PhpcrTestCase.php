@@ -63,7 +63,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    protected $containerValueMap;
+    protected $containerValueMap = array();
     /**
      * @var SessionManagerInterface
      */
@@ -75,7 +75,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    protected $structureValueMap;
+    protected $structureValueMap = array();
     /**
      * @var SecurityContextInterface
      */
