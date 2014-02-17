@@ -56,12 +56,13 @@ interface NodeRepositoryInterface {
      * @param string $templateKey
      * @param string $portalKey
      * @param string $languageCode
-     * @param $userId
+     * @param integer $userId
      * @param string $uuid
-     * @param string $parentUuid
+     * @param null $state
+     * @internal param string $parentUuid
      * @return array
      */
-    public function saveNode($data, $templateKey, $portalKey, $languageCode, $userId, $uuid = null, $parentUuid = null);
+    public function saveNode($data, $templateKey, $portalKey, $languageCode, $userId, $uuid = null, $state = null);
 
     /**
      * save start page of given portal

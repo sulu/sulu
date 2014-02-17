@@ -172,6 +172,10 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
+        $state = $this->getRequest()->get('state');
+        if ($state !== null) {
+            $state = intval($state);
+        }
         $data = $this->getRequest()->request->all();
 
         $result = $this->getRepository()->saveNode(
@@ -180,7 +184,9 @@ class NodeController extends RestController implements ClassResourceInterface
             $webspace,
             $language,
             $this->getUser()->getId(),
-            $uuid
+            $uuid,
+            null,
+            $state
         );
 
         return $this->handleView(
