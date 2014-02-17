@@ -18,6 +18,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
+use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
@@ -31,123 +32,30 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use \DateTime;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
  */
-class ContentMapperTest extends \PHPUnit_Framework_TestCase
+class ContentMapperTest extends PhpcrTestCase
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    public $sessionService;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    public $container;
-
-    /**
-     * @var ContentMapper
-     */
-    protected $mapper;
-
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var ResourceLocator
-     */
-    protected $resourceLocator;
-
-    /**
-     * @var NodeInterface
-     */
-    protected $contents;
-
-    /**
-     * @var NodeInterface
-     */
-    protected $routes;
-
     public function setUp()
     {
         $this->prepareMapper();
-
-        NodeHelper::purgeWorkspace($this->session);
-        $this->session->save();
-
-        $cmf = $this->session->getRootNode()->addNode('cmf');
-        $cmf->addMixin('mix:referenceable');
-        $this->session->save();
-
-        $default = $cmf->addNode('default');
-        $default->addMixin('mix:referenceable');
-        $this->session->save();
-
-        $this->contents = $default->addNode('contents');
-        $this->contents->setProperty('sulu_locale:de-sulu-template', 'overview');
-        $this->contents->setProperty('sulu_locale:en-sulu-template', 'overview');
-        $this->contents->setProperty('sulu_locale:de-sulu-changer', 1);
-        $this->contents->setProperty('sulu_locale:en-sulu-changer', 1);
-        $this->contents->setProperty('sulu_locale:de-sulu-creator', 1);
-        $this->contents->setProperty('sulu_locale:en-sulu-creator', 1);
-        $this->contents->setProperty('sulu_locale:de-sulu-changed', new DateTime());
-        $this->contents->setProperty('sulu_locale:en-sulu-changed', new DateTime());
-        $this->contents->setProperty('sulu_locale:de-sulu-created', new DateTime());
-        $this->contents->setProperty('sulu_locale:en-sulu-created', new DateTime());
-        $this->contents->addMixin('sulu:content');
-        $this->session->save();
-
-        $this->routes = $default->addNode('routes');
-        $this->routes->setProperty('sulu:content', $this->contents);
-        $this->routes->addMixin('sulu:path');
-        $this->session->save();
     }
 
-    private function prepareMapper()
+    public function structureCallback()
     {
-        $this->container = $this->getContainerMock();
+        $args = func_get_args();
+        $structureKey = $args[0];
 
-        $this->mapper = new ContentMapper('de', 'default_template', 'sulu_locale');
-        $this->mapper->setContainer($this->container);
+        if ($structureKey == 'overview') {
+            return $this->getStructureMock(1);
+        } elseif ($structureKey == 'simple') {
+            return $this->getStructureMock(2);
+        }
 
-        $this->prepareSession();
-        $this->prepareRepository();
-
-        $this->resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionService, '/cmf/routes')), 'not in use');
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getContainerMock()
-    {
-        $this->sessionService = new SessionManager(
-            new RepositoryFactoryJackrabbit(),
-            array(
-                'url' => 'http://localhost:8080/server',
-                'username' => 'admin',
-                'password' => 'admin',
-                'workspace' => 'test'
-            ),
-            array(
-                'base' => 'cmf',
-                'route' => 'routes',
-                'content' => 'contents'
-            )
-        );
-
-        $containerMock = $this->getMock('\Symfony\Component\DependencyInjection\ContainerInterface');
-        $containerMock->expects($this->any())
-            ->method('get')
-            ->will(
-                $this->returnCallback(array($this, 'containerCallback'))
-            );
-
-        return $containerMock;
+        return null;
     }
 
     public function getStructureMock($type = 1)
@@ -200,86 +108,6 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
         }
 
         return $structureMock;
-    }
-
-    public function getStructureManager()
-    {
-        $structureManagerMock = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
-        $structureManagerMock->expects($this->any())
-            ->method('getStructure')
-            ->will($this->returnCallback(array($this, 'getStructureCallback')));
-
-        return $structureManagerMock;
-    }
-
-    public function getStructureCallback()
-    {
-        $args = func_get_args();
-        $structureKey = $args[0];
-
-        if ($structureKey == 'overview') {
-            return $this->getStructureMock(1);
-        } elseif ($structureKey == 'simple') {
-            return $this->getStructureMock(2);
-        }
-
-        return null;
-    }
-
-    public function containerCallback()
-    {
-        $result = array(
-            'sulu.phpcr.session' => $this->sessionService,
-            'sulu.content.structure_manager' => $this->getStructureManager(),
-            'sulu.content.type.text_line' => new TextLine('not in use'),
-            'sulu.content.type.text_area' => new TextArea('not in use'),
-            'sulu.content.type.resource_locator' => $this->resourceLocator,
-            'security.context' => $this->getSecurityContextMock()
-        );
-        $args = func_get_args();
-
-        return $result[$args[0]];
-    }
-
-    private function getSecurityContextMock()
-    {
-        $userMock = $this->getMock('\Sulu\Component\Security\UserInterface');
-        $userMock->expects($this->any())
-            ->method('getId')
-            ->will($this->returnValue(1));
-
-        $tokenMock = $this->getMock('\Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $tokenMock->expects($this->any())
-            ->method('getUser')
-            ->will($this->returnValue($userMock));
-
-        $securityMock = $this->getMock('\Symfony\Component\Security\Core\SecurityContextInterface');
-        $securityMock->expects($this->any())
-            ->method('getToken')
-            ->will($this->returnValue($tokenMock));
-
-        return $securityMock;
-    }
-
-    private function prepareSession()
-    {
-        $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
-        $factory = new RepositoryFactoryJackrabbit();
-        $repository = $factory->getRepository($parameters);
-        $credentials = new SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'test');
-    }
-
-    public function prepareRepository()
-    {
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
-            'sulu_locale',
-            'http://sulu.io/phpcr/locale'
-        );
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
     }
 
     public function tearDown()
@@ -365,22 +193,28 @@ class ContentMapperTest extends \PHPUnit_Framework_TestCase
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/default/routes/news/test');
-
         /** @var NodeInterface $contentNode */
         $contentNode = $route->getPropertyValue('sulu:content');
-
         // simulate new property article, by deleting the property
         /** @var PropertyInterface $articleProperty */
         $articleProperty = $contentNode->getProperty('sulu_locale:de-article');
         $this->session->removeItem($articleProperty->getPath());
         $this->session->save();
 
+
         // simulates a new request
+        $this->mapper = null;
+        $this->session = null;
+        $this->sessionManager = null;
+        $this->structureValueMap = array(
+            'overview' => $this->getStructureMock(1),
+            'simple' => $this->getStructureMock(2)
+        );
         $this->prepareMapper();
+
 
         /** @var StructureInterface $content */
         $content = $this->mapper->load($contentBefore->getUuid(), 'default', 'de');
-
         // test values
         $this->assertEquals('Testtitle', $content->title);
         $this->assertEquals(null, $content->article);
