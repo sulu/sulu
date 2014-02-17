@@ -20,7 +20,12 @@ define([
 
             subType = {
                 setValue: function(value) {
-                    App.emit('husky.smart-content.' + options.instanceName + '.external-configs', value.config);
+                    var config = App.util.extend(true, {}, value.config);
+                    config.preSelectedSortBy = config.sortBy[0];
+                    delete config.sortBy;
+                    config.preSelectedSortMethod = config.sortMethod;
+                    delete config.sortMethod;
+                    App.emit('husky.smart-content.' + options.instanceName + '.external-configs', config);
                 },
 
                 getValue: function() {
