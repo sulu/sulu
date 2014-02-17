@@ -30408,7 +30408,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 arrowUpClass: 'arrow-up',
                 slideDuration: 500,
                 elementTagDataName: 'tags',
-                autoCompleteIcon: ''
+                autoCompleteIcon: 'tag'
             },
 
             templates = {
@@ -33064,7 +33064,6 @@ define('__component__$smart-content@husky',[], function() {
         visibleItems: 3,
         dataSource: '',
         subFoldersDisabled: false,
-        preSelectedDataSource: 0,
         categories: [],
         preSelectedCategory: 0,
         tags: [],
@@ -33234,12 +33233,23 @@ define('__component__$smart-content@husky',[], function() {
      },
 
     /**
-     * takes an config-object an merges it with this.options
+     * takes an config-object an merges it with this.options, before the initialization of the component
+     * (options.externalConfigs has to be true)
      * @event husky.smart-content.external-configs
      * @param {object} configs The config-object to merge with this.options
      */
      EXTERNAL_CONFIGS = function() {
             return createEventName.call(this, 'external-configs');
+     },
+
+    /**
+     * takes an config-object and merges it with this.options. Moreover destroys overlay, so
+     * it uses the new configs
+     * @event husky.smart-content.set-configs
+     * @param {object} configs The config-object to merge with this.options
+     */
+     SET_CONFIGS = function() {
+         return createEventName.call(this, 'set-configs');
      },
 
     /** returns normalized event names */
@@ -33306,26 +33316,7 @@ define('__component__$smart-content@husky',[], function() {
                 hasChanged: false
             };
 
-            this.$overlayContent = null;
-            this.overlayData = {
-                dataSource: this.options.dataSource,
-                includeSubFolders: this.options.includeSubFolders,
-                category: this.options.preSelectedCategory,
-                tags: this.options.tags,
-                sortBy: this.options.preSelectedSortBy,
-                sortMethod: this.options.preSelectedSortMethod,
-                presentAs: this.options.preSelectedPresentAs,
-                limitResult: this.options.limitResult
-            };
-
-            this.overlayDisabled = {
-                categories: (this.options.categories.length === 0),
-                sortBy: (this.options.sortBy.length === 0),
-                presentAs: (this.options.presentAs.length === 0),
-                subFolders: (this.options.subFoldersDisabled),
-                tags: this.options.tagsDisabled,
-                limitResult: this.options.limitResultDisabled
-            };
+            this.initOverlayData();
 
             this.translations = {
                 noContentFound: 'smart-content.nocontent-found',
@@ -33352,6 +33343,32 @@ define('__component__$smart-content@husky',[], function() {
             };
 
             this.translations = this.sandbox.util.extend(true, {}, this.translations, this.options.translations);
+        },
+
+        /**
+         * Sets the starting values of properties related to the overlay
+         */
+        initOverlayData: function() {
+            this.$overlayContent = null;
+            this.overlayData = {
+                dataSource: this.options.dataSource,
+                includeSubFolders: this.options.includeSubFolders,
+                category: this.options.preSelectedCategory,
+                tags: this.options.tags,
+                sortBy: this.options.preSelectedSortBy,
+                sortMethod: this.options.preSelectedSortMethod,
+                presentAs: this.options.preSelectedPresentAs,
+                limitResult: this.options.limitResult
+            };
+
+            this.overlayDisabled = {
+                categories: (this.options.categories.length === 0),
+                sortBy: (this.options.sortBy.length === 0),
+                presentAs: (this.options.presentAs.length === 0),
+                subFolders: (this.options.subFoldersDisabled),
+                tags: this.options.tagsDisabled,
+                limitResult: this.options.limitResultDisabled
+            };
         },
 
         /**
@@ -33529,11 +33546,28 @@ define('__component__$smart-content@husky',[], function() {
             this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
                 this.setURI();
                 this.loadContent();
-                this.setElementData(this.overlayData);
             }.bind(this));
 
             this.sandbox.on('husky.overlay.smart-content.' + this.options.instanceName + '.initialized', function() {
                 this.startOverlayComponents();
+            }.bind(this));
+
+            this.sandbox.on(SET_CONFIGS.call(this), function(configs) {
+                //merge this.options with passed configs
+                this.options = this.sandbox.util.extend(false, {}, this.options, configs);
+
+                //remove current overlay component and create new triggerer
+                this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.remove');
+                this.renderButton();
+
+                //re-initialize the overlay
+                this.initOverlayData();
+                this.startOverlay();
+
+                //reload the items
+                this.setURI();
+                this.startLoader();
+                this.loadContent();
             }.bind(this));
         },
 
@@ -33582,6 +33616,9 @@ define('__component__$smart-content@husky',[], function() {
             this.renderContent();
         },
 
+        /**
+         * Starts the overlay component
+         */
         startOverlay: function() {
             this.initOverlayContent();
 
@@ -33600,7 +33637,6 @@ define('__component__$smart-content@husky',[], function() {
                 }
             }]);
         },
-
 
         /**
          * Loads the overlay content based on a template
@@ -33822,6 +33858,7 @@ define('__component__$smart-content@husky',[], function() {
                 }.bind(this));
 
             this.sandbox.dom.when(categoryDef.promise(), tagsDef.promise(), sortByDef.promise(), sortMethodDef.promise(), presentAsDef.promise()).then(function() {
+                this.setElementData(this.overlayData);
                 this.sandbox.emit(INPUT_RETRIEVED.call(this));
             }.bind(this));
         },
@@ -33935,6 +33972,14 @@ define('__component__$overlay@husky',[], function() {
         return createEventName.call(this, 'closed');
      },
 
+    /**
+     * removes the component
+     * @event husky.overlay.<instance-name>.remove
+     */
+     REMOVE = function() {
+        return createEventName.call(this, 'remove');
+     },
+
     /** returns normalized event names */
     createEventName = function(postFix) {
         return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -33952,16 +33997,23 @@ define('__component__$overlay@husky',[], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.setVariables();
-            this.bindTriggerEvent();
+            this.bindEvents();
         },
 
         /**
-         * Binds the event for the overlay trigger
+         * Binds general events
          */
-        bindTriggerEvent: function() {
+        bindEvents: function() {
             this.sandbox.dom.on(this.$el, this.options.trigger, function(event) {
                 this.sandbox.dom.preventDefault(event);
                 this.triggerHandler();
+            }.bind(this));
+
+            this.sandbox.on(REMOVE.call(this), function() {
+                this.sandbox.dom.off(this.$el);
+                this.sandbox.dom.off(this.overlay.$el);
+                this.sandbox.dom.remove(this.overlay.$el);
+                this.sandbox.dom.remove(this.$el);
             }.bind(this));
         },
 
