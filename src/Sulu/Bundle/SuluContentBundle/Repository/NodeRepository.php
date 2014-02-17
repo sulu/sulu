@@ -10,13 +10,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Jackalope\NotImplementedException;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class NodeRepository implements NodeRepositoryInterface
 {
@@ -26,30 +22,28 @@ class NodeRepository implements NodeRepositoryInterface
     private $mapper;
 
     /**
+     * The name of the root node of PHPCR
+     * @var string
+     */
+    private $baseNodeName;
+
+    /**
+     * The name of the content nodes in PHPCR
+     * @var string
+     */
+    private $contentNodeName;
+
+    /**
      * for returning self link in get action
      * @var string
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    /**
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    private $securityContext;
-
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
-    function __construct(
-        ContentMapperInterface $mapper,
-        UserManagerInterface $userManager,
-        SecurityContextInterface $securityContext
-    )
+    function __construct(ContentMapperInterface $mapper, $baseNodeName, $contentNodeName)
     {
         $this->mapper = $mapper;
-        $this->userManager = $userManager;
-        $this->securityContext = $securityContext;
+        $this->baseNodeName = $baseNodeName;
+        $this->contentNodeName = $contentNodeName;
     }
 
     /**
@@ -71,10 +65,6 @@ class NodeRepository implements NodeRepositoryInterface
     {
         $result = $structure->toArray();
 
-        // replace creator, changer
-        $result['creator'] = $this->getFullNameByUserId($structure->getCreator());
-        $result['changer'] = $this->getFullNameByUserId($structure->getChanger());
-
         // add default empty embedded property
         $result['_embedded'] = array();
         // add api links
@@ -84,25 +74,6 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $result;
-    }
-
-    /**
-     * returns user fullName
-     * @param integer $id userId
-     * @return string
-     */
-    protected function getFullNameByUserId($id)
-    {
-        return $this->userManager->getFullNameByUserId($id);
-    }
-
-    /**
-     * returns id of current user
-     * @return int
-     */
-    protected function getUserId()
-    {
-        return $this->userManager->getCurrentUserData()->getId();
     }
 
     /**
@@ -148,14 +119,14 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $languageCode
      * @return array
      */
-    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode)
+    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode, $userId)
     {
         $structure = $this->getMapper()->saveStartPage(
             $data,
             $templateKey,
             $portalKey,
             $languageCode,
-            $this->getUserId()
+            $userId
         );
 
         return $this->prepareNode($structure);
@@ -197,6 +168,74 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
+     * Returns the content of a smart content configuration
+     * @param array $smartContentConfig The config of the smart content
+     * @param string $languageCode The desired language code
+     * @param string $webspaceKey The webspace key
+     * @return mixed
+     */
+    public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey)
+    {
+        // build sql2 query
+        $sql2 = 'SELECT * FROM [sulu:content] AS c';
+        $sql2Where = array();
+        $sql2Order = array();
+
+        // build where clause for datasource
+        if (isset($smartContentConfig['dataSource']) && !empty($smartContentConfig['dataSource'])) {
+            $sqlFunction =
+                (isset($smartContentConfig['includeSubFolders']) && $smartContentConfig['includeSubFolders'])
+                    ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
+            $dataSource = '/' . $this->baseNodeName . '/' . $webspaceKey . '/' . $this->contentNodeName;
+            $dataSource .= $smartContentConfig['dataSource'];
+            $sql2Where[] = $sqlFunction . '(\'' . $dataSource . '\')';
+        }
+
+        // build where clause for tags
+        if (!empty($smartContentConfig['tags'])) {
+            foreach ($smartContentConfig['tags'] as $tag) {
+                $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-tags] = ' . $tag;
+            }
+        }
+
+        // build order clause
+        if (isset($smartContentConfig['sortBy']) && is_string($smartContentConfig['sortBy'])) {
+            // rewrite to array, if string as sort column is given
+            $smartContentConfig['sortBy'] = array($smartContentConfig['sortBy']);
+        }
+
+        if (!empty($smartContentConfig['sortBy'])) {
+            foreach ($smartContentConfig['sortBy'] as $sortColumn) {
+                // TODO implement more generic
+                $sql2Order[] = 'c.[sulu:' . $sortColumn . ']';
+            }
+        }
+
+        // append where clause to sql2 query
+        if (!empty($sql2Where)) {
+            $sql2 .= ' WHERE ' . join(' AND ', $sql2Where);
+        }
+
+        // append order clause
+        if (!empty($sql2Order)) {
+            $sortOrder = (isset($smartContentConfig['sortMethod']) && $smartContentConfig['sortMethod'] == 'asc')
+                ? 'ASC' : 'DESC';
+            $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
+        }
+
+        // set limit if given
+        $limit = null;
+        if (isset($smartContentConfig['limitResult'])) {
+            $limit = $smartContentConfig['limitResult'];
+        }
+
+        // execute query and return results
+        $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $limit);
+
+        return $nodes;
+    }
+
+    /**
      * @param StructureInterface[] $nodes
      * @return array
      */
@@ -215,21 +254,14 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
-     * save node with given uuid or creates a new one
-     * @param array $data
-     * @param string $templateKey
-     * @param string $portalKey
-     * @param string $languageCode
-     * @param string $uuid
-     * @param string $parentUuid
-     * @param int $state
-     * @return array
+     * {@inheritdoc}
      */
     public function saveNode(
         $data,
         $templateKey,
         $portalKey,
         $languageCode,
+        $userId,
         $uuid = null,
         $parentUuid = null,
         $state = null
@@ -240,7 +272,7 @@ class NodeRepository implements NodeRepositoryInterface
             $templateKey,
             $portalKey,
             $languageCode,
-            $this->getUserId(),
+            $userId,
             true,
             $uuid,
             $parentUuid,

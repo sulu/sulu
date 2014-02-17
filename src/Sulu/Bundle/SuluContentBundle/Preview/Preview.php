@@ -11,10 +11,12 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -49,7 +51,13 @@ class Preview implements PreviewInterface
      */
     private $lifeTime;
 
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
     public function __construct(
+        ContainerInterface $container,
         EngineInterface $templating,
         Cache $cache,
         ContentMapperInterface $mapper,
@@ -58,6 +66,7 @@ class Preview implements PreviewInterface
         $lifeTime
     )
     {
+        $this->container = $container;
         $this->templating = $templating;
         $this->cache = $cache;
         $this->mapper = $mapper;
@@ -104,16 +113,9 @@ class Preview implements PreviewInterface
     }
 
     /**
-     * saves changes for given user and content
-     * @param int $userId
-     * @param string $contentUuid
-     * @param string $property propertyName which was changed
-     * @param mixed $data new data
-     * @param string|null $template template key
-     * @return \Sulu\Component\Content\StructureInterface
-     * @throws PreviewNotFoundException
+     * {@inheritdoc}
      */
-    public function update($userId, $contentUuid, $property, $data, $template = null)
+    public function update($userId, $contentUuid, $webspaceKey, $languageCode, $property, $data, $template = null)
     {
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
@@ -124,7 +126,11 @@ class Preview implements PreviewInterface
                 $this->addReload($userId, $contentUuid);
             }
 
-            $this->setValue($content, $property, $data);
+            $propertyInstance = $content->getProperty($property);
+            $contentType = $this->getContentType($propertyInstance->getContentTypeName());
+            $contentType->readForPreview($data, $propertyInstance, $webspaceKey, $languageCode, null);
+
+            $content->getProperty($property)->setValue($propertyInstance->getValue());
             $this->addStructure($userId, $contentUuid, $content);
 
             $changes = $this->render($userId, $contentUuid, true, $property);
@@ -361,5 +367,15 @@ class Preview implements PreviewInterface
     private function getCacheKey($userId, $contentUuid, $subKey = false)
     {
         return $userId . ':' . $contentUuid . ($subKey != false ? ':' . $subKey : '');
+    }
+
+    /**
+     * returns a type with given name
+     * @param $name
+     * @return ContentTypeInterface
+     */
+    protected function getContentType($name)
+    {
+        return $this->container->get('sulu.content.type.' . $name);
     }
 }
