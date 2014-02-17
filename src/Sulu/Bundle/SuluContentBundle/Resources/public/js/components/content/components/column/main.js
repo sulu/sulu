@@ -56,9 +56,11 @@ define(function() {
                         data: {
                             "items": [
                                 {
+                                    "id": 1,
                                     "title": "Content"
                                 },
                                 {
+                                    "id": 2,
                                     "title": "Home page",
                                     "action": 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:index/details'
                                 }
