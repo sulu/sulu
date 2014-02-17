@@ -82,6 +82,17 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $securityContext;
 
     /**
+     * purge webspace at tear down
+     */
+    public function tearDown()
+    {
+        if (isset($this->session)) {
+            NodeHelper::purgeWorkspace($this->session);
+            $this->session->save();
+        }
+    }
+
+    /**
      * prepares a content mapper
      */
     protected function prepareMapper()
