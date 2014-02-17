@@ -23,11 +23,6 @@ class PreviewMessageComponent implements MessageComponentInterface
     protected $content;
 
     /**
-     * @var SecurityContextInterface
-     */
-    private $context;
-
-    /**
      * @var PreviewInterface
      */
     private $preview;
@@ -37,11 +32,10 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private $logger;
 
-    public function __construct(SecurityContextInterface $context, PreviewInterface $preview, LoggerInterface $logger)
+    public function __construct(PreviewInterface $preview, LoggerInterface $logger)
     {
         $this->content = array();
 
-        $this->context = $context;
         $this->preview = $preview;
         $this->logger = $logger;
     }
@@ -142,11 +136,12 @@ class PreviewMessageComponent implements MessageComponentInterface
         $id = $user . '-' . $content;
 
         // if params correct
+        // FIXME implement error handling
         if ($type == 'form' && isset($params->changes) && isset($params->template)) {
 
             foreach ($params->changes as $property => $data) {
                 // update property
-                $this->preview->update($user, $content, $property, $data, $params->template);
+                $this->preview->update($user, $content,$msg->webspaceKey, $msg->languageCode, $property, $data, $params->template);
             }
 
             // send ok message

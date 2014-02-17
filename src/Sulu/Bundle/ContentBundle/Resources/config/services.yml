@@ -30,13 +30,21 @@ services:
         arguments: [%kernel.cache_dir%]
     sulu_content.preview:
         class: %sulu_content.preview.class%
-        arguments: [@templating, @sulu_content.preview.cache, @sulu.content.mapper, @sulu.content.structure_manager, @controller_resolver, %sulu_content.preview.lifetime%, %sulu_content.preview.template-namespace%]
+        arguments:
+            - @service_container
+            - @templating
+            - @sulu_content.preview.cache
+            - @sulu.content.mapper
+            - @sulu.content.structure_manager
+            - @controller_resolver
+            - %sulu_content.preview.lifetime%
+            - %sulu_content.preview.template-namespace%
     sulu_content.preview.message_component:
         class: %sulu_content.preview.message_component.class%
-        arguments: [@security.context, @sulu_content.preview, @logger]
+        arguments: [@sulu_content.preview, @logger]
     sulu_content.node_repository:
         class: %sulu_content.node_repository.class%
-        arguments: [@sulu.content.mapper, @sulu_security.user_manager, @security.context]
+        arguments: [@sulu.content.mapper, %sulu.content.node_names.base%, %sulu.content.node_names.content%]
     sulu.content.type.smart_content:
         class: %sulu.content.type.smart_content.class%
-        arguments: [%sulu.content.type.smart_content.template%]
+        arguments: [@sulu_content.node_repository, @sulu_tag.tag_manager, %sulu.content.type.smart_content.template%]

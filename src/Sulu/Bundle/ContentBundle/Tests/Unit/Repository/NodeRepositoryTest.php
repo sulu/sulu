@@ -134,6 +134,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             'overview',
             'sulu_io',
             'en',
+            1,
             $structure->getUuid()
         );
 
@@ -168,6 +169,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             'overview',
             'sulu_io',
             'en',
+            1,
             null,
             $structure->getUuid()
         );
@@ -190,8 +192,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             'overview',
             'sulu_io',
             'en',
-            null,
-            null
+            1
         );
 
         $result = $this->nodeRepository->getNode($node['id'], 'sulu_io', 'en');
@@ -209,7 +210,8 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             $data,
             'overview',
             'sulu_io',
-            'en'
+            'en',
+            1
         );
 
         $index = $this->nodeRepository->getIndexNode('sulu_io', 'en');
