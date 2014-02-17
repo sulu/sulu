@@ -256,7 +256,7 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function saveNode($data, $templateKey, $portalKey, $languageCode, $userId, $uuid = null, $parentUuid = null)
+    public function saveNode($data, $templateKey, $portalKey, $languageCode, $userId, $uuid = null, $parentUuid = null, $state = null)
     {
         $node = $this->getMapper()->save(
             $data,
@@ -266,7 +266,8 @@ class NodeRepository implements NodeRepositoryInterface
             $userId,
             true,
             $uuid,
-            $parentUuid
+            $parentUuid,
+            $state
         );
 
         return $this->prepareNode($node);

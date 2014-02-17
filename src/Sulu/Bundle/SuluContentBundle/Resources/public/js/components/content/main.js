@@ -16,6 +16,43 @@ define([
 
     return {
 
+        stateDropdownItems: {
+            publish: function() {
+                return {
+                        'id': 'publish',
+                        'title': this.sandbox.translate('edit-toolbar.state-publish'),
+                        'icon': 'publish',
+                        'callback': function() {
+                            this.changeState(2);
+                        }.bind(this)
+                    };
+            },
+            test: function() {
+                return {
+                    'id': 'test',
+                    'title': this.sandbox.translate('edit-toolbar.state-test'),
+                    'icon': 'test',
+                    'callback': function() {
+                        this.changeState(1);
+                    }.bind(this)
+                };
+            }
+        },
+
+        stateDropdownTemplates: {
+            none: function() {
+                return [];
+            },
+            test: function() {
+                return [
+                    this.stateDropdownItems.publish.call(this)
+                ];
+            },
+            publish: function() {
+                return [];
+            }
+        },
+
         initialize: function() {
             this.bindCustomEvents();
 
@@ -65,6 +102,47 @@ define([
             this.sandbox.on('sulu.content.contents.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'content/contents');
             }, this);
+
+            // return dropdown for state
+            this.sandbox.on('sulu.content.contents.getDropdownForState', function(state, callback) {
+                callback(this.getDropdownForState(state));
+            }, this);
+
+            // return dropdown-item for state
+            this.sandbox.on('sulu.content.contents.getStateDropdownItem', function(state, callback) {
+                callback(this.getStateDropdownItem(state));
+            }, this);
+        },
+
+        getStateWithId: function(id) {
+            var strReturn = '';
+            switch(id) {
+                case 0:
+                    strReturn = 'none';
+                    break;
+                case 1:
+                    strReturn = 'test';
+                    break;
+                case 2:
+                    strReturn = 'publish';
+                    break;
+                default:
+                    this.sandbox.logger.error('No state for id', id);
+            }
+            return strReturn;
+        },
+
+        getDropdownForState: function(stateId) {
+            var state = this.getStateWithId(stateId);
+            return this.stateDropdownTemplates[state].call(this);
+        },
+
+        getStateDropdownItem: function(stateId) {
+            // return test state as default;
+            stateId = (stateId === 0) ? 1 : stateId;
+
+            var state = this.getStateWithId(stateId);
+            return this.stateDropdownItems[state].call(this);
         },
 
         getResourceLocator: function(title, callback) {
@@ -150,12 +228,27 @@ define([
             }, params.templateType);
         },
 
+        changeState: function(state) {
+            this.sandbox.emit('sulu.content.contents.state.change');
+
+            // TODO select template
+            this.content.saveTemplate(null, 'overview', this.options.parent, state, {
+                // on success save contents id
+                success: function(response) {
+                    this.sandbox.emit('sulu.content.contents.state.changed', state);
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log("error while saving profile");
+                }.bind(this)
+            });
+        },
+
         save: function(data) {
             // TODO: show loading icon
             this.content.set(data);
 
             // TODO select template
-            this.content.saveTemplate(null, 'overview', this.options.parent, {
+            this.content.saveTemplate(null, 'overview', this.options.parent, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
