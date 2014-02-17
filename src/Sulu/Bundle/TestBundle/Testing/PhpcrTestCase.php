@@ -86,7 +86,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareMapper()
     {
-        if ($this->mapper !== null) {
+        if ($this->mapper === null) {
             $this->prepareContainer();
 
             $this->mapper = new ContentMapper('de', 'default_template', 'sulu_locale');
