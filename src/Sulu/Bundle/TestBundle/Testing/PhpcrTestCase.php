@@ -100,7 +100,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareSessionManager();
 
             $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes')), 'not in use');
-            array_merge(
+            $this->containerValueMap = array_merge(
                 $this->containerValueMap,
                 array(
                     'sulu.phpcr.session' => $this->sessionManager,
