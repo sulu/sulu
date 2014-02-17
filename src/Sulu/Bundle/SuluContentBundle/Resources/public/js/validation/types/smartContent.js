@@ -25,6 +25,7 @@ define([
                     delete config.sortBy;
                     config.preSelectedSortMethod = config.sortMethod;
                     delete config.sortMethod;
+                    config.tagsAutoCompleteUrl = '/admin/api/tags';
                     App.emit('husky.smart-content.' + options.instanceName + '.external-configs', config);
                 },
 

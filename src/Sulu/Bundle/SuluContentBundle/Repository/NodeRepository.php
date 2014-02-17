@@ -199,6 +199,11 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         // build order clause
+        if (is_string($smartContentConfig['sortBy'])) {
+            // rewrite to array, if string as sort column is given
+            $smartContentConfig['sortBy'] = array($smartContentConfig['sortBy']);
+        }
+
         if (!empty($smartContentConfig['sortBy'])) {
             foreach ($smartContentConfig['sortBy'] as $sortColumn) {
                 // TODO implement more generic
