@@ -94,7 +94,6 @@ class NodeControllerTest extends DatabaseTestCase
         NodeHelper::purgeWorkspace($this->session);
         $this->session->save();
 
-        $this->prepareRepository();
         $this->session->save();
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
@@ -148,19 +147,6 @@ class NodeControllerTest extends DatabaseTestCase
         $repository = $factory->getRepository($parameters);
         $credentials = new SimpleCredentials('admin', 'admin');
         $this->session = $repository->login($credentials, 'test');
-    }
-
-    public function prepareRepository()
-    {
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
-            'sulu_locale',
-            'http://sulu.io/phpcr/locale'
-        );
     }
 
     protected function tearDown()
