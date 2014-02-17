@@ -139,7 +139,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         if (isset($this->structureValueMap[$id])) {
             return $this->structureValueMap[$id];
         } else {
-            throw new ServiceNotFoundException($id);
+            return null;
         }
     }
 
