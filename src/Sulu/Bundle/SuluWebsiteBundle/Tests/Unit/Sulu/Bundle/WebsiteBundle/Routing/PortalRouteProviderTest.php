@@ -167,11 +167,12 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            array('getUuid', 'getGlobalState')
+            array('getUuid', 'getGlobalState', 'getHasTranslation')
         );
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
         $structure->expects($this->any())->method('getGlobalState')->will($this->returnValue($state));
+        $structure->expects($this->any())->method('getHasTranslation')->will($this->returnValue(true));
 
         return $structure;
     }

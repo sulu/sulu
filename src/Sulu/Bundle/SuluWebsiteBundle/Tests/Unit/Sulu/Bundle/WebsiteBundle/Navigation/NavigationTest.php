@@ -23,7 +23,7 @@ class NavigationTest extends PhpcrTestCase
     private $data;
 
     /**
-     * @var NavigationInterface
+     * @var NavigationMapperInterface
      */
     private $navigation;
 
@@ -32,7 +32,7 @@ class NavigationTest extends PhpcrTestCase
         $this->prepareMapper();
         $this->data = $this->prepareTestData();
 
-        $this->navigation = new Navigation($this->mapper);
+        $this->navigation = new NavigationMapper($this->mapper);
     }
 
     public function structureCallback()
@@ -226,12 +226,12 @@ class NavigationTest extends PhpcrTestCase
 
         $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]->getId());
         $this->assertEquals('News-1', $main[0]->getTitle());
-        $this->assertEquals('News-1', $main[0]->getContent());
+        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[0]->getContent());
         $this->assertEquals('/news/news-1', $main[0]->getUrl());
 
         $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]->getId());
         $this->assertEquals('News-2', $main[1]->getTitle());
-        $this->assertEquals('News-2', $main[1]->getContent());
+        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $main[1]->getContent());
         $this->assertEquals('/news/news-2', $main[1]->getUrl());
     }
 }

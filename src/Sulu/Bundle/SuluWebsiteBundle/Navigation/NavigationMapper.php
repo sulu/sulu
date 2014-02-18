@@ -16,7 +16,7 @@ use Sulu\Component\Content\StructureInterface;
 /**
  * {@inheritdoc}
  */
-class Navigation implements NavigationInterface
+class NavigationMapper implements NavigationMapperInterface
 {
     /**
      * @var ContentMapperInterface
@@ -74,7 +74,7 @@ class Navigation implements NavigationInterface
             }
             if ($preview || ($content->getPublished() && $content->getNavigation() !== false)) {
                 $result[] = new NavigationItem(
-                    $content->title, $content->title, $content->url, $children, $content->getUuid()
+                    $content, $content->title, $content->url, $children, $content->getUuid()
                 );
             }
         }

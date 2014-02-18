@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
+use Sulu\Component\Content\StructureInterface;
+
 /**
  * Frontend navigation item
  * @package Sulu\Bundle\WebsiteBundle\Navigation
@@ -32,7 +34,7 @@ class NavigationItem
     private $url;
 
     /**
-     * @var string
+     * @var StructureInterface
      */
     private $content;
 
@@ -41,7 +43,7 @@ class NavigationItem
      */
     private $children;
 
-    function __construct($content, $title, $url, $children = array(), $id = null)
+    function __construct(StructureInterface $content, $title, $url, $children = array(), $id = null)
     {
         $this->content = $content;
         $this->title = $title;
