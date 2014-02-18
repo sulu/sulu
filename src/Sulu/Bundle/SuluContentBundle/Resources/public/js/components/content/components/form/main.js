@@ -219,6 +219,7 @@ define(['app-config'], function(AppConfig) {
                     } else {
                         url += '.html';
                     }
+                    url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                     require([url], function(template) {
                         var defaults = {
