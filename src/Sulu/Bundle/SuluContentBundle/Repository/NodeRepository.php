@@ -33,10 +33,20 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    function __construct(ContentMapperInterface $mapper, SessionManagerInterface $sessionManager)
+    /**
+     * @var UserManagerInterface
+     */
+    private $userManager;
+
+    function __construct(
+        ContentMapperInterface $mapper,
+        SessionManagerInterface $sessionManager,
+        UserManagerInterface $userManager
+    )
     {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -46,6 +56,16 @@ class NodeRepository implements NodeRepositoryInterface
     protected function getMapper()
     {
         return $this->mapper;
+    }
+
+    /**
+     * returns user fullName
+     * @param integer $id userId
+     * @return string
+     */
+    protected function getFullNameByUserId($id)
+    {
+        return $this->userManager->getFullNameByUserId($id);
     }
 
     /**
