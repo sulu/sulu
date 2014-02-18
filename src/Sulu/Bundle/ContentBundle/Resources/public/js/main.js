@@ -11,7 +11,8 @@ require.config({
     paths: {
         sulucontent: '../../sulucontent/js',
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
-        "type/textEditor": '../../sulucontent/js/validation/types/textEditor'
+        "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
+        "type/smartContent": '../../sulucontent/js/validation/types/smartContent'
     }
 });
 

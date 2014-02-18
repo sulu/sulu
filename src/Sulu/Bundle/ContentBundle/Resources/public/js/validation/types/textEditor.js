@@ -9,9 +9,9 @@
  */
 
 define([
-    'type/string',
+    'type/default',
     'form/util'
-], function(String, Util) {
+], function(Default, Util) {
 
     'use strict';
 
@@ -20,12 +20,20 @@ define([
 
             subType = {
                 initializeSub: function() {
-                    this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
+                    App.on('husky.ckeditor.changed', function(data, $el) {
                         App.emit('sulu.preview.update', $el.data('mapperProperty'), data);
                     }.bind(this));
+                },
+
+                needsValidation: function() {
+                    return false;
+                },
+
+                validate: function() {
+                    return true;
                 }
             };
 
-        return new String($el, defaults, options, 'textEditor', subType);
+        return new Default($el, defaults, options, 'textEditor', subType);
     };
 });

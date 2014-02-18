@@ -11,7 +11,7 @@
 
     <properties>
         <property name="title" type="text_line" mandatory="true"/>
-        <property name="tags" type="text_line" minOccurs="2" maxOccurs="10"/>
+        <property name="tags" type="tag_list"/>
         <property name="url" type="resource_locator" mandatory="true"/>
         <property name="article" type="text_area" mandatory="false"/>
     </properties>
