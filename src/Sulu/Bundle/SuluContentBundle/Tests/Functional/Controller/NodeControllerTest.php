@@ -202,8 +202,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Test', $response->article);
         $this->assertEquals('/de/test', $response->url);
         $this->assertEquals(array('tag1', 'tag2'), $response->tags);
-        $this->assertEquals(1, $response->creator);
-        $this->assertEquals(1, $response->changer);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/sulu_io/routes/de/test');
@@ -259,8 +259,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Test', $response->article);
         $this->assertEquals('/news/test', $response->url);
         $this->assertEquals(array('tag1', 'tag2'), $response->tags);
-        $this->assertEquals(1, $response->creator);
-        $this->assertEquals(1, $response->changer);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/sulu_io/routes/news/test');
@@ -384,8 +384,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals($data[0]['tags'], $response->tags);
         $this->assertEquals($data[0]['url'], $response->url);
         $this->assertEquals($data[0]['article'], $response->article);
-        $this->assertEquals(1, $response->creator);
-        $this->assertEquals(1, $response->creator);
+        $this->assertEquals('Max Mustermann', $response->creator);
+        $this->assertEquals('Max Mustermann', $response->creator);
 
         $client->request('GET', '/api/nodes?depth=1');
 
@@ -399,15 +399,15 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals($data[1]['tags'], $response->_embedded[0]->tags);
         $this->assertEquals($data[1]['url'], $response->_embedded[0]->url);
         $this->assertEquals($data[1]['article'], $response->_embedded[0]->article);
-        $this->assertEquals(1, $response->_embedded[0]->creator);
-        $this->assertEquals(1, $response->_embedded[0]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[0]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[0]->creator);
 
         $this->assertEquals($data[0]['title'], $response->_embedded[1]->title);
         $this->assertEquals($data[0]['tags'], $response->_embedded[1]->tags);
         $this->assertEquals($data[0]['url'], $response->_embedded[1]->url);
         $this->assertEquals($data[0]['article'], $response->_embedded[1]->article);
-        $this->assertEquals(1, $response->_embedded[1]->creator);
-        $this->assertEquals(1, $response->_embedded[1]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
+        $this->assertEquals('Max Mustermann', $response->_embedded[1]->creator);
     }
 
     private function buildTree()
