@@ -39,6 +39,9 @@ class TemplateController extends Controller
             $fireEvent = true;
         }
 
+        $webspace = $this->getRequest()->get('webspace');
+        $language = $this->getRequest()->get('language');
+
         $template = $this->getTemplateStructure($key);
 
         return $this->render(
@@ -48,7 +51,9 @@ class TemplateController extends Controller
                 'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
                 'templateKey' => $key,
-                'fireEvent' => $fireEvent
+                'fireEvent' => $fireEvent,
+                'webspaceKey' => $webspace,
+                'languageCode' => $language
             )
         );
     }

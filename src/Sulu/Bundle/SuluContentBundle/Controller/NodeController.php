@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -20,7 +22,6 @@ use Sulu\Component\Rest\RestController;
 
 class NodeController extends RestController implements ClassResourceInterface
 {
-
     /**
      * returns a content item with given UUID as JSON String
      * @param $uuid
@@ -83,6 +84,78 @@ class NodeController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Returns the title of the pages for a given smart content configuration
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function filterAction()
+    {
+        // load data from request
+        $dataSource = $this->getRequest()->get('dataSource', null);
+        $includeSubFolders = $this->getRequest()->get('includeSubFolders', 'false');
+        $limitResult = $this->getRequest()->get('limitResult', null);
+        $tagNames = $this->getRequest()->get('tags', null);
+        $sortBy = $this->getRequest()->get('sortBy', null);
+        $sortMethod = $this->getRequest()->get('sortMethod', 'asc');
+
+        // resolve tag names
+        $resolvedTags = array();
+
+        /** @var TagManagerInterface $tagManager */
+        $tagManager = $this->get('sulu_tag.tag_manager');
+
+        if (isset($tagNames)) {
+            $tags = explode(',', $tagNames);
+            foreach ($tags as $tag) {
+                $resolvedTag = $tagManager->findByName($tag);
+                if ($resolvedTag) {
+                    $resolvedTags[] = $resolvedTag->getId();
+                }
+            }
+        }
+
+        // get sort columns
+        $sortColumns = array();
+        if (isset($sortBy)) {
+            $columns = explode(',', $sortBy);
+            foreach ($columns as $column) {
+                $sortColumns[] = $column;
+            }
+        }
+
+        $filterConfig = array(
+            'dataSource' => $dataSource,
+            'includeSubFolders' => ($includeSubFolders == 'false') ? false : true,
+            'limitResult' => $limitResult,
+            'tags' => $resolvedTags,
+            'sortBy' => $sortColumns,
+            'sortMethod' => $sortMethod
+        );
+
+        $webspaceKey = $this->getRequest()->get('webspace');
+        $languageCode = $this->getRequest()->get('language');
+
+        $structures = array();
+
+        $content = $this->get('sulu_content.node_repository')->getFilteredNodes(
+            $filterConfig,
+            $languageCode,
+            $webspaceKey,
+            true
+        );
+
+        $i = 0;
+        foreach ($content as $structure) {
+            /** @var StructureInterface $structure */
+            $structures[] = array(
+                'id' => $i++,
+                'name' => $structure->getProperty('title')->getValue()
+            );
+        }
+
+        return $this->handleView($this->view(array('_embedded' => $structures)));
+    }
+
+    /**
      * saves node with given uuid and data
      * @param $uuid
      * @return \Symfony\Component\HttpFoundation\Response
@@ -114,6 +187,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $template,
             $webspace,
             $language,
+            $this->getUser()->getId(),
             $uuid,
             null,   // parentUuid
             $state,
@@ -137,7 +211,13 @@ class NodeController extends RestController implements ClassResourceInterface
                 throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
             }
 
-            $result = $this->getRepository()->saveIndexNode($data, $template, $webspace, $language);
+            $result = $this->getRepository()->saveIndexNode(
+                $data,
+                $template,
+                $webspace,
+                $language,
+                $this->getUser()->getId()
+            );
             $view = $this->view($result);
         } catch (RestException $ex) {
             $view = $this->view(
@@ -167,6 +247,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $template,
             $webspace,
             $language,
+                $this->getUser()->getId(),
             null, // uuid
             $parent,
             null, // state
