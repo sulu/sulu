@@ -70,13 +70,14 @@ class SmartContent extends ComplexContentType
      * @param string $languageCode
      * @param bool $preview
      */
-    protected function setData($data, PropertyInterface $property, $webspaceKey, $languageCode, $preview = false)
+    protected function setData($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey,  $preview = false)
     {
         $smartContent = new SmartContentContainer(
             $this->nodeRepository,
             $this->tagManager,
             $webspaceKey,
             $languageCode,
+            $segmentKey,
             $preview
         );
         $smartContent->setConfig($data);
@@ -94,7 +95,7 @@ class SmartContent extends ComplexContentType
             $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);
         }
 
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
@@ -102,7 +103,7 @@ class SmartContent extends ComplexContentType
      */
     public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $this->setData($data, $property, $webspaceKey, $languageCode, true);
+        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey, true);
     }
 
     /**
