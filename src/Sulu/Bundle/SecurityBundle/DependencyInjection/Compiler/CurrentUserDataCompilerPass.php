@@ -48,6 +48,16 @@ class CurrentUserDataCompilerPass implements CompilerPassInterface
                     )
                 )
             );
+        } else {
+            $container->setDefinition(
+                'sulu_security.user_manager',
+                new Definition(
+                    'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
+                    array(
+                        new Reference('doctrine')
+                    )
+                )
+            );
         }
     }
 }
