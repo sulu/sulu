@@ -10,12 +10,9 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Twig_Environment;
 
 /**
  * Default Controller for rendering templates, uses the themes from the ClientWebsiteBundle
@@ -33,23 +30,26 @@ class DefaultController extends WebsiteController
      */
     public function indexAction(StructureInterface $structure, $preview = false, $partial = false)
     {
-        $response = $this->renderStructure($structure, array(), $preview, $partial);
+        $response = $this->renderStructure(
+            $structure,
+            array(
+                'navigation' => $this->getMainNavigation($structure, 1, $preview)
+            ),
+            $preview,
+            $partial
+        );
         return $response;
     }
 
     public function error404Action()
     {
-        $content = $this->renderView(
+        return $this->renderError(
             'ClientWebsiteBundle:Website:error404.html.twig',
-            array('path' => $this->getRequest()->get('path'))
+            array(
+                'path' => $this->getRequest()->get('path'),
+                'navigation' => array()
+            )
         );
-
-        $response = new Response();
-        $response->setStatusCode(404);
-
-        $response->setContent($content);
-
-        return $response;
     }
 
     public function redirectAction()

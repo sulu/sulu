@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,10 +52,38 @@ abstract class WebsiteController extends Controller
         return $response;
     }
 
+    protected function renderError($template, $parameters, $code = 404)
+    {
+        $content = $this->renderView(
+            $template,
+            $parameters
+        );
+
+        $response = new Response();
+        $response->setStatusCode($code);
+
+        $response->setContent($content);
+
+        return $response;
+    }
+
     protected function renderBlock($template, $block, $attributes = array())
     {
         $twig = $this->get('twig');
         $template = $twig->loadTemplate($template);
         return $template->renderBlock($block, $attributes);
+    }
+
+    protected function getMainNavigation(StructureInterface $structure, $depth = 1, $preview = false)
+    {
+        /** @var NavigationMapper $navigation */
+        $navigation = $this->get('sulu_website.navigation_mapper');
+
+        return $navigation->getMainNavigation(
+            $structure->getWebspaceKey(),
+            $structure->getLanguageCode(),
+            $depth,
+            $preview
+        );
     }
 } 
