@@ -30,6 +30,7 @@ class SuluContentExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_content.template.default', $config['default_template']);
         $container->setParameter('sulu_content.preview.fallback.interval', $config['preview']['fallback']['interval']);
         $container->setParameter('sulu_content.preview.websocket.port', $config['preview']['websocket']['port']);
 

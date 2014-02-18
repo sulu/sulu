@@ -7,42 +7,72 @@
  * with this source code in the file LICENSE.
  */
 
-define(function () {
+define(function() {
 
     'use strict';
 
     return {
-        content: {
-            url: '/admin/content/navigation/content',
-            title: 'content.contents.title',
-            parentTemplate: 'default',
-            template: [{
-                icon: 'eye-open',
-                iconSize: 'large',
-                group: 'left',
-                position: 20,
-                items: [
-                    {
-                        title: App.translate('sulu.edit-toolbar.new-window'),
-                        callback: function () {
-                            App.emit('sulu.edit-toolbar.preview.new-window');
-                        }
-                    },
-                    {
-                        title: App.translate('sulu.edit-toolbar.split-screen'),
-                        callback: function () {
-                            App.emit('sulu.edit-toolbar.preview.split-screen');
-                        }
+
+        content: function() {
+            return {
+                url: '/admin/content/navigation/content',
+                title: 'content.contents.title',
+                parentTemplate: 'default',
+                template: function() {
+                    var preview = {
+                            icon: 'eye-open',
+                            iconSize: 'large',
+                            group: 'left',
+                            position: 20,
+                            items: [
+                                {
+                                    title: this.sandbox.translate('sulu.edit-toolbar.new-window'),
+                                    callback: function() {
+                                        this.sandbox.emit('sulu.edit-toolbar.preview.new-window');
+                                    }.bind(this)
+                                },
+                                {
+                                    title: this.sandbox.translate('sulu.edit-toolbar.split-screen'),
+                                    callback: function() {
+                                        this.sandbox.emit('sulu.edit-toolbar.preview.split-screen');
+                                    }.bind(this)
+                                }
+                            ]
+                        },
+                        state = {
+                            'id': 'state',
+                            'group': 'right',
+                            'class': 'highlight-gray',
+                            'position': 2,
+                            'type': 'select'
+                        },
+                        template = {
+                            id: 'template',
+                            icon: 'tag',
+                            iconSize: 'large',
+                            group: 'right',
+                            position: 1,
+                            type: 'select',
+                            title: '',
+                            hidden: true,
+                            itemsOption: {
+                                url: '/admin/content/template',
+                                titleAttribute: 'template',
+                                idAttribute: 'template',
+                                translate: true,
+                                languageNamespace: 'template.',
+                                callback: function(item) {
+                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.template.item-clicked', item);
+                                }.bind(this)
+                            }
+                        };
+                    if (!this.options.id) {
+                        return [template, state];
+                    } else {
+                        return [template, preview, state];
                     }
-                ]
-            },
-            {
-                'id': 'state',
-                'group': 'right',
-                'class': 'highlight-gray',
-                'position': 2,
-                'type': 'select'
-            }]
+                }.bind(this)
+            };
         }
     };
 });

@@ -78,6 +78,7 @@ class SmartContentContainer implements \Serializable
         TagManagerInterface $tagManager,
         $webspaceKey,
         $languageCode,
+        $segmentKey,
         $preview = false
     )
     {
@@ -119,7 +120,12 @@ class SmartContentContainer implements \Serializable
                 $config['tags'] = $this->tagManager->resolveTagNames($config['tags']);
             }
 
-            $this->data = $this->nodeRepository->getFilteredNodes($config, $this->languageCode, $this->webspaceKey, $this->preview);
+            $this->data = $this->nodeRepository->getFilteredNodes(
+                $config,
+                $this->languageCode,
+                $this->webspaceKey,
+                $this->preview
+            );
         }
 
         return $this->data;

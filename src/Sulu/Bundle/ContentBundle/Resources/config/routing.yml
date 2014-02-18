@@ -2,6 +2,14 @@ sulu_content.content_form:
     pattern: /template/form/{key}.html
     defaults: { _controller: SuluContentBundle:Template:content }
 
+sulu_content.content_form.default:
+    pattern: /template/form.html
+    defaults: { _controller: SuluContentBundle:Template:content }
+
+sulu_content.template.get:
+    pattern: /template
+    defaults: { _controller: SuluContentBundle:Template:get }
+
 sulu_content.content_navigation:
     path: /navigation/content
     defaults: { _controller: SuluContentBundle:Navigation:content }
@@ -29,7 +37,7 @@ sulu_content.preview.render:
     defaults: { _controller: SuluContentBundle:Preview:render }
 
 sulu_content.preview.slitScreen:
-    pattern: /split-screen/{contentUuid}
+    pattern: /split-screen/{webspace}/{language}/{contentUuid}
     methods: GET
     defaults: { _controller: SuluContentBundle:Template:splitScreen }
 
