@@ -46,7 +46,7 @@ define(function() {
                     name: 'column-navigation@husky',
                     options: {
                         el: '#content-column',
-                        url: '/admin/api/nodes?depth=1'
+                        url: '/admin/api/nodes?depth=1&workspace=' + this.options.webspace + '&language=' + this.options.language
                     }
                 },
                 {
@@ -60,7 +60,7 @@ define(function() {
                                 },
                                 {
                                     "title": "Home page",
-                                    "action": "content/contents/edit:index/details"
+                                    "action": 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:index/details'
                                 }
                             ]
                         }

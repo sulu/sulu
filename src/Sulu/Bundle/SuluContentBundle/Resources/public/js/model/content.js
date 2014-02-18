@@ -16,10 +16,22 @@ define([
     return new RelationalModel({
         urlRoot: '/admin/api/nodes',
 
-        saveTemplate: function(attributes, template, parent, state, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?template=' + template + (!!parent ? '&parent=' + parent : '') + (!!state ? '&state=' + state : '')});
+        fullSave: function(template, webspace, language, parent, state, attributes, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + (!!template ? '&template=' + template : '') + (!!parent ? '&parent=' + parent : '') + (!!state ? '&state=' + state : '')});
 
             return this.save.call(this, attributes, options);
+        },
+
+        fullFetch: function(webspace, language, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+
+            return this.fetch.call(this, options);
+        },
+
+        fullDestroy: function(webspace, language, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+
+            return this.destroy.call(this, options);
         },
 
         defaults: function() {

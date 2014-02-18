@@ -8,9 +8,8 @@
  */
 
 define([
-    'sulucontent/model/content',
-    'text!/admin/content/navigation/content'
-], function(Content, ContentNavigation) {
+    'sulucontent/model/content'
+], function(Content) {
 
     'use strict';
 
@@ -19,13 +18,13 @@ define([
         stateDropdownItems: {
             publish: function() {
                 return {
-                        'id': 'publish',
-                        'title': this.sandbox.translate('edit-toolbar.state-publish'),
-                        'icon': 'publish',
-                        'callback': function() {
-                            this.changeState(2);
-                        }.bind(this)
-                    };
+                    'id': 'publish',
+                    'title': this.sandbox.translate('edit-toolbar.state-publish'),
+                    'icon': 'publish',
+                    'callback': function() {
+                        this.changeState(2);
+                    }.bind(this)
+                };
             },
             test: function() {
                 return {
@@ -74,8 +73,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.content.contents.save', function(data, template) {
+                this.save(data, template);
             }, this);
 
             // wait for navigation events
@@ -100,7 +99,7 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
             }, this);
 
             // return dropdown for state
@@ -116,7 +115,7 @@ define([
 
         getStateWithId: function(id) {
             var strReturn = '';
-            switch(id) {
+            switch (id) {
                 case 0:
                     strReturn = 'none';
                     break;
@@ -146,7 +145,7 @@ define([
         },
 
         getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=sulu_io';
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace;
             // TODO portal
             this.sandbox.util.load(url)
                 .then(function(data) {
@@ -159,20 +158,20 @@ define([
                 if (wasConfirmed) {
                     if (id !== this.content.get('id')) {
                         var content = new Content({id: id});
-                        content.destroy({
+                        content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
 
                             success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     } else {
-                        this.content.destroy({
+                        this.content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
 
                             success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'content/contents');
+                                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
@@ -232,9 +231,9 @@ define([
             this.sandbox.emit('sulu.content.contents.state.change');
 
             // TODO select template
-            this.content.saveTemplate(null, 'overview', this.options.parent, state, {
+            this.content.fullSave(null, this.options.webspace, this.options.language, null, state, null, {
                 // on success save contents id
-                success: function(response) {
+                success: function() {
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                 }.bind(this),
                 error: function() {
@@ -243,19 +242,18 @@ define([
             });
         },
 
-        save: function(data) {
+        save: function(data, template) {
             // TODO: show loading icon
             this.content.set(data);
 
-            // TODO select template
-            this.content.saveTemplate(null, 'overview', this.options.parent, null, {
+            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + model.id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/details');
                     }
                 }.bind(this),
                 error: function() {
@@ -266,14 +264,14 @@ define([
 
         load: function(id) {
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/edit:' + id + '/details');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/details');
         },
 
         add: function(parent) {
             if (!!parent) {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/add:' + parent.id + '/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/details');
             } else {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/add/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/details');
             }
         },
 
@@ -289,7 +287,7 @@ define([
                     // TODO: show loading icon
                     ids.forEach(function(id) {
                         var content = new Content({id: id});
-                        content.destroy({
+                        content.fullDestroy(this.options.webspace, this.options.language, {
                             success: function() {
                                 this.sandbox.emit('husky.datagrid.row.remove', id);
                             }.bind(this),
@@ -352,7 +350,14 @@ define([
             var $column = this.sandbox.dom.createElement('<div id="contacts-column-container"/>');
             this.html($column);
             this.sandbox.start([
-                {name: 'content/components/column@sulucontent', options: { el: $column}}
+                {
+                    name: 'content/components/column@sulucontent',
+                    options: {
+                        el: $column,
+                        webspace: this.options.webspace,
+                        language: this.options.language
+                    }
+                }
             ]);
         },
 
@@ -363,10 +368,18 @@ define([
             this.content = new Content();
             if (!!this.options.id) {
                 this.content = new Content({id: this.options.id});
-                this.content.fetch({
+                this.content.fullFetch(this.options.webspace, this.options.language, {
                     success: function(model) {
                         this.sandbox.start([
-                            {name: 'content/components/form@sulucontent', options: { el: $form, data: model.toJSON()}}
+                            {
+                                name: 'content/components/form@sulucontent',
+                                options: {
+                                    el: $form,
+                                    data: model.toJSON(),
+                                    webspace: this.options.webspace,
+                                    language: this.options.language
+                                }
+                            }
                         ]);
                     }.bind(this),
                     error: function() {
@@ -375,7 +388,15 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'content/components/form@sulucontent', options: { el: $form, data: this.content.toJSON()}}
+                    {
+                        name: 'content/components/form@sulucontent',
+                        options: {
+                            el: $form,
+                            data: this.content.toJSON(),
+                            webspace: this.options.webspace,
+                            language: this.options.language
+                        }
+                    }
                 ]);
             }
 

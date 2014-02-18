@@ -5,9 +5,9 @@
         {% set type = getType(property.contentTypeName) %}
 
         {% if property is multiple %}
-            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'type': type} only %}
+            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'type': type, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
         {% else %}
-            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'id': property.name} only %}
+            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
         {% endif %}
     {% endfor %}
 </form>
@@ -15,5 +15,8 @@
 <script type="text/javascript">
     (function() {
         App.emit('sulu.preview.set-params', '{{ wsUrl }}', '{{ wsPort }}');
+        {% if fireEvent %}
+        App.emit('sulu.content.contents.default-template', '{{ templateKey }}');
+        {% endif %}
     })();
 </script>

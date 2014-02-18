@@ -1,9 +1,10 @@
 <textarea
-       class="form-element"
-       id="{{ id }}"
-       data-aura-component="ckeditor@husky"
-       data-aura-height="300"
-       data-mapper-property="{{ property.name }}"
+        class="form-element"
+        id="{{ id }}"
+        data-type="textEditor"
+        data-aura-component="ckeditor@husky"
+        data-aura-height="300"
+        data-mapper-property="{{ property.name }}"
         {% if property.mandatory %}
-    data-validation-required="true"
+        data-validation-required="true"
         {% endif %}></textarea>

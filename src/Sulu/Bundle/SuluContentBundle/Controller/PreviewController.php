@@ -89,12 +89,13 @@ class PreviewController extends Controller
             // TODO language
             $preview->start($uid, $contentUuid, $webspace, $language);
         }
+        $template = $this->getRequest()->get('template');
 
         // get changes from request
         $changes = $request->get('changes', false);
         if (!!$changes) {
             foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $webspace, $language, $property, $content);
+                $preview->update($uid, $contentUuid, $webspace, $language, $property, $content, $template);
             }
         }
 

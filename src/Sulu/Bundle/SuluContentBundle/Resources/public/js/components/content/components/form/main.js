@@ -20,7 +20,10 @@ define(['app-config'], function(AppConfig) {
         wsUrl: '',
         wsPort: '',
 
-        templates: ['/admin/content/template/form/overview'],
+        template: '',
+        contentChanged: false,
+
+        hiddenTemplate: true,
 
         initialize: function() {
             this.saved = true;
@@ -29,19 +32,16 @@ define(['app-config'], function(AppConfig) {
             this.render();
 
             this.setHeaderBar(true);
-            this.listenForChange();
         },
 
         render: function() {
             this.bindCustomEvents();
 
-            this.html(this.renderTemplate('/admin/content/template/form/overview'));
-            var data = this.initData();
-
-            this.setStateDropdown(data);
-            this.createForm(data);
-
-            this.bindDomEvents();
+            if (!!this.options.data.template) {
+                this.changeTemplate(this.options.data.template);
+            } else {
+                this.changeTemplate();
+            }
         },
 
         setStateDropdown: function(data) {
@@ -63,11 +63,15 @@ define(['app-config'], function(AppConfig) {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-                this.sandbox.form.setData(this.formId, data);
-                if (!!this.options.data.id) {
-                    this.initPreview();
-                }
+                this.setFormData(data);
             }.bind(this));
+        },
+
+        setFormData: function(data) {
+            this.sandbox.form.setData(this.formId, data);
+            if (!!this.options.data.id) {
+                this.initPreview();
+            }
         },
 
         bindDomEvents: function() {
@@ -87,18 +91,22 @@ define(['app-config'], function(AppConfig) {
             var title = this.sandbox.dom.val('#title'),
                 url = '#url';
 
-            this.sandbox.dom.addClass(url, 'is-loading');
-            this.sandbox.dom.css(url, 'background-position', '99%');
+            if (title !== '') {
+                this.sandbox.dom.addClass(url, 'is-loading');
+                this.sandbox.dom.css(url, 'background-position', '99%');
 
-            this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
-                this.sandbox.dom.removeClass(url, 'is-loading');
-                this.sandbox.dom.val(url, rl);
-            }.bind(this));
+                this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
+                    this.sandbox.dom.removeClass(url, 'is-loading');
+                    this.sandbox.dom.val(url, rl);
+                }.bind(this));
+            } else {
+                this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            }
         },
 
         bindCustomEvents: function() {
             // content saved
-            this.sandbox.on('sulu.content.contents.saved', function(id) {
+            this.sandbox.on('sulu.content.contents.saved', function() {
                 this.setHeaderBar(true);
             }, this);
 
@@ -137,6 +145,19 @@ define(['app-config'], function(AppConfig) {
                 this.wsPort = port;
             }, this);
 
+            // set default template
+            this.sandbox.on('sulu.content.contents.default-template', function(name) {
+                this.template = name;
+                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
+                if (this.hiddenTemplate) {
+                    this.hiddenTemplate = false;
+                    this.sandbox.emit('husky.edit-toolbar.item.show', 'template', name);
+                }
+            }, this);
+
+            // change template
+            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', this.changeTemplate, this);
+
             // set state button in loading state
             this.sandbox.on('sulu.content.contents.state.change', function() {
                 this.sandbox.emit('husky.edit-toolbar.item.loading', 'state');
@@ -163,7 +184,92 @@ define(['app-config'], function(AppConfig) {
 
                 this.sandbox.logger.log('data', data);
 
-                this.sandbox.emit('sulu.content.contents.save', data);
+                this.sandbox.emit('sulu.content.contents.save', data, this.template);
+            }
+        },
+
+        changeTemplate: function(item) {
+            if (typeof item === 'string') {
+                item = {template: item};
+            }
+            if (!!item && this.template === item.template) {
+                return;
+            }
+
+            var doIt = function() {
+                    if (!!item) {
+                        this.template = item.template;
+                    }
+                    this.setHeaderBar(false);
+
+                    var tmp, url;
+                    if (!!this.sandbox.form.getObject(this.formId)) {
+                        tmp = this.options.data;
+                        this.options.data = this.sandbox.form.getData(this.formId);
+                        if (!!tmp.id) {
+                            this.options.data.id = tmp.id;
+                        }
+
+                        this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
+                    }
+
+                    url = 'text!/admin/content/template/form';
+                    if (!!item) {
+                        url += '/' + item.template + '.html';
+                    } else {
+                        url += '.html';
+                    }
+                    url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
+
+                    require([url], function(template) {
+                        var defaults = {
+                                translate: this.sandbox.translate
+                            },
+                            context = this.sandbox.util.extend({}, defaults),
+                            tpl = this.sandbox.util.template(template, context),
+                            data = this.initData();
+
+                        this.html(tpl);
+                        this.setStateDropdown(data);
+                        this.createForm(data);
+
+                        this.bindDomEvents();
+                        this.listenForChange();
+
+                        this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+                        if (this.hiddenTemplate) {
+                            this.hiddenTemplate = false;
+                            this.sandbox.emit('husky.edit-toolbar.item.show', 'template');
+                        }
+                    }.bind(this));
+                }.bind(this),
+                showDialog = function() {
+                    this.sandbox.emit('sulu.dialog.confirmation.show', {
+                        content: {
+                            title: this.sandbox.translate('content.template.dialog.title'),
+                            content: this.sandbox.translate('content.template.dialog.content')
+                        },
+                        footer: {
+                            buttonCancelText: this.sandbox.translate('content.template.dialog.cancel-button'),
+                            buttonSubmitText: this.sandbox.translate('content.template.dialog.submit-button')
+                        },
+                        callback: {
+                            submit: function() {
+                                this.sandbox.emit('husky.dialog.hide');
+
+                                doIt();
+                            }.bind(this),
+                            cancel: function() {
+                                this.sandbox.emit('husky.dialog.hide');
+                            }.bind(this)
+                        }
+                    }, null);
+                }.bind(this);
+
+            if (this.template !== '' && this.contentChanged) {
+                showDialog();
+            } else {
+                doIt();
             }
         },
 
@@ -175,19 +281,24 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
+            if (this.saved) {
+                this.contentChanged = false;
+            }
         },
-
 
         listenForChange: function() {
             this.sandbox.dom.on(this.formId, 'change', function() {
                 this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this), "select, input");
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this), "input,textarea");
 
             this.sandbox.on('husky.ckeditor.changed', function() {
                 this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this));
         },
 
@@ -196,7 +307,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         openSplitScreen: function() {
-            window.open('/admin/content/split-screen/' + this.options.data.id);
+            window.open('/admin/content/split-screen/' + this.options.webspace + '/' + this.options.language + '/' + this.options.data.id);
         },
 
         /**
@@ -226,18 +337,20 @@ define(['app-config'], function(AppConfig) {
             }
 
             this.sandbox.dom.on(this.formId, 'keyup', function(e) {
-                var $element = $(e.currentTarget);
-                while (!$element.data('element')) {
-                    $element = $element.parent();
-                }
-                this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
-            }.bind(this), "select, input, textarea");
-
-            this.sandbox.on('husky.ckeditor.changed', function(data, $el) {
                 if (!!this.options.data.id) {
-                    this.updatePreview($el.data('mapperProperty'), data);
+                    var $element = $(e.currentTarget);
+                    while (!$element.data('element')) {
+                        $element = $element.parent();
+                    }
+                    this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
                 }
-            }.bind(this));
+            }.bind(this), '.preview-update');
+
+            this.sandbox.on('sulu.preview.update', function(property, value) {
+                if (!!this.options.data.id) {
+                    this.updatePreview(property, value);
+                }
+            }, this);
         },
 
         initAjax: function() {
@@ -260,9 +373,13 @@ define(['app-config'], function(AppConfig) {
                     content: this.options.data.id,
                     type: 'form',
                     user: AppConfig.getUser().id,
+                    webspace: this.options.webspace,
+                    language: this.options.language,
                     params: {}
                 };
                 this.ws.send(JSON.stringify(message));
+
+                this.updatePreview();
             }.bind(this);
 
             this.ws.onmessage = function(e) {
@@ -282,7 +399,11 @@ define(['app-config'], function(AppConfig) {
 
         updatePreview: function(property, value) {
             var changes = {};
-            changes[property] = value;
+            if (!!property && !!value) {
+                changes[property] = value;
+            } else {
+                changes = this.sandbox.form.getData(this.formId);
+            }
 
             if (this.ws !== null) {
                 this.updateWs(changes);
@@ -292,7 +413,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         updateAjax: function(changes) {
-            var updateUrl = '/admin/content/preview/' + this.options.data.id;
+            var updateUrl = '/admin/content/preview/' + this.options.data.id + '?template=' + this.template + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
 
             this.sandbox.util.ajax({
                 url: updateUrl,
@@ -310,7 +431,9 @@ define(['app-config'], function(AppConfig) {
                 content: this.options.data.id,
                 type: 'form',
                 user: AppConfig.getUser().id,
-                params: {changes: changes}
+                webspace: this.options.webspace,
+                language: this.options.language,
+                params: {changes: changes, template: this.template}
             };
             this.ws.send(JSON.stringify(message));
         }

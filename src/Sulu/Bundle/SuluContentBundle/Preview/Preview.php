@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -114,17 +115,18 @@ class Preview implements PreviewInterface
     /**
      * {@inheritdoc}
      */
-    public function update($userId, $contentUuid, $webspaceKey, $languageCode, $property, $data)
+    public function update($userId, $contentUuid, $webspaceKey, $languageCode, $property, $data, $template = null)
     {
         /** @var StructureInterface $content */
         $content = $this->loadStructure($userId, $contentUuid);
 
         if ($content != false) {
-            $propertyInstance = $content->getProperty($property);
-            $contentType = $this->getContentType($propertyInstance->getContentTypeName());
-            $contentType->readForPreview($data, $propertyInstance, $webspaceKey, $languageCode, null);
+            if ($template !== null && $content->getKey() !== $template) {
+                $content = $this->updateTemplate($content, $template, $webspaceKey, $languageCode);
+                $this->addReload($userId, $contentUuid);
+            }
 
-            $content->getProperty($property)->setValue($propertyInstance->getValue());
+            $this->setValue($content, $property, $data, $webspaceKey, $languageCode);
             $this->addStructure($userId, $contentUuid, $content);
 
             $changes = $this->render($userId, $contentUuid, true, $property);
@@ -136,6 +138,49 @@ class Preview implements PreviewInterface
         } else {
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
+    }
+
+    /**
+     * @param StructureInterface $content
+     * @param $template
+     * @param $webspaceKey
+     * @param $languageCode
+     * @return StructureInterface
+     */
+    private function updateTemplate(StructureInterface $content, $template, $webspaceKey, $languageCode)
+    {
+        /** @var StructureInterface $newContent */
+        $newContent = $this->structureManager->getStructure($template);
+        /** @var PropertyInterface $property */
+        foreach ($newContent->getProperties() as $property) {
+            if ($content->hasProperty($property->getName())) {
+                $this->setValue(
+                    $newContent,
+                    $property->getName(),
+                    $property->getValue(),
+                    $webspaceKey,
+                    $languageCode
+                );
+            }
+        }
+        return $newContent;
+    }
+
+    /**
+     * Sets the given data in the given content (including webspace and language)
+     * @param StructureInterface $content
+     * @param string $property
+     * @param mixed $data
+     * @param string $webspaceKey
+     * @param string $languageCode
+     */
+    private function setValue(StructureInterface $content, $property, $data, $webspaceKey, $languageCode)
+    {
+        $propertyInstance = $content->getProperty($property);
+        $contentType = $this->getContentType($propertyInstance->getContentTypeName());
+        $contentType->readForPreview($data, $propertyInstance, $webspaceKey, $languageCode, null);
+
+        $content->getProperty($property)->setValue($propertyInstance->getValue());
     }
 
     /**
@@ -253,11 +298,23 @@ class Preview implements PreviewInterface
 
         if (!$changes) {
             $changes = array();
+        } elseif (isset($changes['reload']) && $changes['reload'] === true) {
+            return;
         }
 
         $changes[$property] = array('property' => $property, 'content' => $content);
 
         $this->cache->save($id, $changes, $this->lifeTime);
+    }
+
+    /**
+     * adds a reload event to changes
+     * @param $userId
+     * @param $contentUuid
+     */
+    private function addReload($userId, $contentUuid)
+    {
+        $this->addChanges($userId, $contentUuid, 'reload', true);
     }
 
     /**

@@ -29,8 +29,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function getAction($uuid)
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
@@ -54,8 +52,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function indexAction()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
@@ -70,8 +66,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
@@ -137,8 +131,8 @@ class NodeController extends RestController implements ClassResourceInterface
             'sortMethod' => $sortMethod
         );
 
-        $languageCode = 'en';
-        $webspaceKey = 'sulu_io';
+        $webspaceKey = $this->getRequest()->get('webspace');
+        $languageCode = $this->getRequest()->get('language');
 
         $structures = array();
 
@@ -168,8 +162,10 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function putAction($uuid)
     {
-        // TODO portal
-        // TODO language
+        if($uuid === 'index'){
+            return $this->putIndex();
+        }
+
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
@@ -195,14 +191,8 @@ class NodeController extends RestController implements ClassResourceInterface
         );
     }
 
-    /**
-     * save action for index page /nodes/index
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function cputIndexAction()
+    private function putIndex()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
@@ -237,13 +227,11 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function postAction()
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template', 'overview');
-        $data = $this->getRequest()->request->all();
         $parent = $this->getRequest()->get('parent');
+        $data = $this->getRequest()->request->all();
 
         $result = $this->getRepository()->saveNode(
             $data,
@@ -267,8 +255,6 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($uuid)
     {
-        // TODO language
-        // TODO portal
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
