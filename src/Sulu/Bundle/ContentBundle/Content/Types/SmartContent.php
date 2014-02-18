@@ -68,9 +68,17 @@ class SmartContent extends ComplexContentType
      * @param PropertyInterface $property
      * @param string $webspaceKey
      * @param string $languageCode
+     * @param string $segmentKey
      * @param bool $preview
      */
-    protected function setData($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey,  $preview = false)
+    protected function setData(
+        $data,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey,
+        $preview = false
+    )
     {
         $smartContent = new SmartContentContainer(
             $this->nodeRepository,
