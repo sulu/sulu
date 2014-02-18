@@ -81,11 +81,12 @@ class PreviewController extends Controller
         $preview = $this->getPreview();
         $uid = $this->getUserId();
 
+        $language = $this->getRequest()->get('language', 'en');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+
         if (!$preview->started($uid, $contentUuid)) {
             // TODO workspace
             // TODO language
-            $language = $this->getRequest()->get('language', 'en');
-            $webspace = $this->getRequest()->get('webspace', 'sulu_io');
             $preview->start($uid, $contentUuid, $webspace, $language);
         }
 
@@ -93,7 +94,7 @@ class PreviewController extends Controller
         $changes = $request->get('changes', false);
         if (!!$changes) {
             foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $property, $content);
+                $preview->update($uid, $contentUuid, $webspace, $language, $property, $content);
             }
         }
 

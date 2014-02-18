@@ -10,7 +10,8 @@
 require.config({
     paths: {
         sulucontent: '../../sulucontent/js',
-        "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator'
+        "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
+        "type/smartContent": '../../sulucontent/js/validation/types/smartContent'
     }
 });
 
