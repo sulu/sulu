@@ -172,7 +172,8 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
+        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('name', $response->field);
     }
 
     public function testPut()
@@ -228,7 +229,8 @@ class TagControllerTest extends DatabaseTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('The tag with the name "tag1" already exists.', $response->message);
+        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('name', $response->field);
     }
 
     public function testPutNotExisting()
@@ -436,7 +438,13 @@ class TagControllerTest extends DatabaseTestCase
             )
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('tag3', $response[0]->name);
+        $this->assertEquals('tag4', $response[1]->name);
+        $this->assertEquals('tag5', $response[2]->name);
+        $this->assertEquals('tag6', $response[3]->name);
 
         $client->request(
             'GET',
@@ -485,6 +493,10 @@ class TagControllerTest extends DatabaseTestCase
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('name', $response->field);
+
     }
 
     public function testPatchExistingChange()
@@ -510,7 +522,11 @@ class TagControllerTest extends DatabaseTestCase
             )
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('tag11', $response[0]->name);
+        $this->assertEquals('tag22', $response[1]->name);
 
         $client->request(
             'GET',
@@ -526,9 +542,11 @@ class TagControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->total);
-        $this->assertEquals('tag11', $response->_embedded[0]->name);
-        $this->assertEquals('tag22', $response->_embedded[1]->name);
+        $this->assertEquals(4, $response->total);
+        $this->assertEquals('tag1', $response->_embedded[0]->name);
+        $this->assertEquals('tag2', $response->_embedded[1]->name);
+        $this->assertEquals('tag11', $response->_embedded[2]->name);
+        $this->assertEquals('tag22', $response->_embedded[3]->name);
 
     }
 }
