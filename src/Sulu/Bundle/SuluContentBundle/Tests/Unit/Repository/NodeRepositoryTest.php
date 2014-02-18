@@ -226,7 +226,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareMapper();
 
-        $this->nodeRepository = new NodeRepository($this->mapper, $this->userService, $this->securityContextMock);
+        $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionService);
     }
 
     private function prepareContainerMock()
@@ -286,7 +286,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     private function prepareMapper()
     {
-        $this->mapper = new ContentMapper('en', 'sulu_locale');
+        $this->mapper = new ContentMapper('en', 'default_template', 'sulu_locale');
         $this->mapper->setContainer($this->containerMock);
 
         $this->prepareSession();

@@ -111,7 +111,7 @@ class SmartContentContainer implements \Serializable
             }
 
             // TODO use correct language and workspace
-            $this->data = $this->nodeRepository->getSmartContentNodes($config, $this->languageCode, $this->webspaceKey);
+            $this->data = $this->nodeRepository->getFilteredNodes($config, $this->languageCode, $this->webspaceKey);
         }
 
         return $this->data;

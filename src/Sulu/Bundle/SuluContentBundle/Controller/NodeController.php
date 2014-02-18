@@ -93,7 +93,7 @@ class NodeController extends RestController implements ClassResourceInterface
      * Returns the title of the pages for a given smart content configuration
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function smartcontentAction()
+    public function filterAction()
     {
         // load data from request
         $dataSource = $this->getRequest()->get('dataSource', null);
@@ -128,7 +128,7 @@ class NodeController extends RestController implements ClassResourceInterface
             }
         }
 
-        $smartContentConfig = array(
+        $filterConfig = array(
             'dataSource' => $dataSource,
             'includeSubFolders' => ($includeSubFolders == 'false') ? false : true,
             'limitResult' => $limitResult,
@@ -142,8 +142,8 @@ class NodeController extends RestController implements ClassResourceInterface
 
         $structures = array();
 
-        $content = $this->get('sulu_content.node_repository')->getSmartContentNodes(
-            $smartContentConfig,
+        $content = $this->get('sulu_content.node_repository')->getFilteredNodes(
+            $filterConfig,
             $languageCode,
             $webspaceKey,
             true

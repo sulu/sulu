@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class NodeRepository implements NodeRepositoryInterface
 {
@@ -22,16 +23,9 @@ class NodeRepository implements NodeRepositoryInterface
     private $mapper;
 
     /**
-     * The name of the root node of PHPCR
-     * @var string
+     * @var SessionManagerInterface
      */
-    private $baseNodeName;
-
-    /**
-     * The name of the content nodes in PHPCR
-     * @var string
-     */
-    private $contentNodeName;
+    private $sessionManager;
 
     /**
      * for returning self link in get action
@@ -39,11 +33,10 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    function __construct(ContentMapperInterface $mapper, $baseNodeName, $contentNodeName)
+    function __construct(ContentMapperInterface $mapper, SessionManagerInterface $sessionManager)
     {
         $this->mapper = $mapper;
-        $this->baseNodeName = $baseNodeName;
-        $this->contentNodeName = $contentNodeName;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
@@ -117,6 +110,7 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $templateKey
      * @param string $portalKey
      * @param string $languageCode
+     * @param integer $userId
      * @return array
      */
     public function saveIndexNode($data, $templateKey, $portalKey, $languageCode, $userId)
@@ -169,13 +163,13 @@ class NodeRepository implements NodeRepositoryInterface
 
     /**
      * Returns the content of a smart content configuration
-     * @param array $smartContentConfig The config of the smart content
+     * @param array $filterConfig The config of the smart content
      * @param string $languageCode The desired language code
      * @param string $webspaceKey The webspace key
      * @param boolean $preview If true also  unpublished pages will be returned
      * @return mixed
      */
-    public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey, $preview = false)
+    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false)
     {
         // build sql2 query
         $sql2 = 'SELECT * FROM [sulu:content] AS c';
@@ -183,18 +177,19 @@ class NodeRepository implements NodeRepositoryInterface
         $sql2Order = array();
 
         // build where clause for datasource
-        if (isset($smartContentConfig['dataSource']) && !empty($smartContentConfig['dataSource'])) {
+        if (isset($filterConfig['dataSource']) && !empty($filterConfig['dataSource'])) {
             $sqlFunction =
-                (isset($smartContentConfig['includeSubFolders']) && $smartContentConfig['includeSubFolders'])
+                (isset($filterConfig['includeSubFolders']) && $filterConfig['includeSubFolders'])
                     ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
-            $dataSource = '/' . $this->baseNodeName . '/' . $webspaceKey . '/' . $this->contentNodeName;
-            $dataSource .= $smartContentConfig['dataSource'];
+            $node = $this->sessionManager->getContentNode($webspaceKey);
+            $dataSource = $node->getPath();
+            $dataSource .= $filterConfig['dataSource'];
             $sql2Where[] = $sqlFunction . '(\'' . $dataSource . '\')';
         }
 
         // build where clause for tags
-        if (!empty($smartContentConfig['tags'])) {
-            foreach ($smartContentConfig['tags'] as $tag) {
+        if (!empty($filterConfig['tags'])) {
+            foreach ($filterConfig['tags'] as $tag) {
                 $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-tags] = ' . $tag;
             }
         }
@@ -205,8 +200,8 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         // build order clause
-        if (!empty($smartContentConfig['sortBy'])) {
-            foreach ($smartContentConfig['sortBy'] as $sortColumn) {
+        if (!empty($filterConfig['sortBy'])) {
+            foreach ($filterConfig['sortBy'] as $sortColumn) {
                 // TODO implement more generic
                 $sql2Order[] = 'c.[sulu_locale:' . $languageCode . '-sulu-' . $sortColumn . ']';
             }
@@ -219,15 +214,15 @@ class NodeRepository implements NodeRepositoryInterface
 
         // append order clause
         if (!empty($sql2Order)) {
-            $sortOrder = (isset($smartContentConfig['sortMethod']) && $smartContentConfig['sortMethod'] == 'asc')
+            $sortOrder = (isset($filterConfig['sortMethod']) && $filterConfig['sortMethod'] == 'asc')
                 ? 'ASC' : 'DESC';
             $sql2 .= ' ORDER BY ' . join(', ', $sql2Order) . ' ' . $sortOrder;
         }
 
         // set limit if given
         $limit = null;
-        if (isset($smartContentConfig['limitResult'])) {
-            $limit = $smartContentConfig['limitResult'];
+        if (isset($filterConfig['limitResult'])) {
+            $limit = $filterConfig['limitResult'];
         }
 
         // execute query and return results
