@@ -40,7 +40,6 @@ class TagController extends RestController implements ClassResourceInterface
 
     protected $fieldsValidation = array(
         'name' => array(
-            'unique' => true,
             'required' => true
         )
     );
