@@ -122,15 +122,11 @@ class Preview implements PreviewInterface
 
         if ($content != false) {
             if ($template !== null && $content->getKey() !== $template) {
-                $content = $this->updateTemplate($content, $template);
+                $content = $this->updateTemplate($content, $template, $webspaceKey, $languageCode);
                 $this->addReload($userId, $contentUuid);
             }
 
-            $propertyInstance = $content->getProperty($property);
-            $contentType = $this->getContentType($propertyInstance->getContentTypeName());
-            $contentType->readForPreview($data, $propertyInstance, $webspaceKey, $languageCode, null);
-
-            $content->getProperty($property)->setValue($propertyInstance->getValue());
+            $this->setValue($content, $property, $data, $webspaceKey, $languageCode);
             $this->addStructure($userId, $contentUuid, $content);
 
             $changes = $this->render($userId, $contentUuid, true, $property);
@@ -147,10 +143,11 @@ class Preview implements PreviewInterface
     /**
      * @param StructureInterface $content
      * @param $template
-     *
+     * @param $webspaceKey
+     * @param $languageCode
      * @return StructureInterface
      */
-    private function updateTemplate(StructureInterface $content, $template)
+    private function updateTemplate(StructureInterface $content, $template, $webspaceKey, $languageCode)
     {
         /** @var StructureInterface $newContent */
         $newContent = $this->structureManager->getStructure($template);
@@ -160,23 +157,30 @@ class Preview implements PreviewInterface
                 $this->setValue(
                     $newContent,
                     $property->getName(),
-                    $this->getValue($content, $property->getName())
+                    $content->getProperty($property)->getValue(),
+                    $webspaceKey,
+                    $languageCode
                 );
             }
         }
         return $newContent;
     }
 
-    private function setValue(StructureInterface $content, $property, $value)
+    /**
+     * Sets the given data in the given content (including webspace and language)
+     * @param StructureInterface $content
+     * @param string $property
+     * @param mixed $data
+     * @param string $webspaceKey
+     * @param string $languageCode
+     */
+    private function setValue(StructureInterface $content, $property, $data, $webspaceKey, $languageCode)
     {
-        // TODO check for complex content types
-        $content->getProperty($property)->setValue($value);
-    }
+        $propertyInstance = $content->getProperty($property);
+        $contentType = $this->getContentType($propertyInstance->getContentTypeName());
+        $contentType->readForPreview($data, $propertyInstance, $webspaceKey, $languageCode, null);
 
-    private function getValue(StructureInterface $content, $property)
-    {
-        // TODO check for complex content types
-        return $content->getProperty($property)->getValue();
+        $content->getProperty($property)->setValue($propertyInstance->getValue());
     }
 
     /**
