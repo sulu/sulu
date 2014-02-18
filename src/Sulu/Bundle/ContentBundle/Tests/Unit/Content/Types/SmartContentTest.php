@@ -181,9 +181,53 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->exactly(2))->method('setValue')->with($smartContentContainer);
+        $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainer);
 
         $this->smartContent->read($node, $property, 'test', 'en', 's');
+    }
+
+    public function testReadPreview()
+    {
+
+        $smartContentContainerPreview = new SmartContentContainer($this->nodeRepository, $this->tagManager, 'test', 'en', 's', true);
+        $smartContentContainerPreview->setConfig(
+            array(
+                'tags' => array('Tag1', 'Tag2'),
+                'limitResult' => '2'
+            )
+        );
+
+        $node = $this->getMockForAbstractClass(
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getPropertyValueWithDefault')
+        );
+
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setValue')
+        );
+
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
+            $this->returnValueMap(
+                array(
+                    array('property', '{}', '{"tags":[1,2],"limitResult":"2"}')
+                )
+            )
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainerPreview);
 
         $this->smartContent->readForPreview(
             array('tags' => array('Tag1', 'Tag2'), 'limitResult' => 2),

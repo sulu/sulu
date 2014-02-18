@@ -11,50 +11,52 @@
 namespace Sulu\Bundle\ContentBundle\Repository;
 
 
-interface NodeRepositoryInterface {
+interface NodeRepositoryInterface
+{
 
     /**
      * returns node for given uuid
      * @param $uuid
-     * @param $portalKey
+     * @param $webspaceKey
      * @param $languageCode
      * @return array
      */
-    public function getNode($uuid, $portalKey, $languageCode);
+    public function getNode($uuid, $webspaceKey, $languageCode);
 
     /**
      * returns a list of nodes
      * @param string $parent uuid of parent node
-     * @param string $portalKey key of current portal
+     * @param string $webspaceKey key of current portal
      * @param string $languageCode
      * @param int $depth
      * @param bool $flat
      * @return array
      */
-    public function getNodes($parent, $portalKey, $languageCode, $depth = 1, $flat = true);
+    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true);
 
     /**
      * Returns the content of a smartcontent configuration
      * @param array $filterConfig The config of the smart content
      * @param string $languageCode The desired language code
      * @param string $webspaceKey The webspace key
+     * @param bool $preview
      * @return mixed
      */
-    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey);
+    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false);
 
     /**
      * returns start node for given portal
-     * @param string $portalKey
+     * @param string $webspaceKey
      * @param string $languageCode
      * @return array
      */
-    public function getIndexNode($portalKey, $languageCode);
+    public function getIndexNode($webspaceKey, $languageCode);
 
     /**
      * save node with given uuid or creates a new one
      * @param array $data
      * @param string $templateKey
-     * @param string $portalKey
+     * @param string $webspaceKey
      * @param string $languageCode
      * @param integer $userId
      * @param string $uuid
@@ -66,7 +68,7 @@ interface NodeRepositoryInterface {
     public function saveNode(
         $data,
         $templateKey,
-        $portalKey,
+        $webspaceKey,
         $languageCode,
         $userId,
         $uuid = null,
@@ -79,13 +81,13 @@ interface NodeRepositoryInterface {
      * save start page of given portal
      * @param array $data
      * @param string $templateKey
-     * @param string $portalKey
+     * @param string $webspaceKey
      * @param string $languageCode
      * @param $userId
      * @return array
      */
-    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode, $userId);
-    
+    public function saveIndexNode($data, $templateKey, $webspaceKey, $languageCode, $userId);
+
     /**
      * removes given node
      * @param $uuid
