@@ -51,50 +51,57 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * reads the value for given property from the node + sets the value of the property
-     * @param NodeInterface $node
+     * Sets the given array as values on the property
+     * @param array $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @return mixed
      */
-    public function get(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    protected function setData(array $data, PropertyInterface $property)
     {
-        $tags = array();
-
-        if ($node->hasProperty($property->getName())) {
-            $tagIds = $node->getPropertyValue($property->getName());
-            foreach ($tagIds as $tagId) {
-                $tags[] = $this->tagManager->findById($tagId)->getName();
-            }
-        }
-
-        $property->setValue($tags);
+        $property->setValue($data);
     }
 
     /**
-     * save the value from given property
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function set(NodeInterface $node, PropertyInterface $property, $webspaceKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        $tags = $this->tagManager->resolveTagIds($node->getPropertyValueWithDefault($property->getName(), array()));
+        $this->setData($tags, $property);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        $this->setData($data, $property);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    )
     {
         $tagIds = array();
 
         foreach ($property->getValue() as $tag) {
-            $tagIds[] = $this->tagManager->findOrCreateByName($tag)->getId();
+            $tagIds[] = $this->tagManager->findOrCreateByName($tag, $userId)->getId();
         }
 
         $node->setProperty($property->getName(), $tagIds);
     }
 
     /**
-     * remove property from given node
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
+     * {@inheritdoc}
      */
-    public function remove(NodeInterface $node, PropertyInterface $property)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // TODO: Implement remove() method.
     }

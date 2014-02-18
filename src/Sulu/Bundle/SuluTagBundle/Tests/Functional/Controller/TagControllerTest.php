@@ -46,6 +46,7 @@ class TagControllerTest extends DatabaseTestCase
 
         self::$entities = array(
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
         );
 
         self::$tool->dropSchema(self::$entities);
@@ -541,9 +542,11 @@ class TagControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->total);
-        $this->assertEquals('tag11', $response->_embedded[0]->name);
-        $this->assertEquals('tag22', $response->_embedded[1]->name);
+        $this->assertEquals(4, $response->total);
+        $this->assertEquals('tag1', $response->_embedded[0]->name);
+        $this->assertEquals('tag2', $response->_embedded[1]->name);
+        $this->assertEquals('tag11', $response->_embedded[2]->name);
+        $this->assertEquals('tag22', $response->_embedded[3]->name);
 
     }
 }

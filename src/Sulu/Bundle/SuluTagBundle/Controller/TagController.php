@@ -144,7 +144,7 @@ class TagController extends RestController implements ClassResourceInterface
                 throw new MissingArgumentException($this->entityName, 'name');
             }
 
-            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name));
+            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name), $this->getUser()->getId());
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
@@ -173,7 +173,7 @@ class TagController extends RestController implements ClassResourceInterface
                 throw new MissingArgumentException($this->entityName, 'name');
             }
 
-            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name), $id);
+            $tag = $this->get('sulu_tag.tag_manager')->save(array('name' => $name), $this->getUser()->getId(), $id);
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
