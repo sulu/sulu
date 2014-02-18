@@ -20,6 +20,9 @@ use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Types\ResourceLocator;
+use Sulu\Component\Content\Types\TextArea;
+use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\Testing\WebsocketClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -217,8 +220,8 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'type' => 'form',
                     'user' => '1',
                     'params' => array(
-                        'changes'=>array(
-                            'title'=> 'asdf'
+                        'changes' => array(
+                            'title' => 'asdf'
                         )
                     )
                 )
@@ -304,6 +307,8 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                     'content' => '123-123-123',
                     'type' => 'form',
                     'user' => '1',
+                    'webspaceKey' => 'sulu_io',
+                    'languageCode' => 'en',
                     'params' => array(
                         'template' => 'simple',
                         'changes' => array(
@@ -511,6 +516,22 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
     public function prepareContainerMock()
     {
         $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+
+        $container->expects($this->any())->method('get')->will(
+            $this->returnValueMap(
+                array(
+                    array('sulu.content.type.text_line', 1, new TextLine('')),
+                    array(
+                        'sulu.content.type.resource_locator',
+                        1,
+                        new ResourceLocator($this->getMock(
+                            'Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface'
+                        ), '')
+                    ),
+                    array('sulu.content.type.text_area', 1, new TextArea(''))
+                )
+            )
+        );
 
         return $container;
     }

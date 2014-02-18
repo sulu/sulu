@@ -17,6 +17,7 @@ use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -40,7 +41,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Registry
+     * @var UserManagerInterface
      */
     private $userService;
     /**
@@ -226,7 +227,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareMapper();
 
-        $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionService);
+        $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionService, $this->userService);
     }
 
     private function prepareContainerMock()

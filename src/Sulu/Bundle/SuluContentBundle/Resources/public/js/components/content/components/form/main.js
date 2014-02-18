@@ -27,6 +27,7 @@ define(['app-config'], function(AppConfig) {
 
         initialize: function() {
             this.saved = true;
+            this.state = null;
 
             this.formId = '#content-form';
             this.render();
@@ -45,17 +46,17 @@ define(['app-config'], function(AppConfig) {
         },
 
         setStateDropdown: function(data) {
-            var state = data.nodeState || 0;
+            this.state = data.nodeState || 0;
 
             // get the dropdownds
-            this.sandbox.emit('sulu.content.contents.getDropdownForState', state, function(items) {
+            this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
                 if (items.length > 0) {
                     this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items);
                 }
             }.bind(this));
 
             // set the current state
-            this.sandbox.emit('sulu.content.contents.getStateDropdownItem', state, function(item) {
+            this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
                 this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
             }.bind(this));
         },
@@ -169,10 +170,27 @@ define(['app-config'], function(AppConfig) {
 
             // change dropdown if state has changed
             this.sandbox.on('sulu.content.contents.state.changed', function(state) {
-                this.sandbox.emit('sulu.content.contents.getDropdownForState', state, function(items) {
-                    this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items, 0);
+                this.state = state;
+                //set new dropdown
+                this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
+                    this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items, null);
                 }.bind(this));
-                this.sandbox.emit('husky.edit-toolbar.item.enable', 'state');
+                // set the current state
+                this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
+                    this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
+                }.bind(this));
+                //enable button with highlight-effect
+                this.sandbox.emit('husky.edit-toolbar.item.enable', 'state', true);
+            }.bind(this));
+
+            //set button back if state-change failed
+            this.sandbox.on('sulu.content.contents.state.changeFailed', function() {
+                // set the current state
+                this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
+                    this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
+                }.bind(this));
+                //enable button without highlight-effect
+                this.sandbox.emit('husky.edit-toolbar.item.enable', 'state', false);
             }.bind(this));
         },
 
