@@ -33,10 +33,20 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    function __construct(ContentMapperInterface $mapper, SessionManagerInterface $sessionManager)
+    /**
+     * @var UserManagerInterface
+     */
+    private $userManager;
+
+    function __construct(
+        ContentMapperInterface $mapper,
+        SessionManagerInterface $sessionManager,
+        UserManagerInterface $userManager
+    )
     {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -49,14 +59,30 @@ class NodeRepository implements NodeRepositoryInterface
     }
 
     /**
+     * returns user fullName
+     * @param integer $id userId
+     * @return string
+     */
+    protected function getFullNameByUserId($id)
+    {
+        return $this->userManager->getFullNameByUserId($id);
+    }
+
+    /**
      * returns finished Node (with _links and _embedded)
      * @param StructureInterface $structure
+     * @param string $webspaceKey
+     * @param string $languageCode
      * @param int $depth
      * @return array
      */
     protected function prepareNode(StructureInterface $structure, $webspaceKey, $languageCode, $depth = 1)
     {
         $result = $structure->toArray();
+
+        // replace creator, changer
+        $result['creator'] = $structure->getCreator();
+        $result['changer'] = $structure->getChanger();
 
         // add default empty embedded property
         $result['_embedded'] = array();
@@ -261,7 +287,8 @@ class NodeRepository implements NodeRepositoryInterface
         $userId,
         $uuid = null,
         $parentUuid = null,
-        $state = null
+        $state = null,
+        $showInNavigation = null
     )
     {
         $node = $this->getMapper()->save(
@@ -273,7 +300,8 @@ class NodeRepository implements NodeRepositoryInterface
             true,
             $uuid,
             $parentUuid,
-            $state
+            $state,
+            $showInNavigation
         );
 
         return $this->prepareNode($node, $webspaceKey, $languageCode);

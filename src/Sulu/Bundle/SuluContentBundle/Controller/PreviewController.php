@@ -85,8 +85,6 @@ class PreviewController extends Controller
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
 
         if (!$preview->started($uid, $contentUuid)) {
-            // TODO workspace
-            // TODO language
             $preview->start($uid, $contentUuid, $webspace, $language);
         }
         $template = $this->getRequest()->get('template');

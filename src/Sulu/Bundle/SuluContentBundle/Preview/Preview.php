@@ -126,6 +126,14 @@ class Preview implements PreviewInterface
                 $this->addReload($userId, $contentUuid);
             }
 
+            if ($webspaceKey !== $content->getWebspaceKey()) {
+                $content->setWebspaceKey($webspaceKey);
+            }
+
+            if ($languageCode !== $content->getLanguageCode()) {
+                $content->setLanguageCode($languageCode);
+            }
+
             $this->setValue($content, $property, $data, $webspaceKey, $languageCode);
             $this->addStructure($userId, $contentUuid, $content);
 
@@ -151,6 +159,8 @@ class Preview implements PreviewInterface
     {
         /** @var StructureInterface $newContent */
         $newContent = $this->structureManager->getStructure($template);
+        $newContent->setWebspaceKey($webspaceKey);
+        $newContent->setLanguageCode($languageCode);
         /** @var PropertyInterface $property */
         foreach ($newContent->getProperties() as $property) {
             if ($content->hasProperty($property->getName())) {
@@ -225,7 +235,8 @@ class Preview implements PreviewInterface
             // if partial render for property is called
             if ($property != null) {
                 // extract special property
-                $crawler = new Crawler($result);
+                $crawler = new Crawler();
+                $crawler->addHtmlContent($result, 'UTF-8');
                 $nodes = $crawler->filter('*[property="' . $property . '"]');
 
                 // if rdfa property not found return false

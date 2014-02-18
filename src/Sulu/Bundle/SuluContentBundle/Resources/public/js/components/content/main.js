@@ -75,8 +75,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template) {
-                this.save(data, template);
+            this.sandbox.on('sulu.content.contents.save', function(data, template, navigation) {
+                this.save(data, template, navigation);
             }, this);
 
             // wait for navigation events
@@ -232,9 +232,7 @@ define([
         changeState: function(state) {
             this.sandbox.emit('sulu.content.contents.state.change');
 
-            // TODO select template
-            this.content.fullSave(null, this.options.webspace, this.options.language, null, state, null, {
-                // on success save contents id
+            this.content.stateSave(this.options.webspace, this.options.language, state, null, {
                 success: function() {
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                     this.sandbox.emit('sulu.labels.success.show',
@@ -253,11 +251,11 @@ define([
             });
         },
 
-        save: function(data, template) {
+        save: function(data, template, navigation) {
             // TODO: show loading icon
             this.content.set(data);
 
-            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, null, {
+            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -386,6 +384,7 @@ define([
                                 name: 'content/components/form@sulucontent',
                                 options: {
                                     el: $form,
+                                    id: this.options.id,
                                     data: model.toJSON(),
                                     webspace: this.options.webspace,
                                     language: this.options.language
