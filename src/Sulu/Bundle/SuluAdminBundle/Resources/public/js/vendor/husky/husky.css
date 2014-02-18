@@ -6615,3 +6615,54 @@ a.btn-black, a.btn-highlight {
   right: -35px;
   top: 40%;
 }
+
+/* line 3, ../scss/modules/label.scss */
+.husky-label-error,
+.husky-label-warning,
+.husky-label-success {
+  width: 100%;
+  height: 30px;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border-radius: 0 0 4px 4px;
+  color: white;
+  line-height: 30px;
+  padding-left: 20px;
+  font-size: 12px;
+}
+/* line 15, ../scss/modules/label.scss */
+.husky-label-error strong,
+.husky-label-warning strong,
+.husky-label-success strong {
+  font-weight: bold;
+  padding-right: 3px;
+}
+/* line 19, ../scss/modules/label.scss */
+.husky-label-error .close,
+.husky-label-warning .close,
+.husky-label-success .close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 15px;
+}
+
+/* line 31, ../scss/modules/label.scss */
+.husky-label-error {
+  background: #ad0710;
+}
+
+/* line 35, ../scss/modules/label.scss */
+.husky-label-warning {
+  background: #febc2f;
+}
+
+/* line 39, ../scss/modules/label.scss */
+.husky-label-success {
+  background: #1fca23;
+}

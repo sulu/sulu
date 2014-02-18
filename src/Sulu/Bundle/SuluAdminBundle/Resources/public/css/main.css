@@ -135,3 +135,17 @@ input, select {
   margin-left: -150px;
   margin-top: -95px;
 }
+
+/* line 1, ../scss/modules/labels.scss */
+#labels-container {
+  -webkit-transition: margin 0.5s;
+  -moz-transition: margin 0.5s;
+  -o-transition: margin 0.5s;
+  transition: margin 0.5s;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-left: 300px;
+  width: 100%;
+}
