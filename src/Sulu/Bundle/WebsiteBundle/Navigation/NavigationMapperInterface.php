@@ -14,7 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
  * generates frontend navigation
  * @package Sulu\Bundle\WebsiteBundle\Navigation
  */
-interface NavigationInterface
+interface NavigationMapperInterface
 {
     /**
      * returns navigation for given parent

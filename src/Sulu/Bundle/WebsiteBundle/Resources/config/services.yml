@@ -1,7 +1,7 @@
 parameters:
     sulu_website.admin.class: Sulu\Bundle\WebsiteBundle\Admin\SuluWebsiteAdmin
     sulu_website.provider.portal.class: Sulu\Bundle\WebsiteBundle\Routing\PortalRouteProvider
-    sulu_website.navigation.class: Sulu\Bundle\WebsiteBundle\Navigation\Navigation
+    sulu_website.navigation_mapper.class: Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper
 
 services:
     sulu_website.admin:
@@ -14,6 +14,6 @@ services:
         class: %sulu_website.provider.portal.class%
         arguments: ["@sulu.content.mapper", "@sulu_core.workspace.request_analyzer", "@liip_theme.active_theme"]
 
-    sulu_website.navigation:
-        class: %sulu_website.navigation.class%
+    sulu_website.navigation_mapper:
+        class: %sulu_website.navigation_mapper.class%
         arguments: ["@sulu.content.mapper"]
