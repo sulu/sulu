@@ -55,7 +55,7 @@ class TagList extends ComplexContentType
      * @param array $data
      * @param PropertyInterface $property
      */
-    protected function setData(array $data, PropertyInterface $property)
+    protected function setData($data, PropertyInterface $property)
     {
         $property->setValue($data);
     }
