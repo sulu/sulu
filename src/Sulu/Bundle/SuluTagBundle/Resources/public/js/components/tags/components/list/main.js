@@ -11,20 +11,16 @@ define(function() {
 
     'use strict';
 
-    var bindCustomEvents = function() {
+    var bindCustomEvents = function(instanceNameToolbar) {
 
         // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function(){
-            this.sandbox.emit('husky.datagrid.row.add',{ id: '', name: '', changed: '', created: '', author: ''});
-        }.bind(this));
-
-        // save clicked
-        this.sandbox.on('sulu.list-toolbar.save', function(){
-            this.sandbox.emit('husky.datagrid.data.save');
+        this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.emit('husky.datagrid.row.add', { id: '', name: '', changed: '', created: '', author: ''});
         }.bind(this));
 
         // delete clicked
         this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'delete');
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.emit('sulu.tags.delete', ids);
             }.bind(this));
@@ -35,12 +31,13 @@ define(function() {
     return {
 
         view: true,
+        instanceNameToolbar: 'saveToolbar',
 
         templates: ['/admin/tag/template/tag/list'],
 
         initialize: function() {
             this.render();
-            bindCustomEvents.call(this);
+            bindCustomEvents.call(this, this.instanceNameToolbar);
         },
 
         render: function() {
@@ -50,14 +47,17 @@ define(function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'tagsFields', '/admin/api/tags/fields',
                 {
                     el: '#list-toolbar-container',
-                    template: 'defaultEditableList',
-                    listener: 'defaultEditableList',
-                    instanceName: 'saveToolbar'
+                    template: 'default',
+                    listener: 'default',
+                    instanceName: this.instanceNameToolbar
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
                     editable: true,
+                    validation: true,
+                    addRowTop: true,
+                    progressRow: true,
                     paginationOptions: {
                         pageSize: 4
                     },
