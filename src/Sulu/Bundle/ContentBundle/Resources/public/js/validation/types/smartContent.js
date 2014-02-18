@@ -20,6 +20,7 @@ define([
 
             subType = {
                 initializeSub: function(dfd) {
+                    // FIXME resolve only when smart content is initialized
                     dfd.resolve();
                     App.on('husky.smart-content.' + options.instanceName + '.input-retrieved', function() {
                         App.emit('sulu.preview.update', App.dom.data($el, 'mapperProperty'), App.dom.data($el, 'smart-content'));
