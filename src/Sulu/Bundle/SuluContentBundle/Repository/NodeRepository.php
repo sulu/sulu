@@ -71,31 +71,26 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * returns finished Node (with _links and _embedded)
      * @param StructureInterface $structure
+     * @param string $webspaceKey
+     * @param string $languageCode
      * @param int $depth
      * @return array
      */
-    protected function prepareNode(StructureInterface $structure, $depth = 1)
+    protected function prepareNode(StructureInterface $structure, $webspaceKey, $languageCode, $depth = 1)
     {
         $result = $structure->toArray();
 
         // replace creator, changer
-        if ($structure->getCreator() !== 0) {
-            $result['creator'] = $this->getFullNameByUserId($structure->getCreator());
-        } else {
-            $result['creator'] = '';
-        }
-        if ($structure->getChanger() !== 0) {
-            $result['changer'] = $this->getFullNameByUserId($structure->getChanger());
-        } else {
-            $result['changer'] = '';
-        }
+        $result['creator'] = $structure->getCreator();
+        $result['changer'] = $structure->getChanger();
 
         // add default empty embedded property
         $result['_embedded'] = array();
         // add api links
         $result['_links'] = array(
             'self' => $this->apiBasePath . '/' . $structure->getUuid(),
-            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=' . $depth
+            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid()
+                . '&depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode
         );
 
         return $result;
@@ -112,50 +107,50 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * returns node for given uuid
      * @param $uuid
-     * @param $portalKey
+     * @param $webspaceKey
      * @param $languageCode
      * @return array
      */
-    public function getNode($uuid, $portalKey, $languageCode)
+    public function getNode($uuid, $webspaceKey, $languageCode)
     {
-        $structure = $this->getMapper()->load($uuid, $portalKey, $languageCode);
+        $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode);
 
-        return $this->prepareNode($structure);
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
 
     /**
      * returns start node for given portal
-     * @param string $portalKey
+     * @param string $webspaceKey
      * @param string $languageCode
      * @return array
      */
-    public function getIndexNode($portalKey, $languageCode)
+    public function getIndexNode($webspaceKey, $languageCode)
     {
-        $structure = $this->getMapper()->loadStartPage($portalKey, $languageCode);
+        $structure = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
 
-        return $this->prepareNode($structure);
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
 
     /**
      * save start page of given portal
      * @param array $data
      * @param string $templateKey
-     * @param string $portalKey
+     * @param string $webspaceKey
      * @param string $languageCode
      * @param integer $userId
      * @return array
      */
-    public function saveIndexNode($data, $templateKey, $portalKey, $languageCode, $userId)
+    public function saveIndexNode($data, $templateKey, $webspaceKey, $languageCode, $userId)
     {
         $structure = $this->getMapper()->saveStartPage(
             $data,
             $templateKey,
-            $portalKey,
+            $webspaceKey,
             $languageCode,
             $userId
         );
 
-        return $this->prepareNode($structure);
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
 
     /**
@@ -171,23 +166,23 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * returns a list of nodes
      * @param string $parent uuid of parent node
-     * @param string $portalKey key of current portal
+     * @param string $webspaceKey key of current portal
      * @param string $languageCode
      * @param int $depth
      * @param bool $flat
      * @return array
      */
-    public function getNodes($parent, $portalKey, $languageCode, $depth = 1, $flat = true)
+    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true)
     {
-        $nodes = $this->getMapper()->loadByParent($parent, $portalKey, $languageCode, $depth, $flat);
+        $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat);
 
         if ($parent != null) {
-            $parentNode = $this->getMapper()->load($parent, $portalKey, $languageCode);
+            $parentNode = $this->getMapper()->load($parent, $webspaceKey, $languageCode);
         } else {
-            $parentNode = $this->getMapper()->loadStartPage($portalKey, $languageCode);
+            $parentNode = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
         }
-        $result = $this->prepareNodesTree($parentNode);
-        $result['_embedded'] = $this->prepareNodesTree($nodes);
+        $result = $this->prepareNodesTree($parentNode, $webspaceKey, $languageCode);
+        $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode);
         $result['total'] = sizeof($result['_embedded']);
 
         return $result;
@@ -267,13 +262,13 @@ class NodeRepository implements NodeRepositoryInterface
      * @param StructureInterface[] $nodes
      * @return array
      */
-    private function prepareNodesTree($nodes)
+    private function prepareNodesTree($nodes, $webspaceKey, $languageCode)
     {
         $results = array();
         foreach ($nodes as $node) {
-            $result = $this->prepareNode($node);
+            $result = $this->prepareNode($node, $webspaceKey, $languageCode);
             if ($node->getHasChildren() && $node->getChildren() != null) {
-                $result['_embedded'] = $this->prepareNodesTree($node->getChildren());
+                $result['_embedded'] = $this->prepareNodesTree($node->getChildren(), $webspaceKey, $languageCode);
             }
             $results[] = $result;
         }
@@ -287,7 +282,7 @@ class NodeRepository implements NodeRepositoryInterface
     public function saveNode(
         $data,
         $templateKey,
-        $portalKey,
+        $webspaceKey,
         $languageCode,
         $userId,
         $uuid = null,
@@ -299,7 +294,7 @@ class NodeRepository implements NodeRepositoryInterface
         $node = $this->getMapper()->save(
             $data,
             $templateKey,
-            $portalKey,
+            $webspaceKey,
             $languageCode,
             $userId,
             true,
@@ -309,6 +304,6 @@ class NodeRepository implements NodeRepositoryInterface
             $showInNavigation
         );
 
-        return $this->prepareNode($node);
+        return $this->prepareNode($node, $webspaceKey, $languageCode);
     }
 }
