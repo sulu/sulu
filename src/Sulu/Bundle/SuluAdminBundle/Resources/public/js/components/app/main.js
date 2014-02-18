@@ -12,13 +12,65 @@ define(function() {
     'use strict';
 
     var router,
-        changeContentPaddingLeft = function(paddingLeft) {
-            this.sandbox.dom.css('#content', {'margin-left': 50 + paddingLeft});
-        };
+
+    eventNamespace = 'sulu.app.',
+
+    /**
+     * raised after the initialization has finished
+     * @event sulu.app.initialized
+     */
+    INITIALIZED = function() {
+        return createEventName('initialized');
+    },
+
+    /**
+     * raised if width height, or position of content-container changes
+     * @event sulu.app.content.dimensions-changed
+     * @param {object} Object containing width, and position from the left
+     */
+     CONTENT_DIMENSIONS_CHANGED = function() {
+        return createEventName('content.dimensions-changed');
+     },
+
+    /**
+     * listens on and pass an object with the dimensions to the passed callback
+     * @event sulu.app.content.get-dimensions
+     * @param {function} callback The callback to pass the dimensions to
+     */
+     GET_CONTENT_DIMENSIONS = function() {
+        return createEventName('content.get-dimensions');
+     },
+
+    /**
+     * listens on and returns true
+     * @event sulu.app.content.has-started
+     * @param {function} callback The callback to pass true on
+     */
+    HAS_STARTED = function() {
+        return createEventName('has-started');
+    },
+
+    /**
+     * Creates the event-names
+     */
+    createEventName = function(postFix) {
+        return eventNamespace + postFix;
+    },
+
+    /**
+     * Changes the left margin of the content-container
+     * @param marginLeft {number} The margin to set
+     */
+    changeContentMarginLeft = function(marginLeft) {
+        this.sandbox.dom.css(this.$el, {'margin-left': marginLeft});
+    };
 
     return {
         name: 'Sulu App',
 
+        /**
+         * Initialize the component
+         */
         initialize: function() {
             if (!!this.sandbox.mvc.routes) {
 
@@ -41,14 +93,48 @@ define(function() {
                     }.bind(this));
                 }.bind(this));
 
+                this.contentChangeInterval = null;
+
                 this.bindCustomEvents();
                 this.bindDomEvents();
+
+                this.sandbox.emit(INITIALIZED.call(this));
             }
         },
 
+        /**
+         * Bind DOM-related Events
+         */
         bindDomEvents: function() {
+            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function(){
+                this.emitContentDimensionsChangedEvent();
+            }.bind(this));
         },
 
+        /**
+         * Sets the new dimensions of the content-container and
+         * emits the content.dimensions-changed event
+         */
+        emitContentDimensionsChangedEvent: function() {
+            this.sandbox.emit(CONTENT_DIMENSIONS_CHANGED.call(this), this.getContentDimensions());
+        },
+
+        /**
+         * Returns an object with the current dimensions of the content container
+         * @returns {{width: number, left: number}}
+         */
+        getContentDimensions: function() {
+            return {
+                width: this.sandbox.dom.width(this.$el),
+                left: Math.round(
+                    this.sandbox.dom.offset(this.$el).left + parseInt(this.sandbox.dom.css(this.$el, 'padding-left').replace(/[^-\d\.]/g, ''))
+                )
+            }
+        },
+
+        /**
+         * Bind component-related events
+         */
         bindCustomEvents: function() {
             // listening for navigation events
             this.sandbox.on('sulu.router.navigate', function(route, trigger) {
@@ -77,18 +163,40 @@ define(function() {
                 this.emitNavigationEvent(event);
             }.bind(this));
 
+            // emit dimensions-changed event during transition
+            this.sandbox.on('husky.navigation.size.change', function() {
+                this.contentChangeInterval = setInterval(this.emitContentDimensionsChangedEvent.bind(this), 30);
+            }.bind(this));
+
+            // emit dimensions-changed event during transition
+            this.sandbox.on('husky.navigation.size.changed', function() {
+                clearInterval(this.contentChangeInterval);
+                this.emitContentDimensionsChangedEvent();
+            }.bind(this));
+
             // return current url
             this.sandbox.on('navigation.url', function(callbackFunction) {
                 callbackFunction(this.sandbox.mvc.history.fragment);
             }, this);
 
+            // getter event for the content-dimensions
+            this.sandbox.on(GET_CONTENT_DIMENSIONS.call(this), function(callbackFunction) {
+                callbackFunction(this.getContentDimensions());
+            }.bind(this));
 
             // layout
             // responsive listeners
-            this.sandbox.on('husky.navigation.size.change', changeContentPaddingLeft.bind(this));
+            this.sandbox.on('husky.navigation.size.change', changeContentMarginLeft.bind(this));
+
+            this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
+                callbackFunction(true);
+            }.bind(this));
         },
 
-
+        /**
+         * Emits the router.navigate event
+         * @param event
+         */
         emitNavigationEvent: function(event) {
 
             // TODO: select right bundle / item in navigation
@@ -97,6 +205,5 @@ define(function() {
                 this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
             }
         }
-
     };
 });

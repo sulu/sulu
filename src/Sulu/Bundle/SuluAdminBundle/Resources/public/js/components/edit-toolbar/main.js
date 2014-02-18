@@ -31,7 +31,8 @@ define([], function() {
             parentTemplate: null,
             instanceName: 'content',
             changeStateCallback: null,
-            parentChangeStateCallback: null
+            parentChangeStateCallback: null,
+            containerSelector: '#edit-toolbar-container'
         },
 
         templates = {
@@ -102,20 +103,7 @@ define([], function() {
             } else {
                 this.sandbox.logger.log('no template found!');
             }
-        },
-
-        changeLeftDistance = function(paddingLeft) {
-            this.sandbox.dom.css('#edit-toolbar-container', {'margin-left': 50 + paddingLeft});
-        },
-
-        resizeListener = function() {
-            var contentWidth = this.sandbox.dom.width('main#content');
-
-            if (!this.currentContentWidth || this.currentContentWidth !== contentWidth) {
-                this.sandbox.dom.width(this.$el, contentWidth);
-                this.currentContentWidth = contentWidth;
-            }
-        };
+        }
 
     return {
         view: true,
@@ -123,30 +111,45 @@ define([], function() {
         initialize: function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.$container = this.sandbox.dom.$(this.options.containerSelector);
 
-            var template = this.options.template,
-                parentTemplate = this.options.parentTemplate,
-                contentLeft, $container;
+            this.buildTemplate(this.options.template, this.options.parentTemplate);
+            this.startComponent();
 
-            // load templates:
+            //start component with the right dimensions
+            this.sandbox.emit('sulu.app.content.get-dimensions', this.resizeListener.bind(this));
+
+            // bind events (also initializes first component)
+            this.bindCustomEvents();
+            this.bindDomEvents();
+        },
+
+        /**
+         * Builds the template which gets used by the husky-component
+         */
+        buildTemplate: function(template, parentTemplate) {
             this.options.template = getTemplate.call(this, template);
-
             if (!this.options.changeStateCallback || typeof this.options.changeStateCallback !== 'function') {
                 this.options.changeStateCallback = getChangeStateCallback.call(this, template);
             }
 
+            //if a parentTemplate is set merge it with the current template
             if (this.options.parentTemplate !== null) {
 
                 this.options.parentTemplate = getTemplate.call(this, parentTemplate);
-
                 if (!this.options.parentChangeStateCallback || typeof this.options.parentChangeStateCallback !== 'function') {
                     this.options.parentChangeStateCallback = getChangeStateCallback.call(this, parentTemplate);
                 }
 
                 this.options.template = this.options.template.concat(this.options.parentTemplate);
             }
+        },
 
-            $container = this.sandbox.dom.createElement('<div />');
+        /**
+         * Starts the husky-component
+         */
+        startComponent: function() {
+            var $container = this.sandbox.dom.createElement('<div />');
             this.html($container);
 
             this.sandbox.start([
@@ -159,23 +162,6 @@ define([], function() {
                     }
                 }
             ]);
-
-            contentLeft = this.sandbox.dom.css('main#content', 'margin-left');
-            this.sandbox.dom.css('#edit-toolbar-container', {'margin-left': contentLeft});
-            // initialize width correct gap
-            resizeListener.call(this);
-
-            // bind events (also initializes first component)
-            this.bindCustomEvents();
-            this.bindDomEvents();
-        },
-
-        /**
-         * listens to tab events
-         */
-        bindDomEvents: function() {
-            // change size of edit-toolbar
-            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', resizeListener.bind(this));
         },
 
         /**
@@ -185,7 +171,18 @@ define([], function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
             this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', this.changeState.bind(this));
-            this.sandbox.on('husky.navigation.size.change', changeLeftDistance.bind(this));
+
+            //make sure container keeps the width of the content
+            this.sandbox.on('sulu.app.content.dimensions-changed', this.resizeListener.bind(this));
+        },
+
+        /**
+         * Applies new dimensions to the component container
+         * @param dimensions {Object} The dimensions with width and left to apply
+         */
+        resizeListener: function(dimensions) {
+            this.sandbox.dom.width(this.$el, dimensions.width);
+            this.sandbox.dom.css(this.$container, {'margin-left': dimensions.left + 'px'});
         },
 
         changeState: function(type, saved) {

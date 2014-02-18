@@ -18,9 +18,10 @@ body {
 
     max-width: $contentMaxWidth;
     min-width: $contenMinWidth;
-    margin-left: $contentPaddingLeft;
+    margin-left: $contentMarginLeft;
+    padding-left: $contentPaddingLeft;
     padding-top: $contentPaddingTop;
-    margin-right: $contentPaddingRight;
+    padding-right: $contentPaddingRight;
     @include single-transition(margin,  $transitionDuration);
 
     h2.mainheadline {
@@ -43,7 +44,6 @@ body {
 
 // tabs content
 #edit-toolbar-container {
-    @include single-transition(margin,  $transitionDuration);
     z-index: 99;
     position: fixed;
     top: 0;
