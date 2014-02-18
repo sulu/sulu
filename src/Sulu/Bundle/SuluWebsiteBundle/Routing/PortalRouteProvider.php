@@ -77,7 +77,7 @@ class PortalRouteProvider implements RouteProviderInterface
             $collection->add('redirect_' . uniqid(), $route);
         } else {
             $portal = $this->requestAnalyzer->getCurrentPortal();
-            $language = $this->requestAnalyzer->getCurrentLocalization()->getLanguage();
+            $language = str_replace('-', '_', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
 
             // Set current theme
             $this->activeTheme->setName($portal->getWorkspace()->getTheme()->getKey());
