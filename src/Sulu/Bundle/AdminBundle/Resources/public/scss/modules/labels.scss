@@ -1,5 +1,4 @@
 #labels-container {
-    @include single-transition(margin,  $transitionDuration);
     z-index: 1000;
     position: fixed;
     top: 0;

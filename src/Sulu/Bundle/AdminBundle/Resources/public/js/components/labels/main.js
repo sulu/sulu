@@ -93,31 +93,41 @@ define([], function() {
         view: true,
 
         /**
-         * Initialize the component
+         * Waits for the App-Component to start,
+         * then continues with the initialization
          */
         initialize: function() {
-            this.savedContentWidth = null;
-            this.labelId = 0;
-            this.resizeListener();
+            this.appStarted = false;
+            this.sandbox.emit('sulu.app.has-started', function(hasStarted) {
+                this.appStarted = hasStarted;
+            }.bind(this));
 
-            this.bindDomEvents();
-            this.bindCustomEvents();
+            //if app-component is already started continue right ahead
+            if (this.appStarted === true) {
+                this.startComponent();
+            } else {
+                this.sandbox.on('sulu.app.initialized', this.startComponent.bind(this));
+            }
         },
 
         /**
-         * Bind DOM related events
+         * Starts the component
          */
-        bindDomEvents: function() {
-            //todo improve responsivness
-            this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeListener.bind(this));
-            this.sandbox.on('husky.navigation.size.change', this.navigationSizeChangeListener.bind(this));
-            this.sandbox.on('husky.tabs.content.initialized', this.resizeListener.bind(this));
+        startComponent: function() {
+            this.labelId = 0;
+
+            this.bindCustomEvents();
+
+            //set the beginning width of the label-container
+            this.sandbox.emit('sulu.app.content.get-dimensions', this.resizeListener.bind(this));
         },
 
         /**
          * Bind custom related events
          */
         bindCustomEvents: function() {
+            this.sandbox.on('sulu.app.content.dimensions-changed', this.resizeListener.bind(this));
+
             this.sandbox.on(SHOW_ERROR.call(this), function(description, title, id) {
                 this.showLabel('ERROR', description, title, id);
             }.bind(this));
@@ -158,21 +168,9 @@ define([], function() {
         /**
          * Makes sure labels-container always has the width of the content
          */
-        resizeListener: function() {
-            var contentWidth = this.sandbox.dom.width('main#content');
-
-            if (this.savedContentWidth === null || this.savedContentWidth !== contentWidth) {
-                this.sandbox.dom.width(this.$el, contentWidth);
-                this.savedContentWidth = contentWidth;
-            }
-        },
-
-        /**
-         * Handles to left-margin if the navigations size changes
-         * @param navSize
-         */
-        navigationSizeChangeListener: function(navSize) {
-            this.sandbox.dom.css(this.$el, {'margin-left': navSize + 50 + 'px'});
+        resizeListener: function(dimensions) {
+            this.sandbox.dom.width(this.$el, dimensions.width);
+            this.sandbox.dom.css(this.$el, {'margin-left': dimensions.left + 'px'});
         },
 
         /**
