@@ -131,8 +131,8 @@ class NodeController extends RestController implements ClassResourceInterface
             'sortMethod' => $sortMethod
         );
 
-        $languageCode = 'en';
-        $webspaceKey = 'sulu_io';
+        $webspaceKey = $this->getRequest()->get('webspace');
+        $languageCode = $this->getRequest()->get('language');
 
         $structures = array();
 
