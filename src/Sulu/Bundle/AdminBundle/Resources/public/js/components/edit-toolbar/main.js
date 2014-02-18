@@ -103,7 +103,7 @@ define([], function() {
             } else {
                 this.sandbox.logger.log('no template found!');
             }
-        }
+        };
 
     return {
         view: true,
@@ -121,7 +121,6 @@ define([], function() {
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
-            this.bindDomEvents();
         },
 
         /**
