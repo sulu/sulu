@@ -62,6 +62,7 @@ interface NodeRepositoryInterface
      * @param string $uuid
      * @param null $state
      * @param string $parentUuid
+     * @param boolean $showInNavigation
      * @return array
      */
     public function saveNode(
@@ -72,7 +73,8 @@ interface NodeRepositoryInterface
         $userId,
         $uuid = null,
         $parentUuid = null,
-        $state = null
+        $state = null,
+        $showInNavigation = null
     );
 
     /**

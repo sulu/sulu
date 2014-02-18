@@ -43,7 +43,7 @@ interface PreviewInterface
      * saves changes for given user and content
      * @param int $userId
      * @param string $contentUuid
-     * @param string $webspaceKey The webspace key
+     * @param string $webspaceKey
      * @param string $languageCode
      * @param string $property propertyName which was changed
      * @param mixed $data new data

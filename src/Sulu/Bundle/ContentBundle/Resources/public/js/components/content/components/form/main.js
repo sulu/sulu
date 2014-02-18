@@ -70,6 +70,10 @@ define(['app-config'], function(AppConfig) {
 
         setFormData: function(data) {
             this.sandbox.form.setData(this.formId, data);
+            if (this.options.id === 'index') {
+                this.sandbox.dom.remove('#show-in-navigation-container');
+            }
+            this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
             if (!!this.options.data.id) {
                 this.initPreview();
             }
@@ -198,11 +202,18 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.logger.log('save Model');
 
             if (this.sandbox.form.validate(this.formId)) {
-                var data = this.sandbox.form.getData(this.formId);
+                var data = this.sandbox.form.getData(this.formId),
+                    navigation;
+
+                if (this.options.id === 'index') {
+                    navigation = true;
+                } else {
+                    navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+                }
 
                 this.sandbox.logger.log('data', data);
 
-                this.sandbox.emit('sulu.content.contents.save', data, this.template);
+                this.sandbox.emit('sulu.content.contents.save', data, this.template, navigation);
             }
         },
 

@@ -19,7 +19,8 @@ define([
         var defaults = {},
 
             subType = {
-                initializeSub: function() {
+                initializeSub: function(dfd) {
+                    dfd.resolve();
                     App.on('husky.smart-content.' + options.instanceName + '.input-retrieved', function() {
                         App.emit('sulu.preview.update', App.dom.data($el, 'mapperProperty'), App.dom.data($el, 'smart-content'));
                     }.bind(this));
