@@ -172,9 +172,10 @@ class NodeRepository implements NodeRepositoryInterface
      * @param array $smartContentConfig The config of the smart content
      * @param string $languageCode The desired language code
      * @param string $webspaceKey The webspace key
+     * @param boolean $preview If true also  unpublished pages will be returned
      * @return mixed
      */
-    public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey)
+    public function getSmartContentNodes(array $smartContentConfig, $languageCode, $webspaceKey, $preview = false)
     {
         // build sql2 query
         $sql2 = 'SELECT * FROM [sulu:content] AS c';
@@ -199,7 +200,9 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         // search only for published pages
-        $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-sulu-state] = ' . StructureInterface::STATE_PUBLISHED;
+        if (!$preview) {
+            $sql2Where[] = 'c.[sulu_locale:' . $languageCode . '-sulu-state] = ' . StructureInterface::STATE_PUBLISHED;
+        }
 
         // build order clause
         if (!empty($smartContentConfig['sortBy'])) {

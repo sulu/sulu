@@ -145,7 +145,8 @@ class NodeController extends RestController implements ClassResourceInterface
         $content = $this->get('sulu_content.node_repository')->getSmartContentNodes(
             $smartContentConfig,
             $languageCode,
-            $webspaceKey
+            $webspaceKey,
+            true
         );
 
         $i = 0;
