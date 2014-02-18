@@ -61,22 +61,31 @@ class SmartContentContainer implements \Serializable
     private $data = null;
 
     /**
+     * true environment is preview
+     * @var bool
+     */
+    private $preview;
+
+    /**
      * @param NodeRepositoryInterface $nodeRepository
      * @param TagManagerInterface $tagManager
      * @param string $webspaceKey
      * @param string $languageCode
+     * @param bool $preview
      */
     public function __construct(
         NodeRepositoryInterface $nodeRepository,
         TagManagerInterface $tagManager,
         $webspaceKey,
-        $languageCode
+        $languageCode,
+        $preview = false
     )
     {
         $this->nodeRepository = $nodeRepository;
         $this->tagManager = $tagManager;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
+        $this->preview = $preview;
     }
 
     /**
@@ -110,8 +119,7 @@ class SmartContentContainer implements \Serializable
                 $config['tags'] = $this->tagManager->resolveTagNames($config['tags']);
             }
 
-            // TODO use correct language and workspace
-            $this->data = $this->nodeRepository->getSmartContentNodes($config, $this->languageCode, $this->webspaceKey);
+            $this->data = $this->nodeRepository->getFilteredNodes($config, $this->languageCode, $this->webspaceKey, $this->preview);
         }
 
         return $this->data;

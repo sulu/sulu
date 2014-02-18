@@ -35,8 +35,7 @@ define([
                         config.preSelectedSortMethod = config.sortMethod;
                         delete config.sortMethod;
                     }
-                    config.tagsAutoCompleteUrl = '/admin/api/tags';
-                    App.emit('husky.smart-content.' + options.instanceName + '.external-configs', config);
+                    App.emit('husky.smart-content.' + options.instanceName + '.set-configs', config);
                 },
 
                 getValue: function() {

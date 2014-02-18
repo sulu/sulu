@@ -101,14 +101,27 @@ class NodeControllerTest extends DatabaseTestCase
         $webspace = $cmf->addNode('sulu_io');
         $webspace->addNode('routes');
         $content = $webspace->addNode('contents');
-        $content->setProperty('sulu:template', 'overview');
-        $content->setProperty('sulu:creator', 1);
-        $content->setProperty('sulu:created', new \DateTime());
-        $content->setProperty('sulu:changer', 1);
-        $content->setProperty('sulu:changed', new \DateTime());
+        $content->setProperty('sulu_locale:en-template', 'overview');
+        $content->setProperty('sulu_locale:en-creator', 1);
+        $content->setProperty('sulu_locale:en-created', new \DateTime());
+        $content->setProperty('sulu_locale:en-changer', 1);
+        $content->setProperty('sulu_locale:en-changed', new \DateTime());
         $content->addMixin('sulu:content');
 
         $this->session->save();
+    }
+
+    public function prepareRepository()
+    {
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
+        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
+        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
+            'sulu_locale',
+            'http://sulu.io/phpcr/locale'
+        );
     }
 
     private function setUpSchema()
@@ -148,19 +161,6 @@ class NodeControllerTest extends DatabaseTestCase
         $repository = $factory->getRepository($parameters);
         $credentials = new SimpleCredentials('admin', 'admin');
         $this->session = $repository->login($credentials, 'test');
-    }
-
-    public function prepareRepository()
-    {
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
-            'sulu_locale',
-            'http://sulu.io/phpcr/locale'
-        );
     }
 
     protected function tearDown()
@@ -214,8 +214,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
         $this->assertEquals(array(1, 2), $content->getPropertyValue('sulu_locale:en-tags'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-changer'));
     }
 
     public function testPostTree()
@@ -271,8 +271,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test-1', $content->getProperty('sulu_locale:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
         $this->assertEquals(array(1, 2), $content->getPropertyValue('sulu_locale:en-tags'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu:creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu:changer'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-changer'));
 
         // check parent
         $this->assertEquals($uuid, $content->getParent()->getIdentifier());
@@ -714,36 +714,36 @@ class NodeControllerTest extends DatabaseTestCase
             )
         );
 
-        $client->request('GET', '/api/nodes/smartcontent');
+        $client->request('GET', '/api/nodes/filter');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(6, sizeof($response));
 
-        $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2');
+        $client->request('GET', '/api/nodes/filter?dataSource=%2Ftest2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(2, sizeof($response));
 
-        $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2&includeSubFolders=true');
+        $client->request('GET', '/api/nodes/filter?dataSource=%2Ftest2&includeSubFolders=true');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(3, sizeof($response));
 
-        $client->request('GET', '/api/nodes/smartcontent?dataSource=%2Ftest2&includeSubFolders=true&limitResult=2');
+        $client->request('GET', '/api/nodes/filter?dataSource=%2Ftest2&includeSubFolders=true&limitResult=2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(2, sizeof($response));
 
-        $client->request('GET', '/api/nodes/smartcontent?tags=tag1');
+        $client->request('GET', '/api/nodes/filter?tags=tag1');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(4, sizeof($response));
 
-        $client->request('GET', '/api/nodes/smartcontent?tags=tag2');
+        $client->request('GET', '/api/nodes/filter?tags=tag2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
         $this->assertEquals(3, sizeof($response));
 
-        $client->request('GET', '/api/nodes/smartcontent?tags=tag1,tag2');
+        $client->request('GET', '/api/nodes/filter?tags=tag1,tag2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
         $this->assertEquals(2, sizeof($response));
     }

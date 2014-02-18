@@ -226,7 +226,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareMapper();
 
-        $this->nodeRepository = new NodeRepository($this->mapper, $this->userService, $this->securityContextMock);
+        $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionService);
     }
 
     private function prepareContainerMock()
@@ -286,7 +286,7 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     private function prepareMapper()
     {
-        $this->mapper = new ContentMapper('en', 'sulu_locale');
+        $this->mapper = new ContentMapper('en', 'default_template', 'sulu_locale');
         $this->mapper->setContainer($this->containerMock);
 
         $this->prepareSession();
@@ -309,17 +309,6 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function prepareRepository()
     {
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
-            'sulu_locale',
-            'http://sulu.io/phpcr/locale'
-        );
-        $this->session->save();
-
         NodeHelper::purgeWorkspace($this->session);
         $this->session->save();
 
