@@ -6,12 +6,12 @@
     "keywords": ["admin", "cms", "symfony"],
     "authors": [
         {
-            "name": "Daniel Rotter",
-            "email": "daniel.rotter@massiveart.com",
-            "role": "developer"
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluAdminBundle/contributors"
         }
     ],
     "require": {
+        "php": ">=5.4",
         "sulu/sulu": "dev-develop"
     },
     "autoload": {

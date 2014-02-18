@@ -80,6 +80,9 @@ For licensing, see LICENSE.md or http:ckeditor.com/license
 .cke_chrome {
     display: block;
     padding: 0;
+    border: 0;
+    margin: 10px 0 20px;
+    -webkit-box-shadow: none;-moz-box-shadow: none;box-shadow: none;
 }
 
 .cke_inner {
@@ -87,6 +90,15 @@ For licensing, see LICENSE.md or http:ckeditor.com/license
     -webkit-touch-callout: none;
     background: #fff;
     padding: 0
+}
+
+.cke_inner {
+    border: 1px solid #ccc !important;
+}
+.cke_inner,
+.cke_wysiwyg_frame {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .cke_float {
