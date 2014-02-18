@@ -18,6 +18,7 @@
         "sulu/contact-bundle": "dev-develop",
         "sulu/security-bundle": "dev-develop",
         "sulu/website-bundle": "dev-develop",
+        "sulu/tag-bundle": "dev-develop",
         "liip/theme-bundle": "@dev",
 
         "jackalope/jackalope-jackrabbit": "1.0.*",

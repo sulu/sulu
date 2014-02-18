@@ -387,10 +387,8 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
 
     private function prepareComponent()
     {
-        $securityContext = $this->prepareSecurityContext();
         $preview = $this->preparePreview();
         $component = new PreviewMessageComponent(
-            $securityContext,
             $preview,
             $this->getMock('\Psr\Log\LoggerInterface')
         );
@@ -427,13 +425,21 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
 
     private function preparePreview()
     {
+        $container = $this->prepareContainerMock();
         $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
         $structureManager = $this->prepareStructureManagerMock();
         $controllerResolver = $this->prepareControllerResolver();
         $cache = new ArrayCache();
 
-        return new Preview($templating, $cache, $mapper, $structureManager, $controllerResolver, 3600);
+        return new Preview($container, $templating, $cache, $mapper, $structureManager, $controllerResolver, 3600);
+    }
+
+    public function prepareContainerMock()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+
+        return $container;
     }
 
     public function prepareControllerResolver()

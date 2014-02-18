@@ -1,6 +1,14 @@
-<div data-aura-component="smart-content@husky"
-     data-aura-url="/smartcontent"
-     data-aura-data-sources='[{"id":1,"name":"home/"},{"id":2,"name":"home/products/"},{"id":3,"name":"home/products/technical"}]'
-     data-aura-categories='[{"id":1,"name":"New products"},{"id":2,"name":"Old products"},{"id":3,"name":"technical products"}]'
-     data-aura-sort-by='[{"id":1,"name":"Description"},{"id":2,"name":"Name"},{"id":3,"name":"Price"}]'
-     data-aura-present-as='[{"id":1,"name":"2-columns with pictures"},{"id":2,"name":"1-column with pictures"},{"id":3,"name":"only pictures"}]'></div>
+<div id="{{ id }}"
+     data-mapper-property="{{ property.name }}"
+     data-aura-component="smart-content@husky"
+     data-type="smartContent"
+     data-type-instance-name="{{ property.name }}"
+     data-instance-name="{{ property.name }}"
+     data-form="true"
+     data-aura-url="/admin/api/nodes/filter"
+     data-aura-tags-auto-complete-url="/admin/api/tags?flat=true"
+     data-aura-sort-by='[
+            {"id":"published","name":"<%= translate("public.published") %>"},
+            {"id":"created","name":"<%= translate("public.created") %>"},
+            {"id":"changed","name":"<%= translate("public.changed") %>"}
+        ]'></div>
