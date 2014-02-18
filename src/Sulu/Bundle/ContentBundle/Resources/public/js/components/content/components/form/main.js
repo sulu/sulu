@@ -151,7 +151,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
                 if (this.hiddenTemplate) {
                     this.hiddenTemplate = false;
-                    this.sandbox.emit('husky.edit-toolbar.item.show', 'template');
+                    this.sandbox.emit('husky.edit-toolbar.item.show', 'template', name);
                 }
             }, this);
 
