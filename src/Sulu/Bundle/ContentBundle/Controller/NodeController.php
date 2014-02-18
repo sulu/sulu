@@ -162,7 +162,7 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function putAction($uuid)
     {
-        if($uuid === 'index'){
+        if ($uuid === 'index') {
             return $this->putIndex();
         }
 
@@ -170,9 +170,9 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
         $navigation = $this->getRequest()->get('navigation');
-        if($navigation === '0'){
+        if ($navigation === '0') {
             $navigation = false;
-        }else{
+        } else {
             // default navigation
             $navigation = 'main';
         }
@@ -189,7 +189,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $language,
             $this->getUser()->getId(),
             $uuid,
-            null,   // parentUuid
+            null, // parentUuid
             $state,
             $navigation
         );
@@ -247,7 +247,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $template,
             $webspace,
             $language,
-                $this->getUser()->getId(),
+            $this->getUser()->getId(),
             null, // uuid
             $parent,
             null, // state
