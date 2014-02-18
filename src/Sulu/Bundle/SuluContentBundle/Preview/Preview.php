@@ -157,7 +157,7 @@ class Preview implements PreviewInterface
                 $this->setValue(
                     $newContent,
                     $property->getName(),
-                    $content->getProperty($property)->getValue(),
+                    $property->getValue(),
                     $webspaceKey,
                     $languageCode
                 );

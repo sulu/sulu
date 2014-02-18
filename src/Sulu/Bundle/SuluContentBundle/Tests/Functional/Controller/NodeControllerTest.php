@@ -714,36 +714,36 @@ class NodeControllerTest extends DatabaseTestCase
             )
         );
 
-        $client->request('GET', '/api/nodes/filter');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(6, sizeof($response));
 
-        $client->request('GET', '/api/nodes/filter?dataSource=%2Ftest2');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=%2Ftest2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(2, sizeof($response));
 
-        $client->request('GET', '/api/nodes/filter?dataSource=%2Ftest2&includeSubFolders=true');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=%2Ftest2&includeSubFolders=true');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(3, sizeof($response));
 
-        $client->request('GET', '/api/nodes/filter?dataSource=%2Ftest2&includeSubFolders=true&limitResult=2');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=%2Ftest2&includeSubFolders=true&limitResult=2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(2, sizeof($response));
 
-        $client->request('GET', '/api/nodes/filter?tags=tag1');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
 
         $this->assertEquals(4, sizeof($response));
 
-        $client->request('GET', '/api/nodes/filter?tags=tag2');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
         $this->assertEquals(3, sizeof($response));
 
-        $client->request('GET', '/api/nodes/filter?tags=tag1,tag2');
+        $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
         $this->assertEquals(2, sizeof($response));
     }
