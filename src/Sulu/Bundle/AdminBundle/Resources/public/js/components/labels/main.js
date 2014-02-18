@@ -102,6 +102,10 @@ define([], function() {
 
             this.bindDomEvents();
             this.bindCustomEvents();
+
+            setTimeout(function() {
+                this.sandbox.emit('sulu.labels.error.show', 'remove me later', 'Test error');
+            }.bind(this), 300)
         },
 
         /**

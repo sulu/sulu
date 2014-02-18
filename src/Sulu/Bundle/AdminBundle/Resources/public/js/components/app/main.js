@@ -12,13 +12,17 @@ define(function() {
     'use strict';
 
     var router,
-        changeContentPaddingLeft = function(paddingLeft) {
-            this.sandbox.dom.css('#content', {'margin-left': 50 + paddingLeft});
-        };
+
+    changeContentPaddingLeft = function(paddingLeft) {
+        this.sandbox.dom.css('#content', {'margin-left': 50 + paddingLeft});
+    };
 
     return {
         name: 'Sulu App',
 
+        /**
+         * Initialize the component
+         */
         initialize: function() {
             if (!!this.sandbox.mvc.routes) {
 
@@ -46,9 +50,15 @@ define(function() {
             }
         },
 
+        /**
+         * Bind DOM-related Events
+         */
         bindDomEvents: function() {
         },
 
+        /**
+         * Bind component-related events
+         */
         bindCustomEvents: function() {
             // listening for navigation events
             this.sandbox.on('sulu.router.navigate', function(route, trigger) {
@@ -88,7 +98,10 @@ define(function() {
             this.sandbox.on('husky.navigation.size.change', changeContentPaddingLeft.bind(this));
         },
 
-
+        /**
+         * Emits the router.navigate event
+         * @param event
+         */
         emitNavigationEvent: function(event) {
 
             // TODO: select right bundle / item in navigation
