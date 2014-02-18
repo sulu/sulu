@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testStateTEST()
+    public function testStateTest()
     {
         // Set up test
         $path = '/';

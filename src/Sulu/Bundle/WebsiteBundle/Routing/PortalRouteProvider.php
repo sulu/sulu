@@ -82,7 +82,6 @@ class PortalRouteProvider implements RouteProviderInterface
             // Set current theme
             $this->activeTheme->setName($portal->getWorkspace()->getTheme()->getKey());
 
-            $error = false;
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
                     $this->requestAnalyzer->getCurrentResourceLocator(),
@@ -90,7 +89,7 @@ class PortalRouteProvider implements RouteProviderInterface
                     $language
                 );
                 if ($content->getGlobalState() === StructureInterface::STATE_TEST || !$content->getHasTranslation()) {
-                    $error = true;
+                    throw new ResourceLocatorNotFoundException();
                 } else {
                     $route = new Route($request->getRequestUri(), array(
                         '_controller' => $content->getController(),
@@ -100,9 +99,6 @@ class PortalRouteProvider implements RouteProviderInterface
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
             } catch (ResourceLocatorNotFoundException $rlnfe) {
-                $error = true;
-            }
-            if ($error) {
                 $route = new Route($request->getRequestUri(), array(
                     '_controller' => 'SuluWebsiteBundle:Default:error404',
                     'path' => $request->getRequestUri()
