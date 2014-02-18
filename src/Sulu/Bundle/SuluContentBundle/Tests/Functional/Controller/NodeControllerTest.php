@@ -214,8 +214,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
         $this->assertEquals(array(1, 2), $content->getPropertyValue('sulu_locale:en-tags'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-changer'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-changer'));
     }
 
     public function testPostTree()
@@ -271,8 +271,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('test-1', $content->getProperty('sulu_locale:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('sulu_locale:en-article')->getString());
         $this->assertEquals(array(1, 2), $content->getPropertyValue('sulu_locale:en-tags'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-changer'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-creator'));
+        $this->assertEquals(1, $content->getPropertyValue('sulu_locale:en-sulu-changer'));
 
         // check parent
         $this->assertEquals($uuid, $content->getParent()->getIdentifier());
