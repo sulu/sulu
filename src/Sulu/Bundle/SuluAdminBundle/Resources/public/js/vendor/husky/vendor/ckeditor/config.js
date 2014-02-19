@@ -35,4 +35,11 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Make dialogs simpler.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+
+    // Whether to force all pasting operations to insert on plain text into the editor, loosing any formatting information ...
+    config.forcePasteAsPlainText = 'true';
+
+    // allow image tags
+    config.extraAllowedContent = 'img[!src]';
+
 };
