@@ -20,24 +20,32 @@ define([
 
             subType = {
                 initializeSub: function(dfd) {
-                    // FIXME resolve only when smart content is initialized
                     dfd.resolve();
+
+                    this.smartContentInitialized = App.data.deferred();
+
+                    App.on('husky.smart-content.' + options.instanceName + '.data-retrieved', function() {
+                        this.smartContentInitialized.resolve();
+                    }.bind(this));
+
                     App.on('husky.smart-content.' + options.instanceName + '.input-retrieved', function() {
                         App.emit('sulu.preview.update', App.dom.data($el, 'mapperProperty'), App.dom.data($el, 'smart-content'));
                     }.bind(this));
                 },
 
                 setValue: function(value) {
-                    var config = App.util.extend(true, {}, value.config);
-                    if (!!config.sortBy) {
-                        config.preSelectedSortBy = config.sortBy[0];
-                        delete config.sortBy;
-                    }
-                    if (!!config.sortMethod) {
-                        config.preSelectedSortMethod = config.sortMethod;
-                        delete config.sortMethod;
-                    }
-                    App.emit('husky.smart-content.' + options.instanceName + '.set-configs', config);
+                    this.smartContentInitialized.then(function() {
+                        var config = App.util.extend(true, {}, value.config);
+                        if (!!config.sortBy) {
+                            config.preSelectedSortBy = config.sortBy[0];
+                            delete config.sortBy;
+                        }
+                        if (!!config.sortMethod) {
+                            config.preSelectedSortMethod = config.sortMethod;
+                            delete config.sortMethod;
+                        }
+                        App.emit('husky.smart-content.' + options.instanceName + '.set-configs', config);
+                    }.bind(this));
                 },
 
                 getValue: function() {
