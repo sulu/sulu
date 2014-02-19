@@ -214,8 +214,8 @@ define([], function() {
         showLabel: function(type, description, title, id) {
             this.startLabelComponent({
                 type: type,
-                description: description,
-                title: title,
+                description: this.sandbox.translate(description),
+                title: this.sandbox.translate(title),
                 el: this.createLabelContainer(id)
             })
         },

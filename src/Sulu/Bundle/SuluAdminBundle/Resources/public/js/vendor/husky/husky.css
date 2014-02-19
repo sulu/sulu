@@ -749,7 +749,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 10px 0;
+  margin: 10px 0 40px 0;
   font-family: inherit;
   font-weight: normal;
   color: #999999;
@@ -5196,18 +5196,32 @@ a.btn-black, a.btn-highlight {
 .tt-suggestion {
   height: 25px;
   width: 100%;
-  padding: 0 6px;
-  border-width: 0 0px 0 0px;
-  border-style: solid;
-  border-color: #fff;
 }
-/* line 62, ../scss/modules/auto-complete.scss */
-.tt-suggestion .border {
+
+/* line 60, ../scss/modules/auto-complete.scss */
+.suggestion:hover,
+.tt-is-under-cursor .suggestion {
+  background: #249fbe;
+  color: white;
+}
+/* line 64, ../scss/modules/auto-complete.scss */
+.suggestion:hover.disabled,
+.tt-is-under-cursor .suggestion.disabled {
+  background: #efefef;
+}
+
+/* line 69, ../scss/modules/auto-complete.scss */
+.suggestion {
+  color: black;
+  padding: 0 6px;
+}
+/* line 73, ../scss/modules/auto-complete.scss */
+.suggestion .border {
   height: 25px;
   clear: both;
 }
-/* line 66, ../scss/modules/auto-complete.scss */
-.tt-suggestion .border .icon {
+/* line 76, ../scss/modules/auto-complete.scss */
+.suggestion .border .icon {
   display: block;
   float: left;
   margin: 0 10px 0 10px;
@@ -5216,31 +5230,15 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   line-height: 25px;
 }
-/* line 75, ../scss/modules/auto-complete.scss */
-.tt-suggestion .border .text {
+/* line 85, ../scss/modules/auto-complete.scss */
+.suggestion .border .text {
   float: left;
   line-height: 25px;
 }
-/* line 80, ../scss/modules/auto-complete.scss */
-.tt-suggestion:last-child .border {
-  border-bottom: none;
-}
-
-/* line 86, ../scss/modules/auto-complete.scss */
-.tt-suggestion:hover,
-.tt-is-under-cursor {
-  background: #249fbe;
-}
-/* line 88, ../scss/modules/auto-complete.scss */
-.tt-suggestion:hover .border,
-.tt-is-under-cursor .border {
-  border: 0;
-  color: white;
-}
-
-/* line 95, ../scss/modules/auto-complete.scss */
-.suggestion {
-  color: black;
+/* line 91, ../scss/modules/auto-complete.scss */
+.suggestion.disabled {
+  color: #999999;
+  cursor: default;
 }
 
 /* line 5, ../scss/modules/search.scss */
@@ -6611,11 +6609,16 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid thead .table-container {
   width: 100%;
 }
-/* line 46, ../scss/modules/datagrid.scss */
+/* line 47, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody tr:last-child {
+  border-width: 2px;
+  border-color: #999999;
+}
+/* line 53, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container {
   overflow: auto;
 }
-/* line 49, ../scss/modules/datagrid.scss */
+/* line 56, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.overflow:after {
   color: #cccccc;
   font-size: 22px;
