@@ -242,6 +242,13 @@ class NodeController extends RestController implements ClassResourceInterface
         $parent = $this->getRequest()->get('parent');
         $data = $this->getRequest()->request->all();
 
+        if ($navigation === '0') {
+            $navigation = false;
+        } else {
+            // default navigation
+            $navigation = 'main';
+        }
+
         $result = $this->getRepository()->saveNode(
             $data,
             $template,
