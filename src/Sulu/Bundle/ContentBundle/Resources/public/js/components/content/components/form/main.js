@@ -64,12 +64,14 @@ define(['app-config'], function(AppConfig) {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-                this.setFormData(data);
+                this.setFormData(data).then(function(){
+                    this.sandbox.start('#contacts-form-container');
+                }.bind(this));
             }.bind(this));
         },
 
         setFormData: function(data) {
-            this.sandbox.form.setData(this.formId, data);
+            var initialize = this.sandbox.form.setData(this.formId, data);
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
@@ -77,6 +79,7 @@ define(['app-config'], function(AppConfig) {
             if (!!this.options.data.id) {
                 this.initPreview();
             }
+            return initialize;
         },
 
         bindDomEvents: function() {
@@ -258,7 +261,7 @@ define(['app-config'], function(AppConfig) {
                             tpl = this.sandbox.util.template(template, context),
                             data = this.initData();
 
-                        this.html(tpl);
+                        this.sandbox.dom.html(this.$el, tpl);
                         this.setStateDropdown(data);
                         this.createForm(data);
 

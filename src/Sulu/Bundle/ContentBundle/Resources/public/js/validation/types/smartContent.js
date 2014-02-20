@@ -20,24 +20,22 @@ define([
 
             subType = {
                 initializeSub: function(dfd) {
-                    // FIXME resolve only when smart content is initialized
                     dfd.resolve();
+
                     App.on('husky.smart-content.' + options.instanceName + '.input-retrieved', function() {
                         App.emit('sulu.preview.update', App.dom.data($el, 'mapperProperty'), App.dom.data($el, 'smart-content'));
                     }.bind(this));
                 },
 
                 setValue: function(value) {
-                    var config = App.util.extend(true, {}, value.config);
-                    if (!!config.sortBy) {
-                        config.preSelectedSortBy = config.sortBy[0];
-                        delete config.sortBy;
+                    App.dom.data($el, 'auraDataSource', value.config.dataSource);
+                    App.dom.data($el, 'auraIncludeSubFolders', value.config.includeSubFolders);
+                    App.dom.data($el, 'auraTags', value.config.tags);
+                    App.dom.data($el, 'auraPreSelectedSortMethod', value.config.sortMethod);
+                    if (value.config.sortBy.length > 0) {
+                        App.dom.data($el, 'auraPreSelectedSortBy', value.config.sortBy[0]);
                     }
-                    if (!!config.sortMethod) {
-                        config.preSelectedSortMethod = config.sortMethod;
-                        delete config.sortMethod;
-                    }
-                    App.emit('husky.smart-content.' + options.instanceName + '.set-configs', config);
+                    App.dom.data($el, 'auraLimitResult', value.config.limitResult);
                 },
 
                 getValue: function() {
