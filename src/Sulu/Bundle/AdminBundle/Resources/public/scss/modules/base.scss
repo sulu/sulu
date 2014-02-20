@@ -32,14 +32,9 @@ body {
         margin-top: 0;
     }
 
-    #content-tabs {
-        margin-top: 40px;
-    }
-
     .content-tabs-content {
         margin-top: 80px;
     }
-
 }
 
 // tabs content
@@ -59,17 +54,22 @@ body {
 }
 
 #list-toolbar-container {
-    margin-top: 30px;
     margin-bottom: 30px;
 }
 
 #content-tabs-component {
-    margin-top: 40px;
+    padding-top: 10px;
 
-    #cke_texteditor,
-    .auto-complete-list,
-    .form-element {
-        margin: 10px 0 20px;
+    label.pointer {
+        margin-top: 20px;
+    }
+
+    #show-in-navigation {
+        margin: 10px 0;
+    }
+
+    #tags {
+        margin: 10px 0;
     }
 }
 

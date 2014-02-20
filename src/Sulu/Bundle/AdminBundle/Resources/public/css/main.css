@@ -32,15 +32,11 @@ body {
   margin-top: 0;
 }
 /* line 35, ../scss/modules/base.scss */
-#content #content-tabs {
-  margin-top: 40px;
-}
-/* line 39, ../scss/modules/base.scss */
 #content .content-tabs-content {
   margin-top: 80px;
 }
 
-/* line 46, ../scss/modules/base.scss */
+/* line 41, ../scss/modules/base.scss */
 #edit-toolbar-container {
   z-index: 99;
   position: fixed;
@@ -52,26 +48,31 @@ body {
   padding-top: 40px;
 }
 
-/* line 57, ../scss/modules/base.scss */
+/* line 52, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 820px;
 }
 
-/* line 61, ../scss/modules/base.scss */
+/* line 56, ../scss/modules/base.scss */
 #list-toolbar-container {
-  margin-top: 30px;
   margin-bottom: 30px;
 }
 
-/* line 66, ../scss/modules/base.scss */
+/* line 60, ../scss/modules/base.scss */
 #content-tabs-component {
-  margin-top: 40px;
+  padding-top: 10px;
+}
+/* line 63, ../scss/modules/base.scss */
+#content-tabs-component label.pointer {
+  margin-top: 20px;
+}
+/* line 67, ../scss/modules/base.scss */
+#content-tabs-component #show-in-navigation {
+  margin: 10px 0;
 }
 /* line 71, ../scss/modules/base.scss */
-#content-tabs-component #cke_texteditor,
-#content-tabs-component .auto-complete-list,
-#content-tabs-component .form-element {
-  margin: 10px 0 20px;
+#content-tabs-component #tags {
+  margin: 10px 0;
 }
 
 /* line 77, ../scss/modules/base.scss */
