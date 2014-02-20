@@ -70,18 +70,19 @@ body {
 #content-tabs-component #show-in-navigation {
   margin: 10px 0;
 }
-/* line 71, ../scss/modules/base.scss */
-#content-tabs-component #tags {
+/* line 72, ../scss/modules/base.scss */
+#content-tabs-component #tags,
+#content-tabs-component #smartcontent {
   margin: 10px 0;
 }
 
-/* line 77, ../scss/modules/base.scss */
+/* line 78, ../scss/modules/base.scss */
 #page-functions + #edit-toolbar .edit-toolbar-left {
   margin-left: -50px;
 }
 
 /*----------------------------------------*/
-/* line 84, ../scss/modules/base.scss */
+/* line 85, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -89,30 +90,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 92, ../scss/modules/base.scss */
+/* line 93, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 99, ../scss/modules/base.scss */
+/* line 100, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 106, ../scss/modules/base.scss */
+/* line 107, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 110, ../scss/modules/base.scss */
+/* line 111, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 117, ../scss/modules/base.scss */
+/* line 118, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
