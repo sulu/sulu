@@ -18,25 +18,26 @@ body {
   padding-left: 50px;
   padding-top: 40px;
   padding-right: 50px;
+  padding-bottom: 40px;
   -webkit-transition: margin 0.5s;
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 27, ../scss/modules/base.scss */
+/* line 28, ../scss/modules/base.scss */
 #content h2.mainheadline {
   margin-top: 35px;
 }
-/* line 31, ../scss/modules/base.scss */
+/* line 32, ../scss/modules/base.scss */
 #content h1:first-child {
   margin-top: 0;
 }
-/* line 35, ../scss/modules/base.scss */
+/* line 36, ../scss/modules/base.scss */
 #content .content-tabs-content {
   margin-top: 80px;
 }
 
-/* line 41, ../scss/modules/base.scss */
+/* line 42, ../scss/modules/base.scss */
 #edit-toolbar-container {
   z-index: 99;
   position: fixed;
@@ -48,41 +49,33 @@ body {
   padding-top: 40px;
 }
 
-/* line 52, ../scss/modules/base.scss */
+/* line 53, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 820px;
 }
 
-/* line 56, ../scss/modules/base.scss */
+/* line 57, ../scss/modules/base.scss */
 #list-toolbar-container {
   margin-bottom: 30px;
 }
 
-/* line 60, ../scss/modules/base.scss */
+/* line 61, ../scss/modules/base.scss */
 #content-tabs-component {
-  padding-top: 10px;
+  margin-top: 40px;
 }
-/* line 63, ../scss/modules/base.scss */
+/* line 64, ../scss/modules/base.scss */
 #content-tabs-component label.pointer {
   margin-top: 20px;
-}
-/* line 67, ../scss/modules/base.scss */
-#content-tabs-component #show-in-navigation {
-  margin: 10px 0;
-}
-/* line 72, ../scss/modules/base.scss */
-#content-tabs-component #tags,
-#content-tabs-component #smartcontent {
-  margin: 10px 0;
+  margin-bottom: 10px;
 }
 
-/* line 78, ../scss/modules/base.scss */
+/* line 71, ../scss/modules/base.scss */
 #page-functions + #edit-toolbar .edit-toolbar-left {
   margin-left: -50px;
 }
 
 /*----------------------------------------*/
-/* line 85, ../scss/modules/base.scss */
+/* line 78, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -90,30 +83,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 93, ../scss/modules/base.scss */
+/* line 86, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 100, ../scss/modules/base.scss */
+/* line 93, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 107, ../scss/modules/base.scss */
+/* line 100, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 111, ../scss/modules/base.scss */
+/* line 104, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 118, ../scss/modules/base.scss */
+/* line 111, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
