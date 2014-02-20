@@ -64,8 +64,9 @@ define(['app-config'], function(AppConfig) {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-                this.sandbox.start('#contacts-form-container');
-                this.setFormData(data);
+                this.setFormData(data).then(function(){
+                    this.sandbox.start('#contacts-form-container');
+                }.bind(this));
             }.bind(this));
         },
 
