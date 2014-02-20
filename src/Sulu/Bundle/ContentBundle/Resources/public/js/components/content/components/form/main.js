@@ -64,9 +64,14 @@ define(['app-config'], function(AppConfig) {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-                this.setFormData(data).then(function(){
+                // FIXME hack because of husky validation bug
+                if (JSON.stringify(data) !== JSON.stringify({})) {
+                    this.setFormData(data).then(function() {
+                        this.sandbox.start('#contacts-form-container');
+                    }.bind(this));
+                } else {
                     this.sandbox.start('#contacts-form-container');
-                }.bind(this));
+                }
             }.bind(this));
         },
 

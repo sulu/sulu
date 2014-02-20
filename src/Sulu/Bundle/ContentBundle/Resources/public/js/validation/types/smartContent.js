@@ -28,14 +28,27 @@ define([
                 },
 
                 setValue: function(value) {
-                    App.dom.data($el, 'auraDataSource', value.config.dataSource);
-                    App.dom.data($el, 'auraIncludeSubFolders', value.config.includeSubFolders);
-                    App.dom.data($el, 'auraTags', value.config.tags);
-                    App.dom.data($el, 'auraPreSelectedSortMethod', value.config.sortMethod);
-                    if (value.config.sortBy.length > 0) {
-                        App.dom.data($el, 'auraPreSelectedSortBy', value.config.sortBy[0]);
+
+                    var config = value.config;
+
+                    if (typeof(config.dataSource) !== 'undefined') {
+                        App.dom.data($el, 'auraDataSource', config.dataSource);
                     }
-                    App.dom.data($el, 'auraLimitResult', value.config.limitResult);
+                    if (typeof(config.includeSubFolders) !== 'undefined') {
+                        App.dom.data($el, 'auraIncludeSubFolders', config.includeSubFolders);
+                    }
+                    if (typeof(config.tags) !== 'undefined') {
+                        App.dom.data($el, 'auraTags', config.tags);
+                    }
+                    if (typeof(config.sortMethod) !== 'undefined') {
+                        App.dom.data($el, 'auraPreSelectedSortMethod', config.sortMethod);
+                    }
+                    if ((typeof(config.sortBy) !== 'undefined') && config.sortBy.length > 0) {
+                        App.dom.data($el, 'auraPreSelectedSortBy', config.sortBy[0]);
+                    }
+                    if (typeof(config.limitResult) !== 'undefined') {
+                        App.dom.data($el, 'auraLimitResult', config.limitResult);
+                    }
                 },
 
                 getValue: function() {
