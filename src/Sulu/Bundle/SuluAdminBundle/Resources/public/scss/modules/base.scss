@@ -55,7 +55,7 @@ body {
 }
 
 #list-toolbar-container {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 #content-tabs-component {
@@ -63,6 +63,10 @@ body {
 
     label.pointer {
         margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    label {
         margin-bottom: 10px;
     }
 }
