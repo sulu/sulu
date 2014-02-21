@@ -56,7 +56,7 @@ body {
 
 /* line 57, ../scss/modules/base.scss */
 #list-toolbar-container {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 /* line 61, ../scss/modules/base.scss */
@@ -68,14 +68,18 @@ body {
   margin-top: 20px;
   margin-bottom: 10px;
 }
+/* line 69, ../scss/modules/base.scss */
+#content-tabs-component label {
+  margin-bottom: 10px;
+}
 
-/* line 71, ../scss/modules/base.scss */
+/* line 75, ../scss/modules/base.scss */
 #page-functions + #edit-toolbar .edit-toolbar-left {
   margin-left: -50px;
 }
 
 /*----------------------------------------*/
-/* line 78, ../scss/modules/base.scss */
+/* line 82, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -83,30 +87,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 86, ../scss/modules/base.scss */
+/* line 90, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 93, ../scss/modules/base.scss */
+/* line 97, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 100, ../scss/modules/base.scss */
+/* line 104, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 104, ../scss/modules/base.scss */
+/* line 108, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 111, ../scss/modules/base.scss */
+/* line 115, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
