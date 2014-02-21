@@ -54,6 +54,7 @@ define([], function() {
                         icon: 'cogwheel',
                         iconSize: 'large',
                         group: 'left',
+                        id: 'options-button',
                         position: 30,
                         items: [
                             {
@@ -74,7 +75,7 @@ define([], function() {
                 if (!!saved) {
                     this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
                 } else {
-                    this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button');
+                    this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button', false);
                 }
             }
         },
@@ -173,6 +174,36 @@ define([], function() {
 
             //make sure container keeps the width of the content
             this.sandbox.on('sulu.app.content.dimensions-changed', this.resizeListener.bind(this));
+
+            //abstract husky event
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'items.set', function(id, items) {
+                this.sandbox.emit('husky.edit-toolbar.items.set', id, items);
+            }.bind(this));
+
+            //abstract husky event
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'button.set', function(id, object) {
+                this.sandbox.emit('husky.edit-toolbar.button.set', id, object);
+            }.bind(this));
+
+            //abstract husky event
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'item.loading', function(id) {
+                this.sandbox.emit('husky.edit-toolbar.item.loading', id);
+            }.bind(this));
+
+            //abstract husky event
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'item.change', function(id, name) {
+                this.sandbox.emit('husky.edit-toolbar.item.change', id, name);
+            }.bind(this));
+
+            //abstract husky event
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'item.show', function(id, name) {
+                this.sandbox.emit('husky.edit-toolbar.item.show', id, name);
+            }.bind(this));
+
+            //abstract husky event
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'item.enable', function(id, highlight) {
+                this.sandbox.emit('husky.edit-toolbar.item.enable', id, highlight);
+            }.bind(this));
         },
 
         /**
