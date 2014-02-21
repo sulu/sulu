@@ -158,6 +158,7 @@ define([
         del: function(id) {
             this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
+                    this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'options-button');
                     if (id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
@@ -252,7 +253,6 @@ define([
         },
 
         save: function(data, template, navigation) {
-            // TODO: show loading icon
             this.content.set(data);
 
             this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
