@@ -22,6 +22,7 @@ body {
     padding-left: $contentPaddingLeft;
     padding-top: $contentPaddingTop;
     padding-right: $contentPaddingRight;
+    padding-bottom: $contentPaddingBottom;
     @include single-transition(margin,  $transitionDuration);
 
     h2.mainheadline {
@@ -54,22 +55,19 @@ body {
 }
 
 #list-toolbar-container {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 #content-tabs-component {
-    padding-top: 10px;
+    margin-top: 40px;
 
     label.pointer {
         margin-top: 20px;
+        margin-bottom: 10px;
     }
 
-    #show-in-navigation {
-        margin: 10px 0;
-    }
-
-    #tags {
-        margin: 10px 0;
+    label {
+        margin-bottom: 10px;
     }
 }
 
