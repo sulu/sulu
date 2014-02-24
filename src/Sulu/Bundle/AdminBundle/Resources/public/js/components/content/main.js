@@ -141,6 +141,7 @@ define([], function() {
             this.sandbox.mvc.Store.reset();
 
             this.sandbox.stop('#content-tabs-component');
+            this.sandbox.dom.remove('#content-tabs-component');
 
             this.sandbox.dom.append(this.$el, '<div id="content-tabs-component"><span class="is-loading"/></div>');
 
