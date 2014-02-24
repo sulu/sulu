@@ -383,16 +383,6 @@ define(['app-config'], function(AppConfig) {
                 this.initAjax();
             }
 
-            this.sandbox.dom.on(this.formId, 'keyup', function(e) {
-                if (!!this.options.data.id) {
-                    var $element = $(e.currentTarget);
-                    while (!$element.data('element')) {
-                        $element = $element.parent();
-                    }
-                    this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
-                }
-            }.bind(this), '.preview-update');
-
             this.sandbox.on('sulu.preview.update', function(property, value) {
                 if (!!this.options.data.id) {
                     this.updatePreview(property, value);
@@ -400,14 +390,25 @@ define(['app-config'], function(AppConfig) {
             }, this);
         },
 
+        updateAjaxEvent: function(e) {
+            if (!!this.options.data.id) {
+                var $element = $(e.currentTarget);
+                while (!$element.data('element')) {
+                    $element = $element.parent();
+                }
+                this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
+            }
+        },
+
         initAjax: function() {
+            this.sandbox.dom.on(this.formId, 'focusout', this.updateAjaxEvent.bind(this), '.preview-update');
+
             var data = this.sandbox.form.getData(this.formId);
 
             this.updateAjax(data);
         },
 
         initWs: function() {
-            // FIXME parameter?
             var url = this.wsUrl + ':' + this.wsPort;
             this.sandbox.logger.log('Connect to url: ' + url);
             this.ws = new WebSocket(url);
@@ -430,6 +431,8 @@ define(['app-config'], function(AppConfig) {
             }.bind(this);
 
             this.ws.onmessage = function(e) {
+                this.sandbox.dom.on(this.formId, 'keyup', this.updateAjaxEvent.bind(this), '.preview-update');
+
                 var data = JSON.parse(e.data);
 
                 this.sandbox.logger.log('Message:', data);
