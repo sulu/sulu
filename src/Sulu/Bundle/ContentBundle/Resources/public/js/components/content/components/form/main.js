@@ -20,6 +20,7 @@ define(['app-config'], function(AppConfig) {
         wsUrl: '',
         wsPort: '',
         previewInitiated: false,
+        opened: false,
 
         template: '',
         contentChanged: false,
@@ -426,7 +427,8 @@ define(['app-config'], function(AppConfig) {
             this.ws = new WebSocket(url);
             this.ws.onopen = function() {
                 this.sandbox.logger.log('Connection established!');
-
+                this.opened = true;
+                
                 // send start command
                 var message = {
                     command: 'start',
@@ -440,6 +442,14 @@ define(['app-config'], function(AppConfig) {
                 this.ws.send(JSON.stringify(message));
 
                 this.updatePreview();
+            }.bind(this);
+
+            this.ws.onclose = function() {
+                if (!this.opened) {
+                    // no connection can be opened use fallback (safari)
+                    this.ws = null;
+                    this.initAjax();
+                }
             }.bind(this);
 
             this.ws.onmessage = function(e) {
