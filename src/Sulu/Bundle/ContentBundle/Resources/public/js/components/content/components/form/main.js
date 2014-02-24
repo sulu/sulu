@@ -19,6 +19,7 @@ define(['app-config'], function(AppConfig) {
         ws: null,
         wsUrl: '',
         wsPort: '',
+        previewInitiated: false,
 
         template: '',
         contentChanged: false,
@@ -29,7 +30,7 @@ define(['app-config'], function(AppConfig) {
             this.saved = true;
             this.state = null;
 
-            this.formId = '#content-form';
+            this.formId = '#contacts-form-container';
             this.render();
 
             this.setHeaderBar(true);
@@ -64,14 +65,9 @@ define(['app-config'], function(AppConfig) {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-                // FIXME hack because of husky validation bug
-                if (JSON.stringify(data) !== JSON.stringify({})) {
-                    this.setFormData(data).then(function() {
-                        this.sandbox.start('#contacts-form-container');
-                    }.bind(this));
-                } else {
-                    this.sandbox.start('#contacts-form-container');
-                }
+                this.setFormData(data).then(function() {
+                    this.sandbox.start(this.$el, {reset: true});
+                }.bind(this));
             }.bind(this));
         },
 
@@ -272,12 +268,15 @@ define(['app-config'], function(AppConfig) {
                             tpl = this.sandbox.util.template(template, context),
                             data = this.initData();
 
+                        this.sandbox.dom.remove(this.formId + ' *');
                         this.sandbox.dom.html(this.$el, tpl);
                         this.setStateDropdown(data);
                         this.createForm(data);
 
                         this.bindDomEvents();
                         this.listenForChange();
+
+                        this.updatePreviewOnly();
 
                         this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
                         this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
@@ -382,6 +381,7 @@ define(['app-config'], function(AppConfig) {
             } else {
                 this.initAjax();
             }
+            this.previewInitiated = true;
 
             this.sandbox.on('sulu.preview.update', function(property, value) {
                 if (!!this.options.data.id) {
@@ -391,7 +391,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         updateAjaxEvent: function(e) {
-            if (!!this.options.data.id) {
+            if (!!this.options.data.id && !!this.previewInitiated) {
                 var $element = $(e.currentTarget);
                 while (!$element.data('element')) {
                     $element = $element.parent();
@@ -448,17 +448,31 @@ define(['app-config'], function(AppConfig) {
         },
 
         updatePreview: function(property, value) {
-            var changes = {};
-            if (!!property && !!value) {
-                changes[property] = value;
-            } else {
-                changes = this.sandbox.form.getData(this.formId);
-            }
+            if (!!this.previewInitiated) {
+                var changes = {};
+                if (!!property && !!value) {
+                    changes[property] = value;
+                } else {
+                    changes = this.sandbox.form.getData(this.formId);
+                }
 
-            if (this.ws !== null) {
-                this.updateWs(changes);
-            } else {
-                this.updateAjax(changes);
+                if (this.ws !== null) {
+                    this.updateWs(changes);
+                } else {
+                    this.updateAjax(changes);
+                }
+            }
+        },
+
+        updatePreviewOnly: function() {
+            if (!!this.previewInitiated) {
+                var changes = {};
+
+                if (this.ws !== null) {
+                    this.updateWs(changes);
+                } else {
+                    this.updateAjax(changes);
+                }
             }
         },
 
