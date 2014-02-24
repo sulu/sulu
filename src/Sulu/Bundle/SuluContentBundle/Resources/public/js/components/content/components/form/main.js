@@ -169,7 +169,10 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // change template
-            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', this.changeTemplate, this);
+            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
+                this.sandbox.emit('sulu.edit-toolbar.content.item.loading','template');
+                this.changeTemplate(item);
+            }, this);
 
             // set state button in loading state
             this.sandbox.on('sulu.content.contents.state.change', function() {
@@ -279,6 +282,7 @@ define(['app-config'], function(AppConfig) {
                         this.listenForChange();
 
                         this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
+                        this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
                         if (this.hiddenTemplate) {
                             this.hiddenTemplate = false;
                             this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
