@@ -20,6 +20,17 @@ define([
             },
 
             typeInterface = {
+                initializeSub: function() {
+                    App.on('husky.auto-complete.tags.initialized', function() {
+                        App.on('husky.auto-complete-list.tags.item-added', function() {
+                            App.emit('sulu.content.changed');
+                        }.bind(this));
+                        App.on('husky.auto-complete-list.tags.item-deleted', function() {
+                            App.emit('sulu.content.changed');
+                        }.bind(this));
+                    }.bind(this));
+                },
+
                 setValue: function(value) {
                     return App.dom.data($el, 'auraItems', value);
                 },
