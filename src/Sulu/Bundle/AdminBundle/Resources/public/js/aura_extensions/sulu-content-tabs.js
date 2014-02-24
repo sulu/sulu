@@ -8,6 +8,10 @@ define([], function() {
                 if (typeof this.content === 'function') {
                     this.content = this.content.call(this);
                 }
+
+                var $container = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
+                this.html($container);
+
                 this.sandbox.util.load(this.content.url)
                     .then(function(data) {
                         var contentNavigation = JSON.parse(data);
@@ -18,7 +22,7 @@ define([], function() {
                                 {
                                     name: 'content@suluadmin',
                                     options: {
-                                        el: this.options.el,
+                                        el: $container,
                                         tabsData: navigation,
                                         heading: this.sandbox.translate(this.content.title),
                                         contentOptions: this.options,
