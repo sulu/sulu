@@ -51,13 +51,13 @@ define(['app-config'], function(AppConfig) {
             // get the dropdownds
             this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
                 if (items.length > 0) {
-                    this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items);
+                    this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items);
                 }
             }.bind(this));
 
             // set the current state
             this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
+                this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
             }.bind(this));
         },
 
@@ -161,19 +161,27 @@ define(['app-config'], function(AppConfig) {
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                this.sandbox.emit('husky.edit-toolbar.item.change', 'template', name);
+                this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', name);
                 if (this.hiddenTemplate) {
                     this.hiddenTemplate = false;
-                    this.sandbox.emit('husky.edit-toolbar.item.show', 'template', name);
+                    this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template', name);
                 }
             }, this);
 
             // change template
-            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', this.changeTemplate, this);
+            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
+                this.sandbox.emit('sulu.edit-toolbar.content.item.loading','template');
+                this.changeTemplate(item);
+            }, this);
 
             // set state button in loading state
             this.sandbox.on('sulu.content.contents.state.change', function() {
-                this.sandbox.emit('husky.edit-toolbar.item.loading', 'state');
+                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'state');
+            }, this);
+
+            // set save button in loading state
+            this.sandbox.on('sulu.content.contents.save', function() {
+                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
             }, this);
 
             // change dropdown if state has changed
@@ -181,24 +189,24 @@ define(['app-config'], function(AppConfig) {
                 this.state = state;
                 //set new dropdown
                 this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
-                    this.sandbox.emit('husky.edit-toolbar.items.set', 'state', items, null);
+                    this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items, null);
                 }.bind(this));
                 // set the current state
                 this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                    this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
+                    this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
                 }.bind(this));
                 //enable button with highlight-effect
-                this.sandbox.emit('husky.edit-toolbar.item.enable', 'state', true);
+                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', true);
             }.bind(this));
 
             //set button back if state-change failed
             this.sandbox.on('sulu.content.contents.state.changeFailed', function() {
                 // set the current state
                 this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                    this.sandbox.emit('husky.edit-toolbar.button.set', 'state', item);
+                    this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
                 }.bind(this));
                 //enable button without highlight-effect
-                this.sandbox.emit('husky.edit-toolbar.item.enable', 'state', false);
+                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
             }.bind(this));
         },
 
@@ -273,10 +281,11 @@ define(['app-config'], function(AppConfig) {
                         this.bindDomEvents();
                         this.listenForChange();
 
-                        this.sandbox.emit('husky.edit-toolbar.item.change', 'template', this.template);
+                        this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
+                        this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
                         if (this.hiddenTemplate) {
                             this.hiddenTemplate = false;
-                            this.sandbox.emit('husky.edit-toolbar.item.show', 'template');
+                            this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
                         }
                     }.bind(this));
                 }.bind(this),
