@@ -330,16 +330,17 @@ define(['app-config'], function(AppConfig) {
         },
 
         listenForChange: function() {
-            this.sandbox.dom.on(this.formId, 'change', function() {
-                this.setHeaderBar(false);
-                this.contentChanged = true;
-            }.bind(this), "select, input");
             this.sandbox.dom.on(this.formId, 'keyup', function() {
                 this.setHeaderBar(false);
                 this.contentChanged = true;
-            }.bind(this), "input,textarea");
+            }.bind(this), '.trigger-save-button');
 
-            this.sandbox.on('husky.ckeditor.changed', function() {
+            this.sandbox.dom.on(this.formId, 'change', function() {
+                this.setHeaderBar(false);
+                this.contentChanged = true;
+            }.bind(this), '.trigger-save-button');
+
+            this.sandbox.on('sulu.content.changed', function() {
                 this.setHeaderBar(false);
                 this.contentChanged = true;
             }.bind(this));
