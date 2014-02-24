@@ -81,9 +81,6 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
-            if (!!this.options.data.id) {
-                this.initPreview();
-            }
             return initialize;
         },
 
@@ -238,6 +235,7 @@ define(['app-config'], function(AppConfig) {
                 item = {template: item};
             }
             if (!!item && this.template === item.template) {
+                this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
                 return;
             }
 
@@ -349,7 +347,10 @@ define(['app-config'], function(AppConfig) {
         },
 
         openPreviewWindow: function() {
-            window.open('/admin/content/preview/' + this.options.data.id);
+            if (!!this.options.data.id) {
+                this.initPreview();
+                window.open('/admin/content/preview/' + this.options.data.id);
+            }
         },
 
         openSplitScreen: function() {
