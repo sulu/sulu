@@ -19,9 +19,7 @@ define([
         var defaults = {},
 
             subType = {
-                initializeSub: function(dfd) {
-                    console.log('resolved texteditor');
-                    dfd.resolve();
+                initializeSub: function() {
                     App.on('husky.ckeditor.changed', function(data, $el) {
                         App.emit('sulu.preview.update', $el.data('mapperProperty'), data);
                     }.bind(this));
