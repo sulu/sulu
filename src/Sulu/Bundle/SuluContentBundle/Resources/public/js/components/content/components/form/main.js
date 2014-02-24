@@ -34,6 +34,8 @@ define(['app-config'], function(AppConfig) {
             this.render();
 
             this.setHeaderBar(true);
+
+            this.dfdListenForChange = this.sandbox.data.deferred();
         },
 
         render: function() {
@@ -90,6 +92,8 @@ define(['app-config'], function(AppConfig) {
 
             if (!this.options.data.id) {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            } else {
+                this.dfdListenForChange.resolve();
             }
         },
 
@@ -104,6 +108,11 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
                     this.sandbox.dom.removeClass(url, 'is-loading');
                     this.sandbox.dom.val(url, rl);
+
+                    this.dfdListenForChange.resolve();
+
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
                 }.bind(this));
             } else {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
@@ -330,19 +339,21 @@ define(['app-config'], function(AppConfig) {
         },
 
         listenForChange: function() {
-            this.sandbox.dom.on(this.formId, 'keyup', function() {
-                this.setHeaderBar(false);
-                this.contentChanged = true;
-            }.bind(this), '.trigger-save-button');
+            this.dfdListenForChange.then(function() {
+                this.sandbox.dom.on(this.formId, 'keyup', function() {
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
+                }.bind(this), '.trigger-save-button');
 
-            this.sandbox.dom.on(this.formId, 'change', function() {
-                this.setHeaderBar(false);
-                this.contentChanged = true;
-            }.bind(this), '.trigger-save-button');
+                this.sandbox.dom.on(this.formId, 'change', function() {
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
+                }.bind(this), '.trigger-save-button');
 
-            this.sandbox.on('sulu.content.changed', function() {
-                this.setHeaderBar(false);
-                this.contentChanged = true;
+                this.sandbox.on('sulu.content.changed', function() {
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
+                }.bind(this));
             }.bind(this));
         },
 
