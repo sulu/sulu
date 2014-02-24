@@ -94,6 +94,10 @@ define(function() {
                 }.bind(this));
 
                 this.contentChangeInterval = null;
+                this.contentDimensions = {
+                    left: null,
+                    width: null
+                };
 
                 this.bindCustomEvents();
                 this.bindDomEvents();
@@ -116,7 +120,14 @@ define(function() {
          * emits the content.dimensions-changed event
          */
         emitContentDimensionsChangedEvent: function() {
-            this.sandbox.emit(CONTENT_DIMENSIONS_CHANGED.call(this), this.getContentDimensions());
+            var newContentDimensions = this.getContentDimensions();
+
+            if (this.contentDimensions.width !== newContentDimensions.width ||
+                this.contentDimensions.left !== newContentDimensions.left) {
+
+                this.sandbox.emit(CONTENT_DIMENSIONS_CHANGED.call(this), newContentDimensions);
+                this.contentDimensions = newContentDimensions;
+            }
         },
 
         /**
