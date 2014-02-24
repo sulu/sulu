@@ -94,7 +94,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // skeleton
-            this.sandbox.dom.html(this.$el, templates.skeleton.call(this));
+            this.html(templates.skeleton.call(this));
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
@@ -140,7 +140,7 @@ define([], function() {
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
-            this.sandbox.stop('#content-tabs-component');
+            this.sandbox.dom.html('#content-tabs-component', '');
             this.sandbox.dom.remove('#content-tabs-component');
 
             this.sandbox.dom.append(this.$el, '<div id="content-tabs-component"><span class="is-loading"/></div>');
