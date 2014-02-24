@@ -21,10 +21,7 @@ define([
 
             typeInterface = {
                 setValue: function(value) {
-                    // FIXME: do not use timeout, fix timing issue
-                    setTimeout(function() {
-                        App.emit('husky.auto-complete-list.' + this.options.instanceName + '.set-tags', value);
-                    }.bind(this), 50);
+                    return App.dom.data($el, 'auraItems', value);
                 },
 
                 getValue: function() {
