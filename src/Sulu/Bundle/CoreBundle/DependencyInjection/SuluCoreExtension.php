@@ -129,6 +129,10 @@ class SuluCoreExtension extends Extension
             'sulu.content.type.resource_locator.template',
             $contentConfig['types']['resource_locator']['template']
         );
+        $container->setParameter(
+            'sulu.content.type_prefix',
+            $contentConfig['type_prefix']
+        );
 
         // Template
         $container->setParameter(
