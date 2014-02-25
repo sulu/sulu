@@ -10,8 +10,19 @@
 require.config({
     paths: {
         'app-config': 'components/app-config/main',
-        'cultures': 'vendor/globalize/cultures'
-    }
+        'cultures': 'vendor/globalize/cultures',
+        'husky': 'vendor/husky/husky',
+        'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
+        'aura_extensions/sulu-content-tabs': 'aura_extensions/sulu-content-tabs',
+        'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension'
+    },
+    include: [
+        'app-config',
+        'husky',
+        'aura_extensions/backbone-relational',
+        'aura_extensions/sulu-content-tabs',
+        'aura_extensions/sulu-extension'
+    ]
 });
 
 require(['husky', 'app-config'], function(Husky, AppConfig) {
