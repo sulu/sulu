@@ -16,6 +16,10 @@ define(function() {
     return {
         getUser: function() {
             return config.user;
+        },
+
+        getDebug: function() {
+            return config.debug;
         }
     };
 });
