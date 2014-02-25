@@ -118,6 +118,10 @@ define([], function() {
 
             // back clicked
             this.sandbox.on('husky.page-functions.clicked', function() {
+                // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
+                // and the stop event will be called
+                this.sandbox.stop('#edit-toolbar');
+                this.sandbox.dom.remove('#edit-toolbar');
                 this.sandbox.emit('sulu.edit-toolbar.back');
             }.bind(this));
         },
