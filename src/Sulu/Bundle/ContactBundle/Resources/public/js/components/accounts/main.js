@@ -270,7 +270,7 @@ define([
             } else if (ids.length === 1) {
                 this.confirmSingleDeleteDialog(callbackFunction, ids[0]);
             } else {
-                var url = '/admin/api/contact/accounts/multipledeleteinfo';
+                var url = '/admin/api/accounts/multipledeleteinfo';
 
                 this.sandbox.util.ajax({
                     headers: {
