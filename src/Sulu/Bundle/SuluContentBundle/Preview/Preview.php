@@ -163,13 +163,16 @@ class Preview implements PreviewInterface
         $newContent->setLanguageCode($languageCode);
         /** @var PropertyInterface $property */
         foreach ($newContent->getProperties() as $property) {
-                $this->setValue(
-                    $newContent,
-                    $property->getName(),
-                    $content->hasProperty($property->getName()) ? $content->getProperty($property->getName()) : null,
-                    $webspaceKey,
-                    $languageCode
-                );
+            $value = $content->hasProperty($property->getName()) ?
+                $content->getProperty($property->getName())->getValue() : null;
+
+            $this->setValue(
+                $newContent,
+                $property->getName(),
+                $value,
+                $webspaceKey,
+                $languageCode
+            );
         }
         return $newContent;
     }
@@ -269,7 +272,7 @@ class Preview implements PreviewInterface
         $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
 
         return $this->cache->save($cacheId, $data, $this->lifeTime) &&
-            $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
+        $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
     }
 
     /**
