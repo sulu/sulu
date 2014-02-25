@@ -506,11 +506,11 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
         $container = $this->prepareContainerMock();
         $mapper = $this->prepareMapperMock();
         $templating = $this->prepareTemplatingMock();
-        $structureManager = $this->prepareStructureManagerMock();
+        $this->structureManager = $this->prepareStructureManagerMock();
         $controllerResolver = $this->prepareControllerResolver();
         $cache = new ArrayCache();
 
-        return new Preview($container, $templating, $cache, $mapper, $structureManager, $controllerResolver, 3600);
+        return new Preview($container, $templating, $cache, $mapper, $this->structureManager, $controllerResolver, 3600);
     }
 
     public function prepareContainerMock()
@@ -637,7 +637,6 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
     public function indexCallback(StructureInterface $structure, $preview = false, $partial = false)
     {
         return new Response($this->render($structure->title, $structure->article, $partial));
-
     }
 
     public function render($title, $article, $partial = false)
