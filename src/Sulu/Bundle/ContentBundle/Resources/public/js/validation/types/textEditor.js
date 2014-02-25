@@ -22,6 +22,7 @@ define([
                 initializeSub: function() {
                     App.on('husky.ckeditor.changed', function(data, $el) {
                         App.emit('sulu.preview.update', $el.data('mapperProperty'), data);
+                        App.emit('sulu.content.changed');
                     }.bind(this));
                 },
 
