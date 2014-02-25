@@ -1220,4 +1220,35 @@ class ContentMapperTest extends PhpcrTestCase
 
         $this->assertEquals(2, sizeof($result));
     }
+
+    public function testSameName()
+    {
+        $data = array(
+            'title' => 'Test',
+            'tags' => array('tag1'),
+            'url' => '/test-1',
+            'article' => 'default'
+        );
+
+        $d1 = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        $data['url'] = '/test-2';
+        $data['tags'] = array('tag2');
+        $d2 = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        $this->assertEquals('Test', $d1->title);
+        $this->assertEquals(array('tag1'), $d1->tags);
+        $this->assertEquals('Test', $d2->title);
+        $this->assertEquals(array('tag2'), $d2->tags);
+
+        $this->assertNotNull($this->session->getNode('/cmf/default/contents/test'));
+        $this->assertNotNull($this->session->getNode('/cmf/default/contents/test-1'));
+
+        $d1 = $this->mapper->load($d1->getUuid(), 'default', 'de');
+        $d2 = $this->mapper->load($d2->getUuid(), 'default', 'de');
+
+        $this->assertEquals('Test', $d1->title);
+        $this->assertEquals(array('tag1'), $d1->tags);
+        $this->assertEquals('Test', $d2->title);
+        $this->assertEquals(array('tag2'), $d2->tags);
+    }
 }
