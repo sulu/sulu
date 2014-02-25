@@ -180,6 +180,7 @@ define([], function() {
 
             typeClick: function(event, $element) {
                 this.sandbox.logger.log('email click', event);
+                this.setHeaderBar(false);
                 $element.find('*.type-value').data('element').setValue(event);
             },
 
