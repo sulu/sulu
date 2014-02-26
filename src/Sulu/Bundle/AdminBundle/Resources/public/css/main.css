@@ -12,7 +12,7 @@ body {
 /*----------------------------------------*/
 /* line 17, ../scss/modules/base.scss */
 #content {
-  max-width: 820px;
+  max-width: 920px;
   min-width: 300px;
   margin-left: 250px;
   padding-left: 50px;
@@ -43,7 +43,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  margin-left: 50px;
+  padding-left: 50px;
   width: 100%;
   background-color: #f1f1f1;
   padding-top: 40px;
