@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -16321,6 +16322,7 @@ define('aura/ext/components', [],function() {
   };
 });
 
+
 /*
  * This file is part of the Husky Validation.
  *
@@ -17198,7 +17200,7 @@ define('form/mapper',[
                             // resolve this set data
                             resolve();
                         }
-                    } else if (data !== null && !$.isEmptyObject(data)) {
+                    } else {
                         count = Object.keys(data).length;
                         $.each(data, function(key, value) {
                             // search field with mapper property
@@ -17231,8 +17233,6 @@ define('form/mapper',[
                                 resolve();
                             }
                         }.bind(this));
-                    } else {
-                        dfd.resolve();
                     }
 
                     return dfd.promise();
@@ -17485,9 +17485,10 @@ define('type/default',[
                     this.initialized = dfd.promise();
 
                     if (!!this.initializeSub) {
-                        this.initializeSub();
+                        this.initializeSub(dfd);
+                    } else {
+                        dfd.resolve();
                     }
-                    dfd.resolve();
                 }
             },
 
@@ -17650,7 +17651,9 @@ define('type/decimal',[
             },
 
             typeInterface = {
-                initializeSub: function() {
+                initializeSub: function(dfd) {
+                    // TODO internationalization
+                    dfd.resolve();
                 },
 
                 validate: function() {
@@ -18420,7 +18423,6 @@ define('validator/regex',[
     };
 
 });
-
 
 define("husky-validation", function(){});
 
@@ -26150,9 +26152,14 @@ define('__component__$datagrid@husky',[],function() {
             this.data = null;
             this.allItemIds = [];
             this.selectedItemIds = [];
+
+            this.selectedDomIds = [];
+            this.changedData = {};
             this.rowStructure = [];
 
             this.elId = this.sandbox.dom.attr(this.$el, 'id');
+
+
 
             if (!!this.options.contentContainer) {
                 this.originalMaxWidth = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
@@ -26706,6 +26713,7 @@ define('__component__$datagrid@husky',[],function() {
         resetItemSelection: function() {
             this.allItemIds = [];
             this.selectedItemIds = [];
+            this.selectedDomIds = [];
         },
 
         /**
@@ -26790,6 +26798,7 @@ define('__component__$datagrid@husky',[],function() {
                     .prop('checked', false);
 
                 this.selectedItemIds = [];
+                this.selectedDomIds = [];
                 this.sandbox.emit(ALL_DESELECT, null);
 
             } else {
@@ -26808,10 +26817,10 @@ define('__component__$datagrid@husky',[],function() {
          * @param row
          */
         addRow: function(row) {
-            var $table, $row, $editableFields, $firstInputField;
+            var $table, $row, $editableFields;
             // check for other element types when implemented
             $table = this.$element.find('table');
-            $row = this.sandbox.dom.$(this.prepareTableRow(row, true));
+            $row = this.prepareTableRow(row, true);
 
             // prepend or append row
             if (!!this.options.addRowTop) {
@@ -26819,9 +26828,6 @@ define('__component__$datagrid@husky',[],function() {
             } else {
                 this.sandbox.dom.append($table, $row);
             }
-
-            $firstInputField = this.sandbox.dom.find('input[type=text]', $row)[0];
-            this.sandbox.dom.focus($firstInputField);
 
             // TODO fix validation for new rows
             if (!!this.options.validation) {
@@ -27142,45 +27148,10 @@ define('__component__$datagrid@husky',[],function() {
             var $target = event.currentTarget,
                 $input = this.sandbox.dom.next($target, 'input');
 
-            this.lockWidthsOfColumns(this.sandbox.dom.find('table th', this.$el));
-
             this.sandbox.dom.hide($target);
             this.sandbox.dom.removeClass($input, 'hidden');
             $input[0].select();
-        },
 
-        /**
-         * Makes the widths of columns fixed when the table is in edit mode
-         * prevents changes in column width
-         * @param $th array of th elements
-         */
-        lockWidthsOfColumns: function($th) {
-
-            var width, minwidth;
-            this.columnWidths = [];
-
-            this.sandbox.dom.each($th, function(index, $el) {
-                minwidth = this.sandbox.dom.css($el, 'min-width');
-                this.columnWidths.push(minwidth);
-
-                width = this.sandbox.dom.outerWidth($el);
-                this.sandbox.dom.css($el, 'min-width', width);
-                this.sandbox.dom.css($el, 'max-width', width);
-            }.bind(this));
-        },
-
-        /**
-         * Resets the min-width of columns and
-         * @param $th array of th elements
-         */
-        unlockWidthsOfColumns: function($th) {
-            this.sandbox.dom.each($th, function(index, $el) {
-                // skip columns without data-attribute because the have min/max and normal widths by default
-                if (!!this.sandbox.dom.data($el, 'attribute')) {
-                    this.sandbox.dom.css($el, 'min-width', this.columnWidths[index]);
-                    this.sandbox.dom.css($el, 'max-width', '');
-                }
-            }.bind(this));
         },
 
         /**
@@ -27388,7 +27359,6 @@ define('__component__$datagrid@husky',[],function() {
                         // nothing changed - reset immediately
                         this.sandbox.logger.log("No data changed!");
                         this.resetRowInputFields($tr);
-                        this.unlockWidthsOfColumns(this.sandbox.dom.find('table th', this.$el));
                     }
 
                 } else {
@@ -27436,13 +27406,9 @@ define('__component__$datagrid@husky',[],function() {
                     this.sandbox.emit(DATA_SAVED, data, textStatus);
                     this.hideLoadingIconForRow($tr);
                     this.resetRowInputFields($tr);
-                    this.unlockWidthsOfColumns(this.sandbox.dom.find('table th', this.$el));
 
                     // set new returned data
                     this.setDataForRow($tr[0], data);
-
-                    // reset lastFocusedRow
-                    this.lastFocusedRow = null;
 
                 }.bind(this))
                 .fail(function(jqXHR, textStatus, error) {
@@ -30231,15 +30197,6 @@ define('__component__$auto-complete@husky',[], function() {
             return createEventName.call(this, 'set-excludes');
         },
 
-        /**
-         * listens on and passes boolean to callback if input is matched exactly
-         * @event husky.auto-complete.is-matched
-         * @param {Function} Callback which gets the booloan passed
-         */
-            IS_MATCHED = function() {
-            return createEventName.call(this, 'is-matched');
-        },
-
         /** returns normalized event names */
             createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -30294,7 +30251,6 @@ define('__component__$auto-complete@husky',[], function() {
             this.render();
             this.bindDomEvents();
             this.setCustomEvents();
-
             this.sandbox.emit(INITIALIZED.call(this), this.$valueField);
         },
 
@@ -30435,14 +30391,6 @@ define('__component__$auto-complete@husky',[], function() {
             this.sandbox.on(SET_EXCLUDES.call(this), function(excludes) {
                 this.excludes = this.parseExcludes(excludes);
             }.bind(this));
-
-            this.sandbox.on(IS_MATCHED.call(this), function(callback) {
-                if (this.isMatchedExactly() === true && this.getClosestMatch() !== null) {
-                    callback(true);
-                } else {
-                    this.checkMatches(this.getValueFieldValue(), callback, true);
-                }
-            }.bind(this));
         },
 
         /**
@@ -30451,19 +30399,16 @@ define('__component__$auto-complete@husky',[], function() {
          */
         parseExcludes: function(excludes) {
             var arrayReturn = [];
-
-            if(!!excludes.length) {
-                this.sandbox.util.foreach(excludes, function(exclude) {
-                    if (typeof exclude !== 'object') {
-                        arrayReturn.push({
-                            id: null,
-                            name: exclude
-                        });
-                    } else {
-                        arrayReturn.push(exclude);
-                    }
-                }.bind(this));
-            }
+            this.sandbox.util.foreach(excludes, function(exclude) {
+                if (typeof exclude !== 'object') {
+                    arrayReturn.push({
+                        id: null,
+                        name: exclude
+                    });
+                } else {
+                    arrayReturn.push(exclude);
+                }
+            }.bind(this));
             return arrayReturn;
         },
 
@@ -30482,11 +30427,9 @@ define('__component__$auto-complete@husky',[], function() {
             }.bind(this));
 
             //remove state and matches on new input
-            this.sandbox.dom.on(this.$valueField, 'keypress', function(event) {
-                if (event.keyCode !== 13) {
-                    this.matched = false;
-                    this.matches = [];
-                }
+            this.sandbox.dom.on(this.$valueField, 'keydown', function() {
+                this.matched = false;
+                this.matches = [];
             }.bind(this));
 
             //ensures that the blur callback does not get called
@@ -30525,14 +30468,7 @@ define('__component__$auto-complete@husky',[], function() {
                 } else {
                     //request to check if a match exists
                     if (this.getValueFieldValue() !== '') {
-                        this.checkMatches(this.getValueFieldValue(), function(isMatched) {
-                            if (isMatched === true) {
-                                this.setValueFieldValue(this.getClosestMatch().name);
-                                this.setValueFieldId(this.getClosestMatch().id);
-                            } else {
-                                this.clearValueFieldValue();
-                            }
-                        }.bind(this), false);
+                        this.checkMatches();
                     }
                 }
             } else {
@@ -30547,38 +30483,25 @@ define('__component__$auto-complete@husky',[], function() {
         /**
          * Tries to request matches via the remoteUrl
          * and emits an event if matches do exist
-         * @param {String} string The string to check if matches exist
-         * @param {Function} callback to pass a boolean to
-         * @param {Boolean} exactly If true string must be have an identical match
          */
-        checkMatches: function(string, callback, exactly) {
+        checkMatches: function() {
             var delimiter = (this.options.remoteUrl.indexOf('?') === -1) ? '?' : '&';
             this.sandbox.emit(REQUEST_MATCH.call(this));
-            console.log(this.options.remoteUrl + delimiter + this.options.getParameter + '=' + string);
             this.sandbox.util.ajax({
-                url: this.options.remoteUrl + delimiter + this.options.getParameter + '=' + string,
+                url: this.options.remoteUrl + delimiter + this.options.getParameter + '=' + this.getValueFieldValue(),
 
                 success: function(data) {
                     this.matches = this.handleData(data);
-
-                    if (exactly !== true) {
-                        if (this.matches.length > 0) {
-                            callback(true);
-                        } else {
-                            callback(false);
-                        }
+                    if (this.matches.length > 0) {
+                        this.setValueFieldValue(this.getClosestMatch().name);
+                        this.setValueFieldId(this.getClosestMatch().id);
                     } else {
-                        if (this.isMatchedExactly() === true) {
-                            callback(true);
-                        } else {
-                            callback(false);
-                        }
+                        this.clearValueFieldValue();
                     }
                 }.bind(this),
 
                 error: function(error) {
                     this.sandbox.logger.log('Error requesting auto-complete-matches', error);
-                    callback(false);
                 }.bind(this)
             });
         },
@@ -30639,9 +30562,11 @@ define('__component__$auto-complete@husky',[], function() {
          * @returns {boolean}
          */
         isMatchedExactly: function() {
-            if (this.getClosestMatch() !== null) {
-                if (this.getValueFieldValue().toLowerCase() === this.getClosestMatch().name.toLowerCase()) {
-                    return true;
+            if (this.isMatched() === true) {
+                if (this.getClosestMatch() !== null) {
+                    if (this.getValueFieldValue().toLowerCase() === this.getClosestMatch().name.toLowerCase()) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -30652,19 +30577,15 @@ define('__component__$auto-complete@husky',[], function() {
          * @param data {object} with total and data array
          */
         handleData: function(data) {
-            if (typeof data === 'object') {
-                console.log(typeof data, 'data');
-                this.total = data[this.options.totalKey];
-                this.data = [];
+            this.total = data[this.options.totalKey];
+            this.data = [];
 
-                this.sandbox.util.foreach(data[this.options.resultKey], function(key) {
-                    if (this.isExcluded(key) === false) {
-                        this.data.push(key);
-                    }
-                }.bind(this));
-                return this.data;
-            }
-            return false;
+            this.sandbox.util.foreach(data[this.options.resultKey], function(key) {
+                if (this.isExcluded(key) === false) {
+                    this.data.push(key);
+                }
+            }.bind(this));
+            return this.data;
         }
     };
 });
@@ -30714,8 +30635,6 @@ define('__component__$auto-complete@husky',[], function() {
  * @param {Integer} [options.slideDuration] ms - duration for sliding suggestinos up/down
  * @param {String} [options.elementTagDataName] attribute name to store list of tags on element
  * @param {String} [options.autoCompleteIcon] Icon Class-suffix for autocomplete-suggestion-icon
- * @param {Array} [options.delimiters] Array of key-codes which trigger a tag input
- * @param {Boolean} [options.noNewTags] If true only auto-completed tags are accepted
  */
 define('__component__$auto-complete-list@husky',[], function() {
 
@@ -30753,9 +30672,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 arrowUpClass: 'arrow-up',
                 slideDuration: 500,
                 elementTagDataName: 'tags',
-                autoCompleteIcon: 'tag',
-                delimiters: [9, 188, 13],
-                noNewTags: false
+                autoCompleteIcon: 'tag'
             },
 
             templates = {
@@ -30981,7 +30898,10 @@ define('__component__$auto-complete-list@husky',[], function() {
                     AjaxPushAllTags: this.options.AjaxPushAllItems,
                     AjaxPushParameters: this.options.AjaxPushParameters,
                     CapitalizeFirstLetter: this.options.CapitalizeFirstLetter,
-                    delimiters: []
+                    validator: function(string) {
+                        this.sandbox.emit(ITEM_ADDED.call(this), string);
+                        return true;
+                    }.bind(this)
                 });
                 this.setElementDataTags();
             },
@@ -31014,10 +30934,9 @@ define('__component__$auto-complete-list@husky',[], function() {
                     this.pushTags(tags);
                 }.bind(this));
 
-                this.sandbox.on(ITEM_ADDED.call(this), function() {
-                    this.setElementDataTags();
-                    console.log(this.getTags());
-                    this.sandbox.emit('husky.auto-complete.' + this.options.instanceName + '.set-excludes', this.getTags());
+                this.sandbox.on(ITEM_ADDED.call(this), function(newTag) {
+                    var tags = this.setElementDataTags(newTag);
+                    this.sandbox.emit('husky.auto-complete.' + this.options.instanceName + '.set-excludes', tags);
                 }.bind(this));
 
                 this.sandbox.on(ITEM_DELETED.call(this), function() {
@@ -31034,11 +30953,6 @@ define('__component__$auto-complete-list@husky',[], function() {
                         this.itemDeleteHandler();
                         this.setElementDataTags();
                     }
-
-                    if (this.options.delimiters.indexOf(event.keyCode) !== -1) {
-                        this.pushTagHandler(event, this.sandbox.dom.val(this.$input).trim());
-                    }
-
                 }.bind(this));
 
                 this.sandbox.dom.on(this.$el, 'click', function(event) {
@@ -31058,33 +30972,16 @@ define('__component__$auto-complete-list@husky',[], function() {
             },
 
             /**
-             * Gets executed if the user presses a defined delimiter
-             * @param {Object} the keydown event
-             * @param {String} tag The new Tag to push
-             */
-            pushTagHandler: function(event, tag) {
-                if (event.keyCode !== 9) {
-                    this.sandbox.dom.preventDefault(event);
-                }
-
-                if (this.options.noNewTags !== true) {
-                    this.pushTag(tag);
-                } else {
-                    this.sandbox.emit('husky.auto-complete.' + this.options.instanceName + '.is-matched', function(isMatched) {
-                        if(isMatched === true) {
-                            this.pushTag(tag);
-                        }
-                    }.bind(this));
-                }
-            },
-
-            /**
              * Binds the tags to the element
              * @param newTag {String} newly added tag
              */
-            setElementDataTags: function() {
-                var tags = this.getTags();
+            setElementDataTags: function(newTag) {
+                var tags = this.sandbox.util.extend([], this.getTags());
+                if (tags.indexOf(newTag) === -1 && typeof newTag !== 'undefined') {
+                    tags = tags.concat([newTag]);
+                }
                 this.sandbox.dom.data(this.$el, this.options.elementTagDataName, tags);
+                return tags;
             },
 
             /**
@@ -31332,7 +31229,6 @@ define('__component__$auto-complete-list@husky',[], function() {
             pushTag: function(value) {
                 if (this.tagApi !== null) {
                     this.tagApi.tagsManager('pushTag', value);
-                    this.sandbox.emit(ITEM_ADDED.call(this), value);
                 } else {
                     return false;
                 }
@@ -31490,7 +31386,7 @@ define('__component__$dropdown-multiple-select@husky',[], function() {
                     }.bind(this));
                 } else if (typeof(items[0]) === 'object') {
                     this.sandbox.util.each(items, function(index, value) {
-                        if (this.options.preSelectedElements.indexOf(value.id) >= 0 && value.id !== null) {
+                        if (this.options.preSelectedElements.indexOf(value.id) >= 0) {
                             this.sandbox.dom.append(this.$list, this.template.menuElement.call(this, value, this.options.valueName, 'checked'));
                             this.selectedElements.push((value.id).toString());
                             this.selectedElementsValues.push(value[this.options.valueName]);
@@ -33911,11 +33807,10 @@ define('__component__$smart-content@husky',[], function() {
             this.initContentContainer();
 
             if (this.items.length !== 0) {
-
                 var ul, i = -1, length = this.items.length;
                 ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
 
-                //loop stops if no more items are left or if number of rendered items matches itemsVisible
+                //loop stops of no more items are left or if number of rendered items matches itemsVisible
                 for (; ++i < length && i < this.itemsVisible;) {
                     this.sandbox.dom.append(ul, _.template(templates.contentItem)({
                         dataId: this.items[i].id,
@@ -33951,6 +33846,7 @@ define('__component__$smart-content@husky',[], function() {
          * Renders the footer and calls a method to bind the events for itself
          */
         renderFooter: function() {
+            this.itemsVisible = (this.items.length < this.itemsVisible) ? this.items.length : this.itemsVisible;
 
             if (this.$footer === null) {
                 this.$footer = this.sandbox.dom.createElement('<div/>');
@@ -34092,7 +33988,6 @@ define('__component__$smart-content@husky',[], function() {
                         title: this.sandbox.translate(this.translations.configureSmartContent),
                         instanceName: 'smart-content.' + this.options.instanceName,
                         okCallback: function() {
-                            this.itemsVisible = this.options.visibleItems;
                             this.getOverlayData();
                         }.bind(this)
                     }
@@ -34169,8 +34064,7 @@ define('__component__$smart-content@husky',[], function() {
                         items: this.options.tags,
                         remoteUrl: this.options.tagsAutoCompleteUrl,
                         autocomplete: (this.options.tagsAutoCompleteUrl !== ''),
-                        getParameter: this.options.tagsGetParameter,
-                        noNewTags: true
+                        getParameter: this.options.tagsGetParameter
                     }
                 },
                 {
@@ -34183,7 +34077,6 @@ define('__component__$smart-content@husky',[], function() {
                         data: this.options.sortBy,
                         preSelectedElements: [this.options.preSelectedSortBy],
                         singleSelect: true,
-                        noDeselect: true,
                         disabled: this.overlayDisabled.sortBy
                     }
                 },
@@ -35796,10 +35689,6 @@ define('husky_extensions/collection',[],function() {
                 $(selector).unbind(eventType);
             };
 
-            app.core.dom.focus = function(selector){
-              $(selector).focus();
-            };
-
             app.core.util.ajax = $.ajax;
         }
     });
@@ -36152,4 +36041,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
