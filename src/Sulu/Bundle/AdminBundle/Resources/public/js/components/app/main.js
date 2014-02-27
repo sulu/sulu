@@ -150,14 +150,15 @@ define(function() {
             // listening for navigation events
             this.sandbox.on('sulu.router.navigate', function(route, trigger) {
 
-                // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
-                // and the stop event will be called
-                this.sandbox.stop('#edit-toolbar');
-                this.sandbox.dom.remove('#edit-toolbar');
-
                 // default vars
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
+                if (!!trigger) {
+                    // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
+                    // and the stop event will be called
+                    this.sandbox.stop('#edit-toolbar');
+                    this.sandbox.dom.remove('#edit-toolbar');
+                }
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
