@@ -219,6 +219,15 @@ define([], function() {
                 }
             },
 
+
+            // checks if el is in next row and adds margin top if necessary
+            checkRowMargin: function(item) {
+                var parent = this.sandbox.dom.parent(item);
+                if (this.sandbox.dom.children(parent).length > 2) {
+                    this.sandbox.dom.addClass(item, 'm-top-20');
+                }
+            },
+
             addEmail: function() {
                 var $item = emailItem.clone();
                 this.sandbox.dom.append('#emails', $item);
@@ -226,6 +235,8 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.id-value'));
                 this.sandbox.form.addField(form, $item.find('.type-value'));
                 this.sandbox.form.addField(form, $item.find('.email-value'));
+
+                this.checkRowMargin($item);
 
                 this.sandbox.start($item);
             },
@@ -247,6 +258,8 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.id-value'));
                 this.sandbox.form.addField(form, $item.find('.type-value'));
                 this.sandbox.form.addField(form, $item.find('.phone-value'));
+
+                this.checkRowMargin($item);
 
                 this.sandbox.start($item);
             },
