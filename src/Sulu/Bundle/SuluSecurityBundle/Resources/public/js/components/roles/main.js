@@ -74,7 +74,13 @@ define([
             this.role.set(data);
             this.role.save(null, {
                 success: function(data) {
-                    this.sandbox.emit('sulu.role.saved', data.id);
+
+                    if(!this.options.id){
+                        this.sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + data.id + '/details');
+                    } else {
+                        this.sandbox.emit('sulu.role.saved', data.id);
+                    }
+
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('sulu.dialog.error.show', 'An error occured during saving the role!');
