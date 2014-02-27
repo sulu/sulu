@@ -49,7 +49,6 @@ define([], function() {
             this.initializeHeaderbar();
 
             this.sandbox.form.create(this.formId);
-
         },
 
         addConstraintsToPasswordFields: function() {
