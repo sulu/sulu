@@ -62,6 +62,7 @@ define([
         del: function() {
             this.confirmSingleDeleteDialog(function(wasConfirmed, removeContacts) {
                 if (wasConfirmed) {
+                    this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'options-button');
                     this.account.destroy({
                         data: {removeContacts: !!removeContacts},
                         processData: true,
@@ -74,6 +75,8 @@ define([
         },
 
         save: function(data) {
+            this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+
             this.account.set(data);
             this.account.save(null, {
                 // on success save contacts id
