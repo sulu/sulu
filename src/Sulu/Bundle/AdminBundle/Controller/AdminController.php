@@ -30,8 +30,13 @@ class AdminController extends Controller
                 $user = $userManager->getCurrentUserData()->toArray();
 
                 // render template
+                if ($this->get('kernel')->getEnvironment() === 'prod') {
+                    $template = 'SuluAdminBundle:Admin:index.html.dist.twig';
+                } else {
+                    $template = 'SuluAdminBundle:Admin:index.html.twig';
+                }
                 return $this->render(
-                    'SuluAdminBundle:Admin:index.html.twig',
+                    $template,
                     array(
                         'name' => $this->container->getParameter('sulu_admin.name'),
                         'user' => $user

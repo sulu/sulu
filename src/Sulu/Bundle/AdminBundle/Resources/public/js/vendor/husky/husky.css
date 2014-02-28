@@ -769,17 +769,17 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 10px 0 40px 0;
   font-family: inherit;
   font-weight: normal;
   color: #999999;
 }
 
-/* line 27, ../scss/typo.scss */
+/* line 26, ../scss/typo.scss */
 h1 {
   color: #249fbe;
   font-size: 36px;
   line-height: 40px;
+  margin: 10px 0 40px 0;
 }
 
 /* line 33, ../scss/typo.scss */
@@ -807,13 +807,13 @@ h5 {
 }
 
 /* line 53, ../scss/typo.scss */
-h2.divider {
+h1, h2, h3, h4, h5 {
   position: relative;
   z-index: 1;
   overflow: hidden;
 }
 /* line 57, ../scss/typo.scss */
-h2.divider:after {
+h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
   position: absolute;
   top: 50%;
   margin-left: 10px;
@@ -3806,15 +3806,20 @@ hr.divider {
 }
 
 @media (max-width: 580px) {
-  /* line 144, ../scss/modules/grid.scss */
+  /* line 145, ../scss/modules/grid.scss */
   [class*="grid-col-"] {
     width: 100%;
     margin-top: 15px;
-    padding: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
   }
-  /* line 149, ../scss/modules/grid.scss */
+  /* line 152, ../scss/modules/grid.scss */
   [class*="grid-col-"]:first-of-type {
     margin-top: 0;
+    padding-right: 0;
+  }
+  /* line 158, ../scss/modules/grid.scss */
+  [class*="grid-col-"].floating:nth-child(n) {
     padding-right: 0;
   }
 }
@@ -5001,51 +5006,55 @@ table {
   border-bottom: 1px solid #cccccc;
   height: 50px;
 }
-/* line 25, ../scss/modules/tables.scss */
+/* line 26, ../scss/modules/tables.scss */
+.table thead tr {
+  height: 30px;
+}
+/* line 30, ../scss/modules/tables.scss */
 .table thead th {
   vertical-align: bottom;
   color: #999999;
   font-size: 16px;
 }
-/* line 30, ../scss/modules/tables.scss */
+/* line 35, ../scss/modules/tables.scss */
 .table thead th a {
   color: black;
   text-decoration: none;
 }
-/* line 34, ../scss/modules/tables.scss */
+/* line 39, ../scss/modules/tables.scss */
 .table thead th a .selected {
   font-weight: bold;
 }
-/* line 41, ../scss/modules/tables.scss */
+/* line 46, ../scss/modules/tables.scss */
 .table thead tr {
   border-bottom: 2px solid #999999;
 }
-/* line 47, ../scss/modules/tables.scss */
+/* line 52, ../scss/modules/tables.scss */
 .table tbody td {
   vertical-align: middle;
   font-family: Helvetica, Arial;
 }
-/* line 54, ../scss/modules/tables.scss */
+/* line 59, ../scss/modules/tables.scss */
 .table.is-selectable tr {
   cursor: pointer;
 }
-/* line 56, ../scss/modules/tables.scss */
+/* line 61, ../scss/modules/tables.scss */
 .table.is-selectable tr:hover > td {
   background-color: #fff;
 }
-/* line 61, ../scss/modules/tables.scss */
+/* line 66, ../scss/modules/tables.scss */
 .table.is-selectable thead tr {
   cursor: auto;
 }
-/* line 67, ../scss/modules/tables.scss */
+/* line 72, ../scss/modules/tables.scss */
 .table .thumb {
   text-align: center;
 }
-/* line 70, ../scss/modules/tables.scss */
+/* line 75, ../scss/modules/tables.scss */
 .table .thumb img {
   vertical-align: middle;
 }
-/* line 75, ../scss/modules/tables.scss */
+/* line 80, ../scss/modules/tables.scss */
 .table .remove-row {
   text-align: center;
 }
@@ -5093,6 +5102,27 @@ a.btn-black, a.btn-highlight {
 .btn-gray {
   background-color: #cccccc;
   color: #000;
+}
+
+/* line 46, ../scss/modules/btns.scss */
+.addButton {
+  border-radius: 3px;
+  display: inline-block;
+  font-size: 12px;
+  color: white;
+  background-color: #249fbe;
+  padding: 0 10px;
+  height: 20px;
+  line-height: 20px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+/* line 58, ../scss/modules/btns.scss */
+.addButton:before {
+  content: '\e191';
+  font-family: "Glyphicons";
+  font-size: 10px;
+  padding-right: 5px;
 }
 
 /* line 7, ../scss/modules/pagination.scss */
@@ -5161,7 +5191,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
   margin-top: 10px;
-  display: inline-block;
+  display: table;
   width: 100%;
   font-size: 12px;
   border-radius: 4px 4px 0 0;
@@ -5187,56 +5217,57 @@ a.btn-black, a.btn-highlight {
 .twitter-typeahead {
   width: 100%;
   background-color: white;
+  border-radius: 4px 4px 0 0;
 }
 
-/* line 41, ../scss/modules/auto-complete.scss */
+/* line 42, ../scss/modules/auto-complete.scss */
 .tt-suggestions {
   width: 100%;
   top: 37px;
   background: white;
 }
 
-/* line 47, ../scss/modules/auto-complete.scss */
+/* line 48, ../scss/modules/auto-complete.scss */
 .tt-dropdown-menu {
   width: 100%;
   border: 1px solid #cccccc;
   margin-top: -1px;
 }
 
-/* line 53, ../scss/modules/auto-complete.scss */
+/* line 54, ../scss/modules/auto-complete.scss */
 .tt-hint {
   display: none;
 }
 
-/* line 57, ../scss/modules/auto-complete.scss */
+/* line 58, ../scss/modules/auto-complete.scss */
 .tt-suggestion {
   height: 25px;
   width: 100%;
 }
 
-/* line 63, ../scss/modules/auto-complete.scss */
+/* line 64, ../scss/modules/auto-complete.scss */
 .suggestion:hover,
 .tt-is-under-cursor .suggestion {
   background: #249fbe;
   color: white;
 }
-/* line 67, ../scss/modules/auto-complete.scss */
+/* line 68, ../scss/modules/auto-complete.scss */
 .suggestion:hover.disabled,
 .tt-is-under-cursor .suggestion.disabled {
   background: #efefef;
 }
 
-/* line 72, ../scss/modules/auto-complete.scss */
+/* line 73, ../scss/modules/auto-complete.scss */
 .suggestion {
   color: black;
   padding: 0 6px;
 }
-/* line 76, ../scss/modules/auto-complete.scss */
+/* line 77, ../scss/modules/auto-complete.scss */
 .suggestion .border {
   height: 25px;
   clear: both;
 }
-/* line 79, ../scss/modules/auto-complete.scss */
+/* line 80, ../scss/modules/auto-complete.scss */
 .suggestion .border .icon {
   display: block;
   float: left;
@@ -5246,12 +5277,12 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   line-height: 25px;
 }
-/* line 88, ../scss/modules/auto-complete.scss */
+/* line 89, ../scss/modules/auto-complete.scss */
 .suggestion .border .text {
   float: left;
   line-height: 25px;
 }
-/* line 94, ../scss/modules/auto-complete.scss */
+/* line 95, ../scss/modules/auto-complete.scss */
 .suggestion.disabled {
   color: #999999;
   cursor: default;

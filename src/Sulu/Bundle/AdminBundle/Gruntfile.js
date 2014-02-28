@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 
+    var time = new Date().getTime();
+
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -11,13 +13,27 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../web/bundles/suluadmin/'}
                 ]
             },
+            rev: {
+                files: [
+                    {
+                        src: ['Resources/public/dist/app.min.css'],
+                        dest: 'Resources/public/dist/app.min.' + time + '.css'
+                    },
+                    {
+                        src: ['Resources/public/dist/app.min.js'],
+                        dest: 'Resources/public/dist/app.min.' + time + '.js'
+                    }
+                ]
+            },
             build: {
                 files: [
                     //copy fonts
                     {expand: true, cwd: 'Resources/public/js/vendor/husky/', src: ['fonts/**'], dest: 'Resources/public/dist/'},
                     //only needed due to wrong path generation
                     {src: ['Resources/views/Admin/index.html.twig'], dest: 'Resources/public/index.html.twig'},
-                    {expand: true, cwd: 'Resources/public', src: ['**'], dest: 'Resources/public/bundles/suluadmin/'}
+                    {expand: true, cwd: 'Resources/public', src: ['**'], dest: 'Resources/public/bundles/suluadmin/'},
+                    // copy cultures
+                    {expand: true, cwd: 'Resources/public/js/vendor/globalize', src: ['cultures/**'], dest: 'Resources/public/dist/vendor/globalize'}
                 ]
             },
             buildResult: {
@@ -92,8 +108,8 @@ module.exports = function(grunt) {
             buildResult: {
                 options: {
                     variables: {
-                        'app.min': '/bundles/suluadmin/dist/app.min',
-                        'bundles/suluadmin': '/bundles/suluadmin'
+                        'app.min': '/bundles/suluadmin/dist/app.min.' + time,
+                        'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js'
                     },
                     prefix: ''
                 },
@@ -108,16 +124,6 @@ module.exports = function(grunt) {
                     baseUrl: 'Resources/public/js/',
                     mainConfigFile: 'Resources/public/js/main.js',
                     preserveLicenseComments: false
-                }
-            }
-        },
-        rev: {
-            dist: {
-                files: {
-                    src: [
-                        'Resources/public/dist/app.min.css',
-                        'Resources/public/dist/app.min.js'
-                    ]
                 }
             }
         },
@@ -154,9 +160,6 @@ module.exports = function(grunt) {
         cssmin: {
             // TODO: options: { banner: '<%= meta.banner %>' },
             compress: {
-                files: {
-                    'Resources/public/dist/main.min.css': ['Resources/public/css/main.css']
-                }
             }
         },
         compass: {
@@ -190,16 +193,16 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
-        // FIXME 'copy:build',
+        'copy:build',
         'useminPrepare',
-        // FIXME 'requirejs',
-        // FIXME 'concat',
+        'requirejs',
+        'concat',
         'compass:dev',
         'cssmin',
-        //'rev',    FIXME: use rev as soon as usemin can handle it correctly
-        // FIXME 'usemin',
-        // FIXME 'copy:buildResult',
-        // FIXME 'replace:buildResult',
+        'usemin',
+        'copy:rev',
+        'copy:buildResult',
+        'replace:buildResult',
         'clean:build',
         'publish'
     ]);

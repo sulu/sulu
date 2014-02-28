@@ -168,9 +168,13 @@ define([], function() {
          * listens to tab events
          */
         bindCustomEvents: function() {
+
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
+
             // load component on start
-            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', this.changeState.bind(this));
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', function(type, saved){
+                this.changeState(type, saved);
+            }.bind(this));
 
             //make sure container keeps the width of the content
             this.sandbox.on('sulu.app.content.dimensions-changed', this.resizeListener.bind(this));
