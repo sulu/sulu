@@ -39,9 +39,9 @@ define([], function() {
 
                 this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
 
-                emailItem = this.$el.find('#emails .emails-item:first');
-                phoneItem = this.$el.find('#phones .phones-item:first');
-                addressItem = this.$el.find('#addresses .addresses-item:first');
+                emailItem = this.$find('#emails .emails-item:first');
+                phoneItem = this.$find('#phones .phones-item:first');
+                addressItem = this.$find('#addresses .addresses-item:first');
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
