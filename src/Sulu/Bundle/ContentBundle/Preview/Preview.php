@@ -272,7 +272,7 @@ class Preview implements PreviewInterface
         $structureCacheId = $this->getCacheKey($userId, $contentUuid, 'structure');
 
         return $this->cache->save($cacheId, $data, $this->lifeTime) &&
-        $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
+            $this->cache->save($structureCacheId, $data->getKey(), $this->lifeTime);
     }
 
     /**
