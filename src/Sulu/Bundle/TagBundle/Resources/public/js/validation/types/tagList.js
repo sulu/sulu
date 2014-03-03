@@ -20,11 +20,17 @@ define([
             },
 
             typeInterface = {
+                initializeSub: function() {
+                    App.on('husky.auto-complete-list.tags.item-added', function() {
+                        App.emit('sulu.content.changed');
+                    }.bind(this));
+                    App.on('husky.auto-complete-list.tags.item-deleted', function() {
+                        App.emit('sulu.content.changed');
+                    }.bind(this));
+                },
+
                 setValue: function(value) {
-                    // FIXME: do not use timeout, fix timing issue
-                    setTimeout(function() {
-                        App.emit('husky.auto-complete-list.' + this.options.instanceName + '.set-tags', value);
-                    }.bind(this), 50);
+                    return App.dom.data($el, 'auraItems', value);
                 },
 
                 getValue: function() {
