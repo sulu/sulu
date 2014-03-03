@@ -1,0 +1,1 @@
+define(["type/default","form/util"],function(a){"use strict";return function(b,c){var d={},e={validate:function(){return!0}};return new a(b,d,c,"resourceLocator",e)}});
