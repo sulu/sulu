@@ -39,9 +39,9 @@ define([], function() {
 
                 this.html(this.renderTemplate('/admin/contact/template/account/form'));
 
-                emailItem = this.sandbox.dom.find('#emails .email-item:first', this.$el);
-                phoneItem = this.sandbox.dom.find('#phones .phone-item:first', this.$el);
-                addressItem = this.sandbox.dom.find('#addresses .address-item:first', this.$el);
+                emailItem = this.$find('#emails .emails-item:first');
+                phoneItem = this.$find('#phones .phones-item:first');
+                addressItem = this.$find('#addresses .addresses-item:first');
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
@@ -50,6 +50,9 @@ define([], function() {
                 if (!!this.options.data.id) {
                     excludeItem.push({id: this.options.data.id});
                 }
+
+                this.companyInstanceName = 'companyAccount' + data.id;
+
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
@@ -58,7 +61,7 @@ define([], function() {
                             remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
                             getParameter: 'search',
                             value: !!data.parent ? data.parent : null,
-                            instanceName: 'companyAccount' + data.id,
+                            instanceName: this.companyInstanceName,
                             valueName: 'name',
                             noNewValues: true,
                             excludes: [{id: data.id, name: data.name}]
@@ -210,12 +213,21 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.parent = {
-                        id: this.sandbox.dom.data('#company input', 'id')
+                        id: this.sandbox.dom.data('#' + this.companyInstanceName, 'id')
                     };
 
                     this.sandbox.logger.log('data', data);
 
                     this.sandbox.emit('sulu.contacts.accounts.save', data);
+                }
+            },
+
+
+            // checks if el is in next row and adds margin top if necessary
+            checkRowMargin: function(item) {
+                var parent = this.sandbox.dom.parent(item);
+                if (this.sandbox.dom.children(parent).length > 2) {
+                    this.sandbox.dom.addClass(item, 'm-top-20');
                 }
             },
 
@@ -226,6 +238,8 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.id-value'));
                 this.sandbox.form.addField(form, $item.find('.type-value'));
                 this.sandbox.form.addField(form, $item.find('.email-value'));
+
+                this.checkRowMargin($item);
 
                 this.sandbox.start($item);
             },
@@ -247,6 +261,8 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.id-value'));
                 this.sandbox.form.addField(form, $item.find('.type-value'));
                 this.sandbox.form.addField(form, $item.find('.phone-value'));
+
+                this.checkRowMargin($item);
 
                 this.sandbox.start($item);
             },
