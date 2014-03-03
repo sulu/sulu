@@ -127,13 +127,6 @@ define([], function() {
 
                 this.sandbox.dom.on('#addAddress', 'click', this.addAddress.bind(this));
                 this.sandbox.dom.on('#addresses', 'click', this.removeAddress.bind(this), '.remove-address');
-
-                this.sandbox.dom.keypress(this.formId, function(event) {
-                    if (event.which === 13) {
-                        event.preventDefault();
-                        this.submit();
-                    }
-                }.bind(this));
             },
 
             bindCustomEvents: function() {
