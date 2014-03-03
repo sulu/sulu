@@ -30319,7 +30319,7 @@ define('__component__$auto-complete@husky',[], function() {
 
         /**
          * Returns the id of the options.value object
-         * @returns {Integer}
+         * @returns {Integer|null}
          */
         getValueID: function() {
             if (!!this.options.value) {
@@ -30513,6 +30513,10 @@ define('__component__$auto-complete@husky',[], function() {
                     this.checkMatches(this.getValueFieldValue(), callback, true);
                 }
             }.bind(this));
+
+            this.sandbox.on('husky.auto-complete.'+this.options.instanceName+'.select', function(data) {
+                this.selectedElement = data;
+            }.bind(this));
         },
 
         /**
@@ -30569,6 +30573,7 @@ define('__component__$auto-complete@husky',[], function() {
             }.bind(this), '.disabled');
 
             this.sandbox.dom.on(this.$valueField, 'blur', function() {
+
                 //don't do anything if the dropdown is clicked on
                 if (this.executeBlurHandler === true) {
                     if (this.options.emptyOnBlur === false) {
@@ -30579,6 +30584,15 @@ define('__component__$auto-complete@husky',[], function() {
                 } else {
                     this.executeBlurHandler = true;
                 }
+
+            }.bind(this));
+
+            // clear data attribute when input is empty
+            this.sandbox.dom.on(this.$valueField, 'focusout', function() {
+                if (this.sandbox.dom.val(this.$valueField) === '') {
+                    this.sandbox.dom.data(this.$valueField, 'id', 'null');
+                    this.sandbox.logger.log("autocomplete data-id empty:", this.sandbox.dom.data(this.$valueField, 'id'));
+                }
             }.bind(this));
         },
 
@@ -30586,7 +30600,10 @@ define('__component__$auto-complete@husky',[], function() {
          * Gets called when the input box triggers the blur event
          */
         handleBlur: function() {
-            if (this.options.noNewValues === true) {
+
+            if(!!this.selectedElement){ // selected via dropdown
+                this.selectedElement = null;
+            } else if (this.options.noNewValues === true) {
                 //check input matches an auto-complete suggestion
                 if (this.isMatched() === true && this.getClosestMatch() !== null) {
                     //set value o field to the closes match
@@ -30624,7 +30641,6 @@ define('__component__$auto-complete@husky',[], function() {
         checkMatches: function(string, callback, exactly) {
             var delimiter = (this.options.remoteUrl.indexOf('?') === -1) ? '?' : '&';
             this.sandbox.emit(REQUEST_MATCH.call(this));
-            console.log(this.options.remoteUrl + delimiter + this.options.getParameter + '=' + string);
             this.sandbox.util.ajax({
                 url: this.options.remoteUrl + delimiter + this.options.getParameter + '=' + string,
 
@@ -30723,7 +30739,6 @@ define('__component__$auto-complete@husky',[], function() {
          */
         handleData: function(data) {
             if (typeof data === 'object') {
-                console.log(typeof data, 'data');
                 this.total = data[this.options.totalKey];
                 this.data = [];
 
@@ -35656,7 +35671,7 @@ define('husky_extensions/collection',[],function() {
             };
 
             app.core.dom.data = function(selector, key, value) {
-                if (!!value) {
+                if (!!value || value === '') {
                     return $(selector).data(key, value);
                 } else {
                     return $(selector).data(key);
