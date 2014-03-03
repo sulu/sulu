@@ -8,7 +8,9 @@ The SuluSecurityBundle builds on other sulu-cmf bundles. It provides a solution 
 
 ## Features
 
-* Roles editing 
+* Roles editing
+* User management (extension of contacts)
+* Facilities to check permissions
 
 ## Requirements
 
