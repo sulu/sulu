@@ -50,6 +50,9 @@ define([], function() {
                 if (!!this.options.data.id) {
                     excludeItem.push({id: this.options.data.id});
                 }
+
+                this.companyInstanceName = 'companyAccount' + data.id;
+
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
@@ -58,7 +61,7 @@ define([], function() {
                             remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
                             getParameter: 'search',
                             value: !!data.parent ? data.parent : null,
-                            instanceName: 'companyAccount' + data.id,
+                            instanceName: this.companyInstanceName,
                             valueName: 'name',
                             noNewValues: true,
                             excludes: [{id: data.id, name: data.name}]
@@ -210,7 +213,7 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.parent = {
-                        id: this.sandbox.dom.data('#company input', 'id')
+                        id: this.sandbox.dom.data('#' + this.companyInstanceName, 'id')
                     };
 
                     this.sandbox.logger.log('data', data);
