@@ -37,7 +37,7 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
      * @param $contentTypeName A String with the name of the content to load.
      * @return ContentTypeInterface
      */
-    public function get($contentTypeName)
+    public function get($contentTypeName = '')
     {
         return $this->container->get($this->prefix . $contentTypeName);
     }
