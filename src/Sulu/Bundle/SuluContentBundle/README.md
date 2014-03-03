@@ -12,6 +12,7 @@ The SuluContentBundle builds on other sulu-cmf bundles. It provides a solution t
   * Preview to live edit Content-Node in real template
   * Uses Websocket for Communication
   * Provides a Fallback with polling
+* Content editing 
 
 ## Requirements
 
