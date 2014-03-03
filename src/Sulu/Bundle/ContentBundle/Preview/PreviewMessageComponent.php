@@ -188,7 +188,7 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     private function close(ConnectionInterface $from, $msg, $user)
     {
-        $content = $msg->content;
+        $content = $msg['content'];
         $type = strtolower($msg['type']);
         $otherType = ($type == 'form' ? 'preview' : 'form');
         $id = $user . '-' . $content;
