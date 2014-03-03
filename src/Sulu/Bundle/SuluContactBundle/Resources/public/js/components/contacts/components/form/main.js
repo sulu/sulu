@@ -46,6 +46,7 @@ define([], function() {
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
                 var data = this.initData();
+                this.companyInstanceName = 'companyContact' + data.id;
 
                 this.sandbox.start([
                     {
@@ -55,7 +56,7 @@ define([], function() {
                             remoteUrl: '/admin/api/accounts?searchFields=id,name&flat=true',
                             getParameter: 'search',
                             value: data.account,
-                            instanceName:'companyContact' + data.id,
+                            instanceName: this.companyInstanceName,
                             valueName: 'name',
                             noNewValues: true
                         }
@@ -194,11 +195,10 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.account = {
-                        id: this.sandbox.dom.data('#company input', 'id')
+                        id: this.sandbox.dom.data('#' + this.companyInstanceName, 'id')
                     };
 
                     this.sandbox.logger.log('log data', data);
-
                     this.sandbox.emit('sulu.contacts.contacts.save', data);
                 }
             },

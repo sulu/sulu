@@ -1054,4 +1054,197 @@ class AccountControllerTest extends DatabaseTestCase
 		$client->request('GET', '/api/accounts/1/deleteinfo');
 		$this->assertEquals('200', $client->getResponse()->getStatusCode());
 	}
+
+    public function testPutRemovedParentAccount()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/accounts',
+            array(
+                'name' => 'ExampleCompany',
+                'parent' => array('id' => self::$account->getId()),
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'phones' => array(
+                    array(
+                        'phone' => '123456789',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'phone' => '987654321',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'notes' => array(
+                    array('value' => 'Note 1'),
+                    array('value' => 'Note 2')
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+
+        $client->request(
+            'PUT',
+            '/api/accounts/2',
+            array(
+                'id' => 2,
+                'name' => 'ExampleCompany 222',
+                'parent' => array('id' => null),
+                'urls' => array(
+                    array(
+                        'url' => 'http://example.company.com',
+                        'urlType' => array(
+                            'id' => '1',
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'emails' => array(
+                    array(
+                        'id' => 2,
+                        'email' => 'erika.mustermann@muster.at',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'id' => 3,
+                        'email' => 'erika.mustermann@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'phones' => array(
+                    array(
+                        'id' => 2,
+                        'phone' => '123456789',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'id' => 3,
+                        'phone' => '987654321',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'id' => 2,
+                        'street' => 'Musterstraße',
+                        'number' => '1',
+                        'zip' => '0000',
+                        'city' => 'Musterstadt',
+                        'state' => 'Musterstate',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'notes' => array(
+                    array('id' => 2,'value' => 'Note 1'),
+                    array('id' => 3,'value' => 'Note 2')
+                )
+            )
+        );
+
+        $client->request(
+            'GET',
+            '/api/accounts/2'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('ExampleCompany 222', $response->name);
+        $this->assertObjectNotHasAttribute('parent', $response);
+        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
+        $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
+        $this->assertEquals('123456789', $response->phones[0]->phone);
+        $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
+        $this->assertEquals('1', $response->addresses[0]->number);
+        $this->assertEquals('0000', $response->addresses[0]->zip);
+        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('Musterstate', $response->addresses[0]->state);
+        $this->assertEquals('Note 1', $response->notes[0]->value);
+        $this->assertEquals('Note 2', $response->notes[1]->value);
+    }
 }
