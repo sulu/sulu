@@ -212,9 +212,9 @@ module.exports = function(grunt) {
         'compass:dev',
         'cssmin',
         'usemin',
+        'replace:buildMain',
         'copy:rev',
         'copy:buildResult',
-        'replace:buildMain',
         'replace:buildResult',
         'clean:build',
         'publish'
