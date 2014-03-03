@@ -163,15 +163,16 @@ class Preview implements PreviewInterface
         $newContent->setLanguageCode($languageCode);
         /** @var PropertyInterface $property */
         foreach ($newContent->getProperties() as $property) {
-            if ($content->hasProperty($property->getName())) {
-                $this->setValue(
-                    $newContent,
-                    $property->getName(),
-                    $property->getValue(),
-                    $webspaceKey,
-                    $languageCode
-                );
-            }
+            $value = $content->hasProperty($property->getName()) ?
+                $content->getProperty($property->getName())->getValue() : null;
+
+            $this->setValue(
+                $newContent,
+                $property->getName(),
+                $value,
+                $webspaceKey,
+                $languageCode
+            );
         }
         return $newContent;
     }

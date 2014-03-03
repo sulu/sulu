@@ -27,25 +27,29 @@ define([
                 },
 
                 setValue: function(value) {
+                    var config;
+                    if (!!value.config) {
+                        config = value.config;
+                    } else {
+                        config = value;
+                    }
 
-                    var config = value.config;
-
-                    if (typeof(config.dataSource) !== 'undefined') {
+                    if (typeof(config.dataSource) !== 'undefined' && !!config.dataSource) {
                         App.dom.data($el, 'auraDataSource', config.dataSource);
                     }
-                    if (typeof(config.includeSubFolders) !== 'undefined') {
+                    if (typeof(config.includeSubFolders) !== 'undefined' && !!config.includeSubFolders) {
                         App.dom.data($el, 'auraIncludeSubFolders', config.includeSubFolders);
                     }
-                    if (typeof(config.tags) !== 'undefined') {
+                    if (typeof(config.tags) !== 'undefined' && !!config.tags) {
                         App.dom.data($el, 'auraTags', config.tags);
                     }
-                    if (typeof(config.sortMethod) !== 'undefined') {
+                    if (typeof(config.sortMethod) !== 'undefined' && !!config.sortMethod) {
                         App.dom.data($el, 'auraPreSelectedSortMethod', config.sortMethod);
                     }
-                    if ((typeof(config.sortBy) !== 'undefined') && config.sortBy.length > 0) {
+                    if ((typeof(config.sortBy) !== 'undefined') && !!config.sortBy && config.sortBy.length > 0) {
                         App.dom.data($el, 'auraPreSelectedSortBy', config.sortBy[0]);
                     }
-                    if (typeof(config.limitResult) !== 'undefined') {
+                    if (typeof(config.limitResult) !== 'undefined' && !!config.limitResult) {
                         App.dom.data($el, 'auraLimitResult', config.limitResult);
                     }
                 },

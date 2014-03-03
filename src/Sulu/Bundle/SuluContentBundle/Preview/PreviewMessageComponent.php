@@ -48,20 +48,20 @@ class PreviewMessageComponent implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
-        $msg = json_decode($msg);
+        $msg = json_decode($msg, true);
 
-        if (isset($msg->command) &&
-            isset($msg->user) &&
-            isset($msg->params) &&
-            isset($msg->content) &&
-            isset($msg->type) &&
+        if (isset($msg['command']) &&
+            isset($msg['user']) &&
+            isset($msg['params']) &&
+            isset($msg['content']) &&
+            isset($msg['type']) &&
             in_array(
-                strtolower($msg->type),
+                strtolower($msg['type']),
                 array('form', 'preview')
             )
         ) {
-            $user = $msg->user;
-            switch ($msg->command) {
+            $user = $msg['user'];
+            switch ($msg['command']) {
                 case 'start':
                     $this->start($from, $msg, $user);
                     break;
@@ -77,8 +77,8 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     private function start(ConnectionInterface $from, $msg, $user)
     {
-        $content = $msg->content;
-        $type = strtolower($msg->type);
+        $content = $msg['content'];
+        $type = strtolower($msg['type']);
 
         // if preview is started
         if (!$this->preview->started($user, $content)) {
@@ -130,18 +130,18 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     private function update(ConnectionInterface $from, $msg, $user)
     {
-        $content = $msg->content;
-        $type = strtolower($msg->type);
-        $params = $msg->params;
+        $content = $msg['content'];
+        $type = strtolower($msg['type']);
+        $params = $msg['params'];
         $id = $user . '-' . $content;
 
         // if params correct
         // FIXME implement error handling
-        if ($type == 'form' && isset($params->changes) && isset($params->template)) {
+        if ($type == 'form' && isset($params['changes']) && isset($params['template'])) {
 
-            foreach ($params->changes as $property => $data) {
+            foreach ($params['changes'] as $property => $data) {
                 // update property
-                $this->preview->update($user, $content, $msg->webspaceKey, $msg->languageCode, $property, $data, $params->template);
+                $this->preview->update($user, $content, $msg['webspaceKey'], $msg['languageCode'], $property, $data, $params['template']);
             }
 
             // send ok message
@@ -189,7 +189,7 @@ class PreviewMessageComponent implements MessageComponentInterface
     private function close(ConnectionInterface $from, $msg, $user)
     {
         $content = $msg->content;
-        $type = strtolower($msg->type);
+        $type = strtolower($msg['type']);
         $otherType = ($type == 'form' ? 'preview' : 'form');
         $id = $user . '-' . $content;
 

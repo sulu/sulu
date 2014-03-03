@@ -19,6 +19,8 @@ define(['app-config'], function(AppConfig) {
         ws: null,
         wsUrl: '',
         wsPort: '',
+        previewInitiated: false,
+        opened: false,
 
         template: '',
         contentChanged: false,
@@ -29,10 +31,12 @@ define(['app-config'], function(AppConfig) {
             this.saved = true;
             this.state = null;
 
-            this.formId = '#content-form';
+            this.formId = '#contacts-form-container';
             this.render();
 
             this.setHeaderBar(true);
+
+            this.dfdListenForChange = this.sandbox.data.deferred();
         },
 
         render: function() {
@@ -64,14 +68,9 @@ define(['app-config'], function(AppConfig) {
         createForm: function(data) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
-                // FIXME hack because of husky validation bug
-                if (JSON.stringify(data) !== JSON.stringify({})) {
-                    this.setFormData(data).then(function() {
-                        this.sandbox.start('#contacts-form-container');
-                    }.bind(this));
-                } else {
-                    this.sandbox.start('#contacts-form-container');
-                }
+                this.setFormData(data).then(function() {
+                    this.sandbox.start(this.$el, {reset: true});
+                }.bind(this));
             }.bind(this));
         },
 
@@ -81,9 +80,6 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
-            if (!!this.options.data.id) {
-                this.initPreview();
-            }
             return initialize;
         },
 
@@ -97,6 +93,8 @@ define(['app-config'], function(AppConfig) {
 
             if (!this.options.data.id) {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            } else {
+                this.dfdListenForChange.resolve();
             }
         },
 
@@ -111,6 +109,11 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
                     this.sandbox.dom.removeClass(url, 'is-loading');
                     this.sandbox.dom.val(url, rl);
+
+                    this.dfdListenForChange.resolve();
+
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
                 }.bind(this));
             } else {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
@@ -238,6 +241,7 @@ define(['app-config'], function(AppConfig) {
                 item = {template: item};
             }
             if (!!item && this.template === item.template) {
+                this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
                 return;
             }
 
@@ -274,12 +278,15 @@ define(['app-config'], function(AppConfig) {
                             tpl = this.sandbox.util.template(template, context),
                             data = this.initData();
 
+                        this.sandbox.dom.remove(this.formId + ' *');
                         this.sandbox.dom.html(this.$el, tpl);
                         this.setStateDropdown(data);
                         this.createForm(data);
 
                         this.bindDomEvents();
                         this.listenForChange();
+
+                        this.updatePreviewOnly();
 
                         this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
                         this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
@@ -333,24 +340,29 @@ define(['app-config'], function(AppConfig) {
         },
 
         listenForChange: function() {
-            this.sandbox.dom.on(this.formId, 'keyup', function() {
-                this.setHeaderBar(false);
-                this.contentChanged = true;
-            }.bind(this), '.trigger-save-button');
+            this.dfdListenForChange.then(function() {
+                this.sandbox.dom.on(this.formId, 'keyup', function() {
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
+                }.bind(this), '.trigger-save-button');
 
-            this.sandbox.dom.on(this.formId, 'change', function() {
-                this.setHeaderBar(false);
-                this.contentChanged = true;
-            }.bind(this), '.trigger-save-button');
+                this.sandbox.dom.on(this.formId, 'change', function() {
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
+                }.bind(this), '.trigger-save-button');
 
-            this.sandbox.on('sulu.content.changed', function() {
-                this.setHeaderBar(false);
-                this.contentChanged = true;
+                this.sandbox.on('sulu.content.changed', function() {
+                    this.setHeaderBar(false);
+                    this.contentChanged = true;
+                }.bind(this));
             }.bind(this));
         },
 
         openPreviewWindow: function() {
-            window.open('/admin/content/preview/' + this.options.data.id);
+            if (!!this.options.data.id) {
+                this.initPreview();
+                window.open('/admin/content/preview/' + this.options.data.id);
+            }
         },
 
         openSplitScreen: function() {
@@ -382,16 +394,7 @@ define(['app-config'], function(AppConfig) {
             } else {
                 this.initAjax();
             }
-
-            this.sandbox.dom.on(this.formId, 'keyup', function(e) {
-                if (!!this.options.data.id) {
-                    var $element = $(e.currentTarget);
-                    while (!$element.data('element')) {
-                        $element = $element.parent();
-                    }
-                    this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
-                }
-            }.bind(this), '.preview-update');
+            this.previewInitiated = true;
 
             this.sandbox.on('sulu.preview.update', function(property, value) {
                 if (!!this.options.data.id) {
@@ -400,19 +403,33 @@ define(['app-config'], function(AppConfig) {
             }, this);
         },
 
+        updateEvent: function(e) {
+            if (!!this.options.data.id && !!this.previewInitiated) {
+                var $element = $(e.currentTarget);
+                while (!$element.data('element')) {
+                    $element = $element.parent();
+                }
+                this.updatePreview($element.data('mapperProperty'), $element.data('element').getValue());
+            }
+        },
+
         initAjax: function() {
+            this.sandbox.dom.on(this.formId, 'focusout', this.updateEvent.bind(this), '.preview-update');
+
             var data = this.sandbox.form.getData(this.formId);
 
             this.updateAjax(data);
         },
 
         initWs: function() {
-            // FIXME parameter?
             var url = this.wsUrl + ':' + this.wsPort;
             this.sandbox.logger.log('Connect to url: ' + url);
             this.ws = new WebSocket(url);
             this.ws.onopen = function() {
                 this.sandbox.logger.log('Connection established!');
+                this.opened = true;
+
+                this.sandbox.dom.on(this.formId, 'keyup', this.updateEvent.bind(this), '.preview-update');
 
                 // send start command
                 var message = {
@@ -427,6 +444,14 @@ define(['app-config'], function(AppConfig) {
                 this.ws.send(JSON.stringify(message));
 
                 this.updatePreview();
+            }.bind(this);
+
+            this.ws.onclose = function() {
+                if (!this.opened) {
+                    // no connection can be opened use fallback (safari)
+                    this.ws = null;
+                    this.initAjax();
+                }
             }.bind(this);
 
             this.ws.onmessage = function(e) {
@@ -445,17 +470,31 @@ define(['app-config'], function(AppConfig) {
         },
 
         updatePreview: function(property, value) {
-            var changes = {};
-            if (!!property && !!value) {
-                changes[property] = value;
-            } else {
-                changes = this.sandbox.form.getData(this.formId);
-            }
+            if (!!this.previewInitiated) {
+                var changes = {};
+                if (!!property && !!value) {
+                    changes[property] = value;
+                } else {
+                    changes = this.sandbox.form.getData(this.formId);
+                }
 
-            if (this.ws !== null) {
-                this.updateWs(changes);
-            } else {
-                this.updateAjax(changes);
+                if (this.ws !== null) {
+                    this.updateWs(changes);
+                } else {
+                    this.updateAjax(changes);
+                }
+            }
+        },
+
+        updatePreviewOnly: function() {
+            if (!!this.previewInitiated) {
+                var changes = {};
+
+                if (this.ws !== null) {
+                    this.updateWs(changes);
+                } else {
+                    this.updateAjax(changes);
+                }
             }
         },
 
@@ -478,8 +517,8 @@ define(['app-config'], function(AppConfig) {
                 content: this.options.data.id,
                 type: 'form',
                 user: AppConfig.getUser().id,
-                webspace: this.options.webspace,
-                language: this.options.language,
+                webspaceKey: this.options.webspace,
+                languageCode: this.options.language,
                 params: {changes: changes, template: this.template}
             };
             this.ws.send(JSON.stringify(message));
