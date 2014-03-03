@@ -39,9 +39,9 @@ define([], function() {
 
                 this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
 
-                emailItem = this.$el.find('#emails .emails-item:first');
-                phoneItem = this.$el.find('#phones .phones-item:first');
-                addressItem = this.$el.find('#addresses .addresses-item:first');
+                emailItem = this.$find('#emails .emails-item:first');
+                phoneItem = this.$find('#phones .phones-item:first');
+                addressItem = this.$find('#addresses .addresses-item:first');
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
@@ -195,11 +195,19 @@ define([], function() {
 
                     // FIXME auto complete in mapper
                     data.account = {
-                        id: this.sandbox.dom.data('#company input', 'id')
+                        id: this.sandbox.dom.data('#' + this.companyInstanceName, 'id')
                     };
 
                     this.sandbox.logger.log('log data', data);
                     this.sandbox.emit('sulu.contacts.contacts.save', data);
+                }
+            },
+
+            // checks if el is in next row and adds margin top if necessary
+            checkRowMargin: function(item) {
+                var parent = this.sandbox.dom.parent(item);
+                if (this.sandbox.dom.children(parent).length > 2) {
+                    this.sandbox.dom.addClass(item, 'm-top-20');
                 }
             },
 
@@ -211,6 +219,8 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.type-value'));
                 this.sandbox.form.addField(form, $item.find('.email-value'));
 
+                this.checkRowMargin($item);
+
                 this.sandbox.start($item);
             },
 
@@ -220,6 +230,7 @@ define([], function() {
                 this.sandbox.form.removeField(form, $item.find('.id-value'));
                 this.sandbox.form.removeField(form, $item.find('.type-value'));
                 this.sandbox.form.removeField(form, $item.find('.email-value'));
+
 
                 $item.remove();
             },
@@ -231,6 +242,8 @@ define([], function() {
                 this.sandbox.form.addField(form, $item.find('.id-value'));
                 this.sandbox.form.addField(form, $item.find('.type-value'));
                 this.sandbox.form.addField(form, $item.find('.phone-value'));
+
+                this.checkRowMargin($item);
 
                 this.sandbox.start($item);
             },
