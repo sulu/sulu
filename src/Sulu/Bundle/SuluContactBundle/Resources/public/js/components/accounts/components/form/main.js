@@ -7,17 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
-    return (function() {
-        // FIXME move to this.*
-        var form = '#contact-form',
-            emailItem,
-            phoneItem,
-            addressItem,
-            addressCounter;
 
         return {
 
@@ -26,31 +19,54 @@ define([], function() {
             templates: ['/admin/contact/template/account/form'],
 
             initialize: function() {
+                this.form = '#contact-form';
                 this.saved = true;
-                addressCounter=1;
-                this.formId="#contact-form";
+                this.addressCounter=1;
                 this.render();
                 this.setHeaderBar(true);
                 this.listenForChange();
             },
 
             render: function() {
+                var data, excludeItem, key, accountTypeId,
+                    typeInfo, compareAttribute,
+                    accountTypes = AppConfig.getSection('sulu-contact').accountTypes; // get account types
+
+
+                // if newly created account, get type id
+                if (!!this.options.data.id) {
+                    typeInfo = this.options.data.type;
+                    compareAttribute = 'id';
+                } else {
+                    typeInfo = this.options.accountTypeName;
+                    compareAttribute = 'name';
+                }
+
+                // get account type information
+                this.sandbox.util.foreach(accountTypes, function(type) {
+                    if (type[compareAttribute] === typeInfo) {
+                        this.accountType = type;
+                        this.options.data.type = type.id;
+                        return false; // break loop
+                    }
+                }.bind(this));
+
+
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
 
                 this.html(this.renderTemplate('/admin/contact/template/account/form'));
 
-                emailItem = this.$find('#emails .emails-item:first');
-                phoneItem = this.$find('#phones .phones-item:first');
-                addressItem = this.$find('#addresses .addresses-item:first');
+                this.emailItem = this.$find('#emails .emails-item:first');
+                this.phoneItem = this.$find('#phones .phones-item:first');
+                this.addressItem = this.$find('#addresses .addresses-item:first');
 
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
-                var data = this.initData(),
-                    excludeItem = [];
+                data = this.initData();
+                excludeItem = [];
                 if (!!this.options.data.id) {
                     excludeItem.push({id: this.options.data.id});
                 }
-                console.log(data, 'marcelmoos');
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
@@ -78,35 +94,35 @@ define([], function() {
             },
 
             createForm: function(data) {
-                var formObject = this.sandbox.form.create(form);
+                var formObject = this.sandbox.form.create(this.form);
                 formObject.initialized.then(function() {
 
-                    this.sandbox.form.setData(form, data).then(function() {
+                    this.sandbox.form.setData(this.form, data).then(function() {
                         if (!!data.urls[0]) {
                             this.sandbox.dom.val('#url', data.urls[0].url);
                         }
 
-                        this.sandbox.start(form);
-                        this.sandbox.form.addConstraint(form, '#emails .emails-item:first input.email-value', 'required', {required: true});
+                        this.sandbox.start(this.form);
+                        this.sandbox.form.addConstraint(this.form, '#emails .emails-item:first input.email-value', 'required', {required: true});
                         this.sandbox.dom.find('#emails .emails-item:first .remove-email').remove();
                         this.sandbox.dom.addClass('#emails .emails-item:first label span:first', 'required');
                     }.bind(this));
 
                 }.bind(this));
 
-                this.sandbox.form.addCollectionFilter(form, 'emails', function(email) {
+                this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
                     if (email.id === "") {
                         delete email.id;
                     }
                     return email.email !== "";
                 });
-                this.sandbox.form.addCollectionFilter(form, 'phones', function(phone) {
+                this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
                     if (phone.id === "") {
                         delete phone.id;
                     }
                     return phone.phone !== "";
                 });
-                this.sandbox.form.addCollectionFilter(form, 'addresses', function(address) {
+                this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
                     if (address.id === "") {
                         delete address.id;
                     }
@@ -128,7 +144,7 @@ define([], function() {
                 this.sandbox.dom.on('#addAddress', 'click', this.addAddress.bind(this));
                 this.sandbox.dom.on('#addresses', 'click', this.removeAddress.bind(this), '.remove-address');
 
-                this.sandbox.dom.keypress(this.formId, function(event) {
+                this.sandbox.dom.keypress(this.form, function(event) {
                     if (event.which === 13) {
                         event.preventDefault();
                         this.submit();
@@ -190,10 +206,8 @@ define([], function() {
             },
 
             submit: function() {
-                this.sandbox.logger.log('save Model');
-
-                if (this.sandbox.form.validate(form)) {
-                    var data = this.sandbox.form.getData(form);
+                if (this.sandbox.form.validate(this.form)) {
+                    var data = this.sandbox.form.getData(this.form);
 
                     data.urls = [
                         {
@@ -213,8 +227,6 @@ define([], function() {
                         id: this.sandbox.dom.data('#company input', 'id')
                     };
 
-                    this.sandbox.logger.log('data', data);
-
                     this.sandbox.emit('sulu.contacts.accounts.save', data);
                 }
             },
@@ -229,12 +241,12 @@ define([], function() {
             },
 
             addEmail: function() {
-                var $item = emailItem.clone();
+                var $item = this.emailItem.clone();
                 this.sandbox.dom.append('#emails', $item);
 
-                this.sandbox.form.addField(form, $item.find('.id-value'));
-                this.sandbox.form.addField(form, $item.find('.type-value'));
-                this.sandbox.form.addField(form, $item.find('.email-value'));
+                this.sandbox.form.addField(this.form, $item.find('.id-value'));
+                this.sandbox.form.addField(this.form, $item.find('.type-value'));
+                this.sandbox.form.addField(this.form, $item.find('.email-value'));
 
                 this.checkRowMargin($item);
 
@@ -244,20 +256,20 @@ define([], function() {
             removeEmail: function(event) {
                 var $item = $(event.target).parent().parent().parent();
 
-                this.sandbox.form.removeField(form, $item.find('.id-value'));
-                this.sandbox.form.removeField(form, $item.find('.type-value'));
-                this.sandbox.form.removeField(form, $item.find('.email-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.id-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.type-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.email-value'));
 
                 $item.remove();
             },
 
             addPhone: function() {
-                var $item = phoneItem.clone();
+                var $item = this.phoneItem.clone();
                 this.sandbox.dom.append('#phones', $item);
 
-                this.sandbox.form.addField(form, $item.find('.id-value'));
-                this.sandbox.form.addField(form, $item.find('.type-value'));
-                this.sandbox.form.addField(form, $item.find('.phone-value'));
+                this.sandbox.form.addField(this.form, $item.find('.id-value'));
+                this.sandbox.form.addField(this.form, $item.find('.type-value'));
+                this.sandbox.form.addField(this.form, $item.find('.phone-value'));
 
                 this.checkRowMargin($item);
 
@@ -267,28 +279,28 @@ define([], function() {
             removePhone: function(event) {
                 var $item = $(event.target).parent().parent().parent();
 
-                this.sandbox.form.removeField(form, $item.find('.id-value'));
-                this.sandbox.form.removeField(form, $item.find('.type-value'));
-                this.sandbox.form.removeField(form, $item.find('.phone-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.id-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.type-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.phone-value'));
 
                 $item.remove();
             },
 
             addAddress: function() {
-                var $item = addressItem.clone();
+                var $item = this.addressItem.clone();
                 $item = this.setLabelsAndIdsForAddressItem($item);
                 this.sandbox.dom.append('#addresses', $item);
                 $(window).scrollTop($item.offset().top);
 
-                this.sandbox.form.addField(form, $item.find('.id-value'));
-                this.sandbox.form.addField(form, $item.find('.type-value'));
-                this.sandbox.form.addField(form, $item.find('.street-value'));
-                this.sandbox.form.addField(form, $item.find('.number-value'));
-                this.sandbox.form.addField(form, $item.find('.addition-value'));
-                this.sandbox.form.addField(form, $item.find('.zip-value'));
-                this.sandbox.form.addField(form, $item.find('.city-value'));
-                this.sandbox.form.addField(form, $item.find('.state-value'));
-                this.sandbox.form.addField(form, $item.find('.country-value'));
+                this.sandbox.form.addField(this.form, $item.find('.id-value'));
+                this.sandbox.form.addField(this.form, $item.find('.type-value'));
+                this.sandbox.form.addField(this.form, $item.find('.street-value'));
+                this.sandbox.form.addField(this.form, $item.find('.number-value'));
+                this.sandbox.form.addField(this.form, $item.find('.addition-value'));
+                this.sandbox.form.addField(this.form, $item.find('.zip-value'));
+                this.sandbox.form.addField(this.form, $item.find('.city-value'));
+                this.sandbox.form.addField(this.form, $item.find('.state-value'));
+                this.sandbox.form.addField(this.form, $item.find('.country-value'));
 
                 this.sandbox.start($item);
             },
@@ -302,10 +314,8 @@ define([], function() {
 
                     var elementName = this.sandbox.dom.data(value, 'mapper-property');
 
-                    this.sandbox.logger.log(value, "value");
-
-                    this.sandbox.dom.attr($labels[index], {for: elementName+addressCounter.toString()});
-                    this.sandbox.dom.attr($inputs[index], {id: elementName+addressCounter.toString()});
+                    this.sandbox.dom.attr($labels[index], {for: elementName+this.addressCounter.toString()});
+                    this.sandbox.dom.attr($inputs[index], {id: elementName+this.addressCounter.toString()});
 
                 }.bind(this));
 
@@ -315,15 +325,15 @@ define([], function() {
             removeAddress: function(event) {
                 var $item = $(event.target).parent().parent().parent();
 
-                this.sandbox.form.removeField(form, $item.find('.id-value'));
-                this.sandbox.form.removeField(form, $item.find('.type-value'));
-                this.sandbox.form.removeField(form, $item.find('.street-value'));
-                this.sandbox.form.removeField(form, $item.find('.number-value'));
-                this.sandbox.form.removeField(form, $item.find('.addition-value'));
-                this.sandbox.form.removeField(form, $item.find('.zip-value'));
-                this.sandbox.form.removeField(form, $item.find('.city-value'));
-                this.sandbox.form.removeField(form, $item.find('.state-value'));
-                this.sandbox.form.removeField(form, $item.find('.country-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.id-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.type-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.street-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.number-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.addition-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.zip-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.city-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.state-value'));
+                this.sandbox.form.removeField(this.form, $item.find('.country-value'));
 
                 $item.remove();
             },
@@ -347,5 +357,4 @@ define([], function() {
             }
 
         };
-    })();
 });

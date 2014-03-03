@@ -72,6 +72,17 @@ define({
             }
         });
 
+
+        //show for a new account
+        sandbox.mvc.routes.push({
+            route: 'contacts/accounts/add/type::id',
+            callback: function(accountType){
+                this.html(
+                    '<div data-aura-component="accounts/components/content@sulucontact" data-aura-account-type="'+accountType+'" />'
+                );
+            }
+        });
+
         //show for for editing an account
         sandbox.mvc.routes.push({
             route: 'contacts/accounts/edit::id/:content',
