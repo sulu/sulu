@@ -194,18 +194,11 @@ define([], function() {
                     }
 
                     // FIXME auto complete in mapper
-                    if(this.sandbox.dom.val('#'+this.companyInstanceName) === ''){
-                        data.account = {
-                            id:null
-                        };
-                    } else {
-                        data.account = {
-                            id: this.sandbox.dom.data('#company input', 'id')
-                        };
-                    }
+                    data.account = {
+                        id: this.sandbox.dom.data('#company input', 'id')
+                    };
 
                     this.sandbox.logger.log('log data', data);
-
                     this.sandbox.emit('sulu.contacts.contacts.save', data);
                 }
             },
