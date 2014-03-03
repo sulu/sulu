@@ -48,7 +48,7 @@ define(function() {
                         },
                         template = {
                             id: 'template',
-                            icon: 'tag',
+                            icon: 'items',
                             iconSize: 'large',
                             group: 'right',
                             position: 1,

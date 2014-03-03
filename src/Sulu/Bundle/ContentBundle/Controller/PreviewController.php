@@ -32,8 +32,6 @@ class PreviewController extends Controller
         $preview = $this->getPreview();
 
         if (!$preview->started($uid, $contentUuid)) {
-            // TODO workspace
-            // TODO language
             $language = $this->getRequest()->get('language', 'en');
             $webspace = $this->getRequest()->get('webspace', 'sulu_io');
             $preview->start($uid, $contentUuid, $webspace, $language);
@@ -41,7 +39,6 @@ class PreviewController extends Controller
 
         $content = $preview->render($uid, $contentUuid);
 
-        // FIXME make url and port dynamic
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
             array(
@@ -55,7 +52,8 @@ class PreviewController extends Controller
         );
 
         $doc = new DOMDocument();
-        $doc->loadHTML($content);
+        $doc->encoding = 'utf-8';
+        $doc->loadHTML(utf8_decode($content));
 
         $body = $doc->getElementsByTagName('body');
         $body = $body->item(0);

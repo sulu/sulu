@@ -29,47 +29,54 @@
                 },
 
                 init: function() {
-                    // create websocket
-                    this.conn = new WebSocket(this.url + ':' + this.port);
+                    try {
+                        // create websocket
+                        this.conn = new WebSocket(this.url + ':' + this.port);
 
-                    // on open
-                    this.conn.onopen = function(e) {
-                        console.log("Connection established!");
-                        this.opened = true;
+                        // on open
+                        this.conn.onopen = function(e) {
+                            console.log("Connection established!");
+                            this.opened = true;
 
-                        var message = {
-                            command: 'start',
-                            content: '{{ contenUuid }}',
-                            type: 'preview',
-                            user: {{ userId }},
-                            params: {}
-                        };
-                        this.conn.send(JSON.stringify(message));
-                    }.bind(this);
+                            var message = {
+                                command: 'start',
+                                content: '{{ contenUuid }}',
+                                type: 'preview',
+                                user: {{ userId }},
+                                params: {}
+                            };
+                            this.conn.send(JSON.stringify(message));
+                        }.bind(this);
 
-                    // on message
-                    this.conn.onmessage = function(e) {
-                        var data = JSON.parse(e.data);
-                        console.log(data);
-                        if (data.command === 'changes') {
-                            handleChanges(data.params.changes);
-                        }
-                    }.bind(this);
+                        // on message
+                        this.conn.onmessage = function(e) {
+                            var data = JSON.parse(e.data);
+                            console.log(data);
+                            if (data.command === 'changes') {
+                                handleChanges(data.params.changes);
+                            }
+                        }.bind(this);
 
-                    this.conn.onclose = function(e) {
-                        if (!!this.opened) {
-                            window.close();
-                        }
-                    }.bind(this);
+                        this.conn.onclose = function(e) {
+                            if (!!this.opened) {
+                                window.close();
+                            } else {
+                                // safari no connection established
+                                ajax.init();
+                            }
+                        }.bind(this);
 
-                    this.conn.onerror = function(e) {
-                        console.warn(e);
+                        this.conn.onerror = function(e) {
+                            console.warn(e);
 
-                        if (!this.opened) {
-                            // no connection can be opened use fallback
-                            ajax.init();
-                        }
-                    }.bind(this);
+                            if (!this.opened) {
+                                // no connection can be opened use fallback
+                                ajax.init();
+                            }
+                        }.bind(this);
+                    } catch (ex) {
+                        ajax.init();
+                    }
                 }
             },
             ajax = {

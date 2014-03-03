@@ -191,13 +191,11 @@ define([
 
             var params = {
                 templateType: null,
-                title: 'Warning!',
-                content: 'Do you really want to delete the selected company? All data is going to be lost.',
-                buttonCancelText: 'Cancel',
-                buttonSubmitText: 'Delete'
+                title: this.sandbox.translate('content.delete.dialog.title'),
+                content: this.sandbox.translate('content.delete.dialog.content'),
+                buttonCancelText: this.sandbox.translate('content.delete.dialog.cancel'),
+                buttonSubmitText: this.sandbox.translate('content.delete.dialog.submit')
             };
-
-            // FIXME translation
 
             // show dialog
             this.sandbox.emit('sulu.dialog.confirmation.show', {
