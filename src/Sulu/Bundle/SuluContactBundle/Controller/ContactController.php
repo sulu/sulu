@@ -270,6 +270,8 @@ class ContactController extends RestController implements ClassResourceInterface
                         throw new EntityNotFoundException('SuluContactBundle:Account', $parentData['id']);
                     }
                     $contact->setAccount($parent);
+                } else {
+                    $contact->setAccount(null);
                 }
 
                 $contact->setChanged(new DateTime());
