@@ -104,17 +104,32 @@ module.exports = function(grunt) {
                 }
             }
         },
-        replace: {  //FIXME: remove as soon as usemin bugs are fixed (leading slashes, basedir)
+        replace: {
             buildResult: {
                 options: {
                     variables: {
                         'app.min': '/bundles/suluadmin/dist/app.min.' + time,
-                        'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js'
+                        'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js',
+                        'debug: true': 'debug: false'
                     },
                     prefix: ''
                 },
                 files: [
-                    {src: ['Resources/views/Admin/index.html.dist.twig'], dest: 'Resources/views/Admin/index.html.dist.twig'}
+                    {
+                        src: ['Resources/views/Admin/index.html.dist.twig'],
+                        dest: 'Resources/views/Admin/index.html.dist.twig'
+                    }
+                ]
+            },
+            buildMain: {
+                options: {
+                    variables: {
+                        '/js/main.js': '/dist/main.js'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: ['Resources/public/dist/app.min.js'], dest: 'Resources/public/dist/app.min.js'}
                 ]
             }
         },
@@ -200,6 +215,7 @@ module.exports = function(grunt) {
         'compass:dev',
         'cssmin',
         'usemin',
+        'replace:buildMain',
         'copy:rev',
         'copy:buildResult',
         'replace:buildResult',
