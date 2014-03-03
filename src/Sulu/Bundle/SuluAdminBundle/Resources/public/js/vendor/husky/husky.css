@@ -5503,8 +5503,9 @@ a.btn-black, a.btn-highlight {
 .toolbar-container .group {
   display: inline-block;
   font-size: 14px;
+  position: relative;
 }
-/* line 134, ../scss/modules/toolbar.scss */
+/* line 135, ../scss/modules/toolbar.scss */
 .toolbar-container button {
   cursor: pointer;
   display: inline-block;
@@ -5525,57 +5526,61 @@ a.btn-black, a.btn-highlight {
   -moz-user-select: none;
   user-select: none;
 }
-/* line 158, ../scss/modules/toolbar.scss */
+/* line 159, ../scss/modules/toolbar.scss */
 .toolbar-container button:disabled {
   color: #999999;
 }
-/* line 162, ../scss/modules/toolbar.scss */
+/* line 163, ../scss/modules/toolbar.scss */
 .toolbar-container button:hover:not(:disabled) {
   background-color: #dddddd;
 }
-/* line 165, ../scss/modules/toolbar.scss */
+/* line 166, ../scss/modules/toolbar.scss */
 .toolbar-container button:active:not(:disabled) {
   background-color: #cccccc;
 }
-/* line 169, ../scss/modules/toolbar.scss */
+/* line 170, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight {
   color: #FFF;
   background-color: #249fbe;
   border-color: #249fbe;
 }
-/* line 174, ../scss/modules/toolbar.scss */
+/* line 175, ../scss/modules/toolbar.scss */
+.toolbar-container button.highlight.dropdown-toggle:after {
+  border-top-color: #fff;
+}
+/* line 179, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:hover {
   background-color: #26aacb;
   border-color: #26aacb;
 }
-/* line 177, ../scss/modules/toolbar.scss */
+/* line 182, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:active {
   background-color: #28b1d3;
   border-color: #28b1d3;
 }
-/* line 181, ../scss/modules/toolbar.scss */
+/* line 186, ../scss/modules/toolbar.scss */
 .toolbar-container button.highlight:disabled, .toolbar-container button.highlight:disabled:hover, .toolbar-container button.highlight:disabled:focus {
   background-color: #999999;
   border-color: #999999;
 }
-/* line 186, ../scss/modules/toolbar.scss */
+/* line 191, ../scss/modules/toolbar.scss */
 .toolbar-container button span {
   vertical-align: middle;
 }
-/* line 192, ../scss/modules/toolbar.scss */
+/* line 197, ../scss/modules/toolbar.scss */
 .toolbar-container .toolbar-search {
   display: inline-block;
   width: 130px;
 }
-/* line 200, ../scss/modules/toolbar.scss */
+/* line 205, ../scss/modules/toolbar.scss */
 .toolbar-container .is-expanded ul.toolbar-dropdown-menu {
   display: block;
 }
-/* line 206, ../scss/modules/toolbar.scss */
+/* line 211, ../scss/modules/toolbar.scss */
 .toolbar-container .medium ul.toolbar-dropdown-menu, .toolbar-container .small ul.toolbar-dropdown-menu {
   font-size: 12px;
 }
-/* line 211, ../scss/modules/toolbar.scss */
+/* line 216, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu {
   background-color: white;
   border: 1px solid #cccccc;
@@ -5593,12 +5598,12 @@ a.btn-black, a.btn-highlight {
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 2px 2px 0px 0px;
 }
-/* line 229, ../scss/modules/toolbar.scss */
+/* line 234, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 234, ../scss/modules/toolbar.scss */
+/* line 239, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li {
   display: list-item;
   float: none;
@@ -5609,41 +5614,41 @@ a.btn-black, a.btn-highlight {
   cursor: pointer;
   padding: 0 20px;
 }
-/* line 245, ../scss/modules/toolbar.scss */
+/* line 250, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li a {
   color: black;
   text-decoration: none;
 }
-/* line 251, ../scss/modules/toolbar.scss */
+/* line 256, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.is-selected, .toolbar-container ul.toolbar-dropdown-menu li:hover, .toolbar-container .column-navigation-wrapper .column-navigation .column ul.toolbar-dropdown-menu li.selected, .column-navigation-wrapper .column-navigation .column .toolbar-container ul.toolbar-dropdown-menu li.selected {
   background-color: #249fbe;
 }
-/* line 253, ../scss/modules/toolbar.scss */
+/* line 258, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.is-selected a, .toolbar-container ul.toolbar-dropdown-menu li:hover a, .toolbar-container .column-navigation-wrapper .column-navigation .column ul.toolbar-dropdown-menu li.selected a, .column-navigation-wrapper .column-navigation .column .toolbar-container ul.toolbar-dropdown-menu li.selected a {
   color: white;
 }
-/* line 259, ../scss/modules/toolbar.scss */
+/* line 264, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.disabled:hover, .toolbar-container .column-navigation-wrapper .column-navigation .column ul.toolbar-dropdown-menu li.disabled.selected, .column-navigation-wrapper .column-navigation .column .toolbar-container ul.toolbar-dropdown-menu li.disabled.selected, .toolbar-container ul.toolbar-dropdown-menu li.disabled {
   cursor: default;
   background-color: inherit;
 }
-/* line 262, ../scss/modules/toolbar.scss */
+/* line 267, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.disabled:hover a, .toolbar-container .column-navigation-wrapper .column-navigation .column ul.toolbar-dropdown-menu li.disabled.selected a, .column-navigation-wrapper .column-navigation .column .toolbar-container ul.toolbar-dropdown-menu li.disabled.selected a, .toolbar-container ul.toolbar-dropdown-menu li.disabled a {
   cursor: default;
   color: #999999;
 }
-/* line 268, ../scss/modules/toolbar.scss */
+/* line 273, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li:active {
   background-color: #28b1d3;
 }
-/* line 272, ../scss/modules/toolbar.scss */
+/* line 277, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li.divider {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
   background-color: #dddddd;
 }
-/* line 279, ../scss/modules/toolbar.scss */
+/* line 284, ../scss/modules/toolbar.scss */
 .toolbar-container ul.toolbar-dropdown-menu li a {
   clear: both;
   text-align: left;

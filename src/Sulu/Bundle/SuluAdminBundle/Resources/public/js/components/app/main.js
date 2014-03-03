@@ -162,6 +162,9 @@ define(function() {
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
+                // reset content max-width, which might was set by datagrid-list
+                this.sandbox.dom.css('#content','max-width','');
+
                 // navigate
                 router.navigate(route, {trigger: trigger});
 
