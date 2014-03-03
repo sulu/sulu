@@ -121,7 +121,20 @@ module.exports = function (grunt) {
                 }
             }
         },
-        uglify: min
+        uglify: min,
+        replace: {
+            build: {
+                options: {
+                    variables: {
+                        'sulucontent/js': 'sulucontent/dist'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: ['Resources/public/dist/main.js'], dest: 'Resources/public/dist/main.js'}
+                ]
+            }
+        }
     });
 
     grunt.registerTask('publish', [
@@ -131,6 +144,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'uglify',
+        'replace:build',
         'publish'
     ]);
 
