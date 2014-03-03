@@ -440,7 +440,7 @@ define([], function() {
                         '<tr data-id=\"', id, '\">',
                             '<td><input type="checkbox" class="custom-checkbox is-selected" checked/><span class="custom-checkbox-icon"></span></td>',
                             '<td>', title, '</td>',
-                            '<td id="languageSelector', id, '"></td>',
+                            '<td class="m-top-15" id="languageSelector', id, '"></td>',
                             '<td></td>',
                         '</tr>'
                     ].join('');
@@ -449,7 +449,7 @@ define([], function() {
                         '<tr data-id=\"', id, '\">',
                             '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
                             '<td>', title, '</td>',
-                            '<td id="languageSelector', id, '"></td>',
+                            '<td class="m-top-15" id="languageSelector', id, '"></td>',
                             '<td></td>',
                         '</tr>'
                     ].join('');

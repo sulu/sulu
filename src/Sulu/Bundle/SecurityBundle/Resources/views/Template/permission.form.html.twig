@@ -1,22 +1,20 @@
-<div class="grid-row">
-    <h2 class="bold m-top-20"><%= headline %></h2>
-</div>
+<h2 class="bold m-top-20"><%= headline %></h2>
 <form id="permissions-form">
     <div class="grid-row">
-        <div class="grid-col-6">
+        <div class="form-group grid-col-6">
             <label for="username" class="required"><%=translate('security.permission.username')%></label>
             <input name="username" id="username" type="text" class="form-element input-large" value="<%= (!!user) ? user.username : '' %>" data-validation-required="true" data-validation-min-length="3"/>
         </div>
-        <div class="grid-col-6">
+        <div class="form-group grid-col-6">
             <label for="email" class="required"><%=translate('security.permission.email')%></label>
-            <input name="email" tabindex="-1" id="email" type="text" class="form-element m-top-15" readonly value="<%= (!!email) ? email : '' %>" />
+            <input name="email" tabindex="-1" id="email" type="text" class="form-element m-top-5" readonly value="<%= (!!email) ? email : '' %>" />
         </div>
     </div>
 
-    <div class="grid-row m-top-20" id="password-component"></div>
+    <div class="grid-row m-bottom-0" id="password-component"></div>
 
     <div class="grid-row">
-        <div class="grid-col-6">
+        <div class="form-group grid-col-6">
             <label for="locale"><%=translate('security.permission.locale')%></label>
             <select name="locale" id="locale" class="form-element">
                 <option value="de" <%=user.locale==='de'? 'selected="selected"':''%>><%=translate('Deutsch')%></option>
