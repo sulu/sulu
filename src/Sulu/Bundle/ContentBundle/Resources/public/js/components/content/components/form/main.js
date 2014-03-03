@@ -403,7 +403,7 @@ define(['app-config'], function(AppConfig) {
             }, this);
         },
 
-        updateAjaxEvent: function(e) {
+        updateEvent: function(e) {
             if (!!this.options.data.id && !!this.previewInitiated) {
                 var $element = $(e.currentTarget);
                 while (!$element.data('element')) {
@@ -414,7 +414,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         initAjax: function() {
-            this.sandbox.dom.on(this.formId, 'focusout', this.updateAjaxEvent.bind(this), '.preview-update');
+            this.sandbox.dom.on(this.formId, 'focusout', this.updateEvent.bind(this), '.preview-update');
 
             var data = this.sandbox.form.getData(this.formId);
 
@@ -428,7 +428,9 @@ define(['app-config'], function(AppConfig) {
             this.ws.onopen = function() {
                 this.sandbox.logger.log('Connection established!');
                 this.opened = true;
-                
+
+                this.sandbox.dom.on(this.formId, 'keyup', this.updateEvent.bind(this), '.preview-update');
+
                 // send start command
                 var message = {
                     command: 'start',
@@ -453,8 +455,6 @@ define(['app-config'], function(AppConfig) {
             }.bind(this);
 
             this.ws.onmessage = function(e) {
-                this.sandbox.dom.on(this.formId, 'keyup', this.updateAjaxEvent.bind(this), '.preview-update');
-
                 var data = JSON.parse(e.data);
 
                 this.sandbox.logger.log('Message:', data);
@@ -517,8 +517,8 @@ define(['app-config'], function(AppConfig) {
                 content: this.options.data.id,
                 type: 'form',
                 user: AppConfig.getUser().id,
-                webspace: this.options.webspace,
-                language: this.options.language,
+                webspaceKey: this.options.webspace,
+                languageCode: this.options.language,
                 params: {changes: changes, template: this.template}
             };
             this.ws.send(JSON.stringify(message));
