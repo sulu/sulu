@@ -100,7 +100,8 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         if ($this->mapper === null) {
             $this->prepareContainer();
 
-            $this->mapper = new ContentMapper('de', 'default_template', 'sulu_locale');
+            $contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
+            $this->mapper = new ContentMapper($contentTypeManager, 'de', 'default_template', 'sulu_locale');
             $this->mapper->setContainer($this->container);
 
             $this->prepareSession();
