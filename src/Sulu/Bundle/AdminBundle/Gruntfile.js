@@ -117,6 +117,17 @@ module.exports = function(grunt) {
                 files: [
                     {src: ['Resources/views/Admin/index.html.dist.twig'], dest: 'Resources/views/Admin/index.html.dist.twig'}
                 ]
+            },
+            buildMain: {
+                options: {
+                    variables: {
+                        '/js/main.js': '/dist/main.js'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: ['Resources/public/dist/app.min.js'], dest: 'Resources/public/dist/app.min.js'}
+                ]
             }
         },
         requirejs: {
@@ -203,6 +214,7 @@ module.exports = function(grunt) {
         'usemin',
         'copy:rev',
         'copy:buildResult',
+        'replace:buildMain',
         'replace:buildResult',
         'clean:build',
         'publish'
