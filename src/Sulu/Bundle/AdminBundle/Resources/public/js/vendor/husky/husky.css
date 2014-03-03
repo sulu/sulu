@@ -585,213 +585,251 @@ table {
   outline: 0;
 }
 
-/* line 91, ../scss/utilities.scss */
+/* line 92, ../scss/utilities.scss */
+.m-top-0 {
+  margin-top: 0px !important;
+}
+
+/* line 95, ../scss/utilities.scss */
+.p-top-0 {
+  padding-top: 0px !important;
+}
+
+/* line 98, ../scss/utilities.scss */
+.m-bottom-0 {
+  margin-bottom: 0px !important;
+}
+
+/* line 101, ../scss/utilities.scss */
+.p-bottom-0 {
+  padding-bottom: 0px !important;
+}
+
+/* line 106, ../scss/utilities.scss */
 .m-top-5 {
   margin-top: 5px !important;
 }
 
-/* line 94, ../scss/utilities.scss */
+/* line 109, ../scss/utilities.scss */
 .p-top-5 {
   padding-top: 5px !important;
 }
 
-/* line 98, ../scss/utilities.scss */
+/* line 113, ../scss/utilities.scss */
 .m-bottom-5 {
   margin-bottom: 5px !important;
 }
 
-/* line 101, ../scss/utilities.scss */
+/* line 116, ../scss/utilities.scss */
 .p-bottom-5 {
   padding-bottom: 5px !important;
 }
 
-/* line 105, ../scss/utilities.scss */
+/* line 120, ../scss/utilities.scss */
 .m-right-5 {
   margin-right: 5px !important;
 }
 
-/* line 108, ../scss/utilities.scss */
+/* line 123, ../scss/utilities.scss */
 .p-right-5 {
   padding-right: 5px !important;
 }
 
-/* line 112, ../scss/utilities.scss */
+/* line 127, ../scss/utilities.scss */
 .m-left-5 {
   margin-left: 5px !important;
 }
 
-/* line 115, ../scss/utilities.scss */
+/* line 130, ../scss/utilities.scss */
 .p-left-5 {
   padding-left: 5px !important;
 }
 
-/* line 120, ../scss/utilities.scss */
+/* line 135, ../scss/utilities.scss */
 .m-top-10 {
   margin-top: 10px !important;
 }
 
-/* line 124, ../scss/utilities.scss */
+/* line 139, ../scss/utilities.scss */
 .m-bottom-10 {
   margin-bottom: 10px !important;
 }
 
-/* line 128, ../scss/utilities.scss */
+/* line 143, ../scss/utilities.scss */
 .m-right-10 {
   margin-right: 10px !important;
 }
 
-/* line 132, ../scss/utilities.scss */
+/* line 147, ../scss/utilities.scss */
 .m-left-10 {
   margin-left: 10px !important;
 }
 
-/* line 137, ../scss/utilities.scss */
+/* line 152, ../scss/utilities.scss */
 .p-top-10 {
   padding-top: 10px !important;
 }
 
-/* line 142, ../scss/utilities.scss */
+/* line 157, ../scss/utilities.scss */
 .m-top-15 {
   margin-top: 15px !important;
 }
 
-/* line 146, ../scss/utilities.scss */
+/* line 161, ../scss/utilities.scss */
 .m-bottom-15 {
   margin-bottom: 15px !important;
 }
 
-/* line 150, ../scss/utilities.scss */
+/* line 165, ../scss/utilities.scss */
 .m-right-15 {
   margin-right: 15px !important;
 }
 
-/* line 154, ../scss/utilities.scss */
+/* line 169, ../scss/utilities.scss */
 .m-left-15 {
   margin-left: 15px !important;
 }
 
-/* line 159, ../scss/utilities.scss */
+/* line 174, ../scss/utilities.scss */
 .m-top-20 {
   margin-top: 20px !important;
 }
 
-/* line 163, ../scss/utilities.scss */
+/* line 178, ../scss/utilities.scss */
 .m-bottom-20 {
   margin-bottom: 20px !important;
 }
 
-/* line 167, ../scss/utilities.scss */
+/* line 182, ../scss/utilities.scss */
 .m-right-20 {
   margin-right: 20px !important;
 }
 
-/* line 171, ../scss/utilities.scss */
+/* line 186, ../scss/utilities.scss */
 .m-left-20 {
   margin-left: 20px !important;
 }
 
-/* line 177, ../scss/utilities.scss */
+/* line 192, ../scss/utilities.scss */
 .m-top-25 {
   margin-top: 25px !important;
 }
 
-/* line 181, ../scss/utilities.scss */
+/* line 196, ../scss/utilities.scss */
 .m-bottom-25 {
   margin-bottom: 25px !important;
 }
 
-/* line 185, ../scss/utilities.scss */
+/* line 200, ../scss/utilities.scss */
 .m-right-25 {
   margin-right: 25px !important;
 }
 
-/* line 189, ../scss/utilities.scss */
+/* line 204, ../scss/utilities.scss */
 .m-left-25 {
   margin-left: 25px !important;
 }
 
-/* line 194, ../scss/utilities.scss */
+/* line 209, ../scss/utilities.scss */
 .m-top-30 {
   margin-top: 30px !important;
 }
 
-/* line 198, ../scss/utilities.scss */
+/* line 213, ../scss/utilities.scss */
 .m-bottom-30 {
   margin-bottom: 30px !important;
 }
 
-/* line 202, ../scss/utilities.scss */
+/* line 217, ../scss/utilities.scss */
 .m-right-30 {
   margin-right: 30px !important;
 }
 
-/* line 206, ../scss/utilities.scss */
+/* line 221, ../scss/utilities.scss */
 .m-left-30 {
   margin-left: 30px !important;
 }
 
-/* line 214, ../scss/utilities.scss */
+/* line 229, ../scss/utilities.scss */
 .m-height-25 {
   height: 25px !important;
 }
 
-/* line 8, ../scss/typo.scss */
+/* line 7, ../scss/typo.scss */
 body {
   font-size: 14px;
   font-family: Helvetica, Arial, sans-serif;
   line-height: 20px;
 }
 
-/* line 22, ../scss/typo.scss */
+/* line 20, ../scss/typo.scss */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  margin: 10px 0 40px 0;
   font-family: inherit;
   font-weight: normal;
   color: #999999;
 }
 
-/* line 29, ../scss/typo.scss */
+/* line 26, ../scss/typo.scss */
 h1 {
   color: #249fbe;
   font-size: 36px;
   line-height: 40px;
+  margin: 10px 0 40px 0;
 }
 
-/* line 35, ../scss/typo.scss */
+/* line 33, ../scss/typo.scss */
 h2 {
   font-size: 24px;
   line-height: 30px;
 }
 
-/* line 40, ../scss/typo.scss */
+/* line 38, ../scss/typo.scss */
 h3 {
   font-size: 20px;
   line-height: 25px;
 }
 
-/* line 45, ../scss/typo.scss */
+/* line 43, ../scss/typo.scss */
 h4 {
   font-size: 18px;
   line-height: 20px;
 }
 
-/* line 49, ../scss/typo.scss */
+/* line 48, ../scss/typo.scss */
 h5 {
   font-size: 14px;
   line-height: 15px;
 }
 
+/* line 53, ../scss/typo.scss */
+h1, h2, h3, h4, h5 {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
 /* line 57, ../scss/typo.scss */
+h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
+  position: absolute;
+  top: 50%;
+  margin-left: 10px;
+  overflow: hidden;
+  width: 100%;
+  height: 1px;
+  content: '\a0';
+  background-color: #cccccc;
+}
+
+/* line 72, ../scss/typo.scss */
 .bold, .header .header-left .username {
   font-family: Helvetica, Arial, sans-serif !important;
 }
 
-/* line 66, ../scss/typo.scss */
+/* line 81, ../scss/typo.scss */
 .small-font {
   font-size: 12px;
 }
@@ -3552,7 +3590,7 @@ hr.divider {
   color: #fff;
   height: 0;
   border: 1px solid #fff;
-  margin: 30px 0 20px 0;
+  margin: 0px 0 20px 0;
 }
 
 /* line 8, ../scss/modules/column-options.scss */
@@ -3631,148 +3669,157 @@ hr.divider {
   display: block;
 }
 
-/* line 13, ../scss/modules/grid.scss */
+/* line 12, ../scss/modules/grid.scss */
+.grid-row {
+  margin-bottom: 20px;
+}
+/* line 14, ../scss/modules/grid.scss */
 .grid-row::after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 19, ../scss/modules/grid.scss */
+/* line 20, ../scss/modules/grid.scss */
 .grid-row img {
   max-width: 100%;
 }
 
-/* line 24, ../scss/modules/grid.scss */
+/* line 25, ../scss/modules/grid.scss */
 [class*="grid-col-"] {
   float: left;
   padding-left: 8px;
   padding-right: 8px;
 }
-/* line 29, ../scss/modules/grid.scss */
+/* line 30, ../scss/modules/grid.scss */
 [class*="grid-col-"]:first-of-type {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 34, ../scss/modules/grid.scss */
+/* line 35, ../scss/modules/grid.scss */
 [class*="grid-col-"]:last-of-type {
   padding-right: 0;
 }
 
-/* line 39, ../scss/modules/grid.scss */
+/* line 40, ../scss/modules/grid.scss */
 .grid-col-1 {
   width: 8.33%;
 }
-/* line 43, ../scss/modules/grid.scss */
+/* line 44, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 48, ../scss/modules/grid.scss */
+/* line 49, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n) {
   padding-right: 0;
 }
 
-/* line 54, ../scss/modules/grid.scss */
+/* line 55, ../scss/modules/grid.scss */
 .grid-col-2 {
   width: 16.66%;
 }
-/* line 58, ../scss/modules/grid.scss */
+/* line 59, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 63, ../scss/modules/grid.scss */
+/* line 64, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n) {
   padding-right: 0;
 }
 
-/* line 69, ../scss/modules/grid.scss */
+/* line 70, ../scss/modules/grid.scss */
 .grid-col-3 {
   width: 25%;
 }
-/* line 73, ../scss/modules/grid.scss */
+/* line 74, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 78, ../scss/modules/grid.scss */
+/* line 79, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n) {
   padding-right: 0;
 }
 
-/* line 84, ../scss/modules/grid.scss */
+/* line 85, ../scss/modules/grid.scss */
 .grid-col-4 {
   width: 33.33%;
 }
-/* line 88, ../scss/modules/grid.scss */
+/* line 89, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 93, ../scss/modules/grid.scss */
+/* line 94, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n) {
   padding-right: 0;
 }
 
-/* line 99, ../scss/modules/grid.scss */
+/* line 100, ../scss/modules/grid.scss */
 .grid-col-5 {
   width: 41.66%;
 }
 
-/* line 103, ../scss/modules/grid.scss */
+/* line 104, ../scss/modules/grid.scss */
 .grid-col-6 {
   width: 50%;
 }
-/* line 107, ../scss/modules/grid.scss */
+/* line 108, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(2n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 112, ../scss/modules/grid.scss */
+/* line 113, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(2n) {
   padding-right: 0;
 }
 
-/* line 118, ../scss/modules/grid.scss */
+/* line 119, ../scss/modules/grid.scss */
 .grid-col-7 {
   width: 58.33%;
 }
 
-/* line 122, ../scss/modules/grid.scss */
+/* line 123, ../scss/modules/grid.scss */
 .grid-col-8 {
   width: 66.66%;
 }
 
-/* line 126, ../scss/modules/grid.scss */
+/* line 127, ../scss/modules/grid.scss */
 .grid-col-9 {
   width: 75%;
 }
 
-/* line 130, ../scss/modules/grid.scss */
+/* line 131, ../scss/modules/grid.scss */
 .grid-col-10 {
   width: 83.33%;
 }
 
-/* line 134, ../scss/modules/grid.scss */
+/* line 135, ../scss/modules/grid.scss */
 .grid-col-11 {
   width: 91.66%;
 }
 
-/* line 138, ../scss/modules/grid.scss */
+/* line 139, ../scss/modules/grid.scss */
 .grid-col-12 {
   width: 100%;
 }
 
 @media (max-width: 580px) {
-  /* line 143, ../scss/modules/grid.scss */
+  /* line 145, ../scss/modules/grid.scss */
   [class*="grid-col-"] {
     width: 100%;
     margin-top: 15px;
-    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
-  /* line 148, ../scss/modules/grid.scss */
+  /* line 152, ../scss/modules/grid.scss */
   [class*="grid-col-"]:first-of-type {
     margin-top: 0;
+    padding-right: 0;
+  }
+  /* line 158, ../scss/modules/grid.scss */
+  [class*="grid-col-"].floating:nth-child(n) {
     padding-right: 0;
   }
 }
@@ -3786,18 +3833,18 @@ hr.divider {
   border-radius: 3px;
   border: 1px solid #cccccc;
 }
-/* line 15, ../scss/modules/form.scss */
+/* line 14, ../scss/modules/form.scss */
 .form-element:focus {
   outline: 0;
   border-color: #cccccc;
 }
-/* line 20, ../scss/modules/form.scss */
+/* line 19, ../scss/modules/form.scss */
 .form-element.input-large {
   height: 40px;
   padding: 0 10px;
   font-size: 18px;
 }
-/* line 26, ../scss/modules/form.scss */
+/* line 25, ../scss/modules/form.scss */
 .form-element[readonly] {
   background: none;
   border: 0;
@@ -3805,28 +3852,12 @@ hr.divider {
   color: #999999;
 }
 
-/* line 36, ../scss/modules/form.scss */
-.cke.cke_chrome {
-  box-shadow: none !important;
-  border: 0 !important;
-}
-/* line 41, ../scss/modules/form.scss */
-.cke .cke_inner {
-  border: 1px solid #cccccc !important;
-}
-/* line 45, ../scss/modules/form.scss */
-.cke .cke_inner,
-.cke .cke_wysiwyg_frame {
-  border-bottom-left-radius: 3px !important;
-  border-bottom-right-radius: 3px !important;
-}
-
-/* line 52, ../scss/modules/form.scss */
+/* line 35, ../scss/modules/form.scss */
 input[type="text"].input-round {
   border-radius: 30px;
 }
 
-/* line 58, ../scss/modules/form.scss */
+/* line 41, ../scss/modules/form.scss */
 input
 .input-description {
   margin-top: -5px;
@@ -3834,31 +3865,61 @@ input
   color: #999999;
 }
 
-/* line 66, ../scss/modules/form.scss */
+/* line 56, ../scss/modules/form.scss */
+.form-group > :first-child {
+  height: 20px;
+  margin-bottom: 10px;
+}
+/* line 61, ../scss/modules/form.scss */
+.form-group > :nth-child(2) {
+  margin: 0;
+}
+
+/* line 69, ../scss/modules/form.scss */
+.form-horizontal .form-group > :first-child {
+  text-align: right;
+  float: left;
+  margin-top: 5px;
+  padding-right: 4%;
+  white-space: nowrap;
+  width: 35%;
+}
+/* line 78, ../scss/modules/form.scss */
+.form-horizontal .form-group > :nth-child(2) {
+  width: 65%;
+}
+/* line 84, ../scss/modules/form.scss */
+.form-horizontal .form-group.input-large > :first-child {
+  margin-top: 0;
+  line-height: 40px;
+  vertical-align: middle;
+}
+
+/* line 98, ../scss/modules/form.scss */
 label {
   display: block;
   font-size: 14px;
   color: #999999;
   cursor: pointer;
 }
-/* line 72, ../scss/modules/form.scss */
+/* line 104, ../scss/modules/form.scss */
 label.large {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 77, ../scss/modules/form.scss */
+/* line 109, ../scss/modules/form.scss */
 label .form-element {
   margin-top: 5px;
   border: 1px solid #cccccc;
 }
-/* line 82, ../scss/modules/form.scss */
+/* line 114, ../scss/modules/form.scss */
 label.inline {
   font-size: 1em;
   font-weight: normal;
   display: inline;
 }
 
-/* line 91, ../scss/modules/form.scss */
+/* line 123, ../scss/modules/form.scss */
 .custom-checkbox {
   width: 14px;
   height: 14px;
@@ -3866,13 +3927,13 @@ label.inline {
   opacity: 0;
   cursor: pointer;
 }
-/* line 105, ../scss/modules/form.scss */
+/* line 137, ../scss/modules/form.scss */
 .custom-checkbox:checked + .custom-checkbox-icon::after, .custom-checkbox.is-checked + .custom-checkbox-icon::after {
   content: "\e207";
   position: relative;
   top: -3px;
 }
-/* line 113, ../scss/modules/form.scss */
+/* line 145, ../scss/modules/form.scss */
 .custom-checkbox + .custom-checkbox-icon {
   display: inline-block;
   width: 14px;
@@ -3886,27 +3947,27 @@ label.inline {
   vertical-align: middle;
 }
 
-/* line 132, ../scss/modules/form.scss */
+/* line 164, ../scss/modules/form.scss */
 textarea {
   resize: both;
 }
 
-/* line 136, ../scss/modules/form.scss */
+/* line 168, ../scss/modules/form.scss */
 textarea.vertical {
   resize: vertical;
 }
 
-/* line 140, ../scss/modules/form.scss */
+/* line 172, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 144, ../scss/modules/form.scss */
+/* line 176, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 148, ../scss/modules/form.scss */
+/* line 180, ../scss/modules/form.scss */
 textarea.form-element {
   width: 100%;
   height: 40px;
@@ -3916,7 +3977,7 @@ textarea.form-element {
   font-family: inherit;
 }
 
-/* line 159, ../scss/modules/form.scss */
+/* line 191, ../scss/modules/form.scss */
 .custom-radio {
   width: 18px;
   height: 18px;
@@ -3924,7 +3985,7 @@ textarea.form-element {
   opacity: 0;
   cursor: pointer;
 }
-/* line 171, ../scss/modules/form.scss */
+/* line 203, ../scss/modules/form.scss */
 .custom-radio:checked + .custom-radio-icon::after, .custom-radio.is-checked + .custom-radio-icon::after {
   content: "";
   display: block;
@@ -3933,7 +3994,7 @@ textarea.form-element {
   border-radius: 18px;
   background-color: #999;
 }
-/* line 182, ../scss/modules/form.scss */
+/* line 214, ../scss/modules/form.scss */
 .custom-radio + .custom-radio-icon {
   display: inline-block;
   width: 18px;
@@ -3946,6 +4007,22 @@ textarea.form-element {
   text-align: center;
   line-height: 1;
   vertical-align: middle;
+}
+
+/* line 234, ../scss/modules/form.scss */
+.cke.cke_chrome {
+  box-shadow: none !important;
+  border: 0 !important;
+}
+/* line 239, ../scss/modules/form.scss */
+.cke .cke_inner {
+  border: 1px solid #cccccc !important;
+}
+/* line 243, ../scss/modules/form.scss */
+.cke .cke_inner,
+.cke .cke_wysiwyg_frame {
+  border-bottom-left-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
 }
 
 /* line 16, ../scss/modules/header.scss */
@@ -4929,51 +5006,55 @@ table {
   border-bottom: 1px solid #cccccc;
   height: 50px;
 }
-/* line 25, ../scss/modules/tables.scss */
+/* line 26, ../scss/modules/tables.scss */
+.table thead tr {
+  height: 30px;
+}
+/* line 30, ../scss/modules/tables.scss */
 .table thead th {
   vertical-align: bottom;
   color: #999999;
   font-size: 16px;
 }
-/* line 30, ../scss/modules/tables.scss */
+/* line 35, ../scss/modules/tables.scss */
 .table thead th a {
   color: black;
   text-decoration: none;
 }
-/* line 34, ../scss/modules/tables.scss */
+/* line 39, ../scss/modules/tables.scss */
 .table thead th a .selected {
   font-weight: bold;
 }
-/* line 41, ../scss/modules/tables.scss */
+/* line 46, ../scss/modules/tables.scss */
 .table thead tr {
   border-bottom: 2px solid #999999;
 }
-/* line 47, ../scss/modules/tables.scss */
+/* line 52, ../scss/modules/tables.scss */
 .table tbody td {
   vertical-align: middle;
   font-family: Helvetica, Arial;
 }
-/* line 54, ../scss/modules/tables.scss */
+/* line 59, ../scss/modules/tables.scss */
 .table.is-selectable tr {
   cursor: pointer;
 }
-/* line 56, ../scss/modules/tables.scss */
+/* line 61, ../scss/modules/tables.scss */
 .table.is-selectable tr:hover > td {
   background-color: #fff;
 }
-/* line 61, ../scss/modules/tables.scss */
+/* line 66, ../scss/modules/tables.scss */
 .table.is-selectable thead tr {
   cursor: auto;
 }
-/* line 67, ../scss/modules/tables.scss */
+/* line 72, ../scss/modules/tables.scss */
 .table .thumb {
   text-align: center;
 }
-/* line 70, ../scss/modules/tables.scss */
+/* line 75, ../scss/modules/tables.scss */
 .table .thumb img {
   vertical-align: middle;
 }
-/* line 75, ../scss/modules/tables.scss */
+/* line 80, ../scss/modules/tables.scss */
 .table .remove-row {
   text-align: center;
 }
@@ -5021,6 +5102,27 @@ a.btn-black, a.btn-highlight {
 .btn-gray {
   background-color: #cccccc;
   color: #000;
+}
+
+/* line 46, ../scss/modules/btns.scss */
+.addButton {
+  border-radius: 3px;
+  display: inline-block;
+  font-size: 12px;
+  color: white;
+  background-color: #249fbe;
+  padding: 0 10px;
+  height: 20px;
+  line-height: 20px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+/* line 58, ../scss/modules/btns.scss */
+.addButton:before {
+  content: '\e191';
+  font-family: "Glyphicons";
+  font-size: 10px;
+  padding-right: 5px;
 }
 
 /* line 7, ../scss/modules/pagination.scss */
@@ -5089,11 +5191,12 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
   margin-top: 10px;
+  display: table;
+  width: 100%;
   font-size: 12px;
-  background: white;
   border-radius: 4px 4px 0 0;
 }
-/* line 18, ../scss/modules/auto-complete.scss */
+/* line 19, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"] {
   font-size: 14px;
   width: 100%;
@@ -5105,64 +5208,66 @@ a.btn-black, a.btn-highlight {
   margin: 0;
   height: 30px;
 }
-/* line 29, ../scss/modules/auto-complete.scss */
+/* line 30, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"]:focus {
   outline: 0 none;
 }
 
-/* line 35, ../scss/modules/auto-complete.scss */
+/* line 36, ../scss/modules/auto-complete.scss */
 .twitter-typeahead {
   width: 100%;
+  background-color: white;
+  border-radius: 4px 4px 0 0;
 }
 
-/* line 39, ../scss/modules/auto-complete.scss */
+/* line 42, ../scss/modules/auto-complete.scss */
 .tt-suggestions {
   width: 100%;
   top: 37px;
   background: white;
 }
 
-/* line 45, ../scss/modules/auto-complete.scss */
+/* line 48, ../scss/modules/auto-complete.scss */
 .tt-dropdown-menu {
   width: 100%;
   border: 1px solid #cccccc;
   margin-top: -1px;
 }
 
-/* line 51, ../scss/modules/auto-complete.scss */
+/* line 54, ../scss/modules/auto-complete.scss */
 .tt-hint {
   display: none;
 }
 
-/* line 55, ../scss/modules/auto-complete.scss */
+/* line 58, ../scss/modules/auto-complete.scss */
 .tt-suggestion {
   height: 25px;
   width: 100%;
 }
 
-/* line 61, ../scss/modules/auto-complete.scss */
+/* line 64, ../scss/modules/auto-complete.scss */
 .suggestion:hover,
 .tt-is-under-cursor .suggestion {
   background: #249fbe;
   color: white;
 }
-/* line 65, ../scss/modules/auto-complete.scss */
+/* line 68, ../scss/modules/auto-complete.scss */
 .suggestion:hover.disabled,
 .tt-is-under-cursor .suggestion.disabled {
   background: #efefef;
 }
 
-/* line 70, ../scss/modules/auto-complete.scss */
+/* line 73, ../scss/modules/auto-complete.scss */
 .suggestion {
   color: black;
   padding: 0 6px;
 }
-/* line 74, ../scss/modules/auto-complete.scss */
+/* line 77, ../scss/modules/auto-complete.scss */
 .suggestion .border {
   height: 25px;
   clear: both;
 }
-/* line 77, ../scss/modules/auto-complete.scss */
+/* line 80, ../scss/modules/auto-complete.scss */
 .suggestion .border .icon {
   display: block;
   float: left;
@@ -5172,12 +5277,12 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   line-height: 25px;
 }
-/* line 86, ../scss/modules/auto-complete.scss */
+/* line 89, ../scss/modules/auto-complete.scss */
 .suggestion .border .text {
   float: left;
   line-height: 25px;
 }
-/* line 92, ../scss/modules/auto-complete.scss */
+/* line 95, ../scss/modules/auto-complete.scss */
 .suggestion.disabled {
   color: #999999;
   cursor: default;
