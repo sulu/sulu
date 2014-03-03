@@ -260,7 +260,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contact->setPosition($this->getRequest()->get('position'));
 
                 $parentData = $this->getRequest()->get('account');
-                if ($parentData != null && $parentData['id'] != null) {
+                if ($parentData != null && $parentData['id'] != null && $parentData['id'] != 'null' && $parentData['id'] != '') {
                     /** @var Account $parent */
                     $parent = $this->getDoctrine()
                         ->getRepository('SuluContactBundle:Account')
