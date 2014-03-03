@@ -21,68 +21,57 @@ define([], function() {
     var eventNamespace = 'sulu.labels.',
 
     /**
-     * show an error label
+     * error label event
      *
      * @event sulu.labels.error.show
-     * @param {String} description The description of the label
-     * @param {String} title (optional) The title of the label
      */
     SHOW_ERROR = function() {
-        return createEventName.call(this, 'error.show')
+        return createEventName.call(this, 'error.show');
     },
 
     /**
-     * show an error label
+     * wrning label event
      *
-     * @event sulu.labels.error.show
-     * @param {String} description The description of the label
-     * @param {String} title (optional) The title of the label
-     * @param {String} id (optional) The id of the label
+     * @event sulu.labels.warning.show
      */
     SHOW_WARNING = function() {
-        return createEventName.call(this, 'warning.show')
+        return createEventName.call(this, 'warning.show');
     },
 
     /**
-     * show an error label
+     * success label event
      *
-     * @event sulu.labels.error.show
-     * @param {String} description The description of the label
-     * @param {String} title (optional) The title of the label
-     * @param {String} id (optional) The id of the label
+     * @event sulu.labels.success.show
      */
     SHOW_SUCCESS = function() {
-        return createEventName.call(this, 'success.show')
+        return createEventName.call(this, 'success.show');
     },
 
     /**
-     * show an label and pass it your own config object
+     * label event
      *
      * @event sulu.labels.label.show
-     * @param {Object} configs The config-object to pass to the component
-     * @param {String} id (optional) The id of the label
      */
      SHOW_LABEL = function() {
-        return createEventName.call(this, 'label.show')
+        return createEventName.call(this, 'label.show');
      },
 
     /**
-     * removes all displayed labels
+     * remove displayed labels event
      *
      * @event sulu.labels.remove
      */
     LABELS_REMOVE = function() {
-        return createEventName.call(this, 'remove')
+        return createEventName.call(this, 'remove');
     },
 
    /**
-    * removes label with a given id
+    * remove label with a given id event
     *
     * @event sulu.labels.label.remove
-    * @param {String} id The id of the label
     */
     LABEL_REMOVE = function() {
-        return createEventName.call(this, 'label.remove')
+        return createEventName.call(this, 'label.remove');
     },
 
     createEventName = function(postFix) {
@@ -141,7 +130,7 @@ define([], function() {
             }.bind(this));
 
             this.sandbox.on(SHOW_LABEL.call(this), function(configs, id) {
-                configs['el'] = this.createLabelContainer(id);
+                configs.el = this.createLabelContainer(id);
                 this.startLabelComponent(configs);
             }.bind(this));
 
@@ -210,6 +199,7 @@ define([], function() {
          * @param type
          * @param description
          * @param title
+         * @oaram id
          */
         showLabel: function(type, description, title, id) {
             this.startLabelComponent({
@@ -217,7 +207,7 @@ define([], function() {
                 description: this.sandbox.translate(description),
                 title: this.sandbox.translate(title),
                 el: this.createLabelContainer(id)
-            })
+            });
         },
 
         /**
