@@ -7,7 +7,8 @@ This bundle is part of the [Sulu Content Management Framework](https://github.co
 The SuluAdminBundle builds on other sulu-cmf bundles.
 
 ## Features
-
+* General UI for Sulu Administration
+* Service for including own bundles in Sulu navigation
 
 ## Requirements
 
