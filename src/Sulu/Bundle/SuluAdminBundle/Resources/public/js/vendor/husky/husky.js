@@ -26813,6 +26813,8 @@ define('__component__$datagrid@husky',[],function() {
             $table = this.$element.find('table');
             $row = this.sandbox.dom.$(this.prepareTableRow(row, true));
 
+            // when unsaved new row exists - save it
+            this.prepareSave();
 
             // prepend or append row
             if (!!this.options.addRowTop) {
@@ -26889,7 +26891,6 @@ define('__component__$datagrid@husky',[],function() {
 
             domId = this.sandbox.dom.data($tblRow, 'dom-id');
 
-
             // remove row elements from validation
             if (!!this.options.validation) {
                 $editableElements = this.sandbox.dom.find('.editable', $tblRow);
@@ -26902,6 +26903,12 @@ define('__component__$datagrid@husky',[],function() {
 
             if (idx >= 0) {
                 this.selectedItemIds.splice(idx, 1);
+            }
+
+            idx = this.allItemIds.indexOf(id);
+
+            if (idx >= 0) {
+                this.allItemIds.splice(idx, 1);
             }
 
             this.sandbox.emit(ROW_REMOVED, event);
@@ -27351,6 +27358,8 @@ define('__component__$datagrid@husky',[],function() {
 
             if (!!this.lastFocusedRow) {
 
+                this.sandbox.logger.warn("lastFocusedRow "+this.lastFocusedRow.domId);
+
                 var $tr = this.sandbox.dom.find('tr[data-dom-id=' + this.lastFocusedRow.domId + ']', this.$el),
                     lastFocusedRowCurrentData = this.getInputValuesOfRow($tr),
 
@@ -27364,6 +27373,8 @@ define('__component__$datagrid@husky',[],function() {
                 this.sandbox.logger.log("try to save data now ....");
 
                 data.id = lastFocusedRowCurrentData.id;
+
+                this.sandbox.logger.warn("lastFocusedRowCurrentData "+lastFocusedRowCurrentData.domId);
 
                 // validate locally
                 if (!!this.options.validation && !this.sandbox.form.validate('#' + this.elId)) {
@@ -27385,6 +27396,8 @@ define('__component__$datagrid@husky',[],function() {
 
                     // trigger save action when data changed
                     if (!!valuesChanged) {
+
+                        this.sandbox.logger.warn("data changed!");
 
                         this.sandbox.emit(DATA_CHANGED);
                         url = this.getUrlWithoutParams();
@@ -27455,6 +27468,8 @@ define('__component__$datagrid@husky',[],function() {
          * @param data
          * @param method
          * @param url
+         * @param $tr
+         * @param domId
          */
         save: function(data, method, url, $tr, domId) {
 
@@ -27513,6 +27528,7 @@ define('__component__$datagrid@husky',[],function() {
 
             // set id
             this.sandbox.dom.data($tr, 'id', data.id);
+            this.sandbox.dom.attr($tr, 'data-id', data.id);
 
             this.sandbox.util.each(this.sandbox.dom.find('td', $tr), function(index, $el) {
 
