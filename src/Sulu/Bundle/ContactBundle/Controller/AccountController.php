@@ -221,6 +221,8 @@ class AccountController extends RestController implements ClassResourceInterface
                         throw new EntityNotFoundException($this->entityName, $parentData['id']);
                     }
                     $account->setParent($parent);
+                } else {
+                    $account->setParent(null);
                 }
 
                 $account->setChanged(new DateTime());
