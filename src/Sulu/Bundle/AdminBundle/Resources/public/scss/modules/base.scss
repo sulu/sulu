@@ -16,7 +16,7 @@ body {
 /*----------------------------------------*/
 #content {
 
-    max-width: $contentMaxWidth;
+    max-width: $contentMaxWidth + $contentPaddingLeft + $contentPaddingRight;
     min-width: $contenMinWidth;
     margin-left: $contentMarginLeft;
     padding-left: $contentPaddingLeft;
@@ -44,7 +44,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    margin-left: $contentPaddingLeft;
+    padding-left: $contentPaddingLeft;
     width: 100%;
     background-color: $backgroundColor;
     padding-top: $contentPaddingTop;
@@ -60,15 +60,6 @@ body {
 
 #content-tabs-component {
     margin-top: 40px;
-
-    label.pointer {
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
-
-    label {
-        margin-bottom: 10px;
-    }
 }
 
 #page-functions + #edit-toolbar {

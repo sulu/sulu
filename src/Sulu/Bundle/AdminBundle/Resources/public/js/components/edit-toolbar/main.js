@@ -216,7 +216,7 @@ define([], function() {
          */
         resizeListener: function(dimensions) {
             this.sandbox.dom.width(this.$el, dimensions.width);
-            this.sandbox.dom.css(this.$container, {'margin-left': dimensions.left + 'px'});
+            this.sandbox.dom.css(this.$container, {'padding-left': dimensions.left + 'px'});
         },
 
         changeState: function(type, saved) {
