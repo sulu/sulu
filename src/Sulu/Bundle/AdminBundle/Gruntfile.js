@@ -104,7 +104,7 @@ module.exports = function(grunt) {
                 }
             }
         },
-        replace: {  //FIXME: remove as soon as usemin bugs are fixed (leading slashes, basedir)
+        replace: {
             buildResult: {
                 options: {
                     variables: {
@@ -115,7 +115,10 @@ module.exports = function(grunt) {
                     prefix: ''
                 },
                 files: [
-                    {src: ['Resources/views/Admin/index.html.dist.twig'], dest: 'Resources/views/Admin/index.html.dist.twig'}
+                    {
+                        src: ['Resources/views/Admin/index.html.dist.twig'],
+                        dest: 'Resources/views/Admin/index.html.dist.twig'
+                    }
                 ]
             },
             buildMain: {
