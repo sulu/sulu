@@ -145,15 +145,6 @@ define([], function() {
                     this.selectItem(event.currentTarget);
                 }
             }.bind(this), 'input[type="checkbox"]');
-
-            // submit on enter
-            this.sandbox.dom.keypress(this.formId, function(event) {
-                if (event.which === 13) {
-                    event.preventDefault();
-                    this.save();
-                }
-            }.bind(this));
-
         },
 
         selectAll: function(checkbox) {
