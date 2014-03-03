@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class ListQueryBuilder
 {
     /**
@@ -64,6 +62,12 @@ class ListQueryBuilder
     private $associationNames;
 
     /**
+     * The names of columns of the root entity
+     * @var array
+     */
+    private $fieldNames;
+
+    /**
      * An array containing all the fields in which the search is executed
      * @var array
      */
@@ -83,15 +87,25 @@ class ListQueryBuilder
 
     /**
      * @param $associationNames
+     * @param $fieldNames
      * @param $entityName
      * @param $fields
      * @param $sorting
      * @param $where
      * @param array $searchFields
      */
-    function __construct($associationNames, $entityName, $fields, $sorting, $where, $searchFields = array())
+    function __construct(
+        $associationNames,
+        $fieldNames,
+        $entityName,
+        $fields,
+        $sorting,
+        $where,
+        $searchFields = array()
+    )
     {
         $this->associationNames = $associationNames;
+        $this->fieldNames = $fieldNames;
         $this->entityName = $entityName;
         $this->fields = (is_array($fields)) ? $fields : array();
         $this->sorting = $sorting;
@@ -193,7 +207,7 @@ class ListQueryBuilder
 
                 $this->addToSelect($parent, $tempField, $alias);
             }
-        } elseif (in_array($field, $this->fields)) {
+        } elseif (in_array($field, $this->fields) && in_array($field, $this->fieldNames)) {
             $this->addToSelect($prefix, $field);
         }
     }

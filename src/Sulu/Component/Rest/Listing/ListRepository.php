@@ -53,6 +53,7 @@ class ListRepository extends EntityRepository
 
         $queryBuilder = new ListQueryBuilder(
             $this->getClassMetadata()->getAssociationNames(),
+            $this->getClassMetadata()->getFieldNames(),
             $this->getEntityName(),
             $this->helper->getFields(),
             $this->helper->getSorting(),
