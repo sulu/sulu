@@ -79,7 +79,7 @@ module.exports = function (grunt) {
             build: {
                 options: {
                     variables: {
-                        'sulucontent/js': 'sulusecurity/dist'
+                        'sulusecurity/js': 'sulusecurity/dist'
                     },
                     prefix: ''
                 },
