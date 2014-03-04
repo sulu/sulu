@@ -16,6 +16,10 @@ define(function() {
     return {
         getUser: function() {
             return config.user;
+        },
+
+        getSection: function(name) {
+            return config.sections[name];
         }
     };
 });
