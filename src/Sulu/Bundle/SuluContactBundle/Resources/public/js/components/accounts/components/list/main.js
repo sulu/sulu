@@ -59,7 +59,6 @@ define([
                 {
                     el: this.sandbox.dom.find('#companies-list', this.$el),
                     url: '/admin/api/accounts?flat=true',
-                    pagination: false,
                     sortable: true,
                     selectItem: {
                         type: 'checkbox'

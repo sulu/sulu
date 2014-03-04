@@ -124,7 +124,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setName($this->getRequest()->get('name'));
 
             $parentData = $this->getRequest()->get('parent');
-            if ($parentData != null && isset($parentData['id'])) {
+            if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
                 $parent = $this->getDoctrine()
                     ->getRepository($this->entityName)
                     ->findAccountById($parentData['id']);
