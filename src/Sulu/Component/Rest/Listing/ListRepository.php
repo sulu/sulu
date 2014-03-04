@@ -38,29 +38,61 @@ class ListRepository extends EntityRepository
      *
      * @param array $where
      * @param string $prefix
-     * @return array|object
+     * @param bool $justCount Defines, if find should just return the total number of results
+     * @return array|object|int
      */
-    public function find($where = array(), $prefix = 'u')
+    public function find($where = array(), $prefix = 'u', $justCount = false)
     {
+        $searchPattern = $this->helper->getSearchPattern();
+        $searchFields = $this->helper->getSearchFields();
+
+        // if search string is set, but searchfields are not, take all fields into account
+        if (!is_null($searchPattern)  && $searchPattern != '' && (is_null($searchFields) || count($searchFields) == 0)) {
+            $searchFields = $this->getEntityManager()->getClassMetadata($this->getEntityName())->getFieldNames();
+        }
+
         $queryBuilder = new ListQueryBuilder(
             $this->getClassMetadata()->getAssociationNames(),
+            $this->getClassMetadata()->getFieldNames(),
             $this->getEntityName(),
             $this->helper->getFields(),
             $this->helper->getSorting(),
             $where,
-            $this->helper->getSearchFields()
+            $searchFields
         );
 
+        if ($justCount) {
+            $queryBuilder->justCount('u.id');
+        }
         $dql = $queryBuilder->find($prefix);
 
         $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult($this->helper->getOffset())
+            ->createQuery($dql);
+
+        if(!$justCount) {
+            $query->setFirstResult($this->helper->getOffset())
             ->setMaxResults($this->helper->getLimit());
-        if ($this->helper->getSearchPattern() != null) {
-            $query->setParameter('search', '%' . $this->helper->getSearchPattern() . '%');
+        }
+        if ($searchPattern != null && $searchPattern != '') {
+            $query->setParameter('search', '%' . $searchPattern. '%');
+        }
+
+        // if just used for counting
+        if ($justCount) {
+            return intval($query->getSingleResult()['totalcount']);
         }
 
         return $query->getArrayResult();
+    }
+
+    /**
+     * returns the amount of data
+     * @param array $where
+     * @param string $prefix
+     * @return int
+     */
+    public function getCount($where = array(), $prefix = 'u')
+    {
+        return $this->find($where, $prefix, true);
     }
 }

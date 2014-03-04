@@ -37,6 +37,20 @@ class ListRestHelper
     protected $em;
 
     /**
+     * url parameter naming
+     * @var array
+     */
+    protected $parameterNames = array(
+        'sortBy' => 'sortBy',
+        'sortOrder' => 'sortOrder',
+        'pageSize' => 'pageSize',
+        'page' => 'page',
+        'search' => 'search',
+        'searchFields' => 'searchFields',
+        'fields' => 'fields',
+    );
+
+    /**
      * The constructor takes the request as an argument, which
      * is injected by the service container
      * @param Request $request
@@ -62,7 +76,7 @@ class ListRestHelper
      * Create a ListRepository for given EntityName and find Entities for list
      * @param string $entityName
      * @param array $where
-     * @return \Doctrine\ORM\Query
+     * @return array
      */
     public function find($entityName, $where = array())
     {
@@ -84,8 +98,8 @@ class ListRestHelper
      */
     public function getSorting()
     {
-        $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
-        $sortBy = $this->getRequest()->get('sortBy', 'id');
+        $sortOrder = $this->getRequest()->get($this->getParameterName('sortOrder'), 'asc');
+        $sortBy = $this->getRequest()->get($this->getParameterName('sortBy'), 'id');
 
         return array($sortBy => $sortOrder);
     }
@@ -96,7 +110,7 @@ class ListRestHelper
      */
     public function getLimit()
     {
-        return $this->getRequest()->get('pageSize');
+        return $this->getRequest()->get($this->getParameterName('pageSize'));
     }
 
     /**
@@ -106,10 +120,38 @@ class ListRestHelper
      */
     public function getOffset()
     {
-        $page = $this->getRequest()->get('page', 1);
-        $pageSize = $this->getRequest()->get('pageSize');
+        $page = $this->getRequest()->get($this->getParameterName('page'), 1);
+        $pageSize = $this->getRequest()->get($this->getParameterName('pageSize'));
 
         return ($pageSize != null) ? $pageSize * ($page - 1) : null;
+    }
+
+    /**
+     * returns the current page
+     * @return mixed
+     */
+    public function getPage() {
+        return $this->getRequest()->get($this->getParameterName('page'),1);
+    }
+
+    /**
+     * returns total amount of pages
+     * @param $entityName
+     * @param $where
+     * @return array
+     */
+    public function getTotalPages($entityName, $where) {
+        $countData = $this->getRepository($entityName)->getCount($where);
+        return $this->getLimit() ? (ceil($countData/$this->getLimit())) : 1;
+    }
+
+    /**
+     * returns all field names for a certain entity
+     * @param $entityName
+     * @return array
+     */
+    public function getAllFields($entityName) {
+        return $this->em->getClassMetadata($entityName)->getFieldNames();
     }
 
     /**
@@ -119,8 +161,7 @@ class ListRestHelper
      */
     public function getFields()
     {
-        $fields = $this->getRequest()->get('fields');
-
+        $fields = $this->getRequest()->get($this->getParameterName('fields'));
         return ($fields != null) ? explode(',', $fields) : null;
     }
 
@@ -130,7 +171,7 @@ class ListRestHelper
      */
     public function getSearchPattern()
     {
-        return $this->getRequest()->get('search');
+        return $this->getRequest()->get($this->getParameterName('search'));
     }
 
     /**
@@ -139,8 +180,20 @@ class ListRestHelper
      */
     public function getSearchFields()
     {
-        $searchFields = $this->getRequest()->get('searchFields');
+        $searchFields = $this->getRequest()->get($this->getParameterName('searchFields'));
 
         return ($searchFields != null) ? explode(',', $searchFields) : array();
+    }
+
+    /**
+     * returns parameter
+     * @param $key
+     * @return string|null
+     */
+    public function getParameterName($key) {
+        if (array_key_exists($key, $this->parameterNames)) {
+            return $this->parameterNames[$key];
+        }
+        return null;
     }
 }

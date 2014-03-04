@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class ListQueryBuilder
 {
     /**
@@ -64,30 +62,56 @@ class ListQueryBuilder
     private $associationNames;
 
     /**
+     * The names of columns of the root entity
+     * @var array
+     */
+    private $fieldNames;
+
+    /**
      * An array containing all the fields in which the search is executed
      * @var array
      */
     private $searchFields;
 
     /**
-     * @param array $associationNames
-     * @param string $entityName
-     * @param array $fields
-     * @param array $sorting
-     * @param array $where
-     * @param string $search
+     * cache variable for replacing select string in some cases
+     * @var string
+     */
+    private $replaceSelect;
+
+    /**
+     * defines if query is used for counting
+     * @var bool
+     */
+    private $countQuery;
+
+    /**
+     * @param $associationNames
+     * @param $fieldNames
+     * @param $entityName
+     * @param $fields
+     * @param $sorting
+     * @param $where
      * @param array $searchFields
      */
-    function __construct($associationNames, $entityName, $fields, $sorting, $where, $searchFields = array())
+    function __construct(
+        $associationNames,
+        $fieldNames,
+        $entityName,
+        $fields,
+        $sorting,
+        $where,
+        $searchFields = array()
+    )
     {
         $this->associationNames = $associationNames;
+        $this->fieldNames = $fieldNames;
         $this->entityName = $entityName;
         $this->fields = (is_array($fields)) ? $fields : array();
         $this->sorting = $sorting;
         $this->where = $where;
         $this->searchFields = $searchFields;
     }
-
 
     /**
      * Searches Entity by filter for fields, pagination and sorted by a column
@@ -99,10 +123,23 @@ class ListQueryBuilder
     {
         $selectFromDQL = $this->getSelectFrom($prefix);
         $whereDQL = $this->getWhere($prefix);
-        $orderDQL = $this->getOrderBy($prefix);
+        if ($this->countQuery != true) {
+            $orderDQL = $this->getOrderBy($prefix);
+        } else {
+            $orderDQL = '';
+        }
         $dql = sprintf('%s %s %s', $selectFromDQL, $whereDQL, $orderDQL);
 
         return $dql;
+    }
+
+    /**
+     * just return count
+     */
+    public function justCount($countAttribute = 'u.id', $alias = 'totalcount')
+    {
+        $this->countQuery = true;
+        $this->replaceSelect = 'COUNT(' . $countAttribute . ') as ' . $alias;
     }
 
     /**
@@ -130,7 +167,9 @@ class ListQueryBuilder
             }
         }
         // if no field is selected take prefix
-        if (strlen($this->select) == 0) {
+        if ($this->countQuery === true) {
+            $this->select = $this->replaceSelect;
+        } elseif (strlen($this->select) == 0) {
             $this->select = $prefix;
         }
 
@@ -168,7 +207,7 @@ class ListQueryBuilder
 
                 $this->addToSelect($parent, $tempField, $alias);
             }
-        } elseif (in_array($field, $this->fields)) {
+        } elseif (in_array($field, $this->fields) && in_array($field, $this->fieldNames)) {
             $this->addToSelect($prefix, $field);
         }
     }
@@ -240,7 +279,7 @@ class ListQueryBuilder
     {
         // JOIN {parent}.{associationName} {associationPrefix}
         $format = '
-                JOIN %s.%s %s';
+                LEFT JOIN %s.%s %s';
 
         return sprintf($format, $parent, $field, $alias);
     }
@@ -306,7 +345,7 @@ class ListQueryBuilder
                 if ($result != '') {
                     $result .= ' AND ';
                 }
-                $result .= '('.implode(' OR ', $searches).')';
+                $result .= '(' . implode(' OR ', $searches) . ')';
             }
 
             $result = 'WHERE ' . $result;

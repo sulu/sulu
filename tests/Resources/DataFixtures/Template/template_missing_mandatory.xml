@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template</key>
+
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <property name="title" type="textLine" mandatory="true"/>
+        <property name="url" type="resourceLocator" mandatory="true"/>
+        <property name="article" type="textArea" mandatory="false"/>
+        <property name="pages" type="smartContentSelection" mandatory="false"/>
+
+        <property name="images" type="imageSelection" minOccurs="0" maxOccurs="2">
+            <params>
+                <param name="minLinks" value="1"/>
+                <param name="maxLinks" value="10"/>
+            </params>
+        </property>
+    </properties>
+</template>
