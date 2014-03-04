@@ -15,10 +15,15 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
+            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+            new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
+            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\SecurityBundle\SuluSecurityBundle(),
+            new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
+            new \Sulu\Bundle\TestBundle\SuluTestBundle(),
         );
 
         return $bundles;
