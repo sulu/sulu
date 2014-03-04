@@ -58,10 +58,6 @@ define(function() {
                     validation: true,
                     addRowTop: true,
                     progressRow: true,
-                    paginationOptions: {
-                        pageSize: 4
-                    },
-                    pagination: true,
                     selectItem: {
                         type: 'checkbox'
                     },
