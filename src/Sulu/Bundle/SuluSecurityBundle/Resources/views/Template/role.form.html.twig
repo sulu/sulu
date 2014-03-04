@@ -1,0 +1,44 @@
+<form id="role-form">
+    <% if(!!data.id) { %>
+    <input id="id" type="hidden" value="<%= data.id %>"/>
+    <% } %>
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="name" class="required"><%=translate('security.roles.name')%></label>
+                <input class="form-element input-large" type="text" id="name" value="<%= data.name %>"
+                       data-validation-required="true"/>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="system" class="required"><%=translate('security.roles.system')%></label>
+                <select id="system" class="form-element input-large">
+                    {% for system in systems %}
+                        <option value="{{ system }}">{{ system }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <div class="form-group grid-row">
+        <label for="god"><%=translate('security.roles.godMode')%></label>
+
+        <div>
+            <input class="form-element custom-checkbox" type="checkbox" id="god" <% if(data.god)
+            print('checked="checked"')
+            %>/>
+            <span class="custom-checkbox-icon"></span>
+            <label for="god" class="inline"><%=translate('security.roles.godModeDescription')%></label>
+        </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <div class="grid-row">
+        <div id="matrix-container"></div>
+    </div>
+</form>

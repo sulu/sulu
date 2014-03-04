@@ -7,14 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-define(['router'], function (Router) {
+define(function() {
 
     'use strict';
 
-    var initialize = function () {
-    };
-
     return {
-        initialize: initialize
-    }
+        content: {
+            url: '/admin/security/navigation/roles',
+            title: 'security.roles.title'
+        }
+    };
 });
