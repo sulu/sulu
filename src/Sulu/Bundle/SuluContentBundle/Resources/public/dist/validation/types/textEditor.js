@@ -1,0 +1,1 @@
+define(["type/default","form/util"],function(a){"use strict";return function(b,c){var d={},e={initializeSub:function(){App.on("husky.ckeditor.changed",function(a,b){App.emit("sulu.preview.update",b.data("mapperProperty"),a),App.emit("sulu.content.changed")}.bind(this))},needsValidation:function(){return!1},validate:function(){return!0}};return new a(b,d,c,"textEditor",e)}});

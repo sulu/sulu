@@ -28,9 +28,45 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_content');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        // add config preview interval
+        $rootNode
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('preview')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('fallback')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('interval')
+                                    ->defaultValue('1000')
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('websocket')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('port')
+                                    ->defaultValue('9876')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('types')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('smart_content')
+                            ->addDefaultsIfNotSet()
+                                ->children()
+                                    ->scalarNode('template')
+                                        ->defaultValue('SuluContentBundle:Template:content-types/smart_content.html.twig')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

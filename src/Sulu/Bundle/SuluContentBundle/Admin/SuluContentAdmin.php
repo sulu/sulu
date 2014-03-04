@@ -17,9 +17,9 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 class SuluContentAdmin extends Admin
 {
 
-    public function __construct()
+    public function __construct($title)
     {
-        $rootNavigationItem = new NavigationItem('Root');
+        $rootNavigationItem = new NavigationItem($title);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
