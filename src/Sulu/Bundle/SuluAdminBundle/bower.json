@@ -1,6 +1,6 @@
 {
     "name": "sulu-admin",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "homepage": "https://github.com/massiveart/SuluAdminBundle",
     "authors": [],
     "license": "MIT",
@@ -12,7 +12,7 @@
         "tests"
     ],
     "dependencies": {
-        "husky": "#develop",
+        "husky": "0.1.*",
         "backbone-relational": "0.8.*",
         "globalize": "0.1.*",
         "jquery": "1.10.*"
