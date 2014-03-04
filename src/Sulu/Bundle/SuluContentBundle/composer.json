@@ -4,7 +4,7 @@
     "description": "TODO",
     "license": "MIT",
     "keywords": ["content", "cmf"],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "authors": [
         {
             "name": "Sulu Community",
@@ -36,7 +36,7 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.3.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "1.0.*"
+        "sulu/test-bundle": "0.1.*"
     },
     "autoload": {
         "psr-0": {
