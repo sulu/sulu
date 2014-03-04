@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "sulu/sulu": "0.1.*",
+        "sulu/sulu": "dev-develop",
         "liip/theme-bundle": "1.0.*@dev",
         "symfony-cmf/routing-bundle": "1.1.*"
     },
@@ -21,7 +21,7 @@
         "symfony/symfony": "2.3.*",
         "symfony/monolog-bundle": "2.3.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.1.*"
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {
