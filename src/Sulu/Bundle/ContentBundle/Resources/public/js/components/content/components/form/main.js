@@ -84,13 +84,6 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindDomEvents: function() {
-            this.sandbox.dom.keypress(this.formId, function(event) {
-                if (event.which === 13) {
-                    event.preventDefault();
-                    this.submit();
-                }
-            }.bind(this));
-
             if (!this.options.data.id) {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
             } else {
