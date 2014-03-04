@@ -18,6 +18,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new ListQueryBuilder(
             array(),
+            array(),
             'SuluCoreBundle:Example',
             array(),
             array(),
@@ -34,6 +35,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new ListQueryBuilder(
             array(),
+            array('field1', 'field2', 'field3'),
             'SuluCoreBundle:Example',
             array('field1', 'field2', 'field3'),
             array(),
@@ -49,6 +51,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithSorting()
     {
         $builder = new ListQueryBuilder(
+            array(),
             array(),
             'SuluCoreBundle:Example',
             array(),
@@ -66,6 +69,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new ListQueryBuilder(
             array(),
+            array(),
             'SuluCoreBundle:Example',
             array(),
             array(),
@@ -82,6 +86,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new ListQueryBuilder(
             array(),
+            array(),
             'SuluCoreBundle:Example',
             array(),
             array(),
@@ -97,6 +102,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testFindWithWhereAndSearch()
     {
         $builder = new ListQueryBuilder(
+            array(),
             array(),
             'SuluCoreBundle:Example',
             array(),
@@ -117,6 +123,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $builder = new ListQueryBuilder(
             array('object', 'otherobject'),
+            array(),
             'SuluCoreBundle:Example',
             array('object_field1', 'object_field2', 'otherobject_field3'),
             array(),
@@ -136,6 +143,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testCounting()
     {
         $builder = new ListQueryBuilder(
+            array(),
             array(),
             'SuluCoreBundle:Example',
             array(),
