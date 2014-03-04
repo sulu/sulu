@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\TagBundle;
 
+use Sulu\Bundle\TagBundle\DependencyInjection\Compiler\TagManagerCompilerPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluTagBundle extends Bundle
