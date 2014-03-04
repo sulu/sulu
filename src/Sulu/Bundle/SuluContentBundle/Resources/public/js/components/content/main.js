@@ -385,7 +385,8 @@ define([
                                     id: this.options.id,
                                     data: model.toJSON(),
                                     webspace: this.options.webspace,
-                                    language: this.options.language
+                                    language: this.options.language,
+                                    preview: !!this.options.preview ? this.options.preview : false
                                 }
                             }
                         ]);
@@ -402,7 +403,8 @@ define([
                             el: $form,
                             data: this.content.toJSON(),
                             webspace: this.options.webspace,
-                            language: this.options.language
+                            language: this.options.language,
+                            preview: !!this.options.preview ? true : false
                         }
                     }
                 ]);
