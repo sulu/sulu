@@ -1,3 +1,28 @@
-sulu_admin_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: SuluAdminBundle:Default:index }
+sulu_admin:
+    path:  /
+    defaults:
+        _controller: SuluAdminBundle:Admin:index
+
+sulu_admin.navigation:
+    type: rest
+    resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController
+
+sulu_admin.routes:
+    path: /bundles
+    defaults:
+        _controller: SuluAdminBundle:Admin:bundles
+
+sulu_admin.contexts:
+    path: /contexts
+    defaults:
+        _controller: SuluAdminBundle:Admin:contexts
+
+sulu_admin.login:
+    path: /login
+    defaults: { _controller: SuluAdminBundle:Security:login }
+
+sulu_admin.login_check:
+    path: /login_check
+
+logout:
+    path: /logout
