@@ -34032,6 +34032,7 @@ define('__component__$smart-content@husky',[], function() {
          * Renders the footer and calls a method to bind the events for itself
          */
         renderFooter: function() {
+            this.itemsVisible = (this.items.length < this.itemsVisible) ? this.items.length : this.itemsVisible;
 
             if (this.$footer === null) {
                 this.$footer = this.sandbox.dom.createElement('<div/>');
@@ -35409,6 +35410,10 @@ define('husky_extensions/collection',[],function() {
                     },
 
                     validate: function(selector, force) {
+                        if ($(selector).length === 0) {
+                            return false;
+                        }
+                        
                         if (!force) {
                             force = false;
                         }
