@@ -70,6 +70,11 @@ define(['app-config'], function(AppConfig) {
             formObject.initialized.then(function() {
                 this.setFormData(data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
+
+                    if (!!this.options.preview) {
+                        this.initPreview();
+                        this.options.preview = false;
+                    }
                 }.bind(this));
             }.bind(this));
         },

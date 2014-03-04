@@ -16,7 +16,7 @@ define(['app-config'], function(AppConfig) {
                 return [
                     '<div id="top-toolbar"></div>',
                     '<div id="split-screen">',
-                    '<div id="form" class="grid" data-aura-component="content@sulucontent" data-aura-id="', id, '" data-aura-webspace="', webspace, '" data-aura-language="', language, '" data-aura-display="form"></div>',
+                    '<div id="form" class="grid" data-aura-component="content@sulucontent" data-aura-id="', id, '" data-aura-webspace="', webspace, '" data-aura-language="', language, '" data-aura-display="form" data-aura-preview="true"></div>',
                     '<div id="preview"><iframe src="', url, '/admin/content/preview/', id, '" width="1024" height="768"></iframe></div>',
                     '</div>'
                 ].join('');
