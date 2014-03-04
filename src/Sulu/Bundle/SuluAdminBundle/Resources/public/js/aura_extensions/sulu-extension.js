@@ -173,7 +173,10 @@
                         },
                         toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                         gridDefaults = {
-                            pagination: false,
+                            paginationOptions: {
+                                pageSize: 10
+                            },
+                            pagination: true,
                             sortable: true,
                             selectItem: {
                                 type: 'checkbox'
