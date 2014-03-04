@@ -145,6 +145,7 @@ define([], function() {
                                             type: this.sandbox.translate('security.roles.section'),
                                             horizontal: this.sandbox.translate('security.roles.permissions'),
                                             all: this.sandbox.translate('security.roles.all'),
+                                            none: this.sandbox.translate('security.roles.none'),
                                             vertical: contextHeadlines
                                         },
                                         values: {
