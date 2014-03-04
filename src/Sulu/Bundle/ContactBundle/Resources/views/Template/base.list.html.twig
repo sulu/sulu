@@ -1,0 +1,22 @@
+<div class="grid">
+    <div class="grid-row">
+        <div class="grid-col-12">
+            <h1>
+                {% block title %}{% endblock %}
+            </h1>
+        </div>
+        <div class="grid-col-12">
+            {% block options %}
+                <div id="list-toolbar-container" class="pull-right">
+
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{% block list %}{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block dialog %}<div id="dialog"></div>{% endblock %}
