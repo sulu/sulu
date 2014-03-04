@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
@@ -18,11 +26,13 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_admin');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $treeBuilder->root('sulu_admin')
+            ->children()
+                ->scalarNode('name')->defaultValue('Sulu Admin')->end()
+                ->scalarNode('user_data_service')->defaultValue('sulu_security.user_manager')->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

@@ -3,16 +3,22 @@
     "type": "library",
     "description": "Symfony bundle that provides administration functionality",
     "license": "MIT",
-    "keywords": ["admin", "cms", "symfony"],
+    "version": "0.1.0",
+    "keywords": ["admin", "cmf", "symfony"],
     "authors": [
         {
-            "name": "Daniel Rotter",
-            "email": "daniel.rotter@massiveart.com",
-            "role": "developer"
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluAdminBundle/contributors"
         }
     ],
+    "require": {
+        "php": ">=5.4",
+        "sulu/sulu": "0.1.*"
+    },
     "autoload": {
-        "psr-0": {"Sulu\\Bundle\\AdminBundle": ""}
+        "psr-0": {
+            "Sulu\\Bundle\\AdminBundle": ""
+        }
     },
     "target-dir": "Sulu/Bundle/AdminBundle"
 }
