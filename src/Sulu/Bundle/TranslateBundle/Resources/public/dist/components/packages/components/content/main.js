@@ -1,0 +1,1 @@
+define(function(){"use strict";return{content:{url:"/admin/translate/navigation/content?type=package",title:"translate.package.title"}}});

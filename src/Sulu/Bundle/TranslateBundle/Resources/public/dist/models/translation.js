@@ -1,0 +1,1 @@
+define(["mvc/relationalmodel","sulutranslate/models/catalogue","sulutranslate/models/code","mvc/hasone"],function(a,b,c,d){"use strict";return a({urlRoot:"/admin/api/translation",defaults:{id:null,value:"",code:null,catalogue:null},relations:[{type:d,key:"catalogue",relatedModel:b}]})});
