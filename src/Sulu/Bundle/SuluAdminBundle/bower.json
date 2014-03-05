@@ -12,7 +12,7 @@
         "tests"
     ],
     "dependencies": {
-        "husky": "0.1.*",
+        "husky": "#develop",
         "backbone-relational": "0.8.*",
         "globalize": "0.1.*",
         "jquery": "1.10.*"
