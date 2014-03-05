@@ -19,6 +19,7 @@ define([], function() {
 
     var defaults = {
             heading: '',
+            headingAddition: '',
             tabsData: null,
             instanceName: 'content',
             template: 'default',
@@ -33,7 +34,9 @@ define([], function() {
                     '   <div id="edit-toolbar"></div>',
                     '</div>',
                     '<div class="content-tabs-content">',
-                    '   <h1>' + this.options.heading + '</h1>',
+                    '   <div class="headlines">',
+                    '       <h1>' + this.options.heading + '</h1>',
+                    '   </div>',
                     '   <div id="content-tabs" />',
                     '</div>'
                 ].join('');
@@ -83,6 +86,14 @@ define([], function() {
                     }
                 }
             ]);
+        },
+
+        prependHeadingAddition = function() {
+            if (typeof this.options.headingAddition !== 'undefined' && this.options.headingAddition !== null) {
+                var $headlines = this.$find('.headlines');
+                this.sandbox.dom.addClass($headlines,'compoundedHeadlines');
+                this.sandbox.dom.prepend($headlines,'<h6>'+this.options.headingAddition+'</div>');
+            }
         };
 
     return {
@@ -95,6 +106,8 @@ define([], function() {
 
             // skeleton
             this.html(templates.skeleton.call(this));
+
+            prependHeadingAddition.call(this);
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
