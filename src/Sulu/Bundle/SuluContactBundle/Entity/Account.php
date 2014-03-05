@@ -27,10 +27,10 @@ class Account extends ApiEntity
     const TYPE_SUPPLIER = 3;
 
     public static $TYPE_TRANSLATIONS = array(
-        self::TYPE_BASIC => 'account.type.basic',
-        self::TYPE_LEAD => 'account.type.lead',
-        self::TYPE_CUSTOMER => 'account.type.customer',
-        self::TYPE_SUPPLIER => 'account.type.supplier',
+        self::TYPE_BASIC => 'contact.account.type.basic',
+        self::TYPE_LEAD => 'contact.account.type.lead',
+        self::TYPE_CUSTOMER => 'contact.account.type.customer',
+        self::TYPE_SUPPLIER => 'contact.account.type.supplier',
     );
 
     /**
