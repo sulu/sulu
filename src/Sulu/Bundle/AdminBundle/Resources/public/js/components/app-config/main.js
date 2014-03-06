@@ -20,6 +20,10 @@ define(function() {
 
         getSection: function(name) {
             return config.sections[name];
+        },
+
+        getDebug: function() {
+            return config.debug;
         }
     };
 });
