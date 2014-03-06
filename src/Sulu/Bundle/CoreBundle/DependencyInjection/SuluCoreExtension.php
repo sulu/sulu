@@ -33,6 +33,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $parameterBag = $container->getParameterBag();
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
+
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
 
@@ -63,7 +64,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 }
             }
         }
-
     }
 
     /**
