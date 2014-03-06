@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
@@ -20,8 +21,51 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluCoreExtension extends Extension
+class SuluCoreExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        // process the configuration of SuluCoreExtension
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $parameterBag = $container->getParameterBag();
+        $configs = $parameterBag->resolveValue($configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
+        if (isset($config['phpcr'])) {
+            $phpcrConfig = $config['phpcr'];
+
+            foreach ($container->getExtensions() as $name => $extension) {
+                $prependConfig = array();
+                switch ($name) {
+                    case 'doctrine_phpcr':
+                        $prependConfig = array(
+                            'session' => array(
+                                'backend' => array(
+                                    // TODO make sulu_core phpcr config compatible to doctrine_phpcr
+                                    'type' => 'jackrabbit',
+                                    'url' => $phpcrConfig['url'],
+                                ),
+                                'username' => $phpcrConfig['username'],
+                                'password' => $phpcrConfig['password'],
+                                'workspace' => $phpcrConfig['workspace'],
+                            ),
+                            'odm' => array(),
+                        );
+                        break;
+                    case 'cmf_core':
+                        break;
+                }
+
+                if ($prependConfig) {
+                    $container->prependExtensionConfig($name, $prependConfig);
+                }
+            }
+        }
+
+    }
+
     /**
      * {@inheritDoc}
      */
