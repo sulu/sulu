@@ -121,14 +121,12 @@ define(['app-config'], function(AppConfig) {
 
         initContactForm: function() {
 
-            var tmpl = [
-                '<div class="">',
-                '   <div id="field-select"></div>',
-                '   <div id="field-type-select"></div>',
-                '</div>'
-            ],
+            // TODO: get fields from configuration
+            // TODO: data-mapper should be able to render underscore template
+            // TODO: init email as in contact form (to show email field if not empty)
+            // TODO: FETCH ALL FIELDS : (phone, address, website, fax, email)
+            // TODO: FETCH ALL FIELD TYPES
 
-                newTemplate = this.sandbox.dom.createElement(tmpl.join(''));
 
             // initialize dropdown
             this.sandbox.start([{
@@ -143,20 +141,23 @@ define(['app-config'], function(AppConfig) {
                             id: 1,
                             name: 'public.edit-fields',
                             callback: function() {
+
+                            }
+                        },
+                        {
+                            id: 2,
+                            name: 'public.add-fields',
+                            callback: function() {
+                                var tmpl = [
+                                        '<div class="grid-row">',
+                                        '   <div id="field-select" class="grid-col-6"></div>',
+                                        '   <div id="field-type-select" class="grid-col-6"></div>',
+                                        '</div>'
+                                    ],
+
+                                    newTemplate = this.sandbox.dom.createElement(tmpl.join(''));
+
                                 this.sandbox.start([
-                                    {
-                                        name: 'dropdown-multiple-select@husky',
-                                        options: {
-                                            el: '#field-select',
-                                            singleSelect: true,
-                                            data: [
-                                                {id: 0, name: 'Deutsch'},
-                                                {id: 1, name: 'English'},
-                                                {id: 2, name: 'Spanish'},
-                                                {id: 3, name: 'Italienisch'}
-                                            ]
-                                        }
-                                    },
                                     {
                                         name: 'overlay@husky',
                                         options: {
@@ -165,13 +166,41 @@ define(['app-config'], function(AppConfig) {
                                             removeOnClose: true,
                                             data: newTemplate
                                         }
+                                    },
+                                    {
+                                        name: 'dropdown-multiple-select@husky',
+                                        options: {
+                                            el: '#field-select',
+                                            instanceName:'i1',
+                                            singleSelect: true,
+                                            data: [
+                                                {id: 0, name: 'address'},
+                                                {id: 1, name: 'email'},
+                                                {id: 2, name: 'fax'},
+                                                {id: 3, name: 'phone'},
+                                                {id: 4, name: 'website'}
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        name: 'dropdown-multiple-select@husky',
+                                        options: {
+                                            el: '#field-type-select',
+                                            singleSelect: true,
+                                            instanceName:'i2',
+                                            data: [
+                                                {id: 0, name: 'office'},
+                                                {id: 1, name: 'private'}
+                                            ]
+                                        }
                                     }
                                 ]);
+
+                                this.sandbox.on('husky.dropdown.multiple.select.i1.selected.item', function(id) {
+                                    // TODO: now update second dropdown with correct values
+
+                                });
                             }
-                        },
-                        {
-                            id: 2,
-                            name: 'public.add-fields'
                         }
                     ]
                 }
