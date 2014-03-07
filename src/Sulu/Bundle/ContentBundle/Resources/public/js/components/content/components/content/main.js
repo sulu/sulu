@@ -22,8 +22,8 @@ define(function() {
                     var preview = {
                             icon: 'eye-open',
                             iconSize: 'large',
-                            group: 'left',
-                            position: 20,
+                            group: 'right',
+                            position: 1,
                             items: [
                                 {
                                     title: this.sandbox.translate('sulu.edit-toolbar.new-window'),
@@ -48,10 +48,10 @@ define(function() {
                         },
                         template = {
                             id: 'template',
-                            icon: 'items',
+                            icon: 'brush',
                             iconSize: 'large',
-                            group: 'right',
-                            position: 1,
+                            group: 'left',
+                            position: 10,
                             type: 'select',
                             title: '',
                             hidden: true,

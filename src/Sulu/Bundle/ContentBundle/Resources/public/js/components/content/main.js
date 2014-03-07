@@ -260,6 +260,7 @@ define([
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
+                        this.sandbox.sulu.viewStates.justSaved = true;
                         this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/details');
                     }
                 }.bind(this),
