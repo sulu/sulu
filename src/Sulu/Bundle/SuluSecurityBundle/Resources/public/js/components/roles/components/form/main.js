@@ -235,7 +235,7 @@ define([], function() {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, true);
             }
             this.saved = saved;
         },
