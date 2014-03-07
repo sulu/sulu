@@ -16,7 +16,6 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-
             // Sulu
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
@@ -29,6 +28,13 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config/config.yml');
+var_dump(        file_exists(__DIR__ . '/config/config.' . $GLOBALS['$GLOBALS'] . '.yml'));
+        if (array_key_exists('APP_DB', $GLOBALS) &&
+            file_exists(__DIR__ . '/config/config.' . $GLOBALS['$GLOBALS'] . '.yml')
+        ) {
+            $loader->load(__DIR__ . '/config/config.' . $GLOBALS['$GLOBALS'] . '.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/config.mysql.yml');
+        }
     }
 }
