@@ -20,9 +20,9 @@ body {
     min-width: $contenMinWidth;
     margin-left: $contentMarginLeft;
     padding-left: $contentPaddingLeft;
-    padding-top: $contentPaddingTop;
+    margin-top: $contentMarginTop;
     padding-right: $contentPaddingRight;
-    padding-bottom: $contentPaddingBottom;
+    margin-bottom: $contentMarginBottom;
     @include single-transition(margin,  $transitionDuration);
 
     h2.mainheadline {
@@ -34,7 +34,7 @@ body {
     }
 
     .content-tabs-content {
-        margin-top: 80px;
+        padding-top: 80px;
     }
 }
 
@@ -47,7 +47,7 @@ body {
     padding-left: $contentPaddingLeft;
     width: 100%;
     background-color: $backgroundColor;
-    padding-top: $contentPaddingTop;
+    padding-top: $contentMarginTop;
 }
 
 #edit-toolbar {
@@ -55,11 +55,7 @@ body {
 }
 
 #list-toolbar-container {
-    margin-bottom: 40px;
-}
-
-#content-tabs-component {
-    margin-top: 40px;
+    padding-bottom: 20px;
 }
 
 #page-functions + #edit-toolbar {
