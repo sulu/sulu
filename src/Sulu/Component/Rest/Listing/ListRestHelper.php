@@ -130,19 +130,21 @@ class ListRestHelper
      * returns the current page
      * @return mixed
      */
-    public function getPage() {
-        return $this->getRequest()->get($this->getParameterName('page'),1);
+    public function getPage()
+    {
+        return $this->getRequest()->get($this->getParameterName('page'), 1);
     }
 
     /**
      * returns total amount of pages
-     * @param $entityName
-     * @param $where
-     * @return array
+     * @param string $entityName
+     * @param array $where
+     * @return float|int
      */
-    public function getTotalPages($entityName, $where) {
+    public function getTotalPages($entityName, $where)
+    {
         $countData = $this->getRepository($entityName)->getCount($where);
-        return $this->getLimit() ? (ceil($countData/$this->getLimit())) : 1;
+        return $this->getLimit() ? (ceil($countData / $this->getLimit())) : 1;
     }
 
     /**
@@ -150,7 +152,8 @@ class ListRestHelper
      * @param $entityName
      * @return array
      */
-    public function getAllFields($entityName) {
+    public function getAllFields($entityName)
+    {
         return $this->em->getClassMetadata($entityName)->getFieldNames();
     }
 
@@ -190,7 +193,8 @@ class ListRestHelper
      * @param $key
      * @return string|null
      */
-    public function getParameterName($key) {
+    public function getParameterName($key)
+    {
         if (array_key_exists($key, $this->parameterNames)) {
             return $this->parameterNames[$key];
         }
