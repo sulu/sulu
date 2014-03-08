@@ -27,37 +27,74 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
 
-
 /**
  * Makes accounts available through a REST API
  * @package Sulu\Bundle\ContactBundle\Controller
  */
 class AccountController extends RestController implements ClassResourceInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     protected $entityName = 'SuluContactBundle:Account';
 
-    protected $unsortable = array('lft','rgt','depth');
+    /**
+     * {@inheritdoc}
+     */
+    protected $unsortable = array('lft', 'rgt', 'depth');
 
+    /**
+     * {@inheritdoc}
+     */
     protected $fieldsDefault = array('name');
-    protected $fieldsExcluded = array('lft','rgt','depth');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
+
+    /**
+     * {@inheritdoc}
+     */
     protected $fieldsHidden = array('created');
+
+    /**
+     * {@inheritdoc}
+     */
     protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0=>'id');
-    protected $fieldsTranslationKeys = array('id'=>'public.id');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsSortOrder = array(0 => 'id');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsTranslationKeys = array('id' => 'public.id');
+
+    /**
+     * {@inheritdoc}
+     */
     protected $fieldsEditable = array();
+
+    /**
+     * {@inheritdoc}
+     */
     protected $fieldsValidation = array();
 
+    /**
+     * {@inheritdoc}
+     */
     protected $bundlePrefix = 'contact.accounts.';
-
-
-
 
     /**
      * returns all fields that can be used by list
      * @Get("accounts/fields")
      * @return mixed
      */
-    public function getFieldsAction() {
+    public function getFieldsAction()
+    {
         return $this->responseFields();
     }
 
@@ -65,7 +102,8 @@ class AccountController extends RestController implements ClassResourceInterface
      * persists a setting
      * @Put("accounts/fields")
      */
-    public function putFieldsAction() {
+    public function putFieldsAction()
+    {
         return $this->responsePersistSettings();
     }
 
@@ -95,7 +133,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        if ($this->getRequest()->get('flat')=='true') {
+        if ($this->getRequest()->get('flat') == 'true') {
             $view = $this->responseList();
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
@@ -212,7 +250,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $account->setName($this->getRequest()->get('name'));
 
                 $parentData = $this->getRequest()->get('parent');
-                if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null'  && $parentData['id'] != '') {
+                if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
                     $parent = $this->getDoctrine()
                         ->getRepository($this->entityName)
                         ->findAccountById($parentData['id']);
