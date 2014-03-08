@@ -29,10 +29,10 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         if (array_key_exists('APP_DB', $GLOBALS) &&
-            file_exists(__DIR__ . '/config/config.' . $GLOBALS['$GLOBALS'] . '.yml')
+            file_exists(__DIR__ . '/config/config.' . $GLOBALS['APP_DB'] . '.yml')
         ) {
             echo 'load config: config.' . $GLOBALS['$GLOBALS'] . ".yml\n";
-            $loader->load(__DIR__ . '/config/config.' . $GLOBALS['$GLOBALS'] . '.yml');
+            $loader->load(__DIR__ . '/config/config.' . $GLOBALS['APP_DB'] . '.yml');
         } else {
             $loader->load(__DIR__ . '/config/config.mysql.yml');
         }
