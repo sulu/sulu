@@ -12,7 +12,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Localization;
-use Sulu\Component\Webspace\Manager\WorkspaceManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +20,10 @@ use Symfony\Component\HttpFoundation\Request;
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
     /**
-     * The WorkspaceManager, responsible for loading the required workspaces
-     * @var WorkspaceManagerInterface
+     * The WebspaceManager, responsible for loading the required webspaces
+     * @var WebspaceManagerInterface
      */
-    private $workspaceManager;
+    private $webspaceManager;
 
     /**
      * The environment valid to analyze the request
@@ -73,9 +73,9 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $resourceLocatorPrefix;
 
-    public function __construct(WorkspaceManagerInterface $workspaceManager, $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
-        $this->workspaceManager = $workspaceManager;
+        $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }
 
@@ -87,7 +87,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public function analyze(Request $request)
     {
         $url = $request->getHost() . $request->getRequestUri();
-        $portalInformation = $this->workspaceManager->findPortalInformationByUrl(
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl(
             $url,
             $this->environment
         );

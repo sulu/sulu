@@ -17,10 +17,10 @@ use Sulu\Component\Webspace\WebspaceCollection;
 /**
  * Defines the methods for the WebspaceManager
  */
-interface WorkspaceManagerInterface
+interface WebspaceManagerInterface
 {
     /**
-     * Returns the workspace with the given key
+     * Returns the webspace with the given key
      * @param $key string The key to search for
      * @return Webspace
      */
@@ -42,7 +42,7 @@ interface WorkspaceManagerInterface
     public function findPortalInformationByUrl($url, $environment);
 
     /**
-     * Returns all the workspaces managed by this specific instance
+     * Returns all the webspaces managed by this specific instance
      * @return WebspaceCollection
      */
     public function getWebspaceCollection();

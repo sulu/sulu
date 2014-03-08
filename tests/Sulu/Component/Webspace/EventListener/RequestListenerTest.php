@@ -14,7 +14,7 @@ namespace Sulu\Component\Webspace\EventListener;
 use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Localization;
-use Sulu\Component\Webspace\Manager\WorkspaceManager;
+use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -34,12 +34,12 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var PHPUnit_Framework_MockObject_MockObject
      */
-    private $workspaceManager;
+    private $webspaceManager;
 
     public function setUp()
     {
-        $this->workspaceManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Webspace\Manager\WorkspaceManagerInterface',
+        $this->webspaceManager = $this->getMockForAbstractClass(
+            '\Sulu\Component\Webspace\Manager\WebspaceManagerInterface',
             array(),
             '',
             true,
@@ -48,7 +48,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
             array('findPortalInformationByUrl')
         );
 
-        $this->requestAnalyzer = new RequestAnalyzer($this->workspaceManager, 'prod');
+        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, 'prod');
 
         $this->requestListener = new RequestListener($this->requestAnalyzer);
     }
@@ -69,7 +69,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
             'url' => 'sulu.lo'
         );
 
-        $this->workspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
+        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
             $this->returnValue($portalInformation)
         );
 

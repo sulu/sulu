@@ -24,13 +24,13 @@ class PhpWebspaceCollectionDumperTest extends \PHPUnit_Framework_TestCase
     /**
      * @var WebspaceCollection
      */
-    private $workspaceCollection;
+    private $webspaceCollection;
 
     public function setUp()
     {
-        $this->workspaceCollection = new WebspaceCollection();
+        $this->webspaceCollection = new WebspaceCollection();
 
-        $workspace = new Webspace();
+        $webspace = new Webspace();
         $localizationEnUs = new Localization();
         $localizationEnUs->setCountry('us');
         $localizationEnUs->setLanguage('en');
@@ -42,10 +42,10 @@ class PhpWebspaceCollectionDumperTest extends \PHPUnit_Framework_TestCase
         $localizationFrCa = new Localization();
         $localizationFrCa->setCountry('ca');
         $localizationFrCa->setLanguage('fr');
-        $workspace->addLocalization($localizationEnUs);
-        $workspace->addLocalization($localizationFrCa);
-        $workspace->setKey('default');
-        $workspace->setName('Default');
+        $webspace->addLocalization($localizationEnUs);
+        $webspace->addLocalization($localizationFrCa);
+        $webspace->setKey('default');
+        $webspace->setName('Default');
 
         // first portal
         $portal = new Portal();
@@ -55,7 +55,7 @@ class PhpWebspaceCollectionDumperTest extends \PHPUnit_Framework_TestCase
         $theme = new Theme();
         $theme->setKey('portal1theme');
         $theme->setExcludedTemplates(array('overview', 'default'));
-        $workspace->setTheme($theme);
+        $webspace->setTheme($theme);
 
         $environment = new Environment();
         $environment->setType('prod');
@@ -73,14 +73,14 @@ class PhpWebspaceCollectionDumperTest extends \PHPUnit_Framework_TestCase
 
         $portal->setResourceLocatorStrategy('tree');
 
-        $workspace->addPortal($portal);
+        $webspace->addPortal($portal);
 
-        $this->workspaceCollection->add($workspace);
+        $this->webspaceCollection->add($webspace);
     }
 
     public function testDump()
     {
-        $dumper = new PhpWebspaceCollectionDumper($this->workspaceCollection);
+        $dumper = new PhpWebspaceCollectionDumper($this->webspaceCollection);
 
         $dump = $dumper->dump(array('cache_class' => 'WebspaceCollectionCache', 'base_class' => 'WebspaceCollection'));
     }

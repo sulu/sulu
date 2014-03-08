@@ -46,9 +46,9 @@ class Portal
     private $environments;
 
     /**
-     * @var Workspace
+     * @var Webspace
      */
-    private $workspace;
+    private $webspace;
 
     /**
      * Sets the name of the portal
@@ -155,18 +155,18 @@ class Portal
     }
 
     /**
-     * @param \Sulu\Component\Webspace\Workspace $workspace
+     * @param \Sulu\Component\Webspace\Webspace $webspace
      */
-    public function setWorkspace(Workspace $workspace)
+    public function setWebspace(Webspace $webspace)
     {
-        $this->workspace = $workspace;
+        $this->webspace = $webspace;
     }
 
     /**
-     * @return \Sulu\Component\Webspace\Workspace
+     * @return \Sulu\Component\Webspace\Webspace
      */
-    public function getWorkspace()
+    public function getWebspace()
     {
-        return $this->workspace;
+        return $this->webspace;
     }
 }

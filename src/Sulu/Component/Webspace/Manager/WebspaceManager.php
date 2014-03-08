@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Dumper\PhpWorkspaceCollectionDumper;
+use Sulu\Component\Webspace\Dumper\PhpWebspaceCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -26,12 +26,12 @@ use Symfony\Component\Finder\SplFileInfo;
  * This class is responsible for loading, reading and caching the portal configuration files
  * @package Sulu\Bundle\CoreBundle\Portal
  */
-class WebspaceManager implements WorkspaceManagerInterface
+class WebspaceManager implements WebspaceManagerInterface
 {
     /**
      * @var WebspaceCollection
      */
-    private $workspaceCollection;
+    private $webspaceCollection;
 
     /**
      * @var array
@@ -56,13 +56,13 @@ class WebspaceManager implements WorkspaceManagerInterface
     }
 
     /**
-     * Returns the workspace with the given key
+     * Returns the webspace with the given key
      * @param $key string The key to search for
      * @return Webspace
      */
-    public function findWorkspaceByKey($key)
+    public function findWebspaceByKey($key)
     {
-        return $this->getWorkspaceCollection()->getWorkspace($key);
+        return $this->getWebspaceCollection()->getWebspace($key);
     }
 
     /**
@@ -72,7 +72,7 @@ class WebspaceManager implements WorkspaceManagerInterface
      */
     public function findPortalByKey($key)
     {
-        return $this->getWorkspaceCollection()->getPortal($key);
+        return $this->getWebspaceCollection()->getPortal($key);
     }
 
     /**
@@ -89,7 +89,7 @@ class WebspaceManager implements WorkspaceManagerInterface
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach ($this->getWorkspaceCollection()->getPortals($environment) as $portalUrl => $portalInformation) {
+        foreach ($this->getWebspaceCollection()->getPortals($environment) as $portalUrl => $portalInformation) {
             /** @var Portal $portal */
             $urlPart = $url;
 
@@ -113,12 +113,12 @@ class WebspaceManager implements WorkspaceManagerInterface
     }
 
     /**
-     * Returns all the workspaces managed by this specific instance
+     * Returns all the webspaces managed by this specific instance
      * @return WebspaceCollection
      */
-    public function getWorkspaceCollection()
+    public function getWebspaceCollection()
     {
-        if ($this->workspaceCollection === null) {
+        if ($this->webspaceCollection === null) {
             $class = $this->options['cache_class'];
             $cache = new ConfigCache(
                 $this->options['cache_dir'] . '/' . $class . '.php',
@@ -126,8 +126,8 @@ class WebspaceManager implements WorkspaceManagerInterface
             );
 
             if (!$cache->isFresh()) {
-                $portalCollection = $this->buildWorkspaceCollection();
-                $dumper = new PhpWorkspaceCollectionDumper($portalCollection);
+                $portalCollection = $this->buildWebspaceCollection();
+                $dumper = new PhpWebspaceCollectionDumper($portalCollection);
                 $cache->write(
                     $dumper->dump(
                         array(
@@ -141,10 +141,10 @@ class WebspaceManager implements WorkspaceManagerInterface
 
             require_once $cache;
 
-            $this->workspaceCollection = new $class();
+            $this->webspaceCollection = new $class();
         }
 
-        return $this->workspaceCollection;
+        return $this->webspaceCollection;
     }
 
     /**
@@ -169,7 +169,7 @@ class WebspaceManager implements WorkspaceManagerInterface
      * Builds the portal collection from the config
      * @return WebspaceCollection
      */
-    protected function buildWorkspaceCollection()
+    protected function buildWebspaceCollection()
     {
         // Find portal configs with symfony finder
         $finder = new Finder();

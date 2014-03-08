@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace;
 
 /**
- * Represents a localization of a workspace definition
+ * Represents a localization of a webspace definition
  * @package Sulu\Component\Portal
  */
 class Localization

@@ -12,16 +12,16 @@ namespace Sulu\Component\Webspace\Dumper;
 
 use Sulu\Component\Webspace\WebspaceCollection;
 
-class PhpWebspaceCollectionDumper extends WorkspaceCollectionDumper
+class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
 {
     /**
      * @var WebspaceCollection
      */
-    private $workspaceCollection;
+    private $webspaceCollection;
 
-    public function __construct(WebspaceCollection $workspaceCollection)
+    public function __construct(WebspaceCollection $webspaceCollection)
     {
-        $this->workspaceCollection = $workspaceCollection;
+        $this->webspaceCollection = $webspaceCollection;
     }
 
     /**
@@ -32,11 +32,11 @@ class PhpWebspaceCollectionDumper extends WorkspaceCollectionDumper
     public function dump($options = array())
     {
         return $this->render(
-            'WorkspaceCollectionClass.php.twig',
+            'WebspaceCollectionClass.php.twig',
             array(
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],
-                'workspaces' => $this->workspaceCollection->toArray()
+                'webspaces' => $this->webspaceCollection->toArray()
             )
         );
     }

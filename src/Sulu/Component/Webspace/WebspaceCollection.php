@@ -14,16 +14,16 @@ use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
 
 /**
- * A collection of all workspaces and portals in a specific sulu installation
+ * A collection of all webspaces and portals in a specific sulu installation
  * @package Sulu\Component\Webspace
  */
 class WebspaceCollection implements \IteratorAggregate
 {
     /**
-     * All the workspaces in a specific sulu installation
+     * All the webspaces in a specific sulu installation
      * @var Webspace[]
      */
-    private $workspaces;
+    private $webspaces;
 
     /**
      * All the portals in a specific sulu installation
@@ -47,25 +47,25 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Adds the portal with its unique key as array key to the collection for all Portal, and adds all the urls for
      * this portal to the correct environment, with the url as key
-     * @param Webspace $workspace The portal to add
+     * @param Webspace $webspace The portal to add
      */
-    public function add(Webspace $workspace)
+    public function add(Webspace $webspace)
     {
-        $this->workspaces[$workspace->getKey()] = $workspace;
+        $this->webspaces[$webspace->getKey()] = $webspace;
 
-        foreach ($workspace->getPortals() as $portal) {
+        foreach ($webspace->getPortals() as $portal) {
             $this->allPortals[$portal->getKey()] = $portal;
 
-            $this->generateUrls($workspace, $portal);
+            $this->generateUrls($webspace, $portal);
         }
     }
 
     /**
      * Generates all the urls for a portal
-     * @param Webspace $workspace
+     * @param Webspace $webspace
      * @param Portal $portal
      */
-    public function generateUrls(Webspace $workspace, Portal $portal)
+    public function generateUrls(Webspace $webspace, Portal $portal)
     {
         // go through every url, and add the information for the portals
         foreach ($portal->getEnvironments() as $environment) {
@@ -76,7 +76,7 @@ class WebspaceCollection implements \IteratorAggregate
                         $portal,
                         $url,
                         $environment->getType(),
-                        $workspace->getSegments()
+                        $webspace->getSegments()
                     );
                 } else {
                     $environmentType = $environment->getType();
@@ -94,7 +94,7 @@ class WebspaceCollection implements \IteratorAggregate
      * @param string|\Sulu\Component\Webspace\Url $url
      * @param string $environment
      * @param Segment[] $segments
-     * @internal param \Sulu\Component\Webspace\Webspace $workspace
+     * @internal param \Sulu\Component\Webspace\Webspace $webspace
      */
     private function generatePortalInformation(Portal $portal, Url $url, $environment, $segments)
     {
@@ -172,13 +172,13 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Returns the workspace with the given key
-     * @param $key string The key of the workspace
+     * Returns the webspace with the given key
+     * @param $key string The key of the webspace
      * @return Webspace
      */
-    public function getWorkspace($key)
+    public function getWebspace($key)
     {
-        return array_key_exists($key, $this->workspaces) ? $this->workspaces[$key] : null;
+        return array_key_exists($key, $this->webspaces) ? $this->webspaces[$key] : null;
     }
 
     /**
@@ -187,7 +187,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function length()
     {
-        return count($this->workspaces);
+        return count($this->webspaces);
     }
 
     /**
@@ -199,7 +199,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->workspaces);
+        return new \ArrayIterator($this->webspaces);
     }
 
     /**
@@ -208,25 +208,25 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function toArray()
     {
-        $workspaces = array();
-        foreach ($this->workspaces as $workspace) {
-            $workspaceData = array();
-            $workspaceData['key'] = $workspace->getKey();
-            $workspaceData['name'] = $workspace->getName();
-            $workspaceData['localizations'] = $this->toArrayLocalizations($workspace->getLocalizations());
+        $webspaces = array();
+        foreach ($this->webspaces as $webspace) {
+            $webspaceData = array();
+            $webspaceData['key'] = $webspace->getKey();
+            $webspaceData['name'] = $webspace->getName();
+            $webspaceData['localizations'] = $this->toArrayLocalizations($webspace->getLocalizations());
 
-            $workspaceData = $this->toArraySegments($workspace, $workspaceData);
+            $webspaceData = $this->toArraySegments($webspace, $webspaceData);
 
-            $workspaceData['portals'] = array();
+            $webspaceData['portals'] = array();
 
-            $workspaceData['theme']['key'] = $workspace->getTheme()->getKey();
-            $workspaceData['theme']['excludedTemplates'] = $workspace->getTheme()->getExcludedTemplates();
+            $webspaceData['theme']['key'] = $webspace->getTheme()->getKey();
+            $webspaceData['theme']['excludedTemplates'] = $webspace->getTheme()->getExcludedTemplates();
 
-            $workspaceData = $this->toArrayPortals($workspace, $workspaceData);
-            $workspaces[] = $workspaceData;
+            $webspaceData = $this->toArrayPortals($webspace, $webspaceData);
+            $webspaces[] = $webspaceData;
         }
 
-        return $workspaces;
+        return $webspaces;
     }
 
     /**
@@ -257,36 +257,36 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * @param Webspace $workspace
-     * @param array $workspaceData
+     * @param Webspace $webspace
+     * @param array $webspaceData
      * @return mixed
      */
-    private function toArraySegments($workspace, $workspaceData)
+    private function toArraySegments($webspace, $webspaceData)
     {
-        $segments = $workspace->getSegments();
+        $segments = $webspace->getSegments();
         if (!empty($segments)) {
             foreach ($segments as $segment) {
                 $segmentData = array();
                 $segmentData['key'] = $segment->getKey();
                 $segmentData['name'] = $segment->getName();
 
-                $workspaceData['segments'][] = $segmentData;
+                $webspaceData['segments'][] = $segmentData;
             }
 
-            return $workspaceData;
+            return $webspaceData;
         }
 
-        return $workspaceData;
+        return $webspaceData;
     }
 
     /**
-     * @param Webspace $workspace
-     * @param array $workspaceData
+     * @param Webspace $webspace
+     * @param array $webspaceData
      * @return mixed
      */
-    private function toArrayPortals($workspace, $workspaceData)
+    private function toArrayPortals($webspace, $webspaceData)
     {
-        foreach ($workspace->getPortals() as $portal) {
+        foreach ($webspace->getPortals() as $portal) {
             $portalData = array();
             $portalData['name'] = $portal->getName();
             $portalData['key'] = $portal->getKey();
@@ -296,10 +296,10 @@ class WebspaceCollection implements \IteratorAggregate
 
             $portalData = $this->toArrayEnvironments($portal, $portalData);
 
-            $workspaceData['portals'][] = $portalData;
+            $webspaceData['portals'][] = $portalData;
         }
 
-        return $workspaceData;
+        return $webspaceData;
     }
 
     /**

@@ -17,13 +17,13 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Url;
-use Sulu\Component\Webspace\Workspace;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
 
 class XmlFileLoader extends FileLoader
 {
-    const SCHEME_PATH = '/schema/workspace/workspace-1.0.xsd';
+    const SCHEME_PATH = '/schema/webspace/webspace-1.0.xsd';
 
     /**
      * @var  \DOMXPath
@@ -31,26 +31,26 @@ class XmlFileLoader extends FileLoader
     private $xpath;
 
     /**
-     * The workspace which is created by this file loader
-     * @var Workspace
+     * The webspace which is created by this file loader
+     * @var Webspace
      */
-    private $workspace;
+    private $webspace;
 
     /**
-     * Loads a workspace from a xml file
+     * Loads a webspace from a xml file
      *
      * @param mixed $resource The resource
      * @param string $type     The resource type
-     * @return Workspace The workspace object for the given resource
+     * @return Webspace The webspace object for the given resource
      */
     public function load($resource, $type = null)
     {
         $path = $this->getLocator()->locate($resource);
 
         // load data in path
-        $workspace = $this->parseXml($path);
+        $webspace = $this->parseXml($path);
 
-        return $workspace;
+        return $webspace;
     }
 
     /**
@@ -76,24 +76,24 @@ class XmlFileLoader extends FileLoader
         // load xml file
         $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
         $this->xpath = new \DOMXPath($xmlDoc);
-        $this->xpath->registerNamespace('x', 'http://schemas.sulu.io/workspace/workspace');
+        $this->xpath->registerNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
 
-        // set simple workspace properties
-        $this->workspace = new Workspace();
-        $this->workspace->setName($this->xpath->query('/x:workspace/x:name')->item(0)->nodeValue);
-        $this->workspace->setKey($this->xpath->query('/x:workspace/x:key')->item(0)->nodeValue);
-        $this->workspace->setTheme($this->generateTheme());
+        // set simple webspace properties
+        $this->webspace = new Webspace();
+        $this->webspace->setName($this->xpath->query('/x:webspace/x:name')->item(0)->nodeValue);
+        $this->webspace->setKey($this->xpath->query('/x:webspace/x:key')->item(0)->nodeValue);
+        $this->webspace->setTheme($this->generateTheme());
 
-        // set localizations on workspaces
-        $this->generateWorkspaceLocalizations();
+        // set localizations on webspaces
+        $this->generateWebspaceLocalizations();
 
-        // set segments on workspaces
+        // set segments on webspaces
         $this->generateSegments();
 
-        // set portals on workspaces
+        // set portals on webspaces
         $this->generatePortals();
 
-        return $this->workspace;
+        return $this->webspace;
     }
 
     /**
@@ -107,8 +107,8 @@ class XmlFileLoader extends FileLoader
             $localizationNodes = $this->xpath->query('x:localizations/x:localization', $portalNode);
             $this->generateLocalizationsFromNodeList($localizationNodes, $portal);
         } else {
-            // if the portal has no localizations fallback to the localizations from the workspace
-            $localizationNodes = $this->xpath->query('/x:workspace/x:localizations//x:localization');
+            // if the portal has no localizations fallback to the localizations from the webspace
+            $localizationNodes = $this->xpath->query('/x:webspace/x:localizations//x:localization');
             $this->generateLocalizationsFromNodeList($localizationNodes, $portal, true);
         }
     }
@@ -160,30 +160,30 @@ class XmlFileLoader extends FileLoader
         return $localization;
     }
 
-    private function generateWorkspaceLocalizations()
+    private function generateWebspaceLocalizations()
     {
-        foreach ($this->xpath->query('/x:workspace/x:localizations/x:localization') as $localizationNode) {
+        foreach ($this->xpath->query('/x:webspace/x:localizations/x:localization') as $localizationNode) {
             $localization = $this->generateLocalizationFromNode($localizationNode);
 
-            $this->workspace->addLocalization($localization);
+            $this->webspace->addLocalization($localization);
         }
     }
 
     private function generateSegments()
     {
-        foreach ($this->xpath->query('/x:workspace/x:segments/x:segment') as $segmentNode) {
+        foreach ($this->xpath->query('/x:webspace/x:segments/x:segment') as $segmentNode) {
             /** @var \DOMNode $segmentNode */
             $segment = new Segment();
             $segment->setName($segmentNode->nodeValue);
             $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
 
-            $this->workspace->addSegment($segment);
+            $this->webspace->addSegment($segment);
         }
     }
 
     private function generatePortals()
     {
-        foreach ($this->xpath->query('/x:workspace/x:portals/x:portal') as $portalNode) {
+        foreach ($this->xpath->query('/x:webspace/x:portals/x:portal') as $portalNode) {
             /** @var \DOMNode $portalNode */
             $portal = new Portal();
 
@@ -196,7 +196,7 @@ class XmlFileLoader extends FileLoader
             // set localization on portal
             $this->generatePortalLocalizations($portalNode, $portal);
 
-            $this->workspace->addPortal($portal);
+            $this->webspace->addPortal($portal);
 
             // set environments
             $this->generateEnvironments($portalNode, $portal);
@@ -204,15 +204,15 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @param \DOMNode $workspaceNode
+     * @param \DOMNode $webspaceNode
      * @return Theme
      */
     private function generateTheme()
     {
         $theme = new Theme();
-        $theme->setKey($this->xpath->query('/x:workspace/x:theme/x:key')->item(0)->nodeValue);
+        $theme->setKey($this->xpath->query('/x:webspace/x:theme/x:key')->item(0)->nodeValue);
 
-        foreach ($this->xpath->query('/x:workspace/x:theme/x:excluded/x:template') as $templateNode) {
+        foreach ($this->xpath->query('/x:webspace/x:theme/x:excluded/x:template') as $templateNode) {
             /** @var \DOMNode $templateNode */
             $theme->addExcludedTemplate($templateNode->nodeValue);
         }
@@ -247,7 +247,7 @@ class XmlFileLoader extends FileLoader
         foreach ($this->xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
             // check if the url is valid, and throw an exception otherwise
             if (!$this->checkUrlNode($urlNode)) {
-                throw new InvalidUrlDefinitionException($this->workspace, $urlNode->nodeValue);
+                throw new InvalidUrlDefinitionException($this->webspace, $urlNode->nodeValue);
             }
 
             /** @var \DOMNode $urlNode */
@@ -276,7 +276,7 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Checks if the urlNode is valid for this workspace
+     * Checks if the urlNode is valid for this webspace
      * @param \DOMNode $urlNode
      * @return bool
      */
@@ -293,7 +293,7 @@ class XmlFileLoader extends FileLoader
             || (strpos($urlNode->nodeValue, '{country}') !== false)
             || $hasLocalization;
 
-        $hasSegment = (count($this->workspace->getSegments()) == 0)
+        $hasSegment = (count($this->webspace->getSegments()) == 0)
             || ($urlNode->attributes->getNamedItem('segment') != null)
             || (strpos($urlNode->nodeValue, '{segment}') !== false);
 

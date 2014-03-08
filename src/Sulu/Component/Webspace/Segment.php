@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace;
 
 /**
- * Represents the segments defined in a workspace
+ * Represents the segments defined in a webspace
  * @package Sulu\Component\Portal
  */
 class Segment

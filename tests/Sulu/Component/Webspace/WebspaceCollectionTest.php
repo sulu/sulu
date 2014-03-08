@@ -10,16 +10,16 @@
 
 namespace Sulu\Component\Webspace;
 
-class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
+class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var WorkspaceCollection
+     * @var WebspaceCollection
      */
-    private $workspaceCollection;
+    private $webspaceCollection;
 
     public function setUp()
     {
-        $this->workspaceCollection = new WorkspaceCollection();
+        $this->webspaceCollection = new WebspaceCollection();
 
         // first portal
         $portal = new Portal();
@@ -60,32 +60,32 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
         $portal->setResourceLocatorStrategy('tree');
 
-        $workspace = new Workspace();
-        $workspace->addLocalization($localizationEnUs);
-        $workspace->addLocalization($localizationFrCa);
-        $workspace->setTheme($theme);
-        $workspace->addPortal($portal);
-        $workspace->setKey('default');
-        $workspace->setName('Default');
-        $workspace->addPortal($portal);
+        $webspace = new Webspace();
+        $webspace->addLocalization($localizationEnUs);
+        $webspace->addLocalization($localizationFrCa);
+        $webspace->setTheme($theme);
+        $webspace->addPortal($portal);
+        $webspace->setKey('default');
+        $webspace->setName('Default');
+        $webspace->addPortal($portal);
 
-        $this->workspaceCollection->add($workspace);
+        $this->webspaceCollection->add($webspace);
     }
 
     public function testAdd()
     {
-        $workspacesReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WorkspaceCollection', 'workspaces');
-        $workspacesReflection->setAccessible(true);
-        $allPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WorkspaceCollection', 'allPortals');
+        $webspacesReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'webspaces');
+        $webspacesReflection->setAccessible(true);
+        $allPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'allPortals');
         $allPortalsReflection->setAccessible(true);
-        $environmentPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WorkspaceCollection', 'environmentPortals');
+        $environmentPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'environmentPortals');
         $environmentPortalsReflection->setAccessible(true);
 
-        $workspaces = $workspacesReflection->getValue($this->workspaceCollection);
-        $allPortals = $allPortalsReflection->getValue($this->workspaceCollection);
-        $environmentPortals = $environmentPortalsReflection->getValue($this->workspaceCollection);
+        $webspaces = $webspacesReflection->getValue($this->webspaceCollection);
+        $allPortals = $allPortalsReflection->getValue($this->webspaceCollection);
+        $environmentPortals = $environmentPortalsReflection->getValue($this->webspaceCollection);
 
-        $this->assertEquals('Default', $workspaces['default']->getName());
+        $this->assertEquals('Default', $webspaces['default']->getName());
         $this->assertEquals('Portal1', $allPortals['portal1']->getName());
         // TODO make next two lines possible
         $this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']['portal']->getName());
@@ -94,20 +94,20 @@ class WorkspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
-        $workspace = $this->workspaceCollection->toArray()[0];
+        $webspace = $this->webspaceCollection->toArray()[0];
 
-        $this->assertEquals('Default', $workspace['name']);
-        $this->assertEquals('default', $workspace['key']);
-        $this->assertEquals('us', $workspace['localizations'][0]['country']);
-        $this->assertEquals('en', $workspace['localizations'][0]['language']);
-        $this->assertEquals('ca', $workspace['localizations'][0]['children'][0]['country']);
-        $this->assertEquals('en', $workspace['localizations'][0]['children'][0]['language']);
-        $this->assertEquals('ca', $workspace['localizations'][1]['country']);
-        $this->assertEquals('fr', $workspace['localizations'][1]['language']);
-        $this->assertEquals('portal1theme', $workspace['theme']['key']);
-        $this->assertEquals(array('overview', 'default'), $workspace['theme']['excludedTemplates']);
+        $this->assertEquals('Default', $webspace['name']);
+        $this->assertEquals('default', $webspace['key']);
+        $this->assertEquals('us', $webspace['localizations'][0]['country']);
+        $this->assertEquals('en', $webspace['localizations'][0]['language']);
+        $this->assertEquals('ca', $webspace['localizations'][0]['children'][0]['country']);
+        $this->assertEquals('en', $webspace['localizations'][0]['children'][0]['language']);
+        $this->assertEquals('ca', $webspace['localizations'][1]['country']);
+        $this->assertEquals('fr', $webspace['localizations'][1]['language']);
+        $this->assertEquals('portal1theme', $webspace['theme']['key']);
+        $this->assertEquals(array('overview', 'default'), $webspace['theme']['excludedTemplates']);
 
-        $portal = $workspace['portals'][0];
+        $portal = $webspace['portals'][0];
 
         $this->assertEquals('Portal1', $portal['name']);
         $this->assertEquals('prod', $portal['environments'][0]['type']);

@@ -13,7 +13,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Localization;
-use Sulu\Component\Webspace\Manager\WorkspaceManager;
+use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,12 +27,12 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var PHPUnit_Framework_MockObject_MockObject
      */
-    private $workspaceManager;
+    private $webspaceManager;
 
     public function setUp()
     {
-        $this->workspaceManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Webspace\Manager\WorkspaceManagerInterface',
+        $this->webspaceManager = $this->getMockForAbstractClass(
+            '\Sulu\Component\Webspace\Manager\WebspaceManagerInterface',
             array(),
             '',
             true,
@@ -41,7 +41,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             array('findPortalInformationByUrl')
         );
 
-        $this->requestAnalyzer = new RequestAnalyzer($this->workspaceManager, 'prod');
+        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, 'prod');
     }
 
     public function testAnalyze()
@@ -60,7 +60,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             'url' => 'sulu.lo/test'
         );
 
-        $this->workspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
+        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
             $this->returnValue($portalInformation)
         );
 
@@ -82,7 +82,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnalyzeNotExisting()
     {
-        $this->workspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
+        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
             $this->returnValue(null)
         );
 

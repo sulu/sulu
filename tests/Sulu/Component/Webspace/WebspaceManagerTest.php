@@ -12,9 +12,9 @@ namespace Sulu\Component\Webspace;
 
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
-use Sulu\Component\Webspace\Manager\WorkspaceManager;
+use Sulu\Component\Webspace\Manager\WebspaceManager;
 
-class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
+class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var XmlFileLoader
@@ -22,9 +22,9 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
     protected $loader;
 
     /**
-     * @var WorkspaceManager
+     * @var WebspaceManager
      */
-    protected $workspaceManager;
+    protected $webspaceManager;
 
     /**
      * @var LoggerInterface
@@ -39,50 +39,50 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
 
-        $this->workspaceManager = new WorkspaceManager(
+        $this->webspaceManager = new WebspaceManager(
             $this->loader,
             $this->logger,
             array(
                 'cache_dir' => __DIR__ . '/../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Workspace/valid'
+                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Webspace/valid'
             )
         );
     }
 
     public function tearDown()
     {
-        if (file_exists(__DIR__ . '/../../../Resources/cache/WorkspaceCollectionCache.php')) {
-            unlink(__DIR__ . '/../../../Resources/cache/WorkspaceCollectionCache.php');
+        if (file_exists(__DIR__ . '/../../../Resources/cache/WebspaceCollectionCache.php')) {
+            unlink(__DIR__ . '/../../../Resources/cache/WebspaceCollectionCache.php');
         }
     }
 
     public function testGetAll()
     {
-        $workspaces = $this->workspaceManager->getWorkspaceCollection();
+        $webspaces = $this->webspaceManager->getWebspaceCollection();
 
-        $workspace = $workspaces->getWorkspace('massiveart');
+        $webspace = $webspaces->getWebspace('massiveart');
 
-        $this->assertEquals('Massive Art', $workspace->getName());
-        $this->assertEquals('massiveart', $workspace->getKey());
+        $this->assertEquals('Massive Art', $webspace->getName());
+        $this->assertEquals('massiveart', $webspace->getKey());
 
-        $this->assertEquals('en', $workspace->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('us', $workspace->getLocalizations()[0]->getCountry());
-        $this->assertEquals('auto', $workspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
 
-        $this->assertEquals(1, count($workspace->getLocalizations()[0]->getChildren()));
-        $this->assertEquals('en', $workspace->getLocalizations()[0]->getChildren()[0]->getLanguage());
-        $this->assertEquals('ca', $workspace->getLocalizations()[0]->getChildren()[0]->getCountry());
-        $this->assertEquals(null, $workspace->getLocalizations()[0]->getChildren()[0]->getShadow());
+        $this->assertEquals(1, count($webspace->getLocalizations()[0]->getChildren()));
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getChildren()[0]->getLanguage());
+        $this->assertEquals('ca', $webspace->getLocalizations()[0]->getChildren()[0]->getCountry());
+        $this->assertEquals(null, $webspace->getLocalizations()[0]->getChildren()[0]->getShadow());
 
-        $this->assertEquals('fr', $workspace->getLocalizations()[1]->getLanguage());
-        $this->assertEquals('ca', $workspace->getLocalizations()[1]->getCountry());
-        $this->assertEquals(null, $workspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals('fr', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('ca', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
 
-        $this->assertEquals('massiveart', $workspace->getTheme()->getKey());
-        $this->assertEquals(1, count($workspace->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $workspace->getTheme()->getExcludedTemplates()[0]);
+        $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
+        $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
-        $portal = $workspace->getPortals()[0];
+        $portal = $webspace->getPortals()[0];
 
         $this->assertEquals('Massive Art US', $portal->getName());
         $this->assertEquals('massiveart_us', $portal->getKey());
@@ -108,7 +108,7 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
 
 
-        $portal = $workspace->getPortals()[1];
+        $portal = $webspace->getPortals()[1];
 
         $this->assertEquals('Massive Art CA', $portal->getName());
         $this->assertEquals('massiveart_ca', $portal->getKey());
@@ -144,26 +144,26 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testFindWorkspaceByKey()
+    public function testFindWebspaceByKey()
     {
-        $workspace = $this->workspaceManager->findWorkspaceByKey('sulu_io');
+        $webspace = $this->webspaceManager->findWebspaceByKey('sulu_io');
 
-        $this->assertEquals('Sulu CMF', $workspace->getName());
-        $this->assertEquals('sulu_io', $workspace->getKey());
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
 
-        $this->assertEquals(2, count($workspace->getLocalizations()));
-        $this->assertEquals('en', $workspace->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('us', $workspace->getLocalizations()[0]->getCountry());
-        $this->assertEquals('auto', $workspace->getLocalizations()[0]->getShadow());
-        $this->assertEquals('de', $workspace->getLocalizations()[1]->getLanguage());
-        $this->assertEquals('at', $workspace->getLocalizations()[1]->getCountry());
-        $this->assertEquals('', $workspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals(2, count($webspace->getLocalizations()));
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
 
-        $this->assertEquals('sulu', $workspace->getTheme()->getKey());
-        $this->assertEquals(1, count($workspace->getTheme()->getExcludedTemplates()));
-        $this->assertEquals('overview', $workspace->getTheme()->getExcludedTemplates()[0]);
+        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
+        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
 
-        $portal = $workspace->getPortals()[0];
+        $portal = $webspace->getPortals()[0];
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
@@ -190,7 +190,7 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testFindPortalByKey()
     {
-        $portal = $this->workspaceManager->findPortalByKey('sulucmf_at');
+        $portal = $this->webspaceManager->findPortalByKey('sulucmf_at');
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
         $this->assertEquals('sulucmf_at', $portal->getKey());
@@ -214,21 +214,21 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
     }
 
-    public function testFindWorkspaceByNotExistingKey()
+    public function testFindWebspaceByNotExistingKey()
     {
-        $portal = $this->workspaceManager->findWorkspaceByKey('not_existing');
+        $portal = $this->webspaceManager->findWebspaceByKey('not_existing');
         $this->assertNull($portal);
     }
 
     public function testFindPortalByNotExistingKey()
     {
-        $portal = $this->workspaceManager->findPortalByKey('not_existing');
+        $portal = $this->webspaceManager->findPortalByKey('not_existing');
         $this->assertNull($portal);
     }
 
     public function testFindPortalInformationByUrl()
     {
-        $portalInformation = $this->workspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
         $this->assertEquals('de-at', $portalInformation['localization']->getLocalization());
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
@@ -256,7 +256,7 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
         $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
 
-        $portalInformation = $this->workspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
         $this->assertEquals('de-at', $portalInformation['localization']->getLocalization());
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
@@ -287,7 +287,7 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testFindPortalInformationByUrlWithSegment()
     {
-        $portalInformation = $this->workspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');
         $this->assertEquals('en-us', $portalInformation['localization']->getLocalization());
         $this->assertEquals('winter', $portalInformation['segment']->getName());
 
@@ -332,33 +332,33 @@ class WorkspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->logger->expects($this->once())->method('warning')->will($this->returnValue(null));
 
-        $this->workspaceManager = new WorkspaceManager(
+        $this->webspaceManager = new WebspaceManager(
             $this->loader,
             $this->logger,
             array(
                 'cache_dir' => __DIR__ . '/../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Workspace/both'
+                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Webspace/both'
             )
         );
 
-        $workspaces = $this->workspaceManager->getWorkspaceCollection();
+        $webspaces = $this->webspaceManager->getWebspaceCollection();
 
-        $this->assertEquals(3, $workspaces->length());
+        $this->assertEquals(3, $webspaces->length());
 
-        $workspace = $workspaces->getWorkspace('massiveart');
+        $webspace = $webspaces->getWebspace('massiveart');
 
-        $this->assertEquals('Massive Art', $workspace->getName());
-        $this->assertEquals('massiveart', $workspace->getKey());
+        $this->assertEquals('Massive Art', $webspace->getName());
+        $this->assertEquals('massiveart', $webspace->getKey());
 
-        $workspace = $workspaces->getWorkspace('sulu_io');
+        $webspace = $webspaces->getWebspace('sulu_io');
 
-        $this->assertEquals('Sulu CMF', $workspace->getName());
-        $this->assertEquals('sulu_io', $workspace->getKey());
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
     }
 
     public function testRedirectUrl()
     {
-        $portalInformation = $this->workspaceManager->findPortalInformationByUrl('www.sulu.at/test/test', 'prod');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('www.sulu.at/test/test', 'prod');
 
         $this->assertEquals('sulu.at', $portalInformation['redirect']);
         $this->assertEquals('www.sulu.at', $portalInformation['url']);

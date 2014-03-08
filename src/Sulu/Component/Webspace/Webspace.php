@@ -11,49 +11,49 @@
 namespace Sulu\Component\Webspace;
 
 /**
- * Container for a workspace definition
+ * Container for a webspace definition
  * @package Sulu\Component\Webspace
  */
 class Webspace
 {
     /**
-     * The name of the workspace
+     * The name of the webspace
      * @var string
      */
     private $name;
 
     /**
-     * The key of the workspace
+     * The key of the webspace
      * @var string
      */
     private $key;
 
     /**
-     * The localizations defined for this workspace
+     * The localizations defined for this webspace
      * @var Localization[]
      */
     private $localizations;
 
     /**
-     * The segments defined for this workspace
+     * The segments defined for this webspace
      * @var Segment[]
      */
     private $segments;
 
     /**
-     * The theme of the workspace
+     * The theme of the webspace
      * @var Theme
      */
     private $theme;
 
     /**
-     * The portals defined for this workspace
+     * The portals defined for this webspace
      * @var Portal[]
      */
     private $portals;
 
     /**
-     * Sets the key of the workspace
+     * Sets the key of the webspace
      * @param string $key
      */
     public function setKey($key)
@@ -62,7 +62,7 @@ class Webspace
     }
 
     /**
-     * Returns the key of the workspace
+     * Returns the key of the webspace
      * @return string
      */
     public function getKey()
@@ -71,7 +71,7 @@ class Webspace
     }
 
     /**
-     * Adds a localization to the workspace
+     * Adds a localization to the webspace
      * @param Localization $localization
      */
     public function addLocalization(Localization $localization)
@@ -80,7 +80,7 @@ class Webspace
     }
 
     /**
-     * Returns the localizations of this workspace
+     * Returns the localizations of this webspace
      * @param \Sulu\Component\Webspace\Localization[] $localizations
      */
     public function setLocalizations($localizations)
@@ -89,7 +89,7 @@ class Webspace
     }
 
     /**
-     * Returns the localizations of this workspace
+     * Returns the localizations of this webspace
      * @return \Sulu\Component\Webspace\Localization[]
      */
     public function getLocalizations()
@@ -98,7 +98,7 @@ class Webspace
     }
 
     /**
-     * Sets the name of the workspace
+     * Sets the name of the webspace
      * @param string $name
      */
     public function setName($name)
@@ -107,7 +107,7 @@ class Webspace
     }
 
     /**
-     * Returns the name of the workspace
+     * Returns the name of the webspace
      * @return string
      */
     public function getName()
@@ -116,7 +116,7 @@ class Webspace
     }
 
     /**
-     * Adds a portal to the workspace
+     * Adds a portal to the webspace
      * @param Portal $portal
      */
     public function addPortal(Portal $portal)
@@ -125,7 +125,7 @@ class Webspace
     }
 
     /**
-     * Sets the portals of this workspace
+     * Sets the portals of this webspace
      * @param \Sulu\Component\Webspace\Portal[] $portals
      */
     public function setPortals($portals)
@@ -134,7 +134,7 @@ class Webspace
     }
 
     /**
-     * Returns the portals of this workspace
+     * Returns the portals of this webspace
      * @return \Sulu\Component\Webspace\Portal[]
      */
     public function getPortals()
@@ -143,7 +143,7 @@ class Webspace
     }
 
     /**
-     * Adds a segment to the workspace
+     * Adds a segment to the webspace
      * @param Segment $segment
      */
     public function addSegment(Segment $segment)
@@ -152,7 +152,7 @@ class Webspace
     }
 
     /**
-     * Sets the segments of this workspace
+     * Sets the segments of this webspace
      * @param \Sulu\Component\Webspace\Segment[] $segments
      */
     public function setSegments($segments)
@@ -161,7 +161,7 @@ class Webspace
     }
 
     /**
-     * Returns the segments of this workspace
+     * Returns the segments of this webspace
      * @return \Sulu\Component\Webspace\Segment[]
      */
     public function getSegments()
