@@ -13,19 +13,18 @@ namespace Sulu\Component\Content;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 class ContentTypeManager extends ContainerAware implements ContentTypeManagerInterface
 {
 
     /**
-     * @var The prefix to load the content from. Default value is given in configuration and set to: 'sulu.content.types.'
+     * @var string The prefix to load the content from
+     * Default value is given in configuration and set to: 'sulu.content.types.'
      */
     private $prefix;
 
-
     /**
      * @param ContainerInterface $container
-     * @param String $prefix
+     * @param string $prefix
      */
     public function __construct(ContainerInterface $container, $prefix)
     {
@@ -34,7 +33,7 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
     }
 
     /**
-     * @param $contentTypeName A String with the name of the content to load.
+     * @param string $contentTypeName A String with the name of the content to load
      * @return ContentTypeInterface
      */
     public function get($contentTypeName = '')

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Rlp\Strategy;
 
-
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;

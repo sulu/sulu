@@ -10,11 +10,10 @@
 
 namespace Sulu\Component\Content;
 
-
-interface ContentTypeManagerInterface {
-
+interface ContentTypeManagerInterface
+{
     /**
-     * @param $contentTypeName The name of the content to load.
+     * @param string $contentTypeName The name of the content to load.
      * @return mixed
      */
     public function get($contentTypeName);
