@@ -15,7 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class DatabaseTestCase extends WebTestCase
 {
+    /**
+     * @var array
+     */
     protected static $userClasses;
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
