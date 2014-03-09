@@ -20,6 +20,7 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
      * @var RlpMapperInterface
      */
     private $mapper;
+
     /**
      * @var RlpStrategyInterface
      */

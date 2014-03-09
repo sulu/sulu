@@ -57,7 +57,7 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->content1->addMixin('mix:referenceable');
 
         $this->session->save();
-      }
+    }
 
     public function testUnique()
     {

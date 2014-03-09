@@ -1192,7 +1192,18 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertTrue($result->getNavigation());
         $this->assertTrue($content->getNavigation());
 
-        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid(), null, null, false);
+        $result = $this->mapper->save(
+            $data,
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            $result->getUuid(),
+            null,
+            null,
+            false
+        );
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
         $this->assertFalse($result->getNavigation());
         $this->assertFalse($content->getNavigation());
@@ -1202,7 +1213,18 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertFalse($result->getNavigation());
         $this->assertFalse($content->getNavigation());
 
-        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid(), null, null, true);
+        $result = $this->mapper->save(
+            $data,
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            $result->getUuid(),
+            null,
+            null,
+            true
+        );
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
         $this->assertTrue($result->getNavigation());
         $this->assertTrue($content->getNavigation());

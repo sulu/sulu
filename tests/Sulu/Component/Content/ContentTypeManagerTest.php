@@ -14,7 +14,6 @@ class ContentTypeManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetContentType()
     {
-
         $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
         $container->expects($this->once())->method('get')->with('foo.bar');
         $manager = new ContentTypeManager($container, 'foo.');
