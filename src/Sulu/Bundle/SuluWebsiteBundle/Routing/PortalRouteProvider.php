@@ -15,7 +15,7 @@ use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Workspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,12 +80,12 @@ class PortalRouteProvider implements RouteProviderInterface
             $language = str_replace('-', '_', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
 
             // Set current theme
-            $this->activeTheme->setName($portal->getWorkspace()->getTheme()->getKey());
+            $this->activeTheme->setName($portal->getWebspace()->getTheme()->getKey());
 
             try {
                 $content = $this->contentMapper->loadByResourceLocator(
                     $this->requestAnalyzer->getCurrentResourceLocator(),
-                    $portal->getWorkspace()->getKey(),
+                    $portal->getWebspace()->getKey(),
                     $language
                 );
                 if ($content->getGlobalState() === StructureInterface::STATE_TEST || !$content->getHasTranslation()) {
