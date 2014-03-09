@@ -10,13 +10,13 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-
 use DateTime;
 use Jackalope\RepositoryFactoryJackrabbit;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
+use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -44,38 +44,47 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var SessionInterface
      */
     protected $session;
+
     /**
      * @var NodeInterface
      */
     protected $contents;
+
     /**
      * @var NodeInterface
      */
     protected $routes;
+
     /**
      * @var ContentMapperInterface
      */
     protected $mapper;
+
     /**
      * @var ContainerInterface
      */
     protected $container;
+
     /**
      * @var array
      */
     protected $containerValueMap = array();
+
     /**
      * @var SessionManagerInterface
      */
     protected $sessionManager;
+
     /**
      * @var StructureManagerInterface
      */
     protected $structureManager;
+
     /**
      * @var array
      */
     protected $structureValueMap = array();
+
     /**
      * @var SecurityContextInterface
      */
