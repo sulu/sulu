@@ -66,7 +66,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         );
 
         /** @var WebspaceManagerInterface $webspaceManager */
-        $webspaceManager = $this->getContainer()->get('sulu_core.workspace.workspace_manager');
+        $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
 
         /** @var SessionInterface $session */
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
