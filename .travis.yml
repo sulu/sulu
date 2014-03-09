@@ -1,8 +1,9 @@
 language: php
 
 php:
-  - 5.5
   - 5.4
+  - 5.5
+  - hhvm
 
 before_script:
   - composer self-update
@@ -11,3 +12,10 @@ before_script:
   - php bin/jackrabbit.php
 
 script: phpunit --coverage-text
+
+notifications:
+  irc: "irc.freenode.org#sulu-cmf"
+
+matrix:
+  allow_failures:
+    - php: hhvm
