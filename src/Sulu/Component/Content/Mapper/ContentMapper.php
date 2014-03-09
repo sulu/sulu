@@ -173,6 +173,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         /** @var NodeInterface $node */
         if ($uuid === null) {
             // create a new node
+            $path = $this->getUniquePath($path, $root);
             $node = $root->addNode($path);
             $newTranslatedNode($node);
 
@@ -190,6 +191,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
                 $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
 
             if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
+                $path = $this->getUniquePath($path, $node->getParent());
                 $node->rename($path);
                 // FIXME refresh session here
             }
@@ -736,6 +738,24 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         $clean = str_replace('//', '/', $clean);
 
         return $clean;
+    }
+
+    /**
+     * @param $name
+     * @param NodeInterface $parent
+     * @return string
+     */
+    private function getUniquePath($name, NodeInterface $parent)
+    {
+        if ($parent->hasNode($name)) {
+            $i = 0;
+            do {
+                $i++;
+            } while ($parent->hasNode($name . '-' . $i));
+            return $name . '-' . $i;
+        } else {
+            return $name;
+        }
     }
 
     private function getInheritedState(NodeInterface $contentNode, $statePropertyName, $webspaceKey)

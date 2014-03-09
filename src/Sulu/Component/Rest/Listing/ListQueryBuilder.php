@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class ListQueryBuilder
 {
     /**
@@ -64,6 +62,12 @@ class ListQueryBuilder
     private $associationNames;
 
     /**
+     * The names of columns of the root entity
+     * @var array
+     */
+    private $fieldNames;
+
+    /**
      * An array containing all the fields in which the search is executed
      * @var array
      */
@@ -76,16 +80,32 @@ class ListQueryBuilder
     private $replaceSelect;
 
     /**
+     * defines if query is used for counting
+     * @var bool
+     */
+    private $countQuery;
+
+    /**
      * @param $associationNames
+     * @param $fieldNames
      * @param $entityName
      * @param $fields
      * @param $sorting
      * @param $where
      * @param array $searchFields
      */
-    function __construct($associationNames, $entityName, $fields, $sorting, $where, $searchFields = array())
+    function __construct(
+        $associationNames,
+        $fieldNames,
+        $entityName,
+        $fields,
+        $sorting,
+        $where,
+        $searchFields = array()
+    )
     {
         $this->associationNames = $associationNames;
+        $this->fieldNames = $fieldNames;
         $this->entityName = $entityName;
         $this->fields = (is_array($fields)) ? $fields : array();
         $this->sorting = $sorting;
@@ -103,7 +123,11 @@ class ListQueryBuilder
     {
         $selectFromDQL = $this->getSelectFrom($prefix);
         $whereDQL = $this->getWhere($prefix);
-        $orderDQL = $this->getOrderBy($prefix);
+        if ($this->countQuery != true) {
+            $orderDQL = $this->getOrderBy($prefix);
+        } else {
+            $orderDQL = '';
+        }
         $dql = sprintf('%s %s %s', $selectFromDQL, $whereDQL, $orderDQL);
 
         return $dql;
@@ -114,6 +138,7 @@ class ListQueryBuilder
      */
     public function justCount($countAttribute = 'u.id', $alias = 'totalcount')
     {
+        $this->countQuery = true;
         $this->replaceSelect = 'COUNT(' . $countAttribute . ') as ' . $alias;
     }
 
@@ -142,7 +167,7 @@ class ListQueryBuilder
             }
         }
         // if no field is selected take prefix
-        if (!is_null($this->replaceSelect)) {
+        if ($this->countQuery === true) {
             $this->select = $this->replaceSelect;
         } elseif (strlen($this->select) == 0) {
             $this->select = $prefix;
@@ -182,7 +207,7 @@ class ListQueryBuilder
 
                 $this->addToSelect($parent, $tempField, $alias);
             }
-        } elseif (in_array($field, $this->fields)) {
+        } elseif (in_array($field, $this->fields) && in_array($field, $this->fieldNames)) {
             $this->addToSelect($prefix, $field);
         }
     }

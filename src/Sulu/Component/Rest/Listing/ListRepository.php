@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
@@ -46,13 +45,14 @@ class ListRepository extends EntityRepository
         $searchPattern = $this->helper->getSearchPattern();
         $searchFields = $this->helper->getSearchFields();
 
-        // if search string is set, but searchfields are not, take all fields into account
-        if (!is_null($searchPattern)  && $searchPattern != '' && (is_null($searchFields) || count($searchFields) == 0)) {
+        // if search string is set, but search fields are not, take all fields into account
+        if (!is_null($searchPattern) && $searchPattern != '' && (is_null($searchFields) || count($searchFields) == 0)) {
             $searchFields = $this->getEntityManager()->getClassMetadata($this->getEntityName())->getFieldNames();
         }
 
         $queryBuilder = new ListQueryBuilder(
             $this->getClassMetadata()->getAssociationNames(),
+            $this->getClassMetadata()->getFieldNames(),
             $this->getEntityName(),
             $this->helper->getFields(),
             $this->helper->getSorting(),
@@ -63,17 +63,18 @@ class ListRepository extends EntityRepository
         if ($justCount) {
             $queryBuilder->justCount('u.id');
         }
+
         $dql = $queryBuilder->find($prefix);
 
         $query = $this->getEntityManager()
             ->createQuery($dql);
 
-        if(!$justCount) {
+        if (!$justCount) {
             $query->setFirstResult($this->helper->getOffset())
-            ->setMaxResults($this->helper->getLimit());
+                ->setMaxResults($this->helper->getLimit());
         }
         if ($searchPattern != null && $searchPattern != '') {
-            $query->setParameter('search', '%' . $searchPattern. '%');
+            $query->setParameter('search', '%' . $searchPattern . '%');
         }
 
         // if just used for counting
