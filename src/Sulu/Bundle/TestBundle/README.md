@@ -1,9 +1,5 @@
 SuluTestBundle
-==============
-
-SuluTestBundle
 =================
-[![](https://travis-ci.org/sulu-cmf/SuluTestBundle.png)](https://travis-ci.org/sulu-cmf/SuluTestBundle)
 
 This bundle is part of the [Sulu Content Management Framework](https://github.com/sulu-cmf/sulu-standard) (CMF) and licensed under the [MIT License](https://github.com/sulu-cmf/SuluTestBundle/blob/develop/LICENSE).
 
