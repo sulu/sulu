@@ -11,10 +11,10 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Workspace\Localization;
-use Sulu\Component\Workspace\Portal;
-use Sulu\Component\Workspace\Theme;
-use Sulu\Component\Workspace\Workspace;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Theme;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
 class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
@@ -28,9 +28,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setKey('portal');
         $theme = new Theme();
         $theme->setKey('theme');
-        $workspace = new Workspace();
-        $workspace->setTheme($theme);
-        $portal->setWorkspace($workspace);
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
 
@@ -63,9 +63,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setKey('portal');
         $theme = new Theme();
         $theme->setKey('theme');
-        $workspace = new Workspace();
-        $workspace->setTheme($theme);
-        $portal->setWorkspace($workspace);
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
 
@@ -96,9 +96,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setKey('portal');
         $theme = new Theme();
         $theme->setKey('theme');
-        $workspace = new Workspace();
-        $workspace->setTheme($theme);
-        $portal->setWorkspace($workspace);
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
 
@@ -131,9 +131,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $portal->setKey('portal');
         $theme = new Theme();
         $theme->setKey('theme');
-        $workspace = new Workspace();
-        $workspace->setTheme($theme);
-        $portal->setWorkspace($workspace);
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
 
         $structure = $this->getStructureMock($uuid);
         $requestAnalyzer = $this->getRequestAnalyzerRedirectMock($portal);
@@ -188,7 +188,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $portalManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Workspace\Analyzer\RequestAnalyzer',
+            '\Sulu\Component\Webspace\Analyzer\RequestAnalyzer',
             array(),
             '',
             false,
@@ -210,7 +210,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
     protected function getRequestAnalyzerRedirectMock($url)
     {
         $portalManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Workspace\Analyzer\RequestAnalyzer',
+            '\Sulu\Component\Webspace\Analyzer\RequestAnalyzer',
             array(),
             '',
             false,
