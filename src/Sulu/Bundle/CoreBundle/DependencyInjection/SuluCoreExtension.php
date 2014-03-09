@@ -87,37 +87,36 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         // Portal
         if (isset($config['portal'])) {
-            $this->initWorkspace($config['portal'], $container, $loader);
+            $this->initWebspace($config['portal'], $container, $loader);
         }
 
         // Default Fields
         if (isset($config['fields_defaults'])) {
-            $this->initFields($config['fields_defaults'], $container, $loader);
+            $this->initFields($config['fields_defaults'], $container);
         }
 
         $loader->load('rest.xml');
     }
 
     /**
-     * @param $workspaceConfig
+     * @param $webspaceConfig
      * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
      */
-    private function initWorkspace($workspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
-        $container->setParameter('sulu_core.workspace.config_dir', $workspaceConfig['config_dir']);
-        $loader->load('workspace.xml');
+        $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
+        $loader->load('webspace.xml');
     }
 
     /**
-     * @param $workspaceConfig
+     * @param $fieldsConfig
      * @param ContainerBuilder $container
-     * @param Loader\XmlFileLoader $loader
      */
-    private function initFields($workspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function initFields($fieldsConfig, ContainerBuilder $container)
     {
-        $container->setParameter('sulu.fields_defaults.translations', $workspaceConfig['translations']);
-        $container->setParameter('sulu.fields_defaults.widths', $workspaceConfig['widths']);
+        $container->setParameter('sulu.fields_defaults.translations', $fieldsConfig['translations']);
+        $container->setParameter('sulu.fields_defaults.widths', $fieldsConfig['widths']);
     }
 
     /**

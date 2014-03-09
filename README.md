@@ -9,7 +9,7 @@ The SuluContentBundle builds on other sulu-cmf bundles. It provides basic functi
 ## Features
 
 * Content-Managing
-* Workspace-Managing
+* Webspace-Managing
 * Phpcr initialization
 * Configuration Tree
 * Rest-Abstraction

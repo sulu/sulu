@@ -14,9 +14,9 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Workspace\Localization;
-use Sulu\Component\Workspace\Manager\WorkspaceManagerInterface;
-use Sulu\Component\Workspace\Workspace;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -65,8 +65,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $this->getContainer()->getParameter('sulu.content.language.namespace')
         );
 
-        /** @var WorkspaceManagerInterface $webspaceManager */
-        $webspaceManager = $this->getContainer()->get('sulu_core.workspace.workspace_manager');
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
 
         /** @var SessionInterface $session */
         $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
@@ -77,8 +77,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
         $output->writeln('Create basic nodes');
 
-        /** @var Workspace $webspace */
-        foreach ($webspaceManager->getWorkspaceCollection() as $webspace) {
+        /** @var Webspace $webspace */
+        foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
 
@@ -98,7 +98,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         }
     }
 
-    private function setBasicProperties(Workspace $webspace, NodeInterface $node, $template, $userId)
+    private function setBasicProperties(Webspace $webspace, NodeInterface $node, $template, $userId)
     {
         foreach ($webspace->getLocalizations() as $local) {
             $this->setBasicLocalizationProperties($local, $node, $template, $userId);

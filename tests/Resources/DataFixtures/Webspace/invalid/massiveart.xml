@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+
+    <name>Massive Art</name>
+    <key>massiveart</key>
+
+    <theme>
+        <key>massiveart</key>
+        <excluded>
+            <template>overview</template>
+        </excluded>
+    </theme>
+
+    <portals>
+        <portal>
+            <name>Massive Art US</name>
+            <resource-locator>
+                <strategy>tree</strategy>
+            </resource-locator>
+
+            <localizations>
+                <localization language="en" country="us" default="true"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url main="true">{language}.massiveart.{country}/{segment}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url main="true">massiveart.lo/{localization}/{segment}</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+        <portal>
+            <name>Massive Art CA</name>
+            <resource-locator>
+                <strategy>tree</strategy>
+            </resource-locator>
+
+            <localizations>
+                <localization language="en" country="ca" default="true"/>
+                <localization language="fr" country="ca"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url main="true">{language}.massiveart.{country}/{segment}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url main="true">massiveart.lo/{localization}/{segment}</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>
