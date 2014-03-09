@@ -22,18 +22,22 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
      * @var RlpMapperInterface
      */
     private $mapper;
+
     /**
      * @var RlpStrategy
      */
     private $strategy;
+
     /**
      * @var string
      */
     private $className = 'Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy';
+
     /**
      * @var bool
      */
     private $isSaved = false;
+
     /**
      * @var bool
      */
@@ -43,7 +47,15 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array('unique', 'getUniquePath', 'save', 'move', 'loadByContent', 'loadByContentUuid', 'loadByResourceLocator'),
+            array(
+                'unique',
+                'getUniquePath',
+                'save',
+                'move',
+                'loadByContent',
+                'loadByContentUuid',
+                'loadByResourceLocator'
+            ),
             array('test-mapper'),
             'TestMapper'
         );

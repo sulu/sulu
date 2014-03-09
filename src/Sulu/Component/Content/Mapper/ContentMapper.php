@@ -14,6 +14,7 @@ use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -24,6 +25,11 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class ContentMapper extends ContainerAware implements ContentMapperInterface
 {
+
+    /**
+     * @var \Sulu\Component\Content\ContentTypeManager
+     */
+    private $contentTypeManager;
 
     /**
      * namespace of translation
@@ -81,8 +87,9 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     private $properties;
 
 
-    public function __construct($defaultLanguage, $defaultTemplate, $languageNamespace)
+    public function __construct(ContentTypeManager $contentTypeManager, $defaultLanguage, $defaultTemplate, $languageNamespace)
     {
+        $this->contentTypeManager = $contentTypeManager;
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
@@ -668,7 +675,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getContentType($name)
     {
-        return $this->container->get('sulu.content.type.' . $name);
+        return $this->contentTypeManager->get($name);
     }
 
     /**
