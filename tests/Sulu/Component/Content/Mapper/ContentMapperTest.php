@@ -19,6 +19,7 @@ use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
+use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
@@ -795,6 +796,8 @@ class ContentMapperTest extends PhpcrTestCase
             )
         );
 
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+
         // save root content
         $result['root'] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
 
@@ -810,7 +813,16 @@ class ContentMapperTest extends PhpcrTestCase
             null,
             $result['root']->getUuid()
         );
-        $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $result['child']->getUuid());
+        $result['subchild'] = $this->mapper->save(
+            $data[3],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            $result['child']->getUuid()
+        );
 
         return $result;
     }
@@ -1272,5 +1284,27 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(array('tag1'), $d1->tags);
         $this->assertEquals('Test', $d2->title);
         $this->assertEquals(array('tag2'), $d2->tags);
+    }
+
+    public function testBreadcrumb()
+    {
+        /** @var StructureInterface[] $data */
+        $data = $this->prepareTreeTestData();
+
+        /** @var BreadcrumbItemInterface[] $result */
+        $result = $this->mapper->loadBreadcrumb($data['subchild']->getUuid(), 'de', 'default');
+
+        $this->assertEquals(3, sizeof($result));
+        $this->assertEquals(0, $result[0]->getDepth());
+        $this->assertEquals('Start Page', $result[0]->getTitle());
+        $this->assertEquals($this->sessionManager->getContentNode('default')->getIdentifier(), $result[0]->getUuid());
+
+        $this->assertEquals(1, $result[1]->getDepth());
+        $this->assertEquals('News', $result[1]->getTitle());
+        $this->assertEquals($data['root']->getUuid(), $result[1]->getUuid());
+
+        $this->assertEquals(2, $result[2]->getDepth());
+        $this->assertEquals('Testnews-2', $result[2]->getTitle());
+        $this->assertEquals($data['child']->getUuid(), $result[2]->getUuid());
     }
 }
