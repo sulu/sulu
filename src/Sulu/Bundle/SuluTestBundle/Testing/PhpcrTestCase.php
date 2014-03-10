@@ -110,8 +110,6 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareContainer();
 
             $contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
-            $this->mapper = new ContentMapper($contentTypeManager, 'de', 'default_template', 'sulu_locale');
-            $this->mapper->setContainer($this->container);
 
             $this->prepareSession();
             $this->prepareRepository();
@@ -119,6 +117,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
+            $this->mapper = new ContentMapper($contentTypeManager, $this->structureManager, $this->sessionManager, 'de', 'default_template', 'sulu_locale');
 
             $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes')), 'not in use');
             $this->containerValueMap = array_merge(
