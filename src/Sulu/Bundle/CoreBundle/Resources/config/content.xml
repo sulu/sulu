@@ -23,13 +23,11 @@
         <!-- content mapper -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
             <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
-
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
         </service>
 
         <!-- content type manager -->
