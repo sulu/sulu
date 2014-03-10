@@ -67,4 +67,17 @@ class BreadcrumbItem implements BreadcrumbItemInterface
     {
         return $this->uuid;
     }
+
+    /**
+     * returns array representation
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'uuid' => $this->getUuid(),
+            'depth' => $this->getDepth(),
+            'title' => $this->getTitle()
+        );
+    }
 }

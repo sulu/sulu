@@ -33,4 +33,10 @@ interface BreadcrumbItemInterface
      * @return int
      */
     public function getDepth();
+
+    /**
+     * returns array representation
+     * @return array
+     */
+    public function toArray();
 }
