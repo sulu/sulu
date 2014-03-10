@@ -28,3 +28,4 @@ interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterf
      */
     public function getLocale();
 }
+
