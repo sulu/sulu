@@ -15,7 +15,6 @@ body {
 // Content
 /*----------------------------------------*/
 #content {
-
     max-width: $contentMaxWidth + $contentPaddingLeft + $contentPaddingRight;
     min-width: $contenMinWidth;
     margin-left: $contentMarginLeft;
@@ -62,6 +61,14 @@ body {
     .edit-toolbar-left {
         margin-left: -50px;
     }
+}
+
+#sulu-app-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
 }
 
 // Control elements

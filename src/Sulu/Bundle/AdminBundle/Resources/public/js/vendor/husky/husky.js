@@ -24392,6 +24392,11 @@ define('__component__$navigation@husky',[],function() {
                 '<nav class="navigation<% if (collapsed === "true") {%> collapsed<% } %>">',
                 '   <div class="navigation-content">',
                 '       <header class="navigation-header">',
+                '           <div class="navigation-header-image">',
+                '               <% if (data.icon) { %>',
+                '               <img alt="#" src="<%= data.icon %>"/>',
+                '               <% } %>',
+                '           </div>',
                 '           <div class="navigation-header-title"><% if (data.title) { %> <%= translate(data.title) %><% } %></div>',
                 '       </header>',
                 '       <div id="navigation-search" class="navigation-search"></div>',
@@ -24401,14 +24406,6 @@ define('__component__$navigation@husky',[],function() {
                 '   </div>',
                 '   <div class="icon-remove2 navigation-close-icon">',
                 '</nav>'].join(''),
-            headerImage: [
-                '<div class="navigation-header-image">',
-                '   <img alt="#" src="<%= icon %>"/>',
-                '</div>'
-            ].join(''),
-            headerText: [
-                '<div class="navigation-header-text"><span><%= text %></span></div>'
-            ].join(''),
             /** main navigation items (with icons)*/
             mainItem: [
                 '<li class="js-navigation-items navigation-items" id="<%= item.id %>" data-id="<%= item.id %>">',
@@ -24550,21 +24547,6 @@ define('__component__$navigation@husky',[],function() {
                 this.sandbox.util.extend(true, {}, this.options, {translate: this.sandbox.translate}))
             );
 
-            // render header image
-            if (typeof this.options.data.icon === 'string') {
-                this.sandbox.dom.prepend(this.sandbox.dom.find('header.navigation-header', this.$el),
-                    this.sandbox.template.parse(templates.headerImage, {
-                        icon: this.options.data.icon
-                    })
-                );
-            } else {
-                this.sandbox.dom.prepend(this.sandbox.dom.find('header.navigation-header', this.$el),
-                    this.sandbox.template.parse(templates.headerText, {
-                        text: this.options.data.title.substr(0, 2)
-                    })
-                );
-            }
-
             this.$navigation = this.$find('.navigation', this.$el);
             this.$navigationContent = this.$find('.navigation-content', this.$navigation);
 
@@ -24608,9 +24590,6 @@ define('__component__$navigation@husky',[],function() {
                 $sectionList = this.sandbox.dom.createElement('<ul class="section-items">');
                 this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.sandbox.translate(this.options.labels.hide) + '</a></span></div>');
 
-                this.sandbox.dom.append($sectionDiv, $sectionList);
-                this.sandbox.dom.append('#navigation-item-container', $sectionDiv);
-
                 // iterate through section items
                 this.sandbox.util.foreach(section.items, function(item) {
                     // create item
@@ -24619,14 +24598,18 @@ define('__component__$navigation@husky',[],function() {
                         icon: item.icon ? 'icon-' + item.icon : '',
                         translate: this.sandbox.translate
                     }));
-                    this.sandbox.dom.append($sectionList, $elem);
                     //render sub-items
                     if (item.items && item.items.length > 0) {
                         this.renderSubNavigationItems(item, $elem);
                     }
+                    this.sandbox.dom.append($sectionList, $elem);
                     item.domObject = $elem;
                     this.items[item.id] = item;
                 }.bind(this));
+
+                this.sandbox.dom.append($sectionDiv, $sectionList);
+                this.sandbox.dom.append('#navigation-item-container', $sectionDiv);
+
             }.bind(this));
         },
 
@@ -24635,10 +24618,7 @@ define('__component__$navigation@husky',[],function() {
          */
         renderSubNavigationItems: function(data, $parentList) {
             var elem,
-                textCont,
                 list = this.sandbox.dom.createElement('<ul class="navigation-items-list" />');
-
-            this.sandbox.dom.append($parentList, list);
 
             this.sandbox.util.foreach(data.items, function(item) {
                 this.items[item.id] = item;
@@ -24649,15 +24629,10 @@ define('__component__$navigation@husky',[],function() {
                     elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subItem, {item: item, translate: this.sandbox.translate}));
                 }
                 this.sandbox.dom.append(list, elem);
-
-                // add tooltip
-                textCont = this.sandbox.dom.find('a', elem);
-                if (this.sandbox.dom.width(textCont) + 20 < this.sandbox.dom.get(textCont, 0).scrollWidth) {
-                    this.sandbox.dom.attr(textCont, {'title': this.sandbox.dom.html(textCont)});
-                }
-
                 item.domObject = elem;
             }.bind(this));
+
+            this.sandbox.dom.append($parentList, list);
         },
 
         renderFooter: function(footerTemplate) {
@@ -24819,13 +24794,16 @@ define('__component__$navigation@husky',[],function() {
             }
 
             if (isExpanded && !navWasCollapsed) {
-                this.sandbox.dom.removeClass($items, 'is-expanded');
 
-                // change toggle item
-                $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
-                this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
-                this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
+//                this.sandbox.dom.slideUp($childList, 200, function() {
 
+                    this.sandbox.dom.removeClass($items, 'is-expanded');
+
+                    // change toggle item
+                    $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
+                    this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
+                    this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
+//                }.bind(this));
             } else {
                 this.sandbox.dom.show($childList);
                 this.sandbox.dom.addClass($items, 'is-expanded');
@@ -25958,7 +25936,7 @@ define('__component__$datagrid@husky',[],function() {
             appendTBody: true,   // add TBODY to table
             searchInstanceName: null, // at which search it should be listened to can be null|string|empty_string
             columnOptionsInstanceName: null, // at which search it should be listened to can be null|string|empty_string
-            paginationTemplate: '<%=translate("pagination.page")%> <strong><%=i%></strong> <%=translate("pagination.of")%> <%=pages%>',
+            paginationTemplate: '<%=translate("pagination.page")%> <%=i%> <%=translate("pagination.of")%> <%=pages%>',
             fieldsData: null,
             validation: false, // TODO does not work for added rows
             validationDebug: false,
@@ -26210,6 +26188,7 @@ define('__component__$datagrid@husky',[],function() {
 
             // Should only be be called once
             this.bindCustomEvents();
+
         },
 
         /**
@@ -26618,7 +26597,7 @@ define('__component__$datagrid@husky',[],function() {
 
                 // add a checkbox to each row
                 if (!!this.options.selectItem.type && this.options.selectItem.type === 'checkbox') {
-                    this.tblColumns.push('<td class="check">', this.templates.checkbox(), '</td>');
+                    this.tblColumns.push('<td>', this.templates.checkbox(), '</td>');
 
                     // add a radio to each row
                 } else if (!!this.options.selectItem.type && this.options.selectItem.type === 'radio') {
@@ -27014,9 +26993,9 @@ define('__component__$datagrid@husky',[],function() {
 
                 paginationLabel = this.renderPaginationRow(this.data.page, this.data.pages);
 
-                $pagination.append('<div id="' + this.pagination.nextId + '" class="pagination-prev pull-right pointer"></div>');
+                $pagination.append('<div id="' + this.pagination.nextId + '" class="icon-chevron-right pagination-prev pull-right pointer"></div>');
                 $pagination.append('<div id="' + this.pagination.dropdownId + '" class="pagination-main pull-right pointer"><span class="inline-block">' + paginationLabel + '</span><span class="dropdown-toggle inline-block"></span></div>');
-                $pagination.append('<div id="' + this.pagination.prevId + '" class="pagination-next pull-right pointer"></div>');
+                $pagination.append('<div id="' + this.pagination.prevId + '" class="icon-chevron-left pagination-next pull-right pointer"></div>');
             }
 
             return $paginationWrapper;
@@ -27824,24 +27803,11 @@ define('__component__$datagrid@husky',[],function() {
          * @returns {*}
          */
         addLoader: function() {
-            this.$element
+            return this.$element
                 .outerWidth(this.$element.outerWidth())
                 .outerHeight(this.$element.outerHeight())
-                .empty();
-
-            var $container = this.sandbox.dom.createElement('<div class="datagrid-loader"/>');
-            this.sandbox.dom.append(this.$element, $container);
-
-            this.sandbox.start([{
-                name: 'loader@husky',
-                options: {
-                    el: $container,
-                    size: '100px',
-                    color: '#cccccc'
-                }
-            }]);
-
-            return this.$element;
+                .empty()
+                .addClass('is-loading');
         },
 
         /**
@@ -27849,10 +27815,7 @@ define('__component__$datagrid@husky',[],function() {
          * @returns {*}
          */
         removeLoader: function() {
-            return this.$element.outerHeight("").outerWidth("");
-            this.sandbox.stop(this.sandbox.dom.find('.datagrid-loader', this.$element));
-
-            return this.$element
+            return this.$element.removeClass('is-loading').outerHeight("").outerWidth("");
         },
 
         /**

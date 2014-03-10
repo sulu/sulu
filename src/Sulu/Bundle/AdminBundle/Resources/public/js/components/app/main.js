@@ -144,6 +144,25 @@ define(function() {
         },
 
         /**
+         * Starts the Loader if the content is loading
+         */
+        startLoader: function() {
+            var $element = this.sandbox.dom.createElement('<div id="sulu-app-loader">');
+            this.sandbox.dom.append(this.$el, $element);
+
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $element,
+                        size: '200px',
+                        color: '#cacaca'
+                    }
+                }
+            ]);
+        },
+
+        /**
          * Bind component-related events
          */
         bindCustomEvents: function() {
@@ -159,6 +178,7 @@ define(function() {
                     this.sandbox.stop('#edit-toolbar');
                     this.sandbox.dom.remove('#edit-toolbar');
                 }
+
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
@@ -171,6 +191,8 @@ define(function() {
                 // move to top
                 // FIXME abstract
                 $(window).scrollTop(0);
+
+                this.startLoader();
             }.bind(this));
 
             // navigation event
@@ -210,6 +232,11 @@ define(function() {
 
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);
+            }.bind(this));
+
+            // stop the loader if a view gets initialized
+            this.sandbox.on('sulu.view.initialize', function() {
+                this.sandbox.stop('#sulu-app-loader');
             }.bind(this));
         },
 

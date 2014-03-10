@@ -71,6 +71,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         app.use('aura_extensions/backbone-relational');
         app.use('aura_extensions/sulu-content-tabs');
         app.use('aura_extensions/sulu-extension');
+        app.use('aura_extensions/sulu-view');
 
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 
