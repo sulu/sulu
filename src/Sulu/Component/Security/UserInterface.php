@@ -21,4 +21,10 @@ interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterf
      * @return int
      */
     public function getId();
+
+    /**
+     * Returns the locale of the user.
+     * @return string Users locale
+     */
+    public function getLocale();
 }
