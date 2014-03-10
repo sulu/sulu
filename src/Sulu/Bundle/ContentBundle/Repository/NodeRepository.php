@@ -109,13 +109,22 @@ class NodeRepository implements NodeRepositoryInterface
      * @param $uuid
      * @param $webspaceKey
      * @param $languageCode
+     * @param bool $breadcrumb
      * @return array
      */
-    public function getNode($uuid, $webspaceKey, $languageCode)
+    public function getNode($uuid, $webspaceKey, $languageCode, $breadcrumb = false)
     {
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode);
 
-        return $this->prepareNode($structure, $webspaceKey, $languageCode);
+        $result = $this->prepareNode($structure, $webspaceKey, $languageCode);
+        if ($breadcrumb) {
+            $breadcrumb = $this->getMapper()->loadBreadcrumb($uuid, $languageCode, $webspaceKey);
+            $result['breadcrumb'] = array();
+            foreach ($breadcrumb as $item) {
+                $result['breadcrumb'][$item->getDepth()] = $item->toArray();
+            }
+        }
+        return $result;
     }
 
     /**
