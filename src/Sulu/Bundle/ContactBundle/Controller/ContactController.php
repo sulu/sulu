@@ -24,27 +24,61 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 
-
 /**
  * Makes contacts available through a REST API
  * @package Sulu\Bundle\ContactBundle\Controller
  */
 class ContactController extends RestController implements ClassResourceInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     protected $entityName = 'SuluContactBundle:Contact';
 
+    /**
+     * @var string
+     */
     protected $basePath = 'admin/api/contacts';
 
+    /**
+     * {@inheritdoc}
+     */
     protected $unsortable = array();
 
+    /**
+     * {@inheritdoc}
+     */
     protected $fieldsDefault = array('lastName');
-    protected $fieldsExcluded = array();
-    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday');
-    protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0 => 'id', 1 => 'title');
-    protected $fieldsTranslationKeys = array();
-    protected $bundlePrefix = 'contact.contacts.';
 
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsExcluded = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsHidden = array('middleName', 'created', 'changed', 'birthday');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsRelations = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsSortOrder = array(0 => 'id', 1 => 'title');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $fieldsTranslationKeys = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $bundlePrefix = 'contact.contacts.';
 
     /**
      * returns all fields that can be used by list

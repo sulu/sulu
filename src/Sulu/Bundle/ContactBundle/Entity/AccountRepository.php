@@ -12,8 +12,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Doctrine\ORM\Query;
 
 /**
@@ -27,9 +25,10 @@ class AccountRepository extends EntityRepository
      * @param $contactId
      * @return array
      */
-    public function findOneByContactId($contactId) {
+    public function findOneByContactId($contactId)
+    {
         $qb = $this->createQueryBuilder('a')
-            ->join('a.contacts','c', 'WITH', 'c.id = :contactId')
+            ->join('a.contacts', 'c', 'WITH', 'c.id = :contactId')
             ->setParameter('contactId', $contactId);
         $query = $qb->getQuery();
 
@@ -67,15 +66,13 @@ class AccountRepository extends EntityRepository
                 ->addSelect('emails')
                 ->addSelect('emailType')
                 ->addSelect('notes')
-                ->where('account.id=:accountId');
+                ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $id);
 
             return $query->getSingleResult();
-
-
         } catch (NoResultException $ex) {
             return null;
         }
@@ -86,13 +83,14 @@ class AccountRepository extends EntityRepository
      * @param array $fields
      * @return array
      */
-    public function findAllSelect($fields = array()) {
-        $qb =$this->getEntityManager()
+    public function findAllSelect($fields = array())
+    {
+        $qb = $this->getEntityManager()
             ->createQueryBuilder()
-            ->from($this->getEntityName(),'account');
+            ->from($this->getEntityName(), 'account');
 
         foreach ($fields as $field) {
-            $qb->addSelect('account.'.$field.' AS '.$field);
+            $qb->addSelect('account.' . $field . ' AS ' . $field);
         }
 
         $query = $qb->getQuery();
@@ -100,7 +98,6 @@ class AccountRepository extends EntityRepository
 
         return $query->getArrayResult();
     }
-
 
     /**
      * Get account by id to delete
@@ -149,15 +146,13 @@ class AccountRepository extends EntityRepository
                 ->addSelect('phonesAccounts')
                 ->addSelect('addressAccounts')
                 ->addSelect('notes')
-                ->where('account.id=:accountId');
+                ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('accountId', $id);
 
             return $query->getSingleResult();
-
-
         } catch (NoResultException $ex) {
             return null;
         }

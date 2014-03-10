@@ -4,7 +4,8 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
-    <entity name="Sulu\Bundle\ContactBundle\Entity\Account" table="co_accounts" repository-class="Sulu\Bundle\ContactBundle\Entity\AccountRepository">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\Account" table="co_accounts"
+            repository-class="Sulu\Bundle\ContactBundle\Entity\AccountRepository">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -55,6 +56,9 @@
                     <join-column name="idUrls" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
         <many-to-many field="addresses" target-entity="Sulu\Bundle\ContactBundle\Entity\Address" inversed-by="accounts">
             <join-table name="co_account_addresses">
@@ -65,6 +69,9 @@
                     <join-column name="idAddresses" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
         <many-to-many field="phones" target-entity="Sulu\Bundle\ContactBundle\Entity\Phone" inversed-by="accounts">
             <join-table name="co_account_phones">
@@ -75,6 +82,9 @@
                     <join-column name="idPhones" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
         <many-to-many field="emails" target-entity="Sulu\Bundle\ContactBundle\Entity\Email" inversed-by="accounts">
             <join-table name="co_account_emails">
@@ -85,6 +95,9 @@
                     <join-column name="idEmails" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
         <many-to-many field="notes" target-entity="Sulu\Bundle\ContactBundle\Entity\Note" inversed-by="accounts">
             <join-table name="co_account_notes">
@@ -95,6 +108,9 @@
                     <join-column name="idNotes" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
 
         <gedmo:tree type="nested"/>
