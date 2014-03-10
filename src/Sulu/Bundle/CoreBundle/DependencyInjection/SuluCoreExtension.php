@@ -86,8 +86,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         // Portal
-        if (isset($config['portal'])) {
-            $this->initWebspace($config['portal'], $container, $loader);
+        if (isset($config['webspace'])) {
+            $this->initWebspace($config['webspace'], $container, $loader);
         }
 
         // Default Fields
