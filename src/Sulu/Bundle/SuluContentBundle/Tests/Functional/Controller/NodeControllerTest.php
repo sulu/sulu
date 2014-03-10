@@ -304,6 +304,8 @@ class NodeControllerTest extends DatabaseTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
+        $mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
+
         $client = $this->createClient(
             array(),
             array(
@@ -746,5 +748,34 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
         $this->assertEquals(2, sizeof($response));
+    }
+
+    public function testBreadcrumb()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+        $mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'en', 1);
+
+        $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($data[4]['title'], $response->title);
+        $this->assertEquals($data[4]['tags'], $response->tags);
+        $this->assertEquals($data[4]['url'], $response->url);
+        $this->assertEquals($data[4]['article'], $response->article);
+
+        $this->assertEquals(3, sizeof($response->breadcrumb));
+        $this->assertEquals('Start Page', $response->breadcrumb[0]->title);
+        $this->assertEquals('test2', $response->breadcrumb[1]->title);
+        $this->assertEquals('test4', $response->breadcrumb[2]->title);
     }
 }
