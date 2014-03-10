@@ -26,6 +26,11 @@ class TestUser implements UserInterface
      */
     private $id;
 
+    /**
+     * @var string
+     */
+    private $locale;
+
 
     /**
      * Set username
@@ -125,5 +130,15 @@ class TestUser implements UserInterface
     public function eraseCredentials()
     {
 
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }
