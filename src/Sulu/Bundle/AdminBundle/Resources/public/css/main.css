@@ -64,17 +64,8 @@ body {
   margin-left: -50px;
 }
 
-/* line 66, ../scss/modules/base.scss */
-#sulu-app-loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -100px;
-  margin-left: -100px;
-}
-
 /*----------------------------------------*/
-/* line 76, ../scss/modules/base.scss */
+/* line 68, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -82,30 +73,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 84, ../scss/modules/base.scss */
+/* line 76, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 91, ../scss/modules/base.scss */
+/* line 83, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 98, ../scss/modules/base.scss */
+/* line 90, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 102, ../scss/modules/base.scss */
+/* line 94, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 109, ../scss/modules/base.scss */
+/* line 101, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
