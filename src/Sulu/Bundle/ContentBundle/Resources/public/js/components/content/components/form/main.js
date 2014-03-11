@@ -359,7 +359,7 @@ define(['app-config'], function(AppConfig) {
         openPreviewWindow: function() {
             if (!!this.options.data.id) {
                 this.initPreview();
-                window.open('/admin/content/preview/' + this.options.data.id);
+                window.open('/admin/content/preview/' + this.options.data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language);
             }
         },
 
@@ -440,8 +440,6 @@ define(['app-config'], function(AppConfig) {
                     params: {}
                 };
                 this.ws.send(JSON.stringify(message));
-
-                this.updatePreview();
             }.bind(this);
 
             this.ws.onclose = function() {
@@ -454,6 +452,10 @@ define(['app-config'], function(AppConfig) {
 
             this.ws.onmessage = function(e) {
                 var data = JSON.parse(e.data);
+
+                if (data.command === 'start' && data.content === this.options.id && !!data.params.other) {
+                    this.updatePreview();
+                }
 
                 this.sandbox.logger.log('Message:', data);
             }.bind(this);
