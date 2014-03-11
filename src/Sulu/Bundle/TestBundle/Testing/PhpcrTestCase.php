@@ -30,6 +30,7 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -91,6 +92,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $securityContext;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    protected $webspaceManager;
+
+    /**
      * purge webspace at tear down
      */
     public function tearDown()
@@ -117,7 +123,16 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
-            $this->mapper = new ContentMapper($contentTypeManager, $this->structureManager, $this->sessionManager, 'de', 'default_template', 'sulu_locale');
+            $this->prepareWebspaceManager();
+            $this->mapper = new ContentMapper(
+                $this->webspaceManager,
+                $contentTypeManager,
+                $this->structureManager,
+                $this->sessionManager,
+                'de',
+                'default_template',
+                'sulu_locale'
+            );
 
             $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes')), 'not in use');
             $this->containerValueMap = array_merge(
@@ -131,6 +146,13 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'security.context' => $this->securityContext
                 )
             );
+        }
+    }
+
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
         }
     }
 
