@@ -86,8 +86,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         // Portal
-        if (isset($config['portal'])) {
-            $this->initWebspace($config['portal'], $container, $loader);
+        if (isset($config['webspace'])) {
+            $this->initWebspace($config['webspace'], $container, $loader);
         }
 
         // Default Fields
@@ -106,6 +106,14 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
+        $container->setParameter(
+            'sulu_core.webspace.request_analyzer.enabled',
+            $webspaceConfig['request_analyzer']['enabled']
+        );
+        $container->setParameter(
+            'sulu_core.webspace.request_analyzer.priority',
+            $webspaceConfig['request_analyzer']['priority']
+        );
         $loader->load('webspace.xml');
     }
 
