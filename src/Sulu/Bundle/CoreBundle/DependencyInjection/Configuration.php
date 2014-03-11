@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
         $children = $rootNode->children();
         $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
-        $this->getPortalConfiguration($children);
+        $this->getWebspaceConfiguration($children);
         $this->getFieldsConfiguration($children);
         $children->end();
 
@@ -42,12 +42,23 @@ class Configuration implements ConfigurationInterface
     /**
      * @param NodeBuilder $rootNode
      */
-    private function getPortalConfiguration(NodeBuilder $rootNode)
+    private function getWebspaceConfiguration(NodeBuilder $rootNode)
     {
-        $rootNode->arrayNode('portal')
+        $rootNode->arrayNode('webspace')
             ->children()
                 ->scalarNode('config_dir')
-                    ->defaultValue('%kernel.root_dir%/../Resources/portals')
+                    ->defaultValue('%kernel.root_dir%/../Resources/webspaces')
+                ->end()
+                ->arrayNode('request_analyzer')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('enabled')
+                            ->defaultValue(true)
+                        ->end()
+                        ->scalarNode('priority')
+                            ->defaultValue(300)
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ->end();
