@@ -44,7 +44,7 @@ sulu_core:
     content:
         templates:
             default_path: %kernel.root_dir%/../Resources/templates
-    portal:
+    webspace:
         ~
 
 sulu_admin:
