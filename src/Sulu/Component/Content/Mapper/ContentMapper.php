@@ -21,14 +21,21 @@ use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class ContentMapper implements ContentMapperInterface
 {
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
 
     /**
      * @var ContentTypeManager
@@ -36,7 +43,7 @@ class ContentMapper implements ContentMapperInterface
     private $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface::
+     * @var StructureManagerInterface
      */
     private $structureManager;
 
@@ -102,6 +109,7 @@ class ContentMapper implements ContentMapperInterface
 
 
     public function __construct(
+        WebspaceManagerInterface $webspaceManager,
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
         SessionManagerInterface $sessionManager,
@@ -110,6 +118,7 @@ class ContentMapper implements ContentMapperInterface
         $languageNamespace
     )
     {
+        $this->webspaceManager = $webspaceManager;
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->sessionManager = $sessionManager;
@@ -597,6 +606,34 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * Returns the closes available localization for the given node
+     * @param NodeInterface $contentNode The node to look up the localizations
+     * @param string $languageCode The code for which the data should be loaded
+     * @param string $webspaceKey The key for the webspace to look for the defined localizations
+     * @return \Sulu\Component\Webspace\Localization
+     */
+    private function getAvailableLocalization(NodeInterface $contentNode, $languageCode, $webspaceKey)
+    {
+        // use created field to check localization availability
+        $createdProperty = new TranslatedProperty(
+            new Property('created', 'none'), // FIXME none as type is a dirty hack
+            $languageCode,
+            $this->languageNamespace
+        );
+
+        // get localization object for querying parent localizations
+        $localization = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getLocalizations()[$languageCode];
+
+        // find first available localization in localization tree
+        while (!$contentNode->hasProperty($createdProperty->getName())) {
+            // TODO iterate to next iteration
+            $createdProperty->setLocalization($localization->getLocalization());
+        }
+
+        return $localization;
+    }
+
+    /**
      * returns data from given node
      * @param NodeInterface $contentNode
      * @param string $languageCode
@@ -605,10 +642,15 @@ class ContentMapper implements ContentMapperInterface
      */
     private function loadByNode(NodeInterface $contentNode, $languageCode, $webspaceKey)
     {
+        $localization = $this->getAvailableLocalization($contentNode, $languageCode, $webspaceKey);
+
         // create translated properties
         $this->properties->setLanguage($languageCode);
 
-        $templateKey = $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate);
+        $templateKey = $contentNode->getPropertyValueWithDefault(
+            $this->properties->getName('template'),
+            $this->defaultTemplate
+        );
 
         $structure = $this->getStructure($templateKey);
 
@@ -619,8 +661,12 @@ class ContentMapper implements ContentMapperInterface
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
         $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
-        $structure->setCreated($contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime()));
-        $structure->setChanged($contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime()));
+        $structure->setCreated(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime())
+        );
+        $structure->setChanged(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime())
+        );
         $structure->setHasChildren($contentNode->hasNodes());
 
         $structure->setNodeState(

@@ -25,7 +25,7 @@ class TranslatedProperty implements PropertyInterface
     /**
      * @var string
      */
-    private $language;
+    private $localization;
     /**
      * @var string
      */
@@ -33,13 +33,13 @@ class TranslatedProperty implements PropertyInterface
 
     /**
      * @param PropertyInterface $property
-     * @param string $language
+     * @param string $localization
      * @param string $languageNamespace
      */
-    public function __construct(PropertyInterface $property, $language, $languageNamespace)
+    public function __construct(PropertyInterface $property, $localization, $languageNamespace)
     {
         $this->property = $property;
-        $this->language = $language;
+        $this->localization = $localization;
         $this->languageNamespace = $languageNamespace;
     }
 
@@ -49,7 +49,7 @@ class TranslatedProperty implements PropertyInterface
      */
     public function getName()
     {
-        return $this->languageNamespace . ':' . $this->language . '-' . $this->property->getName();
+        return $this->languageNamespace . ':' . $this->localization . '-' . $this->property->getName();
     }
 
     /**
@@ -122,5 +122,23 @@ class TranslatedProperty implements PropertyInterface
     public function getValue()
     {
         return $this->property->getValue();
+    }
+
+    /**
+     * sets the localization of this property
+     * @param string $localization
+     */
+    public function setLocalization($localization)
+    {
+        $this->localization = $localization;
+    }
+
+    /**
+     * returns the localization of this property
+     * @return string
+     */
+    public function getLocalization()
+    {
+        return $this->localization;
     }
 }
