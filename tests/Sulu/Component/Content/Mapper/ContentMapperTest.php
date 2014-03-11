@@ -1368,6 +1368,7 @@ class ContentMapperTest extends PhpcrTestCase
         /** @var StructureInterface[] $data */
         $this->prepareGhostTestData();
 
+        // both pages exists in en
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, true);
         $this->assertEquals(2, sizeof($result));
@@ -1376,6 +1377,16 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
         $this->assertNull($result[1]->getType());
 
+        // both pages exists in en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // both pages are ghosts in en_us from en
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, true);
         $this->assertEquals(2, sizeof($result));
@@ -1386,6 +1397,12 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('ghost', $result[1]->getType()->getName());
         $this->assertEquals('en', $result[1]->getType()->getValue());
 
+        // no page exists in en_us without ghosts
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, false);
+        $this->assertEquals(0, sizeof($result));
+
+        // one page not exists in de (ghost from de_at), other exists in de
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
         $this->assertEquals(2, sizeof($result));
@@ -1395,6 +1412,25 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
         $this->assertNull($result[1]->getType());
 
+        // one page exists in de (without ghosts)
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
+        $this->assertEquals(1, sizeof($result));
+        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+
+        // one page not exists in de_at (ghost from de), other exists in de_at
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('de', $result[0]->getType()->getValue());
+
+
+        // both pages are ghosts in es from en
         /** @var StructureInterface[] $result */
         $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, true);
         $this->assertEquals(2, sizeof($result));
@@ -1404,5 +1440,10 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[1]->getType()->getName());
         $this->assertEquals('en', $result[1]->getType()->getValue());
+
+        // no page exists in en_us without ghosts
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, false);
+        $this->assertEquals(0, sizeof($result));
     }
 }
