@@ -1,1 +1,1 @@
-.previewWrapper{overflow:hidden;overflow-x:scroll;background-color:#fff;position:absolute;top:0;right:0;z-index:100}.previewIframe{border:0;border-left:1px solid #666}.previewToolbar{background:red;z-index:100}
+.previewWrapper{overflow:scroll;background-color:#fff;position:fixed;height:100%;top:0;right:0;z-index:100}.previewIframe{border:0;height:100%;border-left:1px solid #666}.previewToolbar{position:fixed;top:0;right:0;z-index:101;height:30px;color:#fff}.previewToolbar .left{width:30px;height:30px;overflow:hidden;background:#3e3e3e;text-align:center}

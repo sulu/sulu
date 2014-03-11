@@ -1,9 +1,9 @@
 /* line 5, ../scss/modules/preview.scss */
 .previewWrapper {
-  overflow: hidden;
-  overflow-x: scroll;
+  overflow: scroll;
   background-color: #ffffff;
-  position: absolute;
+  position: fixed;
+  height: 100%;
   top: 0;
   right: 0;
   z-index: 100;
@@ -13,11 +13,24 @@
 /* line 15, ../scss/modules/preview.scss */
 .previewIframe {
   border: 0;
+  height: 100%;
   border-left: 1px solid #666;
 }
 
-/* line 20, ../scss/modules/preview.scss */
+/* line 21, ../scss/modules/preview.scss */
 .previewToolbar {
-  background: red;
-  z-index: 100;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 101;
+  height: 30px;
+  color: #fff;
+}
+/* line 33, ../scss/modules/preview.scss */
+.previewToolbar .left {
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  background: #3e3e3e;
+  text-align: center;
 }

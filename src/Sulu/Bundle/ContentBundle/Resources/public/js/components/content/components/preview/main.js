@@ -102,7 +102,7 @@ define([], function() {
                 url = url[url.length - 1] === '/' ? url : url + '/';
                 url += id + '?';
                 url += 'webspace='+webspace;
-                url += 'language='+language;
+                url += '&language='+language;
 
                 return url;
             };
@@ -112,7 +112,15 @@ define([], function() {
             initialize: function() {
 
                 this.options = this.sandbox.util.extend({}, defaults, this.options);
+
+                // component vars
                 this.currentSize = parseHeightAndWidthFromString.call(this, this.options.toolbar.resolutions[0]);
+                this.previewWidth = 0;
+
+                // dom elements
+                this.$wrapper = null;
+                this.$iframe = null;
+                this.$toolbar = null;
 
                 this.render();
 
@@ -127,6 +135,7 @@ define([], function() {
 
                 this.renderWrapper(this.currentSize.height);
                 this.renderIframe(this.currentSize.width, this.currentSize.height, url);
+                this.renderToolbar();
             },
 
             /**
@@ -147,15 +156,12 @@ define([], function() {
                 mainWidth = this.sandbox.dom.outerWidth($main);
                 mainMarginLeft = $main.offsetLeft;
                 totalWidth = this.sandbox.dom.width(document);
-                wrapperWidth = totalWidth - (mainWidth + mainMarginLeft + this.options.marginLeft);
+                this.previewWidth = totalWidth - (mainWidth + mainMarginLeft + this.options.marginLeft);
 
                 this.$wrapper = this.sandbox.dom.$('<div class="previewWrapper" id="previewWrapper" style=""></div>');
-                this.sandbox.dom.css(this.$wrapper, 'height', height + 'px');
-                this.sandbox.dom.css(this.$wrapper, 'width', wrapperWidth + 'px');
+                this.sandbox.dom.css(this.$wrapper, 'width', this.previewWidth + 'px');
 
                 this.sandbox.dom.append(this.$el, this.$wrapper);
-
-                this.renderToolbar(wrapperWidth);
             },
 
             /**
@@ -171,19 +177,17 @@ define([], function() {
 
             /**
              * Renders toolbar on top of the iframe
-             * @param {Number} width of wrapper
              */
-            renderToolbar: function(width) {
+            renderToolbar: function() {
                 this.$toolbar = this.sandbox.dom.$([
                     '<div id="previewToolbar" class="previewToolbar">',
-                    'asdfasdf',
+                        '<div id="previewToolbarLeft" class="left pointer"><span class="icon-eye-open"></span></div>',
+                        '<div id="previewToolbarRight" class="right"></div>',
                     '</div>'
                 ].join(''));
 
-                this.sandbox.dom.css(this.$toolbar,'width', width+20+'px');
-                this.sandbox.dom.css(this.$toolbar,'margin-left', '-20px');
-
-                this.sandbox.dom.append(this.$wrapper, this.$toolbar);
+                this.sandbox.dom.css(this.$toolbar,'width', this.previewWidth+30+'px');
+                this.sandbox.dom.append(this.$el, this.$toolbar);
             }
         };
     }
