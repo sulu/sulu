@@ -1316,54 +1316,48 @@ class ContentMapperTest extends PhpcrTestCase
                 'url' => '/news'
             ),
             array(
-                'title' => 'News-DE',
+                'title' => 'News-DE_AT',
                 'url' => '/news'
             ),
             array(
-                'title' => 'Testnews-1',
-                'url' => '/news/test-1'
+                'title' => 'Products-EN',
+                'url' => '/products'
             ),
             array(
-                'title' => 'Testnews-2',
-                'url' => '/news/test-2'
-            ),
-            array(
-                'title' => 'Testnews-2-1',
-                'tags' => array(
-                    'tag1',
-                    'tag2'
-                ),
-                'url' => '/news/test-2/test-1',
-                'article' => 'default'
+                'title' => 'Products-DE',
+                'url' => '/products'
             )
         );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
 
         // save root content
-        $result['root'] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
-
-        // add a child content
-        $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $result['root']->getUuid());
-        $result['child'] = $this->mapper->save(
+        $result['news-en'] = $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
+        $result['news-de_at'] = $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'de_at',
+            1,
+            true,
+            $result['news-en']->getUuid()
+        );
+        $result['products-en'] = $this->mapper->save(
             $data[2],
             'overview',
             'default',
-            'de',
+            'en',
             1,
-            true,
-            null,
-            $result['root']->getUuid()
+            true
         );
-        $result['subchild'] = $this->mapper->save(
+        $result['products-de'] = $this->mapper->save(
             $data[3],
             'overview',
             'default',
             'de',
             1,
             true,
-            null,
-            $result['child']->getUuid()
+            $result['products-en']->getUuid()
         );
 
         return $result;
@@ -1372,6 +1366,43 @@ class ContentMapperTest extends PhpcrTestCase
     public function testGhost()
     {
         /** @var StructureInterface[] $data */
-        $data = $this->prepareGhostTestData();
+        $this->prepareGhostTestData();
+
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('en', $result[0]->getType()->getValue());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[1]->getType()->getName());
+        $this->assertEquals('en', $result[1]->getType()->getValue());
+
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('de-at', $result[0]->getType()->getValue());
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('en', $result[0]->getType()->getValue());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[1]->getType()->getName());
+        $this->assertEquals('en', $result[1]->getType()->getValue());
     }
 }
