@@ -359,7 +359,7 @@ define(['app-config'], function(AppConfig) {
         openPreviewWindow: function() {
             if (!!this.options.data.id) {
                 this.initPreview();
-                window.open('/admin/content/preview/' + this.options.data.id);
+                window.open('/admin/content/preview/' + this.options.data.id+'?webspace=' + this.options.webspace + '&language='+ this.options.language );
             }
         },
 

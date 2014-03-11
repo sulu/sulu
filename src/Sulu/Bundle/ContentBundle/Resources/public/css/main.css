@@ -1,0 +1,21 @@
+/* line 1, ../scss/modules/preview.scss */
+.previewWrapper {
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  overflow-x: scroll;
+}
+
+/* line 10, ../scss/modules/preview.scss */
+.previewIframe {
+  border: 0;
+  border-left: 1px solid #666;
+}
+
+/* line 15, ../scss/modules/preview.scss */
+.previewToolbar {
+  background: red;
+  z-index: 100;
+}
