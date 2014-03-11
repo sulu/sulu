@@ -14,7 +14,7 @@ define(function() {
     return {
         content: {
             url: '/admin/security/navigation/roles',
-            title: 'security.roles.title'
+            title: 'security.roles.permissions'
         }
     };
 });

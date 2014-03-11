@@ -41,9 +41,11 @@ define([], function() {
 
         initialize: function() {
             this.saved = true;
+            this.selectedSystem = '';
             permissionData = this.options.data.permissions;
 
             this.render();
+            this.startSystemDropdown();
 
             this.initializeMatrix();
             this.initializeValidation();
@@ -56,7 +58,6 @@ define([], function() {
         },
 
         bindDOMEvents: function() {
-            this.sandbox.dom.on(this.$el, 'change', this.initializeMatrix.bind(this), '#system');
             this.sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
         },
 
@@ -82,6 +83,11 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('sulu.roles.list');
             }, this);
+
+            this.sandbox.on('husky.dropdown.multiple.select.system.selected.item', function(value) {
+                this.selectedSystem = value;
+                this.initializeMatrix();
+            }.bind(this));
         },
 
         initializeValidation: function() {
@@ -121,7 +127,7 @@ define([], function() {
 
             // load all the contexts from the selected module
             this.sandbox.util.ajax({
-                url: '/admin/contexts?system=' + this.sandbox.dom.val('#system')
+                url: '/admin/contexts?system=' + this.selectedSystem
             })
                 .done(function(data) {
                     data = JSON.parse(data);
@@ -219,7 +225,7 @@ define([], function() {
                 var data = {
                     id: this.sandbox.dom.val('#id'),
                     name: this.sandbox.dom.val('#name'),
-                    system: this.sandbox.dom.val('#system'),
+                    system: this.selectedSystem,
                     permissions: permissionData
                 };
 
@@ -229,6 +235,23 @@ define([], function() {
 
         render: function() {
             this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.options.data}));
+        },
+
+        startSystemDropdown: function() {
+            this.selectedSystem = this.options.data.system;
+
+            this.sandbox.start([{
+                name: 'dropdown-multiple-select@husky',
+                options: {
+                    el: this.sandbox.dom.find('#system', this.$el),
+                    instanceName: 'system',
+                    defaultLabel: 'Please choose..',
+                    noDeselect: true,
+                    singleSelect: true,
+                    data: [this.options.data.system],
+                    preSelectedElements: [this.options.data.system]
+                }
+            }]);
         },
 
         // @var Bool saved - defines if saved state should be shown
