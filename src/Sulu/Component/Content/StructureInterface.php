@@ -211,6 +211,30 @@ interface StructureInterface extends \JsonSerializable
     public function getPublished();
 
     /**
+     * return value of property with given name
+     * @param $name string name of property
+     * @return mixed
+     */
+    public function getPropertyValue($name);
+
+    /**
+     * returns all property names
+     * @return array
+     */
+    public function getPropertyNames();
+
+    /**
+     * @param \Sulu\Component\Content\StructureType $type
+     */
+    public function setType($type);
+
+    /**
+     * return type of structure
+     * @return \Sulu\Component\Content\StructureType
+     */
+    public function getType();
+
+    /**
      * returns true if this node is shown in navigation
      * @return boolean
      */
