@@ -124,32 +124,6 @@ define([], function() {
                 url += '&language=' + language;
 
                 return url;
-            },
-
-            /**
-             * Binds dom events
-             */
-            bindDomEvents = function() {
-
-                //expand
-                this.sandbox.dom.on('#' + constants.toolbarLeft, 'click', function(event) {
-
-                    var $target = event.currentTarget;
-
-                    if (this.sandbox.dom.hasClass($target, 'collapsed')) {
-                        this.expandPreview($target);
-                    } else {
-                        this.collapsePreview($target);
-                    }
-                }.bind(this));
-
-            },
-
-            /**
-             * binds custom events
-             */
-            bindCustomEvents = function() {
-
             };
 
         return {
@@ -161,6 +135,7 @@ define([], function() {
                 // component vars
                 this.currentSize = parseHeightAndWidthFromString.call(this, this.options.toolbar.resolutions[0]);
                 this.previewWidth = 0;
+                this.url = '';
 
                 // dom elements
                 this.$wrapper = null;
@@ -168,20 +143,24 @@ define([], function() {
                 this.$toolbar = null;
 
                 this.render();
-                bindDomEvents.call(this);
-                bindCustomEvents.call(this);
+                this.bindDomEvents.call(this);
+                this.bindCustomEvents.call(this);
 
                 this.sandbox.emit(INITIALIZED);
             },
+
+            /*********************************************
+            *   Rendering
+            ********************************************/
 
             /**
              * Initializes the rendering process
              */
             render: function() {
-                var url = getUrl.call(this, this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
+                this.url = getUrl.call(this, this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
                 this.renderWrapper(this.currentSize.height);
-                this.renderIframe(this.currentSize.width, this.currentSize.height, url);
+                this.renderIframe(this.currentSize.width, this.currentSize.height, this.url);
                 this.renderToolbar();
             },
 
@@ -230,8 +209,8 @@ define([], function() {
                     '<div id="preview-toolbar" class="preview-toolbar">',
                     '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-eye-open"></span></div>',
                     '<div id="', constants.toolbarRight, '" class="right">',
-                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right"><span class="icon-external-link"></span></div>',
-                    '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right">Resolutions</div>',
+                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-external-link"></span></div>',
+                    '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">Resolutions</div>',
                     '</div>',
                     '</div>'
                 ].join(''));
@@ -240,6 +219,45 @@ define([], function() {
                 this.sandbox.dom.append(this.$el, this.$toolbar);
             },
 
+            /*********************************************
+             *   Event Handling
+             ********************************************/
+
+            /**
+             * Binds dom events
+             */
+            bindDomEvents: function() {
+
+                //expand and collapse
+                this.sandbox.dom.on('#' + constants.toolbarLeft, 'click', function(event) {
+
+                    var $target = event.currentTarget;
+
+                    if (this.sandbox.dom.hasClass($target, 'collapsed')) {
+                        this.expandPreview($target);
+                    } else {
+                        this.collapsePreview($target);
+                    }
+                }.bind(this));
+
+                // show in new window
+                this.sandbox.dom.on('#' + constants.toolbarNewWindow, 'click', function(event) {
+                    window.open(this.url);
+                }.bind(this));
+
+            },
+
+            /**
+             * binds custom events
+             */
+            bindCustomEvents: function() {
+
+            },
+
+
+            /*********************************************
+             *   Util Methods
+             ********************************************/
 
             /**
              * Expands preview and minimizes the form
