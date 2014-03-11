@@ -12,7 +12,10 @@ namespace Sulu\Component\Content\Mapper;
 
 use DateTime;
 use PHPCR\NodeInterface;
+use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
+use Sulu\Component\Content\BreadcrumbItem;
+use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Exception\StateNotFoundException;
@@ -20,16 +23,27 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class ContentMapper extends ContainerAware implements ContentMapperInterface
+class ContentMapper implements ContentMapperInterface
 {
 
     /**
-     * @var \Sulu\Component\Content\ContentTypeManager
+     * @var ContentTypeManager
      */
     private $contentTypeManager;
+
+    /**
+     * @var StructureManagerInterface::
+     */
+    private $structureManager;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
 
     /**
      * namespace of translation
@@ -87,9 +101,18 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     private $properties;
 
 
-    public function __construct(ContentTypeManager $contentTypeManager, $defaultLanguage, $defaultTemplate, $languageNamespace)
+    public function __construct(
+        ContentTypeManager $contentTypeManager,
+        StructureManagerInterface $structureManager,
+        SessionManagerInterface $sessionManager,
+        $defaultLanguage,
+        $defaultTemplate,
+        $languageNamespace
+    )
     {
         $this->contentTypeManager = $contentTypeManager;
+        $this->structureManager = $structureManager;
+        $this->sessionManager = $sessionManager;
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
@@ -547,11 +570,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     {
         $structures = array();
 
-        $queryManager = $this->getSession()->getWorkspace()->getQueryManager();
-        $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
-        if ($limit) {
-            $query->setLimit($limit);
-        }
+        $query = $this->createSql2Query($sql2, $limit);
         $result = $query->execute();
 
         foreach ($result->getNodes() as $node) {
@@ -559,6 +578,22 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
         }
 
         return $structures;
+    }
+
+    /**
+     * returns a sql2 query
+     * @param string $sql2 The query, which returns the content
+     * @param int $limit Limits the number of returned rows
+     * @return QueryInterface
+     */
+    private function createSql2Query($sql2, $limit = null)
+    {
+        $queryManager = $this->getSession()->getWorkspace()->getQueryManager();
+        $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
+        if ($limit) {
+            $query->setLimit($limit);
+        }
+        return $query;
     }
 
     /**
@@ -621,6 +656,57 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
     }
 
     /**
+     * load breadcrumb for given uuid in given language
+     * @param $uuid
+     * @param $languageCode
+     * @param $webspaceKey
+     * @return BreadcrumbItemInterface[]
+     */
+    public function loadBreadcrumb($uuid, $languageCode, $webspaceKey)
+    {
+        $this->properties->setLanguage($languageCode);
+
+        $sql = 'SELECT *
+                FROM  [sulu:content] as parent INNER JOIN [sulu:content] as child
+                    ON ISDESCENDANTNODE(child, parent)
+                WHERE child.[jcr:uuid]="' . $uuid . '"';
+
+        $query = $this->createSql2Query($sql);
+        $nodes = $query->execute();
+
+        $result = array();
+        $groundDepth = $this->getContentNode($webspaceKey)->getDepth();
+
+        /** @var NodeInterface $node */
+        foreach ($nodes->getNodes() as $node) {
+            // uuid
+            $nodeUuid = $node->getIdentifier();
+            // depth
+            $depth = $node->getDepth() - $groundDepth;
+            // title
+            $templateKey = $node->getPropertyValueWithDefault(
+                $this->properties->getName('template'),
+                $this->defaultTemplate
+            );
+            $structure = $this->getStructure($templateKey);
+            $property = $structure->getProperty('title');
+            $type = $this->getContentType($property->getContentTypeName());
+            $type->read(
+                $node,
+                new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                $webspaceKey,
+                $languageCode,
+                null
+            );
+            $title = $property->getValue();
+
+            $result[] = new BreadcrumbItem($depth, $nodeUuid, $title);
+        }
+
+        return $result;
+    }
+
+    /**
      * deletes content with subcontent in given webspace
      * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
@@ -657,7 +743,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getStructure($key)
     {
-        return $this->container->get('sulu.content.structure_manager')->getStructure($key);
+        return $this->structureManager->getStructure($key);
     }
 
     /**
@@ -684,7 +770,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getContentNode($webspaceKey)
     {
-        return $this->container->get('sulu.phpcr.session')->getContentNode($webspaceKey);
+        return $this->sessionManager->getContentNode($webspaceKey);
     }
 
     /**
@@ -692,7 +778,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getSession()
     {
-        return $this->container->get('sulu.phpcr.session')->getSession();
+        return $this->sessionManager->getSession();
     }
 
     /**
@@ -701,7 +787,7 @@ class ContentMapper extends ContainerAware implements ContentMapperInterface
      */
     protected function getRouteNode($webspaceKey)
     {
-        return $this->container->get('sulu.phpcr.session')->getRouteNode($webspaceKey);
+        return $this->sessionManager->getRouteNode($webspaceKey);
     }
 
     /**
