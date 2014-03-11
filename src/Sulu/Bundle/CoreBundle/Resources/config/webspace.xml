@@ -3,10 +3,8 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_core.webspace.request_analyzer.class">Sulu\Component\Webspace\Analyzer\RequestAnalyzer</parameter>
         <parameter key="sulu_core.webspace.webspace_manager.class">Sulu\Component\Webspace\Manager\WebspaceManager</parameter>
         <parameter key="sulu_core.webspace.loader.xml_class">Sulu\Component\Webspace\Loader\XmlFileLoader</parameter>
-        <parameter key="sulu_core.webspace.request_listener.class">Sulu\Component\Webspace\EventListener\RequestListener</parameter>
 
         <parameter key="sulu_core.webspace.config_dir">%kernel.root_dir%/../Resources/webspaces</parameter>
         <parameter key="sulu_core.webspace.cache_class">WebspaceCollectionCache</parameter>
