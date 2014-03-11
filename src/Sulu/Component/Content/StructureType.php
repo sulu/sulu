@@ -58,5 +58,6 @@ class StructureType
      */
     public function toArray()
     {
+        return array('name' => $this->getName(), 'value' => $this->getValue());
     }
 }
