@@ -1307,4 +1307,71 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Testnews-2', $result[2]->getTitle());
         $this->assertEquals($data['child']->getUuid(), $result[2]->getUuid());
     }
+
+    private function prepareGhostTestData()
+    {
+        $data = array(
+            array(
+                'title' => 'News-EN',
+                'url' => '/news'
+            ),
+            array(
+                'title' => 'News-DE',
+                'url' => '/news'
+            ),
+            array(
+                'title' => 'Testnews-1',
+                'url' => '/news/test-1'
+            ),
+            array(
+                'title' => 'Testnews-2',
+                'url' => '/news/test-2'
+            ),
+            array(
+                'title' => 'Testnews-2-1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test-2/test-1',
+                'article' => 'default'
+            )
+        );
+
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+
+        // save root content
+        $result['root'] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+
+        // add a child content
+        $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $result['root']->getUuid());
+        $result['child'] = $this->mapper->save(
+            $data[2],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            $result['root']->getUuid()
+        );
+        $result['subchild'] = $this->mapper->save(
+            $data[3],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            $result['child']->getUuid()
+        );
+
+        return $result;
+    }
+
+    public function testGhost()
+    {
+        /** @var StructureInterface[] $data */
+        $data = $this->prepareGhostTestData();
+    }
 }
