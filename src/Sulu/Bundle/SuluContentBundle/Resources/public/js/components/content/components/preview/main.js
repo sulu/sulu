@@ -74,16 +74,23 @@ define([], function() {
                 INITIALIZED = eventNamespace + 'initialized',
 
             /**
-             * raised after initialization
-             * @event husky.preview.initialized
+             * raised after triggering of expand action
+             * @event husky.preview.expending
              */
                 EXPANDING = eventNamespace + 'expending',
 
             /**
-             * raised on trigger
-             * @event husky.preview.initialized
+             * raised after triggering of collapse action
+             * @event husky.preview.collapsing
              */
                 COLLAPSING = eventNamespace + 'collapsing',
+
+            /**
+             * raised when preview is opened in new window
+             * @event husky.preview.collapsing
+             */
+                HIDE = eventNamespace + 'hide',
+
 
             /**
              * Returns an object with a height and width property from  a string in pixles
@@ -136,6 +143,7 @@ define([], function() {
                 this.currentSize = parseHeightAndWidthFromString.call(this, this.options.toolbar.resolutions[0]);
                 this.previewWidth = 0;
                 this.url = '';
+                this.isExpanded = false;
 
                 // dom elements
                 this.$wrapper = null;
@@ -159,7 +167,7 @@ define([], function() {
             render: function() {
                 this.url = getUrl.call(this, this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
-                this.renderWrapper(this.currentSize.height);
+                this.renderWrapper();
                 this.renderIframe(this.currentSize.width, this.currentSize.height, this.url);
                 this.renderToolbar();
             },
@@ -167,11 +175,10 @@ define([], function() {
             /**
              * Renders the div which contains the iframe
              * with the maximum available space
-             * @param height {Integer} height of wrapper
              */
-            renderWrapper: function(height) {
+            renderWrapper: function() {
 
-                var mainWidth, mainMarginLeft, totalWidth, wrapperWidth,
+                var mainWidth, mainMarginLeft, totalWidth,
                     $main = this.sandbox.dom.$(this.options.mainContentElementIdentifier)[0];
 
                 if (!$main) {
@@ -217,6 +224,15 @@ define([], function() {
 
                 this.sandbox.dom.css(this.$toolbar, 'width', this.previewWidth + 30 + 'px');
                 this.sandbox.dom.append(this.$el, this.$toolbar);
+
+                this.renderResolutionDropdown();
+            },
+
+            /**
+             * Renders the dropdown for the resolution changes
+             */
+            renderResolutionDropdown: function(){
+                // TODO render resolution dropdown
             },
 
             /*********************************************
@@ -233,7 +249,7 @@ define([], function() {
 
                     var $target = event.currentTarget;
 
-                    if (this.sandbox.dom.hasClass($target, 'collapsed')) {
+                    if (!this.isExpanded) {
                         this.expandPreview($target);
                     } else {
                         this.collapsePreview($target);
@@ -241,9 +257,19 @@ define([], function() {
                 }.bind(this));
 
                 // show in new window
-                this.sandbox.dom.on('#' + constants.toolbarNewWindow, 'click', function(event) {
+                this.sandbox.dom.on('#' + constants.toolbarNewWindow, 'click', function() {
+
                     window.open(this.url);
+                    this.sandbox.dom.hide(this.$wrapper);
+                    this.sandbox.dom.hide(this.$toolbar);
+                    this.sandbox.dom.remove(this.$wrapper);
+                    this.sandbox.dom.remove(this.$toolbar);
+
+                    this.sandbox.emit(HIDE);
+
                 }.bind(this));
+
+                // TODO: dropdown events
 
             },
 
@@ -267,7 +293,7 @@ define([], function() {
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
                 this.sandbox.emit(EXPANDING);
-
+                this.isExpanded = true;
 
                 // TODO expandPreview
             },
@@ -280,6 +306,7 @@ define([], function() {
                 this.sandbox.dom.removeClass($target, 'expanded');
                 this.sandbox.dom.addClass($target, 'collapsed');
                 this.sandbox.emit(COLLAPSING);
+                this.isExpanded = false;
 
                 // TODO collapsePreview
             }
