@@ -44,7 +44,7 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
-                tasks: ['compass:dev']
+                tasks: ['publish']
             },
             scripts: {
                 files: ['Resources/public/**'],

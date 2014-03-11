@@ -1,20 +1,22 @@
-/* line 1, ../scss/modules/preview.scss */
+/* line 5, ../scss/modules/preview.scss */
 .previewWrapper {
+  overflow: hidden;
+  overflow-x: scroll;
   background-color: #ffffff;
   position: absolute;
   top: 0;
   right: 0;
-  overflow: hidden;
-  overflow-x: scroll;
+  z-index: 100;
+  /* because of a css bug in the toolbar */
 }
 
-/* line 10, ../scss/modules/preview.scss */
+/* line 15, ../scss/modules/preview.scss */
 .previewIframe {
   border: 0;
   border-left: 1px solid #666;
 }
 
-/* line 15, ../scss/modules/preview.scss */
+/* line 20, ../scss/modules/preview.scss */
 .previewToolbar {
   background: red;
   z-index: 100;

@@ -1,1 +1,1 @@
-.previewWrapper{background-color:#fff;position:absolute;top:0;right:0;overflow:hidden;overflow-x:scroll}.previewIframe{border:0;border-left:1px solid #666}.previewToolbar{background:red;z-index:100}
+.previewWrapper{overflow:hidden;overflow-x:scroll;background-color:#fff;position:absolute;top:0;right:0;z-index:100}.previewIframe{border:0;border-left:1px solid #666}.previewToolbar{background:red;z-index:100}
