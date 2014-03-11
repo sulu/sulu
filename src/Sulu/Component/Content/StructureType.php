@@ -13,6 +13,11 @@ namespace Sulu\Component\Content;
 
 class StructureType
 {
+    public static function getGhost($value)
+    {
+        return new StructureType('ghost', $value);
+    }
+
     /**
      * @var string
      */
@@ -23,7 +28,7 @@ class StructureType
      */
     private $value;
 
-    function __construct($name, $value)
+    private function __construct($name, $value)
     {
         $this->name = $name;
         $this->value = $value;
