@@ -88,11 +88,18 @@ define([], function() {
             ]);
         },
 
+        setTitle = function(title) {
+            this.sandbox.dom.html(this.sandbox.dom.find('h1', this.$headlines), title);
+        },
+
+        setTitleAddition = function(title) {
+            this.sandbox.dom.html(this.sandbox.dom.find('h6', this.$headlines), title);
+        },
+
         prependHeadingAddition = function() {
             if (typeof this.options.headingAddition !== 'undefined' && this.options.headingAddition !== null) {
-                var $headlines = this.$find('.headlines');
-                this.sandbox.dom.addClass($headlines,'compoundedHeadlines');
-                this.sandbox.dom.prepend($headlines,'<h6>'+this.options.headingAddition+'</div>');
+                this.sandbox.dom.addClass(this.$headlines,'compoundedHeadlines');
+                this.sandbox.dom.prepend(this.$headlines,'<h6>'+this.options.headingAddition+'</div>');
             }
         };
 
@@ -107,6 +114,8 @@ define([], function() {
             // skeleton
             this.html(templates.skeleton.call(this));
 
+            // headlines
+            this.$headlines = this.$find('.headlines');
             prependHeadingAddition.call(this);
 
             // bind events (also initializes first component)
@@ -133,6 +142,11 @@ define([], function() {
             this.sandbox.on('husky.page-functions.clicked', function() {
                 this.sandbox.emit('sulu.edit-toolbar.back');
             }.bind(this));
+
+            this.sandbox.on('sulu.content.set-title', setTitle.bind(this));
+
+            this.sandbox.on('sulu.content.set-title-addition', setTitleAddition.bind(this));
+
         },
 
         /**
