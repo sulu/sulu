@@ -1307,4 +1307,143 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Testnews-2', $result[2]->getTitle());
         $this->assertEquals($data['child']->getUuid(), $result[2]->getUuid());
     }
+
+    private function prepareGhostTestData()
+    {
+        $data = array(
+            array(
+                'title' => 'News-EN',
+                'url' => '/news'
+            ),
+            array(
+                'title' => 'News-DE_AT',
+                'url' => '/news'
+            ),
+            array(
+                'title' => 'Products-EN',
+                'url' => '/products'
+            ),
+            array(
+                'title' => 'Products-DE',
+                'url' => '/products'
+            )
+        );
+
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+
+        // save root content
+        $result['news-en'] = $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
+        $result['news-de_at'] = $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'de_at',
+            1,
+            true,
+            $result['news-en']->getUuid()
+        );
+        $result['products-en'] = $this->mapper->save(
+            $data[2],
+            'overview',
+            'default',
+            'en',
+            1,
+            true
+        );
+        $result['products-de'] = $this->mapper->save(
+            $data[3],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            $result['products-en']->getUuid()
+        );
+
+        return $result;
+    }
+
+    public function testGhost()
+    {
+        /** @var StructureInterface[] $data */
+        $this->prepareGhostTestData();
+
+        // both pages exists in en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // both pages exists in en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // both pages are ghosts in en_us from en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('en', $result[0]->getType()->getValue());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[1]->getType()->getName());
+        $this->assertEquals('en', $result[1]->getType()->getValue());
+
+        // no page exists in en_us without ghosts
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, false);
+        $this->assertEquals(0, sizeof($result));
+
+        // one page not exists in de (ghost from de_at), other exists in de
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('de-at', $result[0]->getType()->getValue());
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // one page exists in de (without ghosts)
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
+        $this->assertEquals(1, sizeof($result));
+        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+
+        // one page not exists in de_at (ghost from de), other exists in de_at
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('de', $result[0]->getType()->getValue());
+
+
+        // both pages are ghosts in es from en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('en', $result[0]->getType()->getValue());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[1]->getType()->getName());
+        $this->assertEquals('en', $result[1]->getType()->getValue());
+
+        // no page exists in en_us without ghosts
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, false);
+        $this->assertEquals(0, sizeof($result));
+    }
 }
