@@ -44,17 +44,23 @@ define([], function() {
             this.selectedSystem = '';
             permissionData = this.options.data.permissions;
 
+            // wait for dropdown to initialize, then get the value and continue
+            this.sandbox.on('husky.dropdown.multiple.select.system.initialize', function() {
+                this.sandbox.emit('husky.dropdown.multiple.select.system.getChecked', function(system) {
+                    this.selectedSystem = system[0];
+
+                    this.initializeMatrix();
+                    this.initializeValidation();
+
+                    this.bindDOMEvents();
+                    this.bindCustomEvents();
+
+                    this.setHeaderBar(true);
+                    this.listenForChange();
+                }.bind(this));
+            }.bind(this));
+
             this.render();
-            this.startSystemDropdown();
-
-            this.initializeMatrix();
-            this.initializeValidation();
-
-            this.bindDOMEvents();
-            this.bindCustomEvents();
-
-            this.setHeaderBar(true);
-            this.listenForChange();
         },
 
         bindDOMEvents: function() {
@@ -235,23 +241,8 @@ define([], function() {
 
         render: function() {
             this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.options.data}));
-        },
-
-        startSystemDropdown: function() {
-            this.selectedSystem = this.options.data.system;
-
-            this.sandbox.start([{
-                name: 'dropdown-multiple-select@husky',
-                options: {
-                    el: this.sandbox.dom.find('#system', this.$el),
-                    instanceName: 'system',
-                    defaultLabel: 'Please choose..',
-                    noDeselect: true,
-                    singleSelect: true,
-                    data: [this.options.data.system],
-                    preSelectedElements: [this.options.data.system]
-                }
-            }]);
+            //starts the dropdown-component
+            this.sandbox.start(this.$el);
         },
 
         // @var Bool saved - defines if saved state should be shown
