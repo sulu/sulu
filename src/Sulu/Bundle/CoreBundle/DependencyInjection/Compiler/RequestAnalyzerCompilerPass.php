@@ -30,7 +30,7 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // Check if request analyzer service is enable in configuration
-        if ($container->getParameter('sulu_core.webspace.enable_request_analyzer') == true) {
+        if ($container->getParameter('sulu_core.webspace.request_analyzer.enabled') == true) {
             // set request analyzer
             $container->setDefinition(
                 'sulu_core.webspace.request_analyzer',
@@ -64,7 +64,7 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
                         'sulu_core.webspace.request_listener',
                         'onKernelRequest'
                     ),
-                    300
+                    $container->getParameter('sulu_core.webspace.request_analyzer.priority')
                 )
             );
         }
