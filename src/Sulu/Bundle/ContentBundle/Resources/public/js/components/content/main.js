@@ -369,8 +369,12 @@ define([
         },
 
         renderForm: function() {
-            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>');
+            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>'),
+                $preview = this.sandbox.dom.createElement('<div id="preview-container"/>');
+
             this.html($form);
+            this.sandbox.dom.append('#preview',$preview);
+
             // load data and show form
             this.content = new Content();
             if (!!this.options.id) {
@@ -392,7 +396,7 @@ define([
                             {
                                 name: 'content/components/preview@sulucontent',
                                 options: {
-                                    el: '#preview',
+                                    el: '#preview-container',
                                     toolbar: {
                                         resolutions: [
                                             /*'1920x1080',
