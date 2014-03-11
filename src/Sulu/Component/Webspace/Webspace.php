@@ -76,7 +76,7 @@ class Webspace
      */
     public function addLocalization(Localization $localization)
     {
-        $this->localizations[$localization->getLocalization()] = $localization;
+        $this->localizations[] = $localization;
     }
 
     /**

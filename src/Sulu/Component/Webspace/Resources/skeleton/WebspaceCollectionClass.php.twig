@@ -1,11 +1,13 @@
-{% macro create_localizations(localization, count) %}
+{% macro create_localizations(localization, count, parent) %}
+        // parent id {{ parent }}
         $localization{{ count }} = new Localization();
         $localization{{ count }}->setLanguage('{{ localization.language }}');
         $localization{{ count }}->setCountry('{{ localization.country }}');
         $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
+        $localization{{ count }}->setParent($localization{{ parent }});
 
 {% for childLocalization in localization.children %}
-    {{ _self.create_localizations(childLocalization, count + 1) }}
+    {{ _self.create_localizations(childLocalization, count + 1, count) }}
 {% endfor %}
         $localization{{ count - 1 }}->addChild($localization{{ count }});
 {% endmacro %}
@@ -43,7 +45,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization0->setCountry('{{ localization.country }}');
         $localization0->setShadow('{{ (localization.shadow) }}');
 {% for childLocalization in localization.children %}
-{{ _self.create_localizations(childLocalization, 1) }}
+{{ _self.create_localizations(childLocalization, 1, 0) }}
 {% endfor %}
         $webspace->addLocalization($localization0);
 

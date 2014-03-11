@@ -41,6 +41,12 @@ class Localization
     private $children;
 
     /**
+     * The parent localization
+     * @var Localization
+     */
+    private $parent;
+
+    /**
      * Sets the country of this localization
      * @param string $country
      */
@@ -133,6 +139,24 @@ class Localization
         }
 
         return $localization;
+    }
+
+    /**
+     * Sets the parent of this localization
+     * @param \Sulu\Component\Webspace\Localization $parent
+     */
+    public function setParent(Localization $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Returns the parent of this localization
+     * @return \Sulu\Component\Webspace\Localization
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     /**
