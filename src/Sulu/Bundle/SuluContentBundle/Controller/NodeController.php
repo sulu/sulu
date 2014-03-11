@@ -31,12 +31,13 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+        $breadcrumb = $this->getRequest()->get('breadcrumb', false);
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $webspace) {
+            function ($id) use ($language, $webspace, $breadcrumb) {
                 try {
-                    return $this->getRepository()->getNode($id, $webspace, $language);
+                    return $this->getRepository()->getNode($id, $webspace, $language, $breadcrumb);
                 } catch (ItemNotFoundException $ex) {
                     return null;
                 }
