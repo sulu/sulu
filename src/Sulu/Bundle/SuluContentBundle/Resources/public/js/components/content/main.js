@@ -235,16 +235,16 @@ define([
                 success: function() {
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                     this.sandbox.emit('sulu.labels.success.show',
-                                      'labels.state-changed.success-desc',
-                                      'labels.state-changed.success',
-                                      'sulu.content.contents.state.label');
+                        'labels.state-changed.success-desc',
+                        'labels.state-changed.success',
+                        'sulu.content.contents.state.label');
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('sulu.content.contents.state.changeFailed');
                     this.sandbox.emit('sulu.labels.error.show',
-                                      'labels.state-changed.error-desc',
-                                      'labels.state-changed.error',
-                                      'sulu.content.contents.state.label');
+                        'labels.state-changed.error-desc',
+                        'labels.state-changed.error',
+                        'sulu.content.contents.state.label');
                     this.sandbox.logger.log("error while saving profile");
                 }.bind(this)
             });
@@ -387,6 +387,32 @@ define([
                                     webspace: this.options.webspace,
                                     language: this.options.language,
                                     preview: !!this.options.preview ? this.options.preview : false
+                                }
+                            },
+                            {
+                                name: 'content/components/preview@sulucontent',
+                                options: {
+                                    el: '#preview',
+                                    toolbar: {
+                                        resolutions: [
+                                            /*'1920x1080',
+                                            '1680x1050',
+                                            '1440x1050',*/
+                                            '1024x768',
+                                            '800x640',
+                                            '600x480',
+                                            '480x320'
+                                        ],
+                                        showLeft: true,
+                                        showRight: true
+                                    },
+                                    mainContentElementIdentifier: '#content',
+                                    iframeSource: {
+                                        url: '/admin/content/preview/',
+                                        webspace: this.options.webspace,
+                                        language: this.options.language,
+                                        id: this.options.id
+                                    }
                                 }
                             }
                         ]);

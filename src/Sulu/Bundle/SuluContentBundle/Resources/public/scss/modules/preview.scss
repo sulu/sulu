@@ -1,10 +1,15 @@
+.preview{
+
+}
+
 .previewWrapper {
+    overflow:hidden;
+    overflow-x:scroll;
     background-color: #ffffff;
     position: absolute;
     top:0;
     right:0;
-    overflow:hidden;
-    overflow-x:scroll;
+    z-index:100; /* because of a css bug in the toolbar */
 }
 
 .previewIframe {

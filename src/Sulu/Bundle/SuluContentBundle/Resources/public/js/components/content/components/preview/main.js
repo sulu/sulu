@@ -19,7 +19,7 @@
  * @param {Object}  [options.iframeSource] configuration object for the source of the iframe
  * @param {String}  [options.iframeSource.url] url used for the iframe
  * @param {String}  [options.iframeSource.webspace] webspace section of the url
- * @param {String}  [options.iframeSource.lang] language section of the url
+ * @param {String}  [options.iframeSource.language] language section of the url
  * @param {String}  [options.id] id of the element
  * @param {Object}  [options.toolbar] options for the toolbar
  * @param {Array}   [options.toolbar.resolutions] options for the toolbar
@@ -84,25 +84,27 @@ define([], function() {
 
             /**
              * Concatenates the given strings to an url
-             * @param {String} base url
+             * @param {String} url
              * @param {String} webspace
              * @param {String} language
              * @param {String} id
              * @return {String} url string
              */
-                getUrl = function(baseUrl, webspace, language, id) {
+                getUrl = function(url, webspace, language, id) {
 
-                if (!baseUrl) {
-                    this.sandbox.logger.error('no baseurl definded!');
+                // '/admin/content/preview/' + this.options.data.id+'?webspace=' + this.options.webspace + '&language='+ this.options.language
+
+                if (!url ||!id || !webspace || !language) {
+                    this.sandbox.logger.error('not all url params for iframe definded!');
                     return '';
                 }
 
-                baseUrl = baseUrl[baseUrl.length - 1] === '/' ? baseUrl : baseUrl + '/';
-                webspace = webspace !== '' ? webspace + '/' : '';
-                language = language !== '' ? language + '/' : '';
-                id = id !== '' ? id + '/' : '';
+                url = url[url.length - 1] === '/' ? url : url + '/';
+                url += id + '?';
+                url += 'webspace='+webspace;
+                url += 'language='+language;
 
-                return baseUrl + webspace + language + id;
+                return url;
             };
 
         return {
