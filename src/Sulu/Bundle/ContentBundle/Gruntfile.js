@@ -47,7 +47,7 @@ module.exports = function (grunt) {
                 tasks: ['publish']
             },
             scripts: {
-                files: ['Resources/public/**'],
+                files: ['Resources/public/js/{,*/}*.js'],
                 tasks: ['publish']
             }
         },

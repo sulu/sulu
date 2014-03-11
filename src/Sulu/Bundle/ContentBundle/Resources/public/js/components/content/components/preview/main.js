@@ -58,6 +58,13 @@ define([], function() {
                 }
             },
 
+            constants = {
+                toolbarLeft: 'preview-toolbar-left',
+                toolbarRight: 'preview-toolbar-right',
+                toolbarNewWindow: 'preview-toolbar-new-window',
+                toolbarResolutions: 'preview-toolbar-resolutions'
+            },
+
             eventNamespace = 'husky.preview.',
 
             /**
@@ -65,6 +72,18 @@ define([], function() {
              * @event husky.preview.initialized
              */
                 INITIALIZED = eventNamespace + 'initialized',
+
+            /**
+             * raised after initialization
+             * @event husky.preview.initialized
+             */
+                EXPANDING = eventNamespace + 'expending',
+
+            /**
+             * raised on trigger
+             * @event husky.preview.initialized
+             */
+                COLLAPSING = eventNamespace + 'collapsing',
 
             /**
              * Returns an object with a height and width property from  a string in pixles
@@ -94,17 +113,43 @@ define([], function() {
 
                 // '/admin/content/preview/' + this.options.data.id+'?webspace=' + this.options.webspace + '&language='+ this.options.language
 
-                if (!url ||!id || !webspace || !language) {
+                if (!url || !id || !webspace || !language) {
                     this.sandbox.logger.error('not all url params for iframe definded!');
                     return '';
                 }
 
                 url = url[url.length - 1] === '/' ? url : url + '/';
                 url += id + '?';
-                url += 'webspace='+webspace;
-                url += '&language='+language;
+                url += 'webspace=' + webspace;
+                url += '&language=' + language;
 
                 return url;
+            },
+
+            /**
+             * Binds dom events
+             */
+            bindDomEvents = function() {
+
+                //expand
+                this.sandbox.dom.on('#' + constants.toolbarLeft, 'click', function(event) {
+
+                    var $target = event.currentTarget;
+
+                    if (this.sandbox.dom.hasClass($target, 'collapsed')) {
+                        this.expandPreview($target);
+                    } else {
+                        this.collapsePreview($target);
+                    }
+                }.bind(this));
+
+            },
+
+            /**
+             * binds custom events
+             */
+            bindCustomEvents = function() {
+
             };
 
         return {
@@ -123,6 +168,8 @@ define([], function() {
                 this.$toolbar = null;
 
                 this.render();
+                bindDomEvents.call(this);
+                bindCustomEvents.call(this);
 
                 this.sandbox.emit(INITIALIZED);
             },
@@ -158,7 +205,7 @@ define([], function() {
                 totalWidth = this.sandbox.dom.width(document);
                 this.previewWidth = totalWidth - (mainWidth + mainMarginLeft + this.options.marginLeft);
 
-                this.$wrapper = this.sandbox.dom.$('<div class="previewWrapper" id="previewWrapper" style=""></div>');
+                this.$wrapper = this.sandbox.dom.$('<div class="preview-wrapper" id="preview-wrapper" style=""></div>');
                 this.sandbox.dom.css(this.$wrapper, 'width', this.previewWidth + 'px');
 
                 this.sandbox.dom.append(this.$el, this.$wrapper);
@@ -171,7 +218,7 @@ define([], function() {
              * @param {String} url for iframe target
              */
             renderIframe: function(width, height, url) {
-                this.$iframe = this.sandbox.dom.$('<iframe id="previewIframe" class="previewIframe" src="' + url + '" width="' + width + 'px" height="' + height + 'px"></iframe>');
+                this.$iframe = this.sandbox.dom.$('<iframe id="preview-iframe" class="preview-iframe" src="' + url + '" width="' + width + 'px" height="' + height + 'px"></iframe>');
                 this.sandbox.dom.append(this.$wrapper, this.$iframe);
             },
 
@@ -180,15 +227,46 @@ define([], function() {
              */
             renderToolbar: function() {
                 this.$toolbar = this.sandbox.dom.$([
-                    '<div id="previewToolbar" class="previewToolbar">',
-                        '<div id="previewToolbarLeft" class="left pointer"><span class="icon-eye-open"></span></div>',
-                        '<div id="previewToolbarRight" class="right"></div>',
+                    '<div id="preview-toolbar" class="preview-toolbar">',
+                    '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-eye-open"></span></div>',
+                    '<div id="', constants.toolbarRight, '" class="right">',
+                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right"><span class="icon-external-link"></span></div>',
+                    '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right">Resolutions</div>',
+                    '</div>',
                     '</div>'
                 ].join(''));
 
-                this.sandbox.dom.css(this.$toolbar,'width', this.previewWidth+30+'px');
+                this.sandbox.dom.css(this.$toolbar, 'width', this.previewWidth + 30 + 'px');
                 this.sandbox.dom.append(this.$el, this.$toolbar);
+            },
+
+
+            /**
+             * Expands preview and minimizes the form
+             */
+            expandPreview: function($target) {
+
+                this.sandbox.dom.removeClass($target, 'collapsed');
+                this.sandbox.dom.addClass($target, 'expanded');
+                this.sandbox.emit(EXPANDING);
+
+
+                // TODO expandPreview
+            },
+
+            /**
+             * Collapses preview and restores orginal size of the form
+             */
+            collapsePreview: function($target) {
+
+                this.sandbox.dom.removeClass($target, 'expanded');
+                this.sandbox.dom.addClass($target, 'collapsed');
+                this.sandbox.emit(COLLAPSING);
+
+                // TODO collapsePreview
             }
+
+
         };
     }
 );

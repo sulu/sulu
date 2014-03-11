@@ -1,5 +1,5 @@
 /* line 5, ../scss/modules/preview.scss */
-.previewWrapper {
+.preview-wrapper {
   overflow: scroll;
   background-color: #ffffff;
   position: fixed;
@@ -11,14 +11,14 @@
 }
 
 /* line 15, ../scss/modules/preview.scss */
-.previewIframe {
+.preview-iframe {
   border: 0;
   height: 100%;
   border-left: 1px solid #666;
 }
 
 /* line 21, ../scss/modules/preview.scss */
-.previewToolbar {
+.preview-toolbar {
   position: fixed;
   top: 0;
   right: 0;
@@ -26,11 +26,32 @@
   height: 30px;
   color: #fff;
 }
-/* line 33, ../scss/modules/preview.scss */
-.previewToolbar .left {
+/* line 29, ../scss/modules/preview.scss */
+.preview-toolbar .right {
+  float: right;
+  background: #3e3e3e;
+  height: 100%;
+}
+/* line 34, ../scss/modules/preview.scss */
+.preview-toolbar .right .new-window {
+  width: 30px;
+  overflow: hidden;
+  text-align: center;
+  padding-top: 5px;
+  border-left: 1px solid #4d4d4d;
+  height: 30px;
+}
+/* line 43, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions {
+  padding: 5px;
+}
+/* line 48, ../scss/modules/preview.scss */
+.preview-toolbar .left {
+  float: left;
   width: 30px;
   height: 30px;
   overflow: hidden;
   background: #3e3e3e;
   text-align: center;
+  padding-top: 5px;
 }
