@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Property;
@@ -140,12 +141,10 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         );
 
         // new session (because of jackrabbit bug)
-        $this->sessionService = new SessionManager(new RepositoryFactoryJackrabbit(), array(
-            'url' => 'http://localhost:8080/server',
-            'username' => 'admin',
-            'password' => 'admin',
-            'workspace' => 'test'
-        ), array('base' => 'cmf', 'content' => 'contents', 'route' => 'routes'));
+        $this->prepareContainerMock();
+        $this->prepareUserServiceMock();
+        $this->prepareMapper(false);
+        $this->prepareNodeRepository();
 
         $result = $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
 
@@ -226,7 +225,11 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->prepareUserServiceMock();
 
         $this->prepareMapper();
+        $this->prepareNodeRepository();
+    }
 
+    private function prepareNodeRepository()
+    {
         $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionService, $this->userService);
     }
 
@@ -285,13 +288,22 @@ class NodeRepositoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnCallback(array($this, 'getStructureCallback')));
     }
 
-    private function prepareMapper()
+    private function prepareMapper($repository = true)
     {
-        $this->mapper = new ContentMapper('en', 'default_template', 'sulu_locale');
-        $this->mapper->setContainer($this->containerMock);
-
+        $contentTypeManager = new ContentTypeManager($this->containerMock, 'sulu.content.type.');
         $this->prepareSession();
-        $this->prepareRepository();
+        if ($repository) {
+            $this->prepareRepository();
+        }
+
+        $this->mapper = new ContentMapper(
+            $contentTypeManager,
+            $this->structureManagerMock,
+            $this->sessionService,
+            'en',
+            'default_template',
+            'sulu_locale'
+        );
 
         $this->resourceLocator = new ResourceLocator(
             new TreeStrategy(
