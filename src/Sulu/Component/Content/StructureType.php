@@ -10,12 +10,23 @@
 
 namespace Sulu\Component\Content;
 
+use Sulu\Component\Webspace\Localization;
 
+
+/**
+ * type for structures, like ghost or shadow
+ * @package Sulu\Component\Content
+ */
 class StructureType
 {
-    public static function getGhost($value)
+    /**
+     * creates a new ghost type
+     * @param Localization $local of Type
+     * @return StructureType
+     */
+    public static function getGhost(Localization $local)
     {
-        return new StructureType('ghost', $value);
+        return new StructureType('ghost', $local->getLocalization());
     }
 
     /**
