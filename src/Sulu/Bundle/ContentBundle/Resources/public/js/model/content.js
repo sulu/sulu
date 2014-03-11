@@ -33,8 +33,8 @@ define([
             return this.save.call(this, attributes, options);
         },
 
-        fullFetch: function(webspace, language, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+        fullFetch: function(webspace, language, breadcrumb, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + '&breadcrumb=' + !!breadcrumb});
 
             return this.fetch.call(this, options);
         },
