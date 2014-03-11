@@ -49,6 +49,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('config_dir')
                     ->defaultValue('%kernel.root_dir%/../Resources/webspaces')
                 ->end()
+                ->scalarNode('enable_request_analyzer')
+                    ->defaultValue(true)
+                ->end()
             ->end()
         ->end();
     }
