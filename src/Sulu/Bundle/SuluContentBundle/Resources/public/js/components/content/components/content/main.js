@@ -16,7 +16,6 @@ define(function() {
         content: function() {
             return {
                 url: '/admin/content/navigation/content',
-                title: 'content.contents.title',
                 parentTemplate: 'default',
                 template: function() {
                     var preview = {

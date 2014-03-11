@@ -37,6 +37,7 @@ define(['app-config'], function(AppConfig) {
 
             this.formId = '#contacts-form-container';
             this.render();
+            this.setTitle();
 
             this.setHeaderBar(true);
 
@@ -67,6 +68,33 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
                 this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
             }.bind(this));
+        },
+
+
+        /**
+         * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
+         */
+        setTitle: function() {
+            if (!!this.options.id && !! this.options.data.title) {
+                this.sandbox.emit('sulu.content.set-title', this.options.data.title);
+                this.setBreadcrumb();
+            } else {
+                this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('content.contents.title'));
+            }
+        },
+
+        /**
+         * Generates the Breadcrumb-string and sets it for the title-additon
+         */
+        setBreadcrumb: function() {
+            var breadcrumb = this.options.webspace.replace(/_/g, '.');
+            if (!!this.options.data.breadcrumb) {
+                // loop through breadcrumb skip home-page
+                for (var i = 0, length = this.options.data.breadcrumb.length; ++i < length;) {
+                    breadcrumb += ' &#187; ' + this.options.data.breadcrumb[i].title;
+                }
+            }
+            this.sandbox.emit('sulu.content.set-title-addition', breadcrumb);
         },
 
         createForm: function(data) {
