@@ -1,0 +1,18 @@
+.previewWrapper {
+    background-color: #ffffff;
+    position: absolute;
+    top:0;
+    right:0;
+    overflow:hidden;
+    overflow-x:scroll;
+}
+
+.previewIframe {
+    border: 0;
+    border-left: 1px solid #666;
+}
+
+.previewToolbar {
+    background: red;
+    z-index: 100;
+}
