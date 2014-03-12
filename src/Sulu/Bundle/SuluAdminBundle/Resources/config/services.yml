@@ -1,6 +1,9 @@
 parameters:
     sulu_admin.admin_pool.class: Sulu\Bundle\AdminBundle\Admin\AdminPool
+    sulu_admin.jsconfig_pool.class: Sulu\Bundle\AdminBundle\Admin\JsConfigPool
 
 services:
     sulu_admin.admin_pool:
         class: %sulu_admin.admin_pool.class%
+    sulu_admin.jsconfig_pool:
+        class: %sulu_admin.jsconfig_pool.class%

@@ -17,7 +17,9 @@ define([], function() {
     var defaults = {
             heading: '',
             template: 'default',
+            parentTemplate: null,
             listener: 'default',
+            parentListener: null,
             instanceName: 'content',
             columnOptions: {
                 disabled: false,
@@ -112,24 +114,58 @@ define([], function() {
                     postfix;
                 this.sandbox.on('husky.datagrid.number.selections', function(number) {
                     postfix = number > 0 ? 'enable' : 'disable';
-                    this.sandbox.emit('husky.toolbar.' + instanceName +'item.'+ postfix, 'delete');
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete');
                 }.bind(this));
             },
-            defaultEditableList: function(){
+            defaultEditableList: function() {
                 var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
                 listener.default.call(this);
 
                 this.sandbox.on('husky.datagrid.data.changed', function() {
-                    this.sandbox.emit('husky.toolbar.' + instanceName +'item.enable', 'save');
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.enable', 'save');
                 }.bind(this));
             }
         },
 
+        /**
+         * merges two templates and replaces parent items with child items if they have the same id
+         * @param parentTemplate
+         * @param childTemplate
+         * @returns {Array}
+         */
+        mergeTemplates = function(parentTemplate, childTemplate) {
+            var template = parentTemplate.slice(0),
+                parentIds = [];
+
+            // get parent ids
+            this.sandbox.util.foreach(parentTemplate, function(parent) {
+                parentIds.push(parent.id);
+            }.bind(this));
+
+            // now merge arrays
+            this.sandbox.util.foreach(childTemplate, function(child) {
+                var parentIndex = parentIds.indexOf(child.id);
+                if (parentIndex < 0) {
+                    template.push(child);
+                } else {
+                    // if parent contains item with same id, replace it with child item
+                    template[parentIndex] = child;
+                }
+            }.bind(this));
+            return template;
+        },
+
+        /**
+         * returns parsed template
+         * @param template
+         * @param defaultTemplates
+         * @returns {*}
+         */
         parseTemplate = function(template, defaultTemplates) {
             // parse template, if it is a string
             if (typeof template === 'string') {
                 try {
-                   template = JSON.parse(template);
+                    template = JSON.parse(template);
                 } catch (e) {
                     // load template from variables
                     if (!!defaultTemplates[template]) {
@@ -138,9 +174,11 @@ define([], function() {
                         this.sandbox.logger.log('no template found!');
                     }
                 }
+            } else if (typeof template === 'function') {
+                template = template.call(this);
             }
             return template;
-    };
+        };
 
     return {
         view: true,
@@ -154,12 +192,25 @@ define([], function() {
             this.options.template = parseTemplate.call(this, this.options.template, templates);
             this.options.listener = parseTemplate.call(this, this.options.listener, listener);
 
+
+            // check if parent template is set
+            if (!!this.options.parentTemplate) {
+                this.options.parentTemplate = parseTemplate.call(this, this.options.parentTemplate, templates);
+                this.options.parentListener = parseTemplate.call(this, this.options.parentListener, listener);
+
+                this.options.template = mergeTemplates.call(this, this.options.parentTemplate, this.options.template);
+            }
+
             var $container = this.sandbox.dom.createElement('<div />');
             this.html($container);
 
             // see if template has listener set
             if (this.options.listener) {
                 this.options.listener.call(this);
+            }
+            // see if template has listener set
+            if (this.options.parentListener) {
+                this.options.parentListener.call(this);
             }
 
             this.sandbox.start([
@@ -177,6 +228,7 @@ define([], function() {
                 }
             ]);
         },
+
 
         /**
          * listens to tab events
