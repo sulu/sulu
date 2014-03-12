@@ -125,6 +125,15 @@ interface ContentMapperInterface
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null);
 
     /**
+     * load breadcrumb for given uuid in given language
+     * @param $uuid
+     * @param $languageCode
+     * @param $webspaceKey
+     * @return BreadcrumbItemInterface[]
+     */
+    public function loadBreadcrumb($uuid, $languageCode, $webspaceKey);
+
+    /**
      * deletes content with subcontent in given webspace
      * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
