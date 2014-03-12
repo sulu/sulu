@@ -36,6 +36,13 @@ class ListRestHelper
      */
     protected $em;
 
+
+    /**
+     * temp property for saving total amount of entities
+     * @var int
+     */
+    private $totalNumberOfElements;
+
     /**
      * url parameter naming
      * @var array
@@ -137,14 +144,15 @@ class ListRestHelper
 
     /**
      * returns total amount of pages
-     * @param string $entityName
-     * @param array $where
+     * @param int $totalNumber if not defined the total number is requested from DB
      * @return float|int
      */
-    public function getTotalPages($entityName, $where)
+    public function getTotalPages($totalNumber = null)
     {
-        $countData = $this->getRepository($entityName)->getCount($where);
-        return $this->getLimit() ? (ceil($countData / $this->getLimit())) : 1;
+        if (is_null($totalNumber)) {
+            $totalNumber = $this->$totalNumberOfElements;
+        }
+        return $this->getLimit() ? (ceil($totalNumber / $this->getLimit())) : 1;
     }
 
     /**
@@ -186,6 +194,16 @@ class ListRestHelper
         $searchFields = $this->getRequest()->get($this->getParameterName('searchFields'));
 
         return ($searchFields != null) ? explode(',', $searchFields) : array();
+    }
+
+    /**
+     * @param $entityName
+     * @param $where
+     * @return int
+     */
+    public function getTotalNumberOfElements($entityName, $where) {
+        $this->totalNumberOfElements = $this->getRepository($entityName)->getCount($where);
+        return $this->totalNumberOfElements;
     }
 
     /**

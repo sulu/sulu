@@ -238,7 +238,8 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $entities = $listHelper->find($this->entityName, $where);
-        $pages = $listHelper->getTotalPages($this->entityName, $where);
+        $numberOfAll = $listHelper->getTotalNumberOfElements($this->entityName, $where);
+        $pages = $listHelper->getTotalPages($numberOfAll);
 
         $response = array(
             '_links' => $this->getHalLinks($entities, $pages, true),
@@ -247,6 +248,7 @@ abstract class RestController extends FOSRestController
             'page' => $listHelper->getPage(),
             'pages' => $pages,
             'pageSize' => $listHelper->getLimit(),
+            'numberOfAll' => $numberOfAll
         );
 
         return $this->view($response, 200);
