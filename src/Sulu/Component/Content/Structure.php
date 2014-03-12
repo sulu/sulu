@@ -134,6 +134,11 @@ abstract class Structure implements StructureInterface
     private $hasTranslation;
 
     /**
+     * @var StructureType
+     */
+    private $type;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -340,6 +345,16 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * return value of property with given name
+     * @param $name string name of property
+     * @return mixed
+     */
+    public function getPropertyValue($name)
+    {
+        return $this->getProperty($name)->getValue();
+    }
+
+    /**
      * checks if a property exists
      * @param string $name
      * @return boolean
@@ -487,6 +502,31 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * returns all property names
+     * @return array
+     */
+    public function getPropertyNames()
+    {
+        return array_keys($this->properties);
+    }
+
+    /**
+     * @param \Sulu\Component\Content\StructureType $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return \Sulu\Component\Content\StructureType
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * magic getter
      * @param $property string name of property
      * @return mixed
@@ -563,6 +603,10 @@ abstract class Structure implements StructureInterface
             'created' => $this->created,
             'changed' => $this->changed
         );
+
+        if ($this->type !== null) {
+            $result['type'] = $this->getType()->toArray();
+        }
 
         /** @var PropertyInterface $property */
         foreach ($this->getProperties() as $property) {
