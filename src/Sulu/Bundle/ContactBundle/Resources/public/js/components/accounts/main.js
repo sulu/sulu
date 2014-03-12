@@ -44,8 +44,8 @@ define([
             }, this);
 
             // add new contact
-            this.sandbox.on('sulu.contacts.accounts.new', function() {
-                this.add();
+            this.sandbox.on('sulu.contacts.accounts.new', function(type) {
+                this.add(type);
             }, this);
 
             // delete selected contacts
@@ -99,9 +99,10 @@ define([
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
-        add: function() {
+        add: function(type) {
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
+            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add/type:'+type);
+
         },
 
         delAccounts: function(ids) {
@@ -158,7 +159,7 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
+                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON(), accountTypeName: this.options.accountType}}
                 ]);
             }
         },
