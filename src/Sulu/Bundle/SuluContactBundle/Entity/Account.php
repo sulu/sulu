@@ -20,6 +20,19 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class Account extends ApiEntity
 {
+
+    const TYPE_BASIC = 0;
+    const TYPE_LEAD = 1;
+    const TYPE_CUSTOMER = 2;
+    const TYPE_SUPPLIER = 3;
+
+    public static $TYPE_TRANSLATIONS = array(
+        self::TYPE_BASIC => 'contact.account.type.basic',
+        self::TYPE_LEAD => 'contact.account.type.lead',
+        self::TYPE_CUSTOMER => 'contact.account.type.customer',
+        self::TYPE_SUPPLIER => 'contact.account.type.supplier',
+    );
+
     /**
      * @var integer
      */
@@ -107,6 +120,12 @@ class Account extends ApiEntity
      * @var \Doctrine\Common\Collections\Collection
      */
     private $notes;
+
+    /**
+     * @var integer
+     */
+    private $type = self::TYPE_BASIC;
+
 
     /**
      * Constructor
@@ -567,5 +586,29 @@ class Account extends ApiEntity
     public function getChildren()
     {
         return $this->children;
+    }
+
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     * @return Account
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

@@ -14,7 +14,18 @@ define(function() {
     return {
         content: {
             url: '/admin/contact/navigation/account',
-            title: 'contact.accounts.title'
+            title: '',
+            titleAddition: ''
+        },
+
+        initialize: function() {
+
+            // TODO: set advanced headline
+            this.content.titleAddition = '';
+
+
         }
+
+
     };
 });
