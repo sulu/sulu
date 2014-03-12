@@ -382,8 +382,7 @@ abstract class RestController extends FOSRestController
                     $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page + 1) : null,
             'prev' => ($page > 1 && $pages > 1) ?
                     $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page - 1) : null,
-            'pagination' => ($pages > 1) ?
-                    $this->replaceOrAddUrlString($paginationLink, $listHelper->getParameterName('page') . '=', '{page}') : null,
+            'pagination' => $this->replaceOrAddUrlString($paginationLink, $listHelper->getParameterName('page') . '=', '{page}'),
             'find' => $returnListLinks ? $searchLink : null,
             'filter' => $returnListLinks ? $filterLink : null,
             'sortable' => $returnListLinks ? $sortable : null,
