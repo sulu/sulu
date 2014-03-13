@@ -91,6 +91,24 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $securityContext;
 
     /**
+     * The default language for the content mapper
+     * @var string
+     */
+    protected $language = 'de';
+
+    /**
+     * The default template for the content mapper
+     * @var string
+     */
+    protected $defaultTemplate = 'default';
+
+    /**
+     * The language namespace
+     * @var string
+     */
+    protected $languageNamespace = 'sulu_locale';
+
+    /**
      * purge webspace at tear down
      */
     public function tearDown()
@@ -117,7 +135,14 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
-            $this->mapper = new ContentMapper($contentTypeManager, $this->structureManager, $this->sessionManager, 'de', 'default_template', 'sulu_locale');
+            $this->mapper = new ContentMapper(
+                $contentTypeManager,
+                $this->structureManager,
+                $this->sessionManager,
+                $this->language,
+                $this->defaultTemplate,
+                $this->languageNamespace
+            );
 
             $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes')), 'not in use');
             $this->containerValueMap = array_merge(
