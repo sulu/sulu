@@ -108,6 +108,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var string
      */
     protected $languageNamespace = 'sulu_locale';
+    
      /**
       * @var WebspaceManagerInterface
       */
@@ -142,6 +143,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareSessionManager();
             $this->prepareWebspaceManager();
             $this->mapper = new ContentMapper(
+                $this->webspaceManager,
                 $contentTypeManager,
                 $this->structureManager,
                 $this->sessionManager,
