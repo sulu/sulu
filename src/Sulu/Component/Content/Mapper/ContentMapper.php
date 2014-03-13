@@ -25,6 +25,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -608,27 +609,32 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Returns the closes available localization for the given node
      * @param NodeInterface $contentNode The node to look up the localizations
-     * @param string $languageCode The code for which the data should be loaded
+     * @param string $localizationCode The code for which the data should be loaded
      * @param string $webspaceKey The key for the webspace to look for the defined localizations
      * @return \Sulu\Component\Webspace\Localization
      */
-    private function getAvailableLocalization(NodeInterface $contentNode, $languageCode, $webspaceKey)
+    private function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey)
     {
         // use created field to check localization availability
         $createdProperty = new TranslatedProperty(
             new Property('created', 'none'), // FIXME none as type is a dirty hack
-            $languageCode,
+            $localizationCode,
             $this->languageNamespace
         );
 
         // get localization object for querying parent localizations
-        $localization = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getLocalizations()[$languageCode];
+        $localization = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getLocalization($localizationCode);
 
-        // find first available localization in localization tree
-        while (!$contentNode->hasProperty($createdProperty->getName())) {
-            // TODO iterate to next iteration
+        // find first available localization in parents
+        while (!$contentNode->hasProperty($createdProperty->getName()) && $localization->getParent() != null) {
+            // try to load parent and stop if there is no parent
+            $localization = $localization->getParent();
             $createdProperty->setLocalization($localization->getLocalization());
         }
+
+        // TODO find first available localization in children
+
+        // TODO find any localization available
 
         return $localization;
     }
@@ -636,16 +642,16 @@ class ContentMapper implements ContentMapperInterface
     /**
      * returns data from given node
      * @param NodeInterface $contentNode
-     * @param string $languageCode
+     * @param string $localization
      * @param string $webspaceKey
      * @return StructureInterface
      */
-    private function loadByNode(NodeInterface $contentNode, $languageCode, $webspaceKey)
+    private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey)
     {
-        $localization = $this->getAvailableLocalization($contentNode, $languageCode, $webspaceKey);
+        $availableLocalization = $this->getAvailableLocalization($contentNode, $localization, $webspaceKey);
 
         // create translated properties
-        $this->properties->setLanguage($languageCode);
+        $this->properties->setLanguage($availableLocalization);
 
         $templateKey = $contentNode->getPropertyValueWithDefault(
             $this->properties->getName('template'),
@@ -654,11 +660,16 @@ class ContentMapper implements ContentMapperInterface
 
         $structure = $this->getStructure($templateKey);
 
+        // set structure to ghost, if the available localization does not match the requested one
+        if ($availableLocalization != $localization) {
+            $structure->setType(StructureType::getGhost($availableLocalization));
+        }
+
         $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setWebspaceKey($webspaceKey);
-        $structure->setLanguageCode($languageCode);
+        $structure->setLanguageCode($availableLocalization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
         $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
         $structure->setCreated(
@@ -691,9 +702,9 @@ class ContentMapper implements ContentMapperInterface
             $type = $this->getContentType($property->getContentTypeName());
             $type->read(
                 $contentNode,
-                new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                new TranslatedProperty($property, $availableLocalization, $this->languageNamespace),
                 $webspaceKey,
-                $languageCode,
+                $availableLocalization,
                 null
             );
         }

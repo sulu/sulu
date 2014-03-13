@@ -160,6 +160,27 @@ class Localization
     }
 
     /**
+     * @param Localization $this
+     * @param string $localization
+     * @return Localization|null
+     */
+    public function findLocalization($localization)
+    {
+        if ($this->getLocalization() == $localization) {
+            return $this;
+        }
+
+        $children = $this->getChildren();
+        if (!empty($children)) {
+            foreach ($children as $childLocalization) {
+                return $childLocalization->findLocalization($localization);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function __toString()

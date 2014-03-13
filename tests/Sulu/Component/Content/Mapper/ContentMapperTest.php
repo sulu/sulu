@@ -33,6 +33,8 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use \DateTime;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
@@ -109,6 +111,40 @@ class ContentMapperTest extends PhpcrTestCase
         }
 
         return $structureMock;
+    }
+
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $webspace = new Webspace();
+            $en = new Localization();
+            $en->setLanguage('en');
+            $en_us = new Localization();
+            $en_us->setLanguage('en');
+            $en_us->setCountry('us');
+            $en_us->setParent($en);
+            $en->addChild($en_us);
+
+            $de = new Localization();
+            $de->setLanguage('de');
+            $de_at = new Localization();
+            $de_at->setLanguage('de');
+            $de_at->setCountry('at');
+            $de_at->setParent($de);
+            $de->addChild($de_at);
+
+            $es = new Localization();
+            $es->setLanguage('es');
+
+            $webspace->addLocalization($en);
+            $webspace->addLocalization($de);
+            $webspace->addLocalization($es);
+
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+            $this->webspaceManager->expects($this->any())
+                ->method('findWebspaceByKey')
+                ->will($this->returnValue($webspace));
+        }
     }
 
     public function tearDown()
