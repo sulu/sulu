@@ -54,7 +54,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         if ($structureKey == 'overview') {
             return $this->getStructureMock(1);
-        } elseif ($structureKey == 'simple') {
+        } elseif ($structureKey == 'default') {
             return $this->getStructureMock(2);
         }
 
@@ -245,7 +245,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->sessionManager = null;
         $this->structureValueMap = array(
             'overview' => $this->getStructureMock(1),
-            'simple' => $this->getStructureMock(2)
+            'default' => $this->getStructureMock(2)
         );
         $this->prepareMapper();
 
@@ -504,7 +504,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         // update content
-        $this->mapper->save($data, 'simple', 'default', 'de', 1, true, $structure->getUuid());
+        $this->mapper->save($data, 'default', 'default', 'de', 1, true, $structure->getUuid());
 
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
@@ -534,7 +534,7 @@ class ContentMapperTest extends PhpcrTestCase
         // property of new structure exists
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
         $this->assertEquals('this is a blog test', $content->getPropertyValue('sulu_locale:de-blog'));
-        $this->assertEquals('simple', $content->getPropertyValue('sulu_locale:de-sulu-template'));
+        $this->assertEquals('default', $content->getPropertyValue('sulu_locale:de-sulu-template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
     }
@@ -1460,11 +1460,10 @@ class ContentMapperTest extends PhpcrTestCase
         $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
-        $this->assertNull($result[0]->getType());
-        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
-        $this->assertEquals('de', $result[0]->getType()->getValue());
-
+        $this->assertEquals('de-at', $result[0]->getType()->getValue());
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
 
         // both pages are ghosts in es from en
         /** @var StructureInterface[] $result */

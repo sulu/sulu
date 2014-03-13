@@ -70,13 +70,13 @@ interface ContentMapperInterface
 
     /**
      * returns a list of data from children of given node
-     * @param $uuid
-     * @param $webspaceKey
-     * @param $languageCode
-     * @param int $depth
-     * @param bool $flat
-     *
+     * @param string $uuid The uuid of the parent node
+     * @param string $webspaceKey The key of the webspace we are loading in
+     * @param string $languageCode The requested content language
+     * @param int $depth The depth of the search
+     * @param bool $flat If true, the result is a flat list
      * @param bool $ignoreExceptions
+     * @param bool $loadGhosts If true ghost pages are also loaded
      * @return StructureInterface[]
      */
     public function loadByParent(
@@ -85,7 +85,8 @@ interface ContentMapperInterface
         $languageCode,
         $depth = 1,
         $flat = true,
-        $ignoreExceptions = false
+        $ignoreExceptions = false,
+        $loadGhosts = true
     );
 
     /**
