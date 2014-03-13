@@ -108,7 +108,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var string
      */
     protected $languageNamespace = 'sulu_locale';
-    
+
      /**
       * @var WebspaceManagerInterface
       */
