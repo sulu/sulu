@@ -30,6 +30,7 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -107,6 +108,10 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var string
      */
     protected $languageNamespace = 'sulu_locale';
+     /**
+      * @var WebspaceManagerInterface
+      */
+    protected $webspaceManager;
 
     /**
      * purge webspace at tear down
@@ -135,6 +140,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
+            $this->prepareWebspaceManager();
             $this->mapper = new ContentMapper(
                 $contentTypeManager,
                 $this->structureManager,
@@ -156,6 +162,13 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'security.context' => $this->securityContext
                 )
             );
+        }
+    }
+
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
         }
     }
 
