@@ -41,22 +41,29 @@ define([], function() {
 
         initialize: function() {
             this.saved = true;
+            this.selectedSystem = '';
             permissionData = this.options.data.permissions;
 
+            // wait for dropdown to initialize, then get the value and continue
+            this.sandbox.on('husky.dropdown.multiple.select.system.initialize', function() {
+                this.sandbox.emit('husky.dropdown.multiple.select.system.getChecked', function(system) {
+                    this.selectedSystem = system[0];
+
+                    this.initializeMatrix();
+                    this.initializeValidation();
+
+                    this.bindDOMEvents();
+                    this.bindCustomEvents();
+
+                    this.setHeaderBar(true);
+                    this.listenForChange();
+                }.bind(this));
+            }.bind(this));
+
             this.render();
-
-            this.initializeMatrix();
-            this.initializeValidation();
-
-            this.bindDOMEvents();
-            this.bindCustomEvents();
-
-            this.setHeaderBar(true);
-            this.listenForChange();
         },
 
         bindDOMEvents: function() {
-            this.sandbox.dom.on(this.$el, 'change', this.initializeMatrix.bind(this), '#system');
             this.sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
         },
 
@@ -82,6 +89,11 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('sulu.roles.list');
             }, this);
+
+            this.sandbox.on('husky.dropdown.multiple.select.system.selected.item', function(value) {
+                this.selectedSystem = value;
+                this.initializeMatrix();
+            }.bind(this));
         },
 
         initializeValidation: function() {
@@ -121,7 +133,7 @@ define([], function() {
 
             // load all the contexts from the selected module
             this.sandbox.util.ajax({
-                url: '/admin/contexts?system=' + this.sandbox.dom.val('#system')
+                url: '/admin/contexts?system=' + this.selectedSystem
             })
                 .done(function(data) {
                     data = JSON.parse(data);
@@ -219,7 +231,7 @@ define([], function() {
                 var data = {
                     id: this.sandbox.dom.val('#id'),
                     name: this.sandbox.dom.val('#name'),
-                    system: this.sandbox.dom.val('#system'),
+                    system: this.selectedSystem,
                     permissions: permissionData
                 };
 
@@ -229,13 +241,15 @@ define([], function() {
 
         render: function() {
             this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.options.data}));
+            //starts the dropdown-component
+            this.sandbox.start(this.$el);
         },
 
         // @var Bool saved - defines if saved state should be shown
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, true);
             }
             this.saved = saved;
         },
