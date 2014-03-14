@@ -25,6 +25,7 @@ define([], function() {
                                         el: $container,
                                         tabsData: navigation,
                                         heading: this.sandbox.translate(this.content.title),
+                                        headingAddition: this.content.titleAddition,
                                         contentOptions: this.options,
                                         template: !!this.content.template ? this.content.template : 'default',
                                         parentTemplate: !!this.content.parentTemplate ? this.content.parentTemplate : null
