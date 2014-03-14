@@ -7,10 +7,8 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace Sulu\Bundle\AdminBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\JsConfigInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
+namespace Sulu\Bundle\AdminBundle\Admin;
 
 /**
  *
@@ -18,17 +16,24 @@ use Symfony\Component\Config\Definition\Exception\Exception;
  */
 class JsConfig implements JsConfigInterface
 {
+    /**
+     * @var array
+     */
     protected $parameters = array();
-    protected $bundleName;
 
+    /**
+     * @var string
+     */
+    protected $name;
 
     /**
      * constructor
      * @param $bundleName
      * @param array $params
      */
-    public function __construct($bundleName, array $params) {
-        $this->bundleName = $bundleName;
+    public function __construct($bundleName, array $params)
+    {
+        $this->name = $bundleName;
         $this->addParameters($params);
     }
 
@@ -45,7 +50,8 @@ class JsConfig implements JsConfigInterface
      * @param $name
      * @param $value
      */
-    public function addParameter($name, $value) {
+    public function addParameter($name, $value)
+    {
         $this->parameters[$name] = $value;
     }
 
@@ -54,17 +60,20 @@ class JsConfig implements JsConfigInterface
      * @param array $params
      * @throws \InvalidArgumentException
      */
-    public function addParameters(array $params) {
+    public function addParameters(array $params)
+    {
         if (!is_array($params)) {
             throw new \InvalidArgumentException('$params has to be an array');
         }
         $this->parameters = array_merge($this->parameters, $params);
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        return $this->bundleName;
+        return $this->name;
     }
-
 
 }
