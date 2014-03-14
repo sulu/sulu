@@ -77,7 +77,7 @@ security:
 sulu_core:
     phpcr:
         workspace: test
-    portal:
+    webspace:
         ~
     content:
         ~
