@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block contact %}
+    <div id="contact-edit-form">
     <div class="pos-rel">
         <h2 class="divider"><%=translate('contact.contacts.title')%></h2>
         <span id="contact-options-dropdown" class="options-dropdown-container">
@@ -15,56 +16,80 @@
         </span>
     </div>
 
-    <div class="grid-row">
-        <div class="grid-col-12">
-            <div class="form-group" >
-                <label for="address"><%=translate('public.address')%></label>
-
-                <div id="address">
-                    <%=translate('contact.add.address')%>
+    <div class="grid-row small"  data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl"}]'>
+        <div data-mapper-property-tpl="address-tpl" class="grid-col-12 floating">
+            <div class="form-group">
+                <label>
+                    <%=translate('public.address')%>
+                    (<span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}">
+                        <%=translate('{{ defaultAddressType.name }}')%>
+                    </span>)
+                </label>
+                <div class="address-row">
+                    <span data-mapper-property="street"></span>
+                    <span data-mapper-property="number"></span>
+                    <span data-mapper-property="addition"></span>,
+                    <span data-mapper-property="zip"></span>
+                    <span data-mapper-property="city"></span>,
+                    <span data-mapper-property="state"></span>
+                    <select style="display:none" id="country0" class="country-value form-element" data-mapper-property="country"
+                            data-type="select">
+                        {% for country in countries %}
+                            <option value="{{ country.id }}"><%=translate('{{ country.name }}')%></option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
         </div>
     </div>
-    <div class="grid-row">
-        <div id="emails" data-mapper-property="emails" data-type="collection" class="grid-row">
-            <div class="grid-col-6">
-                <div class="form-group">
-                    <label for="email"><%=translate('public.email')%></label>
-                    <input type="text" class="form-element email-value" data-type="email" data-mapper-property="email">
-                </div>
+    <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"}]'>
+        <div data-mapper-property-tpl="email-tpl" class="grid-col-6 floating">
+            <div class="form-group">
+                <% var uid = _.uniqueId('email_') %>
+                <label for="<%= uid %>">
+                    <%=translate('public.email')%>
+                    (<span class="type-value" data-form="true" data-mapper-property="emailType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultEmailType.id }}">
+                        <input type="hidden" data-mapper-property="id" class="id-value"/>
+                        <%=translate('{{ defaultEmailType.name }}')%>
+                    </span>)
+                </label>
+                <input id="<%= uid %>" type="text" class="form-element email-value" data-type="email" data-mapper-property="email">
             </div>
         </div>
-        <div class="grid-col-6">
+        <div data-mapper-property-tpl="phone-tpl" class="grid-col-6 floating">
             <div class="form-group">
-                <label for="url"><%=translate('contact.accounts.website')%></label>
-                <input class="form-element" type="text" id="url" data-type="url"/>
+                <% var uid = _.uniqueId('phone_') %>
+                <label for="<%= uid %>">
+                    <%=translate('public.phone')%>
+                    (<span class="type-value" data-form="true" data-mapper-property="phoneType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultPhoneType.id }}">
+                        <%=translate('{{ defaultPhoneType.name }}')%>
+                    </span>)
+                </label>
+                <input id="<%= uid %>" type="text" class="form-element phone-value" data-mapper-property="phone">
             </div>
         </div>
-    </div>
-    <div class="grid-row">
-        <div class="grid-col-6">
+        <div  data-mapper-property-tpl="url-tpl" class="grid-col-6 floating">
             <div class="form-group">
-                <label for="phone"><%=translate('public.phone')%></label>
-                <input id="phone" type="text" class="form-element phone-value" data-mapper-property="phone"/>
-            </div>
-        </div>
-        <div class="grid-col-6">
-            <div class="form-group">
-                <label for="fax"><%=translate('public.fax')%></label>
-                <input class="form-element" type="text" id="fax" data-type=""/>
-            </div>
-        </div>
-    </div>
-    <div class="grid-row">
-        <div class="grid-col-12">
-            <div class="form-group">
-                <label class="top" for="phone"><%=translate('public.comments')%></label>
-                <textarea type="text" class="form-element" data-mapper-property="comments"/>
+                <% var uid = _.uniqueId('url_') %>
+                <label for="<%= uid %>"><%=translate('contact.accounts.website')%></label>
+                <input id="<%= uid %>" type="text" class="form-element" data-type="url" data-mapper-property="url"/>
             </div>
         </div>
     </div>
 
+    <div class="grid-row small"  data-type="collection" data-mapper-property='[{"data":"notes","tpl":"note-tpl"}]'>
+        <div data-mapper-property-tpl="note-tpl" class="grid-col-12 floating">
+            <div class="form-group">
+                <% var uid = _.uniqueId('note_') %>
+                <label for="<%= uid %>" class="top">
+                    <%=translate('public.comments')%>
+                </label>
+                <textarea id="<%= uid %>" class="form-element" data-mapper-property="note" />
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}
 
 

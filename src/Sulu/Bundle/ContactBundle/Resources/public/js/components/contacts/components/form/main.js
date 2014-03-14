@@ -321,7 +321,7 @@ define([], function() {
             listenForChange: function() {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
                     this.setHeaderBar(false);
-                }.bind(this), "select, input");
+                }.bind(this), "select, input, textarea");
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input");

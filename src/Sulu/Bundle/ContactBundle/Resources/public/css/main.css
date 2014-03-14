@@ -27,3 +27,13 @@
 #contact-form #addresses .husky-validate-success label::after {
   content: "";
 }
+
+/* line 32, ../scss/modules/utility.scss */
+#contact-options-dropdown {
+  display: none;
+}
+
+/* line 37, ../scss/modules/utility.scss */
+#contact-edit-form:hover #contact-options-dropdown {
+  display: block;
+}

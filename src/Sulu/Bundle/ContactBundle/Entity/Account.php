@@ -26,6 +26,11 @@ class Account extends ApiEntity
     const TYPE_CUSTOMER = 2;
     const TYPE_SUPPLIER = 3;
 
+    /**
+     * array containing all the translations for CRM types
+     * @Exclude
+     * @var array
+     */
     public static $TYPE_TRANSLATIONS = array(
         self::TYPE_BASIC => 'contact.account.type.basic',
         self::TYPE_LEAD => 'contact.account.type.lead',
