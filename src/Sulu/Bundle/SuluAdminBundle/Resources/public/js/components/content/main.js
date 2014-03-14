@@ -44,7 +44,6 @@ define([], function() {
         },
 
         initializeTabs = function() {
-            console.log('tabsdata', !!this.options.tabsData, !!this.options.tabsData.items, this.options.tabsData.items.length)
             // don't start tabs component if only one tab would be displayed
             if (!!this.options.tabsData && !!this.options.tabsData.items && this.options.tabsData.items.length <= 1) {
                 if (this.options.tabsData.items.length !== 0) {
