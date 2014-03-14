@@ -71,9 +71,9 @@ define([], function() {
 
 
         changeStateCallbacks = {
-            default: function(saved) {
+            default: function(saved, type, highlight) {
                 if (!!saved) {
-                    this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
+                    this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button', !!highlight);
                 } else {
                     this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button', false);
                 }
@@ -177,8 +177,8 @@ define([], function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
 
             // load component on start
-            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', function(type, saved){
-                this.changeState(type, saved);
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', function(type, saved, highlight){
+                this.changeState(type, saved, highlight);
             }.bind(this));
 
             //make sure container keeps the width of the content
@@ -283,12 +283,14 @@ define([], function() {
             this.collapsed = false;
         },
 
-        changeState: function(type, saved) {
+        changeState: function(type, saved, highlight) {
+
+            console.log('data', type, saved, highlight);
             if (typeof this.options.changeStateCallback === 'function') {
-                this.options.changeStateCallback.call(this, saved, type);
+                this.options.changeStateCallback.call(this, saved, type, highlight);
             }
             if (typeof this.options.parentChangeStateCallback === 'function') {
-                this.options.parentChangeStateCallback.call(this, saved, type);
+                this.options.parentChangeStateCallback.call(this, saved, type, highlight);
             }
         }
     };
