@@ -260,6 +260,7 @@ define([
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
+                        this.sandbox.sulu.viewStates.justSaved = true;
                         this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/details');
                     }
                 }.bind(this),
@@ -270,7 +271,6 @@ define([
         },
 
         load: function(id) {
-            // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/details');
         },
 
@@ -375,7 +375,7 @@ define([
             this.content = new Content();
             if (!!this.options.id) {
                 this.content = new Content({id: this.options.id});
-                this.content.fullFetch(this.options.webspace, this.options.language, {
+                this.content.fullFetch(this.options.webspace, this.options.language, true, {
                     success: function(model) {
                         this.sandbox.start([
                             {
