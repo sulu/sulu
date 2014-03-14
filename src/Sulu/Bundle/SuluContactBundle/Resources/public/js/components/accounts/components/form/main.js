@@ -126,6 +126,52 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.content.set-title', title);
         },
 
+
+
+
+        // CONTACT
+        fillFields: function(field, minAmount, value) {
+            while (field.length < minAmount) {
+                field.push(value);
+            }
+        },
+
+        // CONTACT
+        initContactData: function() {
+            var contactJson = this.options.data;
+            this.fillFields(contactJson.urls, 1, {
+                id: null,
+                url: '',
+                urlType: this.defaultTypes.urlType
+            });
+            this.fillFields(contactJson.emails, 1, {
+                id: null,
+                email: '',
+                emailType: this.defaultTypes.emailType
+            });
+            this.fillFields(contactJson.phones, 1, {
+                id: null,
+                phone: '',
+                phoneType: this.defaultTypes.phoneType
+            });
+            this.fillFields(contactJson.phones, 2, {
+                id: null,
+                phone: '',
+                phoneType: this.defaultTypes.phoneType
+            });
+            this.fillFields(contactJson.addresses, 1, {
+                id: null,
+                addressType: this.defaultTypes.addressType,
+                street: this.sandbox.translate('contact.add.address')
+            });
+            this.fillFields(contactJson.notes, 1, {
+                id: null,
+                value: ''
+            });
+            return contactJson;
+        },
+
+        // CONTACT
         initContactForm: function() {
 
             // TODO: get fields from configuration
@@ -135,95 +181,107 @@ define(['app-config'], function(AppConfig) {
             // TODO: FETCH ALL FIELD TYPES
 
 
+
+
             var fieldTypes = ['address', 'email', 'fax', 'phone', 'website'],
+                fields = [
+                    {
+                        id: 0,
+                        name: 'address',
+                        minAmount: 1
+                    }
+                ],
                 dropdownData = [];
+
+
+            this.initContactData();
 
             this.sandbox.util.foreach(fieldTypes,function(type, index) {
                 dropdownData.push({id:index, name:type});
             });
 
 
-
-
-            // initialize dropdown
-            this.sandbox.start([
-                {
-                    name: 'dropdown@husky',
-                    toggle: '.contact-options-toggle',
-                    options: {
-                        el: '#contact-options-dropdown',
-                        alignment: 'right',
-                        shadow: true,
-                        data: [
-                            {
-                                id: 1,
-                                name: 'public.edit-fields',
-                                callback: function() {
-
-                                }
-                            },
-                            {
-                                id: 2,
-                                name: 'public.add-fields',
-                                callback: function() {
-                                    var tmpl = [
-                                            '<div class="grid-row">',
-                                            '   <div id="field-select" class="grid-col-6"></div>',
-                                            '   <div id="field-type-select" class="grid-col-6"></div>',
-                                            '</div>'
-                                        ],
-
-                                        newTemplate = this.sandbox.dom.createElement(tmpl.join(''));
-
-                                    this.sandbox.start([
-                                        {
-                                            name: 'overlay@husky',
-                                            options: {
-                                                title: this.sandbox.translate('public.add-fields'),
-                                                openOnStart: true,
-                                                removeOnClose: true,
-                                                data: newTemplate
-                                            }
-                                        },
-                                        {
-                                            name: 'dropdown-multiple-select@husky',
-                                            options: {
-                                                el: '#field-select',
-                                                instanceName: 'i1',
-                                                singleSelect: true,
-                                                data: dropdownData
-                                            }
-                                        }
-                                    ]);
-
-                                    this.sandbox.on('husky.dropdown.multiple.select.i1.selected.item', function(id) {
-                                        // TODO: now update second dropdown with correct values
-
-                                        this.sandbox.stop('#field-type-select');
-
-                                        this.sandbox.start([
-                                            {
-                                                name: 'dropdown-multiple-select@husky',
-                                                options: {
-                                                    el: '#field-type-select',
-                                                    singleSelect: true,
-                                                    instanceName: 'i2',
-                                                    data: [
-                                                        {id: 0, name: 'office'},
-                                                        {id: 1, name: 'private'}
-                                                    ]
-                                                }
-                                            }
-                                        ]);
-                                    });
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]);
+//            // initialize dropdown
+//            this.sandbox.start([
+//                {
+//                    name: 'dropdown@husky',
+//                    toggle: '.contact-options-toggle',
+//                    options: {
+//                        el: '#contact-options-dropdown',
+//                        alignment: 'right',
+//                        shadow: true,
+//                        data: [
+//                            {
+//                                id: 1,
+//                                name: 'public.edit-fields',
+//                                callback: function() {
+//
+//                                }
+//                            },
+//                            {
+//                                id: 2,
+//                                name: 'public.add-fields',
+//                                callback: function() {
+//                                    var tmpl = [
+//                                            '<div class="grid-row">',
+//                                            '   <div id="field-select" class="grid-col-6"></div>',
+//                                            '   <div id="field-type-select" class="grid-col-6"></div>',
+//                                            '</div>'
+//                                        ],
+//
+//                                        newTemplate = this.sandbox.dom.createElement(tmpl.join(''));
+//
+//                                    this.sandbox.start([
+//                                        {
+//                                            name: 'overlay@husky',
+//                                            options: {
+//                                                title: this.sandbox.translate('public.add-fields'),
+//                                                openOnStart: true,
+//                                                removeOnClose: true,
+//                                                data: newTemplate
+//                                            }
+//                                        },
+//                                        {
+//                                            name: 'dropdown-multiple-select@husky',
+//                                            options: {
+//                                                el: '#field-select',
+//                                                instanceName: 'i1',
+//                                                singleSelect: true,
+//                                                data: dropdownData
+//                                            }
+//                                        }
+//                                        // TODO: initialize second dropdown as well on beginning
+//                                    ]);
+//
+//                                    this.sandbox.on('husky.dropdown.multiple.select.i1.selected.item', function(id) {
+//                                        // TODO: now update second dropdown with correct values
+//
+//                                        this.sandbox.stop('#field-type-select');
+//
+//                                        this.sandbox.start([
+//                                            {
+//                                                name: 'dropdown-multiple-select@husky',
+//                                                options: {
+//                                                    el: '#field-type-select',
+//                                                    singleSelect: true,
+//                                                    instanceName: 'i2',
+//                                                    data: [
+//                                                        {id: 0, name: 'office'},
+//                                                        {id: 1, name: 'private'}
+//                                                    ]
+//                                                }
+//                                            }
+//                                        ]);
+//                                    });
+//                                }
+//                            }
+//                        ]
+//                    }
+//                }
+//            ]);
         },
 
+        // sets headline title to account name
         updateHeadline: function() {
             this.sandbox.emit('sulu.content.set-title', this.sandbox.dom.val(this.titleField));
         },
@@ -323,7 +381,7 @@ define(['app-config'], function(AppConfig) {
         listenForChange: function() {
             this.sandbox.dom.on('#contact-form', 'change', function() {
                 this.setHeaderBar(false);
-            }.bind(this), "select, input");
+            }.bind(this), "select, input, textarea");
             // TODO: only activate this, if wanted
 //            this.sandbox.dom.on('#contact-form', 'keyup', function() {
 //                this.setHeaderBar(false);

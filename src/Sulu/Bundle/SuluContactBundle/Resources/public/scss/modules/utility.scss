@@ -27,4 +27,14 @@
   #addresses .husky-validate-success label::after {
     content: "";
   }
+
+}
+#contact-options-dropdown {
+    display: none;
+}
+
+#contact-edit-form:hover {
+    #contact-options-dropdown {
+        display: block;
+    }
 }
