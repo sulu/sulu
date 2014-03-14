@@ -284,8 +284,6 @@ define([], function() {
         },
 
         changeState: function(type, saved, highlight) {
-
-            console.log('data', type, saved, highlight);
             if (typeof this.options.changeStateCallback === 'function') {
                 this.options.changeStateCallback.call(this, saved, type, highlight);
             }
