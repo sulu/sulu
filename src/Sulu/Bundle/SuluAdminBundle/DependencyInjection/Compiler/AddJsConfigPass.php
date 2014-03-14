@@ -21,14 +21,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class AddJsConfigPass implements CompilerPassInterface
 {
 
-    const CONFIG_TAG = 'sulu.jsconfig';
+    const CONFIG_TAG = 'sulu.js_config';
 
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $pool = $container->getDefinition('sulu_admin.jsconfig_pool');
+        $pool = $container->getDefinition('sulu_admin.js_config_pool');
 
         $taggedServices = $container->findTaggedServiceIds(self::CONFIG_TAG);
 
