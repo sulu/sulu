@@ -18,6 +18,10 @@ define(function() {
             return config.user;
         },
 
+        getSection: function(name) {
+            return (!!config.sections[name]) ? config.sections[name] : null;
+        },
+
         getDebug: function() {
             return config.debug;
         }
