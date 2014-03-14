@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-
 /**
  * The JsConfigPool is used to store parameters to be shown in index twig template
  *

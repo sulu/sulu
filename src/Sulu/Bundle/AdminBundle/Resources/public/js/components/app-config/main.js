@@ -19,7 +19,7 @@ define(function() {
         },
 
         getSection: function(name) {
-            return config.sections[name];
+            return (!!config.sections[name]) ? config.sections[name] : null;
         },
 
         getDebug: function() {
