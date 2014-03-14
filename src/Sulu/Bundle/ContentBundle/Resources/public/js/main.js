@@ -21,7 +21,6 @@ define({
     name: "Sulu Content Bundle",
 
     initialize: function(app) {
-
         'use strict';
 
         var sandbox = app.sandbox;

@@ -23,16 +23,21 @@ define(['app-config'], function(AppConfig) {
         opened: false,
 
         template: '',
+        templateChanged: false,
         contentChanged: false,
 
         hiddenTemplate: true,
 
         initialize: function() {
             this.saved = true;
+            this.highlightSaveButton = this.sandbox.sulu.viewStates.justSaved;
+            delete this.sandbox.sulu.viewStates.justSaved;
+
             this.state = null;
 
             this.formId = '#contacts-form-container';
             this.render();
+            this.setTitle();
 
             this.setHeaderBar(true);
 
@@ -63,6 +68,33 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
                 this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
             }.bind(this));
+        },
+
+
+        /**
+         * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
+         */
+        setTitle: function() {
+            if (!!this.options.id && !! this.options.data.title) {
+                this.sandbox.emit('sulu.content.set-title', this.options.data.title);
+                this.setBreadcrumb();
+            } else {
+                this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('content.contents.title'));
+            }
+        },
+
+        /**
+         * Generates the Breadcrumb-string and sets it for the title-additon
+         */
+        setBreadcrumb: function() {
+            var breadcrumb = this.options.webspace.replace(/_/g, '.');
+            if (!!this.options.data.breadcrumb) {
+                // loop through breadcrumb skip home-page
+                for (var i = 0, length = this.options.data.breadcrumb.length; ++i < length;) {
+                    breadcrumb += ' &#187; ' + this.options.data.breadcrumb[i].title;
+                }
+            }
+            this.sandbox.emit('sulu.content.set-title-addition', breadcrumb);
         },
 
         createForm: function(data) {
@@ -121,6 +153,7 @@ define(['app-config'], function(AppConfig) {
         bindCustomEvents: function() {
             // content saved
             this.sandbox.on('sulu.content.contents.saved', function() {
+                this.highlightSaveButton = true;
                 this.setHeaderBar(true);
             }, this);
 
@@ -172,6 +205,7 @@ define(['app-config'], function(AppConfig) {
             // change template
             this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
                 this.sandbox.emit('sulu.edit-toolbar.content.item.loading','template');
+                this.templateChanged = true;
                 this.changeTemplate(item);
             }, this);
 
@@ -239,7 +273,7 @@ define(['app-config'], function(AppConfig) {
                 item = {template: item};
             }
             if (!!item && this.template === item.template) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
+                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', false);
                 return;
             }
 
@@ -287,7 +321,7 @@ define(['app-config'], function(AppConfig) {
                         this.updatePreviewOnly();
 
                         this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
-                        this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template');
+                        this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template', this.templateChanged);
                         if (this.hiddenTemplate) {
                             this.hiddenTemplate = false;
                             this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
@@ -328,12 +362,13 @@ define(['app-config'], function(AppConfig) {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, this.highlightSaveButton);
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
             if (this.saved) {
                 this.contentChanged = false;
+                this.highlightSaveButton = false;
             }
         },
 
