@@ -15,6 +15,8 @@ define([
     'use strict';
 
     return {
+        view: true,
+
         name: 'Sulu Security Role',
 
         initialize: function() {

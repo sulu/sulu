@@ -48,7 +48,7 @@ define(function() {
                 route: 'settings/roles/edit::id/:content',
                 callback: function(id) {
                     this.html(
-                        '<div data-aura-component="roles/components/content@sulusecurity" data-aura-display="form" data-aura-id="' + id + '"/>'
+                        '<div data-aura-component="roles/components/content@sulusecurity" data-aura-title="sulu.roles.permissions" data-aura-display="form" data-aura-id="' + id + '"/>'
                     );
                 }
             });
