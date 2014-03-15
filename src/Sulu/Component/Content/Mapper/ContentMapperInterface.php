@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-
+use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\StructureInterface;
 
 /**
@@ -129,7 +129,7 @@ interface ContentMapperInterface
      * @param $uuid
      * @param $languageCode
      * @param $webspaceKey
-     * @return BreadcrumbItemInterface[]
+     * @return BreadcrumbItemInterface]
      */
     public function loadBreadcrumb($uuid, $languageCode, $webspaceKey);
 

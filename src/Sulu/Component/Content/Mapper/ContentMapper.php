@@ -16,8 +16,10 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
+use Sulu\Component\Content\Event\ContentNodeEvent;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -26,10 +28,10 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ContentMapper implements ContentMapperInterface
 {
-
     /**
      * @var ContentTypeManager
      */
@@ -44,6 +46,11 @@ class ContentMapper implements ContentMapperInterface
      * @var SessionManagerInterface
      */
     private $sessionManager;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * namespace of translation
@@ -105,6 +112,7 @@ class ContentMapper implements ContentMapperInterface
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
         SessionManagerInterface $sessionManager,
+        EventDispatcherInterface $eventDispatcher,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace
@@ -113,6 +121,7 @@ class ContentMapper implements ContentMapperInterface
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->sessionManager = $sessionManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
@@ -177,9 +186,11 @@ class ContentMapper implements ContentMapperInterface
 
         $dateTime = new \DateTime();
 
-        $titleProperty = new TranslatedProperty($structure->getProperty(
-            'title'
-        ), $languageCode, $this->languageNamespace);
+        $titleProperty = new TranslatedProperty(
+            $structure->getProperty('title'),
+            $languageCode,
+            $this->languageNamespace
+        );
 
         $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state, &$showInNavigation) {
             $node->setProperty($this->properties->getName('creator'), $userId);
@@ -325,6 +336,10 @@ class ContentMapper implements ContentMapperInterface
         $structure->setPublished(
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
+
+        // throw an content.node.save event
+        $event = new ContentNodeEvent($node);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
     }
@@ -608,7 +623,10 @@ class ContentMapper implements ContentMapperInterface
         // create translated properties
         $this->properties->setLanguage($languageCode);
 
-        $templateKey = $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate);
+        $templateKey = $contentNode->getPropertyValueWithDefault(
+            $this->properties->getName('template'),
+            $this->defaultTemplate
+        );
 
         $structure = $this->getStructure($templateKey);
 
@@ -619,8 +637,12 @@ class ContentMapper implements ContentMapperInterface
         $structure->setLanguageCode($languageCode);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
         $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
-        $structure->setCreated($contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime()));
-        $structure->setChanged($contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime()));
+        $structure->setCreated(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime())
+        );
+        $structure->setChanged(
+            $contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime())
+        );
         $structure->setHasChildren($contentNode->hasNodes());
 
         $structure->setNodeState(
