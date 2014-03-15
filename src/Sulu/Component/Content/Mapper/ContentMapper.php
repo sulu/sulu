@@ -680,7 +680,7 @@ class ContentMapper implements ContentMapperInterface
     {
         foreach ($localizations as $localization) {
             /** @var Localization $localization */
-            $property->setLocalization($localization->getLocalization());
+            $property->setLocalization($localization->getLocalization('_'));
             if ($contentNode->hasProperty($property->getName())) {
                 return $localization;
             }
@@ -761,7 +761,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey, $loadGhost = true)
     {
-        $availableLocalization = $this->getAvailableLocalization($contentNode, $localization, $webspaceKey);
+        $availableLocalization = $this->getAvailableLocalization(
+            $contentNode,
+            str_replace('-', '_', $localization),
+            $webspaceKey
+        );
         if (!$loadGhost && $availableLocalization->getLocalization() != $localization) {
             return null;
         }
