@@ -685,7 +685,10 @@ class ContentMapper implements ContentMapperInterface
                 return $localization;
             }
 
-            return $this->findAvailableLocalization($contentNode, $localization, $property);
+            $childrenLocalizations = $localization->getChildren();
+            if (!empty($childrenLocalizations)) {
+                return $this->findAvailableLocalization($contentNode, $childrenLocalizations, $property);
+            }
         }
 
         return null;
@@ -774,7 +777,7 @@ class ContentMapper implements ContentMapperInterface
         $structure = $this->getStructure($templateKey);
 
         // set structure to ghost, if the available localization does not match the requested one
-        if ($availableLocalization->getLocalization() != $localization) {
+        if ($availableLocalization->getLocalization('_') != $localization) {
             $structure->setType(StructureType::getGhost($availableLocalization));
         }
 
@@ -782,7 +785,7 @@ class ContentMapper implements ContentMapperInterface
 
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
         $structure->setWebspaceKey($webspaceKey);
-        $structure->setLanguageCode($availableLocalization);
+        $structure->setLanguageCode($localization);
         $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
         $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
         $structure->setCreated(

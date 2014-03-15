@@ -22,6 +22,7 @@
 
         <!-- content mapper -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
