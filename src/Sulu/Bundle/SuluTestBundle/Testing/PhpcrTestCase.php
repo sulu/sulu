@@ -33,6 +33,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -82,6 +83,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $structureManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * @var array
      */
     protected $structureValueMap = array();
@@ -108,11 +114,6 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var string
      */
     protected $languageNamespace = 'sulu_locale';
-
-     /**
-      * @var WebspaceManagerInterface
-      */
-    protected $webspaceManager;
 
     /**
      * purge webspace at tear down
@@ -141,12 +142,12 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
-            $this->prepareWebspaceManager();
+            $this->prepareEventDispatcher();
             $this->mapper = new ContentMapper(
-                $this->webspaceManager,
                 $contentTypeManager,
                 $this->structureManager,
                 $this->sessionManager,
+                $this->eventDispatcher,
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace
@@ -167,10 +168,10 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function prepareWebspaceManager()
+    protected function prepareEventDispatcher()
     {
-        if ($this->webspaceManager === null) {
-            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+        if ($this->eventDispatcher === null) {
+            $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         }
     }
 
