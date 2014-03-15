@@ -129,7 +129,7 @@ interface ContentMapperInterface
      * @param $uuid
      * @param $languageCode
      * @param $webspaceKey
-     * @return BreadcrumbItemInterface]
+     * @return BreadcrumbItemInterface[]
      */
     public function loadBreadcrumb($uuid, $languageCode, $webspaceKey);
 
