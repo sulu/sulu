@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use DateTime;
-use Jackalope\Node;
 use Jackalope\RepositoryFactoryJackrabbit;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
