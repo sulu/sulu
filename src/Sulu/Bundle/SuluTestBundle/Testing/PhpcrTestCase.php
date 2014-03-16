@@ -11,11 +11,13 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use DateTime;
+use Jackalope\Node;
 use Jackalope\RepositoryFactoryJackrabbit;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -30,7 +32,6 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -172,6 +173,12 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->eventDispatcher === null) {
             $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+            $this->eventDispatcher->expects($this->any())
+                ->method('dispatch')
+                ->with(
+                    $this->equalTo(ContentEvents::NODE_SAVE),
+                    $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+                );
         }
     }
 
