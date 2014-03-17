@@ -80,8 +80,8 @@ define([
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.contents.load', function(id) {
-                this.load(id);
+            this.sandbox.on('sulu.content.contents.load', function(id, webspace, language) {
+                this.load(id, webspace, language);
             }, this);
 
             // add new content
@@ -270,8 +270,8 @@ define([
             });
         },
 
-        load: function(id) {
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/details');
+        load: function(id, webspace, language) {
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + id + '/details');
         },
 
         add: function(parent) {

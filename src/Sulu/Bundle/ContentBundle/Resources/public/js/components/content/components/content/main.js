@@ -64,11 +64,29 @@ define(function() {
                                     this.sandbox.emit('sulu.edit-toolbar.dropdown.template.item-clicked', item);
                                 }.bind(this)
                             }
+                        },
+                        languageSelector = {
+                            id: 'language',
+                            iconSize: 'large',
+                            group: 'right',
+                            position: 20,
+                            type: 'select',
+                            title: '',
+                            hidden: true,
+                            itemsOption: {
+                                url: '/admin/content/languages/' + this.options.webspace,
+                                titleAttribute: 'name',
+                                idAttribute: 'localization',
+                                translate: false,
+                                callback: function(item) {
+                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.languages.item-clicked', item);
+                                }.bind(this)
+                            }
                         };
                     if (!this.options.id) {
-                        return [template, state];
+                        return [template, state, languageSelector];
                     } else {
-                        return [template, preview, state];
+                        return [template, preview, state, languageSelector];
                     }
                 }.bind(this)
             };

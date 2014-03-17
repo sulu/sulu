@@ -10,6 +10,10 @@ sulu_content.template.get:
     pattern: /template
     defaults: { _controller: SuluContentBundle:Template:get }
 
+sulu_content.languages.get:
+    pattern: /languages/{webspaceKey}
+    defaults: { _controller: SuluContentBundle:Template:getLanguages }
+
 sulu_content.content_navigation:
     path: /navigation/content
     defaults: { _controller: SuluContentBundle:Navigation:content }
