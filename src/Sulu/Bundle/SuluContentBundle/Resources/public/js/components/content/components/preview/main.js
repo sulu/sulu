@@ -14,7 +14,7 @@
  * @constructor
  *
  * @param {Object}  [options] Configuration object
- * @param {String}  [options.mainContentElementIdentifier] ID / tagname of the element which will be next to the preview
+ * @param {String}  [options.mainContentElementIdentifier] ID of the element which will be next to the preview (main content element)
  * @param {Number}  [options.marginLeft] margin in pixles from the left for the wrapper
  * @param {Object}  [options.iframeSource] configuration object for the source of the iframe
  * @param {String}  [options.iframeSource.url] url used for the iframe
@@ -149,6 +149,7 @@ define([], function() {
                 this.$wrapper = null;
                 this.$iframe = null;
                 this.$toolbar = null;
+                this.$mainContent = this.sandbox.dom.$('#'+this.options.mainContentElementIdentifier)[0];
 
                 this.render();
                 this.bindDomEvents.call(this);
@@ -178,16 +179,16 @@ define([], function() {
              */
             renderWrapper: function() {
 
-                var mainWidth, mainMarginLeft, totalWidth,
-                    $main = this.sandbox.dom.$(this.options.mainContentElementIdentifier)[0];
+                var mainWidth, mainMarginLeft, totalWidth;
 
-                if (!$main) {
+                if (!this.$mainContent) {
                     this.sandbox.logger.error('main content element could not be found!')
+                    return;
                 }
 
                 // caculate the available space next to the
-                mainWidth = this.sandbox.dom.outerWidth($main);
-                mainMarginLeft = $main.offsetLeft;
+                mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
+                mainMarginLeft = this.$mainContent.offsetLeft;
                 totalWidth = this.sandbox.dom.width(document);
                 this.previewWidth = totalWidth - (mainWidth + mainMarginLeft + this.options.marginLeft);
 
@@ -214,7 +215,7 @@ define([], function() {
             renderToolbar: function() {
                 this.$toolbar = this.sandbox.dom.$([
                     '<div id="preview-toolbar" class="preview-toolbar">',
-                    '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-eye-open"></span></div>',
+                    '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-step-backward"></span></div>',
                     '<div id="', constants.toolbarRight, '" class="right">',
                     '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-external-link"></span></div>',
                     '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">Resolutions</div>',
@@ -290,12 +291,22 @@ define([], function() {
              */
             expandPreview: function($target) {
 
+                // TODO get value for with via options
+
+                var $span = this.sandbox.dom.find('span', $target),
+                    width = 800;
+
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
+
+                this.sandbox.dom.addClass($span, 'icon-step-forward');
+                this.sandbox.dom.removeClass($span, 'icon-step-backward');
+
                 this.sandbox.emit(EXPANDING);
                 this.isExpanded = true;
 
-                // TODO expandPreview
+                this.animateCollapseAndExpand(width);
+
             },
 
             /**
@@ -303,12 +314,48 @@ define([], function() {
              */
             collapsePreview: function($target) {
 
+                // TODO get value for with via options
+
+                var $span = this.sandbox.dom.find('span', $target);
+
                 this.sandbox.dom.removeClass($target, 'expanded');
                 this.sandbox.dom.addClass($target, 'collapsed');
+
+                this.sandbox.dom.removeClass($span, 'icon-step-forward');
+                this.sandbox.dom.addClass($span, 'icon-step-backward');
+
                 this.sandbox.emit(COLLAPSING);
                 this.isExpanded = false;
 
-                // TODO collapsePreview
+                this.animateCollapseAndExpand(this.previewWidth);
+            },
+
+            /**
+             * Animates the width change for preview
+             * Concernes wrapper, preview-toolbar and maincontent
+             * @param {Integer} width of preview in pixels
+             */
+            animateCollapseAndExpand: function(width){
+
+                // preview wrapper
+                this.sandbox.dom.animate(this.$wrapper,{
+                    width: width+'px'
+                },{
+                    duration: 500,
+                    queue: false
+                });
+
+                // preview toolbar
+                this.sandbox.dom.animate(this.$toolbar,{
+                    width: width+30+'px'
+                },{
+                    duration: 500,
+                    queue: false
+                });
+
+                // main content
+
+
             }
 
 
