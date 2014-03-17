@@ -135,4 +135,27 @@ class TemplateController extends Controller
             ));
     }
 
+    public function getLanguagesAction($webspaceKey)
+    {
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
+        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $localizations = array();
+
+        $i = 0;
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $localizations[] = array(
+                'localization' => $localization->getLocalization(),
+                'name' => $localization->getLocalization('-'),
+                'id' => $i++
+            );
+        }
+
+        $data = array(
+            '_embedded' => $localizations,
+            'total' => sizeof($localizations),
+        );
+        return new JsonResponse($data);
+    }
+
 }
