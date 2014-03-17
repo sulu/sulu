@@ -99,6 +99,8 @@ define(function() {
                     width: null
                 };
 
+                this.currentRoute = null;
+
                 this.bindCustomEvents();
                 this.bindDomEvents();
 
@@ -192,12 +194,12 @@ define(function() {
                 router.navigate(route, {trigger: trigger});
 
                 // move to top
-                // FIXME abstract
-                $(window).scrollTop(0);
+                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
 
-                if (noLoader !== true) {
+                if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
                     this.startLoader();
                 }
+                this.currentRoute = route;
             }.bind(this));
 
             // navigation event
