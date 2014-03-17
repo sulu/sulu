@@ -211,6 +211,20 @@ define(function() {
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);
             }.bind(this));
+
+            this.sandbox.on('sulu.app.content.dimensions-change', function(properties){
+
+                // - 100 because of padding
+                this.sandbox.emit('sulu.app.content.dimensions-changed', {width: properties.width-100, left: 100})
+
+                this.sandbox.dom.animate(this.$el,{
+                    width: properties.width+'px',
+                    left: properties.left+'px'
+                },{
+                    duration: 500,
+                    queue: false
+                });
+            }.bind(this));
         },
 
         /**
