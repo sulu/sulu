@@ -410,7 +410,7 @@ define([
                                         showLeft: true,
                                         showRight: true
                                     },
-                                    mainContentElementIdentifier: '#content',
+                                    mainContentElementIdentifier: 'content',
                                     iframeSource: {
                                         url: '/admin/content/preview/',
                                         webspace: this.options.webspace,
