@@ -215,13 +215,12 @@ define(function() {
             this.sandbox.on('sulu.app.content.dimensions-change', function(properties) {
 
                 if (!!properties.expand) {
-                    // - 100 because of padding
+                    // - 150 because of padding + margin
                     // adjustments for toolbar
                     this.sandbox.emit('sulu.app.content.dimensions-changed', {width: properties.width - 150, left: 10});
                     this.sandbox.dom.animate(this.$el, {
                         width: properties.width + 'px',
                         marginLeft: '10px',
-                        marginRight: '10px',
                         paddingLeft: 0,
                         paddingRight: 0
                     }, {
@@ -232,7 +231,9 @@ define(function() {
                     this.sandbox.emit('sulu.app.content.dimensions-changed', {width: properties.width - 100, left: 100});
                     this.sandbox.dom.animate(this.$el, {
                         width: properties.width + 'px',
-                        marginLeft: properties.left + 'px'
+                        paddingLeft: '50px',
+                        marginLeft:'50px',
+                        paddingRight: '50px'
                     }, {
                         duration: 500,
                         queue: false
@@ -251,6 +252,7 @@ define(function() {
             // TODO: select right bundle / item in navigation
 
             if (!!event.action) {
+                this.sandbox.emit('husky.navigation.uncollapse');
                 this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
             }
         }
