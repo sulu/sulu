@@ -1,7 +1,33 @@
-<div id="list-tabs"></div>
+<div class="grid-row m-bottom-0">
+    <div class="grid-col-10">
+        <h1>
+            {% block title %}{{ webspace.name }}{% endblock %}
+        </h1>
+    </div>
+    <div id="language-selector" class="dropdown husky-dropdown-multiple-select pull-right grid-col-2">
+        <label class="dropdown-label pointer">
+            <div>
+                {{ currentLocalization.name }}
+            </div>
+            <span class="dropdown-toggle inline-block pointer"></span>
+        </label>
+    </div>
+</div>
 
-<h1>
-    {% block title %}<%=translate('content.contents.title')%>{% endblock %}
-</h1>
-
+<div class="form-horizontal grid-row">
+    <div class="grid-col-12" id="show-ghost-pages-container">
+        <div class="pull-right">
+            <label for="show-ghost-pages"><%=translate('content.contents.show-ghost-pages')%></label>
+            <input type="checkbox" id="show-ghost-pages" checked="checked"/>
+        </div>
+    </div>
+</div>
 <div id="content-column"></div>
+
+<script type="text/javascript">
+    (function() {
+        {% autoescape false %}
+        App.emit('sulu.content.localizations', {{ localizations|json_encode }});
+        {% endautoescape %}
+    })();
+</script>

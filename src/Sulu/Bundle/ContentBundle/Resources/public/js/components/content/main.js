@@ -100,8 +100,8 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.content.contents.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
+            this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 
             // return dropdown for state
