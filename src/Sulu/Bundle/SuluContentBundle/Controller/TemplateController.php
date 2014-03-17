@@ -119,37 +119,20 @@ class TemplateController extends Controller
         $currentLocalization = $webspace->getLocalization($languageCode);
         $localizations = array();
 
-        foreach ($webspace->getLocalizations() as $localization) {
-            $localizations = array_merge($localizations, $this->getFlatLocalizations($localization));
+        $i = 0;
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $localizations[] = array(
+                'localization' => $localization->getLocalization(),
+                'name' => $localization->getLocalization('-'),
+                'id' => $i++
+            );
         }
 
         return $this->render('SuluContentBundle:Template:column.html.twig', array(
                 'localizations' => $localizations,
-                'currentLocalization' => array(
-                    'name' => $currentLocalization->getLocalization('-'),
-                    'localization' => $currentLocalization->getLocalization()
-                ),
+                'currentLocalization' => $currentLocalization,
                 'webspace' => $webspace
             ));
-    }
-
-    var $i = 1;
-
-    private function getFlatLocalizations(Localization $localization)
-    {
-        $localizations = array(
-            array(
-                'name' => $localization->getLocalization('-'),
-                'localization' => $localization->getLocalization(),
-                'id' => $this->i++
-            )
-        );
-        if ($localization->getChildren() !== null && sizeof($localization->getChildren()) > 0) {
-            foreach ($localization->getChildren() as $child) {
-                $localizations = array_merge($localizations, $this->getFlatLocalizations($child));
-            }
-        }
-        return $localizations;
     }
 
 }
