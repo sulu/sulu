@@ -35,7 +35,7 @@ define(['app-config'], function(AppConfig) {
             delete this.sandbox.sulu.viewStates.justSaved;
 
             this.state = null;
-            this.template = this.options.template;
+            this.template = this.options.data.template;
             this.dfdListenForChange = this.sandbox.data.deferred();
 
             this.formId = '#contacts-form-container';
