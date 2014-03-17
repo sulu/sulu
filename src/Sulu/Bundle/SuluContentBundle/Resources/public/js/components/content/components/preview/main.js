@@ -23,7 +23,7 @@
  * @param {String}  [options.iframeSource.language] language section of the url
  * @param {String}  [options.id] id of the element
  * @param {Object}  [options.toolbar] options for the toolbar
- * @param {Array}   [options.toolbar.resolutions] options for the toolbar
+ * @param {Array}   [options.toolbar.resolutions] available widths for dropdown
  * @param {Boolean} [options.toolbar.showLeft] show the left part of the toolbar
  * @param {Boolean} [options.toolbar.showRight] show the right part of the toolbar
  *
@@ -38,13 +38,13 @@ define([], function() {
         var defaults = {
                 toolbar: {
                     resolutions: [
-                        '1920x1080',
-                        '1680x1050',
-                        '1440x1050',
-                        '1024x768',
-                        '800x600',
-                        '600x480',
-                        '480x320'
+                        1920,
+                        1680,
+                        1440,
+                        1024,
+                        800,
+                        600,
+                        480
                     ],
                     showLeft: true,
                     showRight: true
@@ -93,23 +93,6 @@ define([], function() {
              */
                 HIDE = eventNamespace + 'hide',
 
-
-            /**
-             * Returns an object with a height and width property from  a string in pixles
-             * @param dimension {String} a string with dimensions e.g 1920x1080
-             * @return {Object} object with width and height property
-             */
-                parseHeightAndWidthFromString = function(dimension) {
-                var tmp = dimension.split('x');
-
-                if (tmp.length == 2) {
-                    return {width: tmp[0], height: tmp[1]}
-                } else {
-                    this.sandbox.logger.error('Dimension string has invalid format -> 1920x1080');
-                    return '';
-                }
-            },
-
             /**
              * Concatenates the given strings to an url
              * @param {String} url
@@ -140,7 +123,6 @@ define([], function() {
                 this.options = this.sandbox.util.extend({}, defaults, this.options);
 
                 // component vars
-                this.currentSize = parseHeightAndWidthFromString.call(this, this.options.toolbar.resolutions[0]);
                 this.previewWidth = 0;
                 this.url = '';
                 this.isExpanded = false;
@@ -152,7 +134,7 @@ define([], function() {
                 this.$mainContent = this.sandbox.dom.$('#' + this.options.mainContentElementIdentifier)[0];
 
                 // get original max width
-                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent);
+                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent)+50;
 
                 this.render();
                 this.bindDomEvents.call(this);
@@ -203,7 +185,6 @@ define([], function() {
             /**
              * Renders iframe
              * @param {Number} width of iframe
-             * @param {Number} height of iframe
              * @param {String} url for iframe target
              */
             renderIframe: function(width, url) {
