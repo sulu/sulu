@@ -98,6 +98,20 @@ class Webspace
     }
 
     /**
+     * Returns a list of all localizations and sublocalizations
+     * @return \Sulu\Component\Webspace\Localization[]
+     */
+    public function getAllLocalizations()
+    {
+        $localizations = array();
+        foreach ($this->getLocalizations() as $child) {
+            $localizations[] = $child;
+            $localizations = array_merge($localizations, $child->getAllLocalizations());
+        }
+        return $localizations;
+    }
+
+    /**
      * Returns the localization object for a given localization string
      * @param string $localization
      * @return Localization|null
