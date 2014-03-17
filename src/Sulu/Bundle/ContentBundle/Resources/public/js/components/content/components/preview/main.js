@@ -185,11 +185,11 @@ define([], function() {
                 var mainWidth, mainMarginLeft, totalWidth;
 
                 if (!this.$mainContent) {
-                    this.sandbox.logger.error('main content element could not be found!')
+                    this.sandbox.logger.error('main content element could not be found!');
                     return;
                 }
 
-                // caculate the available space next to the
+                // calculate the available space next to the
                 mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
                 mainMarginLeft = this.$mainContent.offsetLeft;
                 totalWidth = this.sandbox.dom.width(document);
@@ -339,16 +339,6 @@ define([], function() {
              */
             animateCollapseAndExpand: function(expand, previewWidth){
 
-                if(!!expand) {
-
-                    // TODO hide navigation
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left:50});
-                } else {
-
-                    // TODO show navigation
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 50});
-                }
-
                 // preview wrapper
                 this.sandbox.dom.animate(this.$wrapper,{
                     width: previewWidth+'px'
@@ -372,6 +362,20 @@ define([], function() {
                     duration: 500,
                     queue: false
                 });
+
+                if(!!expand) {
+
+                    // TODO hide navigation
+                    this.sandbox.emit('husky.page-functions.hide');
+                    this.sandbox.emit('husky.navigation.hide');
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left:0, expand:true});
+                } else {
+
+                    // TODO show navigation
+                    this.sandbox.emit('husky.page-functions.show');
+                    this.sandbox.emit('husky.navigation.show');
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 50, expand:false});
+                }
 
             }
 
