@@ -385,7 +385,7 @@ define([
             if (!!this.options.id) {
 
                 // collapse navigation
-                this.sandbox.emit('husky.navigation.collapse');
+                this.sandbox.emit('husky.navigation.collapse', true);
 
                 this.content = new Content({id: this.options.id});
                 this.content.fullFetch(this.options.webspace, this.options.language, {
