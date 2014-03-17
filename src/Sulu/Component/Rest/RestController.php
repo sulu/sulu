@@ -238,7 +238,8 @@ abstract class RestController extends FOSRestController
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
         $entities = $listHelper->find($this->entityName, $where);
-        $pages = $listHelper->getTotalPages($this->entityName, $where);
+        $numberOfAll = $listHelper->getTotalNumberOfElements($this->entityName, $where);
+        $pages = $listHelper->getTotalPages($numberOfAll);
 
         $response = array(
             '_links' => $this->getHalLinks($entities, $pages, true),
@@ -247,6 +248,7 @@ abstract class RestController extends FOSRestController
             'page' => $listHelper->getPage(),
             'pages' => $pages,
             'pageSize' => $listHelper->getLimit(),
+            'numberOfAll' => $numberOfAll
         );
 
         return $this->view($response, 200);
@@ -366,6 +368,9 @@ abstract class RestController extends FOSRestController
             '{fieldsList}'
         );
 
+        // create pagination link
+        $paginationLink = $this->replaceOrAddUrlString($path, $listHelper->getParameterName('pageSize') . '=', '{pageSize}');
+
 
         return array(
             'self' => $path,
@@ -377,8 +382,7 @@ abstract class RestController extends FOSRestController
                     $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page + 1) : null,
             'prev' => ($page > 1 && $pages > 1) ?
                     $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', $page - 1) : null,
-            'pagination' => ($pages > 1) ?
-                    $this->replaceOrAddUrlString($path, $listHelper->getParameterName('page') . '=', '{page}') : null,
+            'pagination' => $this->replaceOrAddUrlString($paginationLink, $listHelper->getParameterName('page') . '=', '{page}'),
             'find' => $returnListLinks ? $searchLink : null,
             'filter' => $returnListLinks ? $filterLink : null,
             'sortable' => $returnListLinks ? $sortable : null,

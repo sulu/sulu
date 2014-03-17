@@ -104,9 +104,6 @@ class Webspace
      */
     public function getLocalization($localization)
     {
-        // rewrite localization to match internal structure
-        $localization = str_replace('_', '-', $localization);
-
         $localizations = $this->getLocalizations();
         if (!empty($localizations)) {
             foreach ($localizations as $webspaceLocalization) {

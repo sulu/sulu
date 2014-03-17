@@ -21,12 +21,12 @@ class StructureType
 {
     /**
      * creates a new ghost type
-     * @param Localization $local of Type
+     * @param string $localization
      * @return StructureType
      */
-    public static function getGhost(Localization $local)
+    public static function getGhost($localization)
     {
-        return new StructureType('ghost', $local->getLocalization());
+        return new StructureType('ghost', $localization);
     }
 
     /**

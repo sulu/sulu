@@ -39,7 +39,7 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
      */
     public function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey)
     {
-        // use created field to check localization availability
+        // use title field to check localization availability
         $property = new TranslatedProperty(
             new Property('title', 'none'), // FIXME none as type is a dirty hack
             $localizationCode,
@@ -82,7 +82,7 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
             );
         }
 
-        return $resultLocalization;
+        return $resultLocalization->getLocalization();
     }
 
     /**

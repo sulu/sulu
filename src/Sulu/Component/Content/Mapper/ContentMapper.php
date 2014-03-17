@@ -16,8 +16,10 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
+use Sulu\Component\Content\Event\ContentNodeEvent;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
@@ -28,10 +30,9 @@ use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ContentMapper implements ContentMapperInterface
-{
+class ContentMapper implements ContentMapperInterface {
     /**
      * @var ContentTypeManager
      */
@@ -46,6 +47,11 @@ class ContentMapper implements ContentMapperInterface
      * @var SessionManagerInterface
      */
     private $sessionManager;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * @var LocalizationFinderInterface
@@ -112,6 +118,7 @@ class ContentMapper implements ContentMapperInterface
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
         SessionManagerInterface $sessionManager,
+        EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
         $defaultLanguage,
         $defaultTemplate,
@@ -122,6 +129,7 @@ class ContentMapper implements ContentMapperInterface
         $this->structureManager = $structureManager;
         $this->sessionManager = $sessionManager;
         $this->localizationFinder = $localizationFinder;
+        $this->eventDispatcher = $eventDispatcher;
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
@@ -186,9 +194,11 @@ class ContentMapper implements ContentMapperInterface
 
         $dateTime = new \DateTime();
 
-        $titleProperty = new TranslatedProperty($structure->getProperty(
-            'title'
-        ), $languageCode, $this->languageNamespace);
+        $titleProperty = new TranslatedProperty(
+            $structure->getProperty('title'),
+            $languageCode,
+            $this->languageNamespace
+        );
 
         $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state, &$showInNavigation) {
             $node->setProperty($this->properties->getName('creator'), $userId);
@@ -335,6 +345,10 @@ class ContentMapper implements ContentMapperInterface
             $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
         );
 
+        // throw an content.node.save event
+        $event = new ContentNodeEvent($node);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
+
         return $structure;
     }
 
@@ -449,7 +463,7 @@ class ContentMapper implements ContentMapperInterface
         $depth = 1,
         $flat = true,
         $ignoreExceptions = false,
-        $loadGhosts = true
+        $excludeGhosts = false
     )
     {
         if ($uuid != null) {
@@ -464,7 +478,7 @@ class ContentMapper implements ContentMapperInterface
             $depth,
             $flat,
             $ignoreExceptions,
-            $loadGhosts
+            $excludeGhosts
         );
     }
 
@@ -476,7 +490,7 @@ class ContentMapper implements ContentMapperInterface
      * @param int $depth
      * @param bool $flat
      * @param bool $ignoreExceptions
-     * @param bool $loadGhosts If true ghost pages are also loaded
+     * @param bool $excludeGhosts If true ghost pages are also loaded
      * @throws \Exception
      * @return array
      */
@@ -487,7 +501,7 @@ class ContentMapper implements ContentMapperInterface
         $depth = 1,
         $flat = true,
         $ignoreExceptions = false,
-        $loadGhosts
+        $excludeGhosts
     )
     {
         $results = array();
@@ -495,7 +509,7 @@ class ContentMapper implements ContentMapperInterface
         /** @var NodeInterface $node */
         foreach ($parent->getNodes() as $node) {
             try {
-                $result = $this->loadByNode($node, $languageCode, $webspaceKey, $loadGhosts);
+                $result = $this->loadByNode($node, $languageCode, $webspaceKey, $excludeGhosts, true);
                 if ($result) {
                     $results[] = $result;
                 }
@@ -507,7 +521,7 @@ class ContentMapper implements ContentMapperInterface
                         $depth !== null ? $depth - 1 : null,
                         $flat,
                         $ignoreExceptions,
-                        $loadGhosts
+                        $excludeGhosts
                     );
                     if ($flat) {
                         $results = array_merge($results, $children);
@@ -530,14 +544,15 @@ class ContentMapper implements ContentMapperInterface
      * @param string $uuid UUID of the content
      * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
+     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
      * @return StructureInterface
      */
-    public function load($uuid, $webspaceKey, $languageCode)
+    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
     {
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
+        return $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent);
     }
 
     /**
@@ -616,22 +631,27 @@ class ContentMapper implements ContentMapperInterface
      * @param NodeInterface $contentNode
      * @param string $localization
      * @param string $webspaceKey
-     * @param bool $loadGhost True if also a ghost page should be returned, otherwise false
+     * @param bool $excludeGhost True if also a ghost page should be returned, otherwise false
+     * @param bool $loadGhostContent True if also ghost content should be returned, otherwise false
      * @return StructureInterface
      */
-    private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey, $loadGhost = true)
+    private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey, $excludeGhost = true, $loadGhostContent = false)
     {
-        $availableLocalization = $this->localizationFinder->getAvailableLocalization(
-            $contentNode,
-            str_replace('-', '_', $localization),
-            $webspaceKey
-        );
-        if (!$loadGhost && $availableLocalization->getLocalization() != $localization) {
+        if ($loadGhostContent) {
+            $availableLocalization = $this->localizationFinder->getAvailableLocalization(
+                $contentNode,
+                $localization,
+                $webspaceKey
+            );
+        } else {
+            $availableLocalization = $localization;
+        }
+        if ($excludeGhost && $availableLocalization != $localization) {
             return null;
         }
 
         // create translated properties
-        $this->properties->setLanguage($availableLocalization->getLocalization('_'));
+        $this->properties->setLanguage($availableLocalization);
 
         $templateKey = $contentNode->getPropertyValueWithDefault(
             $this->properties->getName('template'),
@@ -641,7 +661,7 @@ class ContentMapper implements ContentMapperInterface
         $structure = $this->getStructure($templateKey);
 
         // set structure to ghost, if the available localization does not match the requested one
-        if ($availableLocalization->getLocalization('_') != $localization) {
+        if ($availableLocalization != $localization) {
             $structure->setType(StructureType::getGhost($availableLocalization));
         }
 
@@ -684,11 +704,11 @@ class ContentMapper implements ContentMapperInterface
                 $contentNode,
                 new TranslatedProperty(
                     $property,
-                    $availableLocalization->getLocalization('_'),
+                    $availableLocalization,
                     $this->languageNamespace
                 ),
                 $webspaceKey,
-                $availableLocalization->getLocalization('_'),
+                $availableLocalization,
                 null
             );
         }
