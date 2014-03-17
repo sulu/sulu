@@ -188,9 +188,11 @@ class Localization implements \JsonSerializable
     public function getAllLocalizations()
     {
         $localizations = array();
-        foreach ($this->getChildren() as $child) {
-            $localizations[] = $child;
-            $localizations = array_merge($localizations, $child->getAllLocalizations());
+        if ($this->getChildren() !== null && sizeof($this->getChildren()) > 0) {
+            foreach ($this->getChildren() as $child) {
+                $localizations[] = $child;
+                $localizations = array_merge($localizations, $child->getAllLocalizations());
+            }
         }
         return $localizations;
     }
