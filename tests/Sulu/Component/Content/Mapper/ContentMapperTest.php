@@ -1451,7 +1451,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
-        $this->assertEquals('de-at', $result[0]->getType()->getValue());
+        $this->assertEquals('de_at', $result[0]->getType()->getValue());
         $this->assertEquals('de', $result[1]->getLanguageCode());
         $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
         $this->assertNull($result[1]->getType());
@@ -1471,7 +1471,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
         $this->assertEquals('ghost', $result[0]->getType()->getName());
-        $this->assertEquals('de-at', $result[0]->getType()->getValue());
+        $this->assertEquals('de_at', $result[0]->getType()->getValue());
         $this->assertEquals('de', $result[1]->getLanguageCode());
         $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
         $this->assertNull($result[1]->getType());

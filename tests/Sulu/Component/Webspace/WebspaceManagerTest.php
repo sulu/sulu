@@ -229,7 +229,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testFindPortalInformationByUrl()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
-        $this->assertEquals('de-at', $portalInformation['localization']->getLocalization());
+        $this->assertEquals('de_at', $portalInformation['localization']->getLocalization());
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
         /** @var Portal $portal */
@@ -257,7 +257,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
 
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
-        $this->assertEquals('de-at', $portalInformation['localization']->getLocalization());
+        $this->assertEquals('de_at', $portalInformation['localization']->getLocalization());
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
         /** @var Portal $portal */
@@ -288,7 +288,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testFindPortalInformationByUrlWithSegment()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');
-        $this->assertEquals('en-us', $portalInformation['localization']->getLocalization());
+        $this->assertEquals('en_us', $portalInformation['localization']->getLocalization());
         $this->assertEquals('winter', $portalInformation['segment']->getName());
 
         /** @var Portal $portal */

@@ -26,6 +26,7 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="event_dispatcher"/>
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
