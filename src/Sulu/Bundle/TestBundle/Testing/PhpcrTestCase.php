@@ -17,8 +17,11 @@ use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\ContentTypeManager;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
+use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
@@ -30,6 +33,7 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -87,6 +91,16 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $eventDispatcher;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    protected $webspaceManager;
+
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    protected $contentTypeManager;
+
+    /**
      * @var array
      */
     protected $structureValueMap = array();
@@ -95,6 +109,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var SecurityContextInterface
      */
     protected $securityContext;
+
+    /**
+     * @var LocalizationFinderInterface
+     */
+    protected $localizationFinder;
 
     /**
      * The default language for the content mapper
@@ -133,19 +152,22 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         if ($this->mapper === null) {
             $this->prepareContainer();
 
-            $contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
-
             $this->prepareSession();
             $this->prepareRepository();
 
+            $this->prepareContentTypeManager();
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
+            $this->prepareWebspaceManager();
             $this->prepareEventDispatcher();
+            $this->prepareLocalizationFinder();
+
             $this->mapper = new ContentMapper(
-                $contentTypeManager,
+                $this->contentTypeManager,
                 $this->structureManager,
                 $this->sessionManager,
+                $this->localizationFinder,
                 $this->eventDispatcher,
                 $this->language,
                 $this->defaultTemplate,
@@ -167,10 +189,37 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    protected function prepareContentTypeManager()
+    {
+        if ($this->contentTypeManager === null) {
+            $this->contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
+        }
+    }
+
+    /**
+     * prepares event dispatcher manager
+     */
     protected function prepareEventDispatcher()
     {
         if ($this->eventDispatcher === null) {
             $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        }
+    }
+
+    protected function prepareLocalizationFinder()
+    {
+        if ($this->localizationFinder === null) {
+            $this->localizationFinder = new ParentChildAnyFinder($this->webspaceManager, 'sulu_locale');
+        }
+    }
+
+    /**
+     * prepares webspace manager
+     */
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
         }
     }
 
