@@ -172,7 +172,7 @@ define([], function() {
                 this.url = getUrl.call(this, this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
                 this.renderWrapper();
-                this.renderIframe(this.currentSize.width, this.currentSize.height, this.url);
+                this.renderIframe(this.previewWidth, this.url);
                 this.renderToolbar();
             },
 
@@ -182,7 +182,7 @@ define([], function() {
              */
             renderWrapper: function() {
 
-                var mainWidth, mainMarginLeft, totalWidth;
+                var mainWidth, totalWidth;
 
                 if (!this.$mainContent) {
                     this.sandbox.logger.error('main content element could not be found!');
@@ -191,7 +191,6 @@ define([], function() {
 
                 // calculate the available space next to the
                 mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
-                mainMarginLeft = this.$mainContent.offsetLeft;
                 totalWidth = this.sandbox.dom.width(document);
                 this.previewWidth = totalWidth - (mainWidth + this.options.marginLeft);
 
@@ -207,8 +206,8 @@ define([], function() {
              * @param {Number} height of iframe
              * @param {String} url for iframe target
              */
-            renderIframe: function(width, height, url) {
-                this.$iframe = this.sandbox.dom.$('<iframe id="preview-iframe" class="preview-iframe" src="' + url + '" width="' + width + 'px" height="' + height + 'px"></iframe>');
+            renderIframe: function(width, url) {
+                this.$iframe = this.sandbox.dom.$('<iframe id="preview-iframe" class="preview-iframe" src="' + url + '" width="' + width + 'px" height="100%"></iframe>');
                 this.sandbox.dom.append(this.$wrapper, this.$iframe);
             },
 
@@ -302,10 +301,8 @@ define([], function() {
              */
             expandPreview: function($target) {
 
-                // TODO get value for with via options
-
                 var $span = this.sandbox.dom.find('span', $target),
-                    width = 1400;
+                    width = this.sandbox.dom.width(document) - 500;
 
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
