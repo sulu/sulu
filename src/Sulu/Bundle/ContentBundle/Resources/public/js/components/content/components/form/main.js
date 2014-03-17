@@ -15,6 +15,8 @@ define(['app-config'], function(AppConfig) {
 
         view: true,
 
+        templates: ['/admin/content/template/content/settings'],
+
         // if ws != null then use it
         ws: null,
         wsUrl: '',
@@ -22,7 +24,6 @@ define(['app-config'], function(AppConfig) {
         previewInitiated: false,
         opened: false,
 
-        template: '',
         templateChanged: false,
         contentChanged: false,
 
@@ -34,24 +35,41 @@ define(['app-config'], function(AppConfig) {
             delete this.sandbox.sulu.viewStates.justSaved;
 
             this.state = null;
+            this.template = this.options.template;
+            this.dfdListenForChange = this.sandbox.data.deferred();
 
             this.formId = '#contacts-form-container';
             this.render();
             this.setTitle();
 
             this.setHeaderBar(true);
-
-            this.dfdListenForChange = this.sandbox.data.deferred();
         },
 
         render: function() {
             this.bindCustomEvents();
 
+            if (this.options.tab.content === true) {
+                this.renderContent();
+            } else if (this.options.tab.settings === true) {
+                this.renderSettings();
+            }
+        },
+
+        renderContent: function() {
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
             } else {
                 this.changeTemplate();
             }
+        },
+
+        renderSettings: function() {
+            this.setHeaderBar(false);
+
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/settings'));
+            this.createForm(this.initData());
+            this.bindDomEvents();
+            this.listenForChange();
         },
 
         setStateDropdown: function(data) {

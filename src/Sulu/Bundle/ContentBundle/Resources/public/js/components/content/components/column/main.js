@@ -62,7 +62,7 @@ define(function() {
                                 {
                                     "id": 2,
                                     "title": "Home page",
-                                    "action": 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:index/details'
+                                    "action": 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:index/content'
                                 }
                             ]
                         }
