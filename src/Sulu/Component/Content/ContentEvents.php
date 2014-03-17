@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Event;
+namespace Sulu\Component\Content;
 
 final class ContentEvents
 {
@@ -18,5 +18,4 @@ final class ContentEvents
      * @var string
      */
     const NODE_SAVE = 'sulu.content.node.save';
-
 }

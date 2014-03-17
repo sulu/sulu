@@ -18,7 +18,7 @@ use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\Event\ContentEvents;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
@@ -32,7 +32,8 @@ use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ContentMapper implements ContentMapperInterface {
+class ContentMapper implements ContentMapperInterface
+{
     /**
      * @var ContentTypeManager
      */
@@ -510,9 +511,11 @@ class ContentMapper implements ContentMapperInterface {
         foreach ($parent->getNodes() as $node) {
             try {
                 $result = $this->loadByNode($node, $languageCode, $webspaceKey, $excludeGhosts, true);
+
                 if ($result) {
                     $results[] = $result;
                 }
+
                 if ($depth === null || $depth > 1) {
                     $children = $this->loadByParentNode(
                         $node,
@@ -635,7 +638,13 @@ class ContentMapper implements ContentMapperInterface {
      * @param bool $loadGhostContent True if also ghost content should be returned, otherwise false
      * @return StructureInterface
      */
-    private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey, $excludeGhost = true, $loadGhostContent = false)
+    private function loadByNode(
+        NodeInterface $contentNode,
+        $localization,
+        $webspaceKey,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    )
     {
         if ($loadGhostContent) {
             $availableLocalization = $this->localizationFinder->getAvailableLocalization(
@@ -646,6 +655,7 @@ class ContentMapper implements ContentMapperInterface {
         } else {
             $availableLocalization = $localization;
         }
+
         if ($excludeGhost && $availableLocalization != $localization) {
             return null;
         }
