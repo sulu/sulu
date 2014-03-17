@@ -23,6 +23,7 @@ define(['app-config'], function(AppConfig) {
         wsPort: '',
         previewInitiated: false,
         opened: false,
+        template: '',
 
         templateChanged: false,
         contentChanged: false,
@@ -35,7 +36,6 @@ define(['app-config'], function(AppConfig) {
             delete this.sandbox.sulu.viewStates.justSaved;
 
             this.state = null;
-            this.template = this.options.data.template;
             this.dfdListenForChange = this.sandbox.data.deferred();
 
             this.formId = '#contacts-form-container';
@@ -173,6 +173,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.content.contents.saved', function() {
                 this.highlightSaveButton = true;
                 this.setHeaderBar(true);
+                this.setTitle();
             }, this);
 
             // content save
@@ -269,6 +270,7 @@ define(['app-config'], function(AppConfig) {
 
         submit: function() {
             this.sandbox.logger.log('save Model');
+            var template = (this.template !== '') ? this.template: this.options.data.template;
 
             if (this.sandbox.form.validate(this.formId)) {
                 var data = this.sandbox.form.getData(this.formId),
@@ -282,7 +284,8 @@ define(['app-config'], function(AppConfig) {
 
                 this.sandbox.logger.log('data', data);
 
-                this.sandbox.emit('sulu.content.contents.save', data, this.template, navigation);
+                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
+                this.sandbox.emit('sulu.content.contents.save', data, template, navigation);
             }
         },
 
