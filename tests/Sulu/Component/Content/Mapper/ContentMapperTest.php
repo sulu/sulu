@@ -17,7 +17,7 @@ use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\Event\ContentEvents;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
