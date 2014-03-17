@@ -91,30 +91,8 @@ define([], function() {
              * raised when preview is opened in new window
              * @event husky.preview.collapsing
              */
-                HIDE = eventNamespace + 'hide',
+                HIDE = eventNamespace + 'hide';
 
-            /**
-             * Concatenates the given strings to an url
-             * @param {String} url
-             * @param {String} webspace
-             * @param {String} language
-             * @param {String} id
-             * @return {String} url string
-             */
-                getUrl = function(url, webspace, language, id) {
-
-                if (!url || !id || !webspace || !language) {
-                    this.sandbox.logger.error('not all url params for iframe definded!');
-                    return '';
-                }
-
-                url = url[url.length - 1] === '/' ? url : url + '/';
-                url += id + '?';
-                url += 'webspace=' + webspace;
-                url += '&language=' + language;
-
-                return url;
-            };
 
         return {
 
@@ -134,7 +112,7 @@ define([], function() {
                 this.$mainContent = this.sandbox.dom.$('#' + this.options.mainContentElementIdentifier)[0];
 
                 // get original max width
-                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent)+50;
+                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 50;
 
                 this.render();
                 this.bindDomEvents.call(this);
@@ -151,7 +129,7 @@ define([], function() {
              * Initializes the rendering process
              */
             render: function() {
-                this.url = getUrl.call(this, this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
+                this.url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
                 this.renderWrapper();
                 this.renderIframe(this.previewWidth, this.url);
@@ -359,8 +337,35 @@ define([], function() {
                     this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand: false});
                 }
 
-            }
+            },
 
+
+            /*********************************************
+             *   Util Methods
+             ********************************************/
+
+            /**
+             * Concatenates the given strings to an url
+             * @param {String} url
+             * @param {String} webspace
+             * @param {String} language
+             * @param {String} id
+             * @return {String} url string
+             */
+            getUrl: function(url, webspace, language, id) {
+
+                if (!url || !id || !webspace || !language) {
+                    this.sandbox.logger.error('not all url params for iframe definded!');
+                    return '';
+                }
+
+                url = url[url.length - 1] === '/' ? url : url + '/';
+                url += id + '?';
+                url += 'webspace=' + webspace;
+                url += '&language=' + language;
+
+                return url;
+            }
 
         };
     }
