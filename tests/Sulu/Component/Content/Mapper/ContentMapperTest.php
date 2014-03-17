@@ -10,20 +10,16 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use Jackalope\RepositoryFactoryJackrabbit;
-use Jackalope\Session;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Event\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
