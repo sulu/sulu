@@ -357,6 +357,14 @@ define([], function() {
                     queue: false
                 });
 
+                // preview iframe
+                this.sandbox.dom.animate(this.$iframe,{
+                    width: previewWidth+'px'
+                },{
+                    duration: 500,
+                    queue: false
+                });
+
                 // preview toolbar
                 this.sandbox.dom.animate(this.$toolbar,{
                     width: previewWidth+30+'px'
