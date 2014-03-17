@@ -76,7 +76,7 @@ interface ContentMapperInterface
      * @param int $depth The depth of the search
      * @param bool $flat If true, the result is a flat list
      * @param bool $ignoreExceptions
-     * @param bool $loadGhosts If true ghost pages are also loaded
+     * @param bool $excludeGhosts If true ghost pages are also loaded
      * @return StructureInterface[]
      */
     public function loadByParent(
@@ -86,7 +86,7 @@ interface ContentMapperInterface
         $depth = 1,
         $flat = true,
         $ignoreExceptions = false,
-        $loadGhosts = true
+        $excludeGhosts = false
     );
 
     /**
@@ -94,9 +94,10 @@ interface ContentMapperInterface
      * @param string $uuid UUID of the content
      * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
+     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
      * @return StructureInterface
      */
-    public function load($uuid, $webspaceKey, $languageCode);
+    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false);
 
     /**
      * returns the data from the given id

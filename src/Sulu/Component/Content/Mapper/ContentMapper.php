@@ -465,7 +465,7 @@ class ContentMapper implements ContentMapperInterface {
         $depth = 1,
         $flat = true,
         $ignoreExceptions = false,
-        $loadGhosts = true
+        $excludeGhosts = false
     )
     {
         if ($uuid != null) {
@@ -480,7 +480,7 @@ class ContentMapper implements ContentMapperInterface {
             $depth,
             $flat,
             $ignoreExceptions,
-            $loadGhosts
+            $excludeGhosts
         );
     }
 
@@ -492,7 +492,7 @@ class ContentMapper implements ContentMapperInterface {
      * @param int $depth
      * @param bool $flat
      * @param bool $ignoreExceptions
-     * @param bool $loadGhosts If true ghost pages are also loaded
+     * @param bool $excludeGhosts If true ghost pages are also loaded
      * @throws \Exception
      * @return array
      */
@@ -503,7 +503,7 @@ class ContentMapper implements ContentMapperInterface {
         $depth = 1,
         $flat = true,
         $ignoreExceptions = false,
-        $loadGhosts
+        $excludeGhosts
     )
     {
         $results = array();
@@ -511,7 +511,7 @@ class ContentMapper implements ContentMapperInterface {
         /** @var NodeInterface $node */
         foreach ($parent->getNodes() as $node) {
             try {
-                $result = $this->loadByNode($node, $languageCode, $webspaceKey, $loadGhosts);
+                $result = $this->loadByNode($node, $languageCode, $webspaceKey, $excludeGhosts, true);
                 if ($result) {
                     $results[] = $result;
                 }
@@ -523,7 +523,7 @@ class ContentMapper implements ContentMapperInterface {
                         $depth !== null ? $depth - 1 : null,
                         $flat,
                         $ignoreExceptions,
-                        $loadGhosts
+                        $excludeGhosts
                     );
                     if ($flat) {
                         $results = array_merge($results, $children);
@@ -546,14 +546,15 @@ class ContentMapper implements ContentMapperInterface {
      * @param string $uuid UUID of the content
      * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
+     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
      * @return StructureInterface
      */
-    public function load($uuid, $webspaceKey, $languageCode)
+    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
     {
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
+        return $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent);
     }
 
     /**
@@ -632,7 +633,7 @@ class ContentMapper implements ContentMapperInterface {
      * @param NodeInterface $contentNode The node to look up the localizations
      * @param string $localizationCode The code for which the data should be loaded
      * @param string $webspaceKey The key for the webspace to look for the defined localizations
-     * @return \Sulu\Component\Webspace\Localization
+     * @return string
      */
     private function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey)
     {
@@ -676,7 +677,7 @@ class ContentMapper implements ContentMapperInterface {
             );
         }
 
-        return $resultLocalization;
+        return $resultLocalization->getLocalization();
     }
 
     /**
@@ -770,22 +771,27 @@ class ContentMapper implements ContentMapperInterface {
      * @param NodeInterface $contentNode
      * @param string $localization
      * @param string $webspaceKey
-     * @param bool $loadGhost True if also a ghost page should be returned, otherwise false
+     * @param bool $excludeGhost True if also a ghost page should be returned, otherwise false
+     * @param bool $loadGhostContent True if also ghost content should be returned, otherwise false
      * @return StructureInterface
      */
-    private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey, $loadGhost = true)
+    private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey, $excludeGhost = true, $loadGhostContent = false)
     {
-        $availableLocalization = $this->getAvailableLocalization(
-            $contentNode,
-            str_replace('-', '_', $localization),
-            $webspaceKey
-        );
-        if (!$loadGhost && $availableLocalization->getLocalization() != $localization) {
+        if ($loadGhostContent) {
+            $availableLocalization = $this->getAvailableLocalization(
+                $contentNode,
+                $localization,
+                $webspaceKey
+            );
+        } else {
+            $availableLocalization = $localization;
+        }
+        if ($excludeGhost && $availableLocalization != $localization) {
             return null;
         }
 
         // create translated properties
-        $this->properties->setLanguage($availableLocalization->getLocalization('_'));
+        $this->properties->setLanguage($availableLocalization);
 
         $templateKey = $contentNode->getPropertyValueWithDefault(
             $this->properties->getName('template'),
@@ -795,7 +801,7 @@ class ContentMapper implements ContentMapperInterface {
         $structure = $this->getStructure($templateKey);
 
         // set structure to ghost, if the available localization does not match the requested one
-        if ($availableLocalization->getLocalization('_') != $localization) {
+        if ($availableLocalization != $localization) {
             $structure->setType(StructureType::getGhost($availableLocalization));
         }
 
@@ -838,11 +844,11 @@ class ContentMapper implements ContentMapperInterface {
                 $contentNode,
                 new TranslatedProperty(
                     $property,
-                    $availableLocalization->getLocalization('_'),
+                    $availableLocalization,
                     $this->languageNamespace
                 ),
                 $webspaceKey,
-                $availableLocalization->getLocalization('_'),
+                $availableLocalization,
                 null
             );
         }

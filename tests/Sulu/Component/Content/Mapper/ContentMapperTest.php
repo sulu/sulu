@@ -1402,18 +1402,7 @@ class ContentMapperTest extends PhpcrTestCase
     public function testGhost()
     {
         /** @var StructureInterface[] $data */
-        $this->prepareGhostTestData();
-
-        // both pages exists in en
-        /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, true);
-        $this->assertEquals(2, sizeof($result));
-        $this->assertEquals('en', $result[0]->getLanguageCode());
-        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
-        $this->assertNull($result[0]->getType());
-        $this->assertEquals('en', $result[1]->getLanguageCode());
-        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
-        $this->assertNull($result[1]->getType());
+        $data = $this->prepareGhostTestData();
 
         // both pages exists in en
         /** @var StructureInterface[] $result */
@@ -1426,9 +1415,20 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
         $this->assertNull($result[1]->getType());
 
+        // both pages exists in en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('en', $result[0]->getLanguageCode());
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('en', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
         // both pages are ghosts in en_us from en
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, true);
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, false);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('en_us', $result[0]->getLanguageCode());
         $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
@@ -1441,12 +1441,12 @@ class ContentMapperTest extends PhpcrTestCase
 
         // no page exists in en_us without ghosts
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, false);
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, true);
         $this->assertEquals(0, sizeof($result));
 
         // one page not exists in de (ghost from de_at), other exists in de
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
@@ -1458,7 +1458,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // one page exists in de (without ghosts)
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
         $this->assertEquals(1, sizeof($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
@@ -1466,7 +1466,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // one page not exists in de_at (ghost from de), other exists in de_at
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('de', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
@@ -1478,7 +1478,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // one page not exists in de_at (ghost from de), other exists in de_at
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'de_at', 1, true, false, true);
+        $result = $this->mapper->loadByParent(null, 'default', 'de_at', 1, true, false, false);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('de_at', $result[0]->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
@@ -1490,7 +1490,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // both pages are ghosts in es from en
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, true);
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, false);
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('es', $result[0]->getLanguageCode());
         $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
@@ -1503,7 +1503,20 @@ class ContentMapperTest extends PhpcrTestCase
 
         // no page exists in en_us without ghosts
         /** @var StructureInterface[] $result */
-        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, false);
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, true);
         $this->assertEquals(0, sizeof($result));
+
+        // load content as de -> no ghost content
+        $result = $this->mapper->load($data['news-de_at']->getUuid(), 'default', 'de', false);
+        $this->assertEquals('de', $result->getLanguageCode());
+        $this->assertEquals('', $result->getPropertyValue('title'));
+        $this->assertNull($result->getType());
+
+        // load content as de -> load ghost content
+        $result = $this->mapper->load($data['news-de_at']->getUuid(), 'default', 'de', true);
+        $this->assertEquals('de', $result->getLanguageCode());
+        $this->assertEquals('News-DE_AT', $result->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result->getType()->getName());
+        $this->assertEquals('de_at', $result->getType()->getValue());
     }
 }
