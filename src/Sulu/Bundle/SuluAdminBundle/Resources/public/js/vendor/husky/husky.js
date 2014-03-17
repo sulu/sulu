@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -32087,8 +32086,8 @@ define('__component__$password-fields@husky',[], function() {
             this.sandbox.on('husky.password.fields.' + this.options.instanceName + '.get.passwords', function(callback){
 
                 if(typeof callback === 'function'){
-                    var password1 = this.sandbox.dom.val('#'+this.options.ids.inputPassword1),
-                        password2 = this.sandbox.dom.val('#'+this.options.ids.inputPassword2);
+                    var password1 = this.sandbox.dom.val('#' + this.options.ids.inputPassword1),
+                        password2 = this.sandbox.dom.val('#' + this.options.ids.inputPassword2);
                     callback(password1, password2);
                 }
 
@@ -32098,7 +32097,7 @@ define('__component__$password-fields@husky',[], function() {
 
         bindDomEvents: function() {
 
-            this.$element.on('click', '#'+this.options.ids.generateLabel, function() {
+            this.$element.on('click', '#' + this.options.ids.generateLabel, function() {
                 this.generatePasswords();
                 this.sandbox.emit('husky.passwords.fields.' + this.options.instanceName + '.generated.passwords');
             }.bind(this));
@@ -32109,8 +32108,8 @@ define('__component__$password-fields@husky',[], function() {
 
             // TODO generate password
 
-            this.sandbox.dom.val('#'+this.options.ids.inputPassword1, generatedPassword);
-            this.sandbox.dom.val('#'+this.options.ids.inputPassword2, generatedPassword);
+            this.sandbox.dom.val('#' + this.options.ids.inputPassword1, generatedPassword);
+            this.sandbox.dom.val('#' + this.options.ids.inputPassword2, generatedPassword);
         },
 
         template: function() {
@@ -36952,6 +36951,10 @@ define('husky_extensions/collection',[],function() {
               $(selector).focus();
             };
 
+            app.core.dom.animate = function(selector, properties, options){
+               $(selector).animate(properties, options);
+            };
+
             app.core.util.ajax = $.ajax;
         }
     });
@@ -37304,3 +37307,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
