@@ -16,7 +16,6 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
-use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -172,12 +171,6 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->eventDispatcher === null) {
             $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-            $this->eventDispatcher->expects($this->any())
-                ->method('dispatch')
-                ->with(
-                    $this->equalTo(ContentEvents::NODE_SAVE),
-                    $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
-                );
         }
     }
 
