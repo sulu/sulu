@@ -220,7 +220,7 @@ define([], function() {
                     '<div id="preview-toolbar" class="preview-toolbar">',
                     '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-step-backward"></span></div>',
                     '<div id="', constants.toolbarRight, '" class="right">',
-                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-external-link"></span></div>',
+                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-disk-export"></span></div>',
                     '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">Resolutions</div>',
                     '</div>',
                     '</div>'
@@ -268,6 +268,13 @@ define([], function() {
                     this.sandbox.dom.hide(this.$toolbar);
                     this.sandbox.dom.remove(this.$wrapper);
                     this.sandbox.dom.remove(this.$toolbar);
+
+                    // when preview expanded then show navigation and adjust main content
+                    if(!!this.isExpanded) {
+                        this.sandbox.emit('husky.page-functions.show');
+                        this.sandbox.emit('husky.navigation.show');
+                        this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand:false});
+                    }
 
                     this.sandbox.emit(HIDE);
 
