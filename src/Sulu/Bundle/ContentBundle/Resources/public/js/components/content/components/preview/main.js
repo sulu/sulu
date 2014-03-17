@@ -50,7 +50,7 @@ define([], function() {
                     showRight: true
                 },
                 mainContentElementIdentifier: '',
-                mainContentMinWidth:480,
+                mainContentMinWidth: 480,
                 marginLeft: 30,
                 iframeSource: {
                     url: '',
@@ -149,7 +149,7 @@ define([], function() {
                 this.$wrapper = null;
                 this.$iframe = null;
                 this.$toolbar = null;
-                this.$mainContent = this.sandbox.dom.$('#'+this.options.mainContentElementIdentifier)[0];
+                this.$mainContent = this.sandbox.dom.$('#' + this.options.mainContentElementIdentifier)[0];
 
                 // get original max width
                 this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent);
@@ -162,8 +162,8 @@ define([], function() {
             },
 
             /*********************************************
-            *   Rendering
-            ********************************************/
+             *   Rendering
+             ********************************************/
 
             /**
              * Initializes the rendering process
@@ -193,7 +193,7 @@ define([], function() {
                 mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
                 mainMarginLeft = this.$mainContent.offsetLeft;
                 totalWidth = this.sandbox.dom.width(document);
-                this.previewWidth = totalWidth - (mainWidth + mainMarginLeft + this.options.marginLeft);
+                this.previewWidth = totalWidth - (mainWidth + this.options.marginLeft);
 
                 this.$wrapper = this.sandbox.dom.$('<div class="preview-wrapper" id="preview-wrapper" style=""></div>');
                 this.sandbox.dom.css(this.$wrapper, 'width', this.previewWidth + 'px');
@@ -235,7 +235,7 @@ define([], function() {
             /**
              * Renders the dropdown for the resolution changes
              */
-            renderResolutionDropdown: function(){
+            renderResolutionDropdown: function() {
                 // TODO render resolution dropdown
             },
 
@@ -258,6 +258,7 @@ define([], function() {
                     } else {
                         this.collapsePreview($target);
                     }
+
                 }.bind(this));
 
                 // show in new window
@@ -270,10 +271,10 @@ define([], function() {
                     this.sandbox.dom.remove(this.$toolbar);
 
                     // when preview expanded then show navigation and adjust main content
-                    if(!!this.isExpanded) {
+                    if (!!this.isExpanded) {
                         this.sandbox.emit('husky.page-functions.show');
                         this.sandbox.emit('husky.navigation.show');
-                        this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand:false});
+                        this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand: false});
                     }
 
                     this.sandbox.emit(HIDE);
@@ -344,44 +345,40 @@ define([], function() {
              * @param {Boolean} expand
              * @param {Integer} previewWidth of preview in pixels
              */
-            animateCollapseAndExpand: function(expand, previewWidth){
+            animateCollapseAndExpand: function(expand, previewWidth) {
 
                 // preview wrapper
-                this.sandbox.dom.animate(this.$wrapper,{
-                    width: previewWidth+'px'
-                },{
+                this.sandbox.dom.animate(this.$wrapper, {
+                    width: previewWidth + 'px'
+                }, {
                     duration: 500,
                     queue: false
                 });
 
                 // preview iframe
-                this.sandbox.dom.animate(this.$iframe,{
-                    width: previewWidth+'px'
-                },{
+                this.sandbox.dom.animate(this.$iframe, {
+                    width: previewWidth + 'px'
+                }, {
                     duration: 500,
                     queue: false
                 });
 
                 // preview toolbar
-                this.sandbox.dom.animate(this.$toolbar,{
-                    width: previewWidth+30+'px'
-                },{
+                this.sandbox.dom.animate(this.$toolbar, {
+                    width: previewWidth + 30 + 'px'
+                }, {
                     duration: 500,
                     queue: false
                 });
 
-                if(!!expand) {
-
-                    // TODO hide navigation
+                if (!!expand) {
                     this.sandbox.emit('husky.page-functions.hide');
                     this.sandbox.emit('husky.navigation.hide');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left:0, expand:true});
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left: 0, expand: true});
                 } else {
-
-                    // TODO show navigation
                     this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('husky.navigation.show');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 50, expand:false});
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand: false});
                 }
 
             }
