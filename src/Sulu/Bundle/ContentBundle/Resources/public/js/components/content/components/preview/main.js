@@ -15,6 +15,7 @@
  *
  * @param {Object}  [options] Configuration object
  * @param {String}  [options.mainContentElementIdentifier] ID of the element which will be next to the preview (main content element)
+ * @param {Number}  [options.mainContentMinWidth] minimal with of main content element
  * @param {Number}  [options.marginLeft] margin in pixles from the left for the wrapper
  * @param {Object}  [options.iframeSource] configuration object for the source of the iframe
  * @param {String}  [options.iframeSource.url] url used for the iframe
@@ -49,6 +50,7 @@ define([], function() {
                     showRight: true
                 },
                 mainContentElementIdentifier: '',
+                mainContentMinWidth:480,
                 marginLeft: 30,
                 iframeSource: {
                     url: '',
@@ -118,8 +120,6 @@ define([], function() {
              */
                 getUrl = function(url, webspace, language, id) {
 
-                // '/admin/content/preview/' + this.options.data.id+'?webspace=' + this.options.webspace + '&language='+ this.options.language
-
                 if (!url || !id || !webspace || !language) {
                     this.sandbox.logger.error('not all url params for iframe definded!');
                     return '';
@@ -150,6 +150,9 @@ define([], function() {
                 this.$iframe = null;
                 this.$toolbar = null;
                 this.$mainContent = this.sandbox.dom.$('#'+this.options.mainContentElementIdentifier)[0];
+
+                // get original max width
+                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent);
 
                 this.render();
                 this.bindDomEvents.call(this);
@@ -283,7 +286,7 @@ define([], function() {
 
 
             /*********************************************
-             *   Util Methods
+             *   Collapse Expand Methods
              ********************************************/
 
             /**
@@ -294,7 +297,7 @@ define([], function() {
                 // TODO get value for with via options
 
                 var $span = this.sandbox.dom.find('span', $target),
-                    width = 800;
+                    width = 1400;
 
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
@@ -305,7 +308,7 @@ define([], function() {
                 this.sandbox.emit(EXPANDING);
                 this.isExpanded = true;
 
-                this.animateCollapseAndExpand(width);
+                this.animateCollapseAndExpand(true, width);
 
             },
 
@@ -313,8 +316,6 @@ define([], function() {
              * Collapses preview and restores orginal size of the form
              */
             collapsePreview: function($target) {
-
-                // TODO get value for with via options
 
                 var $span = this.sandbox.dom.find('span', $target);
 
@@ -327,19 +328,30 @@ define([], function() {
                 this.sandbox.emit(COLLAPSING);
                 this.isExpanded = false;
 
-                this.animateCollapseAndExpand(this.previewWidth);
+                this.animateCollapseAndExpand(false, this.previewWidth);
             },
 
             /**
              * Animates the width change for preview
-             * Concernes wrapper, preview-toolbar and maincontent
-             * @param {Integer} width of preview in pixels
+             * Concerns wrapper, preview-toolbar and maincontent
+             * @param {Boolean} expand
+             * @param {Integer} previewWidth of preview in pixels
              */
-            animateCollapseAndExpand: function(width){
+            animateCollapseAndExpand: function(expand, previewWidth){
+
+                if(!!expand) {
+
+                    // TODO hide navigation
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left:50});
+                } else {
+
+                    // TODO show navigation
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 50});
+                }
 
                 // preview wrapper
                 this.sandbox.dom.animate(this.$wrapper,{
-                    width: width+'px'
+                    width: previewWidth+'px'
                 },{
                     duration: 500,
                     queue: false
@@ -347,14 +359,11 @@ define([], function() {
 
                 // preview toolbar
                 this.sandbox.dom.animate(this.$toolbar,{
-                    width: width+30+'px'
+                    width: previewWidth+30+'px'
                 },{
                     duration: 500,
                     queue: false
                 });
-
-                // main content
-
 
             }
 

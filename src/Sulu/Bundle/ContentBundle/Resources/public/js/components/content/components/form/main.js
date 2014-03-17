@@ -32,6 +32,7 @@ define(['app-config'], function(AppConfig) {
             this.state = null;
 
             this.formId = '#contacts-form-container';
+
             this.render();
 
             this.setHeaderBar(true);

@@ -61,7 +61,7 @@ define({
             route: 'content/contents/:webspace/:language/edit::id/details',
             callback: function(webspace, language, id) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="details" data-aura-id="' + id + '"/>'
+                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="details" data-aura-id="' + id + '" data-aura-preview="true"/>'
                 );
             }
         });
