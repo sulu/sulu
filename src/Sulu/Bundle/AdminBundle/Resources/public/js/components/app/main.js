@@ -211,6 +211,35 @@ define(function() {
             this.sandbox.on(HAS_STARTED.call(this), function(callbackFunction) {
                 callbackFunction(true);
             }.bind(this));
+
+            this.sandbox.on('sulu.app.content.dimensions-change', function(properties) {
+
+                if (!!properties.expand) {
+                    // - 100 because of padding
+                    // adjustments for toolbar
+                    this.sandbox.emit('sulu.app.content.dimensions-changed', {width: properties.width - 150, left: 10});
+                    this.sandbox.dom.animate(this.$el, {
+                        width: properties.width + 'px',
+                        marginLeft: '10px',
+                        marginRight: '10px',
+                        paddingLeft: 0,
+                        paddingRight: 0
+                    }, {
+                        duration: 500,
+                        queue: false
+                    });
+                } else {
+                    this.sandbox.emit('sulu.app.content.dimensions-changed', {width: properties.width - 100, left: 100});
+                    this.sandbox.dom.animate(this.$el, {
+                        width: properties.width + 'px',
+                        marginLeft: properties.left + 'px'
+                    }, {
+                        duration: 500,
+                        queue: false
+                    });
+                }
+
+            }.bind(this));
         },
 
         /**
