@@ -10,32 +10,18 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use Jackalope\RepositoryFactoryJackrabbit;
-use Jackalope\Session;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\Event\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
-use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
-use Sulu\Component\Content\Types\TextArea;
-use Sulu\Component\Content\Types\TextLine;
-use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\PHPCR\SessionManager\SessionManager;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use \DateTime;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
@@ -167,6 +153,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
@@ -195,6 +188,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -225,6 +225,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $contentBefore = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -274,6 +281,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
@@ -298,6 +312,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -348,6 +369,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -396,6 +424,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -446,6 +481,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -493,6 +535,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -551,6 +600,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -607,6 +663,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -651,6 +714,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(3))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -747,6 +817,13 @@ class ContentMapperTest extends PhpcrTestCase
             )
         );
 
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save root content
         $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
 
@@ -831,6 +908,13 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             )
         );
+
+        $this->eventDispatcher->expects($this->atLeastOnce())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
 
@@ -1043,6 +1127,13 @@ class ContentMapperTest extends PhpcrTestCase
             )
         );
 
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save root content
         $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
 
@@ -1083,6 +1174,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'article'
         );
 
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
 
         $node = $this->session->getNodeByIdentifier($structure->getUuid());
@@ -1093,6 +1191,13 @@ class ContentMapperTest extends PhpcrTestCase
 
     public function testStateTransition()
     {
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // default state TEST
         $data1 = array(
             'title' => 't1'
@@ -1148,6 +1253,13 @@ class ContentMapperTest extends PhpcrTestCase
                 'title' => 't1-t2'
             )
         );
+
+        $this->eventDispatcher->expects($this->exactly(7))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
         $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $d1->getUuid());
@@ -1229,6 +1341,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, null, null, null, true);
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
 
@@ -1299,6 +1418,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/test-1',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $d1 = $this->mapper->save($data, 'overview', 'default', 'de', 1);
         $data['url'] = '/test-2';
