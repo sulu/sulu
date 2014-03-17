@@ -17,8 +17,11 @@ use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\ContentTypeManager;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
+use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
@@ -30,6 +33,7 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -107,6 +111,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $securityContext;
 
     /**
+     * @var LocalizationFinderInterface
+     */
+    protected $localizationFinder;
+
+    /**
      * The default language for the content mapper
      * @var string
      */
@@ -152,11 +161,13 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareSessionManager();
             $this->prepareWebspaceManager();
             $this->prepareEventDispatcher();
+            $this->prepareLocalizationFinder();
+
             $this->mapper = new ContentMapper(
-                $this->webspaceManager,
                 $this->contentTypeManager,
                 $this->structureManager,
                 $this->sessionManager,
+                $this->localizationFinder,
                 $this->eventDispatcher,
                 $this->language,
                 $this->defaultTemplate,
@@ -192,6 +203,13 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->eventDispatcher === null) {
             $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        }
+    }
+
+    protected function prepareLocalizationFinder()
+    {
+        if ($this->localizationFinder === null) {
+            $this->localizationFinder = new ParentChildAnyFinder($this->webspaceManager, 'sulu_locale');
         }
     }
 
