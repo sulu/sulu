@@ -114,4 +114,9 @@ class TemplateController extends Controller
         return $this->render('SuluContentBundle:Template:column.html.twig');
     }
 
+    public function settingsAction()
+    {
+        return $this->render('SuluContentBundle:Template:settings.html.twig');
+    }
+
 }
