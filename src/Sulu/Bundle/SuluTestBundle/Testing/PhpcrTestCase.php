@@ -167,8 +167,8 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->contentTypeManager,
                 $this->structureManager,
                 $this->sessionManager,
-                $this->localizationFinder,
                 $this->eventDispatcher,
+                $this->localizationFinder,
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace
