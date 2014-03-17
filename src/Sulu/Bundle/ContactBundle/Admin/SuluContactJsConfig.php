@@ -16,7 +16,7 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 class SuluContactJsConfig extends JsConfig
 {
 
-    protected $bundleName = 'sulu-contact';
+    protected $name = 'sulu-contact';
 
     public function __construct($bundleName = '', $params = array())
     {

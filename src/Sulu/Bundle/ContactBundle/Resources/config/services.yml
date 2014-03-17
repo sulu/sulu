@@ -1,7 +1,7 @@
 parameters:
     sulu_contact.admin.class: Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin
     sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation
-    sulu_contact.jsconfig.class: Sulu\Bundle\ContactBundle\Admin\SuluContactJsConfig
+    sulu_contact.js_config.class: Sulu\Bundle\ContactBundle\Admin\SuluContactJsConfig
 
 services:
     sulu_contact.admin:
@@ -12,11 +12,11 @@ services:
     sulu_contact.admin.content_navigation:
         class: %sulu_contact.admin.content_navigation.class%
 
-    sulu_contact.jsconfig:
-        class: %sulu_contact.jsconfig.class%
+    sulu_contact.js_config:
+        class: %sulu_contact.js_config.class%
         arguments:
           - 'contact-bundle'
           - type : 'basic'
             test : bla
         tags:
-        - { name: sulu.jsconfig }
+        - { name: sulu.js_config }

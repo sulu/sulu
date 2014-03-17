@@ -159,11 +159,11 @@ define(['app-config'], function(AppConfig) {
                 phone: '',
                 phoneType: this.defaultTypes.phoneType
             });
-            this.fillFields(contactJson.addresses, 1, {
-                id: null,
-                addressType: this.defaultTypes.addressType,
-                street: this.sandbox.translate('contact.add.address')
-            });
+//            this.fillFields(contactJson.addresses, 1, {
+//                id: null,
+//                addressType: this.defaultTypes.addressType,
+//                street: this.sandbox.translate('contact.add.address')
+//            });
             this.fillFields(contactJson.notes, 1, {
                 id: null,
                 value: ''
@@ -175,32 +175,20 @@ define(['app-config'], function(AppConfig) {
         initContactForm: function() {
 
             // TODO: get fields from configuration
-            // TODO: data-mapper should be able to render underscore template
-            // TODO: init email as in contact form (to show email field if not empty)
             // TODO: FETCH ALL FIELDS : (phone, address, website, fax, email)
-            // TODO: FETCH ALL FIELD TYPES
-
-
-
 
             var fieldTypes = ['address', 'email', 'fax', 'phone', 'website'],
-                fields = [
-                    {
-                        id: 0,
-                        name: 'address',
-                        minAmount: 1
-                    }
-                ],
                 dropdownData = [];
 
-
-            this.initContactData();
 
             this.sandbox.util.foreach(fieldTypes,function(type, index) {
                 dropdownData.push({id:index, name:type});
             });
 
+            this.initContactData();
 
+
+// TODO: implement options dropdown functionality for adding and editing contact details
 //            // initialize dropdown
 //            this.sandbox.start([
 //                {
