@@ -30,9 +30,10 @@ interface NodeRepositoryInterface
      * @param string $languageCode
      * @param int $depth
      * @param bool $flat
+     * @param bool $excludeGhosts
      * @return array
      */
-    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true);
+    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $excludeGhosts = false);
 
     /**
      * Returns the content of a smartcontent configuration

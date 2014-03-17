@@ -12,6 +12,8 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -109,9 +111,45 @@ class TemplateController extends Controller
         return $this->render('SuluContentBundle:Template:list.html.twig');
     }
 
-    public function columnAction()
+    public function columnAction($webspaceKey, $languageCode)
     {
-        return $this->render('SuluContentBundle:Template:column.html.twig');
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
+        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $currentLocalization = $webspace->getLocalization($languageCode);
+        $localizations = array();
+
+        foreach ($webspace->getLocalizations() as $localization) {
+            $localizations = array_merge($localizations, $this->getFlatLocalizations($localization));
+        }
+
+        return $this->render('SuluContentBundle:Template:column.html.twig', array(
+                'localizations' => $localizations,
+                'currentLocalization' => array(
+                    'name' => $currentLocalization->getLocalization('-'),
+                    'localization' => $currentLocalization->getLocalization()
+                ),
+                'webspace' => $webspace
+            ));
+    }
+
+    var $i = 1;
+
+    private function getFlatLocalizations(Localization $localization)
+    {
+        $localizations = array(
+            array(
+                'name' => $localization->getLocalization('-'),
+                'localization' => $localization->getLocalization(),
+                'id' => $this->i++
+            )
+        );
+        if ($localization->getChildren() !== null && sizeof($localization->getChildren()) > 0) {
+            foreach ($localization->getChildren() as $child) {
+                $localizations = array_merge($localizations, $this->getFlatLocalizations($child));
+            }
+        }
+        return $localizations;
     }
 
 }
