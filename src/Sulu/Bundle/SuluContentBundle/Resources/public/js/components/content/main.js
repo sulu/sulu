@@ -101,6 +101,10 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function() {
+
+                // uncollapse navigation
+                this.sandbox.emit('husky.navigation.uncollapse');
+
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
             }, this);
 
@@ -348,6 +352,7 @@ define([
         renderList: function() {
             var $list = this.sandbox.dom.createElement('<div id="contacts-list-container"/>');
             this.html($list);
+
             this.sandbox.start([
                 {name: 'content/components/list@sulucontent', options: { el: $list}}
             ]);
@@ -378,6 +383,10 @@ define([
             // load data and show form
             this.content = new Content();
             if (!!this.options.id) {
+
+                // collapse navigation
+                this.sandbox.emit('husky.navigation.collapse');
+
                 this.content = new Content({id: this.options.id});
                 this.content.fullFetch(this.options.webspace, this.options.language, {
                     success: function(model) {
@@ -426,6 +435,10 @@ define([
                     }.bind(this)
                 });
             } else {
+
+                // uncollapse navigation
+                this.sandbox.emit('husky.navigation.uncollapse');
+
                 this.sandbox.start([
                     {
                         name: 'content/components/form@sulucontent',
