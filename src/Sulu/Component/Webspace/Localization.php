@@ -129,9 +129,10 @@ class Localization
 
     /**
      * Returns the localization code, which is a combination of the language and the country
+     * @param string $delimiter between language and country
      * @return string
      */
-    public function getLocalization($delimiter = '-')
+    public function getLocalization($delimiter = '_')
     {
         $localization = $this->getLanguage();
         if ($this->getCountry() != null) {
