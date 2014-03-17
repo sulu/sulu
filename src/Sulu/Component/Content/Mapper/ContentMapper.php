@@ -19,26 +19,19 @@ use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Exception\StateNotFoundException;
+use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Webspace;
 
 class ContentMapper implements ContentMapperInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
     /**
      * @var ContentTypeManager
      */
@@ -53,6 +46,11 @@ class ContentMapper implements ContentMapperInterface
      * @var SessionManagerInterface
      */
     private $sessionManager;
+
+    /**
+     * @var LocalizationFinderInterface
+     */
+    private $localizationFinder;
 
     /**
      * namespace of translation
@@ -111,19 +109,19 @@ class ContentMapper implements ContentMapperInterface
 
 
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
         SessionManagerInterface $sessionManager,
+        LocalizationFinderInterface $localizationFinder,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace
     )
     {
-        $this->webspaceManager = $webspaceManager;
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->sessionManager = $sessionManager;
+        $this->localizationFinder = $localizationFinder;
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
@@ -614,144 +612,6 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Returns the closes available localization for the given node
-     * @param NodeInterface $contentNode The node to look up the localizations
-     * @param string $localizationCode The code for which the data should be loaded
-     * @param string $webspaceKey The key for the webspace to look for the defined localizations
-     * @return \Sulu\Component\Webspace\Localization
-     */
-    private function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey)
-    {
-        // use created field to check localization availability
-        $property = new TranslatedProperty(
-            new Property('title', 'none'), // FIXME none as type is a dirty hack
-            $localizationCode,
-            $this->languageNamespace
-        );
-
-        // get localization object for querying parent localizations
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        $localization = $webspace->getLocalization($localizationCode);
-        $resultLocalization = null;
-
-        // check if it already is the correct localization
-        if ($contentNode->hasProperty($property->getName())) {
-            $resultLocalization = $localization;
-        }
-
-        // find first available localization in parents
-        if (!$resultLocalization) {
-            $resultLocalization = $this->findAvailableParentLocalization(
-                $contentNode,
-                $localization,
-                $property
-            );
-        }
-
-        // find first available localization in children
-        if (!$resultLocalization) {
-            $resultLocalization = $this->findAvailableChildLocalization($contentNode, $localization, $property);
-        }
-
-        // find any localization available
-        if (!$resultLocalization) {
-            $resultLocalization = $this->findAvailableLocalization(
-                $contentNode,
-                $webspace->getLocalizations(),
-                $property
-            );
-        }
-
-        return $resultLocalization;
-    }
-
-    /**
-     * Finds any localization, in which the node is translated
-     * @param NodeInterface $contentNode The node, which properties will be checkec
-     * @param array $localizations The available localizations
-     * @param TranslatedProperty $property The property to check
-     * @return null|Localization
-     */
-    private function findAvailableLocalization(
-        NodeInterface $contentNode,
-        array $localizations,
-        TranslatedProperty $property
-    )
-    {
-        foreach ($localizations as $localization) {
-            /** @var Localization $localization */
-            $property->setLocalization($localization->getLocalization('_'));
-            if ($contentNode->hasProperty($property->getName())) {
-                return $localization;
-            }
-
-            $childrenLocalizations = $localization->getChildren();
-            if (!empty($childrenLocalizations)) {
-                return $this->findAvailableLocalization($contentNode, $childrenLocalizations, $property);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Finds the next available child-localization in which the node has a translation
-     * @param NodeInterface $contentNode The node, which properties will be checked
-     * @param Localization $localization The localization to start the search for
-     * @param TranslatedProperty $property The property which will be checked for the translation
-     * @return null|Localization
-     */
-    private function findAvailableChildLocalization(
-        NodeInterface $contentNode,
-        Localization $localization,
-        TranslatedProperty $property
-    )
-    {
-        $childrenLocalizations = $localization->getChildren();
-        if (!empty($childrenLocalizations)) {
-            foreach ($childrenLocalizations as $childrenLocalization) {
-                $property->setLocalization($childrenLocalization->getLocalization('_'));
-                // return the localization if a translation exists in the child localization
-                if ($contentNode->hasProperty($property->getName())) {
-                    return $childrenLocalization;
-                }
-
-                // recursively call this function for checking children
-                return $this->findAvailableChildLocalization($contentNode, $childrenLocalization, $property);
-            }
-        }
-
-        // return null if nothing was found
-        return null;
-    }
-
-    /**
-     * Finds the next available parent-localization in which the node has a translation
-     * @param NodeInterface $contentNode The node, which properties will be checked
-     * @param \Sulu\Component\Webspace\Localization $localization The localization to start the search for
-     * @param TranslatedProperty $property The property which will be checked for the translation
-     * @return Localization|null
-     */
-    private function findAvailableParentLocalization(
-        NodeInterface $contentNode,
-        Localization $localization,
-        TranslatedProperty $property
-    )
-    {
-        do {
-            $property->setLocalization($localization->getLocalization('_'));
-            if ($contentNode->hasProperty($property->getName())) {
-                return $localization;
-            }
-
-            // try to load parent and stop if there is no parent
-            $localization = $localization->getParent();
-        } while ($localization != null);
-
-        return null;
-    }
-
-    /**
      * returns data from given node
      * @param NodeInterface $contentNode
      * @param string $localization
@@ -761,7 +621,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function loadByNode(NodeInterface $contentNode, $localization, $webspaceKey, $loadGhost = true)
     {
-        $availableLocalization = $this->getAvailableLocalization(
+        $availableLocalization = $this->localizationFinder->getAvailableLocalization(
             $contentNode,
             str_replace('-', '_', $localization),
             $webspaceKey

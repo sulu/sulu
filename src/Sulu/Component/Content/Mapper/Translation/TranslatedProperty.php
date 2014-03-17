@@ -22,10 +22,12 @@ class TranslatedProperty implements PropertyInterface
      * @var \Sulu\Component\Content\PropertyInterface
      */
     private $property;
+
     /**
      * @var string
      */
     private $localization;
+
     /**
      * @var string
      */
