@@ -275,7 +275,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $listHelper = $this->getMock(
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            array('find', 'getTotalPages', 'getParameterName', 'getLimit', 'getPage')
+            array('find', 'getTotalPages', 'getTotalNumberOfElements', 'getParameterName', 'getLimit', 'getPage')
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -316,7 +316,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('admin/api/contacts?page=1', $view['_links']['prev']);
         $this->assertEquals('admin/api/contacts?page=3', $view['_links']['next']);
         $this->assertEquals('admin/api/contacts', $view['_links']['all']);
-        $this->assertEquals('admin/api/contacts?page={page}', $view['_links']['pagination']);
+        $this->assertEquals('admin/api/contacts?page={page}&pageSize={pageSize}', $view['_links']['pagination']);
         $this->assertEquals(
             'admin/api/contacts?sortBy=test&sortOrder={sortOrder}',
             $view['_links']['sortable']['test']
@@ -366,7 +366,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $listHelper = $this->getMock(
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            array('find', 'getTotalPages', 'getParameterName', 'getLimit', 'getPage')
+            array('find', 'getTotalPages', 'getTotalNumberOfElements', 'getParameterName', 'getLimit', 'getPage')
         );
 
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
@@ -388,7 +388,9 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $controller->expects($this->any())->method('get')->will($this->returnValue($listHelper));
 
         $request = $this->getMock('\Request', array('getRequestUri', 'getPathInfo'));
-        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('admin/api/contacts?flat=true&page=2&pageSize=4&orderBy=lastName&sortOrder=asc'));
+        $request->expects($this->any())->method('getRequestUri')->will(
+            $this->returnValue('admin/api/contacts?flat=true&page=2&pageSize=4&orderBy=lastName&sortOrder=asc')
+        );
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('admin/api/contacts'));
         $controller->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 
@@ -401,9 +403,18 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $view = $method->invoke($controller, $entities)->getData();
 
-        $this->assertEquals('admin/api/contacts?flat=true&page=2&pageSize=4&orderBy=lastName&sortOrder=asc', $view['_links']['self']);
-        $this->assertEquals('admin/api/contacts?flat=true&page=1&pageSize=4&orderBy=lastName&sortOrder=asc', $view['_links']['prev']);
-        $this->assertEquals('admin/api/contacts?flat=true&page=3&pageSize=4&orderBy=lastName&sortOrder=asc', $view['_links']['next']);
+        $this->assertEquals(
+            'admin/api/contacts?flat=true&page=2&pageSize=4&orderBy=lastName&sortOrder=asc',
+            $view['_links']['self']
+        );
+        $this->assertEquals(
+            'admin/api/contacts?flat=true&page=1&pageSize=4&orderBy=lastName&sortOrder=asc',
+            $view['_links']['prev']
+        );
+        $this->assertEquals(
+            'admin/api/contacts?flat=true&page=3&pageSize=4&orderBy=lastName&sortOrder=asc',
+            $view['_links']['next']
+        );
         $this->assertEquals('admin/api/contacts?flat=true&orderBy=lastName&sortOrder=asc', $view['_links']['all']);
 
     }
@@ -434,8 +445,9 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
         $listHelper = $this->getMock(
             '\Sulu\Bundle\Rest\Listing\ListRestHelper',
-            array('find', 'getTotalPages', 'getParameterName', 'getLimit', 'getPage')
+            array('find', 'getTotalPages', 'getTotalNumberOfElements', 'getParameterName', 'getLimit', 'getPage')
         );
+
         $listHelper->expects($this->any())->method('find')->will($this->returnValue($entities));
         $listHelper->expects($this->any())->method('getTotalPages')->will($this->returnValue(3));
         $listHelper->expects($this->any())->method('getParameterName')->will(

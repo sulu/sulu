@@ -229,7 +229,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testFindPortalInformationByUrl()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
-        $this->assertEquals('de-at', $portalInformation['localization']->getLocalization());
+        $this->assertEquals('de_at', $portalInformation['localization']->getLocalization());
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
         /** @var Portal $portal */
@@ -257,7 +257,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
 
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
-        $this->assertEquals('de-at', $portalInformation['localization']->getLocalization());
+        $this->assertEquals('de_at', $portalInformation['localization']->getLocalization());
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
         /** @var Portal $portal */
@@ -288,7 +288,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testFindPortalInformationByUrlWithSegment()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');
-        $this->assertEquals('en-us', $portalInformation['localization']->getLocalization());
+        $this->assertEquals('en_us', $portalInformation['localization']->getLocalization());
         $this->assertEquals('winter', $portalInformation['segment']->getName());
 
         /** @var Portal $portal */
@@ -362,5 +362,26 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('sulu.at', $portalInformation['redirect']);
         $this->assertEquals('www.sulu.at', $portalInformation['url']);
+    }
+
+    public function testLocalizations()
+    {
+        $localizations = $this->webspaceManager->findWebspaceByKey('massiveart')->getLocalizations();
+        
+        $this->assertEquals('en', $localizations[0]->getLanguage());
+        $this->assertEquals('us', $localizations[0]->getCountry());
+        $this->assertEquals('auto', $localizations[0]->getShadow());
+
+        $this->assertEquals(1, count($localizations[0]->getChildren()));
+        $this->assertEquals('en', $localizations[0]->getChildren()[0]->getLanguage());
+        $this->assertEquals('ca', $localizations[0]->getChildren()[0]->getCountry());
+        $this->assertEquals(null, $localizations[0]->getChildren()[0]->getShadow());
+        $this->assertEquals('en', $localizations[0]->getChildren()[0]->getParent()->getLanguage());
+        $this->assertEquals('us', $localizations[0]->getChildren()[0]->getParent()->getCountry());
+        $this->assertEquals('auto', $localizations[0]->getChildren()[0]->getParent()->getShadow());
+
+        $this->assertEquals('fr', $localizations[1]->getLanguage());
+        $this->assertEquals('ca', $localizations[1]->getCountry());
+        $this->assertEquals(null, $localizations[1]->getShadow());
     }
 }

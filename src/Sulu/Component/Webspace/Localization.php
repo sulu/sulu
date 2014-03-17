@@ -41,6 +41,12 @@ class Localization
     private $children;
 
     /**
+     * The parent localization
+     * @var Localization
+     */
+    private $parent;
+
+    /**
      * Sets the country of this localization
      * @param string $country
      */
@@ -123,16 +129,56 @@ class Localization
 
     /**
      * Returns the localization code, which is a combination of the language and the country
+     * @param string $delimiter between language and country
      * @return string
      */
-    public function getLocalization()
+    public function getLocalization($delimiter = '_')
     {
         $localization = $this->getLanguage();
         if ($this->getCountry() != null) {
-            $localization .= '-' . $this->getCountry();
+            $localization .= $delimiter . $this->getCountry();
         }
 
         return $localization;
+    }
+
+    /**
+     * Sets the parent of this localization
+     * @param \Sulu\Component\Webspace\Localization $parent
+     */
+    public function setParent(Localization $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Returns the parent of this localization
+     * @return \Sulu\Component\Webspace\Localization
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param string $localization
+     * @internal param \Sulu\Component\Webspace\Localization $this
+     * @return Localization|null
+     */
+    public function findLocalization($localization)
+    {
+        if ($this->getLocalization() == $localization) {
+            return $this;
+        }
+
+        $children = $this->getChildren();
+        if (!empty($children)) {
+            foreach ($children as $childLocalization) {
+                return $childLocalization->findLocalization($localization);
+            }
+        }
+
+        return null;
     }
 
     /**

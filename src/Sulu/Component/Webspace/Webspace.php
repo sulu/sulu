@@ -98,6 +98,27 @@ class Webspace
     }
 
     /**
+     * Returns the localization object for a given localization string
+     * @param string $localization
+     * @return Localization|null
+     */
+    public function getLocalization($localization)
+    {
+        $localizations = $this->getLocalizations();
+        if (!empty($localizations)) {
+            foreach ($localizations as $webspaceLocalization) {
+                $result = $webspaceLocalization->findLocalization($localization);
+
+                if ($result) {
+                    return $result;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Sets the name of the webspace
      * @param string $name
      */

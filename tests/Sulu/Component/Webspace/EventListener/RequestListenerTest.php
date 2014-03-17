@@ -77,7 +77,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $this->requestListener->onKernelRequest(new GetResponseEvent($kernel, $request, ''));
 
-        $this->assertEquals('de-at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
     }

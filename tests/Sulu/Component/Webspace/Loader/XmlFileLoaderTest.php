@@ -150,7 +150,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getSegment());
         $this->assertEquals(null, $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[0]->getRedirect());
 
-        $this->assertEquals('www.massiveart.com', $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getUrl());
+        $this->assertEquals(
+            'www.massiveart.com',
+            $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getUrl()
+        );
         $this->assertEquals('ca', $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getCountry());
         $this->assertEquals('en', $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getLanguage());
         $this->assertEquals('s', $webspace->getPortals()[1]->getEnvironments()[0]->getUrls()[1]->getSegment());
@@ -206,11 +209,17 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('prod', $webspace->getPortals()[0]->getEnvironments()[0]->getType());
         $this->assertEquals(1, count($webspace->getPortals()[0]->getEnvironments()[0]->getUrls()));
-        $this->assertEquals('sulu-without.at', $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl());
+        $this->assertEquals(
+            'sulu-without.at',
+            $webspace->getPortals()[0]->getEnvironments()[0]->getUrls()[0]->getUrl()
+        );
 
         $this->assertEquals('dev', $webspace->getPortals()[0]->getEnvironments()[1]->getType());
         $this->assertEquals(1, count($webspace->getPortals()[0]->getEnvironments()[1]->getUrls()));
-        $this->assertEquals('sulu-without.lo', $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl());
+        $this->assertEquals(
+            'sulu-without.lo',
+            $webspace->getPortals()[0]->getEnvironments()[1]->getUrls()[0]->getUrl()
+        );
     }
 
     /**
@@ -229,5 +238,28 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
     public function testLoadInvalid()
     {
         $this->loader->load(__DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart.xml');
+    }
+
+    public function testLocalizations()
+    {
+        $localizations = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/massiveart.xml'
+        )->getLocalizations();
+
+        $this->assertEquals('en', $localizations[0]->getLanguage());
+        $this->assertEquals('us', $localizations[0]->getCountry());
+        $this->assertEquals('auto', $localizations[0]->getShadow());
+
+        $this->assertEquals(1, count($localizations[0]->getChildren()));
+        $this->assertEquals('en', $localizations[0]->getChildren()[0]->getLanguage());
+        $this->assertEquals('ca', $localizations[0]->getChildren()[0]->getCountry());
+        $this->assertEquals(null, $localizations[0]->getChildren()[0]->getShadow());
+        $this->assertEquals('en', $localizations[0]->getChildren()[0]->getParent()->getLanguage());
+        $this->assertEquals('us', $localizations[0]->getChildren()[0]->getParent()->getCountry());
+        $this->assertEquals('auto', $localizations[0]->getChildren()[0]->getParent()->getShadow());
+
+        $this->assertEquals('fr', $localizations[1]->getLanguage());
+        $this->assertEquals('ca', $localizations[1]->getCountry());
+        $this->assertEquals(null, $localizations[1]->getShadow());
     }
 }

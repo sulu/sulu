@@ -10,30 +10,18 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use Jackalope\RepositoryFactoryJackrabbit;
-use Jackalope\Session;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
-use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
-use Sulu\Component\Content\Types\TextArea;
-use Sulu\Component\Content\Types\TextLine;
-use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Component\PHPCR\SessionManager\SessionManager;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use \DateTime;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Webspace;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
@@ -52,7 +40,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         if ($structureKey == 'overview') {
             return $this->getStructureMock(1);
-        } elseif ($structureKey == 'simple') {
+        } elseif ($structureKey == 'default') {
             return $this->getStructureMock(2);
         }
 
@@ -111,6 +99,40 @@ class ContentMapperTest extends PhpcrTestCase
         return $structureMock;
     }
 
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $webspace = new Webspace();
+            $en = new Localization();
+            $en->setLanguage('en');
+            $en_us = new Localization();
+            $en_us->setLanguage('en');
+            $en_us->setCountry('us');
+            $en_us->setParent($en);
+            $en->addChild($en_us);
+
+            $de = new Localization();
+            $de->setLanguage('de');
+            $de_at = new Localization();
+            $de_at->setLanguage('de');
+            $de_at->setCountry('at');
+            $de_at->setParent($de);
+            $de->addChild($de_at);
+
+            $es = new Localization();
+            $es->setLanguage('es');
+
+            $webspace->addLocalization($en);
+            $webspace->addLocalization($de);
+            $webspace->addLocalization($es);
+
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+            $this->webspaceManager->expects($this->any())
+                ->method('findWebspaceByKey')
+                ->will($this->returnValue($webspace));
+        }
+    }
+
     public function tearDown()
     {
         if (isset($this->session)) {
@@ -130,6 +152,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -159,6 +188,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -190,6 +226,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $contentBefore = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
@@ -209,7 +252,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->sessionManager = null;
         $this->structureValueMap = array(
             'overview' => $this->getStructureMock(1),
-            'simple' => $this->getStructureMock(2)
+            'default' => $this->getStructureMock(2)
         );
         $this->prepareMapper();
 
@@ -238,6 +281,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
@@ -262,6 +312,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -312,6 +369,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -360,6 +424,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -410,6 +481,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -458,6 +536,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -468,7 +553,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         // update content
-        $this->mapper->save($data, 'simple', 'default', 'de', 1, true, $structure->getUuid());
+        $this->mapper->save($data, 'default', 'default', 'de', 1, true, $structure->getUuid());
 
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test', 'default', 'de');
@@ -498,7 +583,7 @@ class ContentMapperTest extends PhpcrTestCase
         // property of new structure exists
         $this->assertEquals('Testtitle', $content->getProperty('sulu_locale:de-title')->getString());
         $this->assertEquals('this is a blog test', $content->getPropertyValue('sulu_locale:de-blog'));
-        $this->assertEquals('simple', $content->getPropertyValue('sulu_locale:de-sulu-template'));
+        $this->assertEquals('default', $content->getPropertyValue('sulu_locale:de-sulu-template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
     }
@@ -514,6 +599,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -571,6 +663,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
@@ -615,6 +714,13 @@ class ContentMapperTest extends PhpcrTestCase
             'url' => '/news/test',
             'article' => 'default'
         );
+
+        $this->eventDispatcher->expects($this->exactly(3))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         // save content
         $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -711,6 +817,13 @@ class ContentMapperTest extends PhpcrTestCase
             )
         );
 
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save root content
         $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
 
@@ -795,6 +908,13 @@ class ContentMapperTest extends PhpcrTestCase
                 'article' => 'default'
             )
         );
+
+        $this->eventDispatcher->expects($this->atLeastOnce())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
 
@@ -1007,6 +1127,13 @@ class ContentMapperTest extends PhpcrTestCase
             )
         );
 
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // save root content
         $root = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
 
@@ -1047,6 +1174,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'article'
         );
 
+        $this->eventDispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
 
         $node = $this->session->getNodeByIdentifier($structure->getUuid());
@@ -1057,6 +1191,13 @@ class ContentMapperTest extends PhpcrTestCase
 
     public function testStateTransition()
     {
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         // default state TEST
         $data1 = array(
             'title' => 't1'
@@ -1112,6 +1253,13 @@ class ContentMapperTest extends PhpcrTestCase
                 'title' => 't1-t2'
             )
         );
+
+        $this->eventDispatcher->expects($this->exactly(7))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
 
         $d1 = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
         $d2 = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $d1->getUuid());
@@ -1193,6 +1341,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, null, null, null, true);
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
 
@@ -1264,6 +1419,13 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
+        $this->eventDispatcher->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+            );
+
         $d1 = $this->mapper->save($data, 'overview', 'default', 'de', 1);
         $data['url'] = '/test-2';
         $data['tags'] = array('tag2');
@@ -1306,5 +1468,181 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(2, $result[2]->getDepth());
         $this->assertEquals('Testnews-2', $result[2]->getTitle());
         $this->assertEquals($data['child']->getUuid(), $result[2]->getUuid());
+    }
+
+    private function prepareGhostTestData()
+    {
+        $data = array(
+            array(
+                'title' => 'News-EN',
+                'url' => '/news'
+            ),
+            array(
+                'title' => 'News-DE_AT',
+                'url' => '/news'
+            ),
+            array(
+                'title' => 'Products-EN',
+                'url' => '/products'
+            ),
+            array(
+                'title' => 'Products-DE',
+                'url' => '/products'
+            )
+        );
+
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+
+        // save root content
+        $result['news-en'] = $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
+        $result['news-de_at'] = $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'de_at',
+            1,
+            true,
+            $result['news-en']->getUuid()
+        );
+        $result['products-en'] = $this->mapper->save(
+            $data[2],
+            'overview',
+            'default',
+            'en',
+            1,
+            true
+        );
+        $result['products-de'] = $this->mapper->save(
+            $data[3],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            $result['products-en']->getUuid()
+        );
+
+        return $result;
+    }
+
+    public function testGhost()
+    {
+        /** @var StructureInterface[] $data */
+        $data = $this->prepareGhostTestData();
+
+        // both pages exists in en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('en', $result[0]->getLanguageCode());
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('en', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // both pages exists in en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en', 1, true, false, true);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('en', $result[0]->getLanguageCode());
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('en', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // both pages are ghosts in en_us from en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('en_us', $result[0]->getLanguageCode());
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('en', $result[0]->getType()->getValue());
+        $this->assertEquals('en_us', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[1]->getType()->getName());
+        $this->assertEquals('en', $result[1]->getType()->getValue());
+
+        // no page exists in en_us without ghosts
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'en_us', 1, true, false, true);
+        $this->assertEquals(0, sizeof($result));
+
+        // one page not exists in de (ghost from de_at), other exists in de
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('de', $result[0]->getLanguageCode());
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('de_at', $result[0]->getType()->getValue());
+        $this->assertEquals('de', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // one page exists in de (without ghosts)
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, true);
+        $this->assertEquals(1, sizeof($result));
+        $this->assertEquals('de', $result[0]->getLanguageCode());
+        $this->assertEquals('Products-DE', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+
+        // one page not exists in de_at (ghost from de), other exists in de_at
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('de', $result[0]->getLanguageCode());
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('de_at', $result[0]->getType()->getValue());
+        $this->assertEquals('de', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertNull($result[1]->getType());
+
+        // one page not exists in de_at (ghost from de), other exists in de_at
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'de_at', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('de_at', $result[0]->getLanguageCode());
+        $this->assertEquals('News-DE_AT', $result[0]->getPropertyValue('title'));
+        $this->assertNull($result[0]->getType());
+        $this->assertEquals('de_at', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-DE', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[1]->getType()->getName());
+        $this->assertEquals('de', $result[1]->getType()->getValue());
+
+        // both pages are ghosts in es from en
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, false);
+        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals('es', $result[0]->getLanguageCode());
+        $this->assertEquals('News-EN', $result[0]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[0]->getType()->getName());
+        $this->assertEquals('en', $result[0]->getType()->getValue());
+        $this->assertEquals('es', $result[1]->getLanguageCode());
+        $this->assertEquals('Products-EN', $result[1]->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result[1]->getType()->getName());
+        $this->assertEquals('en', $result[1]->getType()->getValue());
+
+        // no page exists in en_us without ghosts
+        /** @var StructureInterface[] $result */
+        $result = $this->mapper->loadByParent(null, 'default', 'es', 1, true, false, true);
+        $this->assertEquals(0, sizeof($result));
+
+        // load content as de -> no ghost content
+        $result = $this->mapper->load($data['news-de_at']->getUuid(), 'default', 'de', false);
+        $this->assertEquals('de', $result->getLanguageCode());
+        $this->assertEquals('', $result->getPropertyValue('title'));
+        $this->assertNull($result->getType());
+
+        // load content as de -> load ghost content
+        $result = $this->mapper->load($data['news-de_at']->getUuid(), 'default', 'de', true);
+        $this->assertEquals('de', $result->getLanguageCode());
+        $this->assertEquals('News-DE_AT', $result->getPropertyValue('title'));
+        $this->assertEquals('ghost', $result->getType()->getName());
+        $this->assertEquals('de_at', $result->getType()->getValue());
     }
 }

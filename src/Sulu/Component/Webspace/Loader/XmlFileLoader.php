@@ -131,13 +131,19 @@ class XmlFileLoader extends FileLoader
     /**
      * @param \DOMElement|\DOMNode $localizationNode
      * @param bool $flat
+     * @param null $parent
      * @internal param \DOMXPath $xpath
      * @return Localization
      */
-    private function generateLocalizationFromNode(\DOMElement $localizationNode, $flat = false)
+    private function generateLocalizationFromNode(\DOMElement $localizationNode, $flat = false, $parent = null)
     {
         $localization = new Localization();
         $localization->setLanguage($localizationNode->attributes->getNamedItem('language')->nodeValue);
+
+        // set parent if given
+        if ($parent) {
+            $localization->setParent($parent);
+        }
 
         // set optional nodes
         $countryNode = $localizationNode->attributes->getNamedItem('country');
@@ -153,7 +159,7 @@ class XmlFileLoader extends FileLoader
         // set child nodes
         if (!$flat) {
             foreach ($this->xpath->query('x:localization', $localizationNode) as $childNode) {
-                $localization->addChild($this->generateLocalizationFromNode($childNode));
+                $localization->addChild($this->generateLocalizationFromNode($childNode, $flat, $localization));
             }
         }
 
@@ -204,7 +210,7 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @param \DOMNode $webspaceNode
+     * @internal param \DOMNode $webspaceNode
      * @return Theme
      */
     private function generateTheme()

@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-
+use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\StructureInterface;
 
 /**
@@ -70,13 +70,13 @@ interface ContentMapperInterface
 
     /**
      * returns a list of data from children of given node
-     * @param $uuid
-     * @param $webspaceKey
-     * @param $languageCode
-     * @param int $depth
-     * @param bool $flat
-     *
+     * @param string $uuid The uuid of the parent node
+     * @param string $webspaceKey The key of the webspace we are loading in
+     * @param string $languageCode The requested content language
+     * @param int $depth The depth of the search
+     * @param bool $flat If true, the result is a flat list
      * @param bool $ignoreExceptions
+     * @param bool $excludeGhosts If true ghost pages are also loaded
      * @return StructureInterface[]
      */
     public function loadByParent(
@@ -85,7 +85,8 @@ interface ContentMapperInterface
         $languageCode,
         $depth = 1,
         $flat = true,
-        $ignoreExceptions = false
+        $ignoreExceptions = false,
+        $excludeGhosts = false
     );
 
     /**
@@ -93,9 +94,10 @@ interface ContentMapperInterface
      * @param string $uuid UUID of the content
      * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
+     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
      * @return StructureInterface
      */
-    public function load($uuid, $webspaceKey, $languageCode);
+    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false);
 
     /**
      * returns the data from the given id
