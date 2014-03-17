@@ -88,6 +88,16 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $eventDispatcher;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    protected $webspaceManager;
+
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    protected $contentTypeManager;
+
+    /**
      * @var array
      */
     protected $structureValueMap = array();
@@ -134,17 +144,18 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         if ($this->mapper === null) {
             $this->prepareContainer();
 
-            $contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
-
             $this->prepareSession();
             $this->prepareRepository();
 
+            $this->prepareContentTypeManager();
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
+            $this->prepareWebspaceManager();
             $this->prepareEventDispatcher();
             $this->mapper = new ContentMapper(
-                $contentTypeManager,
+                $this->webspaceManager,
+                $this->contentTypeManager,
                 $this->structureManager,
                 $this->sessionManager,
                 $this->eventDispatcher,
@@ -168,6 +179,16 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    protected function prepareContentTypeManager()
+    {
+        if ($this->contentTypeManager === null) {
+            $this->contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
+        }
+    }
+
+    /**
+     * prepares event dispatcher manager
+     */
     protected function prepareEventDispatcher()
     {
         if ($this->eventDispatcher === null) {
@@ -178,6 +199,16 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     $this->equalTo(ContentEvents::NODE_SAVE),
                     $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
                 );
+        }
+    }
+
+    /**
+     * prepares webspace manager
+     */
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
         }
     }
 
