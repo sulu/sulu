@@ -24497,7 +24497,19 @@ define('__component__$navigation@husky',[],function() {
          * raised when navigation was un / collapsed. called when transition is finished. only raised when not forced
          * @event husky.navigation.size.changed
          */
-            EVENT_SIZE_CHANGED = namespace + 'size.changed'
+            EVENT_SIZE_CHANGED = namespace + 'size.changed',
+
+        /**
+         * show the navigation when it was hidden before
+         * @event husky.navigation.show
+         */
+            EVENT_SHOW = namespace + 'show',
+
+        /**
+         * hides the navigation completely
+         * @event husky.navigation.hide
+         */
+            EVENT_HIDE = namespace + 'hide'
         ;
 
 
@@ -24666,7 +24678,7 @@ define('__component__$navigation@husky',[],function() {
             }.bind(this));
             this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function(event) {
                 event.stopPropagation();
-            }.bind(this),'.navigation *');
+            }.bind(this), '.navigation *');
         },
 
         /**
@@ -24681,6 +24693,9 @@ define('__component__$navigation@husky',[],function() {
 
             this.sandbox.on(EVENT_COLLAPSE, this.collapse.bind(this));
             this.sandbox.on(EVENT_UNCOLLAPSE, this.unCollapse.bind(this));
+
+            this.sandbox.on(EVENT_HIDE, this.hide.bind(this));
+            this.sandbox.on(EVENT_SHOW, this.show.bind(this));
 
         },
 
@@ -24796,12 +24811,12 @@ define('__component__$navigation@husky',[],function() {
 
 //                this.sandbox.dom.slideUp($childList, 200, function() {
 
-                    this.sandbox.dom.removeClass($items, 'is-expanded');
+                this.sandbox.dom.removeClass($items, 'is-expanded');
 
-                    // change toggle item
-                    $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
-                    this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
-                    this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
+                // change toggle item
+                $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
+                this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
+                this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
 //                }.bind(this));
             } else {
                 this.sandbox.dom.show($childList);
@@ -24977,6 +24992,32 @@ define('__component__$navigation@husky',[],function() {
 
             }
 
+        },
+
+        /**
+         * Shows the navigation
+         */
+        show: function() {
+            if (!!this.currentNavigationWidth) {
+                this.sandbox.dom.animate(this.$navigation, {
+                    width: this.currentNavigationWidth + 'px'
+                }, {
+                    duration: 400, queue: false, complete: function() {
+                        this.sandbox.dom.css(this.$navigation, 'width', this.currentNavigationWidth + 'px');
+                        this.sandbox.dom.removeAttr(this.$navigation, 'style');
+                    }.bind(this)
+                });
+
+                this.currentNavigationWidth = null;
+            }
+        },
+
+        /**
+         * Hides the navigaiton
+         */
+        hide: function() {
+            this.currentNavigationWidth = this.sandbox.dom.width(this.$navigation);
+            this.sandbox.dom.animate(this.$navigation, {width: 0}, {duration: 400, queue: false});
         }
 
     };
@@ -32992,7 +33033,19 @@ define('__component__$page-functions@husky',[], function() {
              * @event husky.page-functions.clicked
              * @description link was clicked
              */
-            CLICK = eventNamespace + 'clicked';
+            CLICK = eventNamespace + 'clicked',
+
+            /**
+             * @event husky.page-functions.show
+             * @description displays page functions
+             */
+            SHOW = eventNamespace+'show',
+
+            /**
+             * @event husky.page-functions.hide
+             * @description hides page functions
+             */
+            HIDE = eventNamespace+'hide';
 
         return {
 
@@ -33015,7 +33068,10 @@ define('__component__$page-functions@husky',[], function() {
 
                 this.sandbox.dom.append(this.options.el, this.sandbox.template.parse(template(), this.options.data));
 
+                this.$pageFunction = this.sandbox.dom.find('.page-function', this.$el);
+
                 this.bindDomEvents();
+                this.bindCustomEvents();
 
                 this.sandbox.emit(RENDERED);
             },
@@ -33027,8 +33083,34 @@ define('__component__$page-functions@husky',[], function() {
 
                     return false;
                 }.bind(this), '#' + this.options.data.id);
-            }
+            },
 
+            bindCustomEvents: function(){
+                this.sandbox.on(HIDE, function(){
+
+
+                    this.elWidth = this.sandbox.dom.width(this.$pageFunction);
+                    this.sandbox.dom.animate(this.$pageFunction,{
+                        width:0
+                    },{
+                        duration:400
+                    });
+
+                }.bind(this));
+
+                this.sandbox.on(SHOW, function(){
+
+                    if(!!this.elWidth){
+                        this.sandbox.dom.animate(this.$pageFunction,{
+                            width:this.elWidth+'px'
+                        },{
+                            duration:400,
+                            queue: false
+                        });
+                    }
+
+                }.bind(this));
+            }
         };
     }
 );
