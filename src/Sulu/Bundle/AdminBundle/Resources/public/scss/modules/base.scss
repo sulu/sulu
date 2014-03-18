@@ -50,6 +50,12 @@ body {
     padding-top: $contentPaddingTop;
 }
 
+#page-functions {
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
 #edit-toolbar {
     max-width: $contentMaxWidth;
 }
@@ -60,12 +66,6 @@ body {
 
 #content-tabs-component {
     margin-top: 40px;
-}
-
-#page-functions + #edit-toolbar {
-    .edit-toolbar-left {
-        margin-left: -50px;
-    }
 }
 
 // Control elements

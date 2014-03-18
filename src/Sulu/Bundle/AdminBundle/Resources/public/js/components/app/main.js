@@ -223,17 +223,26 @@ define(function() {
 
 
             this.sandbox.on(CONTENT_DIMENSIONS_CHANGE.call(this), function(properties) {
-
-                this.sandbox.dom.animate(this.$el, {
-                    'margin-left': properties.left + 'px',
-                    'width': properties.width + 'px'
-                }, {
-                    duration: 500,
-                    queue: false,
-                    progress: this.emitContentDimensionsChangedEvent.bind(this)
-                });
-
+                this.changeContentStyles(properties);
             }.bind(this));
+        },
+
+        /**
+         * Takes an object an applies it to the app-content
+         * @param styles
+         */
+        changeContentStyles: function(styles) {
+            //Todo: change animate to css-transition
+            this.sandbox.dom.animate(this.$el, {
+                width: styles.width + 'px',
+                paddingLeft: styles.paddingLeft + 'px'
+            }, {
+                duration: 500,
+                queue: false,
+                progress: this.emitContentDimensionsChangedEvent.bind(this)
+            });
+
+            changeContentMarginLeft.call(this, styles.left);
         },
 
         /**
