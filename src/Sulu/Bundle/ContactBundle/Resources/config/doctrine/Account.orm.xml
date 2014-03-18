@@ -114,6 +114,19 @@
                 <order-by-field name="id" direction="ASC"/>
             </order-by>
         </many-to-many>
+        <many-to-many field="faxes" target-entity="Sulu\Bundle\ContactBundle\Entity\Fax" inversed-by="accounts">
+            <join-table name="co_account_faxes">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idFaxes" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
 
         <gedmo:tree type="nested"/>
     </entity>
