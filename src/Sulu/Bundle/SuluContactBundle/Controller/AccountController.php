@@ -175,8 +175,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 $account->setParent($parent);
             }
 
+            // set creator / changer
             $account->setCreated(new DateTime());
             $account->setChanged(new DateTime());
+            $account->setCreator($this->getUser());
+            $account->setChanger($this->getUser());
 
             $urls = $this->getRequest()->get('urls');
             if (!empty($urls)) {
@@ -249,14 +252,15 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 $em = $this->getDoctrine()->getManager();
 
+                // set name
                 $account->setName($this->getRequest()->get('name'));
 
+                // set parent
                 $parentData = $this->getRequest()->get('parent');
                 if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
                     $parent = $this->getDoctrine()
                         ->getRepository($this->entityName)
                         ->findAccountById($parentData['id']);
-
                     if (!$parent) {
                         throw new EntityNotFoundException($this->entityName, $parentData['id']);
                     }
@@ -265,11 +269,16 @@ class AccountController extends RestController implements ClassResourceInterface
                     $account->setParent(null);
                 }
 
+                // set changed
                 $account->setChanged(new DateTime());
+                $user = $this->getUser();
+//                $user = $this->getDoctrine()->getRepository('SuluSecurityBundle:User')->findUserById($this->getUser()->getId());
+                $account->setChanger($user);
 
                 // process details
                 if (!($this->processUrls($account)
                     && $this->processEmails($account)
+                    && $this->processFaxes($account)
                     && $this->processPhones($account)
                     && $this->processAddresses($account)
                     && $this->processNotes($account))
@@ -277,6 +286,7 @@ class AccountController extends RestController implements ClassResourceInterface
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
+//                $em->persist($user);
                 $em->flush();
                 $view = $this->view($account, 200);
             }
@@ -447,6 +457,90 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Process all faxes from request
+     * @param Account $account The contact on which is worked
+     * @return bool True if the processing was sucessful, otherwise false
+     */
+    protected function processFaxes(Account $account)
+    {
+        $faxes = $this->getRequest()->get('faxes');
+
+        $delete = function ($fax) use ($account) {
+            $account->removeFax($fax);
+
+            return true;
+        };
+
+        $update = function ($fax, $matchedEntry) {
+            return $this->updateFax($fax, $matchedEntry);
+        };
+
+        $add = function ($fax) use ($account) {
+            $this->addFax($account, $fax);
+
+            return true;
+        };
+
+        return $this->processPut($account->getFaxes(), $faxes, $delete, $update, $add);
+    }
+
+    /**
+     * Adds an email address to an account
+     * @param Account $account
+     * @param $faxData
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     */
+    private function addFax(Account $account, $faxData)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $faxEntity = 'SuluContactBundle:Fax';
+        $faxTypeEntity = 'SuluContactBundle:FaxType';
+
+        $faxType = $this->getDoctrine()
+            ->getRepository($faxTypeEntity)
+            ->find($faxData['faxType']['id']);
+
+        if (isset($faxData['id'])) {
+            throw new EntityIdAlreadySetException($faxEntity, $faxData['id']);
+        } elseif (!$faxType) {
+            throw new EntityNotFoundException($faxTypeEntity, $faxData['faxType']['id']);
+        } else {
+            $fax = new Fax();
+            $fax->setEmail($faxData['fax']);
+            $fax->setEmailType($faxType);
+            $em->persist($fax);
+            $account->addFax($fax);
+        }
+    }
+
+
+    /**
+     * @param Fax $fax
+     * @param $entry
+     * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    protected function updateFax(Fax $fax, $entry)
+    {
+        $success = true;
+        $faxTypeEntity = 'SuluContactBundle:FaxType';
+
+        $faxType = $this->getDoctrine()
+            ->getRepository($faxTypeEntity)
+            ->find($entry['faxType']['id']);
+
+        if (!$faxType) {
+            throw new EntityNotFoundException($faxTypeEntity, $entry['faxType']['id']);
+        } else {
+            $fax->setFax($entry['fax']);
+            $fax->setFaxType($faxType);
+        }
+
+        return $success;
+    }
+
+    /**
      * Adds an email address to an account
      * @param Account $account
      * @param $emailData
@@ -459,18 +553,18 @@ class AccountController extends RestController implements ClassResourceInterface
         $emailEntity = 'SuluContactBundle:Email';
         $emailTypeEntity = 'SuluContactBundle:EmailType';
 
-        $urlType = $this->getDoctrine()
+        $emailType = $this->getDoctrine()
             ->getRepository($emailTypeEntity)
             ->find($emailData['emailType']['id']);
 
         if (isset($emailData['id'])) {
             throw new EntityIdAlreadySetException($emailEntity, $emailData['id']);
-        } elseif (!$urlType) {
+        } elseif (!$emailType) {
             throw new EntityNotFoundException($emailTypeEntity, $emailData['emailType']['id']);
         } else {
             $email = new Email();
             $email->setEmail($emailData['email']);
-            $email->setEmailType($urlType);
+            $email->setEmailType($emailType);
             $em->persist($email);
             $account->addEmail($email);
         }
