@@ -48,7 +48,8 @@
                     id: '{{ user.id }}',
                     locale: '{{ user.locale is defined ? user.locale : 'en' }}',
                     settings: {{ user.settings }}
-                }
+                },
+                sections: {{ config | json_encode }}
             };
             {% endautoescape %}
 
