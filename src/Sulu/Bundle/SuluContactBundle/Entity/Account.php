@@ -616,4 +616,42 @@ class Account extends ApiEntity
     {
         return $this->type;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $faxes;
+
+
+    /**
+     * Add faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @return Account
+     */
+    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes[] = $faxes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     */
+    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes->removeElement($faxes);
+    }
+
+    /**
+     * Get faxes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFaxes()
+    {
+        return $this->faxes;
+    }
 }
