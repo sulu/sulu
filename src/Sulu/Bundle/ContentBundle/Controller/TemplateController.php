@@ -158,4 +158,9 @@ class TemplateController extends Controller
         return new JsonResponse($data);
     }
 
+    public function settingsAction()
+    {
+        return $this->render('SuluContentBundle:Template:settings.html.twig');
+    }
+
 }
