@@ -187,8 +187,11 @@ define(function() {
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
                 if (!!trigger && this.currentRoute !== route && this.currentRoute !== null) {
-                    this.sandbox.stop('*');
-                    App.stop('#preview *');
+                    // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
+                    // and the stop event will be called
+                    this.sandbox.stop('#edit-toolbar');
+                    this.sandbox.stop('#content > *');
+                    App.stop('#preview > * ');
                 }
 
                 // reset store for cleaning environment
