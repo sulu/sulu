@@ -33,6 +33,7 @@ class SuluContentContentNavigation extends ContentNavigation
         $settings->setContentType('content');
         $settings->setContentComponent('content@sulucontent');
         $settings->setContentComponentOptions(array('display'=>'settings'));
+        $settings->setContentDisplay(array('edit'));
 
         $this->addNavigationItem($content);
         $this->addNavigationItem($settings);

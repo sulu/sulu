@@ -373,8 +373,10 @@ define([
         },
 
         renderForm: function(tab) {
-            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>');
+            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>'),
+            data;
             tab = (typeof tab === 'object') ? tab : {content: true};
+
             this.html($form);
             // load data and show form
             this.content = new Content();
@@ -382,6 +384,7 @@ define([
                 this.content = new Content({id: this.options.id});
                 this.content.fullFetch(this.options.webspace, this.options.language, true, {
                     success: function(model) {
+
                         this.sandbox.start([
                             {
                                 name: 'content/components/form@sulucontent',
@@ -402,6 +405,7 @@ define([
                     }.bind(this)
                 });
             } else {
+
                 this.sandbox.start([
                     {
                         name: 'content/components/form@sulucontent',
