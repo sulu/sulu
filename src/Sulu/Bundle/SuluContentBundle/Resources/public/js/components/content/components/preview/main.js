@@ -265,14 +265,15 @@ define([], function() {
                     window.open(this.url);
                     this.sandbox.dom.hide(this.$wrapper);
                     this.sandbox.dom.hide(this.$toolbar);
-                    this.sandbox.dom.remove(this.$wrapper);
-                    this.sandbox.dom.remove(this.$toolbar);
 
                     // when preview expanded then show navigation and adjust main content
                     if (!!this.isExpanded) {
-                        this.sandbox.emit('husky.page-functions.show');
                         this.sandbox.emit('husky.navigation.show');
-                        this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand: false});
+                        this.sandbox.emit('husky.page-functions.show');
+                        this.sandbox.emit('sulu.app.content.dimensions-change', {
+                            width: this.mainContentOriginalWidth,
+                            left: this.options.maxMarginLeft,
+                            paddingLeft: this.options.maxPaddingLeft});
                     }
 
                     this.sandbox.emit(HIDE);
