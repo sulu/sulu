@@ -93,7 +93,7 @@ define(['app-config'], function(AppConfig) {
             if (!!this.options.data.id) {
                 typeInfo = this.options.data.type;
                 compareAttribute = 'id';
-            } else if (!!this.options.accountTypeName){
+            } else if (!!this.options.accountTypeName) {
                 typeInfo = this.options.accountTypeName;
                 compareAttribute = 'name';
             } else {
@@ -127,8 +127,6 @@ define(['app-config'], function(AppConfig) {
         },
 
 
-
-
         // CONTACT
         fillFields: function(field, minAmount, value) {
             while (field.length < minAmount) {
@@ -154,11 +152,7 @@ define(['app-config'], function(AppConfig) {
                 phone: '',
                 phoneType: this.defaultTypes.phoneType
             });
-            this.fillFields(contactJson.phones, 2, {
-                id: null,
-                phone: '',
-                phoneType: this.defaultTypes.phoneType
-            });
+
 //            this.fillFields(contactJson.addresses, 1, {
 //                id: null,
 //                addressType: this.defaultTypes.addressType,
@@ -181,8 +175,8 @@ define(['app-config'], function(AppConfig) {
                 dropdownData = [];
 
 
-            this.sandbox.util.foreach(fieldTypes,function(type, index) {
-                dropdownData.push({id:index, name:type});
+            this.sandbox.util.foreach(fieldTypes, function(type, index) {
+                dropdownData.push({id: index, name: type});
             });
 
             this.initContactData();
@@ -275,21 +269,43 @@ define(['app-config'], function(AppConfig) {
         },
 
         createForm: function(data) {
-            var formObject = this.sandbox.form.create(this.form);
+            var formObject = this.sandbox.form.create(this.form),
+                emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first';
             formObject.initialized.then(function() {
 
                 this.sandbox.form.setData(this.form, data).then(function() {
-                    if (!!data.urls[0]) {
-                        this.sandbox.dom.val('#url', data.urls[0].url);
-                    }
-
                     this.sandbox.start(this.form);
-                    this.sandbox.form.addConstraint(this.form, '#emails .emails-item:first input.email-value', 'required', {required: true});
-                    this.sandbox.dom.find('#emails .emails-item:first .remove-email').remove();
-                    this.sandbox.dom.addClass('#emails .emails-item:first label span:first', 'required');
+
+
+                    this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
+                    this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
                 }.bind(this));
 
             }.bind(this));
+
+                this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
+                    if (email.id === "") {
+                        delete email.id;
+                    }
+                    return email.email !== "";
+                });
+                this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
+                    if (phone.id === "") {
+                        delete phone.id;
+                    }
+                    return phone.phone !== "";
+                });
+//                this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
+//                    if (address.id === "") {
+//                        delete address.id;
+//                    }
+//                    return address.street !== "" ||
+//                        address.number !== "" ||
+//                        address.zip !== "" ||
+//                        address.city !== "" ||
+//                        address.state !== "";
+//                });
+
 
         },
 
