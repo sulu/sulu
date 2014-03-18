@@ -61,6 +61,9 @@ define([], function() {
             },
 
             constants = {
+
+                minWidthToolbar: 1200,
+
                 toolbarLeft: 'preview-toolbar-left',
                 toolbarRight: 'preview-toolbar-right',
                 toolbarNewWindow: 'preview-toolbar-new-window',
@@ -115,8 +118,7 @@ define([], function() {
                 this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 50;
 
                 this.render();
-                this.bindDomEvents.call(this);
-                this.bindCustomEvents.call(this);
+                this.bindDomEvents();
 
                 this.sandbox.emit(INITIALIZED);
             },
@@ -174,18 +176,32 @@ define([], function() {
              * Renders toolbar on top of the iframe
              */
             renderToolbar: function() {
+
+                var resolutionsLabel = this.sandbox.translate('content.preview.resolutions');
+
                 this.$toolbar = this.sandbox.dom.$([
                     '<div id="preview-toolbar" class="preview-toolbar">',
-                    '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-step-backward"></span></div>',
-                    '<div id="', constants.toolbarRight, '" class="right">',
-                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-disk-export"></span></div>',
-                    '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">Resolutions</div>',
-                    '</div>',
+                        '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-step-backward"></span></div>',
+                        '<div id="', constants.toolbarRight, '" class="right">',
+                            '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-disk-export"></span></div>',
+                            '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">',
+                                '<label class="drop-down-trigger">',
+                                    '<span class="dropdown-toggle"></span>',
+                                    '<span>',resolutionsLabel,'</span>',
+                                '</label>',
+                            '</div>',
+                        '</div>',
                     '</div>'
                 ].join(''));
 
                 this.sandbox.dom.css(this.$toolbar, 'width', this.previewWidth + 30 + 'px');
                 this.sandbox.dom.append(this.$el, this.$toolbar);
+                this.$toolbarRight = this.sandbox.dom.find('#'+constants.toolbarRight, this.$toolbar);
+
+                // hide right part of toolbar when window size is below constants.minWidthToolbar
+                if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
+                    this.sandbox.dom.addClass(this.$toolbarRight,'hidden');
+                }
 
                 this.renderResolutionDropdown();
             },
@@ -194,7 +210,24 @@ define([], function() {
              * Renders the dropdown for the resolution changes
              */
             renderResolutionDropdown: function() {
-                // TODO render resolution dropdown
+
+                var data = this.getResolutions();
+
+                if(data.length > 0) {
+
+                    this.sandbox.start([{
+                        name: 'dropdown@husky',
+                        options: {
+                            el: '#'+constants.toolbarResolutions,
+                            trigger: '.drop-down-trigger',
+                            setParentDropDown: true,
+                            instanceName: 'resolutionsDropdown',
+                            alignment: 'left',
+                            data: data
+                        }
+                    }]);
+                }
+
             },
 
             /*********************************************
@@ -243,14 +276,6 @@ define([], function() {
 
             },
 
-            /**
-             * binds custom events
-             */
-            bindCustomEvents: function() {
-
-            },
-
-
             /*********************************************
              *   Collapse Expand Methods
              ********************************************/
@@ -272,6 +297,11 @@ define([], function() {
                 this.sandbox.emit(EXPANDING);
                 this.isExpanded = true;
 
+                // hide right part of toolbar when window size is below constants.minWidthToolbar
+                if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
+                    this.sandbox.dom.removeClass(this.$toolbarRight,'hidden');
+                }
+
                 this.animateCollapseAndExpand(true, width);
 
             },
@@ -291,6 +321,11 @@ define([], function() {
 
                 this.sandbox.emit(COLLAPSING);
                 this.isExpanded = false;
+
+                // hide right part of toolbar when window size is below constants.minWidthToolbar
+                if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
+                    this.sandbox.dom.addClass(this.$toolbarRight,'hidden');
+                }
 
                 this.animateCollapseAndExpand(false, this.previewWidth);
             },
@@ -365,6 +400,22 @@ define([], function() {
                 url += '&language=' + language;
 
                 return url;
+            },
+
+            /**
+             * Returns the resolutions in an appropriate format for the dropdown component
+             * @return {Array} an array of objects with id and name property
+             */
+            getResolutions: function(){
+
+                var data = [], i =0;
+
+                while(i < this.options.toolbar.resolutions.length) {
+                    data.push({id:i, name: this.options.toolbar.resolutions[i] + ' px' , value: this.options.toolbar.resolutions[i]});
+                    ++i;
+                }
+
+                return data;
             }
 
         };

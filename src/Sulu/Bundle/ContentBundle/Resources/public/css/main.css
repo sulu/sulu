@@ -25,14 +25,15 @@
   z-index: 101;
   height: 30px;
   color: #fff;
+  font-weight: 100;
 }
-/* line 29, ../scss/modules/preview.scss */
+/* line 30, ../scss/modules/preview.scss */
 .preview-toolbar .right {
   float: right;
   background: #3e3e3e;
   height: 100%;
 }
-/* line 34, ../scss/modules/preview.scss */
+/* line 35, ../scss/modules/preview.scss */
 .preview-toolbar .right .new-window {
   width: 30px;
   overflow: hidden;
@@ -41,11 +42,35 @@
   border-left: 1px solid #4d4d4d;
   height: 30px;
 }
-/* line 43, ../scss/modules/preview.scss */
+/* line 44, ../scss/modules/preview.scss */
 .preview-toolbar .right .resolutions {
-  padding: 5px;
+  padding: 5px 10px;
 }
-/* line 48, ../scss/modules/preview.scss */
+/* line 47, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .drop-down-trigger {
+  color: #fff;
+}
+/* line 51, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .dropdown-toggle {
+  display: inline-block;
+}
+/* line 53, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .dropdown-toggle::after {
+  top: -1px;
+  margin-left: 0px;
+  margin-right: 5px;
+  border-top: 6px solid #fff;
+}
+/* line 61, ../scss/modules/preview.scss */
+.preview-toolbar .right .resolutions .dropdown-menu {
+  background: #3e3e3e;
+  color: #fff;
+  z-index: 105;
+  top: 35px;
+  left: -5px;
+  border: 0;
+}
+/* line 72, ../scss/modules/preview.scss */
 .preview-toolbar .left {
   float: left;
   width: 30px;
