@@ -22,6 +22,7 @@
     <services>
 
         <!-- content mapper -->
+        <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.content.structure_manager"/>
@@ -31,6 +32,7 @@
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
+            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
         <!-- localization finder -->
