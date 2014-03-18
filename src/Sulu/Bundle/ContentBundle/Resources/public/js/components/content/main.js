@@ -390,27 +390,31 @@ define([
                 this.content = new Content({id: this.options.id});
                 this.content.fullFetch(this.options.webspace, this.options.language, {
                     success: function(model) {
-                        this.sandbox.start([
-                            {
-                                name: 'content/components/form@sulucontent',
-                                options: {
-                                    el: $form,
-                                    id: this.options.id,
-                                    data: model.toJSON(),
-                                    webspace: this.options.webspace,
-                                    language: this.options.language,
-                                    preview: !!this.options.preview ? this.options.preview : false
-                                }
-                            },
-                            {
+
+                        var components = [{
+                            name: 'content/components/form@sulucontent',
+                            options: {
+                                el: $form,
+                                id: this.options.id,
+                                data: model.toJSON(),
+                                webspace: this.options.webspace,
+                                language: this.options.language,
+                                preview: !!this.options.preview ? this.options.preview : false
+                            }
+                        }];
+
+                        if(this.sandbox.dom.width(window) >= 980){
+
+                            this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
+
+                            components.push({
                                 name: 'content/components/preview@sulucontent',
                                 options: {
                                     el: '#preview-container',
                                     toolbar: {
                                         resolutions: [
-                                            /*1920,
                                             1680,
-                                            1440,*/
+                                            1440,
                                             1024,
                                             800,
                                             600,
@@ -427,8 +431,10 @@ define([
                                         id: this.options.id
                                     }
                                 }
-                            }
-                        ]);
+                            })
+                        }
+
+                        this.sandbox.start(components);
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while fetching content");
