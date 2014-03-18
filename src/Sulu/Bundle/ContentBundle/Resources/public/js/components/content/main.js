@@ -63,6 +63,10 @@ define([
                 this.renderForm();
             } else if (this.options.display === 'column') {
                 this.renderColumn();
+            } else if (this.options.display === 'settings') {
+                this.renderForm({
+                    settings: true
+                });
             } else {
                 throw 'display type wrong';
             }
@@ -180,7 +184,7 @@ define([
                             success: function() {
                                 // reset navigation after preview
                                 this.sandbox.emit('husky.navigation.show');
-                                this.sandbox.emit('husky.navigation.uncollapse',false);
+                                this.sandbox.emit('husky.navigation.uncollapse', false);
 
                                 // reset content after preview
                                 this.sandbox.emit('sulu.app.content.dimensions-change', {
@@ -275,7 +279,7 @@ define([
                         this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
                         this.sandbox.sulu.viewStates.justSaved = true;
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/content');
                     }
                 }.bind(this),
                 error: function() {
@@ -285,14 +289,14 @@ define([
         },
 
         load: function(id) {
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/details');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/content');
         },
 
         add: function(parent) {
             if (!!parent) {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/content');
             } else {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/content');
             }
         },
 
@@ -383,12 +387,13 @@ define([
             ]);
         },
 
-        renderForm: function() {
+        renderForm: function(tab) {
             var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>'),
-                $preview = this.sandbox.dom.createElement('<div id="preview-container"/>');
+                $preview = this.sandbox.dom.createElement('<div id="preview-container"/>'), data;
+            tab = (typeof tab === 'object') ? tab : {content: true};
 
             this.html($form);
-            this.sandbox.dom.append('#preview',$preview);
+            this.sandbox.dom.append('#preview', $preview);
 
             // load data and show form
             this.content = new Content();
@@ -401,19 +406,22 @@ define([
                 this.content.fullFetch(this.options.webspace, this.options.language, true, {
                     success: function(model) {
 
-                        var components = [{
-                            name: 'content/components/form@sulucontent',
-                            options: {
-                                el: $form,
-                                id: this.options.id,
-                                data: model.toJSON(),
-                                webspace: this.options.webspace,
-                                language: this.options.language,
-                                preview: !!this.options.preview ? this.options.preview : false
+                        var components = [
+                            {
+                                name: 'content/components/form@sulucontent',
+                                options: {
+                                    el: $form,
+                                    id: this.options.id,
+                                    data: model.toJSON(),
+                                    webspace: this.options.webspace,
+                                    language: this.options.language,
+                                    preview: !!this.options.preview ? this.options.preview : false,
+                                    tab: tab
+                                }
                             }
-                        }];
+                        ];
 
-                        if(this.sandbox.dom.width(window) >= 980){
+                        if (this.sandbox.dom.width(window) >= 980) {
 
                             this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
 
@@ -441,7 +449,7 @@ define([
                                         id: this.options.id
                                     }
                                 }
-                            })
+                            });
                         }
 
                         this.sandbox.start(components);
@@ -463,7 +471,8 @@ define([
                             data: this.content.toJSON(),
                             webspace: this.options.webspace,
                             language: this.options.language,
-                            preview: !!this.options.preview ? true : false
+                            preview: !!this.options.preview ? true : false,
+                            tab: tab
                         }
                     }
                 ]);
