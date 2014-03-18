@@ -77,7 +77,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $flat = ($flat === 'true');
 
         // TODO pagination
-        $result = $this->getRepository()->getNodes($parentUuid, $webspace, $language, $depth, $flat);
+        $result = $this->getRepository()->getNodes($parentUuid, $webspace, $language, $depth, $flat, false);
 
         return $this->handleView(
             $this->view($result)

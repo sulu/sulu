@@ -18,27 +18,7 @@ define(function() {
                 url: '/admin/content/navigation/content',
                 parentTemplate: 'default',
                 template: function() {
-                    var preview = {
-                            icon: 'eye-open',
-                            iconSize: 'large',
-                            group: 'right',
-                            position: 1,
-                            items: [
-                                {
-                                    title: this.sandbox.translate('sulu.edit-toolbar.new-window'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.edit-toolbar.preview.new-window');
-                                    }.bind(this)
-                                },
-                                {
-                                    title: this.sandbox.translate('sulu.edit-toolbar.split-screen'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.edit-toolbar.preview.split-screen');
-                                    }.bind(this)
-                                }
-                            ]
-                        },
-                        state = {
+                    var state = {
                             'id': 'state',
                             'group': 'right',
                             'class': 'highlight-gray',
@@ -68,7 +48,7 @@ define(function() {
                     if (!this.options.id) {
                         return [template, state];
                     } else {
-                        return [template, preview, state];
+                        return [template, state];
                     }
                 }.bind(this)
             };

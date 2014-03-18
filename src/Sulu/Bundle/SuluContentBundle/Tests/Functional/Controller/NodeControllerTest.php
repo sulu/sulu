@@ -336,12 +336,13 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes/' . $data[0]['id']);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($data[0]['title'], $response->title);
-        $this->assertEquals($data[0]['tags'], $response->tags);
-        $this->assertEquals($data[0]['url'], $response->url);
-        $this->assertEquals($data[0]['article'], $response->article);
+        $this->assertEquals(17, sizeof($response));
+        $this->assertEquals($data[0]['title'], $response['title']);
+        $this->assertEquals($data[0]['tags'], $response['tags']);
+        $this->assertEquals($data[0]['url'], $response['url']);
+        $this->assertEquals($data[0]['article'], $response['article']);
     }
 
     public function testDelete()
@@ -398,18 +399,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(2, sizeof($response->_embedded));
 
         $this->assertEquals($data[1]['title'], $response->_embedded[0]->title);
-        $this->assertEquals($data[1]['tags'], $response->_embedded[0]->tags);
-        $this->assertEquals($data[1]['url'], $response->_embedded[0]->url);
-        $this->assertEquals($data[1]['article'], $response->_embedded[0]->article);
-        $this->assertEquals(1, $response->_embedded[0]->creator);
-        $this->assertEquals(1, $response->_embedded[0]->creator);
-
         $this->assertEquals($data[0]['title'], $response->_embedded[1]->title);
-        $this->assertEquals($data[0]['tags'], $response->_embedded[1]->tags);
-        $this->assertEquals($data[0]['url'], $response->_embedded[1]->url);
-        $this->assertEquals($data[0]['article'], $response->_embedded[1]->article);
-        $this->assertEquals(1, $response->_embedded[1]->creator);
-        $this->assertEquals(1, $response->_embedded[1]->creator);
     }
 
     private function buildTree()
@@ -777,5 +767,47 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Start Page', $response->breadcrumb[0]->title);
         $this->assertEquals('test2', $response->breadcrumb[1]->title);
         $this->assertEquals('test4', $response->breadcrumb[2]->title);
+    }
+
+    public function testSmallResponse()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=1');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded'];
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals(9, sizeof($items[0]));
+        $this->assertArrayHasKey('id', $items[0]);
+        $this->assertEquals('test1', $items[0]['title']);
+        $this->assertEquals(1, $items[0]['nodeState']);
+        $this->assertEquals(1, $items[0]['globalState']);
+        $this->assertFalse($items[0]['publishedState']);
+        $this->assertEquals('main', $items[0]['navigation']);
+        $this->assertFalse($items[0]['hasSub']);
+        $this->assertEquals(0, sizeof($items[0]['_embedded']));
+        $this->assertArrayHasKey('_links', $items[0]);
+
+        $this->assertEquals(9, sizeof($items[1]));
+        $this->assertArrayHasKey('id', $items[1]);
+        $this->assertEquals('test2', $items[1]['title']);
+        $this->assertEquals(1, $items[1]['nodeState']);
+        $this->assertEquals(1, $items[1]['globalState']);
+        $this->assertFalse($items[1]['publishedState']);
+        $this->assertEquals('main', $items[1]['navigation']);
+        $this->assertTrue($items[1]['hasSub']);
+        $this->assertEquals(0, sizeof($items[1]['_embedded']));
+        $this->assertArrayHasKey('_links', $items[1]);
     }
 }
