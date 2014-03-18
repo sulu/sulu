@@ -99,6 +99,8 @@ define(function() {
                     width: null
                 };
 
+                this.currentRoute = null;
+
                 this.bindCustomEvents();
                 this.bindDomEvents();
 
@@ -175,11 +177,10 @@ define(function() {
                 // default vars
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-                if (!!trigger) {
+                if (!!trigger && this.currentRoute !== route && this.currentRoute !== null) {
                     // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
                     // and the stop event will be called
                     this.sandbox.stop('#edit-toolbar');
-                    this.sandbox.dom.remove('#edit-toolbar');
                 }
 
                 // reset store for cleaning environment
@@ -192,12 +193,12 @@ define(function() {
                 router.navigate(route, {trigger: trigger});
 
                 // move to top
-                // FIXME abstract
-                $(window).scrollTop(0);
+                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
 
-                if (noLoader !== true) {
+                if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
                     this.startLoader();
                 }
+                this.currentRoute = route;
             }.bind(this));
 
             // navigation event
