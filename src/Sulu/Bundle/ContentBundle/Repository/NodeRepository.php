@@ -74,15 +74,18 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param int $depth
+     * @param bool $complete
      * @return array
      */
-    protected function prepareNode(StructureInterface $structure, $webspaceKey, $languageCode, $depth = 1)
+    protected function prepareNode(
+        StructureInterface $structure,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $complete = true
+    )
     {
-        $result = $structure->toArray();
-
-        // replace creator, changer
-        $result['creator'] = $structure->getCreator();
-        $result['changer'] = $structure->getChanger();
+        $result = $structure->toArray($complete);
 
         // add default empty embedded property
         $result['_embedded'] = array();
@@ -179,9 +182,10 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $languageCode
      * @param int $depth
      * @param bool $flat
+     * @param bool $complete
      * @return array
      */
-    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true)
+    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true)
     {
         $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat);
 
@@ -190,8 +194,8 @@ class NodeRepository implements NodeRepositoryInterface
         } else {
             $parentNode = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
         }
-        $result = $this->prepareNodesTree($parentNode, $webspaceKey, $languageCode);
-        $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode);
+        $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete);
+        $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete);
         $result['total'] = sizeof($result['_embedded']);
 
         return $result;
@@ -269,13 +273,16 @@ class NodeRepository implements NodeRepositoryInterface
 
     /**
      * @param StructureInterface[] $nodes
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param bool $complete
      * @return array
      */
-    private function prepareNodesTree($nodes, $webspaceKey, $languageCode)
+    private function prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete = true)
     {
         $results = array();
         foreach ($nodes as $node) {
-            $result = $this->prepareNode($node, $webspaceKey, $languageCode);
+            $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete);
             if ($node->getHasChildren() && $node->getChildren() != null) {
                 $result['_embedded'] = $this->prepareNodesTree($node->getChildren(), $webspaceKey, $languageCode);
             }
