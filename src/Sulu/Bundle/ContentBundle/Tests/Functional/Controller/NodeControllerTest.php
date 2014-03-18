@@ -797,17 +797,17 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('main', $items[0]['navigation']);
         $this->assertFalse($items[0]['hasSub']);
         $this->assertEquals(0, sizeof($items[0]['_embedded']));
-        $this->assertArrayHasKey('links', $items[0]);
+        $this->assertArrayHasKey('_links', $items[0]);
 
-        $this->assertEquals(9, sizeof($items[0]));
-        $this->assertArrayHasKey('id', $items[0]);
-        $this->assertEquals('test2', $items[0]['title']);
-        $this->assertEquals(1, $items[0]['nodeState']);
-        $this->assertEquals(1, $items[0]['globalState']);
-        $this->assertFalse($items[0]['publishedState']);
-        $this->assertEquals('main', $items[0]['navigation']);
-        $this->assertFalse($items[0]['hasSub']);
-        $this->assertEquals(0, sizeof($items[0]['_embedded']));
-        $this->assertArrayHasKey('links', $items[0]);
+        $this->assertEquals(9, sizeof($items[1]));
+        $this->assertArrayHasKey('id', $items[1]);
+        $this->assertEquals('test2', $items[1]['title']);
+        $this->assertEquals(1, $items[1]['nodeState']);
+        $this->assertEquals(1, $items[1]['globalState']);
+        $this->assertFalse($items[1]['publishedState']);
+        $this->assertEquals('main', $items[1]['navigation']);
+        $this->assertTrue($items[1]['hasSub']);
+        $this->assertEquals(0, sizeof($items[1]['_embedded']));
+        $this->assertArrayHasKey('_links', $items[1]);
     }
 }
