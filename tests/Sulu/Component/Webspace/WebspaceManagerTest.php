@@ -383,5 +383,16 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $localizations[1]->getLanguage());
         $this->assertEquals('ca', $localizations[1]->getCountry());
         $this->assertEquals(null, $localizations[1]->getShadow());
+
+        $allLocalizations = $this->webspaceManager->findWebspaceByKey('massiveart')->getAllLocalizations();
+        $this->assertEquals('en', $allLocalizations[0]->getLanguage());
+        $this->assertEquals('us', $allLocalizations[0]->getCountry());
+        $this->assertEquals('auto', $allLocalizations[0]->getShadow());
+        $this->assertEquals('en', $allLocalizations[1]->getLanguage());
+        $this->assertEquals('ca', $allLocalizations[1]->getCountry());
+        $this->assertEquals(null, $allLocalizations[1]->getShadow());
+        $this->assertEquals('fr', $allLocalizations[2]->getLanguage());
+        $this->assertEquals('ca', $allLocalizations[2]->getCountry());
+        $this->assertEquals(null, $allLocalizations[2]->getShadow());
     }
 }

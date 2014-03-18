@@ -14,7 +14,7 @@ namespace Sulu\Component\Webspace;
  * Represents a localization of a webspace definition
  * @package Sulu\Component\Portal
  */
-class Localization
+class Localization implements \JsonSerializable
 {
     /**
      * The language of the localization
@@ -132,11 +132,11 @@ class Localization
      * @param string $delimiter between language and country
      * @return string
      */
-    public function getLocalization($delimiter = '_')
+    public function getLocalization()
     {
         $localization = $this->getLanguage();
         if ($this->getCountry() != null) {
-            $localization .= $delimiter . $this->getCountry();
+            $localization .= '_' . $this->getCountry();
         }
 
         return $localization;
@@ -182,10 +182,37 @@ class Localization
     }
 
     /**
+     * Returns a list of all localizations and sublocalizations
+     * @return \Sulu\Component\Webspace\Localization[]
+     */
+    public function getAllLocalizations()
+    {
+        $localizations = array();
+        if ($this->getChildren() !== null && sizeof($this->getChildren()) > 0) {
+            foreach ($this->getChildren() as $child) {
+                $localizations[] = $child;
+                $localizations = array_merge($localizations, $child->getAllLocalizations());
+            }
+        }
+        return $localizations;
+    }
+
+    /**
      * @return string
      */
     public function __toString()
     {
         return $this->getLocalization();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'localization' => $this->getLocalization(),
+            'name' => $this->getLocalization()
+        );
     }
 }
