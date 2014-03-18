@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -16322,7 +16321,6 @@ define('aura/ext/components', [],function() {
   };
 });
 
-
 /*
  * This file is part of the Husky Validation.
  *
@@ -17100,7 +17098,15 @@ define('form/mapper',[
                         type = $el.data('type'),
                         property = $el.data('mapper-property'),
                         element = $el.data('element'),
-                        result, item;
+                        result, item,
+                        filtersAction;
+
+
+                    if (collection && !!filters[collection.data]) {
+                        filtersAction = filters[collection.data];
+                    } else if (!!filters[property]) {
+                        filtersAction = filters[property];
+                    }
 
                     // if type == collection process children, else get value
                     if (type !== 'collection') {
@@ -17120,7 +17126,7 @@ define('form/mapper',[
                                     if (item[keys[0]] !== '') {
                                         result.push(item[keys[0]]);
                                     }
-                                } else if (!filters[property] || (!!filters[property] && filters[property](item))) {
+                                } else if (!filtersAction || filtersAction(item)) {
                                     result.push(item);
                                 }
                             }
@@ -17143,19 +17149,24 @@ define('form/mapper',[
                             }
                         };
 
-                    // remove children
-                    $element.children().each(function(key, value) {
-                        that.remove.call(this, $(value));
-                    }.bind(this));
+                    // no element in collection
+                    if (count === 0) {
+                        dfd.resolve();
+                    } else {
+                        // remove children
+                        $element.children().each(function(key, value) {
+                            that.remove.call(this, $(value));
+                        }.bind(this));
 
-                    // foreach collection elements: create a new dom element, call setData recursively
-                    $.each(collection, function(key, value) {
-                        that.appendChildren($element, $child, value).then(function($newElement) {
-                            form.mapper.setData(value, $newElement).then(function() {
-                                resolve();
+                        // foreach collection elements: create a new dom element, call setData recursively
+                        $.each(collection, function(key, value) {
+                            that.appendChildren($element, $child, value).then(function($newElement) {
+                                form.mapper.setData(value, $newElement).then(function() {
+                                    resolve();
+                                });
                             });
                         });
-                    });
+                    }
 
                     // set current length of collection
                     $('#current-counter-' + $element.attr('id')).text(collection.length);
@@ -17274,12 +17285,10 @@ define('form/mapper',[
                                         element = form.addField($element);
                                         element.initialized.then(function() {
                                             element.setValue(value);
-                                            // resolve this set data
                                             resolve();
                                         });
                                     } else {
                                         element.setValue(value);
-                                        // resolve this set data
                                         resolve();
                                     }
                                 } else {
@@ -17960,11 +17969,28 @@ define('type/readonly-select',[
                     var data = this.options.data,
                         idProperty = this.options.idProperty,
                         i , len;
+
+                    // check if value is an object
+                    if (typeof value === 'object') {
+                        if (value.hasOwnProperty(idProperty)) {
+                            value = value[idProperty];
+                        } else {
+                            throw "value has no property named " + idProperty;
+                        }
+                    // if value is null continue
+                    } else if (value === null) {
+                        return;
+                    }
+
+                    // set data id to value
                     this.$el.data('id', value);
+
+                    // find value in data
                     if (data.length > 0) {
                         for (i = -1, len = data.length; ++i < len;) {
                             if (data[i].hasOwnProperty(idProperty) && data[i][idProperty] === value) {
                                 this.$el.html(data[i][this.options.outputProperty]);
+                                break;
                             }
                         }
                     }
@@ -18550,6 +18576,7 @@ define('validator/regex',[
     };
 
 });
+
 
 define("husky-validation", function(){});
 
@@ -24605,8 +24632,9 @@ define('__component__$navigation@husky',[],function() {
 
 
         /**
-         * forces navigation to uncollapse
+         * forces navigation to collapse
          * @event husky.navigation.collapse
+         * @param {Boolean} stayCollapsed - if true the navigation stays collapsed till the custom-uncollapse event is emited
          */
             EVENT_COLLAPSE = namespace + 'collapse',
 
@@ -24629,7 +24657,19 @@ define('__component__$navigation@husky',[],function() {
          * raised when navigation was un / collapsed. called when transition is finished. only raised when not forced
          * @event husky.navigation.size.changed
          */
-            EVENT_SIZE_CHANGED = namespace + 'size.changed'
+            EVENT_SIZE_CHANGED = namespace + 'size.changed',
+
+        /**
+         * show the navigation when it was hidden before
+         * @event husky.navigation.show
+         */
+            EVENT_SHOW = namespace + 'show',
+
+        /**
+         * hides the navigation completely
+         * @event husky.navigation.hide
+         */
+            EVENT_HIDE = namespace + 'hide'
         ;
 
 
@@ -24641,6 +24681,9 @@ define('__component__$navigation@husky',[],function() {
 
             // merging options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            this.stayCollapsed = false;
+            this.hidden = false;
 
             // binding dom events
             this.bindDOMEvents();
@@ -24688,7 +24731,7 @@ define('__component__$navigation@husky',[],function() {
             } else {
                 this.sandbox.dom.prepend(this.sandbox.dom.find('header.navigation-header', this.$el),
                     this.sandbox.template.parse(templates.headerText, {
-                        text: this.options.data.title.substr(0, 2)
+                        text: this.options.data.title.substr(0, 1)
                     })
                 );
             }
@@ -24815,12 +24858,12 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showToolTip.bind(this, ''), '.navigation.collapsed .navigation-items');
             this.sandbox.dom.on(this.$el, 'mouseleave', this.hideToolTip.bind(this), '.navigation.collapsed .navigation-items, .navigation.collapsed .navigation-search');
 
-            this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function(event) {
+            this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function() {
                 this.sandbox.emit(EVENT_SIZE_CHANGED, this.sandbox.dom.width(this.$navigation));
             }.bind(this));
             this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function(event) {
                 event.stopPropagation();
-            }.bind(this),'.navigation *');
+            }.bind(this), '.navigation *');
         },
 
         /**
@@ -24833,15 +24876,24 @@ define('__component__$navigation@husky',[],function() {
                 this.renderFooter(template);
             }.bind(this));
 
-            this.sandbox.on(EVENT_COLLAPSE, this.collapse.bind(this));
-            this.sandbox.on(EVENT_UNCOLLAPSE, this.unCollapse.bind(this));
+            this.sandbox.on(EVENT_COLLAPSE, function(stayCollapsed) {
+                this.stayCollapsed = (typeof stayCollapsed === 'boolean') ? stayCollapsed : false;
+                this.collapse();
+            }.bind(this));
+            this.sandbox.on(EVENT_UNCOLLAPSE, function(force) {
+                this.stayCollapsed = false;
+                this.unCollapse(force);
+            }.bind(this));
+
+            this.sandbox.on(EVENT_HIDE, this.hide.bind(this));
+            this.sandbox.on(EVENT_SHOW, this.show.bind(this));
 
         },
 
         resizeListener: function() {
             var windowWidth = this.sandbox.dom.width(this.sandbox.dom.window);
 
-            if (windowWidth <= this.options.resizeWidth) {
+            if (windowWidth <= this.options.resizeWidth || this.stayCollapsed === true) {
                 this.collapse();
             } else if (this.sandbox.dom.hasClass(this.$navigation, 'collapsed')) {
                 this.unCollapse();
@@ -24953,7 +25005,6 @@ define('__component__$navigation@husky',[],function() {
                 $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
                 this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
                 this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
-
             } else {
                 this.sandbox.dom.show($childList);
                 this.sandbox.dom.addClass($items, 'is-expanded');
@@ -25036,30 +25087,31 @@ define('__component__$navigation@husky',[],function() {
         },
 
         collapse: function() {
-            this.sandbox.dom.addClass(this.$navigation, 'collapsed');
-            this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
-            if (!this.collapsed) {
-                this.sandbox.emit(EVENT_COLLAPSED, CONSTANTS.COLLAPSED_WIDTH);
-                this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.COLLAPSED_WIDTH);
-                this.collapsed = !this.collapsed;
+            if (this.hidden === false) {
+                this.sandbox.dom.addClass(this.$navigation, 'collapsed');
+                this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
+                if (!this.collapsed) {
+                    this.sandbox.emit(EVENT_COLLAPSED, CONSTANTS.COLLAPSED_WIDTH);
+                    this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.COLLAPSED_WIDTH);
+                    this.collapsed = !this.collapsed;
+                }
             }
         },
 
         unCollapse: function(forced) {
-            this.sandbox.dom.removeClass(this.$navigation, 'collapsed');
-            this.hideToolTip();
-            if (forced) {
-                this.collapseBack = true;
-                this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
-            } else {
-                this.collapseBack = false;
-            }
-            if (this.collapsed) {
-                this.sandbox.emit(EVENT_UNCOLLAPSED, CONSTANTS.UNCOLLAPSED_WIDTH);
-                if (!forced) {
-                    this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.UNCOLLAPSED_WIDTH);
+            if ((this.stayCollapsed === false || forced === true) && this.hidden === false) {
+                this.sandbox.dom.removeClass(this.$navigation, 'collapsed');
+                this.hideToolTip();
+                if (forced) {
+                    this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
                 }
-                this.collapsed = !this.collapsed;
+                if (this.collapsed) {
+                    this.sandbox.emit(EVENT_UNCOLLAPSED, CONSTANTS.UNCOLLAPSED_WIDTH);
+                    if (!forced) {
+                        this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.UNCOLLAPSED_WIDTH);
+                    }
+                    this.collapsed = !this.collapsed;
+                }
             }
         },
 
@@ -25125,9 +25177,28 @@ define('__component__$navigation@husky',[],function() {
 
             if (!customTarget) {
                 setTimeout(this.resizeListener.bind(this), 700);
-
             }
 
+        },
+
+        /**
+         * Shows the navigation
+         */
+        show: function() {
+            if (!!this.currentNavigationWidth) {
+                this.sandbox.dom.removeAttr(this.$navigation, 'style');
+                this.currentNavigationWidth = null;
+                this.hidden = false;
+            }
+        },
+
+        /**
+         * Hides the navigaiton
+         */
+        hide: function() {
+            this.currentNavigationWidth = this.sandbox.dom.width(this.$navigation);
+            this.sandbox.dom.width(this.$navigation, 0);
+            this.hidden = true;
         }
 
     };
@@ -28316,15 +28387,6 @@ define('__component__$dropdown@husky',[], function() {
 
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-//            // return if this plugin has a module instance
-//            if (!!this.$element.data(moduleName)) {
-//                return this;
-//            }
-//
-//            // store the module instance into the jQuery data property
-//           this. $element.data(moduleName, new Husky.Ui.DropDown(this, options));
-
-
             this.$element = this.sandbox.dom.createElement('<div/>', {
                 'class': 'husky-drop-down'
             });
@@ -28332,6 +28394,7 @@ define('__component__$dropdown@husky',[], function() {
             this.sandbox.dom.append(this.options.el, this.$element);
 
             this.render();
+            this.sandbox.emit('husky.dropdown.' + this.options.instanceName + '.initialized');
         },
 
         render: function() {
@@ -28354,7 +28417,7 @@ define('__component__$dropdown@husky',[], function() {
 
             if (this.options.setParentDropDown) {
                 // add class dropdown to parent
-                this.sandbox.dom.addClass(this.sandbox.dom.parent(this.$element),'dropdown');
+                this.sandbox.dom.addClass(this.sandbox.dom.parent(this.$element), 'dropdown');
             }
 
             // check alginment
@@ -28374,22 +28437,22 @@ define('__component__$dropdown@husky',[], function() {
         // bind dom elements
         bindDOMEvents: function() {
 
-             // turn off all events
-             this.sandbox.dom.off(this.$element);
+            // turn off all events
+            this.sandbox.dom.off(this.$element);
 
-             // ------------------------------------------------------------
-             // DOM events
-             // ------------------------------------------------------------
+            // ------------------------------------------------------------
+            // DOM events
+            // ------------------------------------------------------------
 
-             // init drop-down
-             if (this.options.trigger !== '') {
+            // init drop-down
+            if (this.options.trigger !== '') {
                 this.sandbox.dom.on(this.options.el, 'click', this.triggerClick.bind(this), this.options.trigger);
-             } else {
+            } else {
                 this.sandbox.dom.on(this.options.el, 'click', this.triggerClick.bind(this));
-             }
+            }
 
             // on click on list item
-            this.sandbox.dom.on(this.$dropDownList, 'click', function (event) {
+            this.sandbox.dom.on(this.$dropDownList, 'click', function(event) {
                 event.stopPropagation();
                 this.clickItem(this.sandbox.dom.data(event.currentTarget, 'id'));
             }.bind(this), 'li:not(".divider")');
@@ -28408,7 +28471,7 @@ define('__component__$dropdown@husky',[], function() {
         // trigger event with clicked item
         clickItem: function(id) {
             this.sandbox.util.foreach(this.options.data, function(item) {
-                if (!!item.id && item.id.toString() === id.toString()) {
+                if (typeof item.id !== 'undefined' && item.id.toString() === id.toString()) {
                     this.sandbox.logger.log(this.name, 'item.click: ' + id, 'success');
 
                     if (!!item.callback && typeof item.callback === 'function') {
@@ -28506,14 +28569,13 @@ define('__component__$dropdown@husky',[], function() {
         // clear childs of list
         clearDropDown: function() {
             // FIXME make it easier
-            this.sandbox.dom.remove(this.sandbox.dom.children(this.sandbox.dom.children(this.$dropDown,'ul'),'li'));
+            this.sandbox.dom.remove(this.sandbox.dom.children(this.sandbox.dom.children(this.$dropDown, 'ul'), 'li'));
         },
 
         // toggle dropDown visible
         toggleDropDown: function() {
             this.sandbox.logger.log(this.name, 'toggle dropdown');
-//            this.sandbox.dom.toggle(this.$dropDown);
-            if (this.sandbox.dom.is(this.$dropDown,':visible')) {
+            if (this.sandbox.dom.is(this.$dropDown, ':visible')) {
                 this.hideDropDown();
             } else {
                 this.showDropDown();
@@ -28526,7 +28588,8 @@ define('__component__$dropdown@husky',[], function() {
             // on click on trigger outside check
             this.sandbox.dom.one(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
             this.sandbox.dom.show(this.$dropDown);
-            this.sandbox.dom.addClass(this.$el,'is-active');
+            this.sandbox.emit('husky.dropdown.' + this.options.instanceName + '.showing');
+            this.sandbox.dom.addClass(this.$el, 'is-active');
         },
 
         // hide dropDown
@@ -28535,7 +28598,7 @@ define('__component__$dropdown@husky',[], function() {
             // remove global click event
             this.sandbox.dom.off(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
             this.sandbox.dom.hide(this.$dropDown);
-            this.sandbox.dom.removeClass(this.$el,'is-active');
+            this.sandbox.dom.removeClass(this.$el, 'is-active');
         },
 
         // get url for pattern
@@ -33275,7 +33338,19 @@ define('__component__$page-functions@husky',[], function() {
              * @event husky.page-functions.clicked
              * @description link was clicked
              */
-            CLICK = eventNamespace + 'clicked';
+            CLICK = eventNamespace + 'clicked',
+
+            /**
+             * @event husky.page-functions.show
+             * @description displays page functions
+             */
+            SHOW = eventNamespace+'show',
+
+            /**
+             * @event husky.page-functions.hide
+             * @description hides page functions
+             */
+            HIDE = eventNamespace+'hide';
 
         return {
 
@@ -33298,7 +33373,10 @@ define('__component__$page-functions@husky',[], function() {
 
                 this.sandbox.dom.append(this.options.el, this.sandbox.template.parse(template(), this.options.data));
 
+                this.$pageFunction = this.sandbox.dom.find('.page-function', this.$el);
+
                 this.bindDomEvents();
+                this.bindCustomEvents();
 
                 this.sandbox.emit(RENDERED);
             },
@@ -33310,8 +33388,17 @@ define('__component__$page-functions@husky',[], function() {
 
                     return false;
                 }.bind(this), '#' + this.options.data.id);
-            }
+            },
 
+            bindCustomEvents: function(){
+                this.sandbox.on(HIDE, function(){
+                    this.sandbox.dom.fadeOut(this.$el, 300);
+                }.bind(this));
+
+                this.sandbox.on(SHOW, function(){
+                    this.sandbox.dom.fadeIn(this.$el, 300);
+                }.bind(this));
+            }
         };
     }
 );
@@ -37281,6 +37368,10 @@ define('husky_extensions/collection',[],function() {
               $(selector).focus();
             };
 
+            app.core.dom.animate = function(selector, properties, options){
+               $(selector).animate(properties, options);
+            };
+
             app.core.util.ajax = $.ajax;
         }
     });
@@ -37634,3 +37725,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
