@@ -171,8 +171,7 @@ define([], function() {
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
-            this.sandbox.dom.html('#content-tabs-component', '');
-            this.sandbox.dom.remove('#content-tabs-component');
+            this.sandbox.stop('#content-tabs-component');
 
             this.sandbox.dom.append(this.$el, '<div id="content-tabs-component"><span class="is-loading"/></div>');
 
