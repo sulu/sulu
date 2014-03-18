@@ -50,18 +50,20 @@ body {
 }
 
 /* line 52, ../scss/modules/base.scss */
+#page-functions {
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+/* line 58, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 820px;
 }
 
-/* line 56, ../scss/modules/base.scss */
+/* line 62, ../scss/modules/base.scss */
 #list-toolbar-container {
   padding-bottom: 20px;
-}
-
-/* line 61, ../scss/modules/base.scss */
-#page-functions + #edit-toolbar .edit-toolbar-left {
-  margin-left: -50px;
 }
 
 /*----------------------------------------*/

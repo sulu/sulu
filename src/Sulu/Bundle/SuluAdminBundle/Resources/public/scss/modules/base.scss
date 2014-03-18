@@ -49,18 +49,18 @@ body {
     padding-top: $contentMarginTop;
 }
 
+#page-functions {
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
 #edit-toolbar {
     max-width: $contentMaxWidth;
 }
 
 #list-toolbar-container {
     padding-bottom: 20px;
-}
-
-#page-functions + #edit-toolbar {
-    .edit-toolbar-left {
-        margin-left: -50px;
-    }
 }
 
 // Control elements
