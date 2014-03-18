@@ -50,14 +50,18 @@ define([], function() {
                     showRight: true
                 },
                 mainContentElementIdentifier: '',
-                mainContentMinWidth: 480,
+                mainContentMinWidth: 530,
                 marginLeft: 30,
                 iframeSource: {
                     url: '',
                     webspace: '',
                     language: '',
                     id: ''
-                }
+                },
+                transitionDuration: 500,
+                minMarginLeft: 10,
+                maxMarginLeft: 50,
+                maxPaddingLeft: 50
             },
 
             constants = {
@@ -112,7 +116,7 @@ define([], function() {
                 this.$mainContent = this.sandbox.dom.$('#' + this.options.mainContentElementIdentifier)[0];
 
                 // get original max width
-                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 50;
+                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 100;
 
                 this.render();
                 this.bindDomEvents.call(this);
@@ -307,7 +311,7 @@ define([], function() {
                 this.sandbox.dom.animate(this.$wrapper, {
                     width: previewWidth + 'px'
                 }, {
-                    duration: 500,
+                    duration: this.options.transitionDuration,
                     queue: false
                 });
 
@@ -315,28 +319,33 @@ define([], function() {
                 this.sandbox.dom.animate(this.$iframe, {
                     width: previewWidth + 'px'
                 }, {
-                    duration: 500,
+                    duration: this.options.transitionDuration,
                     queue: false
                 });
 
                 // preview toolbar
                 this.sandbox.dom.animate(this.$toolbar, {
-                    width: previewWidth + 30 + 'px'
+                    width: previewWidth + this.options.marginLeft + 'px'
                 }, {
-                    duration: 500,
+                    duration: this.options.transitionDuration,
                     queue: false
                 });
 
                 if (!!expand) {
-                    this.sandbox.emit('husky.page-functions.hide');
                     this.sandbox.emit('husky.navigation.hide');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left: 0, expand: true});
+                    this.sandbox.emit('husky.page-functions.hide');
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {
+                        width: this.options.mainContentMinWidth,
+                        left: this.options.minMarginLeft,
+                        paddingLeft: 0});
                 } else {
-                    this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('husky.navigation.show');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand: false});
+                    this.sandbox.emit('husky.page-functions.show');
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {
+                        width: this.mainContentOriginalWidth,
+                        left: this.options.maxMarginLeft,
+                        paddingLeft: this.options.maxPaddingLeft});
                 }
-
             },
 
 
