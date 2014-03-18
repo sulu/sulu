@@ -3745,162 +3745,220 @@ hr.divider {
   text-align: center;
 }
 
-/* line 8, ../scss/modules/grid.scss */
+/* line 10, ../scss/modules/grid.scss */
 .grid {
   display: block;
 }
 
-/* line 12, ../scss/modules/grid.scss */
+/* line 14, ../scss/modules/grid.scss */
 .grid-row {
   margin-bottom: 20px;
 }
-/* line 14, ../scss/modules/grid.scss */
+/* line 18, ../scss/modules/grid.scss */
+.grid-row.small {
+  margin-bottom: 10px;
+}
+/* line 22, ../scss/modules/grid.scss */
 .grid-row::after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 20, ../scss/modules/grid.scss */
+/* line 28, ../scss/modules/grid.scss */
 .grid-row img {
   max-width: 100%;
 }
 
-/* line 25, ../scss/modules/grid.scss */
+/* line 37, ../scss/modules/grid.scss */
+.grid-row.small .grid-col-1.floating:nth-child(n+13) {
+  margin-top: 10px;
+}
+/* line 42, ../scss/modules/grid.scss */
+.grid-row.small .grid-col-2.floating:nth-child(n+7) {
+  margin-top: 10px;
+}
+/* line 47, ../scss/modules/grid.scss */
+.grid-row.small .grid-col-3.floating:nth-child(n+5) {
+  margin-top: 10px;
+}
+/* line 52, ../scss/modules/grid.scss */
+.grid-row.small .grid-col-4.floating:nth-child(n+4) {
+  margin-top: 10px;
+}
+/* line 57, ../scss/modules/grid.scss */
+.grid-row.small .grid-col-6.floating:nth-child(n+3) {
+  margin-top: 10px;
+}
+/* line 62, ../scss/modules/grid.scss */
+.grid-row.small .grid-col-12.floating:nth-child(n+1) {
+  margin-top: 10px;
+}
+
+/* line 68, ../scss/modules/grid.scss */
 [class*="grid-col-"] {
   float: left;
   padding-left: 8px;
   padding-right: 8px;
   min-height: 1px;
 }
-/* line 31, ../scss/modules/grid.scss */
+/* line 74, ../scss/modules/grid.scss */
 [class*="grid-col-"]:first-of-type {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 36, ../scss/modules/grid.scss */
+/* line 79, ../scss/modules/grid.scss */
 [class*="grid-col-"]:last-of-type {
   padding-right: 0;
 }
 
-/* line 41, ../scss/modules/grid.scss */
+/* line 84, ../scss/modules/grid.scss */
 .grid-col-1 {
   width: 8.33%;
 }
-/* line 45, ../scss/modules/grid.scss */
+/* line 88, ../scss/modules/grid.scss */
+.grid-col-1.floating:nth-child(n+13) {
+  margin-top: 20px;
+}
+/* line 92, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 50, ../scss/modules/grid.scss */
+/* line 97, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n) {
   padding-right: 0;
 }
 
-/* line 56, ../scss/modules/grid.scss */
+/* line 103, ../scss/modules/grid.scss */
 .grid-col-2 {
   width: 16.66%;
 }
-/* line 60, ../scss/modules/grid.scss */
+/* line 107, ../scss/modules/grid.scss */
+.grid-col-2.floating:nth-child(n+7) {
+  margin-top: 20px;
+}
+/* line 111, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 65, ../scss/modules/grid.scss */
+/* line 116, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n) {
   padding-right: 0;
 }
 
-/* line 71, ../scss/modules/grid.scss */
+/* line 122, ../scss/modules/grid.scss */
 .grid-col-3 {
   width: 25%;
 }
-/* line 75, ../scss/modules/grid.scss */
+/* line 126, ../scss/modules/grid.scss */
+.grid-col-3.floating:nth-child(n+5) {
+  margin-top: 20px;
+}
+/* line 130, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 80, ../scss/modules/grid.scss */
+/* line 135, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n) {
   padding-right: 0;
 }
 
-/* line 86, ../scss/modules/grid.scss */
+/* line 141, ../scss/modules/grid.scss */
 .grid-col-4 {
   width: 33.33%;
 }
-/* line 90, ../scss/modules/grid.scss */
+/* line 145, ../scss/modules/grid.scss */
+.grid-col-4.floating:nth-child(n+4) {
+  margin-top: 20px;
+}
+/* line 149, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 95, ../scss/modules/grid.scss */
+/* line 154, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n) {
   padding-right: 0;
 }
 
-/* line 101, ../scss/modules/grid.scss */
+/* line 160, ../scss/modules/grid.scss */
 .grid-col-5 {
   width: 41.66%;
 }
 
-/* line 105, ../scss/modules/grid.scss */
+/* line 164, ../scss/modules/grid.scss */
 .grid-col-6 {
   width: 50%;
 }
-/* line 109, ../scss/modules/grid.scss */
-.grid-col-6.floating:nth-child(2n+1) {
+/* line 169, ../scss/modules/grid.scss */
+.grid-col-6.floating:nth-child(n+3) {
+  margin-top: 20px;
+}
+/* line 173, ../scss/modules/grid.scss */
+.grid-col-6.floating:nth-child(odd) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 114, ../scss/modules/grid.scss */
-.grid-col-6.floating:nth-child(2n) {
+/* line 178, ../scss/modules/grid.scss */
+.grid-col-6.floating:nth-child(even) {
   padding-right: 0;
 }
 
-/* line 120, ../scss/modules/grid.scss */
+/* line 184, ../scss/modules/grid.scss */
 .grid-col-7 {
   width: 58.33%;
 }
 
-/* line 124, ../scss/modules/grid.scss */
+/* line 188, ../scss/modules/grid.scss */
 .grid-col-8 {
   width: 66.66%;
 }
 
-/* line 128, ../scss/modules/grid.scss */
+/* line 192, ../scss/modules/grid.scss */
 .grid-col-9 {
   width: 75%;
 }
 
-/* line 132, ../scss/modules/grid.scss */
+/* line 196, ../scss/modules/grid.scss */
 .grid-col-10 {
   width: 83.33%;
 }
 
-/* line 136, ../scss/modules/grid.scss */
+/* line 200, ../scss/modules/grid.scss */
 .grid-col-11 {
   width: 91.66%;
 }
 
-/* line 140, ../scss/modules/grid.scss */
+/* line 204, ../scss/modules/grid.scss */
 .grid-col-12 {
   width: 100%;
 }
+/* line 208, ../scss/modules/grid.scss */
+.grid-col-12.floating:nth-child(n+2) {
+  margin-top: 20px;
+}
+/* line 211, ../scss/modules/grid.scss */
+.grid-col-12.floating:nth-child(n) {
+  padding-left: 0;
+  padding-right: 0;
+}
 
 @media (max-width: 580px) {
-  /* line 146, ../scss/modules/grid.scss */
+  /* line 220, ../scss/modules/grid.scss */
   [class*="grid-col-"] {
     width: 100%;
     margin-top: 15px;
     padding-left: 0;
     padding-right: 0;
   }
-  /* line 153, ../scss/modules/grid.scss */
+  /* line 227, ../scss/modules/grid.scss */
   [class*="grid-col-"]:first-of-type {
     margin-top: 0;
     padding-right: 0;
   }
-  /* line 159, ../scss/modules/grid.scss */
+  /* line 233, ../scss/modules/grid.scss */
   [class*="grid-col-"].floating:nth-child(n) {
     padding-right: 0;
   }
@@ -4068,7 +4126,7 @@ textarea.form-element {
   height: 40px;
   min-height: 150px;
   padding: 10px;
-  font-size: 18px;
+  font-size: 14px;
   font-family: inherit;
 }
 
