@@ -365,16 +365,18 @@ define([], function() {
 
                 if(!!expand) {
 
-                    // TODO hide navigation
-                    this.sandbox.emit('husky.page-functions.hide');
                     this.sandbox.emit('husky.navigation.hide');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left:0, expand:true});
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {
+                        width: this.options.mainContentMinWidth,
+                        left: 0
+                    });
                 } else {
 
-                    // TODO show navigation
-                    this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('husky.navigation.show');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 50, expand:false});
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {
+                        width: this.mainContentOriginalWidth,
+                        left: 50
+                    });
                 }
 
             }
