@@ -33,6 +33,15 @@ define(function() {
      },
 
     /**
+     * listens on and changes the dimensions of the content
+     * @event sulu.app.content.dimensions-change
+     * @param {object} Object containing width, and position from the left
+     */
+        CONTENT_DIMENSIONS_CHANGE = function() {
+        return createEventName('content.dimensions-change');
+    },
+
+    /**
      * listens on and pass an object with the dimensions to the passed callback
      * @event sulu.app.content.get-dimensions
      * @param {function} callback The callback to pass the dimensions to
@@ -181,6 +190,8 @@ define(function() {
                     // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
                     // and the stop event will be called
                     this.sandbox.stop('#edit-toolbar');
+                    this.sandbox.stop('#content > *');
+                    App.stop('#preview > * ');
                 }
 
                 // reset store for cleaning environment
@@ -240,10 +251,32 @@ define(function() {
                 callbackFunction(true);
             }.bind(this));
 
+            this.sandbox.on(CONTENT_DIMENSIONS_CHANGE.call(this), function(properties) {
+                this.changeContentStyles(properties);
+            }.bind(this));
+
             // stop the loader if a view gets initialized
             this.sandbox.on('sulu.view.initialize', function() {
                 this.sandbox.stop('.sulu-app-loader');
             }.bind(this));
+        },
+
+        /**
+         * Takes an object an applies it to the app-content
+         * @param styles
+         */
+        changeContentStyles: function(styles) {
+            //Todo: change animate to css-transition
+            this.sandbox.dom.animate(this.$el, {
+                width: styles.width + 'px',
+                paddingLeft: styles.paddingLeft + 'px'
+            }, {
+                duration: 500,
+                queue: false,
+                progress: this.emitContentDimensionsChangedEvent.bind(this)
+            });
+
+            changeContentMarginLeft.call(this, styles.left);
         },
 
         /**
@@ -256,6 +289,10 @@ define(function() {
             // TODO: select right bundle / item in navigation
 
             if (!!event.action) {
+
+                // FIXME needed for correct initialization after collapsed view in preview
+                this.sandbox.emit('husky.navigation.collapse');
+                this.sandbox.emit('husky.navigation.uncollapse',false);
                 this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload, loader);
             }
         }
