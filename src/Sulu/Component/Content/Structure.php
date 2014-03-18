@@ -583,7 +583,7 @@ abstract class Structure implements StructureInterface
                 'id' => $this->uuid,
                 'nodeState' => $this->getNodeState(),
                 'published' => $this->getPublished(),
-                'globalState' => $this->getNodeState(),
+                'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navigation' => $this->getNavigation(),
                 'template' => $this->getKey(),
@@ -608,7 +608,7 @@ abstract class Structure implements StructureInterface
             $result = array(
                 'id' => $this->uuid,
                 'nodeState' => $this->getNodeState(),
-                'globalState' => $this->getNodeState(),
+                'globalState' => $this->getGlobalState(),
                 'publishedState' => $this->getPublishedState(),
                 'navigation' => $this->getNavigation(),
                 'hasSub' => $this->hasChildren,
