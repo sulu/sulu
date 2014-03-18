@@ -221,6 +221,7 @@ define(function() {
                 callbackFunction(true);
             }.bind(this));
 
+
             this.sandbox.on(CONTENT_DIMENSIONS_CHANGE.call(this), function(properties) {
 
                 this.sandbox.dom.animate(this.$el, {
@@ -244,6 +245,9 @@ define(function() {
             // TODO: select right bundle / item in navigation
 
             if (!!event.action) {
+                // needed for correct initialization after collapsed view in preview
+                this.sandbox.emit('husky.navigation.collapse');
+                this.sandbox.emit('husky.navigation.uncollapse',false);
                 this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
             }
         }
