@@ -87,14 +87,6 @@ class NodeRepository implements NodeRepositoryInterface
     {
         $result = $structure->toArray($complete);
 
-        // replace creator, changer
-        if (isset($result['creator'])) {
-            $result['creator'] = $this->getFullNameByUserId($result['creator']);
-        }
-        if (isset($result['changer'])) {
-            $result['changer'] = $this->getFullNameByUserId($result['changer']);
-        }
-
         // add default empty embedded property
         $result['_embedded'] = array();
         // add api links
