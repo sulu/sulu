@@ -121,6 +121,7 @@ define([], function() {
             this.buttonsWidth = null;
             this.collapsed = false;
             this.toolbarWidth = null;
+            this.pageFunctionsHidden = false;
 
             //start component with the right dimensions
             this.sandbox.emit('sulu.app.content.get-dimensions', this.resizeListener.bind(this));
@@ -179,6 +180,16 @@ define([], function() {
             // load component on start
             this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', function(type, saved){
                 this.changeState(type, saved);
+            }.bind(this));
+
+            // notice if page-functions get hidden
+            this.sandbox.on('husky.page-functions.hide', function() {
+                this.pageFunctionsHidden = true;
+            }.bind(this));
+
+            // notice if page-functions get hidden
+            this.sandbox.on('husky.page-functions.show', function() {
+                this.pageFunctionsHidden = false;
             }.bind(this));
 
             //make sure container keeps the width of the content

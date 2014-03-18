@@ -50,23 +50,25 @@ body {
 }
 
 /* line 53, ../scss/modules/base.scss */
+#page-functions {
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+/* line 59, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 820px;
 }
 
-/* line 57, ../scss/modules/base.scss */
+/* line 63, ../scss/modules/base.scss */
 #list-toolbar-container {
   margin-bottom: 40px;
 }
 
-/* line 61, ../scss/modules/base.scss */
+/* line 67, ../scss/modules/base.scss */
 #content-tabs-component {
   margin-top: 40px;
-}
-
-/* line 66, ../scss/modules/base.scss */
-#page-functions + #edit-toolbar .edit-toolbar-left {
-  margin-left: -50px;
 }
 
 /*----------------------------------------*/

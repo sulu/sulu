@@ -33,6 +33,15 @@ define(function() {
      },
 
     /**
+     * listens on and changes the dimensions of the content
+     * @event sulu.app.content.dimensions-change
+     * @param {object} Object containing width, and position from the left
+     */
+        CONTENT_DIMENSIONS_CHANGE = function() {
+        return createEventName('content.dimensions-change');
+    },
+
+    /**
      * listens on and pass an object with the dimensions to the passed callback
      * @event sulu.app.content.get-dimensions
      * @param {function} callback The callback to pass the dimensions to
@@ -212,35 +221,28 @@ define(function() {
                 callbackFunction(true);
             }.bind(this));
 
-            this.sandbox.on('sulu.app.content.dimensions-change', function(properties) {
 
-                if (!!properties.expand) {
-                    // - 150 because of padding + margin
-                    // adjustments for toolbar
-                    this.sandbox.emit('sulu.app.content.dimensions-changed', {width: properties.width - 150, left: 10});
-                    this.sandbox.dom.animate(this.$el, {
-                        width: properties.width + 'px',
-                        marginLeft: '10px',
-                        paddingLeft: 0,
-                        paddingRight: 0
-                    }, {
-                        duration: 500,
-                        queue: false
-                    });
-                } else {
-                    this.sandbox.emit('sulu.app.content.dimensions-changed', {width: properties.width - 100, left: 100});
-                    this.sandbox.dom.animate(this.$el, {
-                        width: properties.width + 'px',
-                        paddingLeft: '50px',
-                        marginLeft:'50px',
-                        paddingRight: '50px'
-                    }, {
-                        duration: 500,
-                        queue: false
-                    });
-                }
-
+            this.sandbox.on(CONTENT_DIMENSIONS_CHANGE.call(this), function(properties) {
+                this.changeContentStyles(properties);
             }.bind(this));
+        },
+
+        /**
+         * Takes an object an applies it to the app-content
+         * @param styles
+         */
+        changeContentStyles: function(styles) {
+            //Todo: change animate to css-transition
+            this.sandbox.dom.animate(this.$el, {
+                width: styles.width + 'px',
+                paddingLeft: styles.paddingLeft + 'px'
+            }, {
+                duration: 500,
+                queue: false,
+                progress: this.emitContentDimensionsChangedEvent.bind(this)
+            });
+
+            changeContentMarginLeft.call(this, styles.left);
         },
 
         /**
