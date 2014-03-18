@@ -25,6 +25,7 @@
     z-index: 101;
     height: 30px;
     color: #fff;
+    font-weight: 100;
 
     .right {
         float: right;
@@ -41,7 +42,30 @@
         }
 
         .resolutions {
-            padding: 5px;
+            padding: 5px 10px;
+
+            .drop-down-trigger {
+                color: #fff;
+            }
+
+            .dropdown-toggle {
+                display: inline-block;
+                &::after {
+                    top: -1px;
+                    margin-left: 0px;
+                    margin-right: 5px;
+                    border-top: 6px solid #fff;
+                }
+            }
+
+            .dropdown-menu {
+                background: #3e3e3e;
+                color: #fff;
+                z-index: 105;
+                top: 35px;
+                left: -5px;
+                border: 0;
+            }
         }
     }
 
