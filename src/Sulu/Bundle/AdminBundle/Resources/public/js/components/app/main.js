@@ -108,6 +108,8 @@ define(function() {
                     width: null
                 };
 
+                this.currentRoute = null;
+
                 this.bindCustomEvents();
                 this.bindDomEvents();
 
@@ -153,21 +155,42 @@ define(function() {
         },
 
         /**
+         * Starts the Loader if the content is loading
+         */
+        startLoader: function() {
+            var $element = this.sandbox.dom.createElement('<div class="sulu-app-loader">');
+            this.sandbox.dom.css($element, {
+                'margin-top': (this.sandbox.dom.height(this.sandbox.dom.$window)/2 - 75) + 'px'
+            });
+            this.sandbox.dom.append(this.$el, $element);
+
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $element,
+                        size: '150px',
+                        color: '#cacaca'
+                    }
+                }
+            ]);
+        },
+
+        /**
          * Bind component-related events
          */
         bindCustomEvents: function() {
             // listening for navigation events
-            this.sandbox.on('sulu.router.navigate', function(route, trigger) {
+            this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader) {
 
                 // default vars
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-                if (!!trigger) {
-                    // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
-                    // and the stop event will be called
-                    this.sandbox.stop('#edit-toolbar');
-                    this.sandbox.dom.remove('#edit-toolbar');
+                if (!!trigger && this.currentRoute !== route && this.currentRoute !== null) {
+                    this.sandbox.stop('*');
+                    App.stop('#preview *');
                 }
+
                 // reset store for cleaning environment
                 this.sandbox.mvc.Store.reset();
 
@@ -178,18 +201,22 @@ define(function() {
                 router.navigate(route, {trigger: trigger});
 
                 // move to top
-                // FIXME abstract
-                $(window).scrollTop(0);
+                this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
+
+                if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
+                    this.startLoader();
+                }
+                this.currentRoute = route;
             }.bind(this));
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
-                this.emitNavigationEvent(event);
+                this.emitNavigationEvent(event, false);
             }.bind(this));
 
             // content tabs event
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
-                this.emitNavigationEvent(event);
+                this.emitNavigationEvent(event, true);
             }.bind(this));
 
             // emit dimensions-changed event during transition
@@ -221,9 +248,13 @@ define(function() {
                 callbackFunction(true);
             }.bind(this));
 
-
             this.sandbox.on(CONTENT_DIMENSIONS_CHANGE.call(this), function(properties) {
                 this.changeContentStyles(properties);
+            }.bind(this));
+
+            // stop the loader if a view gets initialized
+            this.sandbox.on('sulu.view.initialize', function() {
+                this.sandbox.stop('.sulu-app-loader');
             }.bind(this));
         },
 
@@ -248,16 +279,18 @@ define(function() {
         /**
          * Emits the router.navigate event
          * @param event
+         * @param {Boolean} loader
          */
-        emitNavigationEvent: function(event) {
+        emitNavigationEvent: function(event, loader) {
 
             // TODO: select right bundle / item in navigation
 
             if (!!event.action) {
+
                 // FIXME needed for correct initialization after collapsed view in preview
                 this.sandbox.emit('husky.navigation.collapse');
                 this.sandbox.emit('husky.navigation.uncollapse',false);
-                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload);
+                this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload, loader);
             }
         }
     };

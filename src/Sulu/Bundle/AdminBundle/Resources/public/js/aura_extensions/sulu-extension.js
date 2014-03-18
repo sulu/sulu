@@ -32,6 +32,12 @@
                     SULU_FIELDS_LOADED = 'sulu.fields.loaded';
 
             /**
+             * Object to store that by views
+             * @type {Object}
+             */
+            app.sandbox.sulu.viewStates = {};
+
+            /**
              * load user settings
              * @param key
              * @param url Where to get data from, if not already available

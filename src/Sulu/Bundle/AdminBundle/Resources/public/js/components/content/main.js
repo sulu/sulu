@@ -19,6 +19,7 @@ define([], function() {
 
     var defaults = {
             heading: '',
+            headingAddition: '',
             tabsData: null,
             instanceName: 'content',
             template: 'default',
@@ -33,7 +34,9 @@ define([], function() {
                     '   <div id="edit-toolbar"></div>',
                     '</div>',
                     '<div class="content-tabs-content">',
-                    '   <h1>' + this.options.heading + '</h1>',
+                    '   <div class="headlines">',
+                    '       <h1>' + this.options.heading + '</h1>',
+                    '   </div>',
                     '   <div id="content-tabs" />',
                     '</div>'
                 ].join('');
@@ -41,8 +44,12 @@ define([], function() {
         },
 
         initializeTabs = function() {
-            if (this.options.tabsData && this.options.tabsData.items <= 1) {
-                // TODO: do not show tabs if just one item available
+            // don't start tabs component if only one tab would be displayed
+            if (!!this.options.tabsData && !!this.options.tabsData.items && this.options.tabsData.items.length <= 1) {
+                if (this.options.tabsData.items.length !== 0) {
+                    this.startTabComponent();
+                }
+                return false;
             }
 
             // initialize tabs
@@ -83,6 +90,21 @@ define([], function() {
                     }
                 }
             ]);
+        },
+
+        setTitle = function(title) {
+            this.sandbox.dom.html(this.sandbox.dom.find('h1', this.$headlines), title);
+        },
+
+        setTitleAddition = function(title) {
+            this.sandbox.dom.html(this.sandbox.dom.find('h6', this.$headlines), title);
+        },
+
+        prependHeadingAddition = function() {
+            if (typeof this.options.headingAddition !== 'undefined' && this.options.headingAddition !== null) {
+                this.sandbox.dom.addClass(this.$headlines,'compoundedHeadlines');
+                this.sandbox.dom.prepend(this.$headlines,'<h6>'+this.options.headingAddition+'</div>');
+            }
         };
 
     return {
@@ -95,6 +117,10 @@ define([], function() {
 
             // skeleton
             this.html(templates.skeleton.call(this));
+
+            // headlines
+            this.$headlines = this.$find('.headlines');
+            prependHeadingAddition.call(this);
 
             // bind events (also initializes first component)
             this.bindCustomEvents();
@@ -120,6 +146,11 @@ define([], function() {
             this.sandbox.on('husky.page-functions.clicked', function() {
                 this.sandbox.emit('sulu.edit-toolbar.back');
             }.bind(this));
+
+            this.sandbox.on('sulu.content.set-title', setTitle.bind(this));
+
+            this.sandbox.on('sulu.content.set-title-addition', setTitleAddition.bind(this));
+
         },
 
         /**
@@ -140,8 +171,7 @@ define([], function() {
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
-            this.sandbox.dom.html('#content-tabs-component', '');
-            this.sandbox.dom.remove('#content-tabs-component');
+            this.sandbox.stop('#content-tabs-component');
 
             this.sandbox.dom.append(this.$el, '<div id="content-tabs-component"><span class="is-loading"/></div>');
 
