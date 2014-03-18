@@ -31,6 +31,7 @@ use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class ContentMapper implements ContentMapperInterface
 {
@@ -78,6 +79,11 @@ class ContentMapper implements ContentMapperInterface
     private $defaultTemplate;
 
     /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
+    /**
      * TODO abstract with cleanup from RLPStrategy
      * replacers for cleanup
      * @var array
@@ -123,7 +129,8 @@ class ContentMapper implements ContentMapperInterface
         LocalizationFinderInterface $localizationFinder,
         $defaultLanguage,
         $defaultTemplate,
-        $languageNamespace
+        $languageNamespace,
+        $stopwatch = null
     )
     {
         $this->contentTypeManager = $contentTypeManager;
@@ -134,6 +141,9 @@ class ContentMapper implements ContentMapperInterface
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
+
+        // optional
+        $this->stopwatch = $stopwatch;
 
         // properties
         $this->properties = new MultipleTranslatedProperties(
@@ -505,10 +515,19 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhosts
     )
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('contentManager.loadByParentNode');
+        }
+
         $results = array();
+        $nodes = $parent->getNodes();
+
+        if ($this->stopwatch) {
+            $this->stopwatch->lap('contentManager.loadByParentNode');
+        }
 
         /** @var NodeInterface $node */
-        foreach ($parent->getNodes() as $node) {
+        foreach ($nodes as $node) {
             try {
                 $result = $this->loadByNode($node, $languageCode, $webspaceKey, $excludeGhosts, true);
 
@@ -539,6 +558,10 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadByParentNode');
+        }
+
         return $results;
     }
 
@@ -552,10 +575,19 @@ class ContentMapper implements ContentMapperInterface
      */
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('contentManager.load');
+        }
         $session = $this->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent);
+        $result = $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.load');
+        }
+
+        return $result;
     }
 
     /**
@@ -646,6 +678,9 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false
     )
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('contentManager.loadByNode');
+        }
         if ($loadGhostContent) {
             $availableLocalization = $this->localizationFinder->getAvailableLocalization(
                 $contentNode,
@@ -721,6 +756,10 @@ class ContentMapper implements ContentMapperInterface
                 $availableLocalization,
                 null
             );
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('contentManager.loadByNode');
         }
 
         return $structure;
