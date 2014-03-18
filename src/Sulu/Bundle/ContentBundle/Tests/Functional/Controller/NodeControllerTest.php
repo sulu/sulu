@@ -336,13 +336,13 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes/' . $data[0]['id']);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(17, sizeof($response));
-        $this->assertEquals($data[0]['title'], $response->title);
-        $this->assertEquals($data[0]['tags'], $response->tags);
-        $this->assertEquals($data[0]['url'], $response->url);
-        $this->assertEquals($data[0]['article'], $response->article);
+        $this->assertEquals($data[0]['title'], $response['title']);
+        $this->assertEquals($data[0]['tags'], $response['tags']);
+        $this->assertEquals($data[0]['url'], $response['url']);
+        $this->assertEquals($data[0]['article'], $response['article']);
     }
 
     public function testDelete()
