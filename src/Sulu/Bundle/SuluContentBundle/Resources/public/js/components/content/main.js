@@ -408,13 +408,13 @@ define([
                                     el: '#preview-container',
                                     toolbar: {
                                         resolutions: [
-                                            /*'1920x1080',
-                                            '1680x1050',
-                                            '1440x1050',*/
-                                            '1024x768',
-                                            '800x640',
-                                            '600x480',
-                                            '480x320'
+                                            /*1920,
+                                            1680,
+                                            1440,*/
+                                            1024,
+                                            800,
+                                            600,
+                                            480
                                         ],
                                         showLeft: true,
                                         showRight: true

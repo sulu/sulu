@@ -23,7 +23,7 @@
  * @param {String}  [options.iframeSource.language] language section of the url
  * @param {String}  [options.id] id of the element
  * @param {Object}  [options.toolbar] options for the toolbar
- * @param {Array}   [options.toolbar.resolutions] options for the toolbar
+ * @param {Array}   [options.toolbar.resolutions] available widths for dropdown
  * @param {Boolean} [options.toolbar.showLeft] show the left part of the toolbar
  * @param {Boolean} [options.toolbar.showRight] show the right part of the toolbar
  *
@@ -38,19 +38,19 @@ define([], function() {
         var defaults = {
                 toolbar: {
                     resolutions: [
-                        '1920x1080',
-                        '1680x1050',
-                        '1440x1050',
-                        '1024x768',
-                        '800x600',
-                        '600x480',
-                        '480x320'
+                        1920,
+                        1680,
+                        1440,
+                        1024,
+                        800,
+                        600,
+                        480
                     ],
                     showLeft: true,
                     showRight: true
                 },
                 mainContentElementIdentifier: '',
-                mainContentMinWidth:480,
+                mainContentMinWidth: 480,
                 marginLeft: 30,
                 iframeSource: {
                     url: '',
@@ -91,47 +91,8 @@ define([], function() {
              * raised when preview is opened in new window
              * @event husky.preview.collapsing
              */
-                HIDE = eventNamespace + 'hide',
+                HIDE = eventNamespace + 'hide';
 
-
-            /**
-             * Returns an object with a height and width property from  a string in pixles
-             * @param dimension {String} a string with dimensions e.g 1920x1080
-             * @return {Object} object with width and height property
-             */
-                parseHeightAndWidthFromString = function(dimension) {
-                var tmp = dimension.split('x');
-
-                if (tmp.length == 2) {
-                    return {width: tmp[0], height: tmp[1]}
-                } else {
-                    this.sandbox.logger.error('Dimension string has invalid format -> 1920x1080');
-                    return '';
-                }
-            },
-
-            /**
-             * Concatenates the given strings to an url
-             * @param {String} url
-             * @param {String} webspace
-             * @param {String} language
-             * @param {String} id
-             * @return {String} url string
-             */
-                getUrl = function(url, webspace, language, id) {
-
-                if (!url || !id || !webspace || !language) {
-                    this.sandbox.logger.error('not all url params for iframe definded!');
-                    return '';
-                }
-
-                url = url[url.length - 1] === '/' ? url : url + '/';
-                url += id + '?';
-                url += 'webspace=' + webspace;
-                url += '&language=' + language;
-
-                return url;
-            };
 
         return {
 
@@ -140,7 +101,6 @@ define([], function() {
                 this.options = this.sandbox.util.extend({}, defaults, this.options);
 
                 // component vars
-                this.currentSize = parseHeightAndWidthFromString.call(this, this.options.toolbar.resolutions[0]);
                 this.previewWidth = 0;
                 this.url = '';
                 this.isExpanded = false;
@@ -149,10 +109,10 @@ define([], function() {
                 this.$wrapper = null;
                 this.$iframe = null;
                 this.$toolbar = null;
-                this.$mainContent = this.sandbox.dom.$('#'+this.options.mainContentElementIdentifier)[0];
+                this.$mainContent = this.sandbox.dom.$('#' + this.options.mainContentElementIdentifier)[0];
 
                 // get original max width
-                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent);
+                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 50;
 
                 this.render();
                 this.bindDomEvents.call(this);
@@ -162,17 +122,17 @@ define([], function() {
             },
 
             /*********************************************
-            *   Rendering
-            ********************************************/
+             *   Rendering
+             ********************************************/
 
             /**
              * Initializes the rendering process
              */
             render: function() {
-                this.url = getUrl.call(this, this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
+                this.url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
                 this.renderWrapper();
-                this.renderIframe(this.currentSize.width, this.currentSize.height, this.url);
+                this.renderIframe(this.previewWidth, this.url);
                 this.renderToolbar();
             },
 
@@ -182,7 +142,7 @@ define([], function() {
              */
             renderWrapper: function() {
 
-                var mainWidth, mainMarginLeft, totalWidth;
+                var mainWidth, totalWidth;
 
                 if (!this.$mainContent) {
                     this.sandbox.logger.error('main content element could not be found!');
@@ -191,9 +151,8 @@ define([], function() {
 
                 // calculate the available space next to the
                 mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
-                mainMarginLeft = this.$mainContent.offsetLeft;
                 totalWidth = this.sandbox.dom.width(document);
-                this.previewWidth = totalWidth - (mainWidth + mainMarginLeft + this.options.marginLeft);
+                this.previewWidth = totalWidth - (mainWidth + this.options.marginLeft);
 
                 this.$wrapper = this.sandbox.dom.$('<div class="preview-wrapper" id="preview-wrapper" style=""></div>');
                 this.sandbox.dom.css(this.$wrapper, 'width', this.previewWidth + 'px');
@@ -204,11 +163,10 @@ define([], function() {
             /**
              * Renders iframe
              * @param {Number} width of iframe
-             * @param {Number} height of iframe
              * @param {String} url for iframe target
              */
-            renderIframe: function(width, height, url) {
-                this.$iframe = this.sandbox.dom.$('<iframe id="preview-iframe" class="preview-iframe" src="' + url + '" width="' + width + 'px" height="' + height + 'px"></iframe>');
+            renderIframe: function(width, url) {
+                this.$iframe = this.sandbox.dom.$('<iframe id="preview-iframe" class="preview-iframe" src="' + url + '" width="' + width + 'px" height="100%"></iframe>');
                 this.sandbox.dom.append(this.$wrapper, this.$iframe);
             },
 
@@ -220,7 +178,7 @@ define([], function() {
                     '<div id="preview-toolbar" class="preview-toolbar">',
                     '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-step-backward"></span></div>',
                     '<div id="', constants.toolbarRight, '" class="right">',
-                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-external-link"></span></div>',
+                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-disk-export"></span></div>',
                     '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">Resolutions</div>',
                     '</div>',
                     '</div>'
@@ -235,7 +193,7 @@ define([], function() {
             /**
              * Renders the dropdown for the resolution changes
              */
-            renderResolutionDropdown: function(){
+            renderResolutionDropdown: function() {
                 // TODO render resolution dropdown
             },
 
@@ -258,6 +216,7 @@ define([], function() {
                     } else {
                         this.collapsePreview($target);
                     }
+
                 }.bind(this));
 
                 // show in new window
@@ -268,6 +227,13 @@ define([], function() {
                     this.sandbox.dom.hide(this.$toolbar);
                     this.sandbox.dom.remove(this.$wrapper);
                     this.sandbox.dom.remove(this.$toolbar);
+
+                    // when preview expanded then show navigation and adjust main content
+                    if (!!this.isExpanded) {
+                        this.sandbox.emit('husky.page-functions.show');
+                        this.sandbox.emit('husky.navigation.show');
+                        this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand: false});
+                    }
 
                     this.sandbox.emit(HIDE);
 
@@ -294,10 +260,8 @@ define([], function() {
              */
             expandPreview: function($target) {
 
-                // TODO get value for with via options
-
                 var $span = this.sandbox.dom.find('span', $target),
-                    width = 1400;
+                    width = this.sandbox.dom.width(document) - 500;
 
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
@@ -337,50 +301,71 @@ define([], function() {
              * @param {Boolean} expand
              * @param {Integer} previewWidth of preview in pixels
              */
-            animateCollapseAndExpand: function(expand, previewWidth){
+            animateCollapseAndExpand: function(expand, previewWidth) {
 
                 // preview wrapper
-                this.sandbox.dom.animate(this.$wrapper,{
-                    width: previewWidth+'px'
-                },{
+                this.sandbox.dom.animate(this.$wrapper, {
+                    width: previewWidth + 'px'
+                }, {
                     duration: 500,
                     queue: false
                 });
 
                 // preview iframe
-                this.sandbox.dom.animate(this.$iframe,{
-                    width: previewWidth+'px'
-                },{
+                this.sandbox.dom.animate(this.$iframe, {
+                    width: previewWidth + 'px'
+                }, {
                     duration: 500,
                     queue: false
                 });
 
                 // preview toolbar
-                this.sandbox.dom.animate(this.$toolbar,{
-                    width: previewWidth+30+'px'
-                },{
+                this.sandbox.dom.animate(this.$toolbar, {
+                    width: previewWidth + 30 + 'px'
+                }, {
                     duration: 500,
                     queue: false
                 });
 
-                if(!!expand) {
-
+                if (!!expand) {
+                    this.sandbox.emit('husky.page-functions.hide');
                     this.sandbox.emit('husky.navigation.hide');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {
-                        width: this.options.mainContentMinWidth,
-                        left: 0
-                    });
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.options.mainContentMinWidth, left: 0, expand: true});
                 } else {
-
+                    this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('husky.navigation.show');
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {
-                        width: this.mainContentOriginalWidth,
-                        left: 50
-                    });
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {width: this.mainContentOriginalWidth, left: 100, expand: false});
                 }
 
-            }
+            },
 
+
+            /*********************************************
+             *   Util Methods
+             ********************************************/
+
+            /**
+             * Concatenates the given strings to an url
+             * @param {String} url
+             * @param {String} webspace
+             * @param {String} language
+             * @param {String} id
+             * @return {String} url string
+             */
+            getUrl: function(url, webspace, language, id) {
+
+                if (!url || !id || !webspace || !language) {
+                    this.sandbox.logger.error('not all url params for iframe definded!');
+                    return '';
+                }
+
+                url = url[url.length - 1] === '/' ? url : url + '/';
+                url += id + '?';
+                url += 'webspace=' + webspace;
+                url += '&language=' + language;
+
+                return url;
+            }
 
         };
     }
