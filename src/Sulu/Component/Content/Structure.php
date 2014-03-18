@@ -573,11 +573,52 @@ abstract class Structure implements StructureInterface
 
     /**
      * returns an array of property value pairs
+     * @param bool $complete True if result should be representation of full node
      * @return array
      */
-    public function toArray()
+    public function toArray($complete = true)
     {
-        return $this->jsonSerialize();
+        if ($complete) {
+            $result = array(
+                'id' => $this->uuid,
+                'nodeState' => $this->getNodeState(),
+                'published' => $this->getPublished(),
+                'globalState' => $this->getGlobalState(),
+                'publishedState' => $this->getPublishedState(),
+                'navigation' => $this->getNavigation(),
+                'template' => $this->getKey(),
+                'hasSub' => $this->hasChildren,
+                'creator' => $this->creator,
+                'changer' => $this->changer,
+                'created' => $this->created,
+                'changed' => $this->changed
+            );
+
+            if ($this->type !== null) {
+                $result['type'] = $this->getType()->toArray();
+            }
+
+            /** @var PropertyInterface $property */
+            foreach ($this->getProperties() as $property) {
+                $result[$property->getName()] = $property->getValue();
+            }
+
+            return $result;
+        } else {
+            $result = array(
+                'id' => $this->uuid,
+                'nodeState' => $this->getNodeState(),
+                'globalState' => $this->getGlobalState(),
+                'publishedState' => $this->getPublishedState(),
+                'navigation' => $this->getNavigation(),
+                'hasSub' => $this->hasChildren,
+                'title' => $this->getPropertyValue('title')
+            );
+            if ($this->type !== null) {
+                $result['type'] = $this->getType()->toArray();
+            }
+            return $result;
+        }
     }
 
     /**
@@ -589,31 +630,7 @@ abstract class Structure implements StructureInterface
      */
     public function jsonSerialize()
     {
-        $result = array(
-            'id' => $this->uuid,
-            'nodeState' => $this->getNodeState(),
-            'published' => $this->getPublished(),
-            'globalState' => $this->getNodeState(),
-            'publishedState' => $this->getPublishedState(),
-            'navigation' => $this->getNavigation(),
-            'template' => $this->getKey(),
-            'hasSub' => $this->hasChildren,
-            'creator' => $this->creator,
-            'changer' => $this->changer,
-            'created' => $this->created,
-            'changed' => $this->changed
-        );
-
-        if ($this->type !== null) {
-            $result['type'] = $this->getType()->toArray();
-        }
-
-        /** @var PropertyInterface $property */
-        foreach ($this->getProperties() as $property) {
-            $result[$property->getName()] = $property->getValue();
-        }
-
-        return $result;
+        return $this->toArray();
     }
 
 }
