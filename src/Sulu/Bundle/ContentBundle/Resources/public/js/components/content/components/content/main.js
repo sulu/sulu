@@ -20,9 +20,8 @@ define(function() {
                 template: function() {
                     var state = {
                             'id': 'state',
-                            'group': 'right',
-                            'class': 'highlight-gray',
-                            'position': 2,
+                            'group': 'left',
+                            'position': 100,
                             'type': 'select'
                         },
                         template = {
@@ -49,7 +48,7 @@ define(function() {
                             id: 'language',
                             iconSize: 'large',
                             group: 'right',
-                            position: 20,
+                            position: 10,
                             type: 'select',
                             title: '',
                             hidden: true,
