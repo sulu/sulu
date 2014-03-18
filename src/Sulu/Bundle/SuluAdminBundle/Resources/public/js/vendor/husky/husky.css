@@ -5067,11 +5067,10 @@ li a.navigation-settings-icon {
 
 /* line 1, ../scss/modules/page-functions.scss */
 .page-function {
-  float: left;
   left: -50px;
-  position: relative;
+  position: absolute;
 }
-/* line 6, ../scss/modules/page-functions.scss */
+/* line 5, ../scss/modules/page-functions.scss */
 .page-function a {
   display: block;
   text-align: center;
@@ -5082,11 +5081,11 @@ li a.navigation-settings-icon {
   line-height: 40px;
   color: black;
 }
-/* line 17, ../scss/modules/page-functions.scss */
+/* line 16, ../scss/modules/page-functions.scss */
 .page-function a:hover {
   color: #1e1e1e;
 }
-/* line 21, ../scss/modules/page-functions.scss */
+/* line 20, ../scss/modules/page-functions.scss */
 .page-function a:active {
   color: #666666;
 }

@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -25008,15 +25007,7 @@ define('__component__$navigation@husky',[],function() {
          */
         show: function() {
             if (!!this.currentNavigationWidth) {
-                this.sandbox.dom.animate(this.$navigation, {
-                    width: this.currentNavigationWidth + 'px'
-                }, {
-                    duration: 400, queue: false, complete: function() {
-                        this.sandbox.dom.css(this.$navigation, 'width', this.currentNavigationWidth + 'px');
-                        this.sandbox.dom.removeAttr(this.$navigation, 'style');
-                    }.bind(this)
-                });
-
+                this.sandbox.dom.removeAttr(this.$navigation, 'style');
                 this.currentNavigationWidth = null;
                 this.hidden = false;
             }
@@ -25027,7 +25018,7 @@ define('__component__$navigation@husky',[],function() {
          */
         hide: function() {
             this.currentNavigationWidth = this.sandbox.dom.width(this.$navigation);
-            this.sandbox.dom.animate(this.$navigation, {width: 0}, {duration: 400, queue: false});
+            this.sandbox.dom.width(this.$navigation, 0);
             this.hidden = true;
         }
 
@@ -28173,6 +28164,7 @@ define('__component__$dropdown@husky',[], function() {
             this.sandbox.dom.append(this.options.el, this.$element);
 
             this.render();
+            this.sandbox.emit('husky.dropdown.' + this.options.instanceName + '.initialized');
         },
 
         render: function() {
@@ -28363,6 +28355,7 @@ define('__component__$dropdown@husky',[], function() {
             // on click on trigger outside check
             this.sandbox.dom.one(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
             this.sandbox.dom.show(this.$dropDown);
+            this.sandbox.emit('husky.dropdown.' + this.options.instanceName + '.showing');
         },
 
         // hide dropDown
@@ -33098,28 +33091,11 @@ define('__component__$page-functions@husky',[], function() {
 
             bindCustomEvents: function(){
                 this.sandbox.on(HIDE, function(){
-
-
-                    this.elWidth = this.sandbox.dom.width(this.$pageFunction);
-                    this.sandbox.dom.animate(this.$pageFunction,{
-                        width:0
-                    },{
-                        duration:400
-                    });
-
+                    this.sandbox.dom.fadeOut(this.$el, 300);
                 }.bind(this));
 
                 this.sandbox.on(SHOW, function(){
-
-                    if(!!this.elWidth){
-                        this.sandbox.dom.animate(this.$pageFunction,{
-                            width:this.elWidth+'px'
-                        },{
-                            duration:400,
-                            queue: false
-                        });
-                    }
-
+                    this.sandbox.dom.fadeIn(this.$el, 300);
                 }.bind(this));
             }
         };
@@ -37400,3 +37376,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
