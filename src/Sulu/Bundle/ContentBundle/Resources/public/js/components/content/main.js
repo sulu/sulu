@@ -178,6 +178,7 @@ define([
                             processData: true,
 
                             success: function() {
+                                this.sandbox.emit('husky.navigation.uncollapse',false);
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
