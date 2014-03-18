@@ -63,6 +63,10 @@ define([
                 this.renderForm();
             } else if (this.options.display === 'column') {
                 this.renderColumn();
+            } else if (this.options.display === 'settings') {
+                this.renderForm({
+                    settings: true
+                });
             } else {
                 throw 'display type wrong';
             }
@@ -251,7 +255,7 @@ define([
         },
 
         save: function(data, template, navigation) {
-            this.content.set(data);
+           this.content.set(data);
 
             this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
                 // on success save contents id
@@ -261,7 +265,7 @@ define([
                         this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
                         this.sandbox.sulu.viewStates.justSaved = true;
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/content');
                     }
                 }.bind(this),
                 error: function() {
@@ -271,14 +275,14 @@ define([
         },
 
         load: function(id) {
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/details');
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/content');
         },
 
         add: function(parent) {
             if (!!parent) {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/content');
             } else {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/content');
             }
         },
 
@@ -368,8 +372,11 @@ define([
             ]);
         },
 
-        renderForm: function() {
-            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>');
+        renderForm: function(tab) {
+            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>'),
+            data;
+            tab = (typeof tab === 'object') ? tab : {content: true};
+
             this.html($form);
             // load data and show form
             this.content = new Content();
@@ -377,6 +384,7 @@ define([
                 this.content = new Content({id: this.options.id});
                 this.content.fullFetch(this.options.webspace, this.options.language, true, {
                     success: function(model) {
+
                         this.sandbox.start([
                             {
                                 name: 'content/components/form@sulucontent',
@@ -386,7 +394,8 @@ define([
                                     data: model.toJSON(),
                                     webspace: this.options.webspace,
                                     language: this.options.language,
-                                    preview: !!this.options.preview ? this.options.preview : false
+                                    preview: !!this.options.preview ? this.options.preview : false,
+                                    tab: tab
                                 }
                             }
                         ]);
@@ -396,6 +405,7 @@ define([
                     }.bind(this)
                 });
             } else {
+
                 this.sandbox.start([
                     {
                         name: 'content/components/form@sulucontent',
@@ -404,7 +414,8 @@ define([
                             data: this.content.toJSON(),
                             webspace: this.options.webspace,
                             language: this.options.language,
-                            preview: !!this.options.preview ? true : false
+                            preview: !!this.options.preview ? true : false,
+                            tab: tab
                         }
                     }
                 ]);

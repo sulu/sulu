@@ -22,12 +22,20 @@ class SuluContentContentNavigation extends ContentNavigation
 
         $this->setName('Content');
 
-        $details = new NavigationItem('content-navigation.contents.details');
-        $details->setAction('details');
-        $details->setContentType('content');
-        $details->setContentComponent('content@sulucontent');
-        $details->setContentComponentOptions(array('display'=>'form'));
+        $content = new NavigationItem('content-navigation.contents.content');
+        $content->setAction('content');
+        $content->setContentType('content');
+        $content->setContentComponent('content@sulucontent');
+        $content->setContentComponentOptions(array('display'=>'form'));
 
-        $this->addNavigationItem($details);
+        $settings = new NavigationItem('content-navigation.contents.settings');
+        $settings->setAction('settings');
+        $settings->setContentType('content');
+        $settings->setContentComponent('content@sulucontent');
+        $settings->setContentComponentOptions(array('display'=>'settings'));
+        $settings->setContentDisplay(array('edit'));
+
+        $this->addNavigationItem($content);
+        $this->addNavigationItem($settings);
     }
 }
