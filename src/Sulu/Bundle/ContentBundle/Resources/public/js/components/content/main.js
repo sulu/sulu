@@ -105,6 +105,10 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function() {
+
+                // uncollapse navigation
+                this.sandbox.emit('husky.navigation.uncollapse');
+
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
             }, this);
 
@@ -178,6 +182,16 @@ define([
                             processData: true,
 
                             success: function() {
+                                // reset navigation after preview
+                                this.sandbox.emit('husky.navigation.show');
+                                this.sandbox.emit('husky.navigation.uncollapse', false);
+
+                                // reset content after preview
+                                this.sandbox.emit('sulu.app.content.dimensions-change', {
+                                    width: 820,
+                                    left: 250,
+                                    paddingLeft: 50});
+
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
@@ -239,23 +253,23 @@ define([
                 success: function() {
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                     this.sandbox.emit('sulu.labels.success.show',
-                                      'labels.state-changed.success-desc',
-                                      'labels.state-changed.success',
-                                      'sulu.content.contents.state.label');
+                        'labels.state-changed.success-desc',
+                        'labels.state-changed.success',
+                        'sulu.content.contents.state.label');
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('sulu.content.contents.state.changeFailed');
                     this.sandbox.emit('sulu.labels.error.show',
-                                      'labels.state-changed.error-desc',
-                                      'labels.state-changed.error',
-                                      'sulu.content.contents.state.label');
+                        'labels.state-changed.error-desc',
+                        'labels.state-changed.error',
+                        'sulu.content.contents.state.label');
                     this.sandbox.logger.log("error while saving profile");
                 }.bind(this)
             });
         },
 
         save: function(data, template, navigation) {
-           this.content.set(data);
+            this.content.set(data);
 
             this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
                 // on success save contents id
@@ -352,6 +366,7 @@ define([
         renderList: function() {
             var $list = this.sandbox.dom.createElement('<div id="contacts-list-container"/>');
             this.html($list);
+
             this.sandbox.start([
                 {name: 'content/components/list@sulucontent', options: { el: $list}}
             ]);
@@ -374,18 +389,24 @@ define([
 
         renderForm: function(tab) {
             var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>'),
-            data;
+                $preview = this.sandbox.dom.createElement('<div id="preview-container"/>'), data;
             tab = (typeof tab === 'object') ? tab : {content: true};
 
             this.html($form);
+            this.sandbox.dom.append('#preview', $preview);
+
             // load data and show form
             this.content = new Content();
             if (!!this.options.id) {
+
+                // collapse navigation
+                this.sandbox.emit('husky.navigation.collapse', true);
+
                 this.content = new Content({id: this.options.id});
                 this.content.fullFetch(this.options.webspace, this.options.language, true, {
                     success: function(model) {
 
-                        this.sandbox.start([
+                        var components = [
                             {
                                 name: 'content/components/form@sulucontent',
                                 options: {
@@ -398,13 +419,49 @@ define([
                                     tab: tab
                                 }
                             }
-                        ]);
+                        ];
+
+                        if (this.sandbox.dom.width(window) >= 980) {
+
+                            this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
+
+                            components.push({
+                                name: 'content/components/preview@sulucontent',
+                                options: {
+                                    el: '#preview-container',
+                                    toolbar: {
+                                        resolutions: [
+                                            1680,
+                                            1440,
+                                            1024,
+                                            800,
+                                            600,
+                                            480
+                                        ],
+                                        showLeft: true,
+                                        showRight: true
+                                    },
+                                    mainContentElementIdentifier: 'content',
+                                    iframeSource: {
+                                        url: '/admin/content/preview/',
+                                        webspace: this.options.webspace,
+                                        language: this.options.language,
+                                        id: this.options.id
+                                    }
+                                }
+                            });
+                        }
+
+                        this.sandbox.start(components);
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while fetching content");
                     }.bind(this)
                 });
             } else {
+
+                // uncollapse navigation
+                this.sandbox.emit('husky.navigation.uncollapse');
 
                 this.sandbox.start([
                     {

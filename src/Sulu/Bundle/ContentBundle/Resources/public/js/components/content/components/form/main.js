@@ -39,6 +39,7 @@ define(['app-config'], function(AppConfig) {
             this.dfdListenForChange = this.sandbox.data.deferred();
 
             this.formId = '#contacts-form-container';
+
             this.render();
             this.setTitle();
 
