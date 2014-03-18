@@ -119,6 +119,7 @@ define([], function() {
 
                 this.render();
                 this.bindDomEvents();
+                this.bindCustomEvents();
 
                 this.sandbox.emit(INITIALIZED);
             },
@@ -187,7 +188,7 @@ define([], function() {
                             '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">',
                                 '<label class="drop-down-trigger">',
                                     '<span class="dropdown-toggle"></span>',
-                                    '<span>',resolutionsLabel,'</span>',
+                                    '<span class="dropdown-label">',resolutionsLabel,'</span>',
                                 '</label>',
                             '</div>',
                         '</div>',
@@ -197,6 +198,7 @@ define([], function() {
                 this.sandbox.dom.css(this.$toolbar, 'width', this.previewWidth + 30 + 'px');
                 this.sandbox.dom.append(this.$el, this.$toolbar);
                 this.$toolbarRight = this.sandbox.dom.find('#'+constants.toolbarRight, this.$toolbar);
+                this.$toolbarResolutionsLabel = this.sandbox.dom.find('.dropdown-label', this.$toolbarRight);
 
                 // hide right part of toolbar when window size is below constants.minWidthToolbar
                 if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
@@ -215,19 +217,20 @@ define([], function() {
 
                 if(data.length > 0) {
 
-                    this.sandbox.start([{
-                        name: 'dropdown@husky',
-                        options: {
-                            el: '#'+constants.toolbarResolutions,
-                            trigger: '.drop-down-trigger',
-                            setParentDropDown: true,
-                            instanceName: 'resolutionsDropdown',
-                            alignment: 'left',
-                            data: data
+                    this.sandbox.start([
+                        {
+                            name: 'dropdown@husky',
+                            options: {
+                                el: '#' + constants.toolbarResolutions,
+                                trigger: '.drop-down-trigger',
+                                setParentDropDown: true,
+                                instanceName: 'resolutionsDropdown',
+                                alignment: 'left',
+                                data: data
+                            }
                         }
-                    }]);
+                    ]);
                 }
-
             },
 
             /*********************************************
@@ -272,8 +275,26 @@ define([], function() {
 
                 }.bind(this));
 
-                // TODO: dropdown events
+                // TODO: dropdown events handling
 
+            },
+
+            /**
+             * Bind custom events
+             */
+            bindCustomEvents: function(){
+
+                // adjust dropdown width
+                this.sandbox.on('husky.dropdown.resolutionsDropdown.showing', function(){
+                    var $resolutions = this.sandbox.dom.find('#' + constants.toolbarResolutions, this.$toolbarRight),
+                        $dropdownMenu = this.sandbox.dom.find('.dropdown-menu', $resolutions);
+                    this.sandbox.dom.width($dropdownMenu, $resolutions.outerWidth());
+                    this.sandbox.dom.width($resolutions, $resolutions.outerWidth());
+                }.bind(this));
+
+                this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', function(item) {
+                    this.sandbox.dom.text(this.$toolbarResolutionsLabel, item.name);
+                }.bind(this));
             },
 
             /*********************************************
