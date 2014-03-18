@@ -15,6 +15,7 @@ require.config({
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content-tabs': 'aura_extensions/sulu-content-tabs',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
+        'aura_extensions/sulu-view': 'aura_extensions/sulu-view',
 
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$content@suluadmin': 'components/content/main',
@@ -28,6 +29,7 @@ require.config({
         'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content-tabs',
         'aura_extensions/sulu-extension',
+        'aura_extensions/sulu-view',
 
         '__component__$app@suluadmin',
         '__component__$app@suluadmin',
