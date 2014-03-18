@@ -63,6 +63,15 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
+        showStateDropdown: function() {
+            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
+        },
+
+        showTemplateDropdown: function() {
+            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', false);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
+        },
+
         renderSettings: function() {
             this.setHeaderBar(false);
 
@@ -70,6 +79,10 @@ define(['app-config'], function(AppConfig) {
             this.createForm(this.initData());
             this.bindDomEvents();
             this.listenForChange();
+
+            this.setStateDropdown(this.options.data);
+            this.showStateDropdown();
+            this.showTemplateDropdown();
         },
 
         setStateDropdown: function(data) {
