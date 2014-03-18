@@ -37,30 +37,30 @@ define({
 
         // show form for new content
         sandbox.mvc.routes.push({
-            route: 'content/contents/:webspace/:language/add::id/details',
-            callback: function(webspace, language, id) {
+            route: 'content/contents/:webspace/:language/add::id/:content',
+            callback: function(webspace, language, id, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="details" data-aura-parent="' + id + '"/>'
+                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-parent="' + id + '"/>'
                 );
             }
         });
 
         // show form for new content
         sandbox.mvc.routes.push({
-            route: 'content/contents/:webspace/:language/add/details',
-            callback: function(webspace, language) {
+            route: 'content/contents/:webspace/:language/add/:content',
+            callback: function(webspace, language, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="details"/>'
+                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '"/>'
                 );
             }
         });
 
         // show form for editing a content
         sandbox.mvc.routes.push({
-            route: 'content/contents/:webspace/:language/edit::id/details',
-            callback: function(webspace, language, id) {
+            route: 'content/contents/:webspace/:language/edit::id/:content',
+            callback: function(webspace, language, id, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="details" data-aura-id="' + id + '"/>'
+                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
                 );
             }
         });

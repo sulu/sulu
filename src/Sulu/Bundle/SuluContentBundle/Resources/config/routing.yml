@@ -40,7 +40,7 @@ sulu_content.preview.render:
     methods: GET
     defaults: { _controller: SuluContentBundle:Preview:render }
 
-sulu_content.preview.slitScreen:
+sulu_content.preview.splitScreen:
     pattern: /split-screen/{webspace}/{language}/{contentUuid}
     methods: GET
     defaults: { _controller: SuluContentBundle:Template:splitScreen }
@@ -49,3 +49,7 @@ sulu_content.preview.update:
     pattern: /preview/{contentUuid}
     methods: POST
     defaults: { _controller: SuluContentBundle:Preview:update }
+
+sulu_content.template.settings:
+    pattern: /template/content/settings.html
+    defaults: { _controller: SuluContentBundle:Template:settings }
