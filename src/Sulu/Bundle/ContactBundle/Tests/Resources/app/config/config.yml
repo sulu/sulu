@@ -41,5 +41,5 @@ sulu_core:
         workspace: test
     content:
         ~
-    portal:
+    webspace:
         ~
