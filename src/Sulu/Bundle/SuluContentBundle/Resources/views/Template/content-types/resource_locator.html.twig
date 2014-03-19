@@ -1,8 +1,4 @@
-<input type="text"
-       class="form-element preview-update trigger-save-button"
-       id="{{ id }}"
+<input id="{{ id }}" type="text" class="form-element preview-update trigger-save-button"
        data-mapper-property="{{ property.name }}"
        data-type="resourceLocator"
-        {% if property.mandatory %}
-    data-validation-required="true"
-        {% endif %}/>
+       {% if property.mandatory %}data-validation-required="true"{% endif %}/>

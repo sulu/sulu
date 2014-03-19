@@ -23,7 +23,7 @@ class PreviewController extends Controller
     const PREVIEW_ID = 'sulu_content.preview';
 
     /**
-     * render content for logedin user with data from FORM
+     * render content for logged in user with data from FORM
      * @param string $contentUuid
      * @return Response
      */
@@ -39,7 +39,7 @@ class PreviewController extends Controller
             /** @var ContentMapperInterface $contentMapper */
             $contentMapper = $this->get('sulu.content.mapper');
             $startPage = $contentMapper->loadStartPage($webspace, $language);
-            $contentUuid =$startPage->getUuid();
+            $contentUuid = $startPage->getUuid();
         }
 
         if (!$preview->started($uid, $contentUuid)) {
@@ -55,7 +55,7 @@ class PreviewController extends Controller
                 'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
                 'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
-                'contenUuid' => $contentUuid,
+                'contentUuid' => $contentUuid,
                 'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval')
             )
         );
@@ -133,8 +133,7 @@ class PreviewController extends Controller
      */
     private function getUserId()
     {
-        return $this->getUser()
-            ->getId();
+        return $this->getUser()->getId();
     }
 
 }
