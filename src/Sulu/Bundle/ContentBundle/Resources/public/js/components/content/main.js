@@ -13,7 +13,10 @@ define([
 
     'use strict';
 
+    var MIN_CONTAINER_WIDTH = 980;
+
     return {
+
 
         stateDropdownItems: {
             publish: function() {
@@ -422,7 +425,7 @@ define([
                         ];
 
                         // only start preview in content tab and at specific window width
-                        if (this.sandbox.dom.width(window) >= 980 && tab.content === true) {
+                        if (this.sandbox.dom.width(window) >= MIN_CONTAINER_WIDTH && tab.content === true) {
 
                             this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
 
