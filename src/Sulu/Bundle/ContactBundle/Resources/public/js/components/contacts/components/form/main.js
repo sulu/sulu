@@ -74,12 +74,13 @@ define([], function() {
             },
 
             createForm: function(data) {
-                var formObject = this.sandbox.form.create(form);
+                var formObject = this.sandbox.form.create(form),
+                    emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first';
                 formObject.initialized.then(function() {
 
                     this.sandbox.form.setData(form, data).then(function() {
                         this.sandbox.start(form);
-                        this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
+                        this.sandbox.form.addConstraint(form, emailSelector + ' input.email-value', 'required', {required: true});
                         this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
                     }.bind(this));
 
@@ -97,12 +98,12 @@ define([], function() {
                     }
                     return phone.phone !== "";
                 });
-                this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
-                    if (url.id === "") {
-                        delete url.id;
-                    }
-                    return url.url !== "";
-                });
+//                this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
+//                    if (url.id === "") {
+//                        delete url.id;
+//                    }
+//                    return url.url !== "";
+//                });
                 this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
                     if (note.id === "") {
                         delete note.id;
@@ -112,14 +113,7 @@ define([], function() {
             },
 
             bindDomEvents: function() {
-//                this.sandbox.dom.on('#addEmail', 'click', this.addEmail.bind(this));
-//                this.sandbox.dom.on('#emails', 'click', this.removeEmail.bind(this), '.remove-email');
-//
-//                this.sandbox.dom.on('#addPhone', 'click', this.addPhone.bind(this));
-//                this.sandbox.dom.on('#phones', 'click', this.removePhone.bind(this), '.remove-phone');
-//
-//                this.sandbox.dom.on('#addAddress', 'click', this.addAddress.bind(this));
-//                this.sandbox.dom.on('#addresses', 'click', this.removeAddress.bind(this), '.remove-address');
+
             },
 
             bindCustomEvents: function() {
@@ -148,15 +142,19 @@ define([], function() {
 
             initData: function() {
                 var contactJson = this.options.data;
-                this.fillFields(contactJson.emails, 2, {
+                this.fillFields(contactJson.emails, 1, {
                     id: null,
                     email: '',
                     emailType: this.defaultTypes.emailType
                 });
-                this.fillFields(contactJson.phones, 2, {
+                this.fillFields(contactJson.phones, 1, {
                     id: null,
                     phone: '',
                     phoneType: this.defaultTypes.phoneType
+                });
+                this.fillFields(contactJson.notes, 1, {
+                    id: null,
+                    value: ''
                 });
 //                this.fillFields(contactJson.addresses, 1, {
 //                    id: null,
@@ -209,7 +207,7 @@ define([], function() {
             setHeaderBar: function(saved) {
                 if (saved !== this.saved) {
                     var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                    this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                    this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, true);
                 }
                 this.saved = saved;
             },
