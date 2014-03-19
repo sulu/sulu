@@ -56,7 +56,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created');
+    protected $fieldsHidden = array('created', 'type');
 
     /**
      * {@inheritdoc}
@@ -86,7 +86,12 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $bundlePrefix = 'contact.accounts.';
+    protected $fieldsWidth = array('type' => '150px');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $bundlePrefix = 'contact.account.';
 
     /**
      * returns all fields that can be used by list

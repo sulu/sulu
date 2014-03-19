@@ -54,8 +54,12 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.contacts.accounts.list', function(ids) {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
+            this.sandbox.on('sulu.contacts.accounts.list', function(type) {
+                var typeString = '';
+                if (!!type) {
+                    typeString = '/type:' + type;
+                }
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString);
             }, this);
         },
 
@@ -101,7 +105,7 @@ define([
 
         add: function(type) {
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add/type:'+type);
+            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add/type:' + type);
 
         },
 
@@ -132,7 +136,13 @@ define([
             var $list = this.sandbox.dom.createElement('<div id="accounts-list-container"/>');
             this.html($list);
             this.sandbox.start([
-                {name: 'accounts/components/list@sulucontact', options: { el: $list}}
+                {
+                    name: 'accounts/components/list@sulucontact',
+                    options: {
+                        el: $list,
+                        accountType: this.options.accountType ? this.options.accountType : null
+                    }
+                }
             ]);
 
         },
