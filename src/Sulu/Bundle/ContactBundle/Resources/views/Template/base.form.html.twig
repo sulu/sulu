@@ -26,7 +26,7 @@
                                     <span class="label-container">
                                         <span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}">
                                     </span>
-                            <%=translate('{{ defaultAddressType.name }}')%>
+                            <%= translate('{{ defaultAddressType.name }}') %>
                         </span>
                                 </label>
 
@@ -97,7 +97,7 @@
                         <div class="grid-col-12 floating">
                             <~ var uid = _.uniqueId('note_') ~>
                             <div class="form-group">
-                                <label class="top" for="<~= uid ~>"><%= translate('public.notes') %></label>
+                                <label class="top" for="<~= uid ~>"><%= translate('public.note') %></label>
                                 <textarea id="<~= uid ~>" class="form-element" dat -mapper-property="note" > </textarea>
                             </div>
                         </div>
@@ -131,6 +131,10 @@
                     'name': '{{ defaultAddressType.name }}'
                 },
                 urlType: {
+                    'id': {{ defaultUrlType.id }},
+                    'name': '{{ defaultUrlType.name }}'
+                },
+                faxType: {
                     'id': {{ defaultUrlType.id }},
                     'name': '{{ defaultUrlType.name }}'
                 },

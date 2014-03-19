@@ -8,13 +8,17 @@
  */
 
 define([
-    'mvc/relationalstore'
-], function(RelationalStore) {
+    'mvc/relationalstore',
+    'app-config'
+], function(RelationalStore, AppConfig) {
 
     'use strict';
 
 
-    var bindCustomEvents = function() {
+    var defaults = {
+            accountType: null
+        },
+        bindCustomEvents = function() {
             // navigate to edit contact
             this.sandbox.on('husky.datagrid.item.click', function(item) {
                 this.sandbox.emit('sulu.contacts.accounts.load', item);
@@ -51,9 +55,13 @@ define([
 
         render: function() {
 
+            alert(this.options.accountType);
+
             RelationalStore.reset(); //FIXME really necessary?
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
+
+            var accountTypes = AppConfig.getSection('sulu-contact').accountTypes;
 
 
             this.sandbox.start([
@@ -61,13 +69,34 @@ define([
                     name: 'tabs@husky',
                     options: {
                         el: '#filter-tabs',
+                        callback: function(item) {
+                            var searchString = '',
+                                searchFields = '';
+
+                            if (item.id !== 'all') {
+                                searchFields = 'type';
+                                searchString = item.id;
+                            }
+                            this.sandbox.emit('husky.datagrid.data.search', searchString, searchFields);
+                            this.sandbox.emit('sulu.contacts.accounts.list', item.name);
+                        },
                         data: {
                             items: [
                                 {
-                                    title: 'test1'
+                                    id: 'all',
+                                    title: this.sandbox.translate('public.all')
                                 },
                                 {
-                                    title: 'test2'
+                                    id: accountTypes[1].id,
+                                    title: this.sandbox.translate(accountTypes[1].translation)
+                                },
+                                {
+                                    id: accountTypes[2].id,
+                                    title: this.sandbox.translate(accountTypes[2].translation)
+                                },
+                                {
+                                    id: accountTypes[3].id,
+                                    title: this.sandbox.translate(accountTypes[3].translation)
                                 }
                             ]
                         }
@@ -89,11 +118,11 @@ define([
                                 class: 'highlight',
                                 title: this.sandbox.translate('sulu.list-toolbar.add'),
                                 items: [
-//                                    {
-//                                        id: 'add-basic',
-//                                        title: this.sandbox.translate('contact.account.add-basic'),
-//                                        callback: addNewAccount.bind(this, 'basic')
-//                                    },
+                                    {
+                                        id: 'add-basic',
+                                        title: this.sandbox.translate('contact.account.add-basic'),
+                                        callback: addNewAccount.bind(this, 'basic')
+                                    },
                                     {
                                         id: 'add-lead',
                                         title: this.sandbox.translate('contact.account.add-lead'),
