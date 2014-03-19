@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,9 +32,17 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
+        $language = $this->getRequest()->get('language', 'en');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+
+        if ($contentUuid === 'index') {
+            /** @var ContentMapperInterface $contentMapper */
+            $contentMapper = $this->get('sulu.content.mapper');
+            $startPage = $contentMapper->loadStartPage($webspace, $language);
+            $contentUuid =$startPage->getUuid();
+        }
+
         if (!$preview->started($uid, $contentUuid)) {
-            $language = $this->getRequest()->get('language', 'en');
-            $webspace = $this->getRequest()->get('webspace', 'sulu_io');
             $preview->start($uid, $contentUuid, $webspace, $language);
         }
 
