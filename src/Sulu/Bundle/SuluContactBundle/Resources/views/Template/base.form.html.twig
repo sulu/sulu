@@ -1,4 +1,4 @@
-<form id="contact-form">
+<form id="contact-form" class="form-horizontal">
     <input type="hidden" data-mapper-property="id"/>
 
     <div class="grid">
@@ -7,169 +7,122 @@
 
         {% endblock %}
 
-        {% block emails %}
-            <h2 class="divider"><%=translate('public.email')%></h2>
-
-            <div  id="emails" data-mapper-property="emails" data-type="collection" class="grid-row">
-                <div class="grid-col-6 floating emails-item form-group">
-
-
-                    <div class="grid-col-12 dropdown"
-                         data-aura-component="dropdown@husky"
-                         data-aura-data='{{ emailTypes|json_encode() }}'
-                         data-aura-instance-name="type"
-                         data-aura-trigger="label">
-                        <input type="hidden" data-mapper-property="id" class="id-value"/>
-                        <label class="pull-left">
-                            <span class="type-value"
-                                  data-form="true"
-                                  data-mapper-property="emailType"
-                                  data-type="label"
-                                  data-type-label="name"
-                                  data-type-id="id"
-                                  data-id="{{ defaultEmailType.id }}">
-                               <%=translate('{{ defaultEmailType.name }}')%>
-                            </span>
-                            <span class="dropdown-toggle inline-block pointer"></span>
-                        </label>
-
-                        <div class="remove-email"><span class="icon-remove pull-right pointer"></span></div>
-                    </div>
-
-                    <input type="text" class="form-element email-value" data-type="email" data-mapper-property="email">
+        {% block contact %}
+            <div id="contact-edit-form">
+                <div class="pos-rel">
+                    <h2 class="divider"><%=translate('contact.contacts.title')%></h2>
+        <span id="contact-options-dropdown" class="options-dropdown-container">
+            <a href="javascript:void(0)" class="contact-options-toggle options-toggle"><span class="icon-cogwheel"/></a>
+        </span>
                 </div>
-            </div>
 
-            <div class="grid-row">
-                <div id="addEmail" data-target-id="emails">
-                    <span class="icon-add"></span><span
-                            class="control-label"><%=translate('contact.form.addEmail')%></span>
-                </div>
-            </div>
-        {% endblock %}
-
-        {% block phones %}
-            <h2 class="divider"><%=translate('public.phone')%></h2>
-
-            <div class="grid-row" id="phones" data-mapper-property="phones" data-type="collection">
-                <div class="grid-col-6 floating phones-item form-group">
-
-                    <div class="grid-col-12 dropdown"
-                         data-aura-component="dropdown@husky"
-                         data-aura-data='{{ phoneTypes|json_encode() }}'
-                         data-aura-instance-name="type"
-                         data-aura-trigger="label">
-                        <input type="hidden" data-mapper-property="id" class="id-value"/>
-                        <label class="pull-left">
-                            <span class="type-value"
-                                  data-form="true"
-                                  data-mapper-property="phoneType"
-                                  data-type="label"
-                                  data-type-label="name"
-                                  data-type-id="id"
-                                  data-id="{{ defaultPhoneType.id }}">
-                                <%=translate('{{ defaultPhoneType.name }}')%>
-                            </span>
-                            <span class="dropdown-toggle inline-block pointer"></span>
-                        </label>
-
-                        <div class="remove-phone"><span class="icon-remove pull-right pointer"></span></div>
-                    </div>
-
-                    <input type="text" class="form-element phone-value" data-mapper-property="phone">
-                </div>
-            </div>
-
-            <div class="grid-row">
-                <div id="addPhone" data-target-id="phones">
-                    <span class="icon-add"></span><span
-                            class="control-label"><%=translate('contact.form.addPhone')%></span>
-                </div>
-            </div>
-        {% endblock %}
-
-        {% block addresses %}
-            <h2 class="divider"><%=translate('public.address')%></h2>
-
-            <div id="addresses" data-mapper-property="addresses" data-type="collection">
-                <div class="addresses-item m-bottom-10">
-
-                    <div class="grid-row m-bottom-0">
-                        <div class="m-bottom-10 pull-left">
-                            <div class="grid-col-12 dropdown"
-                                 data-aura-component="dropdown@husky"
-                                 data-aura-data='{{ addressTypes|json_encode() }}'
-                                 data-aura-instance-name="type"
-                                 data-aura-trigger="label">
-                                <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                <label class="pull-left">
-                                    <span class="type-value"
-                                          data-form="true"
-                                          data-mapper-property="addressType"
-                                          data-type="label"
-                                          data-type-label="name"
-                                          data-type-id="id"
-                                          data-id="{{ defaultAddressType.id }}">
-                                        <%=translate('{{ defaultAddressType.name }}')%>
+                <div class="grid-row small" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl"}]'>
+                    <script type="text/template" id="address-tpl">
+                        <div class="grid-col-12 floating">
+                            <~ var uid = _.uniqueId('address_') ~>
+                            <div class="form-group">
+                                <label>
+                                    <%=translate('public.address')%>
+                                    <span class="label-container">
+                                        <span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}"></span>
+                                        <%= translate('{{ defaultAddressType.name }}') %>
                                     </span>
-                                    <span class="dropdown-toggle inline-block pointer"></span>
                                 </label>
+                                <div class="address-row">
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                    <span data-mapper-property="street" data-form="true"></span>
+                                    <span data-mapper-property="number" data-form="true"></span>
+                                    <span data-mapper-property="addition" data-form="true"></span>
+                                    <~ if (typeof zip !== 'undefined') print(',') ~>
+                                    <span data-mapper-property="zip" data-form="true"></span>
+                                    <span data-mapper-property="city" data-form="true"></span>
+                                    <~ if (typeof state !== 'undefined') print(',') ~>
+                                    <span data-mapper-property="state" data-form="true"></span>
+                                    <~ if (typeof state !== 'country') print(',') ~>
+                                    <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="remove-address"><span class="icon-remove pull-right pointer"></span></div>
-                    </div>
-                    <div class="grid-row">
-                        <div class="form-group grid-col-6">
-                            <label for="street0"><%=translate('contact.address.street')%></label>
-                            <input id="street0" type="text" class="form-element street-value"
-                                   data-mapper-property="street"/>
-                        </div>
-                        <div class="form-group grid-col-2">
-                            <label for="number0"><%=translate('contact.address.number')%></label>
-                            <input id="number0" type="text" class="form-element number-value"
-                                   data-mapper-property="number"/>
-                        </div>
-                        <div class="form-group grid-col-4">
-                            <label for="addition0"><%=translate('contact.address.additional')%></label>
-                            <input id="addition0" type="text" class="form-element addition-value"
-                                   data-mapper-property="addition"/>
-                        </div>
-                    </div>
-                    <div class="grid-row">
-                        <div class="form-group grid-col-2">
-                            <label for="zip0"><%=translate('contact.address.zip')%></label>
-                            <input id="zip0" type="text" class="form-element zip-value"
-                                   data-mapper-property="zip"/>
-                        </div>
-                        <div class="form-group grid-col-4">
-                            <label for="city0"><%=translate('contact.address.city')%></label>
-                            <input id="city0" type="text" class="form-element city-value"
-                                   data-mapper-property="city"/>
-                        </div>
-                        <div class="form-group grid-col-2">
-                            <label for="state0"><%=translate('contact.address.state')%></label>
-                            <input id="state0" type="text" class="form-element state-value"
-                                   data-mapper-property="state"/>
-                        </div>
-                        <div class="form-group grid-col-4">
-                            <label for="country0"><%=translate('contact.address.country')%></label>
-
-                            <select id="country0" class="country-value form-element" data-mapper-property="country" data-type="select">
-                                {% for country in countries %}
-                                    <option value="{{ country.id }}"><%=translate('{{ country.name }}')%></option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
+                    </script>
                 </div>
-            </div>
-            <div class="grid-row m-bottom-20">
-                <div id="addAddress" data-target-id="addresses">
-                    <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addAddress')%></span>
+                <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"}]'>
+                    <script type="text/template" id="email-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('email_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>">
+                                    <%=translate('public.email')%>
+                                    <span class="label-container">
+                                        <span class="type-value" data-form="true" data-mapper-property="emailType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultEmailType.id }}">
+                                            <%=translate('{{ defaultEmailType.name }}')%>
+                                        </span>
+                                    </span>
+                                </label>
+                                <div>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                    <input id="<~= uid ~>" type="text" class="form-element email-value" data-type="email" data-mapper-property="email">
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="phone-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('phone_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>">
+                                    <%=translate('public.phone')%>
+                                    <span class="label-container">
+                                        <span class="type-value" data-form="true" data-mapper-property="phoneType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultPhoneType.id }}">
+                                        <%= translate('{{ defaultPhoneType.name }}') %>
+                                        </span>
+                                    </span>
+                                </label>
+                                <div>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                    <input id="<~= uid ~>" type="text" class="form-element phone-value" data-mapper-property="phone">
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="url-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('url_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>">
+                                    <%= translate('contact.accounts.website') %>
+                                    <span class="label-container">
+                                        <span class="type-value" data-form="true" data-mapper-property="urlType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultUrlType.id }}">
+                                        <%= translate('{{ defaultPhoneType.name }}') %>
+                                        </span>
+                                    </span>
+                                </label>
+                                <div>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                    <input id="<~= uid ~>" type="text" class="form-element" data-type="url" data-mapper-property="url"/>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                </div>
+
+                <div class="grid-row small" data-type="collection" data-mapper-property='{"data":"notes","tpl":"note-tpl"}'>
+                    <script type="text/template" id="note-tpl">
+                        <div class="grid-col-12 floating">
+                            <~ var uid = _.uniqueId('note_') ~>
+                            <div class="form-group">
+                                <label class="top" for="<~= uid ~>"><%= translate('public.note') %></label>
+                                <div>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                    <textarea id="<~= uid ~>" data-form="true" class="form-element" data-mapper-property="value" > </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
                 </div>
             </div>
         {% endblock %}
     </div>
+
 
 </form>
 
@@ -197,6 +150,10 @@
                     'id': {{ defaultUrlType.id }},
                     'name': '{{ defaultUrlType.name }}'
                 },
+                {#faxType: {#}
+                    {#'id': {{ defaultFaxType.id }},#}
+                    {#'name': '{{ defaultFaxType.name }}'#}
+                {#},#}
                 country: {
                     'id': {{ defaultCountry.id }},
                     'name': '{{ defaultCountry.name }}'
