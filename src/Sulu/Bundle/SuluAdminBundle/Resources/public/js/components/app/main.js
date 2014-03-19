@@ -261,7 +261,7 @@ define(function() {
             }.bind(this));
         },
 
-        /**git 
+        /**git
          * Takes an object an applies it to the app-content
          * @param styles
          */
