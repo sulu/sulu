@@ -262,7 +262,7 @@ define(function() {
         },
 
         /**
-         * Takes an object an applies it to the app-content
+         * Takes an object with styles and applies it to the app-content
          * @param styles
          */
         changeContentStyles: function(styles) {
@@ -289,10 +289,6 @@ define(function() {
             // TODO: select right bundle / item in navigation
 
             if (!!event.action) {
-
-                // FIXME needed for correct initialization after collapsed view in preview
-                this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse',false);
                 this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload, loader);
             }
         }
