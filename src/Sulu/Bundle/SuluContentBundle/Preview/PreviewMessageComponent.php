@@ -215,9 +215,9 @@ class PreviewMessageComponent implements MessageComponentInterface
         /** @var ConnectionInterface $other */
         $other = null;
         foreach ($this->content as $c) {
-            if ($c['form'] == $conn || isset($c['preview'])) {
+            if (isset($c['form']) && ($c['form'] == $conn || isset($c['preview']))) {
                 $other = $c['preview'];
-            } elseif ($c['preview'] == $conn && isset($c['form'])) {
+            } elseif (isset($c['preview']) && ($c['preview'] == $conn && isset($c['form']))) {
                 $other = $c['form'];
             }
         }
