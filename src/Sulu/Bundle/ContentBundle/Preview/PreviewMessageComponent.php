@@ -141,7 +141,15 @@ class PreviewMessageComponent implements MessageComponentInterface
 
             foreach ($params['changes'] as $property => $data) {
                 // update property
-                $this->preview->update($user, $content, $msg['webspaceKey'], $msg['languageCode'], $property, $data, $params['template']);
+                $this->preview->update(
+                    $user,
+                    $content,
+                    $msg['webspaceKey'],
+                    $msg['languageCode'],
+                    $property,
+                    $data,
+                    $params['template']
+                );
             }
 
             // send ok message
@@ -214,13 +222,14 @@ class PreviewMessageComponent implements MessageComponentInterface
     {
         /** @var ConnectionInterface $other */
         $other = null;
-        foreach ($this->content as $c) {
-            if ($c['form'] == $conn || isset($c['preview'])) {
-                $other = $c['preview'];
-            } elseif ($c['preview'] == $conn && isset($c['form'])) {
-                $other = $c['form'];
+        foreach ($this->content as $data) {
+            if (isset($data['form']) && ($data['form'] == $conn || isset($data['preview']))) {
+                $other = $data['preview'];
+            } elseif (isset($data['preview']) && ($data['preview'] == $conn && isset($data['form']))) {
+                $other = $data['form'];
             }
         }
+
         if ($other != null) {
             $other->close();
         }

@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class PreviewController extends Controller
     const PREVIEW_ID = 'sulu_content.preview';
 
     /**
-     * render content for logedin user with data from FORM
+     * render content for logged in user with data from FORM
      * @param string $contentUuid
      * @return Response
      */
@@ -31,9 +32,17 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
+        $language = $this->getRequest()->get('language', 'en');
+        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+
+        if ($contentUuid === 'index') {
+            /** @var ContentMapperInterface $contentMapper */
+            $contentMapper = $this->get('sulu.content.mapper');
+            $startPage = $contentMapper->loadStartPage($webspace, $language);
+            $contentUuid = $startPage->getUuid();
+        }
+
         if (!$preview->started($uid, $contentUuid)) {
-            $language = $this->getRequest()->get('language', 'en');
-            $webspace = $this->getRequest()->get('webspace', 'sulu_io');
             $preview->start($uid, $contentUuid, $webspace, $language);
         }
 
@@ -46,7 +55,7 @@ class PreviewController extends Controller
                 'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
                 'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
-                'contenUuid' => $contentUuid,
+                'contentUuid' => $contentUuid,
                 'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval')
             )
         );
@@ -124,8 +133,7 @@ class PreviewController extends Controller
      */
     private function getUserId()
     {
-        return $this->getUser()
-            ->getId();
+        return $this->getUser()->getId();
     }
 
 }
