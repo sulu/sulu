@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* line 7, ../scss/abstract/abstract-loader.scss */
 .is-loading:not(.navigation-column-item) {
   background-image: url("data:image/gif;base64,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");
@@ -3331,94 +3330,100 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 }
 
 /* line 191, ../scss/modules/icons.scss */
+.icon-factory::after {
+  content: "\e451";
+  display: inline-block;
+}
+
+/* line 198, ../scss/modules/icons.scss */
 .icon-live::after {
   content: "\e033";
   display: inline-block;
 }
 
-/* line 198, ../scss/modules/icons.scss */
+/* line 205, ../scss/modules/icons.scss */
 .icon-security::after {
   content: "\e205";
   display: inline-block;
 }
 
-/* line 205, ../scss/modules/icons.scss */
+/* line 212, ../scss/modules/icons.scss */
 .icon-chevron-right::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e080";
   display: inline-block;
 }
 
-/* line 213, ../scss/modules/icons.scss */
+/* line 220, ../scss/modules/icons.scss */
 .icon-chevron-left::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e079";
   display: inline-block;
 }
 
-/* line 221, ../scss/modules/icons.scss */
+/* line 228, ../scss/modules/icons.scss */
 .icon-chevron-down::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e114";
   display: inline-block;
 }
 
-/* line 229, ../scss/modules/icons.scss */
+/* line 236, ../scss/modules/icons.scss */
 .icon-chevron-up::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e113";
   display: inline-block;
 }
 
-/* line 237, ../scss/modules/icons.scss */
+/* line 244, ../scss/modules/icons.scss */
 .icon-archive::after {
   content: "\e150";
   display: inline-block;
 }
 
-/* line 244, ../scss/modules/icons.scss */
+/* line 251, ../scss/modules/icons.scss */
 .icon-check::after {
   content: "\e153";
   display: inline-block;
 }
 
-/* line 251, ../scss/modules/icons.scss */
+/* line 258, ../scss/modules/icons.scss */
 .icon-adjust-alt::after {
   content: "\e140";
   display: inline-block;
 }
 
-/* line 258, ../scss/modules/icons.scss */
+/* line 265, ../scss/modules/icons.scss */
 .icon-list::after {
   content: "\e115";
   display: inline-block;
 }
 
-/* line 265, ../scss/modules/icons.scss */
+/* line 272, ../scss/modules/icons.scss */
 .icon-items::after {
   content: "\e319";
   display: inline-block;
 }
 
-/* line 272, ../scss/modules/icons.scss */
+/* line 279, ../scss/modules/icons.scss */
 .icon-star::after {
   content: "\e050";
   display: inline-block;
 }
 
-/* line 279, ../scss/modules/icons.scss */
+/* line 286, ../scss/modules/icons.scss */
 .icon-globe::after {
   content: "\e341";
   display: inline-block;
 }
 
-/* line 286, ../scss/modules/icons.scss */
+/* line 293, ../scss/modules/icons.scss */
 .icon-dashboard::after {
   content: "\e332";
   display: inline-block;
 }
 
-/* line 293, ../scss/modules/icons.scss */
+/* line 300, ../scss/modules/icons.scss */
 .icon-arrow-down::after {
   content: "\e224";
   display: inline-block;
@@ -3429,7 +3434,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   transform: rotate(90deg);
 }
 
-/* line 306, ../scss/modules/icons.scss */
+/* line 313, ../scss/modules/icons.scss */
 .icon-arrow-up::after {
   content: "\e225";
   display: inline-block;
@@ -3440,133 +3445,133 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   transform: rotate(90deg);
 }
 
-/* line 319, ../scss/modules/icons.scss */
+/* line 326, ../scss/modules/icons.scss */
 .icon-arrow::after {
   content: "\e223";
   display: inline-block;
 }
 
-/* line 326, ../scss/modules/icons.scss */
+/* line 333, ../scss/modules/icons.scss */
 .icon-internal-link::after {
   content: "\e051";
   display: inline-block;
 }
 
-/* line 333, ../scss/modules/icons.scss */
+/* line 340, ../scss/modules/icons.scss */
 .icon-external-link::after {
   content: "\e242";
   display: inline-block;
 }
 
-/* line 340, ../scss/modules/icons.scss */
+/* line 347, ../scss/modules/icons.scss */
 .icon-shadow-node::after {
   content: "\e223";
   display: inline-block;
 }
 
-/* line 347, ../scss/modules/icons.scss */
+/* line 354, ../scss/modules/icons.scss */
 .icon-brush::after {
   content: "\e235";
   display: inline-block;
 }
 
-/* line 354, ../scss/modules/icons.scss */
+/* line 361, ../scss/modules/icons.scss */
 .icon-user-add::after {
   content: "\e007";
   display: inline-block;
 }
 
-/* line 361, ../scss/modules/icons.scss */
+/* line 368, ../scss/modules/icons.scss */
 .icon-bin::after {
   content: "\e017";
   display: inline-block;
 }
 
-/* line 368, ../scss/modules/icons.scss */
+/* line 375, ../scss/modules/icons.scss */
 .icon-retweet::after {
   content: "\e081";
   display: inline-block;
 }
 
-/* line 375, ../scss/modules/icons.scss */
+/* line 382, ../scss/modules/icons.scss */
 .icon-file::after {
   content: "\E037";
   display: inline-block;
 }
 
-/* line 382, ../scss/modules/icons.scss */
+/* line 389, ../scss/modules/icons.scss */
 .icon-file-import::after {
   content: "\e359";
   display: inline-block;
 }
 
-/* line 389, ../scss/modules/icons.scss */
+/* line 396, ../scss/modules/icons.scss */
 .icon-file-export::after {
   content: "\e360";
   display: inline-block;
 }
 
-/* line 396, ../scss/modules/icons.scss */
+/* line 403, ../scss/modules/icons.scss */
 .icon-show-thumbnails::after {
   content: "\e157";
   display: inline-block;
 }
 
-/* line 403, ../scss/modules/icons.scss */
+/* line 410, ../scss/modules/icons.scss */
 .icon-eye-open::after {
   content: "\e052";
   display: inline-block;
 }
 
-/* line 410, ../scss/modules/icons.scss */
+/* line 417, ../scss/modules/icons.scss */
 .icon-half-eye-open::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e105";
   display: inline-block;
 }
 
-/* line 418, ../scss/modules/icons.scss */
+/* line 425, ../scss/modules/icons.scss */
 .icon-half-eye-close::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e106";
   display: inline-block;
 }
 
-/* line 426, ../scss/modules/icons.scss */
+/* line 433, ../scss/modules/icons.scss */
 .icon-floppy-save::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e175";
   display: inline-block;
 }
 
-/* line 434, ../scss/modules/icons.scss */
+/* line 441, ../scss/modules/icons.scss */
 .icon-floppy-saved::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e173";
   display: inline-block;
 }
 
-/* line 442, ../scss/modules/icons.scss */
+/* line 449, ../scss/modules/icons.scss */
 .icon-half-ok::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e013";
   display: inline-block;
 }
 
-/* line 450, ../scss/modules/icons.scss */
+/* line 457, ../scss/modules/icons.scss */
 .icon-half-remove::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e014";
   display: inline-block;
 }
 
-/* line 458, ../scss/modules/icons.scss */
+/* line 465, ../scss/modules/icons.scss */
 .icon-remove2::after {
   content: "\e208";
   display: inline-block;
 }
 
-/* line 465, ../scss/modules/icons.scss */
+/* line 472, ../scss/modules/icons.scss */
 .icon-publish::after {
   content: "";
   display: inline-block;
@@ -3581,7 +3586,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   left: 0px;
 }
 
-/* line 481, ../scss/modules/icons.scss */
+/* line 488, ../scss/modules/icons.scss */
 .icon-unpublish::after {
   content: "";
   display: inline-block;
@@ -3596,7 +3601,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   left: 0px;
 }
 
-/* line 497, ../scss/modules/icons.scss */
+/* line 504, ../scss/modules/icons.scss */
 .icon-test::after {
   content: "";
   display: inline-block;
@@ -3611,25 +3616,25 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   left: 0px;
 }
 
-/* line 513, ../scss/modules/icons.scss */
+/* line 520, ../scss/modules/icons.scss */
 .icon-right-arrow::after {
   content: "\e212";
   display: inline-block;
 }
 
-/* line 520, ../scss/modules/icons.scss */
+/* line 527, ../scss/modules/icons.scss */
 .icon-step-backward::after {
   content: "\e171";
   display: inline-block;
 }
 
-/* line 527, ../scss/modules/icons.scss */
+/* line 534, ../scss/modules/icons.scss */
 .icon-step-forward::after {
   content: "\e179";
   display: inline-block;
 }
 
-/* line 534, ../scss/modules/icons.scss */
+/* line 541, ../scss/modules/icons.scss */
 .icon-disk-export::after {
   content: "\e420";
   display: inline-block;
@@ -3808,7 +3813,7 @@ hr.divider {
   margin-top: 10px;
 }
 /* line 62, ../scss/modules/grid.scss */
-.grid-row.small .grid-col-12.floating:nth-child(n+1) {
+.grid-row.small .grid-col-12.floating:nth-child(n+2) {
   margin-top: 10px;
 }
 
@@ -5691,18 +5696,31 @@ a.btn-black, a.btn-highlight {
   text-decoration: none;
   font-size: 16px;
   line-height: 20px;
+  -webkit-transition: color 250ms;
+  -moz-transition: color 250ms;
+  -o-transition: color 250ms;
+  transition: color 250ms;
 }
-/* line 29, ../scss/modules/tabs.scss */
+/* line 30, ../scss/modules/tabs.scss */
 .tabs-container ul li a:hover {
   color: #666666;
 }
-/* line 35, ../scss/modules/tabs.scss */
+/* line 36, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected a {
   color: #249fbe;
 }
-/* line 40, ../scss/modules/tabs.scss */
+/* line 41, ../scss/modules/tabs.scss */
 .tabs-container ul li:not(:last-child) {
   padding-right: 30px;
+}
+/* line 49, ../scss/modules/tabs.scss */
+.tabs-container.deactivated ul li a, .tabs-container.deactivated ul li a:hover {
+  color: #999999;
+  cursor: default;
+}
+/* line 53, ../scss/modules/tabs.scss */
+.tabs-container.deactivated ul li.is-selected a {
+  color: #249fbe;
 }
 
 /* line 11, ../scss/modules/toolbar.scss */
