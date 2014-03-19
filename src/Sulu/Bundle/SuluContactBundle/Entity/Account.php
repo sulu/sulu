@@ -127,6 +127,11 @@ class Account extends ApiEntity
     private $notes;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $faxes;
+
+    /**
      * @var integer
      */
     private $type = self::TYPE_BASIC;
@@ -616,10 +621,7 @@ class Account extends ApiEntity
     {
         return $this->type;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $faxes;
+
 
 
     /**
@@ -628,7 +630,7 @@ class Account extends ApiEntity
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      * @return Account
      */
-    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
     
@@ -640,7 +642,7 @@ class Account extends ApiEntity
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
-    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
     }

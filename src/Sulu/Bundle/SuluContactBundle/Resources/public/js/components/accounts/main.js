@@ -54,12 +54,12 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.contacts.accounts.list', function(type) {
+            this.sandbox.on('sulu.contacts.accounts.list', function(type, noReload) {
                 var typeString = '';
                 if (!!type) {
                     typeString = '/type:' + type;
                 }
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString);
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false , true);
             }, this);
         },
 
@@ -87,7 +87,7 @@ define([
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!data.id) {
-                        this.sandbox.emit('sulu.contacts.accounts.saved', model.id);
+                        this.sandbox.emit('sulu.contacts.accounts.saved', model);
                     } else {
                         this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details');
                     }

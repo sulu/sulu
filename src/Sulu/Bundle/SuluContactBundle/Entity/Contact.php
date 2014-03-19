@@ -112,6 +112,11 @@ class Contact extends ApiEntity
     private $phones;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $faxes;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -608,10 +613,6 @@ class Contact extends ApiEntity
             'changed'       => $this->getChanged()
         );
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $faxes;
 
 
     /**
@@ -620,7 +621,7 @@ class Contact extends ApiEntity
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      * @return Contact
      */
-    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
     
@@ -632,7 +633,7 @@ class Contact extends ApiEntity
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
      */
-    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
     }

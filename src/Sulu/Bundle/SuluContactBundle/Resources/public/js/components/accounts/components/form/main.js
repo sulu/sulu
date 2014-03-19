@@ -275,8 +275,6 @@ define(['app-config'], function(AppConfig) {
 
                 this.sandbox.form.setData(this.form, data).then(function() {
                     this.sandbox.start(this.form);
-
-
                     this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
                     this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
                 }.bind(this));
@@ -294,6 +292,18 @@ define(['app-config'], function(AppConfig) {
                         delete phone.id;
                     }
                     return phone.phone !== "";
+                });
+                this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
+                    if (url.id === "") {
+                        delete url.id;
+                    }
+                    return url.url !== "";
+                });
+                this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
+                    if (note.id === "") {
+                        delete note.id;
+                    }
+                    return note.value !== "";
                 });
 //                this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
 //                    if (address.id === "") {
@@ -327,8 +337,11 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // account saved
-            this.sandbox.on('sulu.contacts.accounts.saved', function(id) {
-                this.options.data.id = id;
+            this.sandbox.on('sulu.contacts.accounts.saved', function(data) {
+                // reset forms data
+                this.options.data = data;
+                this.sandbox.form.setData(this.form, data);
+
                 this.setHeaderBar(true);
             }, this);
 
@@ -347,15 +360,6 @@ define(['app-config'], function(AppConfig) {
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
-
-                data.urls = [
-                    {
-                        url: this.sandbox.dom.val('#url'),
-                        urlType: {
-                            id: this.defaultTypes.urlType.id
-                        }
-                    }
-                ];
 
                 if (data.id === '') {
                     delete data.id;
