@@ -278,12 +278,14 @@ define(['app-config'], function(AppConfig) {
 
             // expand navigation if navigation item is clicked
             this.sandbox.on('husky.navigation.item.select', function() {
-                //todo expand
+                this.sandbox.emit('husky.navigation.collapse');
+                this.sandbox.emit('husky.navigation.uncollapse',false);
             }.bind(this));
 
             // expand navigation if back gets clicked
             this.sandbox.on('sulu.edit-toolbar.back', function() {
-                //todo expand
+                this.sandbox.emit('husky.navigation.collapse');
+                this.sandbox.emit('husky.navigation.uncollapse',false);
             }.bind(this));
         },
 

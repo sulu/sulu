@@ -314,6 +314,9 @@ define([], function() {
                 var $span = this.sandbox.dom.find('span', $target),
                     width = this.sandbox.dom.width(document) - 500;
 
+                // deactivate tabs
+                this.sandbox.emit('sulu.content.tabs.deactivate');
+
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
 
@@ -336,6 +339,9 @@ define([], function() {
              * Collapses preview and restores orginal size of the form
              */
             collapsePreview: function($target) {
+
+                // activate tabs
+                this.sandbox.emit('sulu.content.tabs.activate');
 
                 var $span = this.sandbox.dom.find('span', $target);
 
