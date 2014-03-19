@@ -275,6 +275,16 @@ define(['app-config'], function(AppConfig) {
                 //enable button without highlight-effect
                 this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
             }.bind(this));
+
+            // expand navigation if navigation item is clicked
+            this.sandbox.on('husky.navigation.item.select', function() {
+                //todo expand
+            }.bind(this));
+
+            // expand navigation if back gets clicked
+            this.sandbox.on('sulu.edit-toolbar.back', function() {
+                //todo expand
+            }.bind(this));
         },
 
         initData: function() {
