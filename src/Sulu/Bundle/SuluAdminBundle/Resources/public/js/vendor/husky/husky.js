@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -26291,6 +26292,14 @@ define('__component__$datagrid@husky',[],function() {
             UPDATE = namespace + 'update',
 
         /**
+         * used to filter data of
+         * @event husky.datagrid.data.filter
+         * @param {String} searchField
+         * @param {String} searchString
+         */
+            DATA_SEARCH = namespace + 'data.search',
+
+        /**
          * used to update the table width and its containers due to responsiveness
          * @event husky.datagrid.update.table
          */
@@ -27546,6 +27555,9 @@ define('__component__$datagrid@husky',[],function() {
 
             this.sandbox.on(DATA_GET, this.provideData.bind(this));
 
+            // filter data
+            this.sandbox.on(DATA_SEARCH, this.triggerSearch.bind(this));
+
             // pagination dropdown item clicked
             this.sandbox.on('husky.dropdown.' + this.dropdownInstanceName + '.item.click', this.changePage.bind(this, null));
 
@@ -27580,6 +27592,7 @@ define('__component__$datagrid@husky',[],function() {
                 this.sandbox.on('husky.column-options' + columnOptionsInstanceName + '.saved', this.filterColumns.bind(this));
             }
         },
+
 
         /**
          * Put focus on table row and remember values
@@ -27917,7 +27930,7 @@ define('__component__$datagrid@husky',[],function() {
         /**
          * this will trigger a api search
          */
-        triggerSearch: function(searchString) {
+        triggerSearch: function(searchString, searchFields) {
 
             var template, url,
             // TODO: get searchFields
@@ -29184,7 +29197,11 @@ define('__component__$search@husky',[], function() {
  *      - data: if no url is provided
  *      - selected: the item that's selected on initialize
  *      - instanceName - enables custom events (in case of multiple tabs on one page)
- *      - preselect - defines if actions are going to be checked against current URL and preselected (current URL mus be provided by data.url)
+ *      - preselect - either true (for url) or position / title  (see preselector for more information)
+ *      - preselector:
+ *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by data.url) - preselector itself is not going to be taken into account in this case
+ *          - position: compares items position against whats defined in options.preselect
+ *          - title: compares items title against whats defined in options.preselect
  *      - forceReload - defines if tabs are forcing page to reload
  *      - forceSelect - forces tabs to select first item, if no selected item has been found
  *  Provides Events
@@ -29210,15 +29227,31 @@ define('__component__$tabs@husky',[],function() {
             data: [],
             instanceName: '',
             preselect: true,
+            preselector: 'url',
             forceReload: false,
+            callback: null,
             forceSelect: true
         },
 
         selectItem = function(event) {
             event.preventDefault();
-            this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
-            this.sandbox.dom.addClass(event.currentTarget, 'is-selected');
-            triggerSelectEvent.call(this, this.items[this.sandbox.dom.data(event.currentTarget, 'id')]);
+            if (this.active === true) {
+                var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')];
+
+                this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
+                this.sandbox.dom.addClass(event.currentTarget, 'is-selected');
+
+                // callback
+                if (item.hasOwnProperty('callback') && typeof item.callback === 'function') {
+                    item.callback.call(this, item);
+                } else if (!!this.options.callback && typeof this.options.callback === 'function') {
+                    this.options.callback.call(this, item);
+                } else {
+                    triggerSelectEvent.call(this, item);
+                }
+            } else {
+                return false;
+            }
         },
 
         triggerSelectEvent = function(item) {
@@ -29236,6 +29269,14 @@ define('__component__$tabs@husky',[],function() {
                 var selection = this.sandbox.dom.find('.is-selected', this.options.el);
                 callback.call(this.items[this.sandbox.dom.data(selection, 'id')]);
             }.bind(this));
+
+            this.sandbox.on(createEventString.call(this, 'activate'), function() {
+                this.activate();
+            }.bind(this));
+
+            this.sandbox.on(createEventString.call(this, 'deactivate'), function() {
+                this.deactivate();
+            }.bind(this));
         },
 
         createEventString = function(ending) {
@@ -29251,6 +29292,7 @@ define('__component__$tabs@husky',[],function() {
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.$el = this.sandbox.dom.$(this.options.el);
+            this.active = true;
 
             // load data and call render
             if (!!this.options.url) {
@@ -29268,6 +29310,16 @@ define('__component__$tabs@husky',[],function() {
             bindDOMEvents.call(this);
 
             bindCustomEvents.call(this);
+        },
+
+        deactivate: function() {
+            this.active = false;
+            this.sandbox.dom.addClass(this.sandbox.dom.find('.tabs-container', this.$el), 'deactivated');
+        },
+
+        activate: function() {
+            this.active = true;
+            this.sandbox.dom.removeClass(this.sandbox.dom.find('.tabs-container', this.$el), 'deactivated');
         },
 
         generateIds: function(data) {
@@ -29298,13 +29350,17 @@ define('__component__$tabs@husky',[],function() {
 
             this.items = [];
 
-            this.sandbox.util.foreach(data.items, function(item) {
+            this.sandbox.util.foreach(data.items, function(item, index) {
                 // check if item got selected
-                if (this.options.preselect && !!data.url && data.url === item.action) {
-                    selected = ' class="is-selected"';
-                    selectedItem = item;
-                } else {
-                    selected = '';
+                selected = '';
+                if (!!this.options.preselect) {
+                    if ((this.options.preselector === 'url' && !!data.url && data.url === item.action) ||
+                        (this.options.preselector === 'position' && (index+1).toString() === this.options.preselect.toString()) ||
+                        (this.options.preselector === 'title' && item.title === this.options.preselect))
+                    {
+                        selected = ' class="is-selected"';
+                        selectedItem = item;
+                    }
                 }
 
                 this.items[item.id] = item;
@@ -37725,4 +37781,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
