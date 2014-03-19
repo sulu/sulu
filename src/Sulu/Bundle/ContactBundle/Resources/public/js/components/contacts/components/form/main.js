@@ -73,17 +73,20 @@ define([], function() {
                 this.defaultTypes = defaultTypes;
             },
 
+            initializeData: function(data) {
+                var emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first';
+                this.sandbox.form.setData(form, data).then(function() {
+                    this.sandbox.start(form);
+                    this.sandbox.form.addConstraint(form, emailSelector + ' input.email-value', 'required', {required: true});
+                    this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
+                }.bind(this));
+            },
+
             createForm: function(data) {
-                var formObject = this.sandbox.form.create(form),
-                    emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first';
+                var formObject = this.sandbox.form.create(form);
 
                 formObject.initialized.then(function() {
-                    this.sandbox.form.setData(form, data).then(function() {
-                        this.sandbox.start(form);
-                        this.sandbox.form.addConstraint(form, emailSelector + ' input.email-value', 'required', {required: true});
-                        this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
-                    }.bind(this));
-
+                    this.initializeData(data);
                 }.bind(this));
 
                 this.sandbox.form.addCollectionFilter(form, 'emails', function(email) {
@@ -125,7 +128,8 @@ define([], function() {
                 // contact saved
                 this.sandbox.on('sulu.contacts.contacts.saved', function(data) {
                     this.options.data = data;
-                    this.sandbox.form.setData(form, data);
+                    this.initData();
+                    this.initializeData(data);
                     this.setHeaderBar(true);
                 }, this);
 
