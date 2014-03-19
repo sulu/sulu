@@ -284,30 +284,30 @@ define(['app-config'], function(AppConfig) {
 
             }.bind(this));
 
-                this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
-                    if (email.id === "") {
-                        delete email.id;
-                    }
-                    return email.email !== "";
-                });
-                this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
-                    if (phone.id === "") {
-                        delete phone.id;
-                    }
-                    return phone.phone !== "";
-                });
-                this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
-                    if (url.id === "") {
-                        delete url.id;
-                    }
-                    return url.url !== "";
-                });
-                this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
-                    if (note.id === "") {
-                        delete note.id;
-                    }
-                    return note.value !== "";
-                });
+            this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
+                if (email.id === "") {
+                    delete email.id;
+                }
+                return email.email !== "";
+            });
+            this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
+                if (phone.id === "") {
+                    delete phone.id;
+                }
+                return phone.phone !== "";
+            });
+            this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
+                if (url.id === "") {
+                    delete url.id;
+                }
+                return url.url !== "";
+            });
+            this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
+                if (note.id === "") {
+                    delete note.id;
+                }
+                return note.value !== "";
+            });
 //                this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
 //                    if (address.id === "") {
 //                        delete address.id;
@@ -380,12 +380,12 @@ define(['app-config'], function(AppConfig) {
         },
 
 
-
         /** @var Bool saved - defines if saved state should be shown */
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, true);
+                return $item;
             }
             this.saved = saved;
         },

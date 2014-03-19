@@ -80,31 +80,32 @@ define([], function() {
                 formObject.initialized.then(function() {
                     this.sandbox.form.setData(form, data).then(function() {
                         this.sandbox.start(form);
-                        this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
+                        this.sandbox.form.addConstraint(form, emailSelector + ' input.email-value', 'required', {required: true});
                         this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
                     }.bind(this));
 
                 }.bind(this));
 
-                this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
+                this.sandbox.form.addCollectionFilter(form, 'emails', function(email) {
                     if (email.id === "") {
                         delete email.id;
                     }
                     return email.email !== "";
                 });
-                this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
+                this.sandbox.form.addCollectionFilter(form, 'phones', function(phone) {
                     if (phone.id === "") {
                         delete phone.id;
                     }
                     return phone.phone !== "";
                 });
-//                this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
+
+//                this.sandbox.form.addCollectionFilter(form, 'urls', function(url) {
 //                    if (url.id === "") {
 //                        delete url.id;
 //                    }
 //                    return url.url !== "";
 //                });
-                this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
+                this.sandbox.form.addCollectionFilter(form, 'notes', function(note) {
                     if (note.id === "") {
                         delete note.id;
                     }
