@@ -271,17 +271,19 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.content.set-title', this.sandbox.dom.val(this.titleField));
         },
 
+        initializeData: function(data) {
+            var emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first'
+            this.sandbox.form.setData(this.form, data).then(function() {
+                this.sandbox.start(this.form);
+                this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
+                this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
+            }.bind(this));
+        },
+
         createForm: function(data) {
-            var formObject = this.sandbox.form.create(this.form),
-                emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first';
+            var formObject = this.sandbox.form.create(this.form);
             formObject.initialized.then(function() {
-
-                this.sandbox.form.setData(this.form, data).then(function() {
-                    this.sandbox.start(this.form);
-                    this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
-                    this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
-                }.bind(this));
-
+                this.initializeData(data);
             }.bind(this));
 
             this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
@@ -343,8 +345,8 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.contacts.accounts.saved', function(data) {
                 // reset forms data
                 this.options.data = data;
-                this.sandbox.form.setData(this.form, data);
-
+                this.initContactData();
+                this.initializeData(data);
                 this.setHeaderBar(true);
             }, this);
 
@@ -385,7 +387,6 @@ define(['app-config'], function(AppConfig) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
                 this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, true);
-                return $item;
             }
             this.saved = saved;
         },
