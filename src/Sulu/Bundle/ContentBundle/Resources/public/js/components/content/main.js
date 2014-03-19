@@ -421,7 +421,8 @@ define([
                             }
                         ];
 
-                        if (this.sandbox.dom.width(window) >= 980) {
+                        // only start preview in content tab and at specific window width
+                        if (this.sandbox.dom.width(window) >= 980 && tab.content === true) {
 
                             this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
 
