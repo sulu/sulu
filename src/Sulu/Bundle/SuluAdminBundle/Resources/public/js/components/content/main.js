@@ -142,6 +142,16 @@ define([], function() {
             // load component after click
             this.sandbox.on('husky.tabs.' + instanceName + 'item.select', this.startTabComponent.bind(this));
 
+            // abstract husky event
+            this.sandbox.on('sulu.content.tabs.deactivate', function() {
+                this.sandbox.emit('husky.tabs.' + instanceName + 'deactivate');
+            }.bind(this));
+
+            // abstract husky event
+            this.sandbox.on('sulu.content.tabs.activate', function() {
+                this.sandbox.emit('husky.tabs.' + instanceName + 'activate');
+            }.bind(this));
+
             // back clicked
             this.sandbox.on('husky.page-functions.clicked', function() {
                 this.sandbox.emit('sulu.edit-toolbar.back');
@@ -150,7 +160,6 @@ define([], function() {
             this.sandbox.on('sulu.content.set-title', setTitle.bind(this));
 
             this.sandbox.on('sulu.content.set-title-addition', setTitleAddition.bind(this));
-
         },
 
         /**
