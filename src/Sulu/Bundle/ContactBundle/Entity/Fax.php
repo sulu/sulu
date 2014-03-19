@@ -1,26 +1,18 @@
 <?php
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Phone
+ * Fax
  */
-class Phone
+class Fax
 {
     /**
      * @var string
      */
-    private $phone;
+    private $fax;
 
     /**
      * @var integer
@@ -28,9 +20,9 @@ class Phone
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\PhoneType
+     * @var \Sulu\Bundle\ContactBundle\Entity\FaxType
      */
-    private $phoneType;
+    private $faxType;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -50,34 +42,34 @@ class Phone
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
-     * Set phone
+     * Set fax
      *
-     * @param string $phone
-     * @return Phone
+     * @param string $fax
+     * @return Fax
      */
-    public function setPhone($phone)
+    public function setFax($fax)
     {
-        $this->phone = $phone;
-
+        $this->fax = $fax;
+    
         return $this;
     }
 
     /**
-     * Get phone
+     * Get fax
      *
-     * @return string
+     * @return string 
      */
-    public function getPhone()
+    public function getFax()
     {
-        return $this->phone;
+        return $this->fax;
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -85,38 +77,38 @@ class Phone
     }
 
     /**
-     * Set phoneType
+     * Set faxType
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType
-     * @return Phone
+     * @param \Sulu\Bundle\ContactBundle\Entity\FaxType $faxType
+     * @return Fax
      */
-    public function setPhoneType(\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType)
+    public function setFaxType(\Sulu\Bundle\ContactBundle\Entity\FaxType $faxType)
     {
-        $this->phoneType = $phoneType;
-
+        $this->faxType = $faxType;
+    
         return $this;
     }
 
     /**
-     * Get phoneType
+     * Get faxType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\PhoneType
+     * @return \Sulu\Bundle\ContactBundle\Entity\FaxType 
      */
-    public function getPhoneType()
+    public function getFaxType()
     {
-        return $this->phoneType;
+        return $this->faxType;
     }
 
     /**
      * Add contacts
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
-     * @return Phone
+     * @return Fax
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-
+    
         return $this;
     }
 
@@ -133,7 +125,7 @@ class Phone
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getContacts()
     {
@@ -144,12 +136,12 @@ class Phone
      * Add accounts
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
-     * @return Phone
+     * @return Fax
      */
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
         $this->accounts[] = $accounts;
-
+    
         return $this;
     }
 
@@ -166,7 +158,7 @@ class Phone
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getAccounts()
     {

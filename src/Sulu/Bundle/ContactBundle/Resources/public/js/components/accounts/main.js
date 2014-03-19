@@ -44,8 +44,8 @@ define([
             }, this);
 
             // add new contact
-            this.sandbox.on('sulu.contacts.accounts.new', function() {
-                this.add();
+            this.sandbox.on('sulu.contacts.accounts.new', function(type) {
+                this.add(type);
             }, this);
 
             // delete selected contacts
@@ -54,8 +54,12 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.contacts.accounts.list', function(ids) {
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts');
+            this.sandbox.on('sulu.contacts.accounts.list', function(type, noReload) {
+                var typeString = '';
+                if (!!type) {
+                    typeString = '/type:' + type;
+                }
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false , true);
             }, this);
         },
 
@@ -83,7 +87,7 @@ define([
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!data.id) {
-                        this.sandbox.emit('sulu.contacts.accounts.saved', model.id);
+                        this.sandbox.emit('sulu.contacts.accounts.saved', model);
                     } else {
                         this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details');
                     }
@@ -99,9 +103,10 @@ define([
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
-        add: function() {
+        add: function(type) {
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
+            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add/type:' + type);
+
         },
 
         delAccounts: function(ids) {
@@ -131,7 +136,13 @@ define([
             var $list = this.sandbox.dom.createElement('<div id="accounts-list-container"/>');
             this.html($list);
             this.sandbox.start([
-                {name: 'accounts/components/list@sulucontact', options: { el: $list}}
+                {
+                    name: 'accounts/components/list@sulucontact',
+                    options: {
+                        el: $list,
+                        accountType: this.options.accountType ? this.options.accountType : null
+                    }
+                }
             ]);
 
         },
@@ -158,7 +169,7 @@ define([
                 });
             } else {
                 this.sandbox.start([
-                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
+                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON(), accountTypeName: this.options.accountType}}
                 ]);
             }
         },

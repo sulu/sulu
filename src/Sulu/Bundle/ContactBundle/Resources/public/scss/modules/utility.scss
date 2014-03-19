@@ -28,3 +28,21 @@
     content: "";
   }
 }
+#contact-options-dropdown {
+    display: none;
+}
+
+#contact-edit-form:hover {
+    #contact-options-dropdown {
+        display: block;
+    }
+}
+
+.type-value {
+    &:before {
+        content: '(';
+    }
+    &:after {
+        content: ')';
+    }
+}

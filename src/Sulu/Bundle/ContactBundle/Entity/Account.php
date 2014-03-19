@@ -20,6 +20,24 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
  */
 class Account extends ApiEntity
 {
+
+    const TYPE_BASIC = 0;
+    const TYPE_LEAD = 1;
+    const TYPE_CUSTOMER = 2;
+    const TYPE_SUPPLIER = 3;
+
+    /**
+     * array containing all the translations for CRM types
+     * @Exclude
+     * @var array
+     */
+    public static $TYPE_TRANSLATIONS = array(
+        self::TYPE_BASIC => 'contact.account.type.basic',
+        self::TYPE_LEAD => 'contact.account.type.lead',
+        self::TYPE_CUSTOMER => 'contact.account.type.customer',
+        self::TYPE_SUPPLIER => 'contact.account.type.supplier',
+    );
+
     /**
      * @var integer
      */
@@ -107,6 +125,17 @@ class Account extends ApiEntity
      * @var \Doctrine\Common\Collections\Collection
      */
     private $notes;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $faxes;
+
+    /**
+     * @var integer
+     */
+    private $type = self::TYPE_BASIC;
+
 
     /**
      * Constructor
@@ -567,5 +596,64 @@ class Account extends ApiEntity
     public function getChildren()
     {
         return $this->children;
+    }
+
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     * @return Account
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+
+
+    /**
+     * Add faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @return Account
+     */
+    public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes[] = $faxes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     */
+    public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes->removeElement($faxes);
+    }
+
+    /**
+     * Get faxes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFaxes()
+    {
+        return $this->faxes;
     }
 }
