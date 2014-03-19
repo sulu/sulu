@@ -261,8 +261,8 @@ define(function() {
             }.bind(this));
         },
 
-        /**git
-         * Takes an object an applies it to the app-content
+        /**
+         * Takes an object with styles and applies it to the app-content
          * @param styles
          */
         changeContentStyles: function(styles) {
