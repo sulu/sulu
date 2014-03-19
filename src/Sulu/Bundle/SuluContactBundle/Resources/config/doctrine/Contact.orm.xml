@@ -88,5 +88,18 @@
                 <order-by-field name="id" direction="ASC"/>
             </order-by>
         </many-to-many>
+        <many-to-many field="faxes" target-entity="Sulu\Bundle\ContactBundle\Entity\Fax" inversed-by="contacts">
+            <join-table name="co_contact_faxes">
+                <join-columns>
+                    <join-column name="idContacts" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idFaxes" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
     </entity>
 </doctrine-mapping>

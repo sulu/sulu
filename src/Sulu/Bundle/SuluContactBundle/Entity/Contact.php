@@ -112,6 +112,11 @@ class Contact extends ApiEntity
     private $phones;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $faxes;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -607,5 +612,39 @@ class Contact extends ApiEntity
             'created'       => $this->getCreated(),
             'changed'       => $this->getChanged()
         );
+    }
+
+
+    /**
+     * Add faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @return Contact
+     */
+    public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes[] = $faxes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     */
+    public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes->removeElement($faxes);
+    }
+
+    /**
+     * Get faxes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFaxes()
+    {
+        return $this->faxes;
     }
 }

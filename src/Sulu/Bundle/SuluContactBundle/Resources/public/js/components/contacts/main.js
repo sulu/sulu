@@ -80,7 +80,7 @@ define([
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!data.id) {
-                        this.sandbox.emit('sulu.contacts.contacts.saved', model.id);
+                        this.sandbox.emit('sulu.contacts.contacts.saved', model);
                     } else {
                         this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + model.id + '/details');
                     }
