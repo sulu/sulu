@@ -2,13 +2,17 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\MediaBundle\Entity\AddressType" table="me_collection_type">
+    <entity name="Sulu\Bundle\MediaBundle\Entity\CollectionMeta" table="me_collection_metas">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="name" type="string" column="name" length="60"/>
+        <field name="title" type="string" column="title" length="255"/>
         <field name="description" type="text" column="description" nullable="true"/>
-        <one-to-many field="collections" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection"
-                     mapped-by="collectionType"/>
+        <field name="locale" type="string" column="locale" length="5"/>
+        <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="locales">
+            <join-columns>
+                <join-column name="idCollections" referenced-column-name="id" nullable="false"/>
+            </join-columns>
+        </many-to-one>
     </entity>
 </doctrine-mapping>
