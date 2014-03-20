@@ -81,6 +81,8 @@ define(function() {
          * Initialize the component
          */
         initialize: function() {
+            this.title = document.title;
+
             if (!!this.sandbox.mvc.routes) {
 
                 var AppRouter = this.sandbox.mvc.Router({
@@ -215,6 +217,13 @@ define(function() {
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
                 this.emitNavigationEvent(event, false);
+
+                // update title
+                if (!!event.parentTitle) {
+                    this.setTitlePostfix(this.sandbox.translate(event.parentTitle));
+                } else if (!!event.title) {
+                    this.setTitlePostfix(this.sandbox.translate(event.title));
+                }
             }.bind(this));
 
             // content tabs event
@@ -277,6 +286,14 @@ define(function() {
             });
 
             changeContentMarginLeft.call(this, styles.left);
+        },
+
+        /**
+         * Takes a postifix and updates the page title
+         * @param postfix {String}
+         */
+        setTitlePostfix: function(postfix) {
+            document.title = this.title + ' - ' + postfix;
         },
 
         /**
