@@ -6,8 +6,8 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="title" type="string" column="name" length="60"/>
-        <field name="description" type="text" column="name" nullable="true"/>
+        <field name="title" type="string" column="title" length="60"/>
+        <field name="description" type="text" column="description" nullable="true"/>
         <field name="locale" type="string" column="locale" length="5"/>
         <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="locales">
             <join-columns>
