@@ -1,0 +1,83 @@
+<?php
+
+namespace Sulu\Bundle\MediaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FileVersionPublishLanguage
+ */
+class FileVersionPublishLanguage
+{
+    /**
+     * @var string
+     */
+    private $locale;
+
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\File
+     */
+    private $fileVersion;
+
+
+    /**
+     * Set locale
+     *
+     * @param string $locale
+     * @return FileVersionPublishLanguage
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    
+        return $this;
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string 
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set fileVersion
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\File $fileVersion
+     * @return FileVersionPublishLanguage
+     */
+    public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\File $fileVersion = null)
+    {
+        $this->fileVersion = $fileVersion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fileVersion
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\File 
+     */
+    public function getFileVersion()
+    {
+        return $this->fileVersion;
+    }
+}
