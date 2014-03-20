@@ -23,7 +23,7 @@
     </head>
     <body>
         <div id="main">
-            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
+            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true" data-aura-select-action="settings/roles"
                 {% if user.username is defined %}
                 data-aura-footer-template="<div>{{ user.fullname }}</div>
                 {% endif %}

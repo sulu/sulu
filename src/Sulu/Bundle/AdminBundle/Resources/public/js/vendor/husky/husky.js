@@ -24685,6 +24685,7 @@ define('__component__$navigation@husky',[],function() {
 
             this.stayCollapsed = false;
             this.hidden = false;
+            this.tooltipsEnabled = true;
 
             // binding dom events
             this.bindDOMEvents();
@@ -24814,6 +24815,7 @@ define('__component__$navigation@husky',[],function() {
 
             this.sandbox.util.foreach(data.items, function(item) {
                 this.items[item.id] = item;
+                this.items[item.id].parentTitle = data.title;
                 if (item.items && item.items.length > 0) {
                     elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subToggleItem, {item: item, translate: this.sandbox.translate}));
                     this.renderSubNavigationItems(item, this.sandbox.dom.find('div', elem));
@@ -24861,6 +24863,7 @@ define('__component__$navigation@husky',[],function() {
 
             this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function() {
                 this.sandbox.emit(EVENT_SIZE_CHANGED, this.sandbox.dom.width(this.$navigation));
+                this.tooltipsEnabled = true;
             }.bind(this));
             this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function(event) {
                 event.stopPropagation();
@@ -24902,20 +24905,22 @@ define('__component__$navigation@husky',[],function() {
         },
 
         showToolTip: function(title, event) {
-            var offset,
-                target = event.currentTarget;
+            if (this.tooltipsEnabled === true) {
+                var offset,
+                    target = event.currentTarget;
 
-            if (!title) {
-                title = this.sandbox.dom.html(this.sandbox.dom.find('.navigation-item-title', event.currentTarget));
+                if (!title) {
+                    title = this.sandbox.dom.html(this.sandbox.dom.find('.navigation-item-title', event.currentTarget));
+                }
+                if (!this.$tooltip) {
+                    this.$tooltip = this.sandbox.dom.createElement('<div class="navigation-tooltip">' + title + '</div>');
+                    this.sandbox.dom.append('body', this.$tooltip);
+                }
+                offset = this.sandbox.dom.offset(target);
+                this.sandbox.dom.css(this.$tooltip, {
+                    top: offset.top + (this.sandbox.dom.outerHeight(target) - 30) / 2
+                });
             }
-            if (!this.$tooltip) {
-                this.$tooltip = this.sandbox.dom.createElement('<div class="navigation-tooltip">' + title + '</div>');
-                this.sandbox.dom.append('body', this.$tooltip);
-            }
-            offset = this.sandbox.dom.offset(target);
-            this.sandbox.dom.css(this.$tooltip, {
-                top: offset.top + (this.sandbox.dom.height(target) - 30) / 2
-            });
         },
 
         hideToolTip: function() {
@@ -25095,6 +25100,7 @@ define('__component__$navigation@husky',[],function() {
                     this.sandbox.emit(EVENT_COLLAPSED, CONSTANTS.COLLAPSED_WIDTH);
                     this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.COLLAPSED_WIDTH);
                     this.collapsed = !this.collapsed;
+                    this.tooltipsEnabled = false;
                 }
             }
         },
@@ -25112,6 +25118,7 @@ define('__component__$navigation@husky',[],function() {
                         this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.UNCOLLAPSED_WIDTH);
                     }
                     this.collapsed = !this.collapsed;
+                    this.tooltipsEnabled = false;
                 }
             }
         },
@@ -27249,7 +27256,7 @@ define('__component__$datagrid@husky',[],function() {
                         el: this.sandbox.dom.find('#' + this.pagination.dropdownId, this.$el),
                         setParentDropDown: true,
                         instanceName: this.dropdownInstanceName,
-                        alignment: 'left',
+                        alignment: 'right',
                         data: data
                     }
                 }
@@ -32684,6 +32691,7 @@ define('__component__$column-navigation@husky',[], function() {
                         this.parseData(response, columnNumber);
                         this.alignWithColumnsWidth();
                         this.scrollIfNeeded(this.filledColumns + 1);
+                        this.setOverflowClass();
                         this.sandbox.emit(LOADED);
                     }.bind(this))
                     .fail(function(error) {
@@ -32889,7 +32897,20 @@ define('__component__$column-navigation@husky',[], function() {
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 this.setContainerHeight();
                 this.setContainerMaxWidth();
+                this.setOverflowClass();
             }.bind(this));
+        },
+
+        /**
+         * Sets an overflow-class to the container if the navigation is scrollable
+         */
+        setOverflowClass: function() {
+            var $navigation = this.sandbox.dom.find('.column-navigation', this.$el);
+            if (this.sandbox.dom.width($navigation) < this.sandbox.dom.get($navigation, 0).scrollWidth) {
+                this.sandbox.dom.addClass($navigation, 'overflow');
+            } else {
+                this.sandbox.dom.removeClass($navigation, 'overflow');
+            }
         },
 
         bindCustomEvents: function() {
@@ -33046,6 +33067,7 @@ define('__component__$column-navigation@husky',[], function() {
                 if (!selectedItem.hasSub) {
                     this.alignWithColumnsWidth();
                     this.scrollIfNeeded(column);
+                    this.setOverflowClass();
                 }
             }
 
