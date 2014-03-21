@@ -28,21 +28,25 @@
   content: "";
 }
 
-/* line 31, ../scss/modules/utility.scss */
+/* line 32, ../scss/modules/utility.scss */
 #contact-options-dropdown {
   display: none;
 }
+/* line 35, ../scss/modules/utility.scss */
+#contact-options-dropdown.is-active {
+  display: block;
+}
 
-/* line 36, ../scss/modules/utility.scss */
+/* line 41, ../scss/modules/utility.scss */
 #contact-edit-form:hover #contact-options-dropdown {
   display: block;
 }
 
-/* line 42, ../scss/modules/utility.scss */
+/* line 47, ../scss/modules/utility.scss */
 .type-value:before {
   content: '(';
 }
-/* line 45, ../scss/modules/utility.scss */
+/* line 50, ../scss/modules/utility.scss */
 .type-value:after {
   content: ')';
 }
