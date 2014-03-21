@@ -24618,6 +24618,13 @@ define('__component__$navigation@husky',[],function() {
         namespace = 'husky.navigation.',
 
         /**
+         * listens on and activates the matching navigation-item
+         * @event husky.navigation.select-item
+         * @param {string} selectAction The select-action to match the navigation-item for
+         */
+            EVENT_SELECT_ITEM = namespace + 'select-item',
+
+        /**
          * raised when navigation was collapsed
          * @event husky.navigation.collapsed
          * @param {Number} width The width of the collapsed navigation
@@ -24761,7 +24768,9 @@ define('__component__$navigation@husky',[],function() {
             }
 
             // preselect item based on url
-            this.preselectItem();
+            if (!!this.options.selectAction && this.options.selectAction.length > 0) {
+                this.preselectItem(this.options.selectAction);
+            }
 
             // collapse if necessary
             this.resizeListener();
@@ -24798,7 +24807,7 @@ define('__component__$navigation@husky',[],function() {
                         this.renderSubNavigationItems(item, $elem);
                     }
                     item.domObject = $elem;
-                    this.items[item.id] = item;
+                    this.items.push(item);
                 }.bind(this));
             }.bind(this));
         },
@@ -24814,8 +24823,8 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.dom.append($parentList, list);
 
             this.sandbox.util.foreach(data.items, function(item) {
-                this.items[item.id] = item;
-                this.items[item.id].parentTitle = data.title;
+                item.parentTitle = data.title;
+                this.items.push(item);
                 if (item.items && item.items.length > 0) {
                     elem = this.sandbox.dom.createElement(this.sandbox.template.parse(templates.subToggleItem, {item: item, translate: this.sandbox.translate}));
                     this.renderSubNavigationItems(item, this.sandbox.dom.find('div', elem));
@@ -24891,7 +24900,7 @@ define('__component__$navigation@husky',[],function() {
 
             this.sandbox.on(EVENT_HIDE, this.hide.bind(this));
             this.sandbox.on(EVENT_SHOW, this.show.bind(this));
-
+            this.sandbox.on(EVENT_SELECT_ITEM, this.preselectItem.bind(this));
         },
 
         resizeListener: function() {
@@ -24931,17 +24940,17 @@ define('__component__$navigation@husky',[],function() {
         },
 
 
-        preselectItem: function() {
-            if (!this.options.selectAction || this.options.selectAction.length < 1) {
-                return;
-            }
-
+        /**
+         * Takes an action and select the matching navigation point
+         * @param selectAction {string}
+         */
+        preselectItem: function(selectAction) {
             var matchLength = 0, matchItem, parent, match;
             this.sandbox.util.foreach(this.items, function(item) {
                 if (!item || !item.action) {
                     return;
                 }
-                if (this.options.selectAction.indexOf(item.action) !== -1 && item.action.length > matchLength) {
+                if (selectAction.indexOf(item.action) !== -1 && item.action.length > matchLength) {
                     matchItem = item;
                     matchLength = item.action.length;
                 }
@@ -24972,7 +24981,7 @@ define('__component__$navigation@husky',[],function() {
 
             // emit event
             var listItem = this.sandbox.dom.closest(event.currentTarget, '.js-navigation-items'),
-                item = this.items[this.sandbox.dom.data(listItem, 'id')];
+                item = this.getItemById(this.sandbox.dom.data(listItem, 'id'));
 
             this.sandbox.emit('husky.navigation.item.settings', item);
 
@@ -25023,7 +25032,7 @@ define('__component__$navigation@husky',[],function() {
             }
 
             // emit event
-            item = this.items[this.sandbox.dom.data($items, 'id')];
+            item = this.getItemById(this.sandbox.dom.data($items, 'id'));
             this.sandbox.emit('husky.navigation.item.toggle', !isExpanded, item);
         },
 
@@ -25179,7 +25188,7 @@ define('__component__$navigation@husky',[],function() {
 
 
             // emit event
-            item = this.items[this.sandbox.dom.data($subItem, 'id')];
+            item = this.getItemById(this.sandbox.dom.data($subItem, 'id'));
             this.sandbox.emit('husky.navigation.item.select', item);
 
 
@@ -25187,6 +25196,20 @@ define('__component__$navigation@husky',[],function() {
                 setTimeout(this.resizeListener.bind(this), 700);
             }
 
+        },
+
+        /**
+         * Takes an id and returns the matching item
+         * @param id {number|string} id of the item
+         * @returns {object|null}
+         */
+        getItemById: function(id) {
+            for (var i = -1, length = this.items.length; ++i < length;) {
+                if (id === this.items[i].id) {
+                    return this.items[i];
+                }
+            }
+            return null;
         },
 
         /**
