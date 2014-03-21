@@ -113,10 +113,17 @@ define(function() {
                 this.currentRoute = null;
 
                 this.bindCustomEvents();
-                this.bindDomEvents();
 
                 this.sandbox.emit(INITIALIZED.call(this));
             }
+        },
+
+        /**
+         * Takes an action and emits a sets the matching navigation-item active
+         * @param action {string}
+         */
+        selectNavigationItem: function(action) {
+            this.sandbox.emit('husky.navigation.select-item', action);
         },
 
         /**
@@ -193,7 +200,7 @@ define(function() {
                     // and the stop event will be called
                     this.sandbox.stop('#edit-toolbar');
                     this.sandbox.stop('#content > *');
-                    App.stop('#preview > * ');
+                    this.sandbox.stop('#preview > *');
                 }
 
                 // reset store for cleaning environment
@@ -268,6 +275,13 @@ define(function() {
             this.sandbox.on('sulu.view.initialize', function() {
                 this.sandbox.stop('.sulu-app-loader');
             }.bind(this));
+
+            // select right navigation-item on navigation startup
+            this.sandbox.on('husky.navigation.initialized', function() {
+                if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
+                    this.selectNavigationItem(this.sandbox.mvc.history.fragment);
+                }
+            }.bind(this));
         },
 
         /**
@@ -299,12 +313,13 @@ define(function() {
         /**
          * Emits the router.navigate event
          * @param event
-         * @param {Boolean} loader
+         * @param {boolean} loader If true a loader will be displayed
+         * @param {boolean} updateNavigation If true the navigation will be updated with the passed route
          */
-        emitNavigationEvent: function(event, loader) {
-
-            // TODO: select right bundle / item in navigation
-
+        emitNavigationEvent: function(event, loader, updateNavigation) {
+            if (updateNavigation === true) {
+                this.selectNavigationItem(event.action);
+            }
             if (!!event.action) {
                 this.sandbox.emit('sulu.router.navigate', event.action, event.forceReload, loader);
             }
