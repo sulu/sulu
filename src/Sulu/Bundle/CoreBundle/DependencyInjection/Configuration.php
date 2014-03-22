@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -66,28 +67,33 @@ class Configuration implements ConfigurationInterface
 
     /**
      * @param NodeBuilder $rootNode
+     * @return NodeDefinition
      */
     private function getPhpcrConfiguration(NodeBuilder $rootNode)
     {
-        $rootNode->arrayNode('phpcr')
-            ->children()
-                ->scalarNode('factory_class')
-                    ->defaultValue('Jackalope\RepositoryFactoryJackrabbit')
+        $treeBuilder = new TreeBuilder();
+        $node = $treeBuilder->root('sessions');
+
+        $node
+            ->requiresAtLeastOneElement()
+                ->useAttributeAsKey('name')
+                ->prototype('array')
+                ->children()
+                    ->scalarNode('workspace')->isRequired()->cannotBeEmpty()->end()
+                    ->scalarNode('username')->defaultNull()->end()
+                    ->scalarNode('password')->defaultNull()->end()
+                    ->arrayNode('backend')
+                        ->useAttributeAsKey('name')
+                        ->prototype('variable')->end()
+                    ->end()
+                    ->arrayNode('options')
+                        ->useAttributeAsKey('name')
+                        ->prototype('scalar')->end()
+                    ->end()
                 ->end()
-                ->scalarNode('url')
-                    ->defaultValue('http://localhost:8080/server')
-                ->end()
-                ->scalarNode('username')
-                    ->defaultValue('admin')
-                ->end()
-                ->scalarNode('password')
-                    ->defaultValue('admin')
-                ->end()
-                ->scalarNode('workspace')
-                    ->defaultValue('default')
-                ->end()
-            ->end()
-        ->end();
+            ->end();
+
+        return $node;
     }
 
     /**
