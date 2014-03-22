@@ -171,7 +171,7 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
 
             // return an available localization
             if ($availableLocalization) {
-                return $availableLocalization;
+                break;
             }
         }
 
