@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu.phpcr.factory.class">Midgard\PHPCR\RepositoryFactory</parameter>
+    </parameters>
+
+    <services>
+        <!-- midgard phpcr session -->
+        <service id="sulu.session.factory" class="%sulu.phpcr.factory.class%" public="false"/>
+        <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
+            <argument type="service" id="sulu.session.factory"/>
+            <argument type="collection">
+                <argument key="username">%sulu.phpcr.username%</argument>
+                <argument key="password">%sulu.phpcr.password%</argument>
+                <argument key="workspace">%sulu.phpcr.workspace%</argument>
+            </argument>
+            <argument type="collection">
+                <argument key="base">%sulu.content.node_names.base%</argument>
+                <argument key="content">%sulu.content.node_names.content%</argument>
+                <argument key="route">%sulu.content.node_names.route%</argument>
+            </argument>
+        </service>
+    </services>
+
+</container>

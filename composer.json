@@ -23,7 +23,8 @@
     "require-dev": {
         "symfony/symfony": "2.3.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "dev-develop"
+        "sulu/test-bundle": "dev-develop",
+        "jackalope/jackalope-doctrine-dbal": "@dev"
     },
     "autoload": {
         "psr-0": {

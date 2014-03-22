@@ -10,8 +10,11 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
+use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
@@ -42,16 +45,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 switch ($name) {
                     case 'doctrine_phpcr':
                         $prependConfig = array(
-                            'session' => array(
-                                'backend' => array(
-                                    // TODO make sulu_core phpcr config compatible to doctrine_phpcr
-                                    'type' => 'jackrabbit',
-                                    'url' => $phpcrConfig['url'],
-                                ),
-                                'username' => $phpcrConfig['username'],
-                                'password' => $phpcrConfig['password'],
-                                'workspace' => $phpcrConfig['workspace'],
-                            ),
+                            'session' => $phpcrConfig,
                             'odm' => array(),
                         );
                         break;
@@ -131,17 +125,81 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      * @param $phpcrConfig
      * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
+     * @throws InvalidArgumentException
      */
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
-        // session factory
-        $container->setParameter('sulu.phpcr.factory_class', $phpcrConfig['factory_class']);
-        $container->setParameter('sulu.phpcr.url', $phpcrConfig['url']);
+        $type = isset($phpcrConfig['backend']['type']) ? $phpcrConfig['backend']['type'] : 'jackrabbit';
+
+        switch ($type) {
+            case 'doctrinedbal':
+                $phpcrConfig = $this->loadDoctrineDbalParameters($phpcrConfig, $container);
+                $xmlFile = 'phpcr_doctrinedbal.xml';
+                break;
+            case 'jackrabbit':
+                $phpcrConfig = $this->loadJackrabbitParameters($phpcrConfig);
+                $xmlFile = 'phpcr_jackrabbit.xml';
+                break;
+            case 'midgard2':
+                $phpcrConfig = $this->loadMidgard2Parameters($phpcrConfig);
+                $xmlFile = 'phpcr_midgard2.xml';
+                break;
+            default:
+                throw new InvalidArgumentException(sprintf('You set an unsupported transport type "%s"', $type));
+        }
+
+        // set backend parameter
+        foreach ($phpcrConfig['backend'] as $name => $backendParameter) {
+            $container->setParameter(sprintf('sulu.phpcr.backend.%s', $name), $backendParameter);
+        }
+        // set session parameter
         $container->setParameter('sulu.phpcr.username', $phpcrConfig['username']);
         $container->setParameter('sulu.phpcr.password', $phpcrConfig['password']);
         $container->setParameter('sulu.phpcr.workspace', $phpcrConfig['workspace']);
 
+        // default session configuration
         $loader->load('phpcr.xml');
+        //specific session configuration
+        $loader->load($xmlFile);
+    }
+
+    private function loadDoctrineDbalParameters($phpcrConfig, ContainerBuilder $container)
+    {
+        $connectionName = isset($phpcrConfig['backend']['connection'])
+            ? $phpcrConfig['backend']['connection']
+            : null;
+
+        $connectionService = $connectionName
+            ? sprintf('doctrine.dbal.%s_connection', $connectionName)
+            : 'database_connection';
+
+        $phpcrConfig['backend']['connection'] = $connectionService;
+
+        $container
+            ->setDefinition('sulu.phpcr.session', new DefinitionDecorator('sulu.phpcr.session'))
+            ->replaceArgument(
+                2,
+                array(
+                    'jackalope.doctrine_dbal_connection' => new Reference($connectionService)
+                )
+            );
+
+        return $phpcrConfig;
+    }
+
+    private function loadJackrabbitParameters($phpcrConfig)
+    {
+        // default values
+        if (!isset($phpcrConfig['url'])) {
+            $phpcrConfig['url'] = 'http://localhost:8080/server';
+        }
+
+        return $phpcrConfig;
+    }
+
+    private function loadMidgard2Parameters($phpcrConfig)
+    {
+        return $phpcrConfig;
     }
 
     /**

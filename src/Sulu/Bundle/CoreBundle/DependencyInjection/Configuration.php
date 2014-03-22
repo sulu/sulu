@@ -67,33 +67,29 @@ class Configuration implements ConfigurationInterface
 
     /**
      * @param NodeBuilder $rootNode
-     * @return NodeDefinition
      */
     private function getPhpcrConfiguration(NodeBuilder $rootNode)
     {
-        $treeBuilder = new TreeBuilder();
-        $node = $treeBuilder->root('sessions');
-
-        $node
-            ->requiresAtLeastOneElement()
-                ->useAttributeAsKey('name')
-                ->prototype('array')
-                ->children()
-                    ->scalarNode('workspace')->isRequired()->cannotBeEmpty()->end()
-                    ->scalarNode('username')->defaultNull()->end()
-                    ->scalarNode('password')->defaultNull()->end()
-                    ->arrayNode('backend')
-                        ->useAttributeAsKey('name')
-                        ->prototype('variable')->end()
-                    ->end()
-                    ->arrayNode('options')
-                        ->useAttributeAsKey('name')
-                        ->prototype('scalar')->end()
-                    ->end()
+        $rootNode->arrayNode('phpcr')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('workspace')
+                    ->isRequired()
+                    ->cannotBeEmpty()
                 ->end()
-            ->end();
+                ->scalarNode('username')
+                    ->defaultNull()
+                ->end()
+                ->scalarNode('password')
+                    ->defaultNull()
+                ->end()
+                ->arrayNode('backend')
+                    ->useAttributeAsKey('name')
+                    ->prototype('variable')
+                ->end()
+            ->end()
+        ->end();
 
-        return $node;
     }
 
     /**

@@ -26,11 +26,6 @@ class SessionManager implements SessionManagerInterface
     private $factory;
 
     /**
-     * @var string
-     */
-    private $parameters;
-
-    /**
      * @var string[]
      */
     private $nodeNames;
@@ -50,11 +45,10 @@ class SessionManager implements SessionManagerInterface
      */
     private $session;
 
-    function __construct(RepositoryFactoryInterface $factory, $options, $nodeNames)
+    function __construct(RepositoryFactoryInterface $factory, $options, $parameters, $nodeNames)
     {
-        $this->options = $this->getOptions($options);
+        $this->parameters = $parameters;
 
-        $this->parameters = array('jackalope.jackrabbit_uri' => $options['url']);
         $this->factory = $factory;
         $this->repository = $this->factory->getRepository($this->parameters);
         $this->credentials = new SimpleCredentials($options['username'], $options['password']);
@@ -62,18 +56,6 @@ class SessionManager implements SessionManagerInterface
         $this->session = $this->repository->login($this->credentials, $options['workspace']);
 
         $this->nodeNames = $nodeNames;
-    }
-
-    private function getOptions($options)
-    {
-        $defaults = array(
-            'url' => 'http://localhost:8080/server',
-            'username' => 'admin',
-            'password' => 'admin',
-            'workspace' => 'default'
-        );
-
-        return array_merge($defaults, $options);
     }
 
     /**
