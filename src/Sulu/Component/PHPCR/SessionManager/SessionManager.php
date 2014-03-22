@@ -20,10 +20,6 @@ use PHPCR\SimpleCredentials;
 
 class SessionManager implements SessionManagerInterface
 {
-    /**
-     * @var RepositoryFactoryInterface
-     */
-    private $factory;
 
     /**
      * @var string[]
@@ -31,30 +27,13 @@ class SessionManager implements SessionManagerInterface
     private $nodeNames;
 
     /**
-     * @var RepositoryInterface
-     */
-    private $repository;
-
-    /**
-     * @var CredentialsInterface
-     */
-    private $credentials;
-
-    /**
      * @var SessionInterface
      */
     private $session;
 
-    function __construct(RepositoryFactoryInterface $factory, $options, $parameters, $nodeNames)
+    function __construct(SessionInterface $session, $nodeNames)
     {
-        $this->parameters = $parameters;
-
-        $this->factory = $factory;
-        $this->repository = $this->factory->getRepository($this->parameters);
-        $this->credentials = new SimpleCredentials($options['username'], $options['password']);
-
-        $this->session = $this->repository->login($this->credentials, $options['workspace']);
-
+        $this->session = $session;
         $this->nodeNames = $nodeNames;
     }
 

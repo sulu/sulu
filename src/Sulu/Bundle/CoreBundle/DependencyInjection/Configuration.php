@@ -87,9 +87,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->prototype('variable')
                 ->end()
-            ->end()
-        ->end();
-
+            ->end();
     }
 
     /**
