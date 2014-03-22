@@ -155,19 +155,26 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
         TranslatedProperty $property
     )
     {
+        $availableLocalization = null;
+
         foreach ($localizations as $localization) {
             /** @var Localization $localization */
-            $property->setLocalization($localization->getLocalization('_'));
+            $property->setLocalization($localization->getLocalization());
             if ($contentNode->hasProperty($property->getName())) {
                 return $localization;
             }
 
             $childrenLocalizations = $localization->getChildren();
             if (!empty($childrenLocalizations)) {
-                return $this->findAvailableLocalization($contentNode, $childrenLocalizations, $property);
+                $availableLocalization = $this->findAvailableLocalization($contentNode, $childrenLocalizations, $property);
+            }
+
+            // return an available localization
+            if ($availableLocalization) {
+                break;
             }
         }
 
-        return null;
+        return $availableLocalization;
     }
 }
