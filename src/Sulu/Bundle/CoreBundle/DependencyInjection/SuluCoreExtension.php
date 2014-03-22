@@ -127,7 +127,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
-        $loader->import('phpcr.xml');
+        $loader->load('phpcr.xml');
     }
 
     /**
