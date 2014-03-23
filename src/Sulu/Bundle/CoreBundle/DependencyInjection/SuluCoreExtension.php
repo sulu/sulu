@@ -95,6 +95,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initFields($config['fields_defaults'], $container);
         }
 
+        $loader->load('cache.xml');
         $loader->load('rest.xml');
     }
 
