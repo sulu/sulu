@@ -70,6 +70,7 @@ class PhpcrMapper extends RlpMapper
 
         $node->addMixin('sulu:path');
         $node->setProperty('sulu:content', $contentNode);
+        $node->setProperty('sulu:history', false);
     }
 
     /**
