@@ -195,6 +195,88 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
+    public function testReadMultiple()
+    {
+        $this->prepareMultipleBlockProperty();
+
+        $this->node = $this->getMock('\Jackalope\Node', array('getPropertyValue', 'hasProperty'), array(), '', false);
+        $data = array(
+            array(
+                'title' => 'Test-Title-1',
+                'article' => array(
+                    'Test-Article-1-1',
+                    'Test-Article-1-2'
+                ),
+                'sub-block' => array(
+                    'title' => 'Test-Title-Sub-1',
+                    'article' => 'Test-Article-Sub-1'
+                )
+            ),
+            array(
+                'title' => 'Test-Title-2',
+                'article' => 'Test-Article-2',
+                'sub-block' => array(
+                    'title' => 'Test-Title-Sub-2',
+                    'article' => 'Test-Article-Sub-2'
+                )
+            )
+        );
+
+        $valueMap = array(
+            array(
+                'sulu_locale:de-block1-title',
+                null,
+                array(
+                    $data[0]['title'],
+                    $data[1]['title']
+                )
+            ),
+            array(
+                'sulu_locale:de-block1-article',
+                null,
+                array(
+                    $data[0]['article'],
+                    $data[1]['article']
+                )
+            ),
+            array(
+                'sulu_locale:de-block1-sub-block-title',
+                null,
+                array(
+                    $data[0]['sub-block']['title'],
+                    $data[1]['sub-block']['title']
+                )
+            ),
+            array(
+                'sulu_locale:de-block1-sub-block-article',
+                null,
+                array(
+                    $data[0]['sub-block']['article'],
+                    $data[1]['sub-block']['article']
+                )
+            )
+        );
+        $this->node
+            ->expects($this->any())
+            ->method('getPropertyValue')
+            ->will($this->returnValueMap($valueMap));
+        $this->node
+            ->expects($this->any())
+            ->method('hasProperty')
+            ->will($this->returnValue(true));
+
+        $this->blockContentType->read(
+            $this->node,
+            new TranslatedProperty($this->blockProperty, 'de', 'sulu_locale'),
+            'default',
+            'de',
+            ''
+        );
+
+        // check resulted structure
+        $this->assertEquals($data, $this->blockProperty->getValue());
+    }
+
     public function testWriteMultiple()
     {
         $this->prepareMultipleBlockProperty();
