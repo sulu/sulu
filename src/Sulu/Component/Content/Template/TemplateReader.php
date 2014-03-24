@@ -93,7 +93,7 @@ class TemplateReader implements LoaderInterface
                 }
 
                 $name = $attributes[$this->nameKey];
-                $params = $this->getChildrenOfNode($node, $this->pathToParams);
+                $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath);
                 $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
 
                 if(in_array($node->tagName, $this->complexNodeTypes)) {
@@ -135,7 +135,7 @@ class TemplateReader implements LoaderInterface
             }
 
             $name = $attributes[$this->nameKey];
-            $params = $this->getChildrenOfNode($child, $this->pathToParams);
+            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath);
             $properties[$name] = array_merge($attributes, $params);
 
             if(in_array($child->tagName, $this->complexNodeTypes)) {
@@ -206,16 +206,17 @@ class TemplateReader implements LoaderInterface
      * Returns an array with all the attributes from the children of a node
      * @param \DOMNode $node
      * @param $path
+     * @param $xpath
      * @return array
      * @internal param $paramsTag
      */
-    private function getChildrenOfNode(\DOMNode $node, $path)
+    private function getChildrenOfNode(\DOMNode $node, $path, $xpath)
     {
 
         $keyValue = array();
+        $params = $children = $xpath->query($path, $node);
 
-        // TODO only if param exists
-        if ($node->hasChildNodes()) {
+        if ($params->length > 0) {
 
             $keyValue[$this->paramsKey] = array();
             $xpath = new \DOMXPath($this->xmlDocument);
