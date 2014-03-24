@@ -282,6 +282,31 @@ define(function() {
                     this.selectNavigationItem(this.sandbox.mvc.history.fragment);
                 }
             }.bind(this));
+
+            // change user locale
+            this.sandbox.on('husky.navigation.user-locale.changed', function(locale) {
+                this.changeUserLocale(locale);
+            }.bind(this));
+        },
+
+        /**
+         * Changes the locale of the user
+         * @param locale {string} locale to change to
+         */
+        changeUserLocale: function(locale) {
+            //Todo: don't use hardcoded url
+            this.sandbox.util.ajax({
+                type: 'PATCH',
+                url: '/admin/api/users/' + this.options.user.id,
+                contentType: 'application/json', // payload format
+                dataType: 'json', // response format
+                data: JSON.stringify({
+                    locale: locale
+                }),
+                success: function() {
+                    this.sandbox.dom.window.location.reload();
+                }.bind(this)
+            });
         },
 
         /**
