@@ -127,6 +127,7 @@ class Contact extends ApiEntity
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -646,5 +647,67 @@ class Contact extends ApiEntity
     public function getFaxes()
     {
         return $this->faxes;
+    }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $urls;
+
+
+    /**
+     * Add urls
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     * @return Contact
+     */
+    public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    {
+        $this->urls[] = $urls;
+    
+        return $this;
+    }
+
+    /**
+     * Remove urls
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     */
+    public function removeUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    {
+        $this->urls->removeElement($urls);
+    }
+
+    /**
+     * Get urls
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUrls()
+    {
+        return $this->urls;
+    }
+
+    /**
+     * Add faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @return Contact
+     */
+    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes[] = $faxes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     */
+    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes->removeElement($faxes);
     }
 }

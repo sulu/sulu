@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * FaxType
@@ -21,6 +22,7 @@ class FaxType
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $faxes;
 

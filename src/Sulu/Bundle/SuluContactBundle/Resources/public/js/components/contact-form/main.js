@@ -17,86 +17,73 @@ define([], function() {
         },
 
         bindCustomEvents = function() {
-            this.sandbox.on('sulu.contact-form.form.create', createForm.bind(this));
+            this.sandbox.on('sulu.contact-form.add-collectionfilters', addCollectionFilters.bind(this));
+            this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
+            this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
         },
 
 
-        createForm = function(form, data, callback) {
+        addCollectionFilters = function(form) {
+            // set form
+            this.form = form;
 
-            if (!form || !data || !callback) {
-                throw "not enough parameters specified";
-            }
-
-            this.sandbox.form.addCollectionFilter(form, 'emails', function(email) {
+            // add collection filters
+            this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
                 if (email.id === "") {
                     delete email.id;
                 }
                 return email.email !== "";
             });
-            this.sandbox.form.addCollectionFilter(form, 'phones', function(phone) {
+            this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
                 if (phone.id === "") {
                     delete phone.id;
                 }
                 return phone.phone !== "";
             });
-            this.sandbox.form.addCollectionFilter(form, 'urls', function(url) {
+            this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
                 if (url.id === "") {
                     delete url.id;
                 }
                 return url.url !== "";
             });
-            this.sandbox.form.addCollectionFilter(form, 'notes', function(note) {
+            this.sandbox.form.addCollectionFilter(this.form, 'faxes', function(fax) {
+                if (fax.id === "") {
+                    delete fax.id;
+                }
+                return fax.fax !== "";
+            });
+            this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
                 if (note.id === "") {
                     delete note.id;
                 }
                 return note.value !== "";
             });
-
-            initContactData(data);
-
-            callback.call(this, data);
-
-
         },
 
-    // CONTACT
-        fillFields = function(field, minAmount, value) {
-            if (!field) {
-                return;
-            }
-            while (field.length < minAmount) {
-                field.push(value);
+        addRequires = function(data) {
+            var tplNames = {
+                    email: 'email-tpl'
+                },
+                tplSelector = '#contact-fields *[data-mapper-property-tpl="<%= selector %>"]:first',
+                emailSelector;
+
+            if (data.indexOf('email') !== -1) {
+                emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
+                this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
+                this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
             }
         },
 
-        // CONTACT
-        initContactData = function(data) {
-            fillFields(data.urls, 1, {
-                id: null,
-                url: '',
-                urlType: this.defaultTypes.urlType
-            });
-            fillFields(data.emails, 1, {
-                id: null,
-                email: '',
-                emailType: this.defaultTypes.emailType
-            });
-            fillFields(data.phones, 1, {
-                id: null,
-                phone: '',
-                phoneType: this.defaultTypes.phoneType
-            });
-            fillFields(data.notes, 1, {
-                id: null,
-                value: ''
-            });
-    //            this.fillFields(contactJson.addresses, 1, {
-    //                id: null,
-    //                addressType: this.defaultTypes.addressType,
-    //                street: this.sandbox.translate('contact.add.address')
-    //            });
-            return data;
+        isInitialized = function(callback){
+            if (!this.initialized) {
+                this.sandbox.on('sulu.contact-form.initialized', function() {
+                    callback.call(this);
+                }.bind(this));
+            } else {
+                callback.call(this);
+            }
         },
+
 
         createAddOverlay = function() {
             var tmpl = [
@@ -161,6 +148,8 @@ define([], function() {
 
         initialize: function() {
 
+            this.initialized = false;
+
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
 
@@ -169,11 +158,13 @@ define([], function() {
             bindCustomEvents.call(this);
 
             this.sandbox.emit('sulu.contact-form.initialized');
+            this.initialized = true;
         },
 
         render: function() {
 
-            var $container = this.sandbox.dom.createElement('<div id="contact-form-options-container" />');;
+            var $container = this.sandbox.dom.createElement('<div id="contact-form-options-container" />');
+            ;
 
             // add new container
             this.sandbox.dom.append(this.$el, $container);

@@ -45,7 +45,7 @@
                         </div>
                     </script>
                 </div>
-                <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"}]'>
+                <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
                     <script type="text/template" id="email-tpl">
                         <div class="grid-col-6 floating">
                             <~ var uid = _.uniqueId('email_') ~>
@@ -61,6 +61,25 @@
                                 <div>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
                                     <input id="<~= uid ~>" type="text" class="form-element email-value" data-type="email" data-mapper-property="email">
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/template" id="fax-tpl">
+                        <div class="grid-col-6 floating">
+                            <~ var uid = _.uniqueId('fax_') ~>
+                            <div class="form-group">
+                                <label for="<~= uid ~>">
+                                    <%=translate('public.fax')%>
+                                    <span class="label-container">
+                                        <span class="type-value" data-form="true" data-mapper-property="faxType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultFaxType.id }}">
+                                            <%=translate('{{ defaultFaxType.name }}')%>
+                                        </span>
+                                    </span>
+                                </label>
+                                <div>
+                                    <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                    <input id="<~= uid ~>" type="text" class="form-element" data-mapper-property="fax">
                                 </div>
                             </div>
                         </div>
@@ -150,10 +169,10 @@
                     'id': {{ defaultUrlType.id }},
                     'name': '{{ defaultUrlType.name }}'
                 },
-                {#faxType: {#}
-                    {#'id': {{ defaultFaxType.id }},#}
-                    {#'name': '{{ defaultFaxType.name }}'#}
-                {#},#}
+                faxType: {
+                    'id': {{ defaultFaxType.id }},
+                    'name': '{{ defaultFaxType.name }}'
+                },
                 country: {
                     'id': {{ defaultCountry.id }},
                     'name': '{{ defaultCountry.name }}'

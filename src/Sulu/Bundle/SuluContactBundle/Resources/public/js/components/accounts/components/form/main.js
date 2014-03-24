@@ -13,7 +13,8 @@ define(['app-config'], function(AppConfig) {
 
     var defaults = {
         headline: 'contact.accounts.title'
-    };
+    },
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
 
     return {
 
@@ -45,12 +46,14 @@ define(['app-config'], function(AppConfig) {
 
             this.titleField = this.$find('#name');
 
-            data = this.options.data;
+            data = this.initContactData();
 
             excludeItem = [];
             if (!!this.options.data.id) {
                 excludeItem.push({id: this.options.data.id});
             }
+
+
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
@@ -69,9 +72,7 @@ define(['app-config'], function(AppConfig) {
                 }
             ]);
 
-            this.initContactForm();
-
-            this.createForm(data);
+            this.initForm(data);
 
             this.bindDomEvents();
             this.bindCustomEvents();
@@ -137,7 +138,6 @@ define(['app-config'], function(AppConfig) {
         },
 
 
-        // CONTACT
         fillFields: function(field, minAmount, value) {
             if (!field) {
                 return;
@@ -147,9 +147,15 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        // CONTACT
         initContactData: function() {
             var contactJson = this.options.data;
+
+            this.sandbox.util.foreach(fields, function(field) {
+                if (!contactJson.hasOwnProperty(field)) {
+                    contactJson[field] = [];
+                }
+            });
+
             this.fillFields(contactJson.urls, 1, {
                 id: null,
                 url: '',
@@ -165,6 +171,11 @@ define(['app-config'], function(AppConfig) {
                 phone: '',
                 phoneType: this.defaultTypes.phoneType
             });
+            this.fillFields(contactJson.faxes, 1, {
+                id: null,
+                fax: '',
+                faxType: this.defaultTypes.faxType
+            });
             this.fillFields(contactJson.notes, 1, {
                 id: null,
                 value: ''
@@ -177,14 +188,14 @@ define(['app-config'], function(AppConfig) {
             return contactJson;
         },
 
-        // CONTACT
-        initForm: function() {
-
-            var formObject = this.sandbox.form.create(this.form);
-
-            formObject.initialized.then(function() {
-                // now set data
-                this.initializeData(data);
+        initForm: function(data) {
+            // when  contact-form is initalized
+            this.sandbox.on('sulu.contact-form.initialized', function() {
+                // set form data
+                var formObject = this.sandbox.form.create(this.form);
+                formObject.initialized.then(function() {
+                    this.setFormData(data);
+                }.bind(this));
             }.bind(this));
 
             // initialize contact form
@@ -192,13 +203,17 @@ define(['app-config'], function(AppConfig) {
                 name: 'contact-form@sulucontact',
                 options: {
                     el:'#contact-options-dropdown',
-                    trigger: '.contact-options-toggle',
+                    trigger: '.contact-options-toggle'
                 }
             }]);
-            // when initalized
-            this.sandbox.on('sulu.contact-form.initialized', function() {
-                // create contact-form elements and prepare data
-                this.sandbox.emit('sulu.contact-form.create', this.form);
+        },
+
+        setFormData: function(data) {
+            // add collection filters to form
+            this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
+            this.sandbox.form.setData(this.form, data).then(function() {
+                this.sandbox.start(this.form);
+                this.sandbox.emit('sulu.contact-form.add-required',['email']);
             }.bind(this));
         },
 
@@ -207,27 +222,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.content.set-title', this.sandbox.dom.val(this.titleField));
         },
 
-        initializeData: function(data) {
-            var emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first';
-            this.sandbox.form.setData(this.form, data).then(function() {
-                this.sandbox.start(this.form);
-                this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
-                this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
-            }.bind(this));
-        },
-
-        createForm: function(data) {
-
-
-
-
-
-
-        },
-
         bindDomEvents: function() {
-//            this.sandbox.dom.on(this.titleField, 'keyup', this.updateHeadline.bind(this));
-
             this.sandbox.dom.keypress(this.form, function(event) {
                 if (event.which === 13) {
                     event.preventDefault();
@@ -247,7 +242,7 @@ define(['app-config'], function(AppConfig) {
                 // reset forms data
                 this.options.data = data;
                 this.initContactData();
-                this.initializeData(data);
+                this.setFormData(data);
                 this.setHeaderBar(true);
             }, this);
 
