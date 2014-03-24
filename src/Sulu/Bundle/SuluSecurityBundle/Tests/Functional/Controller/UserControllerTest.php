@@ -445,6 +445,54 @@ class UserControllerTest extends DatabaseTestCase
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
     }
 
+    public function testPatch()
+    {
+        $client = static::createClient();
+
+
+        $client->request(
+            'PATCH',
+            '/api/users/1',
+            array(
+                'locale' => 'en'
+            )
+        );
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('en', $response->locale);
+
+        $client->request(
+            'PATCH',
+            '/api/users/1',
+            array(
+                'username' => 'newusername'
+            )
+        );
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('newusername', $response->username);
+
+        $client->request(
+            'PATCH',
+            '/api/users/1',
+            array(
+                'contact' => array(
+                    'id' => 1
+                )
+            )
+        );
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, $response->contact->id);
+
+        $client->request(
+            'GET',
+            '/api/users/1'
+        );
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('en', $response->locale);
+        $this->assertEquals('newusername', $response->username);
+        $this->assertEquals(1, $response->contact->id);
+    }
+
     public function testPutWithMissingArgument()
     {
         $client = static::createClient();
