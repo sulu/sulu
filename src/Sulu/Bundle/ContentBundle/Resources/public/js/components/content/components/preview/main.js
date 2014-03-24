@@ -119,6 +119,8 @@ define([], function() {
                 this.$mainContent = this.sandbox.dom.$('#' + this.options.mainContentElementIdentifier)[0];
 
                 // get original max width
+
+                // TODO replace with outer width?
                 this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 100;
 
                 this.render();
@@ -427,20 +429,19 @@ define([], function() {
              */
             dimensionsChanged:function(dimensions){
 
-                this.sandbox.dom.show(this.$el);
-
                 // new width bigger - enlarge just preview
                 // new width smaller - shrink just preview
                 // main content stays the same
+
                 var mainContentWidth = this.sandbox.dom.outerWidth(this.$mainContent),
-                    mainContentMargin = (mainContentWidth - this.sandbox.dom.width(this.$mainContent))/2,
-                    newPreviewWidth = dimensions.width -  mainContentWidth - mainContentMargin;
+                    mainContentMargin = (mainContentWidth - this.sandbox.dom.width(this.$mainContent)),
+                    newPreviewWidth = dimensions.width -  (mainContentWidth + mainContentMargin);
 
                 // TODO move breakpoint values to options
                 if(dimensions.width < 980 || newPreviewWidth <= 0){
                     this.sandbox.dom.hide(this.$el);
                     return;
-                } else if(dimensions.width < this.options.minWidthToolbar) {
+                } else if(dimensions.width < constants.minWidthToolbar) {
                     this.sandbox.dom.hide(this.$toolbarRight);
                 } else {
                     this.sandbox.dom.show(this.$el);
@@ -449,6 +450,8 @@ define([], function() {
 
                 // TODO adjust iframe width?
                 // TODO test when preview expanded
+                // TODO wrong width for preview
+
 
                 this.sandbox.dom.width(this.$wrapper, newPreviewWidth);
                 this.sandbox.dom.width(this.$toolbar, newPreviewWidth+this.options.marginLeft);
