@@ -29,6 +29,7 @@ define([], function() {
                 this.saved = true;
                 addressCounter = 1;
                 this.formId = '#contact-form';
+                this.setTitle();
                 this.render();
                 this.setHeaderBar(true);
                 this.listenForChange();
@@ -67,6 +68,22 @@ define([], function() {
 
                 this.bindDomEvents();
                 this.bindCustomEvents();
+            },
+
+            /**
+             * Sets the title to the username
+             * default title as fallback
+             */
+            setTitle: function() {
+                if (!!this.options.data && !!this.options.data.id) {
+                    console.log(this.options.data, 'marcelmoos');
+                    this.sandbox.emit('sulu.content.set-title', this.options.data.fullName);
+                    this.sandbox.emit('sulu.content.set-title-addition',
+                        this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.id
+                    );
+                } else {
+                    this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('contact.contacts.title'));
+                }
             },
 
             setDefaults: function(defaultTypes) {
