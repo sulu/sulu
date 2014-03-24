@@ -17,6 +17,7 @@
         </xs:sequence>
     </xs:complexType>
 
+
     <xs:complexType name="propertiesType">
 
         <xs:sequence>
@@ -26,14 +27,16 @@
 
     </xs:complexType>
 
+
     <xs:complexType name="blockPropertiesType">
 
-        <xs:sequence>
-            <xs:element type="propertyType" name="property" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="propertyType" name="property"/>
+            <xs:element type="blockType" name="block"/>
+        </xs:choice>
 
     </xs:complexType>
+
 
     <xs:complexType name="propertyType" mixed="true">
 
@@ -50,9 +53,10 @@
 
     </xs:complexType>
 
-    <xs:complexType name="blockType" mixed="true">
 
-        <xs:sequence minOccurs="0" maxOccurs="1">
+    <xs:complexType name="blockType">
+
+        <xs:sequence minOccurs="1" maxOccurs="1">
             <xs:element type="blockPropertiesType" name="properties"/>
         </xs:sequence>
 
@@ -64,11 +68,13 @@
 
     </xs:complexType>
 
+
     <xs:complexType name="paramsType">
         <xs:sequence>
             <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
+
 
     <xs:complexType name="paramType">
         <xs:simpleContent>
@@ -78,5 +84,6 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
 
 </xs:schema>
