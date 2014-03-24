@@ -89,12 +89,12 @@ class TemplateReader implements LoaderInterface
                 $attributes = $this->getAllAttributesOfNode($node);
                 $name = $attributes[$this->nameKey];
                 $params = $this->getChildrenOfNode($node, $this->pathToParams);
+                $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
 
                 if(in_array($node->tagName, $this->complexNodeTypes)) {
                     $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$node);
                 }
 
-                $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
             }
 
         } catch (InvalidXmlException $ex) {
