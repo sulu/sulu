@@ -15,9 +15,11 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
-use Sulu\Component\Content\Mapper\Translation\PropertyWrapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 
+/**
+ * content type for block
+ */
 class BlockContentType extends ComplexContentType
 {
     /**
@@ -67,7 +69,7 @@ class BlockContentType extends ComplexContentType
             }
 
             /** @var PropertyInterface $subProperty */
-            foreach ($blockProperty->getSubProperties() as $subProperty) {
+            foreach ($blockProperty->getChildProperties() as $subProperty) {
                 $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                 $contentType->read(
                     $node,
@@ -129,7 +131,7 @@ class BlockContentType extends ComplexContentType
                 $blockProperty = $blockProperty->getProperty();
             }
             /** @var PropertyInterface $subProperty */
-            foreach ($blockProperty->getSubProperties() as $subProperty) {
+            foreach ($blockProperty->getChildProperties() as $subProperty) {
                 $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                 $data[$subProperty->getName()] = $contentType->write(
                     $node,

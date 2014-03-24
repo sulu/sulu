@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Block;
 
-
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -56,14 +55,14 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->blockProperty = new BlockProperty('block1');
-        $this->blockProperty->addSubProperty(new Property('title', 'text_line'));
-        $this->blockProperty->addSubProperty(new Property('article', 'text_area'));
+        $this->blockProperty->addChild(new Property('title', 'text_line'));
+        $this->blockProperty->addChild(new Property('article', 'text_area'));
 
         $this->subBlockProperty = new BlockProperty('sub-block');
-        $this->subBlockProperty->addSubProperty(new Property('title', 'text_line'));
-        $this->subBlockProperty->addSubProperty(new Property('article', 'text_area'));
+        $this->subBlockProperty->addChild(new Property('title', 'text_line'));
+        $this->subBlockProperty->addChild(new Property('article', 'text_area'));
 
-        $this->blockProperty->addSubProperty($this->subBlockProperty);
+        $this->blockProperty->addChild($this->subBlockProperty);
 
         $this->contentTypeManager = $this->getMock(
             'Sulu\Component\Content\ContentTypeManager',

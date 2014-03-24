@@ -19,7 +19,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
      * properties managed by this block
      * @var PropertyInterface
      */
-    private $subProperties = array();
+    private $childProperties = array();
 
     function __construct(
         $name,
@@ -37,23 +37,23 @@ class BlockProperty extends Property implements BlockPropertyInterface
      * returns a list of properties managed by this block
      * @return PropertyInterface
      */
-    public function getSubProperties()
+    public function getChildProperties()
     {
-        return $this->subProperties;
+        return $this->childProperties;
     }
 
     /**
      * @param PropertyInterface $property
      */
-    public function addSubProperty(PropertyInterface $property)
+    public function addChild(PropertyInterface $property)
     {
-        $this->subProperties[] = $property;
+        $this->childProperties[] = $property;
     }
 
     public function setValue($value)
     {
         /** @var PropertyInterface $subProperty */
-        foreach ($this->subProperties as $subProperty) {
+        foreach ($this->childProperties as $subProperty) {
             if (isset($value[$subProperty->getName()])) {
                 $subProperty->setValue($value[$subProperty->getName()]);
             }
@@ -64,7 +64,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     {
         $data = array();
         /** @var PropertyInterface $subProperty */
-        foreach ($this->subProperties as $subProperty) {
+        foreach ($this->childProperties as $subProperty) {
             $data[$subProperty->getName()] = $subProperty->getValue();
         }
         return $data;

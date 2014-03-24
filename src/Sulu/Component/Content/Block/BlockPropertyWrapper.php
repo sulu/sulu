@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Block;
 
-
 use Sulu\Component\Content\PropertyInterface;
 
 class BlockPropertyWrapper implements PropertyInterface
