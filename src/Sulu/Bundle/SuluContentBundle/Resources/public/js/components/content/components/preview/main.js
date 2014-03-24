@@ -156,7 +156,7 @@ define([], function() {
                     return;
                 }
 
-                // calculate the available space next to the
+                // calculate the available space next to the main content
                 mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
                 totalWidth = this.sandbox.dom.width(document);
                 this.previewWidth = totalWidth - (mainWidth + this.options.marginLeft);
@@ -297,9 +297,14 @@ define([], function() {
                     this.sandbox.dom.width($resolutions, $resolutions.outerWidth());
                 }.bind(this));
 
+                // change label of dropdown to selection
                 this.sandbox.on('husky.dropdown.resolutionsDropdown.item.click', function(item) {
                     this.sandbox.dom.text(this.$toolbarResolutionsLabel, item.name);
                 }.bind(this));
+
+                // make preview responsive
+                this.sandbox.on('sulu.app.viewport.dimensions-changed', this.dimensionsChanged.bind(this));
+
             },
 
             /*********************************************
@@ -415,6 +420,39 @@ define([], function() {
             /*********************************************
              *   Util Methods
              ********************************************/
+
+            /**
+             * Called when the sulu.app.viewport.dimensions-changed is emitted
+             * @param dimensions of new viewport
+             */
+            dimensionsChanged:function(dimensions){
+
+                this.sandbox.dom.show(this.$el);
+
+                // new width bigger - enlarge just preview
+                // new width smaller - shrink just preview
+                // main content stays the same
+                var mainContentWidth = this.sandbox.dom.outerWidth(this.$mainContent),
+                    mainContentMargin = (mainContentWidth - this.sandbox.dom.width(this.$mainContent))/2,
+                    newPreviewWidth = dimensions.width -  mainContentWidth - mainContentMargin;
+
+                // TODO move breakpoint values to options
+                if(dimensions.width < 980 || newPreviewWidth <= 0){
+                    this.sandbox.dom.hide(this.$el);
+                    return;
+                } else if(dimensions.width < this.options.minWidthToolbar) {
+                    this.sandbox.dom.hide(this.$toolbarRight);
+                } else {
+                    this.sandbox.dom.show(this.$el);
+                    this.sandbox.dom.show(this.$toolbarRight);
+                }
+
+                // TODO adjust iframe width?
+                // TODO test when preview expanded
+
+                this.sandbox.dom.width(this.$wrapper, newPreviewWidth);
+                this.sandbox.dom.width(this.$toolbar, newPreviewWidth+this.options.marginLeft);
+            },
 
             /**
              * Concatenates the given strings to an url
