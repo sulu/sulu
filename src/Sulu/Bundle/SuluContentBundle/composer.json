@@ -29,7 +29,9 @@
 
         "jms/serializer-bundle": "@dev",
 
-        "cboden/ratchet": "dev-master"
+        "cboden/ratchet": "dev-master",
+        "doctrine/phpcr-bundle": "1.0.*",
+        "doctrine/phpcr-odm": "1.0.*"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
