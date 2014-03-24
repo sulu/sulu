@@ -282,13 +282,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->sessionManager === null) {
             $this->sessionManager = new SessionManager(
-                new RepositoryFactoryJackrabbit(),
-                array(
-                    'url' => 'http://localhost:8080/server',
-                    'username' => 'admin',
-                    'password' => 'admin',
-                    'workspace' => 'test'
-                ),
+                $this->session,
                 array(
                     'base' => 'cmf',
                     'route' => 'routes',
