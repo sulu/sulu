@@ -38,7 +38,7 @@ class TemplateReader implements LoaderInterface
     /**
      * @var string
      */
-    private $pathToProperties = '/x:template/x:properties/x:property';
+    private $pathToProperties = '/x:template/x:properties/*';
 
     /**
      * @var string
@@ -49,6 +49,11 @@ class TemplateReader implements LoaderInterface
      * @var \DOMDocument
      */
     private $xmlDocument;
+
+    /**
+     * @var array
+     */
+    private $complexNodeTypes = array('block');
 
     /**
      * Reads all types from the given path
@@ -79,10 +84,16 @@ class TemplateReader implements LoaderInterface
             $nodes = $xpath->query($this->pathToProperties);
 
             foreach ($nodes as $node) {
+
                 /** @var \DOMNode $node */
                 $attributes = $this->getAllAttributesOfNode($node);
                 $name = $attributes[$this->nameKey];
                 $params = $this->getChildrenOfNode($node, $this->pathToParams);
+
+                if(in_array($node->tagName, $this->complexNodeTypes)) {
+                    $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$node);
+                }
+
                 $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
             }
 
@@ -93,6 +104,37 @@ class TemplateReader implements LoaderInterface
         }
 
         return $template;
+    }
+
+    /**
+     * Parses childnodes and its attributes recursively and puts them into the properties element
+     * @param $xpath
+     * @param \DOMNode $node
+     * @return array with sub properties
+     */
+    private function parseSubproperties($xpath, $node){
+
+        $properties = array();
+
+        /** @var \DOMNodeList $children */
+        $children = $xpath->query('x:properties/*', $node);
+
+
+        /** @var \DOMNode $child */
+        foreach($children as $child) {
+
+            $attributes = $this->getAllAttributesOfNode($child);
+            $name = $attributes[$this->nameKey];
+            $params = $this->getChildrenOfNode($child, $this->pathToParams);
+            $properties[$name] = array_merge($attributes, $params);
+
+            if(in_array($child->tagName, $this->complexNodeTypes)) {
+                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$child);
+            }
+
+        }
+
+        return $properties;
     }
 
     /**
