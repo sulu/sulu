@@ -87,6 +87,11 @@ class TemplateReader implements LoaderInterface
 
                 /** @var \DOMNode $node */
                 $attributes = $this->getAllAttributesOfNode($node);
+
+                if(in_array($node->tagName, $this->complexNodeTypes)) {
+                    $attributes['type'] = $node->tagName;
+                }
+
                 $name = $attributes[$this->nameKey];
                 $params = $this->getChildrenOfNode($node, $this->pathToParams);
                 $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
@@ -124,6 +129,11 @@ class TemplateReader implements LoaderInterface
         foreach($children as $child) {
 
             $attributes = $this->getAllAttributesOfNode($child);
+
+            if(in_array($child->tagName, $this->complexNodeTypes)) {
+                $attributes['type'] = $child->tagName;
+            }
+
             $name = $attributes[$this->nameKey];
             $params = $this->getChildrenOfNode($child, $this->pathToParams);
             $properties[$name] = array_merge($attributes, $params);
@@ -204,6 +214,7 @@ class TemplateReader implements LoaderInterface
 
         $keyValue = array();
 
+        // TODO only if param exists
         if ($node->hasChildNodes()) {
 
             $keyValue[$this->paramsKey] = array();

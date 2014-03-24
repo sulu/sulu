@@ -99,4 +99,104 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_mandatory.xml');
     }
 
+    public function testReadBlockTemplate()
+    {
+        $template = array(
+            'key' => 'complex',
+            'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
+            'controller' => 'SuluWebsiteBundle:Default:index',
+            'cacheLifetime' => 4800,
+            'properties' => array(
+                'title' => array(
+                    'name' => 'title',
+                    'type' => 'text_line',
+                    'mandatory' => true
+                ),
+                'url' => array(
+                    'name' => 'url',
+                    'type' => 'resource_locator',
+                    'mandatory' => true
+                ),
+                'article' => array(
+                    'name' => 'article',
+                    'type' => 'text_editor',
+                    'mandatory' => true
+                ),
+                'block1' => array(
+                    'name' => 'block1',
+                    'minOccurs' => '2',
+                    'maxOccurs' => '10',
+                    'mandatory' => true,
+                    'type' => 'block',
+                    'properties' => array(
+                        'title1.1' => array(
+                            'name' => 'title1.1',
+                            'type' => 'text_line',
+                            'mandatory' => true
+                        ),
+                        'article1.1' => array(
+                            'name' => 'article1.1',
+                            'type' => 'text_area',
+                            'mandatory' => true,
+                            'minOccurs' => 2
+                        ),
+                        'block1.1' => array(
+                            'name' => 'block1.1',
+                            'type' => 'block',
+                            'properties' => array(
+                                'block1.1.1' => array(
+                                    'name' => 'block1.1.1',
+                                    'type' => 'block',
+                                    'properties' => array(
+                                        'article1.1.1' => array(
+                                            'name' => 'article1.1.1',
+                                            'type' => 'text_area',
+                                            'mandatory' => true,
+                                            'minOccurs' => 2
+                                        ),
+                                        'article1.1.2' => array(
+                                            'name' => 'article1.1.2',
+                                            'type' => 'text_area',
+                                            'mandatory' => true,
+                                            'minOccurs' => 2
+                                        ),
+                                        'block1.1.3' => array(
+                                            'name' => 'block1.1.3',
+                                            'type' => 'block',
+                                            'properties' => array(
+                                                'article1.1.3.1' => array(
+                                                    'name' => 'article1.1.3.1',
+                                                    'type' => 'text_area',
+                                                    'mandatory' => true,
+                                                    'minOccurs' => 2
+                                                )
+                                            )
+                                        )
+                                    )
+                                ),
+                                'block1.1.2' => array(
+                                    'name' => 'block1.1.2',
+                                    'type' => 'block',
+                                    'properties' => array(
+                                        'article1.1.2.1' => array(
+                                            'name' => 'article1.1.2.1',
+                                            'type' => 'text_area',
+                                            'mandatory' => true,
+                                            'minOccurs' => '2'
+                                        )
+                                    )
+                                )
+                            )
+                        )
+
+                    )
+                )
+            )
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block.xml');
+        $this->assertEquals($template, $result);
+    }
+
 }
