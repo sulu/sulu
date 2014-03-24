@@ -40,7 +40,12 @@ monolog:
 
 sulu_core:
     phpcr:
-        workspace: test
+        phpcr_backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
+        phpcr_workspace: default
+        phpcr_user: admin
+        phpcr_pass: admin
     content:
         templates:
             default_path: %kernel.root_dir%/../Resources/templates
