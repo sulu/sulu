@@ -12,7 +12,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1395647793281.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1395672080153.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulutranslate/css/main.css"/>
@@ -22,16 +22,17 @@
     <body>
         <div id="main">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                {% if user.username is defined %}
-                data-aura-footer-template="<div>{{ user.fullname }}</div>
+                {% if user.username is not defined %}
+                data-aura-footer="false"
                 {% endif %}
-                {% if user.logout is defined %}
-                <div><a href='{{ user.logout }}'>logout</a></div>
-                {% endif %}
-                <div class='version'>Sulu 2</div>"
+                 data-aura-user-name="{{ user.fullname }}"
+                 data-aura-system-version="0.1"
+                 data-aura-user-locales='["en", "de"]'
+                 data-aura-user-locale="{{ user.locale }}"
+                 data-aura-logout-route="{{ user.logout }}"
             ></div>
 
-            <main class="grid" id="content" data-aura-component="app@suluadmin"></main>
+            <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
 
         </div>
 
@@ -56,7 +57,7 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1395647793281" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1395672080153" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 
     </body>
 </html>
