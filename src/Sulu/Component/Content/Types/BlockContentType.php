@@ -8,24 +8,24 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\PropertyInterface;
 
-/**
- * Content type definition
- */
-interface ContentTypeInterface
+class BlockContentType extends ComplexContentType
 {
-    const PRE_SAVE = 1;
-    const POST_SAVE = 2;
 
     /**
      * returns type of ContentType
      * PRE_SAVE or POST_SAVE
      * @return int
      */
-    public function getType();
+    public function getType()
+    {
+        // TODO: Implement getType() method.
+    }
 
     /**
      * reads the value for given property from the node + sets the value of the property
@@ -42,7 +42,10 @@ interface ContentTypeInterface
         $webspaceKey,
         $languageCode,
         $segmentKey
-    );
+    )
+    {
+        // TODO: Implement read() method.
+    }
 
     /**
      * sets the value of the property with the data given
@@ -59,7 +62,10 @@ interface ContentTypeInterface
         $webspaceKey,
         $languageCode,
         $segmentKey
-    );
+    )
+    {
+        // TODO: Implement readForPreview() method.
+    }
 
     /**
      * save the value from given property
@@ -78,7 +84,10 @@ interface ContentTypeInterface
         $webspaceKey,
         $languageCode,
         $segmentKey
-    );
+    )
+    {
+        // TODO: Implement write() method.
+    }
 
     /**
      * remove property from given node
@@ -94,11 +103,17 @@ interface ContentTypeInterface
         $webspaceKey,
         $languageCode,
         $segmentKey
-    );
+    )
+    {
+        // TODO: Implement remove() method.
+    }
 
     /**
      * returns a template to render a form
      * @return string
      */
-    public function getTemplate();
+    public function getTemplate()
+    {
+        // TODO: Implement getTemplate() method.
+    }
 }
