@@ -171,6 +171,11 @@ class Property implements PropertyInterface
         return false;
     }
 
+    public function getIsMultiple()
+    {
+        return $this->minOccurs > 1 || $this->maxOccurs > 1;
+    }
+
     /**
      * magic getter for twig templates
      * @param $property

@@ -130,10 +130,11 @@ class BlockContentType extends ComplexContentType
             while (!($blockProperty instanceof BlockPropertyInterface)) {
                 $blockProperty = $blockProperty->getProperty();
             }
+
             /** @var PropertyInterface $subProperty */
             foreach ($blockProperty->getChildProperties() as $subProperty) {
                 $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
-                $data[$subProperty->getName()] = $contentType->write(
+                $contentType->write(
                     $node,
                     new BlockPropertyWrapper($subProperty, $property),
                     $userId,

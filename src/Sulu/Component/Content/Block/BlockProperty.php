@@ -52,10 +52,24 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     public function setValue($value)
     {
+        $data = array();
+        // check value for associativeness
+        if (!(array_keys($value) !== range(0, count($value) - 1))) {
+            foreach ($value as $item) {
+                foreach ($item as $key => $itemValue) {
+                    if (!isset($data[$key])) {
+                        $data[$key] = array();
+                    }
+                    $data[$key][] = $itemValue;
+                }
+            }
+        } else {
+            $data = $value;
+        }
         /** @var PropertyInterface $subProperty */
         foreach ($this->childProperties as $subProperty) {
-            if (isset($value[$subProperty->getName()])) {
-                $subProperty->setValue($value[$subProperty->getName()]);
+            if (isset($data[$subProperty->getName()])) {
+                $subProperty->setValue($data[$subProperty->getName()]);
             }
         }
     }
@@ -63,9 +77,29 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getValue()
     {
         $data = array();
-        /** @var PropertyInterface $subProperty */
-        foreach ($this->childProperties as $subProperty) {
-            $data[$subProperty->getName()] = $subProperty->getValue();
+        if ($this->getIsMultiple()) {
+            /** @var PropertyInterface $child */
+            foreach ($this->childProperties as $child) {
+                $items = $child->getValue();
+                // check value is not associative
+                if (!(array_keys($items) !== range(0, count($items) - 1))) {
+                    foreach ($items as $key => $item) {
+                        $data[$key][$child->getName()] = $item;
+                    }
+                } else {
+                    // go thrue associative array
+                    foreach ($items as $varName => $item) {
+                        foreach ($item as $key => $itemValue) {
+                            $data[$key][$child->getName()][$varName] = $itemValue;
+                        }
+                    }
+                }
+            }
+        } else {
+            /** @var PropertyInterface $child */
+            foreach ($this->childProperties as $child) {
+                $data[$child->getName()] = $child->getValue();
+            }
         }
         return $data;
     }

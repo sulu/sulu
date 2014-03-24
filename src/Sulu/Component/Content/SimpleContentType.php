@@ -81,7 +81,7 @@ abstract class SimpleContentType implements ContentTypeInterface
     {
         $value = $property->getValue();
         if ($value != null) {
-            $node->setProperty($property->getName(), $property->getValue());
+            $node->setProperty($property->getName(), $value);
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }

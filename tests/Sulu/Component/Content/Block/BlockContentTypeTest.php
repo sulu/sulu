@@ -54,16 +54,6 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->blockProperty = new BlockProperty('block1');
-        $this->blockProperty->addChild(new Property('title', 'text_line'));
-        $this->blockProperty->addChild(new Property('article', 'text_area'));
-
-        $this->subBlockProperty = new BlockProperty('sub-block');
-        $this->subBlockProperty->addChild(new Property('title', 'text_line'));
-        $this->subBlockProperty->addChild(new Property('article', 'text_area'));
-
-        $this->blockProperty->addChild($this->subBlockProperty);
-
         $this->contentTypeManager = $this->getMock(
             'Sulu\Component\Content\ContentTypeManager',
             array('get'),
@@ -86,8 +76,36 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap($this->contentTypeValueMap));
     }
 
+    protected function prepareSingleBlockProperty()
+    {
+        $this->blockProperty = new BlockProperty('block1');
+        $this->blockProperty->addChild(new Property('title', 'text_line'));
+        $this->blockProperty->addChild(new Property('article', 'text_area'));
+
+        $this->subBlockProperty = new BlockProperty('sub-block');
+        $this->subBlockProperty->addChild(new Property('title', 'text_line'));
+        $this->subBlockProperty->addChild(new Property('article', 'text_area'));
+
+        $this->blockProperty->addChild($this->subBlockProperty);
+    }
+
+    protected function prepareMultipleBlockProperty()
+    {
+        $this->blockProperty = new BlockProperty('block1', false, false, 1, 10);
+        $this->blockProperty->addChild(new Property('title', 'text_line'));
+        $this->blockProperty->addChild(new Property('article', 'text_area'));
+
+        $this->subBlockProperty = new BlockProperty('sub-block');
+        $this->subBlockProperty->addChild(new Property('title', 'text_line'));
+        $this->subBlockProperty->addChild(new Property('article', 'text_area'));
+
+        $this->blockProperty->addChild($this->subBlockProperty);
+    }
+
     public function testRead()
     {
+        $this->prepareSingleBlockProperty();
+
         $this->node = $this->getMock('\Jackalope\Node', array('getPropertyValue', 'hasProperty'), array(), '', false);
         $data = array(
             'title' => 'Test-Title',
@@ -127,6 +145,8 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testWrite()
     {
+        $this->prepareSingleBlockProperty();
+
         $this->node = $this->getMock('\Jackalope\Node', array('setProperty'), array(), '', false);
         $result = array();
         $this->node
@@ -167,6 +187,83 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
                 'sulu_locale:de-block1-article' => $data['article'],
                 'sulu_locale:de-block1-sub-block-title' => $data['sub-block']['title'],
                 'sulu_locale:de-block1-sub-block-article' => $data['sub-block']['article']
+            ),
+            $result
+        );
+
+        // check resulted structure
+        $this->assertEquals($data, $this->blockProperty->getValue());
+    }
+
+    public function testWriteMultiple()
+    {
+        $this->prepareMultipleBlockProperty();
+
+        $this->node = $this->getMock('\Jackalope\Node', array('setProperty'), array(), '', false);
+        $result = array();
+        $this->node
+            ->expects($this->any())
+            ->method('setProperty')
+            ->will(
+                $this->returnCallback(
+                    function () use (&$result) {
+                        $args = func_get_args();
+                        $result[$args[0]] = $args[1];
+                    }
+                )
+            );
+
+        $data = array(
+            array(
+                'title' => 'Test-Title-1',
+                'article' => array(
+                    'Test-Article-1-1',
+                    'Test-Article-1-2'
+                ),
+                'sub-block' => array(
+                    'title' => 'Test-Title-Sub-1',
+                    'article' => 'Test-Article-Sub-1'
+                )
+            ),
+            array(
+                'title' => 'Test-Title-2',
+                'article' => 'Test-Article-2',
+                'sub-block' => array(
+                    'title' => 'Test-Title-Sub-2',
+                    'article' => 'Test-Article-Sub-2'
+                )
+            )
+        );
+        $this->blockProperty->setValue($data);
+
+        $this->blockContentType->write(
+            $this->node,
+            new TranslatedProperty($this->blockProperty, 'de', 'sulu_locale'),
+            1,
+            'default',
+            'de',
+            ''
+        );
+
+        // check repository node
+        $this->assertEquals(
+            array(
+                'sulu_locale:de-block1-title' => array(
+                    $data[0]['title'],
+                    $data[1]['title']
+                ),
+                'sulu_locale:de-block1-article' => array(
+                    $data[0]['article'],
+                    $data[1]['article']
+                ),
+                'sulu_locale:de-block1-sub-block-title' => array(
+                    $data[0]['sub-block']['title'],
+                    $data[1]['sub-block']['title']
+                ),
+                'sulu_locale:de-block1-sub-block-article' => array(
+                    $data[0]['sub-block']['article'],
+                    $data[1]['sub-block']['article']
+                )
             ),
             $result
         );
