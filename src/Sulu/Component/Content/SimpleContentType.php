@@ -91,6 +91,9 @@ abstract class SimpleContentType implements ContentTypeInterface
      * remove property from given node
      * @param NodeInterface $node
      * @param PropertyInterface $property
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {

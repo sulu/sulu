@@ -49,4 +49,31 @@ class BlockProperty extends Property implements BlockPropertyInterface
     {
         $this->subProperties[] = $property;
     }
+
+    public function setValue($value)
+    {
+        /** @var PropertyInterface $subProperty */
+        foreach ($this->subProperties as $subProperty) {
+            if (isset($value[$subProperty->getName()])) {
+                $subProperty->setValue($value[$subProperty->getName()]);
+            }
+        }
+    }
+
+    public function getValue()
+    {
+        $data = array();
+        /** @var PropertyInterface $subProperty */
+        foreach ($this->subProperties as $subProperty) {
+            $data[$subProperty->getName()] = $subProperty->getValue();
+        }
+        return $data;
+    }
+
+    public function getIsBlock()
+    {
+        return true;
+    }
+
+
 }

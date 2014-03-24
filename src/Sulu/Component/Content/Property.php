@@ -163,6 +163,15 @@ class Property implements PropertyInterface
     }
 
     /**
+     * returns TRUE if property is a block
+     * @return boolean
+     */
+    public function getIsBlock()
+    {
+        return false;
+    }
+
+    /**
      * magic getter for twig templates
      * @param $property
      * @return null
