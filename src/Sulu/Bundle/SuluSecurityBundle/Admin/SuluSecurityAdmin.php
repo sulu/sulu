@@ -23,7 +23,7 @@ class SuluSecurityAdmin extends Admin
         $section = new NavigationItem('navigation.tools');
 
         $settings = new NavigationItem('navigation.settings');
-        $settings->setIcon('settings');
+        $settings->setIcon('cogwheels');
 
         $roles = new NavigationItem('navigation.settings.roles', $settings);
         $roles->setAction('settings/roles');

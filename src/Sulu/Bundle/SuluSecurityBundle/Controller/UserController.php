@@ -180,6 +180,63 @@ class UserController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Partly updates a user entity for a given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchAction($id)
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()
+            ->getRepository($this->entityName)
+            ->findUserById($id);
+
+        try {
+            if (!$user) {
+                throw new EntityNotFoundException($this->entityName, $id);
+            }
+
+            $username = $this->getRequest()->get('username');
+            $password = $this->getRequest()->get('password');
+            $contact = $this->getRequest()->get('contact');
+            $locale = $this->getRequest()->get('locale');
+
+            $em = $this->getDoctrine()->getManager();
+
+            if ($username !== null) {
+                $user->setUsername($username);
+            }
+            if ($password !== null) {
+                $user->setSalt($this->generateSalt());
+                $user->setPassword(
+                    $this->encodePassword($user, $password, $user->getSalt())
+                );
+            }
+            if ($contact !== null) {
+                $user->setContact($this->getContact($contact['id']));
+            }
+            if ($locale !== null) {
+                $user->setLocale($locale);
+            }
+
+            if (!$this->processUserRoles($user) || !$this->processUserGroups($user)) {
+                throw new RestException('Could not update dependencies!');
+            }
+
+            $em->persist($user);
+            $em->flush();
+
+            $view = $this->view($user, 200);
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
      * Deletes the user with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
