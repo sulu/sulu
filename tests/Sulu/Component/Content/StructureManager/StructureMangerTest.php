@@ -53,9 +53,9 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if (file_exists(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php')) {
-            unlink(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php');
-        }
+//        if (file_exists(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php')) {
+//            unlink(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php');
+//        }
     }
 
     public function testGetStructure()
@@ -153,5 +153,16 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             ),
             $property->getParams()
         );
+    }
+
+
+    public function testGetBlockStructure()
+    {
+        /** @var StructureInterface $structure */
+        $structure = $this->structureManager->getStructure('template_block');
+
+        // should implement interface
+        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+
     }
 }

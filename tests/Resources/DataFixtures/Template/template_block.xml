@@ -18,27 +18,6 @@
             <properties>
                 <property name="title1.1" type="text_line" mandatory="true"/>
                 <property name="article1.1" type="text_area" mandatory="true" minOccurs="2"/>
-                <block name="block1.1">
-                    <properties>
-                        <block name="block1.1.1">
-                            <properties>
-                                <property name="article1.1.1" type="text_area" mandatory="true" minOccurs="2"/>
-                                <property name="article1.1.2" type="text_area" mandatory="true" minOccurs="2"/>
-                                <block name="block1.1.3">
-                                    <properties>
-                                        <property name="article1.1.3.1" type="text_area" mandatory="true"
-                                                  minOccurs="2"/>
-                                    </properties>
-                                </block>
-                            </properties>
-                        </block>
-                        <block name="block1.1.2">
-                            <properties>
-                                <property name="article1.1.2.1" type="text_area" mandatory="true" minOccurs="2"/>
-                            </properties>
-                        </block>
-                    </properties>
-                </block>
             </properties>
         </block>
     </properties>
