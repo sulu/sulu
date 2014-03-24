@@ -27,9 +27,16 @@ class BlockContentType extends ComplexContentType
      */
     private $contentTypeManager;
 
-    function __construct(ContentTypeManagerInterface $contentTypeManager)
+    /**
+     * template for form generation
+     * @var string
+     */
+    private $template;
+
+    function __construct(ContentTypeManagerInterface $contentTypeManager, $template)
     {
         $this->contentTypeManager = $contentTypeManager;
+        $this->template = $template;
     }
 
     /**
@@ -173,6 +180,6 @@ class BlockContentType extends ComplexContentType
      */
     public function getTemplate()
     {
-        // TODO: Implement getTemplate() method.
+        return $this->template;
     }
 }
