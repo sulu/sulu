@@ -16,6 +16,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
+use Sulu\Component\Content\Block\BlockContentType;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
@@ -183,6 +184,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'sulu.content.type.text_line' => new TextLine('not in use'),
                     'sulu.content.type.text_area' => new TextArea('not in use'),
                     'sulu.content.type.resource_locator' => $resourceLocator,
+                    'sulu.content.type.block' => new BlockContentType($this->contentTypeManager),
                     'security.context' => $this->securityContext
                 )
             );
