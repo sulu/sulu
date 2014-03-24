@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -70,24 +71,23 @@ class Configuration implements ConfigurationInterface
     private function getPhpcrConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('phpcr')
+            ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('factory_class')
-                    ->defaultValue('Jackalope\RepositoryFactoryJackrabbit')
-                ->end()
-                ->scalarNode('url')
-                    ->defaultValue('http://localhost:8080/server')
+                ->scalarNode('workspace')
+                    ->isRequired()
+                    ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('username')
-                    ->defaultValue('admin')
+                    ->defaultNull()
                 ->end()
                 ->scalarNode('password')
-                    ->defaultValue('admin')
+                    ->defaultNull()
                 ->end()
-                ->scalarNode('workspace')
-                    ->defaultValue('default')
+                ->arrayNode('backend')
+                    ->useAttributeAsKey('name')
+                    ->prototype('variable')
                 ->end()
-            ->end()
-        ->end();
+            ->end();
     }
 
     /**

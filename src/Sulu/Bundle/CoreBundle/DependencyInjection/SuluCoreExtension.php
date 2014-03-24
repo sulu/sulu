@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
+use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -42,16 +43,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 switch ($name) {
                     case 'doctrine_phpcr':
                         $prependConfig = array(
-                            'session' => array(
-                                'backend' => array(
-                                    // TODO make sulu_core phpcr config compatible to doctrine_phpcr
-                                    'type' => 'jackrabbit',
-                                    'url' => $phpcrConfig['url'],
-                                ),
-                                'username' => $phpcrConfig['username'],
-                                'password' => $phpcrConfig['password'],
-                                'workspace' => $phpcrConfig['workspace'],
-                            ),
+                            'session' => $phpcrConfig,
                             'odm' => array(),
                         );
                         break;
@@ -131,16 +123,10 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      * @param $phpcrConfig
      * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
+     * @throws InvalidArgumentException
      */
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
-        // session factory
-        $container->setParameter('sulu.phpcr.factory_class', $phpcrConfig['factory_class']);
-        $container->setParameter('sulu.phpcr.url', $phpcrConfig['url']);
-        $container->setParameter('sulu.phpcr.username', $phpcrConfig['username']);
-        $container->setParameter('sulu.phpcr.password', $phpcrConfig['password']);
-        $container->setParameter('sulu.phpcr.workspace', $phpcrConfig['workspace']);
-
         $loader->load('phpcr.xml');
     }
 
