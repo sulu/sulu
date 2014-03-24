@@ -41,13 +41,16 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% macro constructProperties(properties, counter) %}
 
+    {#{{ properties|length }}#}
+
     {% for prop in properties %}
+
 
         {% if prop.type == 'block' %}
 
             $prop{{ counter }}->addSubProperty({{ _self.complextype(prop) }});
             {% set counter = counter+1 %}
-            {{ _self.complextype(prop.properties) }}
+            {{ _self.complextype(prop.properties, counter) }}
 
         {% else %}
 
