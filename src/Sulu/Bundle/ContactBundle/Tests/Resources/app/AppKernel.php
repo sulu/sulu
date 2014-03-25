@@ -21,6 +21,8 @@ class AppKernel extends Kernel
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
+
+            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );
 
         return $bundles;
