@@ -12,13 +12,13 @@ class AppKernel extends Kernel
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
-            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-            new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\WebsiteBundle\SuluWebsiteBundle(),
+
+            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );
 
         return $bundles;
