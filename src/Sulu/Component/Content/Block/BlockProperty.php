@@ -13,6 +13,9 @@ namespace Sulu\Component\Content\Block;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 
+/**
+ * representation of a block node in template xml
+ */
 class BlockProperty extends Property implements BlockPropertyInterface
 {
     /**
@@ -35,7 +38,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     /**
      * returns a list of properties managed by this block
-     * @return PropertyInterface
+     * @return PropertyInterface[]
      */
     public function getChildProperties()
     {
@@ -50,6 +53,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $this->childProperties[] = $property;
     }
 
+    /**
+     * set value of child properties
+     * @param mixed $value
+     */
     public function setValue($value)
     {
         $data = array();
@@ -74,6 +81,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
         }
     }
 
+    /**
+     * get value of sub properties
+     * @return array|mixed
+     */
     public function getValue()
     {
         $data = array();
@@ -104,6 +115,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return $data;
     }
 
+    /**
+     * returns TRUE if property is a block
+     * @return boolean
+     */
     public function getIsBlock()
     {
         return true;

@@ -156,4 +156,12 @@ class BlockPropertyWrapper implements PropertyInterface
         return $this->property->getIsBlock();
     }
 
+    /**
+     * returns TRUE if property is multiple
+     * @return bool
+     */
+    public function getIsMultiple()
+    {
+        return $this->property->getIsMultiple();
+    }
 }

@@ -160,4 +160,13 @@ class TranslatedProperty implements PropertyInterface
     {
         return $this->getProperty()->getIsBlock();
     }
+
+    /**
+     * returns TRUE if property is multiple
+     * @return bool
+     */
+    public function getIsMultiple()
+    {
+        return $this->property->getIsMultiple();
+    }
 }

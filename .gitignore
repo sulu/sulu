@@ -2,6 +2,8 @@
 /vendor/
 /composer.phar
 /composer.lock
+/tests/Resources/cache/*
+
 
 # IDEs
 .idea/*
