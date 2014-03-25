@@ -45,6 +45,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         self::$account = new Account();
         self::$account->setName('Company');
+        self::$account->setType(Account::TYPE_BASIC);
         self::$account->setCreated(new DateTime());
         self::$account->setChanged(new DateTime());
 
@@ -130,6 +131,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$tool = new SchemaTool(self::$em);
 
         self::$entities = array(
+            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
@@ -153,7 +155,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetById()
     {
-        $client = self::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
 
         $client->request(
             'GET',
@@ -184,7 +192,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetByIdNotExisting()
     {
-        $client = self::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'GET',
             '/api/accounts/10'
@@ -199,13 +213,20 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'POST',
             '/api/accounts',
             array(
                 'name' => 'ExampleCompany',
                 'parent' => array('id' => self::$account->getId()),
+                'type' => Account::TYPE_BASIC,
                 'urls' => array(
                     array(
                         'url' => 'http://example.company.com',
@@ -314,7 +335,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithIds()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'POST',
             '/api/accounts',
@@ -447,7 +474,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingUrlType()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'POST',
             '/api/accounts',
@@ -472,7 +505,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingEmailType()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'POST',
             '/api/accounts',
@@ -504,7 +543,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingPhoneType()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'POST',
             '/api/accounts',
@@ -570,7 +615,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingCountry()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'POST',
             '/api/accounts',
@@ -604,7 +655,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetList()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request('GET', '/api/accounts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
 
@@ -615,7 +672,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetListSearch()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name,emails_emailType_name');
         $response = json_decode($client->getResponse()->getContent());
 
@@ -632,7 +695,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'PUT',
             '/api/accounts/1',
@@ -783,7 +852,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPutNoDetails()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'PUT',
             '/api/accounts/1',
@@ -817,7 +892,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPutNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
 
         $client->request(
             'PUT',
@@ -833,7 +914,13 @@ class AccountControllerTest extends DatabaseTestCase
     public function testDeleteById()
     {
 
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
 
         $client->request('DELETE', '/api/accounts/1');
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
@@ -842,7 +929,13 @@ class AccountControllerTest extends DatabaseTestCase
     public function testDeleteByIdAndNotDeleteContacts()
     {
 
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
 
         $client->request(
             'DELETE',
@@ -875,7 +968,13 @@ class AccountControllerTest extends DatabaseTestCase
         self::$em->flush();
 
 
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
 
         $client->request(
             'DELETE',
@@ -896,8 +995,13 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testDeleteByIdNotExisting()
     {
-
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
 
         $client->request('DELETE', '/api/accounts/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
@@ -946,12 +1050,16 @@ class AccountControllerTest extends DatabaseTestCase
 
         self::$em->flush();
 
-
         // get number of contacts from both accounts
         $numContacts = self::$account->getContacts()->count() + $acc->getContacts()->count();
 
-
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
         $client->request(
             'GET',
             '/api/accounts/multipledeleteinfo',
@@ -998,7 +1106,14 @@ class AccountControllerTest extends DatabaseTestCase
 
         $numContacts = self::$account->getContacts()->count();
 
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+
         $client->request('GET', '/api/accounts/1/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
 
@@ -1033,7 +1148,14 @@ class AccountControllerTest extends DatabaseTestCase
         }
         self::$em->flush();
 
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+
         $client->request('GET', '/api/accounts/1/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -1059,7 +1181,14 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPutRemovedParentAccount()
     {
-        $client = static::createClient();
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+
         $client->request(
             'POST',
             '/api/accounts',
