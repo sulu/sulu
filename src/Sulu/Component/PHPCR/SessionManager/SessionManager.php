@@ -20,15 +20,6 @@ use PHPCR\SimpleCredentials;
 
 class SessionManager implements SessionManagerInterface
 {
-    /**
-     * @var RepositoryFactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var string
-     */
-    private $parameters;
 
     /**
      * @var string[]
@@ -36,44 +27,14 @@ class SessionManager implements SessionManagerInterface
     private $nodeNames;
 
     /**
-     * @var RepositoryInterface
-     */
-    private $repository;
-
-    /**
-     * @var CredentialsInterface
-     */
-    private $credentials;
-
-    /**
      * @var SessionInterface
      */
     private $session;
 
-    function __construct(RepositoryFactoryInterface $factory, $options, $nodeNames)
+    function __construct(SessionInterface $session, $nodeNames)
     {
-        $this->options = $this->getOptions($options);
-
-        $this->parameters = array('jackalope.jackrabbit_uri' => $options['url']);
-        $this->factory = $factory;
-        $this->repository = $this->factory->getRepository($this->parameters);
-        $this->credentials = new SimpleCredentials($options['username'], $options['password']);
-
-        $this->session = $this->repository->login($this->credentials, $options['workspace']);
-
+        $this->session = $session;
         $this->nodeNames = $nodeNames;
-    }
-
-    private function getOptions($options)
-    {
-        $defaults = array(
-            'url' => 'http://localhost:8080/server',
-            'username' => 'admin',
-            'password' => 'admin',
-            'workspace' => 'default'
-        );
-
-        return array_merge($defaults, $options);
     }
 
     /**

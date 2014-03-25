@@ -17,13 +17,15 @@
         "symfony/framework-bundle": "2.3.*",
         "sensio/distribution-bundle": "2.3.*",
         "friendsofsymfony/rest-bundle": "1.0.*",
-        "jms/serializer-bundle": "@dev",
-        "jackalope/jackalope-jackrabbit": "1.0.*"
+        "jackalope/jackalope-jackrabbit": "1.0.*",
+        "doctrine/phpcr-bundle": "1.0.*",
+        "doctrine/phpcr-odm": "1.0.*"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "dev-develop"
+        "sulu/test-bundle": "dev-develop",
+        "jackalope/jackalope-doctrine-dbal": "@dev"
     },
     "autoload": {
         "psr-0": {
