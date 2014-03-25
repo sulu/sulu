@@ -41,5 +41,6 @@
                 </block>
             </properties>
         </block>
+        <property name="blog" type="text_editor" mandatory="true"/>
     </properties>
 </template>

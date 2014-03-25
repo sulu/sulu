@@ -105,7 +105,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'key' => 'complex',
             'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
             'controller' => 'SuluWebsiteBundle:Default:index',
-            'cacheLifetime' => 4800,
+            'cacheLifetime' => '4800',
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
@@ -154,8 +154,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                             'mandatory' => true,
                                             'minOccurs' => 2
                                         ),
-                                        'article1.1.2' => array(
-                                            'name' => 'article1.1.2',
+                                        'article2.1.2' => array(
+                                            'name' => 'article2.1.2',
                                             'type' => 'text_area',
                                             'mandatory' => true,
                                             'minOccurs' => 2
@@ -190,7 +190,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         )
 
                     )
-                )
+                ),
+
+                'blog' => array(
+                    'name' => 'blog',
+                    'type' => 'text_editor',
+                    'mandatory' => true
+                ),
             )
         );
 

@@ -20,10 +20,10 @@
 
     <xs:complexType name="propertiesType">
 
-        <xs:sequence>
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
+        </xs:choice>
 
     </xs:complexType>
 

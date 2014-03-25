@@ -12,11 +12,11 @@ namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\PropertyInterface;
 
-interface BlockPropertyInterface
+interface BlockPropertyInterface extends PropertyInterface
 {
     /**
      * returns a list of properties managed by this block
-     * @return PropertyInterface
+     * @return Array of PropertyInterface
      */
     public function getSubProperties();
 
