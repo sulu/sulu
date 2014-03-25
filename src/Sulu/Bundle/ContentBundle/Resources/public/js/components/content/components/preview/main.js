@@ -50,6 +50,7 @@ define([], function() {
                     showRight: true
                 },
                 mainContentElementIdentifier: '',
+                mainContentMaxWidth: 820,
                 mainContentMinWidth: 530,
                 marginLeft: 30,
                 iframeSource: {
@@ -366,6 +367,9 @@ define([], function() {
                     this.sandbox.dom.addClass(this.$toolbarRight,'hidden');
                 }
 
+                // calculate new width of preview - because of resize
+                this.previewWidth = this.sandbox.dom.width(document) - this.mainContentOriginalWidth-30;
+
                 this.animateCollapseAndExpand(false, this.previewWidth);
             },
 
@@ -409,10 +413,19 @@ define([], function() {
                         left: this.options.minMarginLeft,
                         paddingLeft: 0});
                 } else {
+
+                    var widthOfContent = this.sandbox.dom.width(window) - 100, width;
+                    if(widthOfContent < this.options.mainContentMaxWidth ? widthOfContent : this.options.mainContentMaxWidth){
+                        width = widthOfContent;
+                        this.sandbox.dom.hide(this.$toolbarRight);
+                    } else {
+                        width = this.options.mainContentMaxWidth;
+                    }
+
                     this.sandbox.emit('husky.navigation.show');
                     this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
-                        width: this.mainContentOriginalWidth,
+                        width: width,
                         left: this.options.maxMarginLeft,
                         paddingLeft: this.options.maxPaddingLeft});
                 }
@@ -429,32 +442,51 @@ define([], function() {
              */
             dimensionsChanged:function(dimensions){
 
-                // new width bigger - enlarge just preview
-                // new width smaller - shrink just preview
-                // main content stays the same
-
                 var mainContentWidth = this.sandbox.dom.outerWidth(this.$mainContent),
-                    mainContentMargin = (mainContentWidth - this.sandbox.dom.width(this.$mainContent)),
-                    newPreviewWidth = dimensions.width -  (mainContentWidth + mainContentMargin);
+                    newPreviewWidth = 0;
 
-                // TODO move breakpoint values to options
-                if(dimensions.width < 980 || newPreviewWidth <= 0){
-                    this.sandbox.dom.hide(this.$el);
-                    return;
-                } else if(dimensions.width < constants.minWidthToolbar) {
-                    this.sandbox.dom.hide(this.$toolbarRight);
-                } else {
-                    this.sandbox.dom.show(this.$el);
-                    this.sandbox.dom.show(this.$toolbarRight);
+                if(!this.isExpanded){
+
+                    newPreviewWidth = dimensions.width -  (mainContentWidth + this.options.marginLeft);
+
+                    if(dimensions.width < 980 || newPreviewWidth <= 0){
+                        this.sandbox.dom.hide(this.$el);
+                        return;
+                    } else if(dimensions.width < constants.minWidthToolbar) {
+                        this.sandbox.dom.show(this.$el);
+                        this.sandbox.dom.hide(this.$toolbarRight);
+                    } else {
+                        this.sandbox.dom.show(this.$el);
+                        this.sandbox.dom.show(this.$toolbarRight);
+                    }
+
+                } else if(!!this.isExpanded){
+
+                    newPreviewWidth = dimensions.width -  mainContentWidth + this.options.marginLeft;
+
+                    if(dimensions.width < 540 || newPreviewWidth <= 0){
+                        this.sandbox.dom.hide(this.$el);
+                        return;
+                    } else if(dimensions.width < 750) {
+                        this.sandbox.dom.show(this.$el);
+                        this.sandbox.dom.hide(this.$toolbarRight);
+                    } else {
+                        this.sandbox.dom.show(this.$el);
+                        this.sandbox.dom.show(this.$toolbarRight);
+                    }
+
                 }
 
-                // TODO adjust iframe width?
+                // TODO move breakpoint values to options
                 // TODO test when preview expanded
-                // TODO wrong width for preview
+                // TODO iframe hinzufuegen/entfernen fuer start/stop
+                // TODO wenn aufloesung zu klein nur streifen anzeigen - content verkleinern
+                // TODO dimension changed - with attribut wird gesetzt --> in css setzen
 
-
-                this.sandbox.dom.width(this.$wrapper, newPreviewWidth);
-                this.sandbox.dom.width(this.$toolbar, newPreviewWidth+this.options.marginLeft);
+                this.previewWidth = newPreviewWidth;
+                this.sandbox.dom.width(this.$wrapper, this.previewWidth);
+                this.sandbox.dom.width(this.$iframe, this.previewWidth);
+                this.sandbox.dom.width(this.$toolbar, this.previewWidth+this.options.marginLeft);
             },
 
             /**
