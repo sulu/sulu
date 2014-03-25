@@ -76,7 +76,6 @@ define([], function() {
              */
             setTitle: function() {
                 if (!!this.options.data && !!this.options.data.id) {
-                    console.log(this.options.data, 'marcelmoos');
                     this.sandbox.emit('sulu.content.set-title', this.options.data.fullName);
                     this.sandbox.emit('sulu.content.set-title-addition',
                         this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.id
