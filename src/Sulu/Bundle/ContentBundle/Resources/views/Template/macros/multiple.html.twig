@@ -1,7 +1,7 @@
 <h2>{{ property.name|capitalize }}</h2>
 <div id="{{ property.name }}" data-type="collection" data-type-min="{{ property.minOccurs }}"
      data-type-max="{{ property.maxOccurs }}"
-     data-mapper-property='{"id": "{{ property.name }}", "tpl": "{{ property.name }}-tpl"}'>
+     data-mapper-property='{"data": "{{ property.name }}", "tpl": "{{ property.name }}-tpl"}'>
     <script id="{{ property.name }}-tpl" type="text/template">
         <div class="{{ property.name }}-element grid-row">
             <div class="grid-col-11">
