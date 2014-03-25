@@ -14,6 +14,8 @@ use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Webspace;
 
 class NavigationTest extends PhpcrTestCase
 {
@@ -21,6 +23,11 @@ class NavigationTest extends PhpcrTestCase
      * @var StructureInterface[]
      */
     private $data;
+
+    /**
+     * @var Webspace
+     */
+    private $webspace;
 
     /**
      * @var NavigationMapperInterface
@@ -33,6 +40,26 @@ class NavigationTest extends PhpcrTestCase
         $this->data = $this->prepareTestData();
 
         $this->navigation = new NavigationMapper($this->mapper);
+    }
+
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $this->webspace = new Webspace();
+            $this->webspace->setKey('default');
+
+            $local = new Localization();
+            $local->setLanguage('en');
+
+            $this->webspace->setLocalizations(array($local));
+            $this->webspace->setName('Default');
+
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+            $this->webspaceManager
+                ->expects($this->any())
+                ->method('findWebspaceByKey')
+                ->will($this->returnValue($this->webspace));
+        }
     }
 
     public function structureCallback()
