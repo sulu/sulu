@@ -171,7 +171,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
         $navigation = $this->getRequest()->get('navigation');
-        if ($navigation === '0') {
+        if ($navigation === false || $navigation === '0') {
             $navigation = false;
         } else {
             // default navigation
