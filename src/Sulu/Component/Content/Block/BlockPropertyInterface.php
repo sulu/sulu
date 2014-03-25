@@ -12,16 +12,19 @@ namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\PropertyInterface;
 
+/**
+ * interface definition for block property
+ */
 interface BlockPropertyInterface extends PropertyInterface
 {
     /**
      * returns a list of properties managed by this block
      * @return Array of PropertyInterface
      */
-    public function getSubProperties();
+    public function getChildProperties();
 
     /**
      * @param PropertyInterface $property
      */
-    public function addSubProperty(PropertyInterface $property);
+    public function addChild(PropertyInterface $property);
 } 

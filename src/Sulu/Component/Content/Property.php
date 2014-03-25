@@ -163,6 +163,20 @@ class Property implements PropertyInterface
     }
 
     /**
+     * returns TRUE if property is a block
+     * @return boolean
+     */
+    public function getIsBlock()
+    {
+        return false;
+    }
+
+    public function getIsMultiple()
+    {
+        return $this->minOccurs > 1 || $this->maxOccurs > 1;
+    }
+
+    /**
      * magic getter for twig templates
      * @param $property
      * @return null

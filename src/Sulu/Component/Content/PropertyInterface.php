@@ -68,4 +68,10 @@ interface PropertyInterface
      * @return mixed
      */
     public function getValue();
+
+    /**
+     * returns TRUE if property is a block
+     * @return boolean
+     */
+    public function getIsBlock();
 }

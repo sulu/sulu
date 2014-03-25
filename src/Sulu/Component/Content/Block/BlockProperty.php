@@ -19,7 +19,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
      * properties managed by this block
      * @var PropertyInterface
      */
-    private $subProperties = array();
+    private $childProperties = array();
 
     function __construct(
         $name,
@@ -37,16 +37,77 @@ class BlockProperty extends Property implements BlockPropertyInterface
      * returns a list of properties managed by this block
      * @return Array of PropertyInterface
      */
-    public function getSubProperties()
+    public function getChildProperties()
     {
-        return $this->subProperties;
+        return $this->childProperties;
     }
 
     /**
      * @param PropertyInterface $property
      */
-    public function addSubProperty(PropertyInterface $property)
+    public function addChild(PropertyInterface $property)
     {
-        $this->subProperties[] = $property;
+        $this->childProperties[] = $property;
     }
+
+    public function setValue($value)
+    {
+        $data = array();
+        // check value for associativeness
+        if (!(array_keys($value) !== range(0, count($value) - 1))) {
+            foreach ($value as $item) {
+                foreach ($item as $key => $itemValue) {
+                    if (!isset($data[$key])) {
+                        $data[$key] = array();
+                    }
+                    $data[$key][] = $itemValue;
+                }
+            }
+        } else {
+            $data = $value;
+        }
+        /** @var PropertyInterface $subProperty */
+        foreach ($this->childProperties as $subProperty) {
+            if (isset($data[$subProperty->getName()])) {
+                $subProperty->setValue($data[$subProperty->getName()]);
+            }
+        }
+    }
+
+    public function getValue()
+    {
+        $data = array();
+        if ($this->getIsMultiple()) {
+            /** @var PropertyInterface $child */
+            foreach ($this->childProperties as $child) {
+                $items = $child->getValue();
+                // check value is not associative
+                if (!(array_keys($items) !== range(0, count($items) - 1))) {
+                    foreach ($items as $key => $item) {
+                        $data[$key][$child->getName()] = $item;
+                    }
+                } else {
+                    // go thrue associative array
+                    foreach ($items as $varName => $item) {
+                        foreach ($item as $key => $itemValue) {
+                            $data[$key][$child->getName()][$varName] = $itemValue;
+                        }
+                    }
+                }
+            }
+        } else {
+            /** @var PropertyInterface $child */
+            foreach ($this->childProperties as $child) {
+                $data[$child->getName()] = $child->getValue();
+            }
+        }
+        return $data;
+    }
+
+    public function getIsBlock()
+    {
+        return true;
+    }
+
+
 }

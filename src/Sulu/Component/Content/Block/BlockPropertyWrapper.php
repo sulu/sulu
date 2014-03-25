@@ -8,49 +8,30 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Mapper\Translation;
+namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\PropertyInterface;
 
-/**
- * Wrapper for translated properties
- * @package Sulu\Component\Content\Mapper\Translation
- */
-class TranslatedProperty implements PropertyInterface
+class BlockPropertyWrapper implements PropertyInterface
 {
     /**
-     * @var \Sulu\Component\Content\PropertyInterface
+     * @var PropertyInterface
      */
     private $property;
 
     /**
-     * @var string
+     * @var BlockPropertyInterface
      */
-    private $localization;
-
-    /**
-     * @var string
-     */
-    private $languageNamespace;
+    private $block;
 
     /**
      * @param PropertyInterface $property
-     * @param string $localization
-     * @param string $languageNamespace
+     * @param PropertyInterface $block
      */
-    public function __construct(PropertyInterface $property, $localization, $languageNamespace)
+    public function __construct(PropertyInterface $property, PropertyInterface $block)
     {
         $this->property = $property;
-        $this->localization = $localization;
-        $this->languageNamespace = $languageNamespace;
-    }
-
-    /**
-     * @return \Sulu\Component\Content\PropertyInterface
-     */
-    public function getProperty()
-    {
-        return $this->property;
+        $this->block = $block;
     }
 
     /**
@@ -59,7 +40,7 @@ class TranslatedProperty implements PropertyInterface
      */
     public function getName()
     {
-        return $this->languageNamespace . ':' . $this->localization . '-' . $this->property->getName();
+        return $this->block->getName().'-'.$this->property->getName();
     }
 
     /**
@@ -135,21 +116,35 @@ class TranslatedProperty implements PropertyInterface
     }
 
     /**
-     * sets the localization of this property
-     * @param string $localization
+     * @param \Sulu\Component\Content\Block\BlockPropertyInterface $block
      */
-    public function setLocalization($localization)
+    public function setBlock($block)
     {
-        $this->localization = $localization;
+        $this->block = $block;
     }
 
     /**
-     * returns the localization of this property
-     * @return string
+     * @return \Sulu\Component\Content\Block\BlockPropertyInterface
      */
-    public function getLocalization()
+    public function getBlock()
     {
-        return $this->localization;
+        return $this->block;
+    }
+
+    /**
+     * @param \Sulu\Component\Content\PropertyInterface $property
+     */
+    public function setProperty($property)
+    {
+        $this->property = $property;
+    }
+
+    /**
+     * @return \Sulu\Component\Content\PropertyInterface
+     */
+    public function getProperty()
+    {
+        return $this->property;
     }
 
     /**
@@ -158,6 +153,7 @@ class TranslatedProperty implements PropertyInterface
      */
     public function getIsBlock()
     {
-        return $this->getProperty()->getIsBlock();
+        return $this->property->getIsBlock();
     }
+
 }

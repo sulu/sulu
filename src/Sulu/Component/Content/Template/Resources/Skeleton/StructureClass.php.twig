@@ -37,10 +37,10 @@ class {{ cache_class }} extends {{ base_class }}
 {% if prop.type == 'block' %}
 {% set child = '$prop' ~ counter %}
         {{ child }} = {{ _self.complextype(prop) }};
-        {{ parent }}->addSubProperty({{ child }});
+        {{ parent }}->addChild({{ child }});
 {{ _self.constructProperties(prop.properties, counter, child) }}
 {% else %}
-        {{ parent }}->addSubProperty(
+        {{ parent }}->addChild(
 {{ _self.basictype(prop) }}
         );
 {% endif %}

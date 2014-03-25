@@ -255,7 +255,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $block1->isMultilingual());
         $this->assertEquals('block', $block1->getContentTypeName());
 
-        $subproperties = $block1->getSubProperties();
+        $subproperties = $block1->getChildProperties();
         $this->assertEquals(3, sizeof($subproperties));
 
         $title11 = $subproperties[0];
@@ -293,7 +293,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $block11->isMultilingual());
         $this->assertEquals('block', $block11->getContentTypeName());
 
-        $subproperties11 = $block11->getSubProperties();
+        $subproperties11 = $block11->getChildProperties();
         $this->assertEquals(2, sizeof($subproperties11));
 
         $block111 = $subproperties11[0];
@@ -304,7 +304,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $block111->isMultilingual());
         $this->assertEquals('block', $block111->getContentTypeName());
 
-        $subproperties111 = $block111->getSubProperties();
+        $subproperties111 = $block111->getChildProperties();
         $this->assertEquals(3, sizeof($subproperties111));
 
         $article111 = $subproperties111[0];
@@ -341,7 +341,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $block113->isMultilingual());
         $this->assertEquals('block', $block113->getContentTypeName());
 
-        $subproperties113 = $block113->getSubProperties();
+        $subproperties113 = $block113->getChildProperties();
         $this->assertEquals(1, sizeof($subproperties113));
 
         $article1131 = $subproperties113[0];
@@ -365,7 +365,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $block112->isMultilingual());
         $this->assertEquals('block', $block112->getContentTypeName());
 
-        $subproperties112 = $block112->getSubProperties();
+        $subproperties112 = $block112->getChildProperties();
         $this->assertEquals(1, sizeof($subproperties112));
 
         $article1121 = $subproperties112[0];
