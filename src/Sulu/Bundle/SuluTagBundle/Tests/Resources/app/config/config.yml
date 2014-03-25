@@ -40,7 +40,14 @@ sulu_admin:
 
 sulu_core:
     phpcr:
+        backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
         workspace: test
+        username: admin
+        password: admin
+    content: ~
+    webspace: ~
 
             
 # Configuration file for security in the test environment
