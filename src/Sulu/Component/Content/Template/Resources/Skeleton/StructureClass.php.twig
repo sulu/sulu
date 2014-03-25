@@ -17,15 +17,16 @@ class {{ cache_class }} extends {{ base_class }}
 {% for property in content.properties %}
 
 
-            {% set counter = 1 %}
+            {% set counter = 0 %}
 
 
             {% if property.type == 'block' %}
 
-                $prop{{ counter }} = {{ _self.complextype(property) }};
-                $this->add($prop{{ counter }});
+                {% set parent = '$prop1' %}
+                {{ parent }}= {{ _self.complextype(property) }};
+                $this->add({{ parent }});
 
-                {{ _self.constructProperties(property.properties, counter ) }}
+                {{ _self.constructProperties(property.properties, counter, parent) }}
 
             {% else %}
 
@@ -39,22 +40,30 @@ class {{ cache_class }} extends {{ base_class }}
 
 
 
-{% macro constructProperties(properties, counter) %}
+{% macro constructProperties(properties, counter, parent) %}
 
-    {#{{ properties|length }}#}
+    /* Anzahl Properties {{ properties|length }} */
 
     {% for prop in properties %}
 
+        {% set counter = counter+1 %}
+
+        /* Counter {{ counter }} */
+        /* Property Name {{ prop.name }} */
+        /* Property Type {{ prop.type }} */
 
         {% if prop.type == 'block' %}
 
-            $prop{{ counter }}->addSubProperty({{ _self.complextype(prop) }});
-            {% set counter = counter+1 %}
-            {{ _self.complextype(prop.properties, counter) }}
+            {% set child = '$prop' ~ counter %}
+
+            {{ child }} = {{ _self.complextype(prop) }};
+            {{ parent }}->addSubProperty({{ child }});
+
+            {{ _self.constructProperties(prop.properties, counter, child) }}
 
         {% else %}
 
-            $prop{{ counter }}->addSubProperty({{ _self.basictype(prop) }});
+            {{ parent }}->addSubProperty({{ _self.basictype(prop) }});
 
         {% endif %}
 
@@ -65,8 +74,10 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% macro complextype(property) %}
 
+    /* Complex Type Name {{ property.name }} */
+
     new BlockProperty(
-    '{{ property.name}}',
+    '{{ property.name }}',
     {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
     {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
     {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
@@ -92,8 +103,8 @@ class {{ cache_class }} extends {{ base_class }}
 
 
     new Property(
-    '{{ property.name}}',
-    '{{ property.type}}',
+    '{{ property.name }}',
+    '{{ property.type }}',
     {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
     {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
     {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},

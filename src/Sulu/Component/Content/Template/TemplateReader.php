@@ -105,6 +105,7 @@ class TemplateReader implements LoaderInterface
         } catch (InvalidXmlException $ex) {
             throw $ex;
         } catch (Exception $ex) {
+            // TODO do not catch exceptions here but in the callee
             throw new InvalidArgumentException('Path is invalid: ' . $path);
         }
 
