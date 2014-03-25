@@ -1,10 +1,11 @@
 <h2>{{ property.name|capitalize }}</h2>
-<div id="{{ property.name }}" data-type="collection" data-type-min="{{ property.minOccurs }}" data-type-max="{{ property.maxOccurs }}" data-mapper-property="{{ property.name }}">
-
-    {% for i in 1..property.minOccurs %}
+<div id="{{ property.name }}" data-type="collection" data-type-min="{{ property.minOccurs }}"
+     data-type-max="{{ property.maxOccurs }}"
+     data-mapper-property='{"id": "{{ property.name }}", "tpl": "{{ property.name }}-tpl"}'>
+    <script id="{{ property.name }}-tpl" type="text/template">
         <div class="{{ property.name }}-element grid-row">
             <div class="grid-col-11">
-                {% include type.template with {'property': property, 'type': type, 'id': property.name ~ i} only %}
+                {% include type.template with {'property': property, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
             </div>
             <div class="grid-col-1 m-top-15">
                 <div class="mapper-remove-{{ property.name }} pointer" data-mapper-remove="{{ property.name }}">
@@ -12,12 +13,9 @@
                 </div>
             </div>
         </div>
-    {% endfor %}
-
+    </script>
 </div>
 
 {% if needsAddButton(property) %}
     {% include 'SuluContentBundle:Template:macros/add_button.html.twig' with {'property': property} only %}
 {% endif %}
-
-<hr class="divider"/>

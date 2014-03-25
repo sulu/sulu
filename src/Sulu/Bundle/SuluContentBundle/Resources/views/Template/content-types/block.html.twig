@@ -1,13 +1,13 @@
-<div class="block">
-    {% for property in template.childProperties %}
+<div class="block block-{{ property.name }}">
+    {% for child in property.childProperties %}
 
         {# set defaults for property#}
-        {% set type = getType(property.contentTypeName) %}
+        {% set type = getType(child.contentTypeName) %}
 
-        {% if property is multiple %}
-            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'type': type, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+        {% if child is multiple %}
+            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'type': type, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
         {% else %}
-            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
         {% endif %}
     {% endfor %}
 </div>
