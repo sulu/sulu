@@ -1,6 +1,7 @@
 <?php
 
 use Sulu\Component\Content\Property;
+use Sulu\Component\Content\Block\BlockProperty;
 
 /**
  * {{ cache_class }}
@@ -15,25 +16,109 @@ class {{ cache_class }} extends {{ base_class }}
         parent::__construct('{{ content.key }}', '{{ content.view }}', '{{ content.controller }}', '{{ content.cacheLifetime }}');
 {% for property in content.properties %}
 
-        $this->add(
-            new Property(
-                '{{ property.name}}',
-                '{{ property.type}}',
-                {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-                {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
-                {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
-                {{ property.minOccurs is defined ? property.minOccurs : 1 }},
-{% if property.params %}
-                {{ 'array(' }}
-{% for key,value in property.params %}
-                    '{{ key }}' => '{{ value }}',
-{% endfor %}
-                {{ ')' }}
-{% else %}
-                array()
-{% endif %}
-            )
-        );
+
+            {% set counter = 0 %}
+
+
+            {% if property.type == 'block' %}
+
+                {% set parent = '$prop1' %}
+                {{ parent }}= {{ _self.complextype(property) }};
+                $this->add({{ parent }});
+
+                {{ _self.constructProperties(property.properties, counter, parent) }}
+
+            {% else %}
+
+                   $this->add( {{ _self.basictype(property) }});
+
+            {% endif %}
+
 {% endfor %}
     }
 }
+
+
+
+{% macro constructProperties(properties, counter, parent) %}
+
+    /* Anzahl Properties {{ properties|length }} */
+
+    {% for prop in properties %}
+
+        {% set counter = counter+1 %}
+
+        /* Counter {{ counter }} */
+        /* Property Name {{ prop.name }} */
+        /* Property Type {{ prop.type }} */
+
+        {% if prop.type == 'block' %}
+
+            {% set child = '$prop' ~ counter %}
+
+            {{ child }} = {{ _self.complextype(prop) }};
+            {{ parent }}->addSubProperty({{ child }});
+
+            {{ _self.constructProperties(prop.properties, counter, child) }}
+
+        {% else %}
+
+            {{ parent }}->addSubProperty({{ _self.basictype(prop) }});
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endmacro %}
+
+
+{% macro complextype(property) %}
+
+    /* Complex Type Name {{ property.name }} */
+
+    new BlockProperty(
+    '{{ property.name }}',
+    {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
+    {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
+    {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
+    {{ property.minOccurs is defined ? property.minOccurs : 1 }},
+
+    {% if property.params %}
+        {{ 'array(' }}
+        {% for key,value in property.params %}
+            '{{ key }}' => '{{ value }}',
+        {% endfor %}
+        {{ ')' }}
+    {% else %}
+        array()
+    {% endif %}
+    )
+
+{% endmacro %}
+
+
+
+
+{% macro basictype(property) %}
+
+
+    new Property(
+    '{{ property.name }}',
+    '{{ property.type }}',
+    {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
+    {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
+    {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
+    {{ property.minOccurs is defined ? property.minOccurs : 1 }},
+
+    {% if property.params %}
+        {{ 'array(' }}
+        {% for key,value in property.params %}
+            '{{ key }}' => '{{ value }}',
+        {% endfor %}
+        {{ ')' }}
+    {% else %}
+        array()
+    {% endif %}
+    )
+
+{% endmacro %}
