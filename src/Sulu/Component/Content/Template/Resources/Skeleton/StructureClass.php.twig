@@ -42,15 +42,9 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% macro constructProperties(properties, counter, parent) %}
 
-    /* Anzahl Properties {{ properties|length }} */
-
     {% for prop in properties %}
 
         {% set counter = counter+1 %}
-
-        /* Counter {{ counter }} */
-        /* Property Name {{ prop.name }} */
-        /* Property Type {{ prop.type }} */
 
         {% if prop.type == 'block' %}
 
@@ -73,8 +67,6 @@ class {{ cache_class }} extends {{ base_class }}
 
 
 {% macro complextype(property) %}
-
-    /* Complex Type Name {{ property.name }} */
 
     new BlockProperty(
     '{{ property.name }}',
