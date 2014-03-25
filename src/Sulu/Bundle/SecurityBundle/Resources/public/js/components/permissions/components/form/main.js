@@ -26,9 +26,7 @@ define([], function() {
             this.formId = '#permissions-form';
             this.selectedRoles = [];
             this.deselectedRoles = [];
-
-            this.passwordField1Id = '#husky-password-fields-instance1-password1';
-            this.passwordField2Id = '#husky-password-fields-instance1-password2';
+            this.systemLanguage = null;
 
             if (!!this.options.data) {
                 this.user = this.options.data.user;
@@ -39,8 +37,8 @@ define([], function() {
                 this.sandbox.logger.log("no data given");
             }
 
+            this.setTitle();
             this.render();
-            this.initializePasswordFields();
             this.initializeRoles();
 
             this.bindDOMEvents();
@@ -49,14 +47,6 @@ define([], function() {
             this.initializeHeaderbar();
 
             this.sandbox.form.create(this.formId);
-        },
-
-        addConstraintsToPasswordFields: function() {
-            // TODO FIXME
-            setTimeout(function() {
-                this.sandbox.form.addConstraint(this.formId, this.passwordField1Id, 'required', {required: true});
-                this.sandbox.form.addConstraint(this.formId, this.passwordField2Id, 'required', {required: true});
-            }.bind(this), 10);
         },
 
         // Headerbar
@@ -87,6 +77,10 @@ define([], function() {
                 this.setHeaderBar(false);
             }.bind(this), 'input');
 
+            this.sandbox.on('husky.dropdown.multiple.select.systemLanguage.selected.item', function() {
+                this.setHeaderBar(false);
+            }.bind(this));
+
             this.sandbox.util.each(this.roles, function(index, value) {
                 this.sandbox.on('husky.dropdown.multiple.select.languageSelector' + value.id + '.selected.item', function() {
                     this.setHeaderBar(false);
@@ -96,6 +90,21 @@ define([], function() {
                 }, this);
             }.bind(this));
 
+        },
+
+        /**
+         * Sets the title to the username
+         * default title as fallback
+         */
+        setTitle: function() {
+            if (!!this.options.data.user && !!this.options.data.user.id) {
+                this.sandbox.emit('sulu.content.set-title', this.options.data.user.fullName);
+                this.sandbox.emit('sulu.content.set-title-addition',
+                    this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.user.id
+                );
+            } else {
+                this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('contact.contacts.title'));
+            }
         },
 
         // Form
@@ -109,30 +118,30 @@ define([], function() {
 
             headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {user: !!this.user ? this.user : null, email: email, headline: headline}));
+            this.startLanguageDropdown();
         },
 
-        initializePasswordFields: function() {
+        /**
+         * Starts the dropdown for the system language
+         */
+        startLanguageDropdown: function() {
+            this.systemLanguage = this.options.data.user.locale;
 
             this.sandbox.start([
                 {
-                    name: 'password-fields@husky',
+                    name: 'dropdown-multiple-select@husky',
                     options: {
-                        instanceName: "instance1",
-                        el: '#password-component',
-                        labels: {
-                            inputPassword1: this.sandbox.translate('security.permission.password'),
-                            inputPassword2: this.sandbox.translate('security.permission.passwordRepeat'),
-                            generateLabel: this.sandbox.translate('security.permission.generatePassword')
-                        },
-                        validation: this.formId
+                        el: this.sandbox.dom.find('#systemLanguage', this.$el),
+                        instanceName: 'systemLanguage',
+                        defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
+                        value: 'name',
+                        singleSelect: true,
+                        noDeselect: true,
+                        data: [{id:"de", name:"Deutsch"}, {id:"en", name:"English"}],
+                        preSelectedElements: [this.systemLanguage]
                     }
                 }
             ]);
-
-            // set timeout
-            if (!this.user || !this.user.id) {
-                this.addConstraintsToPasswordFields();
-            }
         },
 
         bindDOMEvents: function() {
@@ -219,11 +228,6 @@ define([], function() {
             this.sandbox.on('sulu.user.permissions.saved', function(model) {
                 this.user = model;
 
-                if (!!this.user.id && !!this.sandbox.form.element.hasConstraint(this.passwordField1Id, 'required')) {
-                    this.sandbox.form.deleteConstraint(this.formId, this.passwordField1Id, 'required');
-                    this.sandbox.form.deleteConstraint(this.formId, this.passwordField2Id, 'required');
-                }
-
                 this.setHeaderBar(true);
             }, this);
 
@@ -234,14 +238,17 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.back', function(){
                 this.sandbox.emit('sulu.contacts.contacts.list');
             }, this);
+
+            // update systemLanguage on dropdown select
+            this.sandbox.on('husky.dropdown.multiple.select.systemLanguage.selected.item', function(locale) {
+                this.systemLanguage = locale;
+            }.bind(this));
         },
 
         save: function() {
             // FIXME  Use datamapper instead
 
             var data;
-
-            this.getPassword();
 
             if (this.sandbox.form.validate(this.formId)) {
 
@@ -251,12 +258,14 @@ define([], function() {
                     user: {
                         username: this.sandbox.dom.val('#username'),
                         contact: this.contact,
-                        locale: this.sandbox.dom.val('#locale')
+                        locale: this.systemLanguage
                     },
 
                     selectedRolesAndConfig: this.getSelectedRolesAndLanguages(),
                     deselectedRoles: this.deselectedRoles
                 };
+
+                this.password = this.sandbox.dom.val('#password');
 
                 if (!!this.user && !!this.user.id) {
                     data.user.id = this.user.id;
@@ -267,14 +276,6 @@ define([], function() {
                 }
 
                 this.sandbox.emit('sulu.user.permissions.save', data);
-            }
-        },
-
-        isValidPassword: function() {
-            if (!!this.user && !!this.user.id) { // existion user - does not have to set password
-                return true;
-            } else { // new user - should set password at least once and it should not be empty
-                return !!this.password && this.password !== '';
             }
         },
 
@@ -299,12 +300,6 @@ define([], function() {
 
             return data;
 
-        },
-
-        getPassword: function() {
-            this.sandbox.emit('husky.password.fields.instance1.get.passwords', function(password1) {
-                this.password = password1;
-            }.bind(this));
         },
 
         // Grid with roles and permissions
@@ -340,7 +335,7 @@ define([], function() {
                             defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                             checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
-                            data: ["Deutsch", "English", "Spanish", "Italienisch"],
+                            data: ["Deutsch", "English", "Espagnol", "Italiano"],
                             preSelectedElements: preSelectedValues
                         }
                     }

@@ -1,5 +1,5 @@
 <form class="form-horizontal" id="permissions-form">
-    <div class="grid-row">
+    <div class="grid-row small">
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="username"><%=translate('security.permission.username')%></label>
@@ -14,26 +14,31 @@
         </div>
     </div>
 
-    <div class="grid-row" id="password-component"></div>
-
-    <div class="grid-row">
-        <div class="form-group grid-col-6">
-            <label for="locale"><%=translate('security.permission.locale')%></label>
-            <select name="locale" id="locale" class="form-element">
-                <option value="de" <%=user.locale==='de'? 'selected="selected"':''%>><%=translate('Deutsch')%></option>
-                <option value="en" <%=user.locale==='en'? 'selected="selected"':''%>><%=translate('English')%></option>
-            </select>
+    <div class="grid-row small">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="password"><%=translate('security.permission.password')%></label>
+                <input name="password" id="password" type="text" class="form-element" data-validation-equal="passwords"/>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="password"><%=translate('security.permission.passwordRepeat')%></label>
+                <input name="passwordRepeat" id="passwordRepeat" type="text" class="form-element" data-validation-equal="passwords"/>
+            </div>
         </div>
     </div>
-
-    <hr class="divider"/>
-
-    <div class="grid-row m-top-30">
-
-        <div class="gridrow">
-            <h2><%=translate('security.permission.titlePermissions')%></h2>
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="locale"><%=translate('security.permission.locale')%></label>
+                <div id="systemLanguage"></div>
+            </div>
         </div>
-        <div class="gridrow" id="permissions-grid"></div>
-
+        <div class="grid-col-6"></div>
+    </div>
+    <div class="grid-row">
+        <h2 class="divider"><%=translate('security.permission.titlePermissions')%></h2>
+        <div id="permissions-grid"></div>
     </div>
 </form>
