@@ -21,7 +21,7 @@ body {
     padding-left: $contentPaddingLeft;
     margin-top: $contentMarginTop;
     padding-right: $contentPaddingRight;
-    margin-bottom: $contentMarginBottom;
+    padding-bottom: $contentMarginBottom;
     @include single-transition(margin,  $transitionDuration);
 
     h2.mainheadline {

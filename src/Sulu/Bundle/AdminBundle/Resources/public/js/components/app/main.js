@@ -123,7 +123,7 @@ define(function() {
          * @param action {string}
          */
         selectNavigationItem: function(action) {
-            this.sandbox.emit('husky.navigation.select-item', action);
+            this.sandbox.emit('husky.navigation.select-item', action, false);
         },
 
         /**
