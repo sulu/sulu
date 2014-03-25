@@ -15,8 +15,6 @@
  *
  * @param {Object}  [options] Configuration object
  * @param {String}  [options.mainContentElementIdentifier] ID of the element which will be next to the preview (main content element)
- * @param {Number}  [options.mainContentMinWidthOld] minimal with of main content element
- * @param {Number}  [options.marginPreviewCollapsedLeft] margin in pixles from the left for the wrapper
  * @param {Object}  [options.iframeSource] configuration object for the source of the iframe
  * @param {String}  [options.iframeSource.url] url used for the iframe
  * @param {String}  [options.iframeSource.webspace] webspace section of the url
@@ -51,31 +49,33 @@ define([], function() {
                 },
 
                 mainContentElementIdentifier: '',
-                mainContentMaxOuterWidth: 920,
-                mainContentMaxWidth: 820,
-                mainContentMinOuterWidth: 500,
-                mainContentMinWidthOld: 530,
-
-                marginPreviewCollapsedLeft: 30,
-                marginPreviewExpandedLeft: 10,
-                previewMinWidth: 60,
 
                 iframeSource: {
                     url: '',
                     webspace: '',
                     language: '',
                     id: ''
-                },
+                }
 
-                transitionDuration: 500,
-                minMarginLeft: 10,
-                maxMarginLeft: 50,
-                maxPaddingLeft: 50
             },
 
             constants = {
 
                 minWidthToolbar: 1200,
+
+                // main content + 50px margin + 50px padding
+                mainContentMaxWidthIncMarginLeft: 920,
+                mainContentMaxWidth: 820,
+
+                mainContentMinWidth: 530,
+                marginPreviewCollapsedLeft: 30,
+
+                previewMinWidth: 60,
+
+                transitionDuration: 500,
+                minMainContentMarginLeft: 10,
+                maxMainContentMarginLeft: 50,
+                maxMainContentPaddingLeft: 50,
 
                 toolbarLeft: 'preview-toolbar-left',
                 toolbarRight: 'preview-toolbar-right',
@@ -172,7 +172,7 @@ define([], function() {
                 totalWidth = this.sandbox.dom.width(window);
 
                 // TODO remove this variable
-                this.previewWidth = totalWidth - (mainWidth + this.options.marginPreviewCollapsedLeft);
+                this.previewWidth = totalWidth - (mainWidth + constants.marginPreviewCollapsedLeft);
 
                 widths = this.calculateCurrentWidths(false);
 
@@ -287,8 +287,8 @@ define([], function() {
                         this.sandbox.emit('husky.page-functions.show');
                         this.sandbox.emit('sulu.app.content.dimensions-change', {
                             width: this.mainContentOriginalWidth,
-                            left: this.options.maxMarginLeft,
-                            paddingLeft: this.options.maxPaddingLeft});
+                            left: constants.maxMainContentMarginLeft,
+                            paddingLeft: constants.maxMainContentPaddingLeft});
                     }
 
                     this.sandbox.emit(HIDE);
@@ -402,7 +402,7 @@ define([], function() {
                 this.sandbox.dom.animate(this.$wrapper, {
                     width: widths.preview + 'px'
                 }, {
-                    duration: this.options.transitionDuration,
+                    duration: constants.transitionDuration,
                     queue: false
                 });
 
@@ -410,15 +410,15 @@ define([], function() {
                 this.sandbox.dom.animate(this.$iframe, {
                     width: widths.preview + 'px'
                 }, {
-                    duration: this.options.transitionDuration,
+                    duration: constants.transitionDuration,
                     queue: false
                 });
 
                 // preview toolbar
                 this.sandbox.dom.animate(this.$toolbar, {
-                    width: widths.preview + this.options.marginPreviewCollapsedLeft + 'px'
+                    width: widths.preview + constants.marginPreviewCollapsedLeft + 'px'
                 }, {
-                    duration: this.options.transitionDuration,
+                    duration: constants.transitionDuration,
                     queue: false
                 });
 
@@ -427,24 +427,24 @@ define([], function() {
                     this.sandbox.emit('husky.page-functions.hide');
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
                         width: widths.content,
-                        left: this.options.minMarginLeft,
+                        left: constants.minMainContentMarginLeft,
                         paddingLeft: 0});
                 } else {
 
 //                    var widthOfContent = this.sandbox.dom.width(window) - 100, width;
-                    if(widths.content < this.options.mainContentMaxWidth){
+                    if(widths.content < constants.mainContentMaxWidth){
 //                        width = widthOfContent;
                         this.sandbox.dom.hide(this.$toolbarRight);
 //                    } else {
-//                        width = this.options.mainContentMaxWidth;
+//                        width = constants.mainContentMaxWidth;
                     }
 
                     this.sandbox.emit('husky.navigation.show');
                     this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
                         width: widths.content,
-                        left: this.options.maxMarginLeft,
-                        paddingLeft: this.options.maxPaddingLeft});
+                        left: constants.maxMainContentMarginLeft,
+                        paddingLeft: constants.maxMainContentPaddingLeft});
                 }
             },
 
@@ -464,7 +464,7 @@ define([], function() {
 
                 if(!this.isExpanded){
 
-                    newPreviewWidth = dimensions.width -  (mainContentWidth + this.options.marginPreviewCollapsedLeft);
+                    newPreviewWidth = dimensions.width -  (mainContentWidth + constants.marginPreviewCollapsedLeft);
 
                     if(dimensions.width < constants.minWidthToolbar) {
                         this.sandbox.dom.show(this.$el);
@@ -476,7 +476,7 @@ define([], function() {
 
                 } else if(!!this.isExpanded){
 
-                    newPreviewWidth = dimensions.width -  mainContentWidth + this.options.marginPreviewCollapsedLeft;
+                    newPreviewWidth = dimensions.width -  mainContentWidth + constants.marginPreviewCollapsedLeft;
 
                      if(dimensions.width < 750) {
                         this.sandbox.dom.hide(this.$toolbarRight);
@@ -495,7 +495,7 @@ define([], function() {
                 this.previewWidth = newPreviewWidth;
                 this.sandbox.dom.width(this.$wrapper, this.previewWidth);
                 this.sandbox.dom.width(this.$iframe, this.previewWidth);
-                this.sandbox.dom.width(this.$toolbar, this.previewWidth+this.options.marginPreviewCollapsedLeft);
+                this.sandbox.dom.width(this.$toolbar, this.previewWidth+constants.marginPreviewCollapsedLeft);
             },
 
             /**
@@ -511,20 +511,20 @@ define([], function() {
 
                 if(!!expanded) {
 
-                    widths.preview = viewportWidth - this.options.mainContentMinOuterWidth;
-                    widths.content = this.options.mainContentMinWidthOld;
+                    widths.preview = viewportWidth - constants.mainContentMinWidth + constants.marginPreviewCollapsedLeft;
+                    widths.content = constants.mainContentMinWidth;
 
                 } else {
 
-                    tmpWidth = viewportWidth - this.options.previewMinWidth - this.options.marginPreviewCollapsedLeft;
+                    tmpWidth = viewportWidth - constants.previewMinWidth - constants.marginPreviewCollapsedLeft;
 
-                    if(tmpWidth > this.options.mainContentMaxOuterWidth) {
-                        widths.content = this.options.mainContentMaxOuterWidth;
+                    if(tmpWidth > constants.mainContentMaxWidthIncMarginLeft) {
+                        widths.content = constants.mainContentMaxWidthIncMarginLeft;
                     } else {
                         widths.content = tmpWidth;
                     }
 
-                    widths.preview = viewportWidth - widths.content - this.options.marginPreviewCollapsedLeft;
+                    widths.preview = viewportWidth - widths.content - constants.marginPreviewCollapsedLeft;
                 }
 
                 return widths;
