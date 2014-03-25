@@ -38,5 +38,13 @@ sulu_admin:
 
 sulu_core:
     phpcr:
+        backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
         workspace: test
-
+        username: admin
+        password: admin
+    content:
+        templates:
+            default_path: %kernel.root_dir%/../Resources/templates
+    webspace: ~
