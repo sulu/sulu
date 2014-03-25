@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['app-config'], function (AppConfig) {
 
     'use strict';
 
@@ -30,7 +30,7 @@ define(['app-config'], function(AppConfig) {
 
         hiddenTemplate: true,
 
-        initialize: function() {
+        initialize: function () {
             this.saved = true;
             this.highlightSaveButton = this.sandbox.sulu.viewStates.justSaved;
             delete this.sandbox.sulu.viewStates.justSaved;
@@ -46,7 +46,7 @@ define(['app-config'], function(AppConfig) {
             this.setHeaderBar(true);
         },
 
-        render: function() {
+        render: function () {
             this.bindCustomEvents();
 
             if (this.options.tab.content === true) {
@@ -56,7 +56,7 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        renderContent: function() {
+        renderContent: function () {
             if (!!this.options.data.template) {
                 this.changeTemplate(this.options.data.template);
             } else {
@@ -64,11 +64,11 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        showStateDropdown: function() {
+        showStateDropdown: function () {
             this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
         },
 
-        renderSettings: function() {
+        renderSettings: function () {
             this.setHeaderBar(false);
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/settings'));
@@ -85,18 +85,18 @@ define(['app-config'], function(AppConfig) {
             this.changeTemplateDropdownHandler();
         },
 
-        setStateDropdown: function(data) {
+        setStateDropdown: function (data) {
             this.state = data.nodeState || 0;
 
             // get the dropdownds
-            this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
+            this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function (items) {
                 if (items.length > 0) {
                     this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items);
                 }
             }.bind(this));
 
             // set the current state
-            this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
+            this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function (item) {
                 this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
             }.bind(this));
         },
@@ -105,8 +105,8 @@ define(['app-config'], function(AppConfig) {
         /**
          * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
          */
-        setTitle: function() {
-            if (!!this.options.id && !! this.options.data.title) {
+        setTitle: function () {
+            if (!!this.options.id && !!this.options.data.title) {
                 this.sandbox.emit('sulu.content.set-title', this.options.data.title);
                 this.setBreadcrumb();
             } else {
@@ -117,7 +117,7 @@ define(['app-config'], function(AppConfig) {
         /**
          * Generates the Breadcrumb-string and sets it for the title-additon
          */
-        setBreadcrumb: function() {
+        setBreadcrumb: function () {
             var breadcrumb = this.options.webspace.replace(/_/g, '.');
             if (!!this.options.data.breadcrumb) {
                 // loop through breadcrumb skip home-page
@@ -128,10 +128,10 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.content.set-title-addition', breadcrumb);
         },
 
-        createForm: function(data) {
+        createForm: function (data) {
             var formObject = this.sandbox.form.create(this.formId);
-            formObject.initialized.then(function() {
-                this.setFormData(data).then(function() {
+            formObject.initialized.then(function () {
+                this.setFormData(data).then(function () {
                     this.sandbox.start(this.$el, {reset: true});
 
                     if (!!this.options.preview) {
@@ -142,7 +142,7 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
-        setFormData: function(data) {
+        setFormData: function (data) {
             var initialize = this.sandbox.form.setData(this.formId, data);
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
@@ -151,7 +151,7 @@ define(['app-config'], function(AppConfig) {
             return initialize;
         },
 
-        bindDomEvents: function() {
+        bindDomEvents: function () {
             if (!this.options.data.id) {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
             } else {
@@ -159,7 +159,7 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        setResourceLocator: function() {
+        setResourceLocator: function () {
             var title = this.sandbox.dom.val('#title'),
                 url = '#url';
 
@@ -167,7 +167,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.addClass(url, 'is-loading');
                 this.sandbox.dom.css(url, 'background-position', '99%');
 
-                this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
+                this.sandbox.emit('sulu.content.contents.getRL', title, function (rl) {
                     this.sandbox.dom.removeClass(url, 'is-loading');
                     this.sandbox.dom.val(url, rl);
 
@@ -181,51 +181,51 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        bindCustomEvents: function() {
+        bindCustomEvents: function () {
             // content saved
-            this.sandbox.on('sulu.content.contents.saved', function() {
+            this.sandbox.on('sulu.content.contents.saved', function () {
                 this.highlightSaveButton = true;
                 this.setHeaderBar(true);
                 this.setTitle();
             }, this);
 
             // content save
-            this.sandbox.on('sulu.edit-toolbar.save', function() {
+            this.sandbox.on('sulu.edit-toolbar.save', function () {
                 this.submit();
             }, this);
-            this.sandbox.on('sulu.preview.save', function() {
+            this.sandbox.on('sulu.preview.save', function () {
                 this.submit();
             }, this);
 
             // content delete
-            this.sandbox.on('sulu.preview.delete', function() {
+            this.sandbox.on('sulu.preview.delete', function () {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
             }, this);
-            this.sandbox.on('sulu.edit-toolbar.delete', function() {
+            this.sandbox.on('sulu.edit-toolbar.delete', function () {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
             }, this);
 
             // back to list
-            this.sandbox.on('sulu.edit-toolbar.back', function() {
+            this.sandbox.on('sulu.edit-toolbar.back', function () {
                 this.sandbox.emit('sulu.content.contents.list');
             }, this);
 
-            this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
+            this.sandbox.on('sulu.edit-toolbar.preview.new-window', function () {
                 this.openPreviewWindow();
             }, this);
 
-            this.sandbox.on('sulu.edit-toolbar.preview.split-screen', function() {
+            this.sandbox.on('sulu.edit-toolbar.preview.split-screen', function () {
                 this.openSplitScreen();
             }, this);
 
             // set preview params
-            this.sandbox.on('sulu.preview.set-params', function(url, port) {
+            this.sandbox.on('sulu.preview.set-params', function (url, port) {
                 this.wsUrl = url;
                 this.wsPort = port;
             }, this);
 
             // set default template
-            this.sandbox.on('sulu.content.contents.default-template', function(name) {
+            this.sandbox.on('sulu.content.contents.default-template', function (name) {
                 this.template = name;
                 this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', name);
                 if (this.hiddenTemplate) {
@@ -235,31 +235,31 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // change template
-            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading','template');
+            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function (item) {
+                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'template');
                 this.templateChanged = true;
                 this.changeTemplate(item);
             }, this);
 
             // set state button in loading state
-            this.sandbox.on('sulu.content.contents.state.change', function() {
+            this.sandbox.on('sulu.content.contents.state.change', function () {
                 this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'state');
             }, this);
 
             // set save button in loading state
-            this.sandbox.on('sulu.content.contents.save', function() {
+            this.sandbox.on('sulu.content.contents.save', function () {
                 this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
             }, this);
 
             // change dropdown if state has changed
-            this.sandbox.on('sulu.content.contents.state.changed', function(state) {
+            this.sandbox.on('sulu.content.contents.state.changed', function (state) {
                 this.state = state;
                 //set new dropdown
-                this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
+                this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function (items) {
                     this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items, null);
                 }.bind(this));
                 // set the current state
-                this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
+                this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function (item) {
                     this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
                 }.bind(this));
                 //enable button with highlight-effect
@@ -267,9 +267,9 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             //set button back if state-change failed
-            this.sandbox.on('sulu.content.contents.state.changeFailed', function() {
+            this.sandbox.on('sulu.content.contents.state.changeFailed', function () {
                 // set the current state
-                this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
+                this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function (item) {
                     this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
                 }.bind(this));
                 //enable button without highlight-effect
@@ -277,53 +277,52 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             // expand navigation if navigation item is clicked
-            this.sandbox.on('husky.navigation.item.select', function() {
+            this.sandbox.on('husky.navigation.item.select', function () {
                 this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse',false);
+                this.sandbox.emit('husky.navigation.uncollapse', false);
             }.bind(this));
 
             // expand navigation if back gets clicked
-            this.sandbox.on('sulu.edit-toolbar.back', function() {
+            this.sandbox.on('sulu.edit-toolbar.back', function () {
                 this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse',false);
+                this.sandbox.emit('husky.navigation.uncollapse', false);
             }.bind(this));
         },
 
-        initData: function() {
+        initData: function () {
             return this.options.data;
         },
 
-        submit: function() {
+        submit: function () {
             this.sandbox.logger.log('save Model');
-            var template = (this.template !== '') ? this.template: this.options.data.template;
+            var template = (this.template !== '') ? this.template : this.options.data.template;
 
             if (this.sandbox.form.validate(this.formId)) {
-                var data = this.sandbox.form.getData(this.formId),
-                    navigation;
+                var data = this.sandbox.form.getData(this.formId);
 
                 if (this.options.id === 'index') {
-                    navigation = true;
-                } else {
-                    navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+                    data.navigation = true;
+                } else if (!!this.sandbox.dom.find('#show-in-navigation', this.$el).length) {
+                    data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
                 }
 
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data, template, navigation);
+                this.sandbox.emit('sulu.content.contents.save', data, template);
             }
         },
 
-        changeTemplateDropdownHandler: function() {
+        changeTemplateDropdownHandler: function () {
             this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
-            this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template', this.templateChanged);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', this.templateChanged);
             if (this.hiddenTemplate) {
                 this.hiddenTemplate = false;
                 this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
             }
         },
 
-        changeTemplate: function(item) {
+        changeTemplate: function (item) {
             if (typeof item === 'string') {
                 item = {template: item};
             }
@@ -332,7 +331,7 @@ define(['app-config'], function(AppConfig) {
                 return;
             }
 
-            var doIt = function() {
+            var doIt = function () {
                     if (!!item) {
                         this.template = item.template;
                     }
@@ -359,7 +358,7 @@ define(['app-config'], function(AppConfig) {
                         }
                         url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
-                        require([url], function(template) {
+                        require([url], function (template) {
                             var defaults = {
                                     translate: this.sandbox.translate
                                 },
@@ -383,7 +382,7 @@ define(['app-config'], function(AppConfig) {
                         this.changeTemplateDropdownHandler();
                     }
                 }.bind(this),
-                showDialog = function() {
+                showDialog = function () {
                     this.sandbox.emit('sulu.dialog.confirmation.show', {
                         content: {
                             title: this.sandbox.translate('content.template.dialog.title'),
@@ -394,12 +393,12 @@ define(['app-config'], function(AppConfig) {
                             buttonSubmitText: this.sandbox.translate('content.template.dialog.submit-button')
                         },
                         callback: {
-                            submit: function() {
+                            submit: function () {
                                 this.sandbox.emit('husky.dialog.hide');
 
                                 doIt();
                             }.bind(this),
-                            cancel: function() {
+                            cancel: function () {
                                 this.sandbox.emit('husky.dialog.hide');
                             }.bind(this)
                         }
@@ -414,7 +413,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         // @var Bool saved - defines if saved state should be shown
-        setHeaderBar: function(saved) {
+        setHeaderBar: function (saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
                 this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, this.highlightSaveButton);
@@ -427,33 +426,33 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        listenForChange: function() {
-            this.dfdListenForChange.then(function() {
-                this.sandbox.dom.on(this.formId, 'keyup', function() {
+        listenForChange: function () {
+            this.dfdListenForChange.then(function () {
+                this.sandbox.dom.on(this.formId, 'keyup', function () {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
 
-                this.sandbox.dom.on(this.formId, 'change', function() {
+                this.sandbox.dom.on(this.formId, 'change', function () {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
 
-                this.sandbox.on('sulu.content.changed', function() {
+                this.sandbox.on('sulu.content.changed', function () {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this));
             }.bind(this));
         },
 
-        openPreviewWindow: function() {
+        openPreviewWindow: function () {
             if (!!this.options.data.id) {
                 this.initPreview();
                 window.open('/admin/content/preview/' + this.options.data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language);
             }
         },
 
-        openSplitScreen: function() {
+        openSplitScreen: function () {
             window.open('/admin/content/split-screen/' + this.options.webspace + '/' + this.options.language + '/' + this.options.data.id);
         },
 
@@ -461,7 +460,7 @@ define(['app-config'], function(AppConfig) {
          * returns true if there is a websocket
          * @returns {boolean}
          */
-        wsDetection: function() {
+        wsDetection: function () {
             var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
             // no support
             if (support === null) {
@@ -476,7 +475,7 @@ define(['app-config'], function(AppConfig) {
             return true;
         },
 
-        initPreview: function() {
+        initPreview: function () {
             if (this.wsDetection()) {
                 this.initWs();
             } else {
@@ -484,14 +483,14 @@ define(['app-config'], function(AppConfig) {
             }
             this.previewInitiated = true;
 
-            this.sandbox.on('sulu.preview.update', function(property, value) {
+            this.sandbox.on('sulu.preview.update', function (property, value) {
                 if (!!this.options.data.id) {
                     this.updatePreview(property, value);
                 }
             }, this);
         },
 
-        updateEvent: function(e) {
+        updateEvent: function (e) {
             if (!!this.options.data.id && !!this.previewInitiated) {
                 var $element = $(e.currentTarget);
                 while (!$element.data('element')) {
@@ -501,7 +500,7 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        initAjax: function() {
+        initAjax: function () {
             this.sandbox.dom.on(this.formId, 'focusout', this.updateEvent.bind(this), '.preview-update');
 
             var data = this.sandbox.form.getData(this.formId);
@@ -509,11 +508,11 @@ define(['app-config'], function(AppConfig) {
             this.updateAjax(data);
         },
 
-        initWs: function() {
+        initWs: function () {
             var url = this.wsUrl + ':' + this.wsPort;
             this.sandbox.logger.log('Connect to url: ' + url);
             this.ws = new WebSocket(url);
-            this.ws.onopen = function() {
+            this.ws.onopen = function () {
                 this.sandbox.logger.log('Connection established!');
                 this.opened = true;
 
@@ -532,7 +531,7 @@ define(['app-config'], function(AppConfig) {
                 this.ws.send(JSON.stringify(message));
             }.bind(this);
 
-            this.ws.onclose = function() {
+            this.ws.onclose = function () {
                 if (!this.opened) {
                     // no connection can be opened use fallback (safari)
                     this.ws = null;
@@ -540,7 +539,7 @@ define(['app-config'], function(AppConfig) {
                 }
             }.bind(this);
 
-            this.ws.onmessage = function(e) {
+            this.ws.onmessage = function (e) {
                 var data = JSON.parse(e.data);
 
                 if (data.command === 'start' && data.content === this.options.id && !!data.params.other) {
@@ -550,7 +549,7 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.logger.log('Message:', data);
             }.bind(this);
 
-            this.ws.onerror = function(e) {
+            this.ws.onerror = function (e) {
                 this.sandbox.logger.warn(e);
 
                 // no connection can be opened use fallback
@@ -559,7 +558,7 @@ define(['app-config'], function(AppConfig) {
             }.bind(this);
         },
 
-        updatePreview: function(property, value) {
+        updatePreview: function (property, value) {
             if (!!this.previewInitiated) {
                 var changes = {};
                 if (!!property && !!value) {
@@ -576,7 +575,7 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        updatePreviewOnly: function() {
+        updatePreviewOnly: function () {
             if (!!this.previewInitiated) {
                 var changes = {};
 
@@ -588,7 +587,7 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        updateAjax: function(changes) {
+        updateAjax: function (changes) {
             var updateUrl = '/admin/content/preview/' + this.options.data.id + '?template=' + this.template + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
 
             this.sandbox.util.ajax({
@@ -601,7 +600,7 @@ define(['app-config'], function(AppConfig) {
             });
         },
 
-        updateWs: function(changes) {
+        updateWs: function (changes) {
             var message = {
                 command: 'update',
                 content: this.options.data.id,
@@ -615,4 +614,5 @@ define(['app-config'], function(AppConfig) {
         }
 
     };
-});
+})
+;
