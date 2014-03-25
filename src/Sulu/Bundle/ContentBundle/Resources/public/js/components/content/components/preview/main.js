@@ -15,8 +15,8 @@
  *
  * @param {Object}  [options] Configuration object
  * @param {String}  [options.mainContentElementIdentifier] ID of the element which will be next to the preview (main content element)
- * @param {Number}  [options.mainContentMinWidth] minimal with of main content element
- * @param {Number}  [options.marginLeft] margin in pixles from the left for the wrapper
+ * @param {Number}  [options.mainContentMinWidthOld] minimal with of main content element
+ * @param {Number}  [options.marginPreviewCollapsedLeft] margin in pixles from the left for the wrapper
  * @param {Object}  [options.iframeSource] configuration object for the source of the iframe
  * @param {String}  [options.iframeSource.url] url used for the iframe
  * @param {String}  [options.iframeSource.webspace] webspace section of the url
@@ -49,16 +49,24 @@ define([], function() {
                     showLeft: true,
                     showRight: true
                 },
+
                 mainContentElementIdentifier: '',
+                mainContentMaxOuterWidth: 920,
                 mainContentMaxWidth: 820,
-                mainContentMinWidth: 530,
-                marginLeft: 30,
+                mainContentMinOuterWidth: 500,
+                mainContentMinWidthOld: 530,
+
+                marginPreviewCollapsedLeft: 30,
+                marginPreviewExpandedLeft: 10,
+                previewMinWidth: 60,
+
                 iframeSource: {
                     url: '',
                     webspace: '',
                     language: '',
                     id: ''
                 },
+
                 transitionDuration: 500,
                 minMarginLeft: 10,
                 maxMarginLeft: 50,
@@ -121,7 +129,7 @@ define([], function() {
 
                 // get original max width
 
-                // TODO replace with outer width?
+                // TODO replace with outer width? - remove due to problems with resize. maybe better to calculate new width
                 this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 100;
 
                 this.render();
@@ -152,7 +160,7 @@ define([], function() {
              */
             renderWrapper: function() {
 
-                var mainWidth, totalWidth;
+                var mainWidth, totalWidth, widths;
 
                 if (!this.$mainContent) {
                     this.sandbox.logger.error('main content element could not be found!');
@@ -161,11 +169,15 @@ define([], function() {
 
                 // calculate the available space next to the main content
                 mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
-                totalWidth = this.sandbox.dom.width(document);
-                this.previewWidth = totalWidth - (mainWidth + this.options.marginLeft);
+                totalWidth = this.sandbox.dom.width(window);
+
+                // TODO remove this variable
+                this.previewWidth = totalWidth - (mainWidth + this.options.marginPreviewCollapsedLeft);
+
+                widths = this.calculateCurrentWidths(false);
 
                 this.$wrapper = this.sandbox.dom.$('<div class="preview-wrapper" id="preview-wrapper" style=""></div>');
-                this.sandbox.dom.css(this.$wrapper, 'width', this.previewWidth + 'px');
+                this.sandbox.dom.css(this.$wrapper, 'width', widths.preview + 'px');
 
                 this.sandbox.dom.append(this.$el, this.$wrapper);
             },
@@ -320,7 +332,7 @@ define([], function() {
             expandPreview: function($target) {
 
                 var $span = this.sandbox.dom.find('span', $target),
-                    width = this.sandbox.dom.width(document) - 500;
+                    widths = this.calculateCurrentWidths(true);
 
                 // deactivate tabs
                 this.sandbox.emit('sulu.content.tabs.deactivate');
@@ -336,10 +348,10 @@ define([], function() {
 
                 // hide right part of toolbar when window size is below constants.minWidthToolbar
                 if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
-                    this.sandbox.dom.removeClass(this.$toolbarRight,'hidden');
+                    this.sandbox.dom.hide(this.$toolbarRight);
                 }
 
-                this.animateCollapseAndExpand(true, width);
+                this.animateCollapseAndExpand(true, widths);
 
             },
 
@@ -351,7 +363,8 @@ define([], function() {
                 // activate tabs
                 this.sandbox.emit('sulu.content.tabs.activate');
 
-                var $span = this.sandbox.dom.find('span', $target);
+                var $span = this.sandbox.dom.find('span', $target),
+                    widths = this.calculateCurrentWidths(false);
 
                 this.sandbox.dom.removeClass($target, 'expanded');
                 this.sandbox.dom.addClass($target, 'collapsed');
@@ -368,22 +381,26 @@ define([], function() {
                 }
 
                 // calculate new width of preview - because of resize
-                this.previewWidth = this.sandbox.dom.width(document) - this.mainContentOriginalWidth-30;
+//                if(this.sandbox.dom.width(window) < 980) {
+//                    this.previewWidth = this.sandbox.dom.width(window) - this.mainContentOriginalWidth;
+//                } else {
+//                    this.previewWidth = this.sandbox.dom.width(window) - this.mainContentOriginalWidth-30;
+//                }
 
-                this.animateCollapseAndExpand(false, this.previewWidth);
+                this.animateCollapseAndExpand(false, widths);
             },
 
             /**
              * Animates the width change for preview
              * Concerns wrapper, preview-toolbar and maincontent
              * @param {Boolean} expand
-             * @param {Integer} previewWidth of preview in pixels
+             * @param {Object} widths of preview and content
              */
-            animateCollapseAndExpand: function(expand, previewWidth) {
+            animateCollapseAndExpand: function(expand, widths) {
 
                 // preview wrapper
                 this.sandbox.dom.animate(this.$wrapper, {
-                    width: previewWidth + 'px'
+                    width: widths.preview + 'px'
                 }, {
                     duration: this.options.transitionDuration,
                     queue: false
@@ -391,7 +408,7 @@ define([], function() {
 
                 // preview iframe
                 this.sandbox.dom.animate(this.$iframe, {
-                    width: previewWidth + 'px'
+                    width: widths.preview + 'px'
                 }, {
                     duration: this.options.transitionDuration,
                     queue: false
@@ -399,7 +416,7 @@ define([], function() {
 
                 // preview toolbar
                 this.sandbox.dom.animate(this.$toolbar, {
-                    width: previewWidth + this.options.marginLeft + 'px'
+                    width: widths.preview + this.options.marginPreviewCollapsedLeft + 'px'
                 }, {
                     duration: this.options.transitionDuration,
                     queue: false
@@ -409,23 +426,23 @@ define([], function() {
                     this.sandbox.emit('husky.navigation.hide');
                     this.sandbox.emit('husky.page-functions.hide');
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
-                        width: this.options.mainContentMinWidth,
+                        width: widths.content,
                         left: this.options.minMarginLeft,
                         paddingLeft: 0});
                 } else {
 
-                    var widthOfContent = this.sandbox.dom.width(window) - 100, width;
-                    if(widthOfContent < this.options.mainContentMaxWidth ? widthOfContent : this.options.mainContentMaxWidth){
-                        width = widthOfContent;
+//                    var widthOfContent = this.sandbox.dom.width(window) - 100, width;
+                    if(widths.content < this.options.mainContentMaxWidth){
+//                        width = widthOfContent;
                         this.sandbox.dom.hide(this.$toolbarRight);
-                    } else {
-                        width = this.options.mainContentMaxWidth;
+//                    } else {
+//                        width = this.options.mainContentMaxWidth;
                     }
 
                     this.sandbox.emit('husky.navigation.show');
                     this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
-                        width: width,
+                        width: widths.content,
                         left: this.options.maxMarginLeft,
                         paddingLeft: this.options.maxPaddingLeft});
                 }
@@ -447,12 +464,9 @@ define([], function() {
 
                 if(!this.isExpanded){
 
-                    newPreviewWidth = dimensions.width -  (mainContentWidth + this.options.marginLeft);
+                    newPreviewWidth = dimensions.width -  (mainContentWidth + this.options.marginPreviewCollapsedLeft);
 
-                    if(dimensions.width < 980 || newPreviewWidth <= 0){
-                        this.sandbox.dom.hide(this.$el);
-                        return;
-                    } else if(dimensions.width < constants.minWidthToolbar) {
+                    if(dimensions.width < constants.minWidthToolbar) {
                         this.sandbox.dom.show(this.$el);
                         this.sandbox.dom.hide(this.$toolbarRight);
                     } else {
@@ -462,16 +476,11 @@ define([], function() {
 
                 } else if(!!this.isExpanded){
 
-                    newPreviewWidth = dimensions.width -  mainContentWidth + this.options.marginLeft;
+                    newPreviewWidth = dimensions.width -  mainContentWidth + this.options.marginPreviewCollapsedLeft;
 
-                    if(dimensions.width < 540 || newPreviewWidth <= 0){
-                        this.sandbox.dom.hide(this.$el);
-                        return;
-                    } else if(dimensions.width < 750) {
-                        this.sandbox.dom.show(this.$el);
+                     if(dimensions.width < 750) {
                         this.sandbox.dom.hide(this.$toolbarRight);
                     } else {
-                        this.sandbox.dom.show(this.$el);
                         this.sandbox.dom.show(this.$toolbarRight);
                     }
 
@@ -486,7 +495,40 @@ define([], function() {
                 this.previewWidth = newPreviewWidth;
                 this.sandbox.dom.width(this.$wrapper, this.previewWidth);
                 this.sandbox.dom.width(this.$iframe, this.previewWidth);
-                this.sandbox.dom.width(this.$toolbar, this.previewWidth+this.options.marginLeft);
+                this.sandbox.dom.width(this.$toolbar, this.previewWidth+this.options.marginPreviewCollapsedLeft);
+            },
+
+            /**
+             * Calculates the widths for preview and content for expanded/collapsed state for current viewport width
+             * @param {Boolean} expanded state
+             * @return {Object} widths for content and preview
+             */
+            calculateCurrentWidths: function(expanded){
+
+                var widths = { preview: 0, content: 0},
+                    tmpWidth,
+                    viewportWidth = this.sandbox.dom.width(window);
+
+                if(!!expanded) {
+
+                    widths.preview = viewportWidth - this.options.mainContentMinOuterWidth;
+                    widths.content = this.options.mainContentMinWidthOld;
+
+                } else {
+
+                    tmpWidth = viewportWidth - this.options.previewMinWidth - this.options.marginPreviewCollapsedLeft;
+
+                    if(tmpWidth > this.options.mainContentMaxOuterWidth) {
+                        widths.content = this.options.mainContentMaxOuterWidth;
+                    } else {
+                        widths.content = tmpWidth;
+                    }
+
+                    widths.preview = viewportWidth - widths.content - this.options.marginPreviewCollapsedLeft;
+                }
+
+                return widths;
+
             },
 
             /**
