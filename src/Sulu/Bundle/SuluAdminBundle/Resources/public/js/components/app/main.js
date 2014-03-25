@@ -33,6 +33,15 @@ define(function() {
      },
 
     /**
+     * raised if width height, or position of view port changes
+     * @event sulu.app.content.dimensions-changed
+     * @param {object} Object containing width, and position from the left
+     */
+        VIEWPORT_DIMENSIONS_CHANGED = function() {
+        return createEventName('viewport.dimensions-changed');
+     },
+
+    /**
      * listens on and changes the dimensions of the content
      * @event sulu.app.content.dimensions-change
      * @param {object} Object containing width, and position from the left
@@ -123,7 +132,18 @@ define(function() {
         bindDomEvents: function() {
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function(){
                 this.emitContentDimensionsChangedEvent();
+                this.emitViewPortDimensionsChanged();
             }.bind(this));
+        },
+
+        /**
+         * Emits an event with the new dimensions of the viewport
+         */
+        emitViewPortDimensionsChanged: function(){
+            var width = this.sandbox.dom.width(window),
+                height = this.sandbox.dom.height(window);
+
+            this.sandbox.emit(VIEWPORT_DIMENSIONS_CHANGED.call(this),{width: width, height: height});
         },
 
         /**
