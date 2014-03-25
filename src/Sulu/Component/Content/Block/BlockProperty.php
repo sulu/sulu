@@ -92,16 +92,18 @@ class BlockProperty extends Property implements BlockPropertyInterface
             /** @var PropertyInterface $child */
             foreach ($this->childProperties as $child) {
                 $items = $child->getValue();
-                // check value is not associative
-                if (!(array_keys($items) !== range(0, count($items) - 1))) {
-                    foreach ($items as $key => $item) {
-                        $data[$key][$child->getName()] = $item;
-                    }
-                } else {
-                    // go thrue associative array
-                    foreach ($items as $varName => $item) {
-                        foreach ($item as $key => $itemValue) {
-                            $data[$key][$child->getName()][$varName] = $itemValue;
+                if ($items !== null) {
+                    // check value is not associative
+                    if (!(array_keys($items) !== range(0, count($items) - 1))) {
+                        foreach ($items as $key => $item) {
+                            $data[$key][$child->getName()] = $item;
+                        }
+                    } else {
+                        // go thrue associative array
+                        foreach ($items as $varName => $item) {
+                            foreach ($item as $key => $itemValue) {
+                                $data[$key][$child->getName()][$varName] = $itemValue;
+                            }
                         }
                     }
                 }
