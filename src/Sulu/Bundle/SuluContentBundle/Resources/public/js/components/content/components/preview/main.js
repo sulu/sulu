@@ -61,7 +61,8 @@ define([], function() {
 
             constants = {
 
-                minWidthToolbar: 1200,
+                minWidthForToolbarCollapsed: 240,
+                minWidthForToolbarExpanded: 240,
 
                 // main content + 50px margin + 50px padding
                 mainContentMaxWidthIncMarginLeft: 920,
@@ -117,7 +118,6 @@ define([], function() {
                 this.options = this.sandbox.util.extend({}, defaults, this.options);
 
                 // component vars
-                this.previewWidth = 0;
                 this.url = '';
                 this.isExpanded = false;
 
@@ -149,32 +149,24 @@ define([], function() {
             render: function() {
                 this.url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
-                this.renderWrapper();
-                this.renderIframe(this.previewWidth, this.url);
-                this.renderToolbar();
+                var widths = this.calculateCurrentWidths(false);
+
+                this.renderWrapper(widths);
+                this.renderIframe(widths.preview, this.url);
+                this.renderToolbar(widths);
             },
 
             /**
              * Renders the div which contains the iframe
              * with the maximum available space
+             * @param {Object} object with widths of preview and content
              */
-            renderWrapper: function() {
-
-                var mainWidth, totalWidth, widths;
+            renderWrapper: function(widths) {
 
                 if (!this.$mainContent) {
                     this.sandbox.logger.error('main content element could not be found!');
                     return;
                 }
-
-                // calculate the available space next to the main content
-                mainWidth = this.sandbox.dom.outerWidth(this.$mainContent);
-                totalWidth = this.sandbox.dom.width(window);
-
-                // TODO remove this variable
-                this.previewWidth = totalWidth - (mainWidth + constants.marginPreviewCollapsedLeft);
-
-                widths = this.calculateCurrentWidths(false);
 
                 this.$wrapper = this.sandbox.dom.$('<div class="preview-wrapper" id="preview-wrapper" style=""></div>');
                 this.sandbox.dom.css(this.$wrapper, 'width', widths.preview + 'px');
@@ -194,8 +186,9 @@ define([], function() {
 
             /**
              * Renders toolbar on top of the iframe
+             * @param {Object} object with widths of preview and content
              */
-            renderToolbar: function() {
+            renderToolbar: function(widths) {
 
                 var resolutionsLabel = this.sandbox.translate('content.preview.resolutions');
 
@@ -214,13 +207,13 @@ define([], function() {
                     '</div>'
                 ].join(''));
 
-                this.sandbox.dom.css(this.$toolbar, 'width', this.previewWidth + 30 + 'px');
+                this.sandbox.dom.css(this.$toolbar, 'width', widths.preview + 30 + 'px');
                 this.sandbox.dom.append(this.$el, this.$toolbar);
                 this.$toolbarRight = this.sandbox.dom.find('#'+constants.toolbarRight, this.$toolbar);
                 this.$toolbarResolutionsLabel = this.sandbox.dom.find('.dropdown-label', this.$toolbarRight);
 
-                // hide right part of toolbar when window size is below constants.minWidthToolbar
-                if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
+                // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
+                if(widths.preview < constants.minWidthForToolbarCollapsed){
                     this.sandbox.dom.addClass(this.$toolbarRight,'hidden');
                 }
 
@@ -346,9 +339,11 @@ define([], function() {
                 this.sandbox.emit(EXPANDING);
                 this.isExpanded = true;
 
-                // hide right part of toolbar when window size is below constants.minWidthToolbar
-                if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
+                // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
+                if(widths.preview < constants.minWidthForToolbarExpanded){
                     this.sandbox.dom.hide(this.$toolbarRight);
+                } else {
+                    this.sandbox.dom.show(this.$toolbarRight);
                 }
 
                 this.animateCollapseAndExpand(true, widths);
@@ -375,17 +370,10 @@ define([], function() {
                 this.sandbox.emit(COLLAPSING);
                 this.isExpanded = false;
 
-                // hide right part of toolbar when window size is below constants.minWidthToolbar
-                if(this.sandbox.dom.width(window) < constants.minWidthToolbar){
-                    this.sandbox.dom.addClass(this.$toolbarRight,'hidden');
+                // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
+                if(widths.preview < constants.minWidthForToolbarCollapsed){
+                    this.sandbox.dom.hide(this.$toolbarRight);
                 }
-
-                // calculate new width of preview - because of resize
-//                if(this.sandbox.dom.width(window) < 980) {
-//                    this.previewWidth = this.sandbox.dom.width(window) - this.mainContentOriginalWidth;
-//                } else {
-//                    this.previewWidth = this.sandbox.dom.width(window) - this.mainContentOriginalWidth-30;
-//                }
 
                 this.animateCollapseAndExpand(false, widths);
             },
@@ -431,12 +419,8 @@ define([], function() {
                         paddingLeft: 0});
                 } else {
 
-//                    var widthOfContent = this.sandbox.dom.width(window) - 100, width;
                     if(widths.content < constants.mainContentMaxWidth){
-//                        width = widthOfContent;
                         this.sandbox.dom.hide(this.$toolbarRight);
-//                    } else {
-//                        width = constants.mainContentMaxWidth;
                     }
 
                     this.sandbox.emit('husky.navigation.show');
@@ -446,6 +430,15 @@ define([], function() {
                         left: constants.maxMainContentMarginLeft,
                         paddingLeft: constants.maxMainContentPaddingLeft});
                 }
+
+                // TODO when animation for main content is complete -> width <-> maxWidth
+//                this.sandbox.logger.warn("completed animation!");
+//                // remove width property from main content element for responsiveness
+//                var mainContentWidth = this.sandbox.dom.width(this.$mainContent);
+//                this.sandbox.dom.css(this.$mainContent, 'width', mainContentWidth);
+//                this.sandbox.dom.css(this.$mainContent, 'width','');
+//                this.sandbox.dom.css(this.$mainContent, 'max-width',mainContentWidth);
+
             },
 
 
@@ -460,25 +453,19 @@ define([], function() {
             dimensionsChanged:function(dimensions){
 
                 var mainContentWidth = this.sandbox.dom.outerWidth(this.$mainContent),
-                    newPreviewWidth = 0;
+                    widths = this.calculateCurrentWidths(this.isExpanded);
 
                 if(!this.isExpanded){
 
-                    newPreviewWidth = dimensions.width -  (mainContentWidth + constants.marginPreviewCollapsedLeft);
-
-                    if(dimensions.width < constants.minWidthToolbar) {
-                        this.sandbox.dom.show(this.$el);
+                    if(widths.preview < constants.minWidthForToolbarCollapsed) {
                         this.sandbox.dom.hide(this.$toolbarRight);
                     } else {
-                        this.sandbox.dom.show(this.$el);
                         this.sandbox.dom.show(this.$toolbarRight);
                     }
 
                 } else if(!!this.isExpanded){
 
-                    newPreviewWidth = dimensions.width -  mainContentWidth + constants.marginPreviewCollapsedLeft;
-
-                     if(dimensions.width < 750) {
+                    if(widths.preview < constants.minWidthForToolbarExpanded) {
                         this.sandbox.dom.hide(this.$toolbarRight);
                     } else {
                         this.sandbox.dom.show(this.$toolbarRight);
@@ -487,15 +474,15 @@ define([], function() {
                 }
 
                 // TODO move breakpoint values to options
-                // TODO test when preview expanded
+
                 // TODO iframe hinzufuegen/entfernen fuer start/stop
                 // TODO wenn aufloesung zu klein nur streifen anzeigen - content verkleinern
                 // TODO dimension changed - with attribut wird gesetzt --> in css setzen
+                // TODO reset of navigation when navigate back to list only if viewport big enough....
 
-                this.previewWidth = newPreviewWidth;
-                this.sandbox.dom.width(this.$wrapper, this.previewWidth);
-                this.sandbox.dom.width(this.$iframe, this.previewWidth);
-                this.sandbox.dom.width(this.$toolbar, this.previewWidth+constants.marginPreviewCollapsedLeft);
+                this.sandbox.dom.width(this.$wrapper, widths.preview);
+                this.sandbox.dom.width(this.$iframe, widths.preview);
+                this.sandbox.dom.width(this.$toolbar, widths.preview+constants.marginPreviewCollapsedLeft);
             },
 
             /**
