@@ -62,7 +62,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
             false
         );
 
-        $this->blockContentType = new BlockContentType($this->contentTypeManager);
+        $this->blockContentType = new BlockContentType($this->contentTypeManager, 'not in use');
 
         $this->contentTypeValueMap = array(
             array('text_line', new TextLine('not in use')),

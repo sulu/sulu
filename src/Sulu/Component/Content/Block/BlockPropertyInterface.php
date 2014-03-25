@@ -19,7 +19,7 @@ interface BlockPropertyInterface extends PropertyInterface
 {
     /**
      * returns a list of properties managed by this block
-     * @return Array of PropertyInterface
+     * @return PropertyInterface[]
      */
     public function getChildProperties();
 

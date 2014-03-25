@@ -17,7 +17,9 @@ use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
-
+/**
+ * reads a template xml and returns a array representation
+ */
 class TemplateReader implements LoaderInterface
 {
     /**
@@ -277,7 +279,6 @@ class TemplateReader implements LoaderInterface
      */
     public function supports($resource, $type = null)
     {
-        // TODO
         throw new FeatureNotImplementedException();
     }
 

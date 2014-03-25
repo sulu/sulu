@@ -74,4 +74,10 @@ interface PropertyInterface
      * @return boolean
      */
     public function getIsBlock();
+
+    /**
+     * returns TRUE if property is multiple
+     * @return bool
+     */
+    public function getIsMultiple();
 }
