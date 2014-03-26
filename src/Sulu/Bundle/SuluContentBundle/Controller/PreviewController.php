@@ -52,6 +52,7 @@ class PreviewController extends Controller
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
             array(
+                'debug' => $this->get('kernel')->getEnvironment() === 'dev',
                 'userId' => $uid,
                 'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
                 'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),

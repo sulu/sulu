@@ -7,7 +7,9 @@
                 }
             },
             debug = function(message) {
+                {% if debug is defined and debug %}
                 console.log('PREVIEW', message);
+                {% endif %}
             },
             ws = {
                 conn: null,
