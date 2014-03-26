@@ -75,7 +75,9 @@ define([], function() {
 
                 mainContentMinWidthIncMarginLeft: 510,
                 mainContentMinWidth: 460,
+
                 marginPreviewCollapsedLeft: 30,
+                marginPreviewExpandedLeft: 10,
 
                 previewMinWidth: 30,
 
@@ -435,10 +437,6 @@ define([], function() {
                         paddingLeft: 0});
                 } else {
 
-                    if(widths.content < constants.mainContentMaxWidth){
-                        this.sandbox.dom.hide(this.$toolbarRight);
-                    }
-
                     this.sandbox.emit('husky.navigation.show');
                     this.sandbox.emit('husky.page-functions.show');
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
@@ -446,14 +444,6 @@ define([], function() {
                         left: constants.maxMainContentMarginLeft,
                         paddingLeft: constants.maxMainContentPaddingLeft});
                 }
-
-                // TODO when animation for main content is complete -> width <-> maxWidth
-//                this.sandbox.logger.warn("completed animation!");
-//                // remove width property from main content element for responsiveness
-//                var mainContentWidth = this.sandbox.dom.width(this.$mainContent);
-//                this.sandbox.dom.css(this.$mainContent, 'width', mainContentWidth);
-//                this.sandbox.dom.css(this.$mainContent, 'width','');
-//                this.sandbox.dom.css(this.$mainContent, 'max-width',mainContentWidth);
 
             },
 
@@ -463,7 +453,7 @@ define([], function() {
              ********************************************/
 
             /**
-             * Called when the sulu.app.viewport.dimensions-changed is emitted
+             * Called when the sulu.app.viewport.dimensions-changed is emitted and before initialized
              */
             adjustDisplayedComponents:function(){
 
@@ -489,8 +479,6 @@ define([], function() {
                         this.sandbox.dom.remove(this.$iframe);
                         this.iframeExists = false;
 
-                        this.sandbox.logger.warn("too small for preview");
-
                         widths.content = '';
 
                         // hide resolutions div in toolbar
@@ -504,7 +492,9 @@ define([], function() {
 
                         this.sandbox.dom.show(this.$toolbar);
                         this.sandbox.dom.show(this.$toolbarLeft);
+                        this.sandbox.dom.show(this.$toolbarRight);
                         this.sandbox.dom.show(this.$wrapper);
+                        this.sandbox.dom.show(this.$toolbarOpenNewWindow);
 
                         this.sandbox.dom.hide(this.$toolbarResolutions);
 
@@ -516,17 +506,19 @@ define([], function() {
 
                 } else if(!!this.isExpanded){
 
-                    // TODO fettes to do
-
-                    if(widths.preview < constants.minWidthForToolbarExpanded) {
-                        this.sandbox.dom.hide(this.$toolbarRight);
+                    if(widths.preview < constants.previewMinWidth) {
+                        this.sandbox.dom.hide(this.$toolbarOpenNewWindow);
+                    } else if(widths.preview < constants.minWidthForToolbarExpanded) {
+                        this.sandbox.dom.hide(this.$toolbarResolutions);
+                        this.sandbox.dom.show(this.$toolbarOpenNewWindow);
                     } else {
-                        this.sandbox.dom.show(this.$toolbarRight);
+                        this.sandbox.dom.show(this.$toolbarResolutions);
+                        this.sandbox.dom.show(this.$toolbarOpenNewWindow);
                     }
 
                 }
 
-                // TODO beim laden richtige toolbar felder einblenden
+
                 // TODO wenn dropdown ausgeblendet dann neues-fenster-button nach links
                 // TODO reset of navigation when navigate back to list only if viewport big enough....
                 // TODO content minwidth 460px --> expand 460 + Abstand
@@ -552,8 +544,15 @@ define([], function() {
 
                 if(!!expanded) {
 
-                    widths.preview = viewportWidth - constants.mainContentMinWidthIncMarginLeft + constants.marginPreviewCollapsedLeft;
-                    widths.content = constants.mainContentMinWidthIncMarginLeft;
+                    if(!!resized) {
+                        widths.preview = viewportWidth - constants.mainContentMinWidth - constants.marginPreviewExpandedLeft - constants.minMainContentMarginLeft;
+                        widths.content = constants.mainContentMinWidth;
+                    } else {
+                        // TODO wtf?
+                        widths.preview = viewportWidth - constants.mainContentMinWidthIncMarginLeft + constants.marginPreviewExpandedLeft + constants.minMainContentMarginLeft  + constants.minMainContentMarginLeft;
+                        widths.content = constants.mainContentMinWidthIncMarginLeft;
+                    }
+
 
                 } else {
 
