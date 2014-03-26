@@ -154,7 +154,7 @@ define([], function() {
             render: function() {
                 this.url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
-                var widths = this.calculateCurrentWidths(false,false);
+                var widths = this.calculateCurrentWidths(false, false);
 
                 this.renderWrapper(widths);
                 this.renderIframe(widths.preview, this.url);
@@ -206,31 +206,31 @@ define([], function() {
 
                 this.$toolbar = this.sandbox.dom.$([
                     '<div id="preview-toolbar" class="preview-toolbar">',
-                        '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-step-backward"></span></div>',
-                        '<div id="', constants.toolbarRight, '" class="right">',
-                            '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-disk-export"></span></div>',
-                            '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">',
-                                '<label class="drop-down-trigger">',
-                                    '<span class="dropdown-toggle"></span>',
-                                    '<span class="dropdown-label">',resolutionsLabel,'</span>',
-                                '</label>',
-                            '</div>',
-                        '</div>',
+                    '<div id="', constants.toolbarLeft, '" class="left pointer collapsed"><span class="icon-step-backward"></span></div>',
+                    '<div id="', constants.toolbarRight, '" class="right">',
+                    '<div id="', constants.toolbarNewWindow, '" class="new-window pull-right pointer"><span class="icon-disk-export"></span></div>',
+                    '<div id="', constants.toolbarResolutions, '" class="resolutions pull-right pointer">',
+                    '<label class="drop-down-trigger">',
+                    '<span class="dropdown-toggle"></span>',
+                    '<span class="dropdown-label">', resolutionsLabel, '</span>',
+                    '</label>',
+                    '</div>',
+                    '</div>',
                     '</div>'
                 ].join(''));
 
                 this.sandbox.dom.css(this.$toolbar, 'width', widths.preview + 30 + 'px');
                 this.sandbox.dom.append(this.$el, this.$toolbar);
 
-                this.$toolbarRight = this.sandbox.dom.find('#'+constants.toolbarRight, this.$toolbar);
+                this.$toolbarRight = this.sandbox.dom.find('#' + constants.toolbarRight, this.$toolbar);
                 this.$toolbarResolutionsLabel = this.sandbox.dom.find('.dropdown-label', this.$toolbarRight);
-                this.$toolbarResolutions = this.sandbox.dom.find('#'+constants.toolbarResolutions, this.$toolbarRight);
-                this.$toolbarOpenNewWindow = this.sandbox.dom.find('#'+constants.toolbarNewWindow, this.$toolbarRight);
-                this.$toolbarLeft = this.sandbox.dom.find('#'+constants.toolbarLeft, this.$toolbar);
+                this.$toolbarResolutions = this.sandbox.dom.find('#' + constants.toolbarResolutions, this.$toolbarRight);
+                this.$toolbarOpenNewWindow = this.sandbox.dom.find('#' + constants.toolbarNewWindow, this.$toolbarRight);
+                this.$toolbarLeft = this.sandbox.dom.find('#' + constants.toolbarLeft, this.$toolbar);
 
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
-                if(widths.preview < constants.minWidthForToolbarCollapsed){
-                    this.sandbox.dom.addClass(this.$toolbarRight,'hidden');
+                if (widths.preview < constants.minWidthForToolbarCollapsed) {
+                    this.sandbox.dom.addClass(this.$toolbarRight, 'hidden');
                 }
 
                 this.renderResolutionDropdown();
@@ -243,7 +243,7 @@ define([], function() {
 
                 var data = this.getResolutions();
 
-                if(data.length > 0) {
+                if (data.length > 0) {
 
                     this.sandbox.start([
                         {
@@ -287,7 +287,7 @@ define([], function() {
                 this.sandbox.dom.on('#' + constants.toolbarNewWindow, 'click', function() {
 
                     // collapse everything
-                    var $target = this.sandbox.dom.find('#'+constants.toolbarLeft,this.$el);
+                    var $target = this.sandbox.dom.find('#' + constants.toolbarLeft, this.$el);
                     this.collapsePreview($target);
 
                     window.open(this.url);
@@ -297,14 +297,14 @@ define([], function() {
                     this.sandbox.dom.remove(this.$iframe);
                     this.iframeExists = false;
 
-                        this.sandbox.emit('husky.navigation.show');
-                        this.sandbox.emit('husky.page-functions.show');
-                        this.sandbox.emit('sulu.app.content.dimensions-change', {
-                            width: '',
-                            left: constants.maxMainContentMarginLeft,
-                            paddingLeft: constants.maxMainContentPaddingLeft});
+                    this.sandbox.emit('husky.navigation.show');
+                    this.sandbox.emit('husky.page-functions.show');
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {
+                        width: '',
+                        left: constants.maxMainContentMarginLeft,
+                        paddingLeft: constants.maxMainContentPaddingLeft});
 
-                        this.sandbox.dom.width(this.$mainContent,'');
+                    this.sandbox.dom.width(this.$mainContent, '');
 
 
                     this.sandbox.emit(HIDE);
@@ -318,10 +318,10 @@ define([], function() {
             /**
              * Bind custom events
              */
-            bindCustomEvents: function(){
+            bindCustomEvents: function() {
 
                 // adjust dropdown width
-                this.sandbox.on('husky.dropdown.resolutionsDropdown.showing', function(){
+                this.sandbox.on('husky.dropdown.resolutionsDropdown.showing', function() {
                     var $resolutions = this.sandbox.dom.find('#' + constants.toolbarResolutions, this.$toolbarRight),
                         $dropdownMenu = this.sandbox.dom.find('.dropdown-menu', $resolutions);
                     this.sandbox.dom.width($dropdownMenu, $resolutions.outerWidth());
@@ -363,7 +363,7 @@ define([], function() {
                 this.isExpanded = true;
 
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
-                if(widths.preview < constants.minWidthForToolbarExpanded){
+                if (widths.preview < constants.minWidthForToolbarExpanded) {
                     this.sandbox.dom.hide(this.$toolbarRight);
                 } else {
                     this.sandbox.dom.show(this.$toolbarRight);
@@ -394,7 +394,7 @@ define([], function() {
                 this.isExpanded = false;
 
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
-                if(widths.preview < constants.minWidthForToolbarCollapsed){
+                if (widths.preview < constants.minWidthForToolbarCollapsed) {
                     this.sandbox.dom.hide(this.$toolbarRight);
                 }
 
@@ -460,14 +460,14 @@ define([], function() {
             /**
              * Called when the sulu.app.viewport.dimensions-changed is emitted and before initialized
              */
-            adjustDisplayedComponents:function(){
+            adjustDisplayedComponents: function() {
 
                 var widths = this.calculateCurrentWidths(this.isExpanded, true);
 
-                if(!this.isExpanded){
+                if (!this.isExpanded) {
 
                     // hide preview except for open in new window button
-                    if(widths.content <= (constants.breakPointSmall + constants.previewMinWidth)) {
+                    if (widths.content <= (constants.breakPointSmall + constants.previewMinWidth)) {
 
                         // remove iframe - disables unnecessary communication
 
@@ -490,7 +490,7 @@ define([], function() {
                         widths.content = '';
 
                         // hide resolutions div in toolbar
-                    } else if(widths.preview < constants.minWidthForToolbarCollapsed) {
+                    } else if (widths.preview < constants.minWidthForToolbarCollapsed) {
 
                         this.restoreIframe(widths.preview);
                         this.showNecessaryDOMElements();
@@ -506,15 +506,15 @@ define([], function() {
 
                     }
 
-                } else if(!!this.isExpanded){
+                } else if (!!this.isExpanded) {
 
-                    if(widths.preview < constants.previewMinWidth) {
+                    if (widths.preview < constants.previewMinWidth) {
 
                         this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.hide(this.$toolbarOpenNewWindow);
                         this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
 
-                    } else if(widths.preview < constants.minWidthForToolbarExpanded) {
+                    } else if (widths.preview < constants.minWidthForToolbarExpanded) {
 
                         this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.show(this.$toolbarOpenNewWindow);
@@ -530,14 +530,9 @@ define([], function() {
 
                 }
 
-
-                // TODO wenn dropdown ausgeblendet dann neues-fenster-button nach links
-                // TODO reset of navigation when navigate back to list only if viewport big enough....
-                // TODO content minwidth 460px --> expand 460 + Abstand
-
                 this.sandbox.dom.width(this.$wrapper, widths.preview);
                 this.sandbox.dom.width(this.$iframe, widths.preview);
-                this.sandbox.dom.width(this.$toolbar, widths.preview+constants.marginPreviewCollapsedLeft);
+                this.sandbox.dom.width(this.$toolbar, widths.preview + constants.marginPreviewCollapsedLeft);
                 this.sandbox.dom.width(this.$mainContent, widths.content);
             },
 
@@ -545,10 +540,10 @@ define([], function() {
              * Restores the iframe
              * @param {Number} width of preview
              */
-            restoreIframe: function(width){
-                if(!this.iframeExists) {
+            restoreIframe: function(width) {
+                if (!this.iframeExists) {
                     var url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
-                    this.renderIframe(width,url);
+                    this.renderIframe(width, url);
                     this.iframeExists = true;
                 }
             },
@@ -556,7 +551,7 @@ define([], function() {
             /**
              * Shows necessary DOM Elements
              */
-            showNecessaryDOMElements:function(){
+            showNecessaryDOMElements: function() {
                 this.sandbox.dom.show(this.$toolbar);
                 this.sandbox.dom.show(this.$toolbarLeft);
                 this.sandbox.dom.show(this.$toolbarRight);
@@ -573,18 +568,18 @@ define([], function() {
              * @param {Boolean} resized triggered thourgh resize
              * @return {Object} widths for content and preview
              */
-            calculateCurrentWidths: function(expanded, resized){
+            calculateCurrentWidths: function(expanded, resized) {
 
                 var widths = { preview: 0, content: 0},
                     tmpWidth,
                     viewportWidth = this.sandbox.dom.width(window),
                     margin = 0;
 
-                if(!!expanded) {
+                if (!!expanded) {
 
                     widths.preview = viewportWidth - constants.mainContentMinWidth - constants.marginPreviewExpandedLeft - constants.minMainContentMarginLeft;
 
-                    if(!!resized) { // animation needs outer width
+                    if (!!resized) { // animation needs outer width
                         widths.content = constants.mainContentMinWidth;
                     } else {
                         widths.content = constants.mainContentMinWidthIncMarginLeft;
@@ -595,13 +590,13 @@ define([], function() {
 
                     // when resized needed to have enough space for preview
                     // or rather for the content to have enough whitespace on the right
-                    if(!!resized && viewportWidth < constants.breakPointBig){
+                    if (!!resized && viewportWidth < constants.breakPointBig) {
                         margin = constants.maxMainContentMarginLeft + constants.maxMainContentPaddingLeft;
                     }
 
                     tmpWidth = viewportWidth - constants.previewMinWidth - constants.marginPreviewCollapsedLeft - margin;
 
-                    if(tmpWidth > constants.mainContentMaxWidthIncMarginLeft) {
+                    if (tmpWidth > constants.mainContentMaxWidthIncMarginLeft) {
                         widths.content = constants.mainContentMaxWidthIncMarginLeft;
                         widths.preview = viewportWidth - widths.content - constants.marginPreviewCollapsedLeft;
                     } else {
@@ -613,7 +608,6 @@ define([], function() {
 //                        widths.content = constants.breakPointSmall;
 //                        widths.preview = 0;
 //                    }
-
 
 
                 }
@@ -652,12 +646,12 @@ define([], function() {
              * Returns the resolutions in an appropriate format for the dropdown component
              * @return {Array} an array of objects with id and name property
              */
-            getResolutions: function(){
+            getResolutions: function() {
 
-                var data = [], i =0;
+                var data = [], i = 0;
 
-                while(i < this.options.toolbar.resolutions.length) {
-                    data.push({id:i, name: this.options.toolbar.resolutions[i] + ' px' , value: this.options.toolbar.resolutions[i]});
+                while (i < this.options.toolbar.resolutions.length) {
+                    data.push({id: i, name: this.options.toolbar.resolutions[i] + ' px', value: this.options.toolbar.resolutions[i]});
                     ++i;
                 }
 
