@@ -137,6 +137,9 @@ class Preview implements PreviewInterface
             $this->setValue($content, $property, $data, $webspaceKey, $languageCode);
             $this->addStructure($userId, $contentUuid, $content);
 
+            if (false !== ($sequence = $this->getSequence($content, $property))) {
+                $property = implode(',', array_slice($sequence['sequence'], 0, -1));
+            }
             $changes = $this->render($userId, $contentUuid, true, $property);
             if ($changes !== false) {
                 $this->addChanges($userId, $contentUuid, $property, $changes);
