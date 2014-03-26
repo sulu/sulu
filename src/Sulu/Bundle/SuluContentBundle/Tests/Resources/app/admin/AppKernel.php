@@ -27,6 +27,8 @@ class AppKernel extends Kernel
             new \Liip\ThemeBundle\LiipThemeBundle(),
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
+
+            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );
 
         return $bundles;
