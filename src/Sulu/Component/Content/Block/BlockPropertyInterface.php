@@ -27,4 +27,12 @@ interface BlockPropertyInterface extends PropertyInterface
      * @param PropertyInterface $property
      */
     public function addChild(PropertyInterface $property);
+
+    /**
+     * returns property with given name
+     * @param string $name of property
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getChild($name);
 } 

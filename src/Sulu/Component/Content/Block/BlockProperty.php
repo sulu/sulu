@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
+use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
  * representation of a block node in template xml
@@ -51,6 +52,22 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function addChild(PropertyInterface $property)
     {
         $this->childProperties[] = $property;
+    }
+
+    /**
+     * returns property with given name
+     * @param string $name of property
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getChild($name)
+    {
+        foreach ($this->childProperties as $child) {
+            if ($child->getName() === $name) {
+                return $child;
+            }
+        }
+        throw new NoSuchPropertyException();
     }
 
     /**
