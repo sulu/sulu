@@ -544,12 +544,11 @@ define([], function() {
 
                 if(!!expanded) {
 
-                    if(!!resized) {
-                        widths.preview = viewportWidth - constants.mainContentMinWidth - constants.marginPreviewExpandedLeft - constants.minMainContentMarginLeft;
+                    widths.preview = viewportWidth - constants.mainContentMinWidth - constants.marginPreviewExpandedLeft - constants.minMainContentMarginLeft;
+
+                    if(!!resized) { // animation needs outer width
                         widths.content = constants.mainContentMinWidth;
                     } else {
-                        // TODO wtf?
-                        widths.preview = viewportWidth - constants.mainContentMinWidthIncMarginLeft + constants.marginPreviewExpandedLeft + constants.minMainContentMarginLeft  + constants.minMainContentMarginLeft;
                         widths.content = constants.mainContentMinWidthIncMarginLeft;
                     }
 
