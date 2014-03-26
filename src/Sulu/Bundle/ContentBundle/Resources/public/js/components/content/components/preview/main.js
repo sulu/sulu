@@ -286,12 +286,17 @@ define([], function() {
                 // show in new window
                 this.sandbox.dom.on('#' + constants.toolbarNewWindow, 'click', function() {
 
+                    // collapse everything
+                    var $target = this.sandbox.dom.find('#'+constants.toolbarLeft,this.$el);
+                    this.collapsePreview($target);
+
                     window.open(this.url);
+
                     this.sandbox.dom.hide(this.$wrapper);
                     this.sandbox.dom.hide(this.$toolbar);
+                    this.sandbox.dom.remove(this.$iframe);
+                    this.iframeExists = false;
 
-                    // when preview expanded then show navigation and adjust main content
-//                    if (!!this.isExpanded) {
                         this.sandbox.emit('husky.navigation.show');
                         this.sandbox.emit('husky.page-functions.show');
                         this.sandbox.emit('sulu.app.content.dimensions-change', {
@@ -300,9 +305,8 @@ define([], function() {
                             paddingLeft: constants.maxMainContentPaddingLeft});
 
                         this.sandbox.dom.width(this.$mainContent,'');
-//                    }
 
-                    this.isExpanded = false;
+
                     this.sandbox.emit(HIDE);
 
                 }.bind(this));
@@ -481,6 +485,8 @@ define([], function() {
                         this.sandbox.dom.remove(this.$iframe);
                         this.iframeExists = false;
 
+                        this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
+
                         widths.content = '';
 
                         // hide resolutions div in toolbar
@@ -496,6 +502,7 @@ define([], function() {
                         this.restoreIframe(widths.preview);
                         this.showNecessaryDOMElements();
                         this.sandbox.dom.show(this.$toolbarResolutions);
+                        this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
 
                     }
 
@@ -514,8 +521,11 @@ define([], function() {
                         this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
 
                     } else {
+
                         this.sandbox.dom.show(this.$toolbarResolutions);
                         this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+                        this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
+
                     }
 
                 }
