@@ -71,7 +71,7 @@ define([], function() {
                 mainContentMinWidth: 530,
                 marginPreviewCollapsedLeft: 30,
 
-                previewMinWidth: 60,
+                previewMinWidth: 30,
 
                 transitionDuration: 500,
                 minMainContentMarginLeft: 10,
@@ -155,12 +155,11 @@ define([], function() {
                 this.renderIframe(widths.preview, this.url);
                 this.renderToolbar(widths);
 
-//                if(widths.content > constants.mainContentMaxWidth){
-                    this.sandbox.emit('sulu.app.content.dimensions-change', {
-                        width: widths.content,
-                        left: constants.maxMainContentMarginLeft,
-                        paddingLeft: constants.maxMainContentPaddingLeft});
-//                }
+                // adjust content width if needed
+                this.sandbox.emit('sulu.app.content.dimensions-change', {
+                    width: widths.content,
+                    left: constants.maxMainContentMarginLeft,
+                    paddingLeft: constants.maxMainContentPaddingLeft});
             },
 
             /**
