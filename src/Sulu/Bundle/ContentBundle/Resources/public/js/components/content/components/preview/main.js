@@ -291,7 +291,7 @@ define([], function() {
                     this.sandbox.dom.hide(this.$toolbar);
 
                     // when preview expanded then show navigation and adjust main content
-                    if (!!this.isExpanded) {
+//                    if (!!this.isExpanded) {
                         this.sandbox.emit('husky.navigation.show');
                         this.sandbox.emit('husky.page-functions.show');
                         this.sandbox.emit('sulu.app.content.dimensions-change', {
@@ -300,8 +300,9 @@ define([], function() {
                             paddingLeft: constants.maxMainContentPaddingLeft});
 
                         this.sandbox.dom.width(this.$mainContent,'');
-                    }
+//                    }
 
+                    this.isExpanded = false;
                     this.sandbox.emit(HIDE);
 
                 }.bind(this));
@@ -393,8 +394,6 @@ define([], function() {
                     this.sandbox.dom.hide(this.$toolbarRight);
                 }
 
-                 // TODO content width to big
-
                 this.animateCollapseAndExpand(false, widths);
             },
 
@@ -459,7 +458,7 @@ define([], function() {
              */
             adjustDisplayedComponents:function(){
 
-                var widths = this.calculateCurrentWidths(this.isExpanded, true), url;
+                var widths = this.calculateCurrentWidths(this.isExpanded, true);
 
                 if(!this.isExpanded){
 
@@ -478,6 +477,7 @@ define([], function() {
                         this.sandbox.dom.show(this.$toolbarRight);
                         this.sandbox.dom.show(this.$toolbarOpenNewWindow);
 
+
                         this.sandbox.dom.remove(this.$iframe);
                         this.iframeExists = false;
 
@@ -489,6 +489,7 @@ define([], function() {
                         this.restoreIframe(widths.preview);
                         this.showNecessaryDOMElements();
                         this.sandbox.dom.hide(this.$toolbarResolutions);
+                        this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
 
                     } else {
 
@@ -501,11 +502,17 @@ define([], function() {
                 } else if(!!this.isExpanded){
 
                     if(widths.preview < constants.previewMinWidth) {
+
                         this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.hide(this.$toolbarOpenNewWindow);
+                        this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
+
                     } else if(widths.preview < constants.minWidthForToolbarExpanded) {
+
                         this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+                        this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
+
                     } else {
                         this.sandbox.dom.show(this.$toolbarResolutions);
                         this.sandbox.dom.show(this.$toolbarOpenNewWindow);
@@ -544,7 +551,10 @@ define([], function() {
                 this.sandbox.dom.show(this.$toolbarLeft);
                 this.sandbox.dom.show(this.$toolbarRight);
                 this.sandbox.dom.show(this.$wrapper);
+                this.sandbox.dom.show(this.$iframe);
                 this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+
+                this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
             },
 
             /**
@@ -584,14 +594,17 @@ define([], function() {
                     if(tmpWidth > constants.mainContentMaxWidthIncMarginLeft) {
                         widths.content = constants.mainContentMaxWidthIncMarginLeft;
                         widths.preview = viewportWidth - widths.content - constants.marginPreviewCollapsedLeft;
-                    } else if(tmpWidth <= constants.breakPointSmall){
-                        widths.content = constants.breakPointSmall;
-                        widths.preview = 0;
-
                     } else {
                         widths.content = tmpWidth;
                         widths.preview = constants.previewMinWidth;
                     }
+
+//                    else if(tmpWidth <= constants.breakPointSmall){
+//                        widths.content = constants.breakPointSmall;
+//                        widths.preview = 0;
+//                    }
+
+
 
                 }
 
