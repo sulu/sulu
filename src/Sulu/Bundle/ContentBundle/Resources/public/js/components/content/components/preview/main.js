@@ -156,7 +156,7 @@ define([], function() {
             render: function() {
                 this.url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
 
-                var widths = this.calculateCurrentWidths(false);
+                var widths = this.calculateCurrentWidths(false,false);
 
                 this.renderWrapper(widths);
                 this.renderIframe(widths.preview, this.url);
@@ -343,7 +343,7 @@ define([], function() {
             expandPreview: function($target) {
 
                 var $span = this.sandbox.dom.find('span', $target),
-                    widths = this.calculateCurrentWidths(true);
+                    widths = this.calculateCurrentWidths(true, false);
 
                 // deactivate tabs
                 this.sandbox.emit('sulu.content.tabs.deactivate');
@@ -377,7 +377,7 @@ define([], function() {
                 this.sandbox.emit('sulu.content.tabs.activate');
 
                 var $span = this.sandbox.dom.find('span', $target),
-                    widths = this.calculateCurrentWidths(false);
+                    widths = this.calculateCurrentWidths(false, false);
 
                 this.sandbox.dom.removeClass($target, 'expanded');
                 this.sandbox.dom.addClass($target, 'collapsed');
@@ -476,7 +476,7 @@ define([], function() {
                     // hide preview except for open in new window
                     if(widths.content <= (constants.breakPointSmall + constants.previewMinWidth)) {
 
-                        // remove iframe
+                        // remove iframe - disables unnecessary communication
 
                         this.sandbox.dom.hide(this.$iframe);
                         this.sandbox.dom.hide(this.$wrapper);
@@ -508,12 +508,12 @@ define([], function() {
                         this.sandbox.dom.show(this.$wrapper);
 
                         this.sandbox.dom.hide(this.$toolbarRight);
-
-                        // TODO show all and add iframe
                         this.sandbox.dom.hide(this.$toolbarRight);
+
                     } else {
-                        // TODO show all and add iframe
+
                         this.sandbox.dom.show(this.$toolbarRight);
+                        this.sandbox.dom.show(this.$toolbarResolutions);
                     }
 
                 } else if(!!this.isExpanded){
@@ -527,6 +527,10 @@ define([], function() {
                     }
 
                 }
+
+                // TODO beim laden richtige toolbar felder einblenden
+                // TODO dropdown wieder einblenden
+                // TODO wenn dropdown ausgeblendet dann neues-fenster-button nach links
 
                 // TODO iframe hinzufuegen/entfernen fuer start/stop
 
