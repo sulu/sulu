@@ -98,6 +98,7 @@ class BlockContentType extends ComplexContentType
      * @param $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
+     * @throws \Sulu\Component\Content\Exception\UnexpectedPropertyType
      * @return mixed
      */
     public function readForPreview(
@@ -108,7 +109,11 @@ class BlockContentType extends ComplexContentType
         $segmentKey
     )
     {
-        // TODO: Implement readForPreview() method.
+        if ($property->getIsBlock()) {
+            $property->setValue($data);
+        } else {
+            throw new UnexpectedPropertyType($property, $this);
+        }
     }
 
     /**
