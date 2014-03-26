@@ -13,7 +13,7 @@ body {
 /* line 17, ../scss/modules/base.scss */
 #content {
   max-width: 920px;
-  min-width: 300px;
+  min-width: 560px;
   margin-left: 250px;
   padding-left: 50px;
   margin-top: 40px;

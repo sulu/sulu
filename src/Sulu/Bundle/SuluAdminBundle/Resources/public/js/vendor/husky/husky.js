@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -24667,6 +24666,12 @@ define('__component__$navigation@husky',[],function() {
             EVENT_SHOW = namespace + 'show',
 
         /**
+         * triggers the update of the navigation size
+         * @event husky.navigation.show.size
+         */
+            EVENT_SIZE_UPDATE = namespace + 'size.update',
+
+        /**
          * hides the navigation completely
          * @event husky.navigation.hide
          */
@@ -24888,6 +24893,8 @@ define('__component__$navigation@husky',[],function() {
 
             this.sandbox.on(EVENT_HIDE, this.hide.bind(this));
             this.sandbox.on(EVENT_SHOW, this.show.bind(this));
+
+            this.sandbox.on(EVENT_SIZE_UPDATE, this.resizeListener.bind(this));
 
         },
 
@@ -37781,3 +37788,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
