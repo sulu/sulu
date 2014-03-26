@@ -393,6 +393,8 @@ define([], function() {
                     this.sandbox.dom.hide(this.$toolbarRight);
                 }
 
+                 // TODO content width to big
+
                 this.animateCollapseAndExpand(false, widths);
             },
 
@@ -484,29 +486,22 @@ define([], function() {
                         // hide resolutions div in toolbar
                     } else if(widths.preview < constants.minWidthForToolbarCollapsed) {
 
-                        if(!this.iframeExists) {
-                            url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
-                            this.renderIframe(widths.preview,url);
-                            this.iframeExists = true;
-                        }
-
-                        this.sandbox.dom.show(this.$toolbar);
-                        this.sandbox.dom.show(this.$toolbarLeft);
-                        this.sandbox.dom.show(this.$toolbarRight);
-                        this.sandbox.dom.show(this.$wrapper);
-                        this.sandbox.dom.show(this.$toolbarOpenNewWindow);
-
+                        this.restoreIframe(widths.preview);
+                        this.showNecessaryDOMElements();
                         this.sandbox.dom.hide(this.$toolbarResolutions);
 
                     } else {
 
-                        this.sandbox.dom.show(this.$toolbarRight);
+                        this.restoreIframe(widths.preview);
+                        this.showNecessaryDOMElements();
                         this.sandbox.dom.show(this.$toolbarResolutions);
+
                     }
 
                 } else if(!!this.isExpanded){
 
                     if(widths.preview < constants.previewMinWidth) {
+                        this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.hide(this.$toolbarOpenNewWindow);
                     } else if(widths.preview < constants.minWidthForToolbarExpanded) {
                         this.sandbox.dom.hide(this.$toolbarResolutions);
@@ -527,6 +522,29 @@ define([], function() {
                 this.sandbox.dom.width(this.$iframe, widths.preview);
                 this.sandbox.dom.width(this.$toolbar, widths.preview+constants.marginPreviewCollapsedLeft);
                 this.sandbox.dom.width(this.$mainContent, widths.content);
+            },
+
+            /**
+             * Restores the iframe
+             * @param {Number} width of preview
+             */
+            restoreIframe: function(width){
+                if(!this.iframeExists) {
+                    var url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
+                    this.renderIframe(width,url);
+                    this.iframeExists = true;
+                }
+            },
+
+            /**
+             * Shows necessary DOM Elements
+             */
+            showNecessaryDOMElements:function(){
+                this.sandbox.dom.show(this.$toolbar);
+                this.sandbox.dom.show(this.$toolbarLeft);
+                this.sandbox.dom.show(this.$toolbarRight);
+                this.sandbox.dom.show(this.$wrapper);
+                this.sandbox.dom.show(this.$toolbarOpenNewWindow);
             },
 
             /**
