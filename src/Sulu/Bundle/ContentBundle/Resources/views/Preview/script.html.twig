@@ -6,6 +6,9 @@
                     ajax.init();
                 }
             },
+            debug = function(message) {
+                console.log('PREVIEW', message);
+            },
             ws = {
                 conn: null,
                 opened: false,
@@ -17,7 +20,7 @@
                     var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
                     // no support
                     if (support === null) {
-                        console.log("Your browser doesn't support Websockets.");
+                        debug("Your browser doesn't support Websockets.");
                         return false;
                     }
                     // let's invite Firefox to the party.
@@ -35,7 +38,7 @@
 
                         // on open
                         this.conn.onopen = function(e) {
-                            console.log("Connection established!");
+                            debug("Connection established!");
                             this.opened = true;
 
                             var message = {
@@ -51,7 +54,7 @@
                         // on message
                         this.conn.onmessage = function(e) {
                             var data = JSON.parse(e.data);
-                            console.log(data);
+                            debug(data);
                             if (data.command === 'changes') {
                                 handleChanges(data.params.changes);
                             }
@@ -97,7 +100,7 @@
                     } else if (window.ActiveXObject) {
                         http = new ActiveXObject("Microsoft.XMLHTTP");
                     } else {
-                        console.log('no ajax supported');
+                        debug('no ajax supported');
                         return false;
                     }
 
@@ -127,6 +130,7 @@
                     if (this.http.readyState == 4) {
                         var result = JSON.parse(this.http.responseText);
 
+                        debug(result);
                         handleChanges(result);
                     }
 
@@ -135,33 +139,75 @@
                 }
             },
             handleChanges = function(changes) {
-                var content,
-                    elements,
-                    nodeArray,
-                    i;
-
                 if (!!changes.reload) {
                     location.reload();
                 } else {
                     // foreach property which was changed
                     for (var propertyName in changes) {
                         if (changes.hasOwnProperty(propertyName)) {
-                            content = changes[propertyName].content;
-
-                            // find rdfa node
-                            elements = document.querySelectorAll('*[property="' + propertyName + '"]');
-                            i = 0;
-
-                            // foreach node
-                            nodeArray = [].slice.call(elements);
-                            nodeArray.forEach(function(element) {
-                                // set content and highlight class
-                                element.innerHTML = content[i];
-                                i++;
-                            });
+                            if (-1 !== propertyName.indexOf(',')) {
+                                handleSequence(propertyName, changes[propertyName].content);
+                            } else {
+                                handleSingle(propertyName, changes[propertyName].content);
+                            }
                         }
                     }
                 }
+            },
+            handleSequence = function(propertyName, content) {
+                var sequence = propertyName.split(','),
+                        filter = '',
+                        elements,
+                        nodeArray,
+                        i,
+                        item;
+
+                for (item in sequence) {
+                    // check of integer
+                    if (!/^\+?(0|[1-9]\d*)$/.test(sequence[item])) {
+                        filter += ' *[property="' + sequence[item] + '"]';
+                    } else {
+                        filter += ':nth-child(' + (parseInt(sequence[item]) + 1) + ')';
+                    }
+                }
+
+                // find rdfa node
+                elements = document.querySelectorAll(filter);
+                i = 0;
+                // foreach node
+                nodeArray = [].slice.call(elements);
+                nodeArray.forEach(function(element) {
+                    // set content and highlight class
+                    element.innerHTML = content[i];
+                    element.scrollIntoView();
+                    i++;
+                });
+            },
+            handleSingle = function(propertyName, content) {
+                // not is not supported ...
+                // check if one parent is a property
+                var filter = '*[property="' + propertyName + '"]',
+                        cur,
+                // find rdfa node
+                        elements = document.querySelectorAll(filter),
+                // foreach node
+                        nodeArray = [].slice.call(elements),
+                        i = 0;
+
+                nodeArray.forEach(function(element) {
+                    // no parent have property
+                    cur = element.parentNode;
+                    while (null !== cur.parentNode) {
+                        if (cur.hasAttribute('property')) {
+                            return;
+                        }
+                        cur = cur.parentNode;
+                    }
+                    // set content and highlight class
+                    element.innerHTML = content[i];
+                    element.scrollIntoView();
+                    i++;
+                });
             };
 
     (function() {

@@ -118,7 +118,7 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $changes = $this->getPreview()->getChanges($uid, $contentUuid);
 
-        return new JsonResponse(json_encode($changes));
+        return new JsonResponse($changes);
     }
 
     /**
