@@ -64,7 +64,8 @@ define([], function() {
                 breakPointBig: 980,
 
                 // needed to hide preview and show only new-window-button
-                breakPointSmall: 460,
+                // 460 + margin + padding
+                breakPointSmall: 560,
 
                 minWidthForToolbarCollapsed: 240,
                 minWidthForToolbarExpanded: 240,
@@ -72,7 +73,8 @@ define([], function() {
                 mainContentMaxWidthIncMarginLeft: 920,
                 mainContentMaxWidth: 820,
 
-                mainContentMinWidth: 530,
+                mainContentMinWidthIncMarginLeft: 530,
+                mainContentMinWidth: 460,
                 marginPreviewCollapsedLeft: 30,
 
                 previewMinWidth: 30,
@@ -219,8 +221,12 @@ define([], function() {
 
                 this.sandbox.dom.css(this.$toolbar, 'width', widths.preview + 30 + 'px');
                 this.sandbox.dom.append(this.$el, this.$toolbar);
+
                 this.$toolbarRight = this.sandbox.dom.find('#'+constants.toolbarRight, this.$toolbar);
                 this.$toolbarResolutionsLabel = this.sandbox.dom.find('.dropdown-label', this.$toolbarRight);
+                this.$toolbarResolutions = this.sandbox.dom.find('#'+constants.toolbarResolutions, this.$toolbarRight);
+                this.$toolbarOpenNewWindow = this.sandbox.dom.find('#'+constants.toolbarNewWindow, this.$toolbarRight);
+                this.$toolbarLeft = this.sandbox.dom.find('#'+constants.toolbarLeft, this.$toolbar);
 
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
                 if(widths.preview < constants.minWidthForToolbarCollapsed){
@@ -466,9 +472,29 @@ define([], function() {
 
                 if(!this.isExpanded){
 
-                    if(widths.preview < constants.minWidthForToolbarCollapsed) {
+                    // hide preview except for open in new window
+                    if(widths.content <= (constants.breakPointSmall + constants.previewMinWidth)) {
+
+                        // remove iframe
+                        this.sandbox.dom.remove(this.$iframe);
+
+                        this.sandbox.dom.hide(this.$wrapper);
+                        this.sandbox.dom.hide(this.$toolbarResolutions);
+                        this.sandbox.dom.hide(this.$toolbarLeft);
+                        this.sandbox.dom.hide(this.$toolbarResolutions);
+
+                        this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+                        this.sandbox.dom.show(this.$toolbar);
+
+                        this.sandbox.logger.warn("too small for preview");
+
+                        widths.content = constants.mainContentMinWidth;
+
+                    } else if(widths.preview < constants.minWidthForToolbarCollapsed) {
+                        // TODO show all and add iframe
                         this.sandbox.dom.hide(this.$toolbarRight);
                     } else {
+                        // TODO show all and add iframe
                         this.sandbox.dom.show(this.$toolbarRight);
                     }
 
@@ -485,8 +511,8 @@ define([], function() {
                 }
 
                 // TODO iframe hinzufuegen/entfernen fuer start/stop
-                // TODO wenn aufloesung zu klein nur streifen anzeigen - content verkleinern
-                // TODO dimension changed - with attribut wird gesetzt --> in css setzen
+
+                // TODO dimension changed - width attribut wird gesetzt --> in css setzen
                 // TODO reset of navigation when navigate back to list only if viewport big enough....
 
                 // TODO content minwidth 460px --> expand 460 + Abstand
@@ -501,7 +527,7 @@ define([], function() {
             /**
              * Calculates the widths for preview and content for expanded/collapsed state for current viewport width
              * @param {Boolean} expanded state
-             * @param {Boolean} triggered thourgh resize
+             * @param {Boolean} resize triggered thourgh resize
              * @return {Object} widths for content and preview
              */
             calculateCurrentWidths: function(expanded, resized){
@@ -513,8 +539,8 @@ define([], function() {
 
                 if(!!expanded) {
 
-                    widths.preview = viewportWidth - constants.mainContentMinWidth + constants.marginPreviewCollapsedLeft;
-                    widths.content = constants.mainContentMinWidth;
+                    widths.preview = viewportWidth - constants.mainContentMinWidthIncMarginLeft + constants.marginPreviewCollapsedLeft;
+                    widths.content = constants.mainContentMinWidthIncMarginLeft;
 
                 } else {
 
@@ -529,6 +555,10 @@ define([], function() {
                     if(tmpWidth > constants.mainContentMaxWidthIncMarginLeft) {
                         widths.content = constants.mainContentMaxWidthIncMarginLeft;
                         widths.preview = viewportWidth - widths.content - constants.marginPreviewCollapsedLeft;
+                    } else if(tmpWidth <= constants.breakPointSmall){
+                        widths.content = constants.breakPointSmall;
+                        widths.preview = 0;
+
                     } else {
                         widths.content = tmpWidth;
                         widths.preview = constants.previewMinWidth;
@@ -536,12 +566,11 @@ define([], function() {
 
                 }
 
-                this.sandbox.logger.warn("viewport width", viewportWidth);
-                this.sandbox.logger.warn("preview width", widths.preview);
                 this.sandbox.logger.warn("content width", widths.content);
+                this.sandbox.logger.warn("real content width", this.sandbox.dom.width(this.$mainContent));
+                this.sandbox.logger.warn("preview width", widths.preview);
 
                 return widths;
-
             },
 
             /**
