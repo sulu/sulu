@@ -178,7 +178,7 @@ define([], function() {
                 this.sandbox.dom.prop(checkbox, 'checked', true);
 
                 this.sandbox.util.each($checkboxes, function(index, value) {
-                    roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(value)), 'id');
+                    roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.sandbox.dom.parent(value))), 'id');
 
                     if (this.selectedRoles.indexOf(roleId) < 0) {
                         this.selectedRoles.push(roleId);
@@ -195,7 +195,7 @@ define([], function() {
 
         selectItem: function($element) {
 
-            var roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent($element)), 'id'),
+            var roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.sandbox.dom.parent($element))), 'id'),
                 index = this.selectedRoles.indexOf(roleId);
 
             if (index >= 0) {
@@ -407,8 +407,13 @@ define([], function() {
             tableHead: function(thLabel1, thLabel2, thLabel3) {
                 return [
                     '<thead>',
-                        '<tr>' +
-                            '<th width="5%"><input id="selectAll" type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></th>',
+                        '<tr>',
+                            '<th width="5%">',
+                                 '<div class="custom-checkbox">',
+                                    '<input id="selectAll" type="checkbox"/>',
+                                    '<span class="icon"></span>',
+                                 '</div>',
+                            '</th>',
                             '<th width="30%">', thLabel1, '</th>',
                             '<th width="45%">', thLabel2, '</th>',
                             '<th width="20%">', thLabel3, '</th>',
@@ -424,7 +429,12 @@ define([], function() {
                 if (!!selected) {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                            '<td><input type="checkbox" class="custom-checkbox is-selected" checked/><span class="custom-checkbox-icon"></span></td>',
+                            '<td>',
+                                '<div class="custom-checkbox">',
+                                    '<input type="checkbox" class="is-selected" checked/>',
+                                    '<span class="icon"></span>',
+                                '</div>',
+                            '</td>',
                             '<td>', title, '</td>',
                             '<td class="m-top-15" id="languageSelector', id, '"></td>',
                             '<td></td>',
@@ -433,7 +443,12 @@ define([], function() {
                 } else {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                            '<td><input type="checkbox" class="custom-checkbox"/><span class="custom-checkbox-icon"></span></td>',
+                            '<td>',
+                                '<div class="custom-checkbox">',
+                                    '<input type="checkbox"/>',
+                                    '<span class="icon"></span>',
+                                '</div>',
+                            '</td>',
                             '<td>', title, '</td>',
                             '<td class="m-top-15" id="languageSelector', id, '"></td>',
                             '<td></td>',
