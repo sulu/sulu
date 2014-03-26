@@ -65,7 +65,7 @@ define([], function() {
 
                 // needed to hide preview and show only new-window-button
                 // 460 + margin + padding
-                breakPointSmall: 560,
+                breakPointSmall: 640,
 
                 minWidthForToolbarCollapsed: 240,
                 minWidthForToolbarExpanded: 240,
@@ -126,6 +126,7 @@ define([], function() {
                 // component vars
                 this.url = '';
                 this.isExpanded = false;
+                this.iframeExists = false;
 
                 // dom elements
                 this.$wrapper = null;
@@ -171,7 +172,7 @@ define([], function() {
             /**
              * Renders the div which contains the iframe
              * with the maximum available space
-             * @param {Object} object with widths of preview and content
+             * @param {Object} widths object with widths of preview and content
              */
             renderWrapper: function(widths) {
 
@@ -194,11 +195,12 @@ define([], function() {
             renderIframe: function(width, url) {
                 this.$iframe = this.sandbox.dom.$('<iframe id="preview-iframe" class="preview-iframe" src="' + url + '" width="' + width + 'px" height="100%"></iframe>');
                 this.sandbox.dom.append(this.$wrapper, this.$iframe);
+                this.iframeExists = true;
             },
 
             /**
              * Renders toolbar on top of the iframe
-             * @param {Object} object with widths of preview and content
+             * @param {Object} widths object with widths of preview and content
              */
             renderToolbar: function(widths) {
 
@@ -464,11 +466,10 @@ define([], function() {
 
             /**
              * Called when the sulu.app.viewport.dimensions-changed is emitted
-             * @param dimensions of new viewport
              */
             dimensionsChanged:function(){
 
-                var widths = this.calculateCurrentWidths(this.isExpanded, true);
+                var widths = this.calculateCurrentWidths(this.isExpanded, true), url;
 
                 if(!this.isExpanded){
 
@@ -476,21 +477,38 @@ define([], function() {
                     if(widths.content <= (constants.breakPointSmall + constants.previewMinWidth)) {
 
                         // remove iframe
-                        this.sandbox.dom.remove(this.$iframe);
 
+                        this.sandbox.dom.hide(this.$iframe);
                         this.sandbox.dom.hide(this.$wrapper);
+
                         this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.hide(this.$toolbarLeft);
-                        this.sandbox.dom.hide(this.$toolbarResolutions);
 
-                        this.sandbox.dom.show(this.$toolbarOpenNewWindow);
                         this.sandbox.dom.show(this.$toolbar);
+                        this.sandbox.dom.show(this.$toolbarRight);
+                        this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+
+                        this.sandbox.dom.remove(this.$iframe);
+                        this.iframeExists = false;
 
                         this.sandbox.logger.warn("too small for preview");
 
-                        widths.content = constants.mainContentMinWidth;
+                        widths.content = '';
 
                     } else if(widths.preview < constants.minWidthForToolbarCollapsed) {
+
+                        if(!this.iframeExists) {
+                            url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
+                            this.renderIframe(widths.preview,url);
+                            this.iframeExists = true;
+                        }
+
+                        this.sandbox.dom.show(this.$toolbar);
+                        this.sandbox.dom.show(this.$toolbarLeft);
+                        this.sandbox.dom.show(this.$wrapper);
+
+                        this.sandbox.dom.hide(this.$toolbarRight);
+
                         // TODO show all and add iframe
                         this.sandbox.dom.hide(this.$toolbarRight);
                     } else {
@@ -527,7 +545,7 @@ define([], function() {
             /**
              * Calculates the widths for preview and content for expanded/collapsed state for current viewport width
              * @param {Boolean} expanded state
-             * @param {Boolean} resize triggered thourgh resize
+             * @param {Boolean} resized triggered thourgh resize
              * @return {Object} widths for content and preview
              */
             calculateCurrentWidths: function(expanded, resized){
