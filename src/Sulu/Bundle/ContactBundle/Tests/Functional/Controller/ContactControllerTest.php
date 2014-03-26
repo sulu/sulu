@@ -19,6 +19,8 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
+use Sulu\Bundle\ContactBundle\Entity\Fax;
+use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
@@ -75,6 +77,14 @@ class ContactControllerTest extends DatabaseTestCase
         $email->setEmailType($emailType);
         $contact->addEmail($email);
 
+        $faxType = new FaxType();
+        $faxType->setName('Private');
+
+        $fax = new Fax();
+        $fax->setFax('123654789');
+        $fax->setFaxType($faxType);
+        $contact->addFax($fax);
+
         $country1 = new Country();
         $country1->setName('Musterland');
         $country1->setCode('ML');
@@ -105,6 +115,8 @@ class ContactControllerTest extends DatabaseTestCase
         self::$em->persist($account1);
         self::$em->persist($phoneType);
         self::$em->persist($phone);
+        self::$em->persist($faxType);
+        self::$em->persist($fax);
         self::$em->persist($emailType);
         self::$em->persist($email);
         self::$em->persist($country1);
@@ -139,6 +151,8 @@ class ContactControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
@@ -152,7 +166,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testGetById()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('GET', '/api/contacts/1');
 
         $response = json_decode($client->getResponse()->getContent());
@@ -164,6 +178,8 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('CEO', $response->position);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
+        $this->assertEquals('123654789', $response->faxes[0]->fax);
+        $this->assertEquals('Private', $response->faxes[0]->faxType->name);
         $this->assertEquals('max.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('Private', $response->emails[0]->emailType->name);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);
@@ -174,9 +190,19 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Note', $response->notes[0]->value);
     }
 
+    private function createTestClient() {
+        return $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+    }
+
     public function testPostAccountIDNull()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'POST',
@@ -288,7 +314,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'POST',
@@ -333,6 +359,22 @@ class ContactControllerTest extends DatabaseTestCase
                         )
                     )
                 ),
+                'faxes' => array(
+                    array(
+                        'fax' => '123456789-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'fax' => '987654321-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
                 'addresses' => array(
                     array(
                         'street' => 'Musterstraße',
@@ -370,6 +412,8 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
+        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);
         $this->assertEquals('1', $response->addresses[0]->number);
         $this->assertEquals('0000', $response->addresses[0]->zip);
@@ -390,6 +434,8 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('987654321', $response->phones[1]->phone);
+        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
+        $this->assertEquals('987654321-1', $response->faxes[1]->fax);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);
         $this->assertEquals('1', $response->addresses[0]->number);
         $this->assertEquals('0000', $response->addresses[0]->zip);
@@ -402,7 +448,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithoutAdditionalData()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'POST',
@@ -434,7 +480,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPostWithEmptyAdditionalData()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'POST',
@@ -470,7 +516,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testGetListSearch()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=firstName,lastName');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -491,7 +537,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'PUT',
@@ -542,6 +588,30 @@ class ContactControllerTest extends DatabaseTestCase
                         )
                     )
                 ),
+                'faxes' => array(
+                    array(
+                        'id' => 1,
+                        'fax' => '321654987-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'fax' => '789456123-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    ),
+                    array(
+                        'fax' => '147258369-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
                 'addresses' => array(
                     array(
                         'id' => 1,
@@ -581,6 +651,9 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('321654987', $response->phones[0]->phone);
         $this->assertEquals('789456123', $response->phones[1]->phone);
         $this->assertEquals('147258369', $response->phones[2]->phone);
+        $this->assertEquals('321654987-1', $response->faxes[0]->fax);
+        $this->assertEquals('789456123-1', $response->faxes[1]->fax);
+        $this->assertEquals('147258369-1', $response->faxes[2]->fax);
         $this->assertEquals('Street', $response->addresses[0]->street);
         $this->assertEquals('2', $response->addresses[0]->number);
         $this->assertEquals('9999', $response->addresses[0]->zip);
@@ -601,6 +674,9 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('321654987', $response->phones[0]->phone);
         $this->assertEquals('789456123', $response->phones[1]->phone);
         $this->assertEquals('147258369', $response->phones[2]->phone);
+        $this->assertEquals('321654987-1', $response->faxes[0]->fax);
+        $this->assertEquals('789456123-1', $response->faxes[1]->fax);
+        $this->assertEquals('147258369-1', $response->faxes[2]->fax);
         $this->assertEquals('Street', $response->addresses[0]->street);
         $this->assertEquals('2', $response->addresses[0]->number);
         $this->assertEquals('9999', $response->addresses[0]->zip);
@@ -612,7 +688,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNoEmail()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'PUT',
@@ -686,7 +762,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNewCountryOnlyId()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'PUT',
@@ -761,7 +837,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNewAccount()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'PUT',
@@ -841,7 +917,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'PUT',
@@ -856,7 +932,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testGetList()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
 
@@ -870,7 +946,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testGetListFields()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&fields=id,firstName,lastName');
         $response = json_decode($client->getResponse()->getContent());
 
@@ -879,7 +955,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('Max', $response->_embedded[0]->firstName);
         $this->assertEquals('Mustermann', $response->_embedded[0]->lastName);
 
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&fields=id,firstName');
         $response = json_decode($client->getResponse()->getContent());
 
@@ -891,12 +967,12 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testDelete()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/1');
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('GET', '/api/contacts/1');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -904,7 +980,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testDeleteNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/4711');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -917,7 +993,7 @@ class ContactControllerTest extends DatabaseTestCase
 
     public function testPutRemovedAccount()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
         $client->request(
             'PUT',
