@@ -61,10 +61,14 @@ define([], function() {
 
             constants = {
 
+                breakPointBig: 980,
+
+                // needed to hide preview and show only new-window-button
+                breakPointSmall: 460,
+
                 minWidthForToolbarCollapsed: 240,
                 minWidthForToolbarExpanded: 240,
 
-                // main content + 50px margin + 50px padding
                 mainContentMaxWidthIncMarginLeft: 920,
                 mainContentMaxWidth: 820,
 
@@ -456,10 +460,9 @@ define([], function() {
              * Called when the sulu.app.viewport.dimensions-changed is emitted
              * @param dimensions of new viewport
              */
-            dimensionsChanged:function(dimensions){
+            dimensionsChanged:function(){
 
-                var mainContentWidth = this.sandbox.dom.outerWidth(this.$mainContent),
-                    widths = this.calculateCurrentWidths(this.isExpanded);
+                var widths = this.calculateCurrentWidths(this.isExpanded, true);
 
                 if(!this.isExpanded){
 
@@ -471,6 +474,8 @@ define([], function() {
 
                 } else if(!!this.isExpanded){
 
+                    // TODO fettes to do
+
                     if(widths.preview < constants.minWidthForToolbarExpanded) {
                         this.sandbox.dom.hide(this.$toolbarRight);
                     } else {
@@ -479,12 +484,13 @@ define([], function() {
 
                 }
 
-                // TODO move breakpoint values to options
-
                 // TODO iframe hinzufuegen/entfernen fuer start/stop
                 // TODO wenn aufloesung zu klein nur streifen anzeigen - content verkleinern
                 // TODO dimension changed - with attribut wird gesetzt --> in css setzen
                 // TODO reset of navigation when navigate back to list only if viewport big enough....
+
+                // TODO content minwidth 460px --> expand 460 + Abstand
+                // TODO ab 640px nur mehr new windown button --> iframe stopp?
 
                 this.sandbox.dom.width(this.$wrapper, widths.preview);
                 this.sandbox.dom.width(this.$iframe, widths.preview);
@@ -495,13 +501,15 @@ define([], function() {
             /**
              * Calculates the widths for preview and content for expanded/collapsed state for current viewport width
              * @param {Boolean} expanded state
+             * @param {Boolean} triggered thourgh resize
              * @return {Object} widths for content and preview
              */
-            calculateCurrentWidths: function(expanded){
+            calculateCurrentWidths: function(expanded, resized){
 
                 var widths = { preview: 0, content: 0},
                     tmpWidth,
-                    viewportWidth = this.sandbox.dom.width(window);
+                    viewportWidth = this.sandbox.dom.width(window),
+                    margin = 0;
 
                 if(!!expanded) {
 
@@ -510,7 +518,13 @@ define([], function() {
 
                 } else {
 
-                    tmpWidth = viewportWidth - constants.previewMinWidth - constants.marginPreviewCollapsedLeft;
+                    // when resized needed to have enough space for preview
+                    // or rather for the content to have enough whitespace on the right
+                    if(!!resized && viewportWidth < constants.breakPointBig){
+                        margin = constants.maxMainContentMarginLeft + constants.maxMainContentPaddingLeft;
+                    }
+
+                    tmpWidth = viewportWidth - constants.previewMinWidth - constants.marginPreviewCollapsedLeft - margin;
 
                     if(tmpWidth > constants.mainContentMaxWidthIncMarginLeft) {
                         widths.content = constants.mainContentMaxWidthIncMarginLeft;
@@ -521,6 +535,10 @@ define([], function() {
                     }
 
                 }
+
+                this.sandbox.logger.warn("viewport width", viewportWidth);
+                this.sandbox.logger.warn("preview width", widths.preview);
+                this.sandbox.logger.warn("content width", widths.content);
 
                 return widths;
 
