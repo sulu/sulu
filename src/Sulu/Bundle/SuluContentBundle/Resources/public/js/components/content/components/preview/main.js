@@ -73,7 +73,7 @@ define([], function() {
                 mainContentMaxWidthIncMarginLeft: 920,
                 mainContentMaxWidth: 820,
 
-                mainContentMinWidthIncMarginLeft: 530,
+                mainContentMinWidthIncMarginLeft: 510,
                 mainContentMinWidth: 460,
                 marginPreviewCollapsedLeft: 30,
 
@@ -134,14 +134,10 @@ define([], function() {
                 this.$toolbar = null;
                 this.$mainContent = this.sandbox.dom.$('#' + this.options.mainContentElementIdentifier)[0];
 
-                // get original max width
-
-                // TODO replace with outer width? - remove due to problems with resize. maybe better to calculate new width
-                this.mainContentOriginalWidth = this.sandbox.dom.width(this.$mainContent) + 100;
-
                 this.render();
                 this.bindDomEvents();
                 this.bindCustomEvents();
+                this.dimensionsChanged();
 
                 this.sandbox.emit(INITIALIZED);
             },
@@ -297,9 +293,11 @@ define([], function() {
                         this.sandbox.emit('husky.navigation.show');
                         this.sandbox.emit('husky.page-functions.show');
                         this.sandbox.emit('sulu.app.content.dimensions-change', {
-                            width: this.mainContentOriginalWidth,
+                            width: '',
                             left: constants.maxMainContentMarginLeft,
                             paddingLeft: constants.maxMainContentPaddingLeft});
+
+                        this.sandbox.dom.width(this.$mainContent,'');
                     }
 
                     this.sandbox.emit(HIDE);
@@ -529,7 +527,6 @@ define([], function() {
                 }
 
                 // TODO beim laden richtige toolbar felder einblenden
-                // TODO dropdown wieder einblenden
                 // TODO wenn dropdown ausgeblendet dann neues-fenster-button nach links
 
                 // TODO iframe hinzufuegen/entfernen fuer start/stop
