@@ -154,6 +154,13 @@ define([], function() {
                 this.renderWrapper(widths);
                 this.renderIframe(widths.preview, this.url);
                 this.renderToolbar(widths);
+
+//                if(widths.content > constants.mainContentMaxWidth){
+                    this.sandbox.emit('sulu.app.content.dimensions-change', {
+                        width: widths.content,
+                        left: constants.maxMainContentMarginLeft,
+                        paddingLeft: constants.maxMainContentPaddingLeft});
+//                }
             },
 
             /**
@@ -483,6 +490,7 @@ define([], function() {
                 this.sandbox.dom.width(this.$wrapper, widths.preview);
                 this.sandbox.dom.width(this.$iframe, widths.preview);
                 this.sandbox.dom.width(this.$toolbar, widths.preview+constants.marginPreviewCollapsedLeft);
+                this.sandbox.dom.width(this.$mainContent, widths.content);
             },
 
             /**
@@ -507,11 +515,12 @@ define([], function() {
 
                     if(tmpWidth > constants.mainContentMaxWidthIncMarginLeft) {
                         widths.content = constants.mainContentMaxWidthIncMarginLeft;
+                        widths.preview = viewportWidth - widths.content - constants.marginPreviewCollapsedLeft;
                     } else {
                         widths.content = tmpWidth;
+                        widths.preview = constants.previewMinWidth;
                     }
 
-                    widths.preview = viewportWidth - widths.content - constants.marginPreviewCollapsedLeft;
                 }
 
                 return widths;
