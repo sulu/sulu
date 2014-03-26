@@ -137,7 +137,7 @@ define([], function() {
                 this.render();
                 this.bindDomEvents();
                 this.bindCustomEvents();
-                this.dimensionsChanged();
+                this.adjustDisplayedComponents();
 
                 this.sandbox.emit(INITIALIZED);
             },
@@ -327,7 +327,7 @@ define([], function() {
                 }.bind(this));
 
                 // make preview responsive
-                this.sandbox.on('sulu.app.viewport.dimensions-changed', this.dimensionsChanged.bind(this));
+                this.sandbox.on('sulu.app.viewport.dimensions-changed', this.adjustDisplayedComponents.bind(this));
 
             },
 
@@ -465,13 +465,13 @@ define([], function() {
             /**
              * Called when the sulu.app.viewport.dimensions-changed is emitted
              */
-            dimensionsChanged:function(){
+            adjustDisplayedComponents:function(){
 
                 var widths = this.calculateCurrentWidths(this.isExpanded, true), url;
 
                 if(!this.isExpanded){
 
-                    // hide preview except for open in new window
+                    // hide preview except for open in new window button
                     if(widths.content <= (constants.breakPointSmall + constants.previewMinWidth)) {
 
                         // remove iframe - disables unnecessary communication
@@ -493,6 +493,7 @@ define([], function() {
 
                         widths.content = '';
 
+                        // hide resolutions div in toolbar
                     } else if(widths.preview < constants.minWidthForToolbarCollapsed) {
 
                         if(!this.iframeExists) {
@@ -505,8 +506,7 @@ define([], function() {
                         this.sandbox.dom.show(this.$toolbarLeft);
                         this.sandbox.dom.show(this.$wrapper);
 
-                        this.sandbox.dom.hide(this.$toolbarRight);
-                        this.sandbox.dom.hide(this.$toolbarRight);
+                        this.sandbox.dom.hide(this.$toolbarResolutions);
 
                     } else {
 
@@ -528,14 +528,8 @@ define([], function() {
 
                 // TODO beim laden richtige toolbar felder einblenden
                 // TODO wenn dropdown ausgeblendet dann neues-fenster-button nach links
-
-                // TODO iframe hinzufuegen/entfernen fuer start/stop
-
-                // TODO dimension changed - width attribut wird gesetzt --> in css setzen
                 // TODO reset of navigation when navigate back to list only if viewport big enough....
-
                 // TODO content minwidth 460px --> expand 460 + Abstand
-                // TODO ab 640px nur mehr new windown button --> iframe stopp?
 
                 this.sandbox.dom.width(this.$wrapper, widths.preview);
                 this.sandbox.dom.width(this.$iframe, widths.preview);
