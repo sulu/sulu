@@ -178,23 +178,6 @@ class Preview implements PreviewInterface
     }
 
     /**
-     * Sets the given data in the given content (including webspace and language)
-     * @param StructureInterface $content
-     * @param string $property
-     * @param mixed $data
-     * @param string $webspaceKey
-     * @param string $languageCode
-     */
-    private function setValue(StructureInterface $content, $property, $data, $webspaceKey, $languageCode)
-    {
-        $propertyInstance = $content->getProperty($property);
-        $contentType = $this->getContentType($propertyInstance->getContentTypeName());
-        $contentType->readForPreview($data, $propertyInstance, $webspaceKey, $languageCode, null);
-
-        $content->getProperty($property)->setValue($propertyInstance->getValue());
-    }
-
-    /**
      * returns pending changes for given user and content
      * @param $userId
      * @param $contentUuid
@@ -238,7 +221,36 @@ class Preview implements PreviewInterface
                 // extract special property
                 $crawler = new Crawler();
                 $crawler->addHtmlContent($result, 'UTF-8');
-                $nodes = $crawler->filter('*[property="' . $property . '"]');
+                $nodes = $crawler;
+                if (false !== ($sequence = $this->getSequence($content, $property))) {
+                    foreach ($sequence['sequence'] as $item) {
+                        // is not integer
+                        if (!ctype_digit(strval($item))) {
+                            $nodes = $nodes->filter('*[property="' . $item . '"]');
+                        } else {
+                            $nodes = $nodes->eq($item);
+                        }
+                    }
+                } else {
+                    // FIXME it is a bit complex but there is no :not operator in crawler
+                    // should be *[property="block"]:not(*[property] *)
+                    $nodes = $nodes->filter('*[property="' . $property . '"]')->reduce(
+                        function (Crawler $node) {
+                            // get parents
+                            $parents = $node->parents();
+                            $count = 0;
+                            // check if one parent is property exvlude it
+                            $parents->each(
+                                function ($node) use (&$count) {
+                                    if ($node->attr('property')) {
+                                        $count++;
+                                    }
+                                }
+                            );
+                            return ($count === 0);
+                        }
+                    );
+                }
 
                 // if rdfa property not found return false
                 if ($nodes->count() > 0) {
@@ -257,6 +269,75 @@ class Preview implements PreviewInterface
         } else {
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
+    }
+
+    /**
+     * Sets the given data in the given content (including webspace and language)
+     * @param StructureInterface $content
+     * @param string $property
+     * @param mixed $data
+     * @param string $webspaceKey
+     * @param string $languageCode
+     */
+    private function setValue(StructureInterface $content, $property, $data, $webspaceKey, $languageCode)
+    {
+        if (false !== ($sequence = $this->getSequence($content, $property))) {
+            $tmp = $data;
+            $data = $sequence['property']->getValue();;
+            $value = & $data;
+            $len = sizeof($sequence['index']);
+            for ($i = 0; $i < $len; $i++) {
+                $value = & $value[$sequence['index'][$i]];
+            }
+            $value = $tmp;
+            $instance = $sequence['property'];
+        } else {
+            $instance = $content->getProperty($property);
+        }
+        $contentType = $this->getContentType($instance->getContentTypeName());
+        $contentType->readForPreview($data, $instance, $webspaceKey, $languageCode, null);
+    }
+
+    /**
+     * extracts sequence information from property name
+     * implemented with memoize to avoid memory leaks
+     * @param StructureInterface $content
+     * @param string $property
+     * @return false|array with sequence, propertypath, property instance, index sequence
+     */
+    private function getSequence(StructureInterface $content, $property)
+    {
+        // memoize start
+        static $cache;
+        if (!is_null($cache) && array_key_exists($property, $cache)) {
+            return $cache[$property];
+        }
+        // memoize end
+
+        if (false !== strpos($property, ',')) {
+            $sequence = explode(',', $property);
+            $propertyPath = array();
+            $indexSequence = array();
+            $propertyInstance = $content->getProperty($sequence[0]);
+            for ($i = 1; $i < sizeof($sequence); $i++) {
+                // is not integer
+                if (!ctype_digit(strval($sequence[$i]))) {
+                    $propertyPath[] = $sequence[$i];
+                    $propertyInstance = $propertyInstance->getChild($sequence[$i]);
+                } else {
+                    $indexSequence[] = intval($sequence[$i]);
+                }
+            }
+            $cache[$property] = array(
+                'sequence' => $sequence,
+                'propertyPath' => $propertyPath,
+                'property' => $propertyInstance,
+                'index' => $indexSequence
+            );
+        } else {
+            $cache[$property] = false;
+        }
+        return $cache[$property];
     }
 
     /**

@@ -14,6 +14,7 @@ use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -104,7 +105,7 @@ class PreviewController extends Controller
             }
         }
 
-        return new Response();
+        return new JsonResponse();
     }
 
     /**
@@ -117,7 +118,7 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $changes = $this->getPreview()->getChanges($uid, $contentUuid);
 
-        return new Response(json_encode($changes));
+        return new JsonResponse(json_encode($changes));
     }
 
     /**
