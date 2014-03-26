@@ -2,7 +2,7 @@
     <% if(!!data.id) { %>
     <input id="id" type="hidden" value="<%= data.id %>"/>
     <% } %>
-    <div class="grid-row">
+    <div class="grid-row small">
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="name" class="required"><%= translate('security.roles.name') %></label>
@@ -32,8 +32,10 @@
     <div class="form-group grid-row">
         <span></span>
         <div>
-            <input class="form-element custom-checkbox" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
-            <span class="custom-checkbox-icon"></span>
+            <div class="custom-checkbox">
+                <input class="form-element" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
+                <span class="icon"></span>
+            </div>
             <label for="god" class="inline clickable"><%= translate('security.roles.godMode') %></label>
         </div>
     </div>
