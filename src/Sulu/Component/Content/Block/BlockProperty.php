@@ -76,24 +76,26 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function setValue($value)
     {
-        $data = array();
-        // check value for associativeness
-        if (!(array_keys($value) !== range(0, count($value) - 1))) {
-            foreach ($value as $item) {
-                foreach ($item as $key => $itemValue) {
-                    if (!isset($data[$key])) {
-                        $data[$key] = array();
+        if ($value != null) {
+            $data = array();
+            // check value for associativeness
+            if (!(array_keys($value) !== range(0, count($value) - 1))) {
+                foreach ($value as $item) {
+                    foreach ($item as $key => $itemValue) {
+                        if (!isset($data[$key])) {
+                            $data[$key] = array();
+                        }
+                        $data[$key][] = $itemValue;
                     }
-                    $data[$key][] = $itemValue;
                 }
+            } else {
+                $data = $value;
             }
-        } else {
-            $data = $value;
-        }
-        /** @var PropertyInterface $subProperty */
-        foreach ($this->childProperties as $subProperty) {
-            if (isset($data[$subProperty->getName()])) {
-                $subProperty->setValue($data[$subProperty->getName()]);
+            /** @var PropertyInterface $subProperty */
+            foreach ($this->childProperties as $subProperty) {
+                if (isset($data[$subProperty->getName()])) {
+                    $subProperty->setValue($data[$subProperty->getName()]);
+                }
             }
         }
     }
