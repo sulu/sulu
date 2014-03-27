@@ -333,6 +333,7 @@ class ContentMapper implements ContentMapperInterface
             } catch (\Exception $ex) {
                 // TODO Introduce a PostSaveException, so that we don't have to catch everything
                 // FIXME message for user or log entry
+                throw $ex;
             }
         }
 
@@ -612,12 +613,13 @@ class ContentMapper implements ContentMapperInterface
      * @param string $resourceLocator Resource locator
      * @param string $webspaceKey Key of webspace
      * @param string $languageCode
+     * @param string $segmentKey
      * @return StructureInterface
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $session = $this->getSession();
-        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator, $webspaceKey);
+        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator, $webspaceKey, $languageCode, $segmentKey);
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode, $webspaceKey);

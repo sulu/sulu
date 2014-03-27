@@ -65,19 +65,19 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerate()
     {
-        $result = $this->strategy->generate('machines', '/products', 'default');
+        $result = $this->strategy->generate('machines', '/products', 'default', 'de');
         $this->assertEquals('/products/machines-1', $result);
 
-        $result = $this->strategy->generate('drill', '/products/machines', 'default');
+        $result = $this->strategy->generate('drill', '/products/machines', 'default', 'de');
         $this->assertEquals('/products/machines/drill-1', $result);
 
-        $result = $this->strategy->generate('mä   chines', '/products', 'default');
+        $result = $this->strategy->generate('mä   chines', '/products', 'default', 'de');
         $this->assertEquals('/products/mae-chines', $result);
 
-        $result = $this->strategy->generate('mächines', '/products', 'default');
+        $result = $this->strategy->generate('mächines', '/products', 'default', 'de');
         $this->assertEquals('/products/maechines', $result);
 
-        $result = $this->strategy->generate('asdf', null, 'default');
+        $result = $this->strategy->generate('asdf', null, 'default', 'de');
         $this->assertEquals('/asdf', $result);
     }
 

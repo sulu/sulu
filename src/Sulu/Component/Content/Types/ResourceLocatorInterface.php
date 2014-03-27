@@ -21,9 +21,11 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * returns the node uuid of referenced content node
      * @param string $resourceLocator
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    public function loadContentNodeUuid($resourceLocator, $webspaceKey);
+    public function loadContentNodeUuid($resourceLocator, $webspaceKey, $languageCode, $segmentKey);
 
     /**
      * reads the value for given property out of the database + sets the value of the property
@@ -36,9 +38,11 @@ interface ResourceLocatorInterface extends ContentTypeInterface
 
     /**
      * reads the value for given property out of the database + sets the value of the property
-     * @param \PHPCR\NodeInterface $node
+     * @param NodeInterface $node
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    public function getResourceLocator(NodeInterface $node, $webspaceKey);
+    public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey);
 }

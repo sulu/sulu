@@ -153,38 +153,38 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     public function testIsValid()
     {
         // false from mapper (is not unique)
-        $result = $this->strategy->isValid('/products/machines', 'default');
+        $result = $this->strategy->isValid('/products/machines', 'default', 'de');
         $this->assertFalse($result);
 
         // true from mapper (is unique)
-        $result = $this->strategy->isValid('/products/machines-1', 'default');
+        $result = $this->strategy->isValid('/products/machines-1', 'default', 'de');
         $this->assertTrue($result);
 
         // false from strategy incorrect signs
-        $result = $this->strategy->isValid('/products/mä  chines', 'default');
+        $result = $this->strategy->isValid('/products/mä  chines', 'default', 'de');
         $this->assertFalse($result);
     }
 
     public function testGenerate()
     {
         // /products/machines => not unique add -1
-        $result = $this->strategy->generate('machines', '/products', 'default');
+        $result = $this->strategy->generate('machines', '/products', 'default', 'de');
         $this->assertEquals('/products/machines-1', $result);
 
         // /products/machines/drill => not unique add -1
-        $result = $this->strategy->generate('drill', '/products/machines', 'default');
+        $result = $this->strategy->generate('drill', '/products/machines', 'default', 'de');
         $this->assertEquals('/products/machines/drill-1', $result);
 
         // /products/mä   chines => after cleanup => /products/mae-chines
-        $result = $this->strategy->generate('mä   chines', '/products', 'default');
+        $result = $this->strategy->generate('mä   chines', '/products', 'default', 'de');
         $this->assertEquals('/products/mae-chines', $result);
 
         // /products/mächines => after cleanup => /products/maechines
-        $result = $this->strategy->generate('mächines', '/products', 'default');
+        $result = $this->strategy->generate('mächines', '/products', 'default', 'de');
         $this->assertEquals('/products/maechines', $result);
 
         // /products/Äpfel => after cleanup => /products/aepfel
-        $result = $this->strategy->generate('Äpfel', '/products', 'default');
+        $result = $this->strategy->generate('Äpfel', '/products', 'default', 'de');
         $this->assertEquals('/products/aepfel', $result);
     }
 
@@ -200,7 +200,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->isSaved = false;
         // its a delegate
-        $this->strategy->save($this->getNodeMock(), '/test/test-1', 'default');
+        $this->strategy->save($this->getNodeMock(), '/test/test-1', 'default', 'de');
 
         $this->assertTrue($this->isSaved);
     }
@@ -208,16 +208,16 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     public function testRead()
     {
         // its a delegate
-        $result = $this->mapper->loadByContent($this->getNodeMock(), 'default');
+        $result = $this->mapper->loadByContent($this->getNodeMock(), 'default', 'de');
         $this->assertEquals('/test', $result);
-        $result = $this->mapper->loadByContentUuid('123-123-123', 'default');
+        $result = $this->mapper->loadByContentUuid('123-123-123', 'default', 'de');
         $this->assertEquals('/test', $result);
     }
 
     public function testLoad()
     {
         //its a delegate
-        $result = $this->mapper->loadByResourceLocator('/test', 'default');
+        $result = $this->mapper->loadByResourceLocator('/test', 'default', 'de');
         $this->assertEquals('this-is-a-uuid', $result);
     }
 
@@ -225,7 +225,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->isMoved = false;
         // its a delegate
-        $this->strategy->move('/test/test', '/test/test-1', 'default');
+        $this->strategy->move('/test/test', '/test/test-1', 'default', 'de');
 
         $this->assertTrue($this->isMoved);
     }

@@ -27,67 +27,70 @@ interface RLPStrategyInterface {
      * returns whole path for given ContentNode
      * @param string $title title of new node
      * @param string $parentPath parent path of new contentNode
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string whole path
      */
-    public function generate($title, $parentPath, $portalKey);
+    public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      */
-    public function save(NodeInterface $contentNode, $path, $portalKey);
+    public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * creates a new resourcelocator and creates the correct history
      * @param string $src old resource locator
      * @param string $dest new resource locator
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      */
-    public function move($src, $dest, $portalKey);
+    public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
-     *
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string path
      */
-    public function loadByContent(NodeInterface $contentNode, $portalKey);
+    public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns path for given contentNode
      * @param string $uuid uuid of contentNode
-     * @param string $portalKey key of portal
-     *
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string path
      */
-    public function loadByContentUuid($uuid, $portalKey);
+    public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
-     *
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string uuid of content node
      */
-    public function loadByResourceLocator($resourceLocator, $portalKey);
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * checks if path is valid
      * @param string $path path of route
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return bool
      */
-    public function isValid($path, $portalKey);
+    public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null);
 }
