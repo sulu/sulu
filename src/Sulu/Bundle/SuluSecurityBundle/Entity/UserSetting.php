@@ -28,7 +28,7 @@ class UserSetting
     private $key;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $user;
 
@@ -81,10 +81,10 @@ class UserSetting
     /**
      * Set user
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $user
+     * @param \Sulu\Component\Security\UserInterface $user
      * @return UserSetting
      */
-    public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user)
+    public function setUser(\Sulu\Component\Security\UserInterface $user)
     {
         $this->user = $user;
 
@@ -94,7 +94,7 @@ class UserSetting
     /**
      * Get user
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getUser()
     {

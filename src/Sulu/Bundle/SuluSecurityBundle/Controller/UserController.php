@@ -20,6 +20,8 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * Makes the users accessible through a rest api
@@ -175,6 +177,76 @@ class UserController extends RestController implements ClassResourceInterface
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Takes a key, value pair and stores it as settings for the user
+     * @param Number $userId the id of the user
+     * @param String $key the settings key
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putSettingsAction($id, $key)
+    {
+        $value = $this->getRequest()->get('value');
+
+        try {
+            if ($key === null || $value === null) {
+                throw new InvalidArgumentException($this->entityName, 'key and value');
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->getUser();
+
+            if ($user->getId() != $id) {
+                throw new InvalidArgumentException($this->entityName, 'id');
+            }
+
+            // encode before persist
+            $data = json_encode($value);
+
+            // get setting
+            /** @var UserSetting $setting */
+            $setting = $this->getDoctrine()
+                ->getRepository('SuluSecurityBundle:UserSetting')
+                ->findOneBy(array('user' => $user, 'key' => $key));
+
+            // or create new one
+            if (!$setting) {
+                $setting = new UserSetting();
+                $setting->setKey($key);
+                $setting->setUser($user);
+                $em->persist($setting);
+            }
+            // persist setting
+            $setting->setValue($data);
+            $em->flush($setting);
+
+            //create view
+            $view = $this->view($setting, 200);
+        } catch (InvalidArgumentException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Returns the settings for a key for the current user
+     * @param String $key The settings key
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Get("users/settings/{key}")
+     */
+    public function getSettingsAction($key)
+    {
+        $user = $this->getUser();
+
+        $setting = $this->getDoctrine()
+            ->getRepository('SuluSecurityBundle:UserSetting')
+            ->findOneBy(array('user' => $user, 'key' => $key));
+
+        $view = $this->view($setting, 200);
 
         return $this->handleView($view);
     }
