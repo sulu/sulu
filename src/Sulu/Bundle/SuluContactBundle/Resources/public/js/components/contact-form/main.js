@@ -12,8 +12,23 @@ define([], function() {
     'use strict';
 
     var defaults = {
-            fieldTypes: ['address', 'email', 'fax', 'phone', 'website'],
+            fields: ['address', 'email', 'fax', 'phone', 'url'],
+            fieldTypes: [],
             trigger: '.contact-options-toggle'
+        },
+
+        constants = {
+            fieldId : 'field-select',
+            fieldTypeId : 'field-type-select'
+        },
+
+        templates = {
+            add : [
+                '<div class="grid-row">',
+                '   <div id="'+constants.fieldId+'" class="grid-col-6"></div>',
+                '   <div id="'+constants.fieldTypeId+'" class="grid-col-6"></div>',
+                '</div>'
+            ].join('')
         },
 
         bindCustomEvents = function() {
@@ -74,7 +89,7 @@ define([], function() {
             }
         },
 
-        isInitialized = function(callback){
+        isInitialized = function(callback) {
             if (!this.initialized) {
                 this.sandbox.on('sulu.contact-form.initialized', function() {
                     callback.call(this);
@@ -84,21 +99,38 @@ define([], function() {
             }
         },
 
+        addOkClicked = function() {
+            var field = this.sandbox.dom.children('#'+constants.fieldId)[0],
+                fieldType = this.sandbox.dom.children('#'+constants.fieldTypeId)[0],
+                fieldData = this.sandbox.dom.data(field, 'selection'),
+                fieldTypeData = this.sandbox.dom.data(fieldType, 'selection');
+//            alert(this.sandbox.dom.data();
+        },
+
 
         createAddOverlay = function() {
-            var tmpl = [
-                    '<div class="grid-row">',
-                    '   <div id="field-select" class="grid-col-6"></div>',
-                    '   <div id="field-type-select" class="grid-col-6"></div>',
-                    '</div>'
-                ],
+            var data,
+                $newTemplate = this.sandbox.dom.createElement(templates.add),
+                dropdownData = {},
+                dropdownArray = [];
 
-                newTemplate = this.sandbox.dom.createElement(tmpl.join('')),
-                dropdownData = [];
+            // create object
+            this.sandbox.util.foreach(this.options.fields, function(type, index) {
+                if (!!this.options.fieldTypes && this.options.fieldTypes[type]) {
+                    // TODO: USE ARRAY INSTEAD OF OBJECT WHEN DATA HAS NOT TO BE MANIPULATED ANYMORE
+                    data = {id: index, name: type, items: this.options.fieldTypes[type]}
+                    dropdownData[type] = (data);
+                } else {
+                    throw 'contact-form@sulu: fieldTypes not defined for type ' + type;
+                }
+            }.bind(this));
 
-            this.sandbox.util.foreach(this.options.fieldTypes, function(type, index) {
-                dropdownData.push({id: index, name: type});
-            });
+            // TODO:  REMOVE AFTER ADDRESSES CAN BE ADDED
+            // change data
+            dropdownData.address.disabled = true;
+
+            // convert object to array
+            dropdownArray = Object.keys(dropdownData).map(function (key) { return dropdownData[key]; });
 
             this.sandbox.start([
                 {
@@ -106,42 +138,22 @@ define([], function() {
                     options: {
                         title: this.sandbox.translate('public.add-fields'),
                         openOnStart: true,
-                        removeOnClose: true,
-                        data: newTemplate
+//                        removeOnClose: true,
+                        data: $newTemplate,
+                        okCallback: addOkClicked.bind(this)
                     }
                 },
                 {
-                    name: 'dropdown-multiple-select@husky',
+                    name: 'dependent-select@husky',
                     options: {
-                        el: '#field-select',
-                        instanceName: 'i1',
+                        el: $newTemplate,
                         singleSelect: true,
-                        data: dropdownData
+                        data: dropdownArray,
+                        container: ['#'+constants.fieldId, '#'+constants.fieldTypeId],
+//                        selectOptions: [null,{preSelectedElements:[]}]
                     }
                 }
-                // TODO: initialize second dropdown as well on beginning
             ]);
-
-            this.sandbox.on('husky.dropdown.multiple.select.i1.selected.item', function(id) {
-                // TODO: now update second dropdown with correct values
-
-                this.sandbox.stop('#field-type-select');
-
-                this.sandbox.start([
-                    {
-                        name: 'dropdown-multiple-select@husky',
-                        options: {
-                            el: '#field-type-select',
-                            singleSelect: true,
-                            instanceName: 'i2',
-                            data: [
-                                {id: 0, name: 'office'},
-                                {id: 1, name: 'private'}
-                            ]
-                        }
-                    }
-                ]);
-            });
         };
 
     return {
@@ -151,7 +163,6 @@ define([], function() {
             this.initialized = false;
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
 
             this.render();
 
@@ -164,7 +175,6 @@ define([], function() {
         render: function() {
 
             var $container = this.sandbox.dom.createElement('<div id="contact-form-options-container" />');
-            ;
 
             // add new container
             this.sandbox.dom.append(this.$el, $container);
@@ -177,6 +187,7 @@ define([], function() {
                     name: 'dropdown@husky',
                     options: {
                         trigger: this.$el,
+                        triggerOutside: true,
                         el: $container,
                         alignment: 'right',
                         shadow: true,
