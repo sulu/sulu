@@ -10,11 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Preview;
 
-
 use Doctrine\Common\Cache\ArrayCache;
-use Ratchet\Http\HttpServer;
-use Ratchet\Server\IoServer;
-use Ratchet\WebSocket\WsServer;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent;
@@ -23,7 +19,6 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
-use Sulu\Component\Testing\WebsocketClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
