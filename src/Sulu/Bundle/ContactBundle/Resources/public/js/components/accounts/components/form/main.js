@@ -41,6 +41,7 @@ define(['app-config'], function(AppConfig) {
             var data, excludeItem;
 
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
+            this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
             this.html(this.renderTemplate('/admin/contact/template/account/form'));
 
@@ -78,13 +79,20 @@ define(['app-config'], function(AppConfig) {
             this.bindCustomEvents();
         },
 
-
         /**
          * is getting called when template is initialized
          * @param defaultTypes
          */
         setDefaults: function(defaultTypes) {
             this.defaultTypes = defaultTypes;
+        },
+
+        /**
+         * is getting called when template is initialized
+         * @param types
+         */
+        setTypes: function(types) {
+            this.fieldTypes = types;
         },
 
         /**
@@ -203,7 +211,7 @@ define(['app-config'], function(AppConfig) {
                 name: 'contact-form@sulucontact',
                 options: {
                     el:'#contact-options-dropdown',
-                    trigger: '.contact-options-toggle'
+                    fieldTypes: this.fieldTypes
                 }
             }]);
         },
