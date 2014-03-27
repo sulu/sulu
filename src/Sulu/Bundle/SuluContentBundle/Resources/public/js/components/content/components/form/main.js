@@ -132,7 +132,9 @@ define(['app-config'], function(AppConfig) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
                 this.setFormData(data).then(function() {
+
                     this.sandbox.start(this.$el, {reset: true});
+                    this.initSortableBlock();
 
                     if (!!this.options.preview) {
                         this.initPreview();
@@ -140,6 +142,19 @@ define(['app-config'], function(AppConfig) {
                     }
                 }.bind(this));
             }.bind(this));
+        },
+
+        initSortableBlock: function(){
+            var $sortable = this.sandbox.dom.find('.sortable', this.$el);
+            if(!!$sortable){
+                this.sandbox.dom.sortable($sortable,{
+                    handle: '.move',
+                    forcePlaceholderSize: true
+                });
+            }
+
+            // TODO event listener
+
         },
 
         setFormData: function(data) {
