@@ -111,7 +111,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @param $parentPath
      * @return string
      */
-    protected abstract function generatePath($title, $parentPath);
+    protected abstract function generatePath($title, $parentPath = null);
 
     /**
      * returns a clean string
