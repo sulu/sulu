@@ -160,13 +160,15 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.unbind(sortable, 'sortupdate');
 
                 sortable.bind('sortupdate', function(event, ui) {
-                    this.sandbox.emit('sulu.content.contents.update', event, ui);
+                    var changes = this.sandbox.form.getData(this.formId),
+                        propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
+
+                    this.updatePreview(propertyName, changes[propertyName]);
                 }.bind(this));
             }
         },
 
         bindFormEvents: function() {
-
             this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
