@@ -161,15 +161,15 @@
                         filter = '',
                         elements,
                         nodeArray,
-                        i,
-                        item;
+                        i, item, before;
 
                 for (item in sequence) {
                     // check of integer
                     if (!/^\+?(0|[1-9]\d*)$/.test(sequence[item])) {
+                        before = sequence[item];
                         filter += ' *[property="' + sequence[item] + '"]';
                     } else {
-                        filter += ':nth-child(' + (parseInt(sequence[item]) + 1) + ')';
+                        filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
                     }
                 }
 
@@ -180,7 +180,11 @@
                 nodeArray = [].slice.call(elements);
                 nodeArray.forEach(function(element) {
                     // set content and highlight class
-                    element.innerHTML = content[i];
+                    if (typeof content[i] !== 'undefined') {
+                        element.innerHTML = content[i];
+                    } else {
+                        element.innerHTML = '';
+                    }
                     // FIXME jump to element jump in from to: element.scrollIntoView();
                     i++;
                 });
@@ -206,7 +210,11 @@
                         cur = cur.parentNode;
                     }
                     // set content and highlight class
-                    element.innerHTML = content[i];
+                    if (typeof content[i] !== 'undefined') {
+                        element.innerHTML = content[i];
+                    } else {
+                        element.innerHTML = '';
+                    }
                     // FIXME jump to element jump in from to: element.scrollIntoView();
                     i++;
                 });

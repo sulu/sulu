@@ -133,12 +133,26 @@ define(['app-config'], function(AppConfig) {
             formObject.initialized.then(function() {
                 this.setFormData(data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
-
+                    this.bindFormEvents();
                     if (!!this.options.preview) {
                         this.initPreview();
                         this.options.preview = false;
                     }
                 }.bind(this));
+            }.bind(this));
+        },
+
+        bindFormEvents: function() {
+            this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
+                var changes = this.sandbox.form.getData(this.formId);
+
+                this.updatePreview(propertyName, changes[propertyName]);
+            }.bind(this));
+
+            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+                var changes = this.sandbox.form.getData(this.formId);
+
+                this.updatePreview(propertyName, changes[propertyName]);
             }.bind(this));
         },
 

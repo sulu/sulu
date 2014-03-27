@@ -229,9 +229,10 @@ class Preview implements PreviewInterface
                     foreach ($sequence['sequence'] as $item) {
                         // is not integer
                         if (!ctype_digit(strval($item))) {
+                            $before = $item;
                             $nodes = $nodes->filter('*[property="' . $item . '"]');
                         } else {
-                            $nodes = $nodes->eq($item);
+                            $nodes = $nodes->filter('*[rel="' . $before . '"]')->eq($item);
                         }
                     }
                 } else {
