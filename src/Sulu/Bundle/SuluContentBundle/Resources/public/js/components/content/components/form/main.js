@@ -106,7 +106,7 @@ define(['app-config'], function(AppConfig) {
          * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
          */
         setTitle: function() {
-            if (!!this.options.id && !! this.options.data.title) {
+            if (!!this.options.id && !!this.options.data.title) {
                 this.sandbox.emit('sulu.content.set-title', this.options.data.title);
                 this.setBreadcrumb();
             } else {
@@ -145,33 +145,38 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
         },
 
-        initSortableBlock: function(){
-            var $sortable = this.sandbox.dom.find('.sortable', this.$el);
-            if(!!$sortable){
-                this.sandbox.dom.sortable($sortable,{
+        initSortableBlock: function() {
+            var $sortable = this.sandbox.dom.find('.sortable', this.$el),
+                sortable;
+
+            if (!!$sortable && $sortable.length > 0) {
+                this.sandbox.dom.sortable($sortable, 'destroy');
+                sortable = this.sandbox.dom.sortable($sortable, {
                     handle: '.move',
                     forcePlaceholderSize: true
                 });
-            }
 
-            // TODO event listener
+                // (un)bind event listener
+                this.sandbox.dom.unbind(sortable, 'sortupdate');
+
+                sortable.bind('sortupdate', function(event, ui) {
+                    this.sandbox.emit('sulu.content.contents.update', event, ui);
+                }.bind(this));
+            }
         },
 
         bindFormEvents: function() {
+
             this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
                 var changes = this.sandbox.form.getData(this.formId);
-
+                this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
                 var changes = this.sandbox.form.getData(this.formId);
-
+                this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
-            }.bind(this));
-
-            this.sandbox.on('sortupdate', function(){
-               this.sandbox.logger.warn("sort updated!");
             }.bind(this));
         },
 
@@ -269,7 +274,7 @@ define(['app-config'], function(AppConfig) {
 
             // change template
             this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading','template');
+                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'template');
                 this.templateChanged = true;
                 this.changeTemplate(item);
             }, this);
@@ -312,13 +317,13 @@ define(['app-config'], function(AppConfig) {
             // expand navigation if navigation item is clicked
             this.sandbox.on('husky.navigation.item.select', function() {
                 this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse',false);
+                this.sandbox.emit('husky.navigation.uncollapse', false);
             }.bind(this));
 
             // expand navigation if back gets clicked
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse',false);
+                this.sandbox.emit('husky.navigation.uncollapse', false);
             }.bind(this));
         },
 
@@ -350,7 +355,7 @@ define(['app-config'], function(AppConfig) {
 
         changeTemplateDropdownHandler: function() {
             this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
-            this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template', this.templateChanged);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', this.templateChanged);
             if (this.hiddenTemplate) {
                 this.hiddenTemplate = false;
                 this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
