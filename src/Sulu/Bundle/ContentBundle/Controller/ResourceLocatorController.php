@@ -14,6 +14,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContactBundle\Controller\ContactsController;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
@@ -58,7 +59,12 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
     {
         $strategy = $this->getStrategy($portal);
         if ($parentUuid !== null) {
-            $parentPath = $strategy->loadByContentUuid($parentUuid, $portal);
+            try {
+                $parentPath = $strategy->loadByContentUuid($parentUuid, $portal);
+            } catch (ResourceLocatorNotFoundException $ex) {
+                // parent has no rl
+                $parentPath = null;
+            }
         } else {
             $parentPath = '/';
         }
