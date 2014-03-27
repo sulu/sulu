@@ -135,6 +135,7 @@ define(['app-config'], function(AppConfig) {
 
                     this.sandbox.start(this.$el, {reset: true});
                     this.initSortableBlock();
+                    this.bindFormEvents();
 
                     if (!!this.options.preview) {
                         this.initPreview();
@@ -154,7 +155,24 @@ define(['app-config'], function(AppConfig) {
             }
 
             // TODO event listener
+        },
 
+        bindFormEvents: function() {
+            this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
+                var changes = this.sandbox.form.getData(this.formId);
+
+                this.updatePreview(propertyName, changes[propertyName]);
+            }.bind(this));
+
+            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+                var changes = this.sandbox.form.getData(this.formId);
+
+                this.updatePreview(propertyName, changes[propertyName]);
+            }.bind(this));
+
+            this.sandbox.on('sortupdate', function(){
+               this.sandbox.logger.warn("sort updated!");
+            }.bind(this));
         },
 
         setFormData: function(data) {

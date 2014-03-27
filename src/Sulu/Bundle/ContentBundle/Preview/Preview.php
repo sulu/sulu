@@ -137,6 +137,9 @@ class Preview implements PreviewInterface
             $this->setValue($content, $property, $data, $webspaceKey, $languageCode);
             $this->addStructure($userId, $contentUuid, $content);
 
+            if (false !== ($sequence = $this->getSequence($content, $property))) {
+                $property = implode(',', array_slice($sequence['sequence'], 0, -1));
+            }
             $changes = $this->render($userId, $contentUuid, true, $property);
             if ($changes !== false) {
                 $this->addChanges($userId, $contentUuid, $property, $changes);
@@ -226,9 +229,10 @@ class Preview implements PreviewInterface
                     foreach ($sequence['sequence'] as $item) {
                         // is not integer
                         if (!ctype_digit(strval($item))) {
+                            $before = $item;
                             $nodes = $nodes->filter('*[property="' . $item . '"]');
                         } else {
-                            $nodes = $nodes->eq($item);
+                            $nodes = $nodes->filter('*[rel="' . $before . '"]')->eq($item);
                         }
                     }
                 } else {

@@ -78,3 +78,8 @@
   text-align: center;
   padding-top: 5px;
 }
+
+/* line 2, ../scss/modules/general.scss */
+.sortable-placeholder {
+  margin-bottom: 20px;
+}
