@@ -312,12 +312,14 @@ class Preview implements PreviewInterface
     private function getSequence(StructureInterface $content, $property)
     {
         // memoize start
-        static $cache;
-        if (!is_null($cache) && array_key_exists($property, $cache)) {
-            return $cache[$property];
-        }
+        // FIXME websocket loses couple between structure and instance
+//        static $cache;
+//        if (!is_null($cache) && array_key_exists($property, $cache)) {
+//            return $cache[$property];
+//        }
         // memoize end
 
+        $cache = array();
         if (false !== strpos($property, ',')) {
             $sequence = explode(',', $property);
             $propertyPath = array();
