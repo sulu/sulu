@@ -295,11 +295,12 @@ define(['app-config'], function(AppConfig) {
 
         submit: function() {
             this.sandbox.logger.log('save Model');
-            var template = (this.template !== '') ? this.template: this.options.data.template;
+            var data,
+                navigation,
+                template = (this.template !== '') ? this.template : this.options.data.template;
 
             if (this.sandbox.form.validate(this.formId)) {
-                var data = this.sandbox.form.getData(this.formId),
-                    navigation;
+                data = this.sandbox.form.getData(this.formId);
 
                 if (this.options.id === 'index') {
                     navigation = true;
