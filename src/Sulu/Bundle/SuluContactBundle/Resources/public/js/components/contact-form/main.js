@@ -18,16 +18,17 @@ define([], function() {
         },
 
         constants = {
-            fieldId : 'field-select',
-            fieldTypeId : 'field-type-select'
+            fieldId: 'field-select',
+            fieldTypeId: 'field-type-select'
         },
 
         templates = {
-            add : [
+            add: [
                 '<div class="grid-row">',
-                '   <div id="'+constants.fieldId+'" class="grid-col-6"></div>',
-                '   <div id="'+constants.fieldTypeId+'" class="grid-col-6"></div>',
-                '</div>'
+                '   <div id="' + constants.fieldId + '" class="grid-col-6"></div>',
+                '   <div id="' + constants.fieldTypeId + '" class="grid-col-6"></div>',
+                '</div>',
+                '<div class="grid-row m-bottom-0"></div>'
             ].join('')
         },
 
@@ -89,6 +90,14 @@ define([], function() {
             }
         },
 
+        getDataById = function(array, id) {
+            for (var i = -1, len = array.length; ++i < len;) {
+                if (array[i].id === id) {
+                    return array[i];
+                }
+            }
+        },
+
         isInitialized = function(callback) {
             if (!this.initialized) {
                 this.sandbox.on('sulu.contact-form.initialized', function() {
@@ -100,37 +109,81 @@ define([], function() {
         },
 
         addOkClicked = function() {
-            var field = this.sandbox.dom.children('#'+constants.fieldId)[0],
-                fieldType = this.sandbox.dom.children('#'+constants.fieldTypeId)[0],
-                fieldData = this.sandbox.dom.data(field, 'selection'),
-                fieldTypeData = this.sandbox.dom.data(fieldType, 'selection');
-//            alert(this.sandbox.dom.data();
+            var field = this.sandbox.dom.children('#' + constants.fieldId)[0],
+                fieldType = this.sandbox.dom.children('#' + constants.fieldTypeId)[0],
+                fieldId = this.sandbox.dom.data(field, 'selection'),
+                fieldTypeId = this.sandbox.dom.data(fieldType, 'selection'),
+                data, dataType, dataObject;
+
+            if (!fieldId || !fieldTypeId) {
+            }
+
+            data = this.dropdownDataArray[fieldId];
+            dataType = getDataById(this.dropdownDataArray[fieldId].items, fieldTypeId);
+            dataObject = {};
+            dataObject[data.type] = '';
+            dataObject[data.type+'Type'] = {
+                id: fieldTypeId,
+                name: dataType.name
+            };
+
+            // insert field
+            this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
+
+
+            // TODO: focus on just inserted field
+
+            // remove overlay
+            this.sandbox.emit('husky.overlay.add-overlay.remove');
+        },
+
+        translateFieldTypes = function() {
+            var translatedTypes = this.options.fieldTypes,
+                i, len, type;
+            for (type in translatedTypes) {
+                for (i= -1, len = translatedTypes[type].length; ++i < len;) {
+                    translatedTypes[type][i].name = this.sandbox.translate(translatedTypes[type][i].name);
+                }
+            }
+            this.options.translatedFieldTypes = translatedTypes;
         },
 
 
         createAddOverlay = function() {
             var data,
-                $newTemplate = this.sandbox.dom.createElement(templates.add),
-                dropdownData = {},
-                dropdownArray = [];
+                dropdownData = {};
 
-            // create object
-            this.sandbox.util.foreach(this.options.fields, function(type, index) {
-                if (!!this.options.fieldTypes && this.options.fieldTypes[type]) {
-                    // TODO: USE ARRAY INSTEAD OF OBJECT WHEN DATA HAS NOT TO BE MANIPULATED ANYMORE
-                    data = {id: index, name: type, items: this.options.fieldTypes[type]}
-                    dropdownData[type] = (data);
-                } else {
-                    throw 'contact-form@sulu: fieldTypes not defined for type ' + type;
-                }
-            }.bind(this));
+            this.dropdownDataArray = [];
+
+            this.$addOverlay = this.sandbox.dom.createElement(templates.add),
+
+                // create object
+                this.sandbox.util.foreach(this.options.fields, function(type, index) {
+                    if (!!this.options.fieldTypes && this.options.fieldTypes[type]) {
+                        // TODO: USE ARRAY INSTEAD OF OBJECT WHEN DATA HAS NOT TO BE MANIPULATED ANYMORE
+                        data = {
+                            id: index,
+                            name: this.sandbox.translate('public.' + type),
+                            type: type,
+                            collection: type + 's',
+                            items: this.options.translatedFieldTypes[type]
+                        };
+                        dropdownData[type] = (data);
+
+                    } else {
+                        throw 'contact-form@sulu: fieldTypes not defined for type ' + type;
+                    }
+                }.bind(this));
 
             // TODO:  REMOVE AFTER ADDRESSES CAN BE ADDED
             // change data
             dropdownData.address.disabled = true;
+            dropdownData.fax.collection = 'faxes';
 
             // convert object to array
-            dropdownArray = Object.keys(dropdownData).map(function (key) { return dropdownData[key]; });
+            this.dropdownDataArray = Object.keys(dropdownData).map(function(key) {
+                return dropdownData[key];
+            });
 
             this.sandbox.start([
                 {
@@ -138,18 +191,18 @@ define([], function() {
                     options: {
                         title: this.sandbox.translate('public.add-fields'),
                         openOnStart: true,
-//                        removeOnClose: true,
-                        data: $newTemplate,
+                        instanceName: 'add-overlay',
+                        data: this.$addOverlay,
                         okCallback: addOkClicked.bind(this)
                     }
                 },
                 {
                     name: 'dependent-select@husky',
                     options: {
-                        el: $newTemplate,
+                        el: this.$addOverlay,
                         singleSelect: true,
-                        data: dropdownArray,
-                        container: ['#'+constants.fieldId, '#'+constants.fieldTypeId],
+                        data: this.dropdownDataArray,
+                        container: ['#' + constants.fieldId, '#' + constants.fieldTypeId]
 //                        selectOptions: [null,{preSelectedElements:[]}]
                     }
                 }
@@ -163,6 +216,8 @@ define([], function() {
             this.initialized = false;
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            translateFieldTypes.call(this);
 
             this.render();
 
@@ -178,6 +233,7 @@ define([], function() {
 
             // add new container
             this.sandbox.dom.append(this.$el, $container);
+
 
 
             // TODO: implement options dropdown functionality for adding and editing contact details
@@ -197,7 +253,7 @@ define([], function() {
                                 id: 1,
                                 name: 'public.edit-fields',
                                 callback: function() {
-                                    alert("a s d f ");
+                                    this.sandbox.emit('sulu.labels.warning.show', 'Editing fields is not yet implemented');
                                 }
                             },
                             {

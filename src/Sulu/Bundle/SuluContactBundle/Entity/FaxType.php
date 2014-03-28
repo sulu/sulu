@@ -33,7 +33,7 @@ class FaxType implements \JsonSerializable
     {
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -43,14 +43,14 @@ class FaxType implements \JsonSerializable
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -60,7 +60,7 @@ class FaxType implements \JsonSerializable
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -76,7 +76,7 @@ class FaxType implements \JsonSerializable
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -93,7 +93,7 @@ class FaxType implements \JsonSerializable
     /**
      * Get faxes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFaxes()
     {

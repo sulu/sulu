@@ -160,13 +160,15 @@ class ContactController extends RestController implements ClassResourceInterface
                     $em->remove($email);
                 }
             }
-            $urls = $contact->getUrls()->toArray();
-            /** @var Url $url */
-            foreach ($urls as $url) {
-                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
-                    $em->remove($url);
-                }
-            }
+
+//            $urls = $contact->getUrls()->toArray();
+//            /** @var Url $url */
+//            foreach ($urls as $url) {
+//                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
+//                    $em->remove($url);
+//                }
+//            }
+
             $faxes = $contact->getFaxes()->toArray();
             /** @var Fax $fax */
             foreach ($faxes as $fax) {
@@ -256,7 +258,7 @@ class ContactController extends RestController implements ClassResourceInterface
             $faxes = $this->getRequest()->get('faxes');
             if (!empty($faxes)) {
                 foreach ($faxes as $faxData) {
-                    $this->addFaxes($contact, $faxData);
+                    $this->addFax($contact, $faxData);
                 }
             }
 

@@ -23,7 +23,7 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <field name="type" type="integer" column="type" nullable="true" column-definition="INT DEFAULT 0 NOT NULL"  />
+        <field name="type" type="integer" column="type" nullable="false" column-definition="INT DEFAULT 0 NOT NULL" />
 
         <!-- enabled EXTRA_LAZY loading to avoid overhead while using slice() to get contacts -->
         <one-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="account"

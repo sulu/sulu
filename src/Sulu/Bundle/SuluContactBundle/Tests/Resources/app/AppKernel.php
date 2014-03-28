@@ -16,11 +16,15 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+
             // Sulu
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
             new \Sulu\Bundle\TestBundle\SuluTestBundle(),
+
+            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );
 
         return $bundles;
