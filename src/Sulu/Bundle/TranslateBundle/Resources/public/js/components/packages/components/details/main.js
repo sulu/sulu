@@ -86,7 +86,7 @@ define([], function() {
                 }.bind(this), '.length-value');
 
                 // selected catalogue changed
-                this.sandbox.on('select.catalogues.item.changed', function(catalogueId) {
+                this.sandbox.on('husky.select.catalogues.selected.item', function(catalogueId) {
                     this.sandbox.emit('sulu.translate.catalogue.changed', this.options.data.id, catalogueId);
                 }, this);
 
@@ -156,7 +156,7 @@ define([], function() {
                             el: this.sandbox.dom.$('#languageCatalogue'),
                             valueName: 'locale',
                             instanceName: 'catalogues',
-                            selected: this.options.selectedCatalogue,
+                            preSelectedElements: [this.options.selectedCatalogue.id],
                             data: this.options.data.catalogues
                         }
                     }
