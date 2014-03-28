@@ -11,13 +11,27 @@ define(function() {
 
     'use strict';
 
+    var SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages';
+
     return {
 
         view: true,
 
         initialize: function() {
             this.render();
+
             this.showGhostPages = true;
+            this.setShowGhostPages();
+        },
+
+        /**
+         * Sets the show-ghost-pages configuration to stored user settings if there is one
+         */
+        setShowGhostPages: function() {
+            var showGhostPages = this.sandbox.sulu.getUserSetting(SHOW_GHOST_PAGES_KEY);
+            if (showGhostPages !== null) {
+                this.showGhostPages = JSON.parse(showGhostPages);
+            }
         },
 
         bindCustomEvents: function() {
@@ -35,6 +49,7 @@ define(function() {
 
             this.sandbox.on('husky.toggler.show-ghost-pages.changed', function(checked) {
                 this.showGhostPages = checked;
+                this.sandbox.sulu.saveUserSetting(SHOW_GHOST_PAGES_KEY, this.showGhostPages);
                 this.restartColumnNavigation();
             }, this);
 
