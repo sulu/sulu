@@ -13,8 +13,7 @@ define(function() {
 
     return {
         content: {
-            url: '/admin/contact/navigation/contact',
-            title: 'contact.contacts.title'
+            url: '/admin/contact/navigation/contact'
         }
     };
 });

@@ -24,6 +24,8 @@ define([], function() {
 
             initialize: function() {
                 this.saved = true;
+                this.formId = '#contact-form';
+                this.setTitle();
                 this.render();
                 this.setHeaderBar(true);
                 this.listenForChange();
@@ -31,6 +33,7 @@ define([], function() {
 
             render: function() {
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
+                this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
                 this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
 
@@ -62,8 +65,31 @@ define([], function() {
                 this.bindCustomEvents();
             },
 
+            /**
+             * Sets the title to the username
+             * default title as fallback
+             */
+            setTitle: function() {
+                if (!!this.options.data && !!this.options.data.id) {
+                    this.sandbox.emit('sulu.content.set-title', this.options.data.fullName);
+                    this.sandbox.emit('sulu.content.set-title-addition',
+                        this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.id
+                    );
+                } else {
+                    this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('contact.contacts.title'));
+                }
+            },
+
             setDefaults: function(defaultTypes) {
                 this.defaultTypes = defaultTypes;
+            },
+
+            /**
+             * is getting called when template is initialized
+             * @param types
+             */
+            setTypes: function(types) {
+                this.fieldTypes = types;
             },
 
             setFormData: function(data) {
@@ -90,7 +116,7 @@ define([], function() {
                     name: 'contact-form@sulucontact',
                     options: {
                         el:'#contact-options-dropdown',
-                        trigger: '.contact-options-toggle'
+                        fieldTypes: this.fieldTypes
                     }
                 }]);
             },
