@@ -88,10 +88,10 @@ define([], function() {
             }.bind(this), 'input');
 
             this.sandbox.util.each(this.roles, function(index, value) {
-                this.sandbox.on('husky.dropdown.multiple.select.languageSelector' + value.id + '.selected.item', function() {
+                this.sandbox.on('husky.select.languageSelector' + value.id + '.selected.item', function() {
                     this.setHeaderBar(false);
                 }, this);
-                this.sandbox.on('husky.dropdown.multiple.select.languageSelector' + value.id + '.deselected.item', function() {
+                this.sandbox.on('husky.select.languageSelector' + value.id + '.deselected.item', function() {
                     this.setHeaderBar(false);
                 }, this);
             }.bind(this));
@@ -289,7 +289,7 @@ define([], function() {
                 config = {};
                 config.roleId = value;
 
-                this.sandbox.emit('husky.dropdown.multiple.select.languageSelector' + value + '.getChecked', function(selected) {
+                this.sandbox.emit('husky.select.languageSelector' + value + '.getChecked', function(selected) {
                     config.selection = selected;
                 });
 
@@ -333,7 +333,7 @@ define([], function() {
 
                 this.sandbox.start([
                     {
-                        name: 'dropdown-multiple-select@husky',
+                        name: 'select@husky',
                         options: {
                             el: '#languageSelector' + id,
                             instanceName: 'languageSelector' + id,
