@@ -687,26 +687,4 @@ class Contact extends ApiEntity
     {
         return $this->urls;
     }
-
-    /**
-     * Add faxes
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
-     * @return Contact
-     */
-    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
-    {
-        $this->faxes[] = $faxes;
-        return $this;
-    }
-
-    /**
-     * Remove faxes
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
-     */
-    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
-    {
-        $this->faxes->removeElement($faxes);
-    }
 }
