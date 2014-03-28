@@ -28,8 +28,13 @@
     content: "";
   }
 }
+
 #contact-options-dropdown {
     display: none;
+
+    &.is-active {
+        display: block;
+    }
 }
 
 #contact-edit-form:hover {

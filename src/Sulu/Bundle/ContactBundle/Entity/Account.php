@@ -148,6 +148,7 @@ class Account extends ApiEntity
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -656,4 +657,5 @@ class Account extends ApiEntity
     {
         return $this->faxes;
     }
+
 }

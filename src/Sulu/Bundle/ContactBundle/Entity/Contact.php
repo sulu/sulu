@@ -127,6 +127,7 @@ class Contact extends ApiEntity
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -205,7 +206,7 @@ class Contact extends ApiEntity
      */
     public function getFullName()
     {
-       return $this->firstName . ' ' . $this->lastName;
+        return $this->firstName . ' ' . $this->lastName;
     }
 
     /**
@@ -600,17 +601,18 @@ class Contact extends ApiEntity
         return $this->phones;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return array(
-            'id'            => $this->getLastName(),
-            'firstName'     => $this->getFirstName(),
-            'middleName'    => $this->getMiddleName(),
-            'lastName'      => $this->getLastName(),
-            'title'         => $this->getTitle(),
-            'position'      => $this->getPosition(),
-            'birthday'      => $this->getBirthday(),
-            'created'       => $this->getCreated(),
-            'changed'       => $this->getChanged()
+            'id' => $this->getLastName(),
+            'firstName' => $this->getFirstName(),
+            'middleName' => $this->getMiddleName(),
+            'lastName' => $this->getLastName(),
+            'title' => $this->getTitle(),
+            'position' => $this->getPosition(),
+            'birthday' => $this->getBirthday(),
+            'created' => $this->getCreated(),
+            'changed' => $this->getChanged()
         );
     }
 
@@ -624,7 +626,7 @@ class Contact extends ApiEntity
     public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -641,10 +643,48 @@ class Contact extends ApiEntity
     /**
      * Get faxes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFaxes()
     {
         return $this->faxes;
+    }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $urls;
+
+
+    /**
+     * Add urls
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     * @return Contact
+     */
+    public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    {
+        $this->urls[] = $urls;
+        return $this;
+    }
+
+    /**
+     * Remove urls
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Url $urls
+     */
+    public function removeUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    {
+        $this->urls->removeElement($urls);
+    }
+
+    /**
+     * Get urls
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUrls()
+    {
+        return $this->urls;
     }
 }
