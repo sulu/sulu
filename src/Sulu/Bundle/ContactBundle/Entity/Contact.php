@@ -206,7 +206,7 @@ class Contact extends ApiEntity
      */
     public function getFullName()
     {
-       return $this->firstName . ' ' . $this->lastName;
+        return $this->firstName . ' ' . $this->lastName;
     }
 
     /**
@@ -601,17 +601,18 @@ class Contact extends ApiEntity
         return $this->phones;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return array(
-            'id'            => $this->getLastName(),
-            'firstName'     => $this->getFirstName(),
-            'middleName'    => $this->getMiddleName(),
-            'lastName'      => $this->getLastName(),
-            'title'         => $this->getTitle(),
-            'position'      => $this->getPosition(),
-            'birthday'      => $this->getBirthday(),
-            'created'       => $this->getCreated(),
-            'changed'       => $this->getChanged()
+            'id' => $this->getLastName(),
+            'firstName' => $this->getFirstName(),
+            'middleName' => $this->getMiddleName(),
+            'lastName' => $this->getLastName(),
+            'title' => $this->getTitle(),
+            'position' => $this->getPosition(),
+            'birthday' => $this->getBirthday(),
+            'created' => $this->getCreated(),
+            'changed' => $this->getChanged()
         );
     }
 
@@ -625,7 +626,7 @@ class Contact extends ApiEntity
     public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -642,7 +643,7 @@ class Contact extends ApiEntity
     /**
      * Get faxes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFaxes()
     {
@@ -664,7 +665,6 @@ class Contact extends ApiEntity
     public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
     {
         $this->urls[] = $urls;
-    
         return $this;
     }
 
@@ -681,7 +681,7 @@ class Contact extends ApiEntity
     /**
      * Get urls
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUrls()
     {
@@ -697,7 +697,6 @@ class Contact extends ApiEntity
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
         return $this;
     }
 
