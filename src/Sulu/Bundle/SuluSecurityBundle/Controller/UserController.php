@@ -34,6 +34,7 @@ class UserController extends RestController implements ClassResourceInterface
     const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
     const ENTITY_NAME_GROUP = 'SuluSecurityBundle:Group';
     const ENTITY_NAME_CONTACT = 'SuluContactBundle:Contact';
+    const ENTITY_NAME_USER_SETTING = 'SuluSecurityBundle:UserSetting';
 
     /**
      * Lists all the users in the system
@@ -183,7 +184,7 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Takes a key, value pair and stores it as settings for the user
-     * @param Number $userId the id of the user
+     * @param Number $id the id of the user
      * @param String $key the settings key
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -209,7 +210,7 @@ class UserController extends RestController implements ClassResourceInterface
             // get setting
             /** @var UserSetting $setting */
             $setting = $this->getDoctrine()
-                ->getRepository('SuluSecurityBundle:UserSetting')
+                ->getRepository(self::ENTITY_NAME_USER_SETTING)
                 ->findOneBy(array('user' => $user, 'key' => $key));
 
             // or create new one
@@ -234,19 +235,27 @@ class UserController extends RestController implements ClassResourceInterface
 
     /**
      * Returns the settings for a key for the current user
+     * @param Number $id The id of the user
      * @param String $key The settings key
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Get("users/settings/{key}")
      */
-    public function getSettingsAction($key)
+    public function getSettingsAction($id, $key)
     {
-        $user = $this->getUser();
+        try {
+            $user = $this->getUser();
 
-        $setting = $this->getDoctrine()
-            ->getRepository('SuluSecurityBundle:UserSetting')
-            ->findOneBy(array('user' => $user, 'key' => $key));
+            if ($user->getId() != $id) {
+                throw new InvalidArgumentException($this->entityName, 'id');
+            }
 
-        $view = $this->view($setting, 200);
+            $setting = $this->getDoctrine()
+                ->getRepository(self::ENTITY_NAME_USER_SETTING)
+                ->findOneBy(array('user' => $user, 'key' => $key));
+
+            $view = $this->view($setting, 200);
+        } catch (InvalidArgumentException $exc) {
+            $view = $this->view($exc-toArray(), 400);
+        }
 
         return $this->handleView($view);
     }
