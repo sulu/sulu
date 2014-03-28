@@ -25082,7 +25082,7 @@ define('__component__$navigation@husky',[],function() {
             }.bind(this));
 
             //user locales dropdown
-            this.sandbox.on('husky.dropdown.multiple.select.navigation-locale.selected.item', function(locale) {
+            this.sandbox.on('husky.select.navigation-locale.selected.item', function(locale) {
                 this.sandbox.emit(USER_LOCALE_CHANGED, locale);
             }.bind(this));
 
@@ -35512,7 +35512,7 @@ define('__component__$smart-content@husky',[], function() {
             this.overlayData.dataSource = this.sandbox.dom.val(this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent));
 
             //category
-            this.sandbox.emit('husky.dropdown.multiple.select.' + this.options.instanceName + constants.categoryDDClass + '.getChecked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.categoryDDClass + '.getChecked',
                 function(category) {
                     this.overlayData.category = category;
                     categoryDef.resolve();
@@ -35526,21 +35526,21 @@ define('__component__$smart-content@husky',[], function() {
                 }.bind(this));
 
             //sort by
-            this.sandbox.emit('husky.dropdown.multiple.select.' + this.options.instanceName + constants.sortByDDClass + '.getChecked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortByDDClass + '.getChecked',
                 function(sortBy) {
                     this.overlayData.sortBy = sortBy;
                     sortByDef.resolve();
                 }.bind(this));
 
             //sort method
-            this.sandbox.emit('husky.dropdown.multiple.select.' + this.options.instanceName + constants.sortMethodDDClass + '.getChecked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortMethodDDClass + '.getChecked',
                 function(sortMethod) {
                     this.overlayData.sortMethod = (sortMethod[0] === sortMethods.asc) ? 'asc' : 'desc';
                     sortMethodDef.resolve();
                 }.bind(this));
 
             //present as
-            this.sandbox.emit('husky.dropdown.multiple.select.' + this.options.instanceName + constants.presentAsDDClass + '.getChecked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.presentAsDDClass + '.getChecked',
                 function(presentAs) {
                     this.overlayData.presentAs = presentAs;
                     presentAsDef.resolve();
@@ -35741,6 +35741,15 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.on(OKBUTTON_ACTIVATE.call(this), this.activateOkButton.bind(this));
             this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButton.bind(this));
         },
+
+        activateOkButton : function() {
+
+        },
+
+        deactivateOkButton : function() {
+
+        },
+
 
         /**
          * Removes the component
@@ -36667,7 +36676,7 @@ define('__component__$matcher@husky',[], function() {
          */
         getDropdownValue: function(column, callback) {
             this.sandbox.emit(
-                'husky.dropdown.multiple.select.' + this.options.instanceName + column.id + '.getChecked',
+                'husky.select.' + this.options.instanceName + column.id + '.getChecked',
                 callback
             );
         },
