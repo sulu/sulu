@@ -77,15 +77,15 @@ define([], function() {
                 this.setHeaderBar(false);
             }.bind(this), 'input');
 
-            this.sandbox.on('husky.dropdown.multiple.select.systemLanguage.selected.item', function() {
+            this.sandbox.on('husky.select.systemLanguage.selected.item', function() {
                 this.setHeaderBar(false);
             }.bind(this));
 
             this.sandbox.util.each(this.roles, function(index, value) {
-                this.sandbox.on('husky.dropdown.multiple.select.languageSelector' + value.id + '.selected.item', function() {
+                this.sandbox.on('husky.select.languageSelector' + value.id + '.selected.item', function() {
                     this.setHeaderBar(false);
                 }, this);
-                this.sandbox.on('husky.dropdown.multiple.select.languageSelector' + value.id + '.deselected.item', function() {
+                this.sandbox.on('husky.select.languageSelector' + value.id + '.deselected.item', function() {
                     this.setHeaderBar(false);
                 }, this);
             }.bind(this));
@@ -129,14 +129,12 @@ define([], function() {
 
             this.sandbox.start([
                 {
-                    name: 'dropdown-multiple-select@husky',
+                    name: 'select@husky',
                     options: {
                         el: this.sandbox.dom.find('#systemLanguage', this.$el),
                         instanceName: 'systemLanguage',
                         defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                         value: 'name',
-                        singleSelect: true,
-                        noDeselect: true,
                         data: [{id:"de", name:"Deutsch"}, {id:"en", name:"English"}],
                         preSelectedElements: [this.systemLanguage]
                     }
@@ -240,7 +238,7 @@ define([], function() {
             }, this);
 
             // update systemLanguage on dropdown select
-            this.sandbox.on('husky.dropdown.multiple.select.systemLanguage.selected.item', function(locale) {
+            this.sandbox.on('husky.select.systemLanguage.selected.item', function(locale) {
                 this.systemLanguage = locale;
             }.bind(this));
         },
@@ -290,7 +288,7 @@ define([], function() {
                 config = {};
                 config.roleId = value;
 
-                this.sandbox.emit('husky.dropdown.multiple.select.languageSelector' + value + '.getChecked', function(selected) {
+                this.sandbox.emit('husky.select.languageSelector' + value + '.getChecked', function(selected) {
                     config.selection = selected;
                 });
 
@@ -328,10 +326,11 @@ define([], function() {
 
                 this.sandbox.start([
                     {
-                        name: 'dropdown-multiple-select@husky',
+                        name: 'select@husky',
                         options: {
                             el: '#languageSelector' + id,
                             instanceName: 'languageSelector' + id,
+                            multipleSelect: true,
                             defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                             checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
