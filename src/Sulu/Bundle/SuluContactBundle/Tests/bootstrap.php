@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
+
 $file = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($file)) {
     throw new RuntimeException('Install dependencies to run test suite.');
@@ -16,3 +18,4 @@ if (!file_exists($file)) {
 $autoload = require_once $file;
 
 \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($autoload, 'loadClass'));
+AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');

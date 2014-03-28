@@ -1,1 +1,1 @@
-define(function(){"use strict";return{content:{url:"/admin/contact/navigation/contact",title:"contact.contacts.title"}}});
+define(function(){"use strict";return{content:{url:"/admin/contact/navigation/contact"}}});

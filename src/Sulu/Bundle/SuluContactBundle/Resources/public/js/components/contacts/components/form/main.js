@@ -11,14 +11,11 @@ define([], function() {
 
     'use strict';
 
+    var form = '#contact-form',
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
+
     return (function() {
         // FIXME move to this.*
-        var form = '#contact-form',
-            emailItem,
-            phoneItem,
-            addressItem,
-            addressCounter;
-
         return {
 
             view: true,
@@ -27,7 +24,6 @@ define([], function() {
 
             initialize: function() {
                 this.saved = true;
-                addressCounter = 1;
                 this.formId = '#contact-form';
                 this.setTitle();
                 this.render();
@@ -37,16 +33,14 @@ define([], function() {
 
             render: function() {
                 this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
+                this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
                 this.$el.html(this.renderTemplate('/admin/contact/template/contact/form'));
 
-                emailItem = this.$find('#emails .emails-item:first');
-                phoneItem = this.$find('#phones .phones-item:first');
-                addressItem = this.$find('#addresses .addresses-item:first');
-
                 this.sandbox.on('husky.dropdown.type.item.click', this.typeClick.bind(this));
 
-                var data = this.initData();
+                var data = this.initContactData();
+
                 this.companyInstanceName = 'companyContact' + data.id;
 
                 this.sandbox.start([
@@ -64,7 +58,8 @@ define([], function() {
                     }
                 ]);
 
-                this.createForm(data);
+
+                this.initForm(data);
 
                 this.bindDomEvents();
                 this.bindCustomEvents();
@@ -89,47 +84,41 @@ define([], function() {
                 this.defaultTypes = defaultTypes;
             },
 
-            initializeData: function(data) {
-                var emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first';
+            /**
+             * is getting called when template is initialized
+             * @param types
+             */
+            setTypes: function(types) {
+                this.fieldTypes = types;
+            },
+
+            setFormData: function(data) {
+                // add collection filters to form
+                this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
                     this.sandbox.start(form);
-                    this.sandbox.form.addConstraint(form, emailSelector + ' input.email-value', 'required', {required: true});
-                    this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
+                    this.sandbox.emit('sulu.contact-form.add-required',['email']);
                 }.bind(this));
             },
 
-            createForm: function(data) {
-                var formObject = this.sandbox.form.create(form);
-
-                formObject.initialized.then(function() {
-                    this.initializeData(data);
+            initForm: function(data) {
+                // when  contact-form is initalized
+                this.sandbox.on('sulu.contact-form.initialized', function() {
+                    // set form data
+                    var formObject = this.sandbox.form.create(form);
+                    formObject.initialized.then(function() {
+                        this.setFormData(data);
+                    }.bind(this));
                 }.bind(this));
 
-                this.sandbox.form.addCollectionFilter(form, 'emails', function(email) {
-                    if (email.id === "") {
-                        delete email.id;
+                // initialize contact form
+                this.sandbox.start([{
+                    name: 'contact-form@sulucontact',
+                    options: {
+                        el:'#contact-options-dropdown',
+                        fieldTypes: this.fieldTypes
                     }
-                    return email.email !== "";
-                });
-                this.sandbox.form.addCollectionFilter(form, 'phones', function(phone) {
-                    if (phone.id === "") {
-                        delete phone.id;
-                    }
-                    return phone.phone !== "";
-                });
-
-//                this.sandbox.form.addCollectionFilter(form, 'urls', function(url) {
-//                    if (url.id === "") {
-//                        delete url.id;
-//                    }
-//                    return url.url !== "";
-//                });
-                this.sandbox.form.addCollectionFilter(form, 'notes', function(note) {
-                    if (note.id === "") {
-                        delete note.id;
-                    }
-                    return note.value !== "";
-                });
+                }]);
             },
 
             bindDomEvents: function() {
@@ -144,8 +133,8 @@ define([], function() {
                 // contact saved
                 this.sandbox.on('sulu.contacts.contacts.saved', function(data) {
                     this.options.data = data;
-                    this.initData();
-                    this.initializeData(data);
+                    this.initContactData();
+                    this.setFormData(data);
                     this.setHeaderBar(true);
                 }, this);
 
@@ -160,13 +149,16 @@ define([], function() {
                 }, this);
             },
 
-            initData: function() {
-                var contactJson = this.options.data;
-//                this.fillFields(contactJson.urls, 1, {
-//                    id: null,
-//                    url: '',
-//                    urlType: this.defaultTypes.urlType
-//                });
+            initContactData: function() {
+                var contactJson = this.options.data,
+                    field;
+
+                this.sandbox.util.foreach(fields, function(field) {
+                    if (!contactJson.hasOwnProperty(field)) {
+                        contactJson[field] = [];
+                    }
+                });
+
                 this.fillFields(contactJson.emails, 1, {
                     id: null,
                     email: '',
@@ -177,10 +169,20 @@ define([], function() {
                     phone: '',
                     phoneType: this.defaultTypes.phoneType
                 });
+                this.fillFields(contactJson.faxes, 1, {
+                    id: null,
+                    fax: '',
+                    faxType: this.defaultTypes.faxType
+                });
                 this.fillFields(contactJson.notes, 1, {
                     id: null,
                     value: ''
                 });
+//                this.fillFields(contactJson.urls, 1, {
+//                    id: null,
+//                    url: '',
+//                    urlType: this.defaultTypes.urlType
+//                });
 //                this.fillFields(contactJson.addresses, 1, {
 //                    id: null,
 //                    addressType: this.defaultTypes.addressType

@@ -15,6 +15,8 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\Fax;
+use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Note;
@@ -207,6 +209,13 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             }
 
+            $faxes = $this->getRequest()->get('faxes');
+            if (!empty($faxes)) {
+                foreach ($faxes as $faxData) {
+                    $this->addFax($account, $faxData);
+                }
+            }
+
             $addresses = $this->getRequest()->get('addresses');
             if (!empty($addresses)) {
                 foreach ($addresses as $addressData) {
@@ -277,7 +286,6 @@ class AccountController extends RestController implements ClassResourceInterface
                 // set changed
                 $account->setChanged(new DateTime());
                 $user = $this->getUser();
-//                $user = $this->getDoctrine()->getRepository('SuluSecurityBundle:User')->findUserById($this->getUser()->getId());
                 $account->setChanger($user);
 
                 // process details
@@ -512,8 +520,8 @@ class AccountController extends RestController implements ClassResourceInterface
             throw new EntityNotFoundException($faxTypeEntity, $faxData['faxType']['id']);
         } else {
             $fax = new Fax();
-            $fax->setEmail($faxData['fax']);
-            $fax->setEmailType($faxType);
+            $fax->setFax($faxData['fax']);
+            $fax->setFaxType($faxType);
             $em->persist($fax);
             $account->addFax($fax);
         }

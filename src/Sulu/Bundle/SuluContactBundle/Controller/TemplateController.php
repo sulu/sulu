@@ -57,11 +57,13 @@ class TemplateController extends Controller
             'phoneTypes' => $values['phoneTypes'],
             'emailTypes' => $values['emailTypes'],
             'urlTypes' => $values['urlTypes'],
+            'faxTypes' => $values['faxTypes'],
             'countries' => $values['countries'],
             'defaultPhoneType' => $defaults['phoneType'],
             'defaultEmailType' => $defaults['emailType'],
             'defaultAddressType' => $defaults['addressType'],
             'defaultUrlType' => $defaults['urlType'],
+            'defaultFaxType' => $defaults['faxType'],
             'defaultCountry' => $defaults['country']
         );
     }
@@ -91,6 +93,10 @@ class TemplateController extends Controller
 
         $values['urlTypes'] = $this->getDoctrine()
             ->getRepository('SuluContactBundle:UrlType')
+            ->findAll();
+
+        $values['faxTypes'] = $this->getDoctrine()
+            ->getRepository('SuluContactBundle:FaxType')
             ->findAll();
 
         $values['countries'] = $this->getDoctrine()
@@ -128,6 +134,11 @@ class TemplateController extends Controller
         $defaults['urlType'] = $this->getDoctrine()
             ->getRepository($urlTypeEntity)
             ->find($config['urlType']);
+
+        $faxTypeEntity = 'SuluContactBundle:FaxType';
+        $defaults['faxType'] = $this->getDoctrine()
+            ->getRepository($faxTypeEntity)
+            ->find($config['faxType']);
 
         $countryEntity = 'SuluContactBundle:Country';
         $defaults['country'] = $this->getDoctrine()

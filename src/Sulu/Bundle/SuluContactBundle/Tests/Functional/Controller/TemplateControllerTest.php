@@ -8,9 +8,20 @@ class TemplateControllerTest extends WebTestCase
 {
     public function testDetailsform()
     {
-        $client = static::createClient();
+        $client = $this->createTestClient();
 
-        $crawler = $client->request('GET', '/detailsForm');
     }
+
+    private function createTestClient()
+    {
+        return $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+    }
+
 
 }
