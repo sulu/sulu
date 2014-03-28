@@ -45,8 +45,8 @@ define([], function() {
             permissionData = this.options.data.permissions;
 
             // wait for dropdown to initialize, then get the value and continue
-            this.sandbox.on('husky.dropdown.multiple.select.system.initialize', function() {
-                this.sandbox.emit('husky.dropdown.multiple.select.system.getChecked', function(system) {
+            this.sandbox.on('husky.select.system.initialize', function() {
+                this.sandbox.emit('husky.select.system.getChecked', function(system) {
                     this.selectedSystem = system[0];
 
                     this.initializeMatrix();
@@ -90,7 +90,7 @@ define([], function() {
                 this.sandbox.emit('sulu.roles.list');
             }, this);
 
-            this.sandbox.on('husky.dropdown.multiple.select.system.selected.item', function(value) {
+            this.sandbox.on('husky.select.system.selected.item', function(value) {
                 this.selectedSystem = value;
                 this.initializeMatrix();
             }.bind(this));
