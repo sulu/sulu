@@ -13,7 +13,8 @@ define(['app-config'], function(AppConfig) {
 
     var defaults = {
         headline: 'contact.accounts.title'
-    };
+    },
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
 
     return {
 
@@ -32,7 +33,6 @@ define(['app-config'], function(AppConfig) {
             this.accountType = this.getAccountType();
             this.setHeadlines(this.accountType);
             this.render();
-            this.initContactForm();
             this.setHeaderBar(true);
             this.listenForChange();
         },
@@ -41,17 +41,20 @@ define(['app-config'], function(AppConfig) {
             var data, excludeItem;
 
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
+            this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
             this.html(this.renderTemplate('/admin/contact/template/account/form'));
 
             this.titleField = this.$find('#name');
 
-            data = this.options.data;
+            data = this.initContactData();
 
             excludeItem = [];
             if (!!this.options.data.id) {
                 excludeItem.push({id: this.options.data.id});
             }
+
+
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
@@ -70,14 +73,26 @@ define(['app-config'], function(AppConfig) {
                 }
             ]);
 
-            this.createForm(data);
+            this.initForm(data);
 
             this.bindDomEvents();
             this.bindCustomEvents();
         },
 
+        /**
+         * is getting called when template is initialized
+         * @param defaultTypes
+         */
         setDefaults: function(defaultTypes) {
             this.defaultTypes = defaultTypes;
+        },
+
+        /**
+         * is getting called when template is initialized
+         * @param types
+         */
+        setTypes: function(types) {
+            this.fieldTypes = types;
         },
 
         /**
@@ -113,6 +128,10 @@ define(['app-config'], function(AppConfig) {
             return accountType;
         },
 
+        /**
+         * sets headline to the current title input
+         * @param accountType
+         */
         setHeadlines: function(accountType) {
             var titleAddition = this.sandbox.translate(accountType.translation),
                 title = this.sandbox.translate(this.options.headline);
@@ -127,7 +146,6 @@ define(['app-config'], function(AppConfig) {
         },
 
 
-        // CONTACT
         fillFields: function(field, minAmount, value) {
             if (!field) {
                 return;
@@ -137,9 +155,15 @@ define(['app-config'], function(AppConfig) {
             }
         },
 
-        // CONTACT
         initContactData: function() {
             var contactJson = this.options.data;
+
+            this.sandbox.util.foreach(fields, function(field) {
+                if (!contactJson.hasOwnProperty(field)) {
+                    contactJson[field] = [];
+                }
+            });
+
             this.fillFields(contactJson.urls, 1, {
                 id: null,
                 url: '',
@@ -155,115 +179,50 @@ define(['app-config'], function(AppConfig) {
                 phone: '',
                 phoneType: this.defaultTypes.phoneType
             });
-
+            this.fillFields(contactJson.faxes, 1, {
+                id: null,
+                fax: '',
+                faxType: this.defaultTypes.faxType
+            });
+            this.fillFields(contactJson.notes, 1, {
+                id: null,
+                value: ''
+            });
 //            this.fillFields(contactJson.addresses, 1, {
 //                id: null,
 //                addressType: this.defaultTypes.addressType,
 //                street: this.sandbox.translate('contact.add.address')
 //            });
-            this.fillFields(contactJson.notes, 1, {
-                id: null,
-                value: ''
-            });
             return contactJson;
         },
 
-        // CONTACT
-        initContactForm: function() {
+        initForm: function(data) {
+            // when  contact-form is initalized
+            this.sandbox.on('sulu.contact-form.initialized', function() {
+                // set form data
+                var formObject = this.sandbox.form.create(this.form);
+                formObject.initialized.then(function() {
+                    this.setFormData(data);
+                }.bind(this));
+            }.bind(this));
 
-            // TODO: get fields from configuration
-            // TODO: FETCH ALL FIELDS : (phone, address, website, fax, email)
+            // initialize contact form
+            this.sandbox.start([{
+                name: 'contact-form@sulucontact',
+                options: {
+                    el:'#contact-options-dropdown',
+                    fieldTypes: this.fieldTypes
+                }
+            }]);
+        },
 
-            var fieldTypes = ['address', 'email', 'fax', 'phone', 'website'],
-                dropdownData = [];
-
-
-            this.sandbox.util.foreach(fieldTypes, function(type, index) {
-                dropdownData.push({id: index, name: type});
-            });
-
-            this.initContactData();
-
-
-// TODO: implement options dropdown functionality for adding and editing contact details
-//            // initialize dropdown
-//            this.sandbox.start([
-//                {
-//                    name: 'dropdown@husky',
-//                    toggle: '.contact-options-toggle',
-//                    options: {
-//                        el: '#contact-options-dropdown',
-//                        alignment: 'right',
-//                        shadow: true,
-//                        data: [
-//                            {
-//                                id: 1,
-//                                name: 'public.edit-fields',
-//                                callback: function() {
-//
-//                                }
-//                            },
-//                            {
-//                                id: 2,
-//                                name: 'public.add-fields',
-//                                callback: function() {
-//                                    var tmpl = [
-//                                            '<div class="grid-row">',
-//                                            '   <div id="field-select" class="grid-col-6"></div>',
-//                                            '   <div id="field-type-select" class="grid-col-6"></div>',
-//                                            '</div>'
-//                                        ],
-//
-//                                        newTemplate = this.sandbox.dom.createElement(tmpl.join(''));
-//
-//                                    this.sandbox.start([
-//                                        {
-//                                            name: 'overlay@husky',
-//                                            options: {
-//                                                title: this.sandbox.translate('public.add-fields'),
-//                                                openOnStart: true,
-//                                                removeOnClose: true,
-//                                                data: newTemplate
-//                                            }
-//                                        },
-//                                        {
-//                                            name: 'dropdown-multiple-select@husky',
-//                                            options: {
-//                                                el: '#field-select',
-//                                                instanceName: 'i1',
-//                                                singleSelect: true,
-//                                                data: dropdownData
-//                                            }
-//                                        }
-//                                        // TODO: initialize second dropdown as well on beginning
-//                                    ]);
-//
-//                                    this.sandbox.on('husky.dropdown.multiple.select.i1.selected.item', function(id) {
-//                                        // TODO: now update second dropdown with correct values
-//
-//                                        this.sandbox.stop('#field-type-select');
-//
-//                                        this.sandbox.start([
-//                                            {
-//                                                name: 'dropdown-multiple-select@husky',
-//                                                options: {
-//                                                    el: '#field-type-select',
-//                                                    singleSelect: true,
-//                                                    instanceName: 'i2',
-//                                                    data: [
-//                                                        {id: 0, name: 'office'},
-//                                                        {id: 1, name: 'private'}
-//                                                    ]
-//                                                }
-//                                            }
-//                                        ]);
-//                                    });
-//                                }
-//                            }
-//                        ]
-//                    }
-//                }
-//            ]);
+        setFormData: function(data) {
+            // add collection filters to form
+            this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
+            this.sandbox.form.setData(this.form, data).then(function() {
+                this.sandbox.start(this.form);
+                this.sandbox.emit('sulu.contact-form.add-required',['email']);
+            }.bind(this));
         },
 
         // sets headline title to account name
@@ -271,62 +230,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.content.set-title', this.sandbox.dom.val(this.titleField));
         },
 
-        initializeData: function(data) {
-            var emailSelector = '#contact-fields *[data-mapper-property-tpl="email-tpl"]:first'
-            this.sandbox.form.setData(this.form, data).then(function() {
-                this.sandbox.start(this.form);
-                this.sandbox.form.addConstraint(this.form, emailSelector + ' input.email-value', 'required', {required: true});
-                this.sandbox.dom.addClass(emailSelector + ' label span:first', 'required');
-            }.bind(this));
-        },
-
-        createForm: function(data) {
-            var formObject = this.sandbox.form.create(this.form);
-            formObject.initialized.then(function() {
-                this.initializeData(data);
-            }.bind(this));
-
-            this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
-                if (email.id === "") {
-                    delete email.id;
-                }
-                return email.email !== "";
-            });
-            this.sandbox.form.addCollectionFilter(this.form, 'phones', function(phone) {
-                if (phone.id === "") {
-                    delete phone.id;
-                }
-                return phone.phone !== "";
-            });
-            this.sandbox.form.addCollectionFilter(this.form, 'urls', function(url) {
-                if (url.id === "") {
-                    delete url.id;
-                }
-                return url.url !== "";
-            });
-            this.sandbox.form.addCollectionFilter(this.form, 'notes', function(note) {
-                if (note.id === "") {
-                    delete note.id;
-                }
-                return note.value !== "";
-            });
-//                this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
-//                    if (address.id === "") {
-//                        delete address.id;
-//                    }
-//                    return address.street !== "" ||
-//                        address.number !== "" ||
-//                        address.zip !== "" ||
-//                        address.city !== "" ||
-//                        address.state !== "";
-//                });
-
-
-        },
-
         bindDomEvents: function() {
-//            this.sandbox.dom.on(this.titleField, 'keyup', this.updateHeadline.bind(this));
-
             this.sandbox.dom.keypress(this.form, function(event) {
                 if (event.which === 13) {
                     event.preventDefault();
@@ -346,7 +250,7 @@ define(['app-config'], function(AppConfig) {
                 // reset forms data
                 this.options.data = data;
                 this.initContactData();
-                this.initializeData(data);
+                this.setFormData(data);
                 this.setHeaderBar(true);
             }, this);
 
