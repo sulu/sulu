@@ -141,6 +141,62 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $this->smartContent->write($node, $property, 0, 'test', 'en', 's');
     }
 
+    public function testWriteWithPassedContainer()
+    {
+        $node = $this->getMockForAbstractClass(
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setProperty')
+        );
+
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getValue')
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->any())->method('getValue')->will(
+            $this->returnValue(
+                array(
+                    'config' => array(
+                        'dataSource' => array(
+                            'home/products'
+                        ),
+                        'sortBy' => array(
+                            'published'
+                        )
+                    )
+                )
+            )
+        );
+
+        $node->expects($this->once())->method('setProperty')->with(
+            'property',
+            json_encode(
+                array(
+                    'dataSource' => array(
+                        'home/products'
+                    ),
+                    'sortBy' => array(
+                        'published'
+                    )
+                )
+            )
+        );
+
+        $this->smartContent->write($node, $property, 0, 'test', 'en', 's');
+    }
+
     public function testRead()
     {
         $smartContentContainer = new SmartContentContainer($this->nodeRepository, $this->tagManager, 'test', 'en', 's');

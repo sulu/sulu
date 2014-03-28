@@ -82,8 +82,8 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template, navigation) {
-                this.save(data, template, navigation);
+            this.sandbox.on('sulu.content.contents.save', function(data, template) {
+                this.save(data, template);
             }, this);
 
             // wait for navigation events
@@ -270,10 +270,10 @@ define([
             });
         },
 
-        save: function(data, template, navigation) {
+        save: function(data, template) {
             this.content.set(data);
 
-            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
+            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
