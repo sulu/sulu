@@ -144,6 +144,9 @@ define(['app-config'], function(AppConfig) {
 
         setFormData: function(data) {
             var initialize = this.sandbox.form.setData(this.formId, data);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'language', this.options.language);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'language');
+
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
@@ -239,6 +242,11 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'template');
                 this.templateChanged = true;
                 this.changeTemplate(item);
+            }, this);
+
+            // change language
+            this.sandbox.on('sulu.edit-toolbar.dropdown.languages.item-clicked', function(item) {
+                this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
             }, this);
 
             // set state button in loading state

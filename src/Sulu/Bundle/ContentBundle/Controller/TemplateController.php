@@ -12,6 +12,8 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -109,9 +111,51 @@ class TemplateController extends Controller
         return $this->render('SuluContentBundle:Template:list.html.twig');
     }
 
-    public function columnAction()
+    public function columnAction($webspaceKey, $languageCode)
     {
-        return $this->render('SuluContentBundle:Template:column.html.twig');
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
+        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $currentLocalization = $webspace->getLocalization($languageCode);
+        $localizations = array();
+
+        $i = 0;
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $localizations[] = array(
+                'localization' => $localization->getLocalization(),
+                'name' => $localization->getLocalization('-'),
+                'id' => $i++
+            );
+        }
+
+        return $this->render('SuluContentBundle:Template:column.html.twig', array(
+                'localizations' => $localizations,
+                'currentLocalization' => $currentLocalization,
+                'webspace' => $webspace
+            ));
+    }
+
+    public function getLanguagesAction($webspaceKey)
+    {
+        /** @var WebspaceManagerInterface $webspaceManager */
+        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
+        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $localizations = array();
+
+        $i = 0;
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $localizations[] = array(
+                'localization' => $localization->getLocalization(),
+                'name' => $localization->getLocalization('-'),
+                'id' => $i++
+            );
+        }
+
+        $data = array(
+            '_embedded' => $localizations,
+            'total' => sizeof($localizations),
+        );
+        return new JsonResponse($data);
     }
 
     public function settingsAction()
