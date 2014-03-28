@@ -39,7 +39,7 @@ CKEDITOR.editorConfig = function( config ) {
     // Whether to force all pasting operations to insert on plain text into the editor, loosing any formatting information ...
     config.forcePasteAsPlainText = 'true';
 
-    // allow image tags
-    config.extraAllowedContent = 'img[!src]';
+    // allow image/links tags - needs semicolon at the end
+    config.extraAllowedContent = 'img[!src];a[!href];';
 
 };

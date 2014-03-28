@@ -18,7 +18,7 @@ body {
   padding-left: 50px;
   margin-top: 40px;
   padding-right: 50px;
-  margin-bottom: 40px;
+  padding-bottom: 40px;
   -webkit-transition: margin 0.5s;
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
@@ -110,14 +110,43 @@ input, select {
 }
 
 /* line 1, ../scss/modules/login.scss */
-#login {
-  position: absolute;
+#main.login {
+  width: 100%;
+  height: 100%;
+}
+
+/* line 5, ../scss/modules/login.scss */
+#login-wrapper {
+  position: relative;
+  top: 0px;
   left: 50%;
-  top: 50%;
-  width: 300px;
-  height: 190px;
   margin-left: -150px;
-  margin-top: -95px;
+  display: table;
+  width: 300px;
+  height: 100%;
+}
+
+/* line 14, ../scss/modules/login.scss */
+#login {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* line 18, ../scss/modules/login.scss */
+#login .logo {
+  margin-bottom: 50px;
+  text-align: center;
+}
+/* line 23, ../scss/modules/login.scss */
+#login #placeholderLogoRemoveLater {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  background: #D8D8D8;
+  line-height: 100px;
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 50px;
+  display: inline-block;
 }
 
 /* line 1, ../scss/modules/labels.scss */
