@@ -8,7 +8,7 @@
         <id name="key" type="string" length="150" column="settingsKey"/>
         <field name="value" type="text" column="settingsValue"/>
 
-        <many-to-one field="user" target-entity="Sulu\Bundle\SecurityBundle\Entity\User" inversed-by="userSettings">
+        <many-to-one field="user" target-entity="Sulu\Component\Security\UserInterface" inversed-by="userSettings">
             <join-column name="idUsers" referenced-column-name="id" on-delete="CASCADE"/>
         </many-to-one>
     </entity>
