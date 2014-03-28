@@ -3,11 +3,12 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * FaxType
  */
-class FaxType
+class FaxType implements \JsonSerializable
 {
     /**
      * @var string
@@ -21,6 +22,7 @@ class FaxType
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $faxes;
 
@@ -31,7 +33,7 @@ class FaxType
     {
         $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -41,14 +43,14 @@ class FaxType
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -58,7 +60,7 @@ class FaxType
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -74,7 +76,7 @@ class FaxType
     public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes[] = $faxes;
-    
+
         return $this;
     }
 
@@ -91,10 +93,26 @@ class FaxType
     /**
      * Get faxes
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFaxes()
     {
         return $this->faxes;
     }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->getId(),
+            'name' => $this->getName()
+        );
+    }
+
 }

@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Fax
@@ -26,11 +27,13 @@ class Fax
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $contacts;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $accounts;
 
@@ -42,7 +45,7 @@ class Fax
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set fax
      *
@@ -52,14 +55,14 @@ class Fax
     public function setFax($fax)
     {
         $this->fax = $fax;
-    
+
         return $this;
     }
 
     /**
      * Get fax
      *
-     * @return string 
+     * @return string
      */
     public function getFax()
     {
@@ -69,7 +72,7 @@ class Fax
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -85,14 +88,14 @@ class Fax
     public function setFaxType(\Sulu\Bundle\ContactBundle\Entity\FaxType $faxType)
     {
         $this->faxType = $faxType;
-    
+
         return $this;
     }
 
     /**
      * Get faxType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\FaxType 
+     * @return \Sulu\Bundle\ContactBundle\Entity\FaxType
      */
     public function getFaxType()
     {
@@ -108,7 +111,7 @@ class Fax
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -125,7 +128,7 @@ class Fax
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
@@ -141,7 +144,7 @@ class Fax
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
         $this->accounts[] = $accounts;
-    
+
         return $this;
     }
 
@@ -158,7 +161,7 @@ class Fax
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccounts()
     {

@@ -16,6 +16,10 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Fax;
+use Sulu\Bundle\ContactBundle\Entity\FaxType;
+//use Sulu\Bundle\ContactBundle\Entity\Url;
+//use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -157,6 +161,22 @@ class ContactController extends RestController implements ClassResourceInterface
                 }
             }
 
+//            $urls = $contact->getUrls()->toArray();
+//            /** @var Url $url */
+//            foreach ($urls as $url) {
+//                if ($url->getAccounts()->count() == 0 && $url->getContacts()->count() == 1) {
+//                    $em->remove($url);
+//                }
+//            }
+
+            $faxes = $contact->getFaxes()->toArray();
+            /** @var Fax $fax */
+            foreach ($faxes as $fax) {
+                if ($fax->getAccounts()->count() == 0 && $fax->getContacts()->count() == 1) {
+                    $em->remove($fax);
+                }
+            }
+
             $em->remove($contact);
             $em->flush();
         };
@@ -227,6 +247,20 @@ class ContactController extends RestController implements ClassResourceInterface
 
             $contact->setCreated(new DateTime());
             $contact->setChanged(new DateTime());
+
+//            $urls = $this->getRequest()->get('urls');
+//            if (!empty($urls)) {
+//                foreach ($urls as $urlData) {
+//                    $this->addUrl($contact, $urlData);
+//                }
+//            }
+
+            $faxes = $this->getRequest()->get('faxes');
+            if (!empty($faxes)) {
+                foreach ($faxes as $faxData) {
+                    $this->addFax($contact, $faxData);
+                }
+            }
 
             $emails = $this->getRequest()->get('emails');
             if (!empty($emails)) {
@@ -314,7 +348,9 @@ class ContactController extends RestController implements ClassResourceInterface
                 if (!($this->processEmails($contact)
                     && $this->processPhones($contact)
                     && $this->processAddresses($contact)
-                    && $this->processNotes($contact))
+                    && $this->processNotes($contact)
+                    && $this->processFaxes($contact))
+//                    && $this->processUrls($contact))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
@@ -479,6 +515,89 @@ class ContactController extends RestController implements ClassResourceInterface
         } else {
             $phone->setPhone($entry['phone']);
             $phone->setPhoneType($phoneType);
+        }
+
+        return $success;
+    }
+
+
+    /**
+     * @param Contact $contact
+     * @return bool
+     */
+    protected function processFaxes(Contact $contact)
+    {
+        $faxes = $this->getRequest()->get('faxes');
+
+        $delete = function ($fax) use ($contact) {
+            $contact->removeFax($fax);
+
+            return true;
+        };
+
+        $update = function ($fax, $matchedEntry) {
+            return $this->updateFax($fax, $matchedEntry);
+        };
+
+        $add = function ($fax) use ($contact) {
+            $this->addFax($contact, $fax);
+
+            return true;
+        };
+
+        return $this->processPut($contact->getFaxes(), $faxes, $delete, $update, $add);
+    }
+
+    /**
+     * @param Contact $contact
+     * @param $faxData
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityIdAlreadySetException
+     */
+    private function addFax(Contact $contact, $faxData)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $faxEntity = 'SuluContactBundle:Fax';
+        $faxTypeEntity = 'SuluContactBundle:FaxType';
+
+        $faxType = $this->getDoctrine()
+            ->getRepository($faxTypeEntity)
+            ->find($faxData['faxType']['id']);
+
+        if (isset($faxData['id'])) {
+            throw new EntityIdAlreadySetException($faxEntity, $faxData['id']);
+        } elseif (!$faxType) {
+            throw new EntityNotFoundException($faxTypeEntity, $faxData['faxType']['id']);
+        } else {
+            $fax = new Fax();
+            $fax->setFax($faxData['fax']);
+            $fax->setFaxType($faxType);
+            $em->persist($fax);
+            $contact->addFax($fax);
+        }
+    }
+
+
+    /**
+     * @param Fax $fax
+     * @param $entry
+     * @return bool
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     */
+    protected function updateFax(Fax $fax, $entry)
+    {
+        $success = true;
+        $faxTypeEntity = 'SuluContactBundle:FaxType';
+
+        $faxType = $this->getDoctrine()
+            ->getRepository($faxTypeEntity)
+            ->find($entry['faxType']['id']);
+
+        if (!$faxType) {
+            throw new EntityNotFoundException($faxTypeEntity, $entry['faxType']['id']);
+        } else {
+            $fax->setFax($entry['fax']);
+            $fax->setFaxType($faxType);
         }
 
         return $success;
