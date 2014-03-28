@@ -696,39 +696,9 @@ class UserControllerTest extends DatabaseTestCase
 
     }
 
-    public function testPutSettings()
-    {
-        $client = static::createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
-
-        $client->request(
-            'PUT',
-            '/api/users/1/settings/myKey',
-            array(
-                'value' => 'myValue'
-            )
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals('myKey', $response->key);
-        $this->assertEquals('myValue', $response->value);
-    }
-
     public function testPostWithEmptyPassword()
     {
-        $client = static::createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = static::createClient();
 
         $client->request(
             'POST',
@@ -772,7 +742,7 @@ class UserControllerTest extends DatabaseTestCase
             '/api/users/1',
             array(
                 'username' => 'manager',
-                'password' => '',
+                'password'=> '',
                 'locale' => 'en',
                 'contact' => array(
                     'id' => 1
@@ -810,8 +780,7 @@ class UserControllerTest extends DatabaseTestCase
     }
 
 
-    public function testUserDataHandler()
-    {
+    public function testUserDataHandler() {
 
 //        $this->createClient();
 //        self::$kernel->getContainer()->get('sulu_admin.user_data_service');
