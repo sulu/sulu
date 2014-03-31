@@ -132,13 +132,53 @@ define(['app-config'], function(AppConfig) {
             var formObject = this.sandbox.form.create(this.formId);
             formObject.initialized.then(function() {
                 this.setFormData(data).then(function() {
+
                     this.sandbox.start(this.$el, {reset: true});
+                    this.initSortableBlock();
+                    this.bindFormEvents();
 
                     if (!!this.options.preview) {
                         this.initPreview();
                         this.options.preview = false;
                     }
                 }.bind(this));
+            }.bind(this));
+        },
+
+        initSortableBlock: function() {
+            var $sortable = this.sandbox.dom.find('.sortable', this.$el),
+                sortable;
+
+            if (!!$sortable && $sortable.length > 0) {
+                this.sandbox.dom.sortable($sortable, 'destroy');
+                sortable = this.sandbox.dom.sortable($sortable, {
+                    handle: '.move',
+                    forcePlaceholderSize: true
+                });
+
+                // (un)bind event listener
+                this.sandbox.dom.unbind(sortable, 'sortupdate');
+
+                sortable.bind('sortupdate', function(event, ui) {
+                    var changes = this.sandbox.form.getData(this.formId),
+                        propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
+
+                    this.updatePreview(propertyName, changes[propertyName]);
+                }.bind(this));
+            }
+        },
+
+        bindFormEvents: function() {
+            this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
+                var changes = this.sandbox.form.getData(this.formId);
+                this.initSortableBlock();
+                this.updatePreview(propertyName, changes[propertyName]);
+            }.bind(this));
+
+            this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+                var changes = this.sandbox.form.getData(this.formId);
+                this.initSortableBlock();
+                this.updatePreview(propertyName, changes[propertyName]);
             }.bind(this));
         },
 
@@ -303,10 +343,12 @@ define(['app-config'], function(AppConfig) {
 
         submit: function() {
             this.sandbox.logger.log('save Model');
-            var template = (this.template !== '') ? this.template : this.options.data.template;
+            var data,
+                navigation,
+                template = (this.template !== '') ? this.template : this.options.data.template;
 
             if (this.sandbox.form.validate(this.formId)) {
-                var data = this.sandbox.form.getData(this.formId);
+                data = this.sandbox.form.getData(this.formId);
 
                 if (this.options.id === 'index') {
                     data.navigation = true;
