@@ -189,18 +189,26 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function render($title, $article, $block, $partial = false)
     {
-        $template = '<h1 property="title">%s</h1><h1 property="title">PREF: %s</h1><div property="article">%s</div>';
+        $template = '
+            <div id="content" vocab="http://sulu.io/" typeof="Content">
+                <h1 property="title">%s</h1>
+                <h1 property="title">PREF: %s</h1>
+                <div property="article">%s</div>
+                <div property="block" typeof="collection">';
+        $i = 0;
         foreach ($block as $b) {
             $subTemplate = '';
             foreach ($b['article'] as $a) {
                 $subTemplate .= sprintf('<li property="article">%s</li>', $a);
             }
             $template .= sprintf(
-                '<div property="block"><h1 property="title">%s</h1><ul>%s</ul></div>',
+                '<div rel="block" typeof="block"><h1 property="title">%s</h1><ul>%s</ul></div>',
                 $b['title'],
                 $subTemplate
             );
+            $i++;
         }
+        $template .= '</div></div>';
         if (!$partial) {
             $template = '<html vocab="http://schema.org/" typeof="Content"><body>' . $template . '</body></html>';
         }
@@ -262,10 +270,26 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $changes = $this->preview->getChanges(1, '123-123-123');
 
         // check result
-        $this->assertEquals(['New-Block-Article-1-1'], $changes['block,0,article,0']['content']);
-        $this->assertEquals(['New-Block-Article-1-2'], $changes['block,0,article,1']['content']);
-        $this->assertEquals(['New-Block-Title-1'], $changes['block,0,title']['content']);
-        $this->assertEquals(['New-Block-Title-2'], $changes['block,1,title']['content']);
+        $this->assertEquals(['New-Block-Article-1-1', 'New-Block-Article-1-2'], $changes['block,0,article']['content']);
+
+        $this->assertEquals(1, sizeof($changes['block,0']['content']));
+        $this->assertEquals(
+            "<h1 property=\"title\">New-Block-Title-1</h1>\n" .
+            "<ul>\n" .
+            "<li property=\"article\">New-Block-Article-1-1</li>\n" .
+            "<li property=\"article\">New-Block-Article-1-2</li>\n" .
+            "</ul>",
+            $changes['block,0']['content'][0]
+        );
+        $this->assertEquals(1, sizeof($changes['block,1']['content']));
+        $this->assertEquals(
+            "<h1 property=\"title\">New-Block-Title-2</h1>\n" .
+            "<ul>\n" .
+            "<li property=\"article\">Block-Article-2-1</li>\n" .
+            "<li property=\"article\">Block-Article-2-2</li>\n" .
+            "</ul>",
+            $changes['block,1']['content'][0]
+        );
 
         // check cache
         $this->assertTrue($this->cache->contains('1:123-123-123'));
