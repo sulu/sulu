@@ -29,6 +29,18 @@ define([], function() {
                 '   <div id="' + constants.fieldTypeId + '" class="grid-col-6"></div>',
                 '</div>',
                 '<div class="grid-row m-bottom-0"></div>'
+            ].join(''),
+            editField: [
+                '<div class="grid-row divider">',
+                    '<div class="grid-col-7 pull-left">',
+                        '<div id="<%= dropdownId %>"></div>',
+                    '</div>',
+                    '<div class="grid-col-2 pull-right">',
+                        '<div class="btn gray-dark fit only-icon pull-right">',
+                            '<div class="icon-circle-minus"></div>',
+                        '</div>',
+                    '</div>',
+                '</div>'
             ].join('')
         },
 
@@ -49,6 +61,15 @@ define([], function() {
             this.sandbox.on('husky.dependent-select.add-fields.all.items.deselected', function() {
                 this.sandbox.emit('husky.overlay.add-fields.okbutton.deactivate');
             }.bind(this));
+        },
+
+        removeCollectionFilters = function(form) {
+            // add collection filters
+            this.sandbox.form.removeCollectionFilter(this.form, 'emails');
+            this.sandbox.form.removeCollectionFilter(this.form, 'phones');
+            this.sandbox.form.removeCollectionFilter(this.form, 'urls');
+            this.sandbox.form.removeCollectionFilter(this.form, 'faxes');
+            this.sandbox.form.removeCollectionFilter(this.form, 'notes');
         },
 
         addCollectionFilters = function(form) {
@@ -149,6 +170,11 @@ define([], function() {
             this.sandbox.emit('husky.overlay.add-fields.remove');
         },
 
+        editOkClicked = function() {
+            this.sandbox.logger.log('fields-edit-ok clicked remove me later');
+            this.sandbox.stop(this.$editOverlayContent);
+        },
+
         translateFieldTypes = function() {
             var translatedTypes = this.options.fieldTypes,
                 i, len, type;
@@ -158,6 +184,111 @@ define([], function() {
                 }
             }
             this.options.translatedFieldTypes = translatedTypes;
+        },
+
+        /**
+         * Get the data from the form create a neat public object and render the DOM object
+         * for the edit-fields overlay
+         * @returns {*|HTMLElement}
+         */
+        createEditOverlayContent = function() {
+            this.editFieldsData = [];
+            removeCollectionFilters.call(this);
+            var data = this.sandbox.form.getData(this.form),
+                dataArray = {},
+                i, length, key,
+                $content = this.sandbox.dom.createElement('<div class="edit-fields"/>'),
+                $element;
+            addCollectionFilters.call(this, this.form);
+
+            dataArray['address'] = data.addresses;
+            dataArray['email'] = data.emails;
+            dataArray['fax'] = data.faxes;
+            dataArray['phone'] = data.phones;
+            dataArray['url'] = data.urls;
+
+            //loop through object properties
+            for(key in dataArray) {
+                //foreach object property loop through its children
+                for(i = -1, length = dataArray[key].length; ++i < length;) {
+
+                    $element = this.sandbox.dom.createElement(_.template(templates.editField)({
+                        dropdownId: 'edit-dropdown-' + key + '-' + i
+                    }));
+
+                    this.editFieldsData.push({
+                         id: dataArray[key][i].id,
+                         type: dataArray[key][i][key+'Type'],
+                         name: this.sandbox.translate('public.' + key),
+                         $element: $element,
+                         dropdownId: 'edit-dropdown-' + key + '-' + i,
+                         types: this.options.fieldTypes[key],
+                         dropdownData: null
+                    });
+
+                    this.sandbox.dom.append($content, $element);
+                }
+            }
+            return $content;
+        },
+
+        /**
+         * Generate the Data for the all Edit-fields dropdowns
+         */
+        generateEditFieldsDropdownData = function() {
+            var i, length, x, xlength;
+
+            //foreach edit-field
+            for (i = -1, length = this.editFieldsData.length; ++i < length;) {
+                this.editFieldsData[i].dropdownData = [];
+
+                //foreach type in each edit-field
+                for (x = -1, xlength = this.editFieldsData[i].types.length; ++x < xlength;) {
+                    this.editFieldsData[i].dropdownData.push({
+                        id: this.editFieldsData[i].types[x].id,
+                        name: this.editFieldsData[i].name + ' ('+ this.editFieldsData[i].types[x].name +')'
+                    });
+                }
+            }
+        },
+
+        /**
+         * Start all edit-fields dropdowns
+         */
+        startEditFieldsDropdowns = function() {
+            generateEditFieldsDropdownData.call(this);
+            for(var i = -1, length = this.editFieldsData.length; ++i < length;) {
+
+                this.sandbox.start([{
+                    name: 'select@husky',
+                    options: {
+                        el: this.sandbox.dom.find('#' + this.editFieldsData[i].dropdownId, this.editFieldsData[i].$element),
+                        instanceName: this.editFieldsData[i].dropdownId,
+                        data: this.editFieldsData[i].dropdownData,
+                        preSelectedElements: [this.editFieldsData[i].type.id]
+                    }
+                }]);
+            }
+        },
+
+        /**
+         * Create the edit-fields overlay
+         */
+        createEditOverlay = function() {
+            this.$editOverlayContent = createEditOverlayContent.call(this);
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        title: this.sandbox.translate('public.edit-fields'),
+                        openOnStart: true,
+                        instanceName: 'edit-fields',
+                        data: this.$editOverlayContent,
+                        okCallback: editOkClicked.bind(this)
+                    }
+                }
+            ]);
+            startEditFieldsDropdowns.call(this);
         },
 
         createAddOverlay = function() {
@@ -217,7 +348,6 @@ define([], function() {
                         data: this.dropdownDataArray,
                         instanceName: 'add-fields',
                         container: ['#' + constants.fieldId, '#' + constants.fieldTypeId]
-//                        selectOptions: [null,{preSelectedElements:[]}]
                     }
                 }
             ]);
@@ -228,6 +358,11 @@ define([], function() {
         initialize: function() {
 
             this.initialized = false;
+            this.$editOverlayContent = null;
+            this.form = null;
+            this.$addOverlay = null;
+            this.dropdownDataArray = [];
+            this.editFieldsData = [];
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
@@ -266,9 +401,7 @@ define([], function() {
                             {
                                 id: 1,
                                 name: 'public.edit-fields',
-                                callback: function() {
-                                    this.sandbox.emit('sulu.labels.warning.show', 'Editing fields is not yet implemented');
-                                }
+                                callback: createEditOverlay.bind(this)
                             },
                             {
                                 id: 2,
