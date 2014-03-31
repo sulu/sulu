@@ -36,8 +36,20 @@ define([], function() {
             this.sandbox.on('sulu.contact-form.add-collectionfilters', addCollectionFilters.bind(this));
             this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
+
+            // bind events for add-fields overlay
+            bindAddEvents.call(this);
         },
 
+        bindAddEvents = function() {
+            this.sandbox.on('husky.dependent-select.add-fields.all.items.selected', function() {
+                this.sandbox.emit('husky.overlay.add-fields.okbutton.activate');
+            }.bind(this));
+
+            this.sandbox.on('husky.dependent-select.add-fields.all.items.deselected', function() {
+                this.sandbox.emit('husky.overlay.add-fields.okbutton.deactivate');
+            }.bind(this));
+        },
 
         addCollectionFilters = function(form) {
             // set form
@@ -134,7 +146,7 @@ define([], function() {
             // TODO: focus on just inserted field
 
             // remove overlay
-            this.sandbox.emit('husky.overlay.add-overlay.remove');
+            this.sandbox.emit('husky.overlay.add-fields.remove');
         },
 
         translateFieldTypes = function() {
@@ -147,7 +159,6 @@ define([], function() {
             }
             this.options.translatedFieldTypes = translatedTypes;
         },
-
 
         createAddOverlay = function() {
             var data,
@@ -185,13 +196,15 @@ define([], function() {
                 return dropdownData[key];
             });
 
+            // start overlay and dependent select
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
                         title: this.sandbox.translate('public.add-fields'),
                         openOnStart: true,
-                        instanceName: 'add-overlay',
+                        instanceName: 'add-fields',
+                        okInactive: true,
                         data: this.$addOverlay,
                         okCallback: addOkClicked.bind(this)
                     }
@@ -202,6 +215,7 @@ define([], function() {
                         el: this.$addOverlay,
                         singleSelect: true,
                         data: this.dropdownDataArray,
+                        instanceName: 'add-fields',
                         container: ['#' + constants.fieldId, '#' + constants.fieldTypeId]
 //                        selectOptions: [null,{preSelectedElements:[]}]
                     }
