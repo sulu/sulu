@@ -123,7 +123,7 @@
              * @returns mixed
              */
             app.sandbox.sulu.getUserSetting = function(key) {
-                return app.sandbox.sulu.userSettings[key] ? app.sandbox.sulu.userSettings[key] : null;
+                return (typeof app.sandbox.sulu.userSettings[key] !== 'undefined') ? app.sandbox.sulu.userSettings[key] : null;
             };
 
             /**
