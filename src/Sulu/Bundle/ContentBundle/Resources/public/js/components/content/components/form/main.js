@@ -106,7 +106,7 @@ define(['app-config'], function(AppConfig) {
          * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
          */
         setTitle: function() {
-            if (!!this.options.id && !! this.options.data.title) {
+            if (!!this.options.id && !!this.options.data.title) {
                 this.sandbox.emit('sulu.content.set-title', this.options.data.title);
                 this.setBreadcrumb();
             } else {
@@ -144,6 +144,9 @@ define(['app-config'], function(AppConfig) {
 
         setFormData: function(data) {
             var initialize = this.sandbox.form.setData(this.formId, data);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'language', this.options.language);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'language');
+
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
@@ -236,9 +239,14 @@ define(['app-config'], function(AppConfig) {
 
             // change template
             this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading','template');
+                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'template');
                 this.templateChanged = true;
                 this.changeTemplate(item);
+            }, this);
+
+            // change language
+            this.sandbox.on('sulu.edit-toolbar.dropdown.languages.item-clicked', function(item) {
+                this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
             }, this);
 
             // set state button in loading state
@@ -279,13 +287,13 @@ define(['app-config'], function(AppConfig) {
             // expand navigation if navigation item is clicked
             this.sandbox.on('husky.navigation.item.select', function() {
                 this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse',false);
+                this.sandbox.emit('husky.navigation.uncollapse', false);
             }.bind(this));
 
             // expand navigation if back gets clicked
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse',false);
+                this.sandbox.emit('husky.navigation.uncollapse', false);
             }.bind(this));
         },
 
@@ -295,28 +303,27 @@ define(['app-config'], function(AppConfig) {
 
         submit: function() {
             this.sandbox.logger.log('save Model');
-            var template = (this.template !== '') ? this.template: this.options.data.template;
+            var template = (this.template !== '') ? this.template : this.options.data.template;
 
             if (this.sandbox.form.validate(this.formId)) {
-                var data = this.sandbox.form.getData(this.formId),
-                    navigation;
+                var data = this.sandbox.form.getData(this.formId);
 
                 if (this.options.id === 'index') {
-                    navigation = true;
-                } else {
-                    navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+                    data.navigation = true;
+                } else if (!!this.sandbox.dom.find('#show-in-navigation', this.$el).length) {
+                    data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
                 }
 
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data, template, navigation);
+                this.sandbox.emit('sulu.content.contents.save', data, template);
             }
         },
 
         changeTemplateDropdownHandler: function() {
             this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
-            this.sandbox.emit('sulu.edit-toolbar.content.item.enable','template', this.templateChanged);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', this.templateChanged);
             if (this.hiddenTemplate) {
                 this.hiddenTemplate = false;
                 this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
