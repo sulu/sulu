@@ -6,12 +6,12 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="street" type="string" column="street" length="60"/>
-        <field name="number" type="string" column="number" length="60"/>
+        <field name="street" type="string" column="street" length="60" nullable="true"/>
+        <field name="number" type="string" column="number" length="60"  nullable="true"/>
         <field name="addition" type="string" column="addition" length="60" nullable="true"/>
-        <field name="zip" type="string" column="zip" length="60"/>
+        <field name="zip" type="string" column="zip" length="60" nullable="true"/>
         <field name="city" type="string" column="city" length="60"/>
-        <field name="state" type="string" column="state" length="60"/>
+        <field name="state" type="string" column="state" length="60" nullable="true" />
         <many-to-one field="addressType" target-entity="Sulu\Bundle\ContactBundle\Entity\AddressType"
                      inversed-by="addresses">
             <join-columns>
