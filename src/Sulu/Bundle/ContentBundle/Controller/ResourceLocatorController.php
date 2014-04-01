@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
