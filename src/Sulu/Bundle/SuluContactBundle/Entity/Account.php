@@ -658,4 +658,111 @@ class Account extends ApiEntity
         return $this->faxes;
     }
 
+    /**
+     * @var string
+     */
+    private $division;
+
+    /**
+     * @var integer
+     */
+    private $disabled;
+
+    /**
+     * @var string
+     */
+    private $uid;
+
+
+    /**
+     * Set division
+     *
+     * @param string $division
+     * @return Account
+     */
+    public function setDivision($division)
+    {
+        $this->division = $division;
+    
+        return $this;
+    }
+
+    /**
+     * Get division
+     *
+     * @return string 
+     */
+    public function getDivision()
+    {
+        return $this->division;
+    }
+
+    /**
+     * Set disabled
+     *
+     * @param integer $disabled
+     * @return Account
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    
+        return $this;
+    }
+
+    /**
+     * Get disabled
+     *
+     * @return integer 
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param string $uid
+     * @return Account
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+    
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return string 
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * Add faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     * @return Account
+     */
+    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes[] = $faxes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove faxes
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
+     */
+    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    {
+        $this->faxes->removeElement($faxes);
+    }
 }
