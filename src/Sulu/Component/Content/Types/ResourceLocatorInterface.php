@@ -25,16 +25,17 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @param string $segmentKey
      * @return string
      */
-    public function loadContentNodeUuid($resourceLocator, $webspaceKey, $languageCode, $segmentKey);
+    public function loadContentNodeUuid($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * reads the value for given property out of the database + sets the value of the property
-     * @param $uuid
+     * @param string $uuid
      * @param string $webspaceKey
-     * @internal param \PHPCR\NodeInterface $node
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    public function getResourceLocatorByUuid($uuid, $webspaceKey);
+    public function getResourceLocatorByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * reads the value for given property out of the database + sets the value of the property
@@ -44,5 +45,5 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @param string $segmentKey
      * @return string
      */
-    public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey);
+    public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey = null);
 }

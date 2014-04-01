@@ -55,7 +55,14 @@ class SessionManager implements SessionManagerInterface
      */
     public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
-        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['route'];
+        $path = sprintf(
+            '%s/%s/%s/%s%s',
+            $this->nodeNames['base'],
+            $webspaceKey,
+            $this->nodeNames['route'],
+            $languageCode,
+            ($segment !== null ? '/' . $segment : '')
+        );
         $root = $this->getSession()->getRootNode();
 
         return $root->getNode($path);

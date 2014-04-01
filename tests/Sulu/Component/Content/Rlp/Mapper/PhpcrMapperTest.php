@@ -38,7 +38,7 @@ class PhpcrMapperTest extends PhpcrTestCase
 
     private function prepareTestData()
     {
-        $products = $this->routes->addNode('products');
+        $products = $this->languageRoutes['de']->addNode('products');
         $products->addMixin('mix:referenceable');
 
         $machines = $products->addNode('machines');
@@ -116,7 +116,7 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
         $this->sessionManager->getSession()->save();
 
-        $route = '/cmf/default/routes/products/news/content1-news';
+        $route = '/cmf/default/routes/de/products/news/content1-news';
 
         $node = $this->session->getNode($route);
         $this->assertTrue($node->getPropertyValue('sulu:content') == $this->content1);
@@ -179,8 +179,8 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->rlpMapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default', 'de');
         $this->sessionManager->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/default/routes/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/default/routes/products/asdf/content2-news');
+        $oldNode = $this->session->getNode('/cmf/default/routes/de/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/default/routes/de/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
@@ -215,8 +215,8 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->rlpMapper->move('/products/news/content2-news', '/products/asdf/content2-news', 'default', 'de');
         $this->sessionManager->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/default/routes/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/default/routes/products/asdf/content2-news');
+        $oldNode = $this->session->getNode('/cmf/default/routes/de/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/default/routes/de/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();

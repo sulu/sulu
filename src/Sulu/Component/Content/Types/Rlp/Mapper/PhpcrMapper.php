@@ -90,8 +90,14 @@ class PhpcrMapper extends RlpMapper
         foreach ($contentNode->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $parent = $ref->getParent();
-                if (false === $parent->getPropertyValue('sulu:history')) {
-                    return $this->getResourceLocator($ref->getParent()->getPath(), $webspaceKey, $languageCode, $segmentKey);
+                $result = $this->getResourceLocator(
+                    $ref->getParent()->getPath(),
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey
+                );
+                if (false === $parent->getPropertyValue('sulu:history') && false !== $result) {
+                    return $result;
                 }
             }
         }
@@ -387,6 +393,12 @@ class PhpcrMapper extends RlpMapper
         if ($path === $basePath) {
             return '/';
         }
-        return substr($path, strlen($basePath));
+        if (false !== strpos($path, $basePath . '/')) {
+            $result = str_replace($basePath . '/', '/', $path);
+            if (0 === strpos($result, '/')) {
+                return $result;
+            }
+        }
+        return false;
     }
 }

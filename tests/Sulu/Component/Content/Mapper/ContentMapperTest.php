@@ -163,7 +163,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -236,7 +236,7 @@ class ContentMapperTest extends PhpcrTestCase
         $contentBefore = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
         /** @var NodeInterface $contentNode */
         $contentNode = $route->getPropertyValue('sulu:content');
         // simulate new property article, by deleting the property
@@ -344,7 +344,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -400,7 +400,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -456,7 +456,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -511,7 +511,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -573,7 +573,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
         $content = $route->getPropertyValue('sulu:content');
 
         // old properties exists in node
@@ -629,7 +629,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test/test/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test/test/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -641,7 +641,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
-        $oldRoute = $root->getNode('cmf/default/routes/news/test');
+        $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
         $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
@@ -753,7 +753,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/asdf/test/test');
+        $route = $root->getNode('cmf/default/routes/de/news/asdf/test/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -766,7 +766,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
-        $oldRoute = $root->getNode('cmf/default/routes/news/test');
+        $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
         $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
@@ -1352,7 +1352,7 @@ class ContentMapperTest extends PhpcrTestCase
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
         $node = $route->getPropertyValue('sulu:content');
 
         $this->assertTrue($node->getPropertyValue('sulu_locale:de-sulu-navigation'));
