@@ -17117,6 +17117,8 @@ define('form/mapper',[
                         });
                     }.bind(this));
 
+                    that.checkFullAndEmpty.call(this, property[0].data);
+
                     dfd.then(function() {
                         Util.debug('collection resolved');
                     });
@@ -17137,6 +17139,7 @@ define('form/mapper',[
                             that.emitAddEvent(propertyName, null);
                         }.bind(this));
                     }
+                    that.checkFullAndEmpty.call(this, propertyName);
                 },
 
                 removeClick: function(event) {
@@ -17151,6 +17154,35 @@ define('form/mapper',[
                         // set counter
                         $('#current-counter-' + propertyName).text(collection.element.getType().getChildren(tpl.id).length);
                         that.emitRemoveEvent(propertyName, null);
+                    }
+                    that.checkFullAndEmpty.call(this, propertyName);
+                },
+
+                checkFullAndEmpty: function(propertyName) {
+                    var $addButton = $("[data-mapper-add='"+ propertyName +"']"),
+                        $removeButton = $("[data-mapper-remove='"+ propertyName +"']"),
+                        tpl = this.templates[propertyName].tpl,
+                        collection = this.templates[propertyName].collection,
+                        fullClass = collection.element.$el.data('mapper-full-class') || 'full',
+                        emptyClass = collection.element.$el.data('mapper-empty-class') || 'empty';
+
+                    $addButton.removeClass(fullClass);
+                    $addButton.removeClass(emptyClass);
+                    $(collection.element.$el).removeClass(fullClass);
+                    $(collection.element.$el).removeClass(emptyClass);
+
+                    if (!!$addButton.length || !!$removeButton.length) {
+                        // if no add is possible add full style-classes
+                        if (!collection.element.getType().canAdd(tpl.id)) {
+                            $addButton.addClass(fullClass);
+                            $(collection.element.$el).addClass(fullClass);
+
+                        // else, if no remove is possible add empty style-classes
+                        } else if (!collection.element.getType().canRemove(tpl.id)) {
+                            $addButton.addClass(emptyClass);
+                            $(collection.element.$el).addClass(emptyClass);
+
+                        }
                     }
                 },
 
@@ -24823,6 +24855,12 @@ define('__component__$navigation@husky',[],function() {
             EVENT_SHOW = namespace + 'show',
 
         /**
+         * triggers the update of the navigation size
+         * @event husky.navigation.show.size
+         */
+            EVENT_SIZE_UPDATE = namespace + 'size.update',
+
+        /**
          * hides the navigation completely
          * @event husky.navigation.hide
          */
@@ -25097,6 +25135,9 @@ define('__component__$navigation@husky',[],function() {
 
             this.sandbox.on(EVENT_HIDE, this.hide.bind(this));
             this.sandbox.on(EVENT_SHOW, this.show.bind(this));
+
+            this.sandbox.on(EVENT_SIZE_UPDATE, this.resizeListener.bind(this));
+
             this.sandbox.on(EVENT_SELECT_ITEM, this.preselectItem.bind(this));
         },
 
@@ -32226,12 +32267,14 @@ define('__component__$dependent-select@husky',[],function() {
         checkAllSelected = function() {
             var $lastContainer = this.$find(this.options.container[this.options.container.length-1]),
                 lastSelectElement = this.sandbox.dom.children($lastContainer)[0],
-                selection = this.sandbox.dom.data(lastSelectElement,'selection');
+                selection = this.sandbox.dom.attr(lastSelectElement,'data-selection');
 
             // if last element is selected
-            if (!!lastSelectElement && typeof selection !== 'undefined' && this.allSelected !== true) {
-                this.allSelected = true;
-                this.sandbox.emit(ALL_ITEMS_SELECTED.call(this));
+            if (!!lastSelectElement && typeof selection !== 'undefined') {
+                if (!this.allSelected) {
+                    this.allSelected = true;
+                    this.sandbox.emit(ALL_ITEMS_SELECTED.call(this));
+                }
             } else if (this.allSelected) {
                 this.allSelected = false;
                 this.sandbox.emit(ALL_ITEMS_DESELECTED.call(this));
@@ -35595,6 +35638,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Boolean} [options.backdrop] if true backdrop will be shown
  * @params {Boolean} [options.backdropColor] Color of the backdrop
  * @params {Boolean} [options.backdropAlpha] Alpha-value of the backdrop
+ * @params {Boolean} [options.okInactive] If true ok button is deactivated
  */
 define('__component__$overlay@husky',[], function() {
 
@@ -35606,7 +35650,7 @@ define('__component__$overlay@husky',[], function() {
             container: 'body',
             title: '',
             closeIcon: 'remove2',
-            okIcon: 'half-ok save-button btn btn-highlight btn-large',
+            okIcon: 'half-ok save-button btn action',
             closeCallback: null,
             okCallback: null,
             data: '',
@@ -35616,7 +35660,8 @@ define('__component__$overlay@husky',[], function() {
             removeOnClose: false,
             backdrop: true,
             backdropColor: '#000000',
-            backdropAlpha: 0.3
+            backdropAlpha: 0.3,
+            okInactive: false
         },
 
         constants = {
@@ -35640,71 +35685,71 @@ define('__component__$overlay@husky',[], function() {
                 '<div class="overlay-footer">',
                 '<a class="icon-<%= okIcon %> ok-button" href="#"></a>',
                 '</div>',
-            '</div>'
-        ].join(''),
+                '</div>'
+            ].join(''),
             backdrop: [
                 '<div class="husky-overlay-backdrop"></div>'
             ].join('')
-    },
+        },
 
-    /**
-     * namespace for events
-     * @type {string}
-     */
-     eventNamespace = 'husky.overlay.',
+        /**
+         * namespace for events
+         * @type {string}
+         */
+            eventNamespace = 'husky.overlay.',
 
-    /**
-     * raised after initialization process
-     * @event husky.overlay.<instance-name>.initialize
-     */
-    INITIALIZED = function() {
-        return createEventName.call(this, 'initialized');
-    },
+        /**
+         * raised after initialization process
+         * @event husky.overlay.<instance-name>.initialize
+         */
+            INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
 
-    /**
-     * raised after overlay is opened
-     * @event husky.overlay.<instance-name>.opened
-     */
-     OPENED = function() {
-        return createEventName.call(this, 'opened');
-     },
+        /**
+         * raised after overlay is opened
+         * @event husky.overlay.<instance-name>.opened
+         */
+            OPENED = function() {
+            return createEventName.call(this, 'opened');
+        },
 
-    /**
-     * raised after overlay is closed
-     * @event husky.overlay.<instance-name>.closed
-     */
-     CLOSED = function() {
-        return createEventName.call(this, 'closed');
-     },
+        /**
+         * raised after overlay is closed
+         * @event husky.overlay.<instance-name>.closed
+         */
+            CLOSED = function() {
+            return createEventName.call(this, 'closed');
+        },
 
-    /**
-     * used to activate ok button
-     * @event husky.overlay.<instance-name>.okbutton.activate
-     */
-     OKBUTTON_ACTIVATE = function() {
-        return createEventName.call(this, 'okbutton.activate');
-     },
+        /**
+         * used to activate ok button
+         * @event husky.overlay.<instance-name>.okbutton.activate
+         */
+            OKBUTTON_ACTIVATE = function() {
+            return createEventName.call(this, 'okbutton.activate');
+        },
 
-    /**
-     * used to deactivate ok button
-     * @event husky.overlay.<instance-name>.okbutton.deactivate
-     */
-     OKBUTTON_DEACTIVATE = function() {
-        return createEventName.call(this, 'okbutton.deactivate');
-     },
+        /**
+         * used to deactivate ok button
+         * @event husky.overlay.<instance-name>.okbutton.deactivate
+         */
+            OKBUTTON_DEACTIVATE = function() {
+            return createEventName.call(this, 'okbutton.deactivate');
+        },
 
-    /**
-     * removes the component
-     * @event husky.overlay.<instance-name>.remove
-     */
-     REMOVE = function() {
-        return createEventName.call(this, 'remove');
-     },
+        /**
+         * removes the component
+         * @event husky.overlay.<instance-name>.remove
+         */
+            REMOVE = function() {
+            return createEventName.call(this, 'remove');
+        },
 
-    /** returns normalized event names */
-    createEventName = function(postFix) {
-        return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-    };
+        /** returns normalized event names */
+            createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        };
 
     return {
 
@@ -35742,12 +35787,12 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButton.bind(this));
         },
 
-        activateOkButton : function() {
-
+        activateOkButton: function() {
+            this.sandbox.dom.removeClass(this.overlay.$ok, 'inactive gray');
         },
 
-        deactivateOkButton : function() {
-
+        deactivateOkButton: function() {
+            this.sandbox.dom.addClass(this.overlay.$ok, 'inactive gray');
         },
 
 
@@ -35806,6 +35851,11 @@ define('__component__$overlay@husky',[], function() {
                     this.initSkeleton();
                     this.setContent();
                     this.bindOverlayEvents();
+
+                    if (this.options.okInactive === true) {
+                        this.deactivateOkButton();
+                    }
+
                     this.sandbox.emit(INITIALIZED.call(this));
                 }
 
@@ -35820,7 +35870,7 @@ define('__component__$overlay@husky',[], function() {
         initBackdrop: function() {
             this.$backdrop = this.sandbox.dom.createElement(templates.backdrop);
             this.sandbox.dom.css(this.$backdrop, {
-               'background-color': this.options.backdropColor
+                'background-color': this.options.backdropColor
             });
             this.sandbox.dom.fadeTo(this.$backdrop, 0, this.options.backdropAlpha);
         },
@@ -35907,6 +35957,10 @@ define('__component__$overlay@husky',[], function() {
             }.bind(this));
 
             this.sandbox.dom.on(this.overlay.$ok, 'click', function(event) {
+                // do nothing, if button is inactive
+                if (this.overlay.$ok.hasClass('inactive')) {
+                    return;
+                }
                 this.sandbox.dom.preventDefault(event);
                 if (this.executeCallback(this.options.okCallback) !== false) {
                     this.closeOverlay();
