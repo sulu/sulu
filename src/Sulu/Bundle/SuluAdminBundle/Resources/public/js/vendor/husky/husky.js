@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -17015,6 +17014,7 @@ define('form/mapper',[
                     this.collections = [];
                     this.collectionsSet = {};
                     this.templates = {};
+                    this.elements = [];
                     this.collectionsInitiated = $.Deferred();
 
                     form.initialized.then(function() {
@@ -17117,6 +17117,8 @@ define('form/mapper',[
                         });
                     }.bind(this));
 
+                    that.checkFullAndEmpty.call(this, property[0].data);
+
                     dfd.then(function() {
                         Util.debug('collection resolved');
                     });
@@ -17137,6 +17139,7 @@ define('form/mapper',[
                             that.emitAddEvent(propertyName, null);
                         }.bind(this));
                     }
+                    that.checkFullAndEmpty.call(this, propertyName);
                 },
 
                 removeClick: function(event) {
@@ -17151,6 +17154,35 @@ define('form/mapper',[
                         // set counter
                         $('#current-counter-' + propertyName).text(collection.element.getType().getChildren(tpl.id).length);
                         that.emitRemoveEvent(propertyName, null);
+                    }
+                    that.checkFullAndEmpty.call(this, propertyName);
+                },
+
+                checkFullAndEmpty: function(propertyName) {
+                    var $addButton = $("[data-mapper-add='"+ propertyName +"']"),
+                        $removeButton = $("[data-mapper-remove='"+ propertyName +"']"),
+                        tpl = this.templates[propertyName].tpl,
+                        collection = this.templates[propertyName].collection,
+                        fullClass = collection.element.$el.data('mapper-full-class') || 'full',
+                        emptyClass = collection.element.$el.data('mapper-empty-class') || 'empty';
+
+                    $addButton.removeClass(fullClass);
+                    $addButton.removeClass(emptyClass);
+                    $(collection.element.$el).removeClass(fullClass);
+                    $(collection.element.$el).removeClass(emptyClass);
+
+                    if (!!$addButton.length || !!$removeButton.length) {
+                        // if no add is possible add full style-classes
+                        if (!collection.element.getType().canAdd(tpl.id)) {
+                            $addButton.addClass(fullClass);
+                            $(collection.element.$el).addClass(fullClass);
+
+                        // else, if no remove is possible add empty style-classes
+                        } else if (!collection.element.getType().canRemove(tpl.id)) {
+                            $addButton.addClass(emptyClass);
+                            $(collection.element.$el).addClass(emptyClass);
+
+                        }
                     }
                 },
 
@@ -17194,6 +17226,7 @@ define('form/mapper',[
                         $.each($el.children(), function(key, value) {
                             if (!collection || collection.tpl === value.dataset.mapperPropertyTpl) {
                                 item = form.mapper.getData($(value));
+                                item.mapperId = value.dataset.mapperId;
 
                                 var keys = Object.keys(item);
                                 if (keys.length === 1) { // for value only collection
@@ -17235,12 +17268,12 @@ define('form/mapper',[
 
                         // foreach collection elements: create a new dom element, call setData recursively
                         $.each(collection, function(key, value) {
-                            that.appendChildren($element, $child, value).then(function($newElement) {
+                            that.appendChildren.call(this, $element, $child, value).then(function($newElement) {
                                 that.setData.call(this, value, $newElement).then(function() {
                                     resolve();
-                                });
-                            });
-                        });
+                                }.bind(this));
+                            }.bind(this));
+                        }.bind(this));
                     }
 
                     // set current length of collection
@@ -17260,6 +17293,7 @@ define('form/mapper',[
 
                     // adding
                     $template.attr('data-mapper-property-tpl', $child.id);
+                    $template.attr('data-mapper-id', _.uniqueId());
 
                     // add fields
                     $.each($newFields, function(key, field) {
@@ -17283,7 +17317,41 @@ define('form/mapper',[
                             that.setData.call(this, data, $newFields);
                         });
                     }
+
+                    // push element to global array
+                    this.elements.push($template);
+
                     return dfd.promise();
+                },
+
+                /**
+                 * Returns a collection element for a given mapper-id
+                 * @param {number} mapperId
+                 * @return {Object|null} the dom object or null
+                 **/
+                getElementByMapperId: function(mapperId) {
+                    for (var i = -1, length = this.elements.length; ++i < length;) {
+                        if (this.elements[i].data('mapper-id') === mapperId) {
+                            return this.elements[i];
+                        }
+                    }
+                    return null;
+                },
+
+                /**
+                 * Delets an element from the DOM and the global object by a given unique-id
+                 * @param {number} mapperId
+                 * @return {boolean} true if an element was found and deleted
+                 **/
+                deleteElementByMapperId: function(mapperId) {
+                    for (var i = -1, length = this.elements.length; ++i < length;) {
+                        if (this.elements[i].data('mapper-id') === mapperId) {
+                            this.elements[i].remove();
+                            this.elements.splice(i, 1);
+                            return true;
+                        }
+                    }
+                    return false;
                 },
 
                 remove: function($element) {
@@ -17324,7 +17392,7 @@ define('form/mapper',[
                                 element.setValue(data);
                                 // resolve this set data
                                 resolve();
-                            });
+                            }.bind(this));
                         } else {
                             element.setValue(data);
                             // resolve this set data
@@ -17365,7 +17433,7 @@ define('form/mapper',[
                                         element.initialized.then(function() {
                                             element.setValue(value);
                                             resolve();
-                                        });
+                                        }.bind(this));
                                     } else {
                                         element.setValue(value);
                                         resolve();
@@ -17456,6 +17524,24 @@ define('form/mapper',[
                         insertAfterLast = true;
                     }
                     that.appendChildren.call(this, element, template.tpl, data, data, insertAfterLast);
+                },
+
+                /**
+                 * Edits a field in an collection
+                 * @param mapperId {Number} the unique Id of the field
+                 * @param data {Object} new data to apply
+                 */
+                editInCollection: function(mapperId, data) {
+                    var $element = that.getElementByMapperId.call(this, mapperId);
+                    that.setData.call(this, data, $element);
+                },
+
+                /**
+                 * Removes a field from a collection
+                 * @param mapperId {Number} the unique Id of the field
+                 */
+                removeFromCollection: function(mapperId) {
+                    that.deleteElementByMapperId.call(this, mapperId);
                 }
             };
 
@@ -24823,6 +24909,12 @@ define('__component__$navigation@husky',[],function() {
             EVENT_SHOW = namespace + 'show',
 
         /**
+         * triggers the update of the navigation size
+         * @event husky.navigation.show.size
+         */
+            EVENT_SIZE_UPDATE = namespace + 'size.update',
+
+        /**
          * hides the navigation completely
          * @event husky.navigation.hide
          */
@@ -25013,7 +25105,8 @@ define('__component__$navigation@husky',[],function() {
                             value: 'name',
                             data: this.options.userLocales,
                             preSelectedElements: [this.options.userLocale],
-                            small: true
+                            style: 'small',
+                            emitValues: true
                         }
                     }
                 ]);
@@ -25097,6 +25190,9 @@ define('__component__$navigation@husky',[],function() {
 
             this.sandbox.on(EVENT_HIDE, this.hide.bind(this));
             this.sandbox.on(EVENT_SHOW, this.show.bind(this));
+
+            this.sandbox.on(EVENT_SIZE_UPDATE, this.resizeListener.bind(this));
+
             this.sandbox.on(EVENT_SELECT_ITEM, this.preselectItem.bind(this));
         },
 
@@ -32226,12 +32322,14 @@ define('__component__$dependent-select@husky',[],function() {
         checkAllSelected = function() {
             var $lastContainer = this.$find(this.options.container[this.options.container.length-1]),
                 lastSelectElement = this.sandbox.dom.children($lastContainer)[0],
-                selection = this.sandbox.dom.data(lastSelectElement,'selection');
+                selection = this.sandbox.dom.attr(lastSelectElement,'data-selection');
 
             // if last element is selected
-            if (!!lastSelectElement && typeof selection !== 'undefined' && this.allSelected !== true) {
-                this.allSelected = true;
-                this.sandbox.emit(ALL_ITEMS_SELECTED.call(this));
+            if (!!lastSelectElement && typeof selection !== 'undefined') {
+                if (!this.allSelected) {
+                    this.allSelected = true;
+                    this.sandbox.emit(ALL_ITEMS_SELECTED.call(this));
+                }
             } else if (this.allSelected) {
                 this.allSelected = false;
                 this.sandbox.emit(ALL_ITEMS_DESELECTED.call(this));
@@ -32366,6 +32464,7 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {Function} [options.selectCallback] callbackfunction, when element is selected
  * @param {String} [options.valueName] name of property which should be used
  * @param {String} [options.style] "normal", "small" or "big" for different appearance
+ * @param {Boolean} [options.emitValues] If true the value is emited with events instead of the id
  */
 
 define('__component__$select@husky',[], function() {
@@ -32384,7 +32483,8 @@ define('__component__$select@husky',[], function() {
             disabled: false,                  //if true button is disabled
             selectCallback: null,
             deselectCallback: null,
-            style: 'normal'
+            style: 'normal',
+            emitValues: false,
         },
 
         constants = {
@@ -32420,6 +32520,15 @@ define('__component__$select@husky',[], function() {
          */
             EVENT_SELECTED_ITEM = function() {
             return getEventName.call(this, 'selected.item');
+        },
+
+        /**
+         * triggered when item has been preselected
+         * @event husky.select[.INSTANCE_NAME].preselected.item
+         * @param {String} key of selected item
+         */
+            EVENT_PRESELECTED_ITEM = function() {
+            return getEventName.call(this, 'preselected.item');
         },
 
         /**
@@ -32550,7 +32659,11 @@ define('__component__$select@husky',[], function() {
                 $item = this.sandbox.dom.createElement(this.template.menuElement.call(this, idString, value, 'checked'));
                 this.selectedElements.push(idString);
                 this.selectedElementsValues.push(value);
-                this.triggerSelect(idString);
+                if (this.options.emitValues === true) {
+                    this.triggerPreSelect(idString);
+                } else {
+                    this.triggerPreSelect(value);
+                }
             } else {
                 $item = this.sandbox.dom.createElement(this.template.menuElement.call(this, idString, value, ''));
             }
@@ -32578,7 +32691,7 @@ define('__component__$select@husky',[], function() {
                     }.bind(this));
                 }
                 this.changeLabel();
-
+                this.updateSelectionAttribute();
             }
         },
 
@@ -32694,6 +32807,10 @@ define('__component__$select@husky',[], function() {
                 this.hideDropDown();
             }
 
+            if (this.options.emitValues === true) {
+                key = value;
+            }
+
             if (index >= 0) {
                 this.triggerDeselect(key);
             } else {
@@ -32708,6 +32825,16 @@ define('__component__$select@husky',[], function() {
                 this.options.selectCallback.call(this, key);
             } else {
                 this.sandbox.emit(EVENT_SELECTED_ITEM.call(this), key);
+            }
+        },
+
+        // triggers select callback or emits event
+        triggerPreSelect: function(key) {
+            // callback, if defined
+            if (!!this.options.selectCallback) {
+                this.options.selectCallback.call(this, key);
+            } else {
+                this.sandbox.emit(EVENT_PRESELECTED_ITEM.call(this), key);
             }
         },
 
@@ -35595,6 +35722,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Boolean} [options.backdrop] if true backdrop will be shown
  * @params {Boolean} [options.backdropColor] Color of the backdrop
  * @params {Boolean} [options.backdropAlpha] Alpha-value of the backdrop
+ * @params {Boolean} [options.okInactive] If true ok button is deactivated
  */
 define('__component__$overlay@husky',[], function() {
 
@@ -35606,7 +35734,7 @@ define('__component__$overlay@husky',[], function() {
             container: 'body',
             title: '',
             closeIcon: 'remove2',
-            okIcon: 'half-ok save-button btn btn-highlight btn-large',
+            okIcon: 'half-ok save-button btn action',
             closeCallback: null,
             okCallback: null,
             data: '',
@@ -35616,7 +35744,8 @@ define('__component__$overlay@husky',[], function() {
             removeOnClose: false,
             backdrop: true,
             backdropColor: '#000000',
-            backdropAlpha: 0.3
+            backdropAlpha: 0.3,
+            okInactive: false
         },
 
         constants = {
@@ -35640,71 +35769,71 @@ define('__component__$overlay@husky',[], function() {
                 '<div class="overlay-footer">',
                 '<a class="icon-<%= okIcon %> ok-button" href="#"></a>',
                 '</div>',
-            '</div>'
-        ].join(''),
+                '</div>'
+            ].join(''),
             backdrop: [
                 '<div class="husky-overlay-backdrop"></div>'
             ].join('')
-    },
+        },
 
-    /**
-     * namespace for events
-     * @type {string}
-     */
-     eventNamespace = 'husky.overlay.',
+        /**
+         * namespace for events
+         * @type {string}
+         */
+            eventNamespace = 'husky.overlay.',
 
-    /**
-     * raised after initialization process
-     * @event husky.overlay.<instance-name>.initialize
-     */
-    INITIALIZED = function() {
-        return createEventName.call(this, 'initialized');
-    },
+        /**
+         * raised after initialization process
+         * @event husky.overlay.<instance-name>.initialize
+         */
+            INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
 
-    /**
-     * raised after overlay is opened
-     * @event husky.overlay.<instance-name>.opened
-     */
-     OPENED = function() {
-        return createEventName.call(this, 'opened');
-     },
+        /**
+         * raised after overlay is opened
+         * @event husky.overlay.<instance-name>.opened
+         */
+            OPENED = function() {
+            return createEventName.call(this, 'opened');
+        },
 
-    /**
-     * raised after overlay is closed
-     * @event husky.overlay.<instance-name>.closed
-     */
-     CLOSED = function() {
-        return createEventName.call(this, 'closed');
-     },
+        /**
+         * raised after overlay is closed
+         * @event husky.overlay.<instance-name>.closed
+         */
+            CLOSED = function() {
+            return createEventName.call(this, 'closed');
+        },
 
-    /**
-     * used to activate ok button
-     * @event husky.overlay.<instance-name>.okbutton.activate
-     */
-     OKBUTTON_ACTIVATE = function() {
-        return createEventName.call(this, 'okbutton.activate');
-     },
+        /**
+         * used to activate ok button
+         * @event husky.overlay.<instance-name>.okbutton.activate
+         */
+            OKBUTTON_ACTIVATE = function() {
+            return createEventName.call(this, 'okbutton.activate');
+        },
 
-    /**
-     * used to deactivate ok button
-     * @event husky.overlay.<instance-name>.okbutton.deactivate
-     */
-     OKBUTTON_DEACTIVATE = function() {
-        return createEventName.call(this, 'okbutton.deactivate');
-     },
+        /**
+         * used to deactivate ok button
+         * @event husky.overlay.<instance-name>.okbutton.deactivate
+         */
+            OKBUTTON_DEACTIVATE = function() {
+            return createEventName.call(this, 'okbutton.deactivate');
+        },
 
-    /**
-     * removes the component
-     * @event husky.overlay.<instance-name>.remove
-     */
-     REMOVE = function() {
-        return createEventName.call(this, 'remove');
-     },
+        /**
+         * removes the component
+         * @event husky.overlay.<instance-name>.remove
+         */
+            REMOVE = function() {
+            return createEventName.call(this, 'remove');
+        },
 
-    /** returns normalized event names */
-    createEventName = function(postFix) {
-        return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-    };
+        /** returns normalized event names */
+            createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        };
 
     return {
 
@@ -35742,12 +35871,12 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButton.bind(this));
         },
 
-        activateOkButton : function() {
-
+        activateOkButton: function() {
+            this.sandbox.dom.removeClass(this.overlay.$ok, 'inactive gray');
         },
 
-        deactivateOkButton : function() {
-
+        deactivateOkButton: function() {
+            this.sandbox.dom.addClass(this.overlay.$ok, 'inactive gray');
         },
 
 
@@ -35806,6 +35935,11 @@ define('__component__$overlay@husky',[], function() {
                     this.initSkeleton();
                     this.setContent();
                     this.bindOverlayEvents();
+
+                    if (this.options.okInactive === true) {
+                        this.deactivateOkButton();
+                    }
+
                     this.sandbox.emit(INITIALIZED.call(this));
                 }
 
@@ -35820,7 +35954,7 @@ define('__component__$overlay@husky',[], function() {
         initBackdrop: function() {
             this.$backdrop = this.sandbox.dom.createElement(templates.backdrop);
             this.sandbox.dom.css(this.$backdrop, {
-               'background-color': this.options.backdropColor
+                'background-color': this.options.backdropColor
             });
             this.sandbox.dom.fadeTo(this.$backdrop, 0, this.options.backdropAlpha);
         },
@@ -35907,6 +36041,10 @@ define('__component__$overlay@husky',[], function() {
             }.bind(this));
 
             this.sandbox.dom.on(this.overlay.$ok, 'click', function(event) {
+                // do nothing, if button is inactive
+                if (this.overlay.$ok.hasClass('inactive')) {
+                    return;
+                }
                 this.sandbox.dom.preventDefault(event);
                 if (this.executeCallback(this.options.okCallback) !== false) {
                     this.closeOverlay();
@@ -37746,6 +37884,14 @@ define('husky_extensions/collection',[],function() {
                         return  app.sandbox.form.getObject(selector).mapper.addToCollection(propertyName, data, append);
                     },
 
+                    editInCollection: function(selector, mapperId, data) {
+                        return  app.sandbox.form.getObject(selector).mapper.editInCollection(mapperId, data);
+                    },
+
+                    removeFromCollection: function(selector, mapperId) {
+                        return  app.sandbox.form.getObject(selector).mapper.removeFromCollection(mapperId);
+                    },
+
                     addCollectionFilter: function(selector, arrayName, callback) {
                         app.sandbox.form.getObject(selector).mapper.addCollectionFilter(arrayName, callback);
                     },
@@ -38552,3 +38698,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
