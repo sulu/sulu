@@ -11,19 +11,9 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use PHPCR\NodeInterface;
-use PHPCR\SessionInterface;
-use Sulu\Bundle\ContactBundle\Controller\ContactsController;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
-use Sulu\Component\Rest\RestController;
-use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,9 +37,6 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
         if ($webspace == null) {
             throw new MissingArgumentException('ResourceLocator', 'webspace');
         }
-        if ($parent === null && $uuid === null) {
-            throw new MissingArgumentException('ResourceLocator', 'parent or uuid');
-        }
 
         $result = array(
             'resourceLocator' => $this->getResourceLocator($title, $parent, $uuid, $webspace, $languageCode, null)
@@ -69,27 +56,21 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
             return $strategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
         } elseif ($uuid !== null) {
             return $strategy->generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey);
+        } else {
+            $parentPath = '/';
+            return $strategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
         }
-        return ';';
     }
 
     /**
-     * @param $portal
+     * @param $webspaceKey
      * @return RlpStrategyInterface
      */
-    private function getStrategy($portal)
+    private function getStrategy($webspaceKey)
     {
         // FIXME get strategy key for portal ($portal)
         $strategy = 'tree';
 
         return $this->get('sulu.content.rlp.strategy.' . $strategy);
-    }
-
-    /**
-     * @return ResourceLocatorInterface
-     */
-    private function getResourceLocatorType()
-    {
-        return $this->get('sulu.content.type.resource_locator');
     }
 }
