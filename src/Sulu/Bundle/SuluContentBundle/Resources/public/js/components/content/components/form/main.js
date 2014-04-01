@@ -155,7 +155,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindDomEvents: function() {
-            if (!this.options.data.id) {
+            if (!this.options.data.id || !this.options.data.url) {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
             } else {
                 this.dfdListenForChange.resolve();

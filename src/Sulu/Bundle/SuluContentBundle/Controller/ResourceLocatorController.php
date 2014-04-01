@@ -23,6 +23,7 @@ use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\RestController;
+use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,17 +37,22 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
     public function getAction()
     {
         $parent = $this->getRequest()->get('parent');
+        $uuid = $this->getRequest()->get('uuid');
         $title = $this->getRequest()->get('title');
         $webspace = $this->getRequest()->get('webspace');
+        $languageCode = $this->getRequest()->get('language');
         if ($title == null) {
             throw new MissingArgumentException('ResourceLocator', 'title');
         }
         if ($webspace == null) {
             throw new MissingArgumentException('ResourceLocator', 'webspace');
         }
+        if ($parent === null && $uuid === null) {
+            throw new MissingArgumentException('ResourceLocator', 'parent or uuid');
+       }
 
         $result = array(
-            'resourceLocator' => $this->getResourceLocator($title, $parent, $webspace)
+            'resourceLocator' => $this->getResourceLocator($title, $parent, $uuid, $webspace, $languageCode, null)
         );
 
         $response = new Response(json_encode($result));
@@ -55,10 +61,11 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
         return $response;
     }
 
-    private function getResourceLocator($title, $parentUuid, $portal)
+    private function getResourceLocator($title, $parentUuid, $uuid, $webspaceKey, $languageCode, $segmentKey)
     {
-        $strategy = $this->getStrategy($portal);
+        $strategy = $this->getStrategy($webspaceKey);
         if ($parentUuid !== null) {
+<<<<<<< Updated upstream
             try {
                 $parentPath = $strategy->loadByContentUuid($parentUuid, $portal);
             } catch (ResourceLocatorNotFoundException $ex) {
@@ -68,8 +75,15 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
         } else {
             $parentPath = '/';
         }
+=======
+            $parentPath = $strategy->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, $segmentKey);
+>>>>>>> Stashed changes
 
-        return $strategy->generate($title, $parentPath, $portal);
+            return $strategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
+        } elseif ($uuid !== null) {
+            return $strategy->generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey);
+        }
+        return ';';
     }
 
     /**
