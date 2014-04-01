@@ -86,7 +86,7 @@ define([], function() {
                 this.sandbox.emit('sulu.roles.list');
             }, this);
 
-            this.sandbox.on('husky.dropdown.multiple.select.system.selected.item', function(value) {
+            this.sandbox.on('husky.select.system.selected.item', function(value) {
                 this.selectedSystem = value;
                 this.initializeMatrix();
             }.bind(this));
