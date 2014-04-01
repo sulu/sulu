@@ -25,11 +25,7 @@ define([], function() {
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         formSelector = '#role-form',
-        loadedContexts,
-
-    // FIXME move to this.*
-        currentType,
-        currentState;
+        loadedContexts;
 
     return {
 
@@ -46,18 +42,16 @@ define([], function() {
 
             // wait for dropdown to initialize, then get the value and continue
             this.sandbox.on('husky.select.system.initialize', function() {
-                this.sandbox.emit('husky.select.system.getChecked', function(system) {
-                    this.selectedSystem = system[0];
+                this.selectedSystem = this.sandbox.dom.attr('#system', 'data-selection-values');
 
-                    this.initializeMatrix();
-                    this.initializeValidation();
+                this.initializeMatrix();
+                this.initializeValidation();
 
-                    this.bindDOMEvents();
-                    this.bindCustomEvents();
+                this.bindDOMEvents();
+                this.bindCustomEvents();
 
-                    this.setHeaderBar(true);
-                    this.listenForChange();
-                }.bind(this));
+                this.setHeaderBar(true);
+                this.listenForChange();
             }.bind(this));
 
             this.render();

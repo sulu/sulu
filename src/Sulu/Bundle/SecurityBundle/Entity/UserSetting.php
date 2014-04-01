@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * UserSetting
@@ -29,6 +30,7 @@ class UserSetting
 
     /**
      * @var \Sulu\Component\Security\UserInterface
+     * @Exclude
      */
     private $user;
 
