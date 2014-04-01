@@ -246,6 +246,11 @@ define([], function() {
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input");
+
+                // if a field-type gets changed or a field gets deleted
+                this.sandbox.on('sulu.contact-form.changed', function() {
+                    this.setHeaderBar(false);
+                }.bind(this));
             }
 
         };
