@@ -184,6 +184,9 @@ define(['app-config'], function(AppConfig) {
 
         setFormData: function(data) {
             var initialize = this.sandbox.form.setData(this.formId, data);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'language', this.options.language);
+            this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'language');
+
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
@@ -281,6 +284,11 @@ define(['app-config'], function(AppConfig) {
                 this.changeTemplate(item);
             }, this);
 
+            // change language
+            this.sandbox.on('sulu.edit-toolbar.dropdown.languages.item-clicked', function(item) {
+                this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
+            }, this);
+
             // set state button in loading state
             this.sandbox.on('sulu.content.contents.state.change', function() {
                 this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'state');
@@ -336,22 +344,21 @@ define(['app-config'], function(AppConfig) {
         submit: function() {
             this.sandbox.logger.log('save Model');
             var data,
-                navigation,
                 template = (this.template !== '') ? this.template : this.options.data.template;
 
             if (this.sandbox.form.validate(this.formId)) {
                 data = this.sandbox.form.getData(this.formId);
 
                 if (this.options.id === 'index') {
-                    navigation = true;
-                } else {
-                    navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+                    data.navigation = true;
+                } else if (!!this.sandbox.dom.find('#show-in-navigation', this.$el).length) {
+                    data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
                 }
 
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data, template, navigation);
+                this.sandbox.emit('sulu.content.contents.save', data, template);
             }
         },
 

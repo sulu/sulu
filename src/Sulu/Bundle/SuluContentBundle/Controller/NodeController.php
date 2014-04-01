@@ -69,6 +69,12 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+        $excludeGhosts = $this->getRequest()->get('exclude-ghosts', false);
+        if ($excludeGhosts === 'false') {
+            $excludeGhosts = false;
+        } else {
+            $excludeGhosts = true;
+        }
 
         $parentUuid = $this->getRequest()->get('parent');
         $depth = $this->getRequest()->get('depth', 1);
@@ -77,7 +83,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $flat = ($flat === 'true');
 
         // TODO pagination
-        $result = $this->getRepository()->getNodes($parentUuid, $webspace, $language, $depth, $flat, false);
+        $result = $this->getRepository()->getNodes($parentUuid, $webspace, $language, $depth, $flat, false, $excludeGhosts);
 
         return $this->handleView(
             $this->view($result)
@@ -171,7 +177,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
         $template = $this->getRequest()->get('template');
         $navigation = $this->getRequest()->get('navigation');
-        if ($navigation === '0') {
+        if ($navigation === false || $navigation === '0') {
             $navigation = false;
         } else {
             // default navigation
