@@ -21,10 +21,11 @@
         </field>
         <field name="name" type="string" column="name" length="60"/>
 
-        <field name="division" type="string" column="division" length="255"/>
+        <field name="division" type="string" column="division" length="255" nullable="true"/>
 
-        <field name="disabled" type="integer" column="disabled" />
-        <field name="uid" type="string" column="uid" length="50" />
+        <field name="disabled" type="integer" column="disabled" length="1" />
+
+        <field name="uid" type="string" column="uid" length="50" nullable="true" />
 
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
