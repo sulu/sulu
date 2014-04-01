@@ -334,7 +334,7 @@ define([], function() {
                             defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                             checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
-                            data: ["Deutsch", "English", "Espagnol", "Italiano"],
+                            data: ["Deutsch", "English", "Espanol", "Italiano"],
                             preSelectedElements: preSelectedValues
                         }
                     }
