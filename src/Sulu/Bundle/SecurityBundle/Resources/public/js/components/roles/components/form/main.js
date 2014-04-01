@@ -25,11 +25,7 @@ define([], function() {
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         formSelector = '#role-form',
-        loadedContexts,
-
-    // FIXME move to this.*
-        currentType,
-        currentState;
+        loadedContexts;
 
     return {
 
