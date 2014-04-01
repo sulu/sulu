@@ -87,8 +87,8 @@ define([
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.contents.load', function(id) {
-                this.load(id);
+            this.sandbox.on('sulu.content.contents.load', function(id, webspace, language) {
+                this.load(id, webspace, language);
             }, this);
 
             // add new content
@@ -107,12 +107,11 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.content.contents.list', function() {
-
+            this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
                 // uncollapse navigation
                 this.sandbox.emit('husky.navigation.uncollapse');
 
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 
             // return dropdown for state
@@ -291,8 +290,8 @@ define([
             });
         },
 
-        load: function(id) {
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/content');
+        load: function(id, webspace, language) {
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + id + '/content');
         },
 
         add: function(parent) {

@@ -183,11 +183,12 @@ class NodeRepository implements NodeRepositoryInterface
      * @param int $depth
      * @param bool $flat
      * @param bool $complete
+     * @param bool $excludeGhosts
      * @return array
      */
-    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true)
+    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true, $excludeGhosts = false)
     {
-        $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat);
+        $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat, false, $excludeGhosts);
 
         if ($parent != null) {
             $parentNode = $this->getMapper()->load($parent, $webspaceKey, $languageCode);
