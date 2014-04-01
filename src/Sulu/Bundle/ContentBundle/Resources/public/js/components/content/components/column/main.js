@@ -55,7 +55,7 @@ define(function() {
 
             this.sandbox.on('husky.select.language.selected.item', function(localeId) {
                 this.changeLanguage(this.getLocalizationForId(localeId));
-            }, this)
+            }, this);
         },
 
         restartColumnNavigation: function() {
