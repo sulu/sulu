@@ -599,172 +599,177 @@ table {
   color: black !important;
 }
 
-/* line 106, ../scss/utilities.scss */
+/* line 101, ../scss/utilities.scss */
+.faded {
+  opacity: 0.3;
+}
+
+/* line 110, ../scss/utilities.scss */
 .m-top-0 {
   margin-top: 0px !important;
 }
 
-/* line 109, ../scss/utilities.scss */
+/* line 113, ../scss/utilities.scss */
 .p-top-0 {
   padding-top: 0px !important;
 }
 
-/* line 112, ../scss/utilities.scss */
+/* line 116, ../scss/utilities.scss */
 .m-bottom-0 {
   margin-bottom: 0px !important;
 }
 
-/* line 115, ../scss/utilities.scss */
+/* line 119, ../scss/utilities.scss */
 .p-bottom-0 {
   padding-bottom: 0px !important;
 }
 
-/* line 120, ../scss/utilities.scss */
+/* line 124, ../scss/utilities.scss */
 .m-top-5 {
   margin-top: 5px !important;
 }
 
-/* line 123, ../scss/utilities.scss */
+/* line 127, ../scss/utilities.scss */
 .p-top-5 {
   padding-top: 5px !important;
 }
 
-/* line 127, ../scss/utilities.scss */
+/* line 131, ../scss/utilities.scss */
 .m-bottom-5 {
   margin-bottom: 5px !important;
 }
 
-/* line 130, ../scss/utilities.scss */
+/* line 134, ../scss/utilities.scss */
 .p-bottom-5 {
   padding-bottom: 5px !important;
 }
 
-/* line 134, ../scss/utilities.scss */
+/* line 138, ../scss/utilities.scss */
 .m-right-5 {
   margin-right: 5px !important;
 }
 
-/* line 137, ../scss/utilities.scss */
+/* line 141, ../scss/utilities.scss */
 .p-right-5 {
   padding-right: 5px !important;
 }
 
-/* line 141, ../scss/utilities.scss */
+/* line 145, ../scss/utilities.scss */
 .m-left-5 {
   margin-left: 5px !important;
 }
 
-/* line 144, ../scss/utilities.scss */
+/* line 148, ../scss/utilities.scss */
 .p-left-5 {
   padding-left: 5px !important;
 }
 
-/* line 149, ../scss/utilities.scss */
+/* line 153, ../scss/utilities.scss */
 .m-top-10 {
   margin-top: 10px !important;
 }
 
-/* line 153, ../scss/utilities.scss */
+/* line 157, ../scss/utilities.scss */
 .m-bottom-10 {
   margin-bottom: 10px !important;
 }
 
-/* line 157, ../scss/utilities.scss */
+/* line 161, ../scss/utilities.scss */
 .m-right-10 {
   margin-right: 10px !important;
 }
 
-/* line 161, ../scss/utilities.scss */
+/* line 165, ../scss/utilities.scss */
 .m-left-10 {
   margin-left: 10px !important;
 }
 
-/* line 166, ../scss/utilities.scss */
+/* line 170, ../scss/utilities.scss */
 .p-top-10 {
   padding-top: 10px !important;
 }
 
-/* line 171, ../scss/utilities.scss */
+/* line 175, ../scss/utilities.scss */
 .m-top-15 {
   margin-top: 15px !important;
 }
 
-/* line 175, ../scss/utilities.scss */
+/* line 179, ../scss/utilities.scss */
 .m-bottom-15 {
   margin-bottom: 15px !important;
 }
 
-/* line 179, ../scss/utilities.scss */
+/* line 183, ../scss/utilities.scss */
 .m-right-15 {
   margin-right: 15px !important;
 }
 
-/* line 183, ../scss/utilities.scss */
+/* line 187, ../scss/utilities.scss */
 .m-left-15 {
   margin-left: 15px !important;
 }
 
-/* line 188, ../scss/utilities.scss */
+/* line 192, ../scss/utilities.scss */
 .m-top-20 {
   margin-top: 20px !important;
 }
 
-/* line 192, ../scss/utilities.scss */
+/* line 196, ../scss/utilities.scss */
 .m-bottom-20 {
   margin-bottom: 20px !important;
 }
 
-/* line 196, ../scss/utilities.scss */
+/* line 200, ../scss/utilities.scss */
 .m-right-20 {
   margin-right: 20px !important;
 }
 
-/* line 200, ../scss/utilities.scss */
+/* line 204, ../scss/utilities.scss */
 .m-left-20 {
   margin-left: 20px !important;
 }
 
-/* line 206, ../scss/utilities.scss */
+/* line 210, ../scss/utilities.scss */
 .m-top-25 {
   margin-top: 25px !important;
 }
 
-/* line 210, ../scss/utilities.scss */
+/* line 214, ../scss/utilities.scss */
 .m-bottom-25 {
   margin-bottom: 25px !important;
 }
 
-/* line 214, ../scss/utilities.scss */
+/* line 218, ../scss/utilities.scss */
 .m-right-25 {
   margin-right: 25px !important;
 }
 
-/* line 218, ../scss/utilities.scss */
+/* line 222, ../scss/utilities.scss */
 .m-left-25 {
   margin-left: 25px !important;
 }
 
-/* line 223, ../scss/utilities.scss */
+/* line 227, ../scss/utilities.scss */
 .m-top-30 {
   margin-top: 30px !important;
 }
 
-/* line 227, ../scss/utilities.scss */
+/* line 231, ../scss/utilities.scss */
 .m-bottom-30 {
   margin-bottom: 30px !important;
 }
 
-/* line 231, ../scss/utilities.scss */
+/* line 235, ../scss/utilities.scss */
 .m-right-30 {
   margin-right: 30px !important;
 }
 
-/* line 235, ../scss/utilities.scss */
+/* line 239, ../scss/utilities.scss */
 .m-left-30 {
   margin-left: 30px !important;
 }
 
-/* line 243, ../scss/utilities.scss */
+/* line 247, ../scss/utilities.scss */
 .m-height-25 {
   height: 25px !important;
 }
@@ -999,15 +1004,17 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 /* line 52, ../scss/modules/overlay.scss */
 .overlay-footer .save-button {
   display: inline-block;
+  font-size: 20px;
+  line-height: 26px;
 }
 
-/* line 57, ../scss/modules/overlay.scss */
+/* line 59, ../scss/modules/overlay.scss */
 .overlay-content {
   padding-left: 0;
   margin: 10px 20px;
 }
 
-/* line 62, ../scss/modules/overlay.scss */
+/* line 64, ../scss/modules/overlay.scss */
 .husky-overlay-backdrop {
   width: 100%;
   height: 100%;
@@ -3216,234 +3223,240 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 }
 
 /* line 59, ../scss/modules/icons.scss */
+.icon-circle-minus::after {
+  content: "\e192";
+  display: inline-block;
+}
+
+/* line 66, ../scss/modules/icons.scss */
 .icon-circle-arrow-down::after {
   content: "\e220";
   display: inline-block;
 }
 
-/* line 66, ../scss/modules/icons.scss */
+/* line 73, ../scss/modules/icons.scss */
 .icon-circle-ok::after {
   content: "\e199";
   display: inline-block;
 }
 
-/* line 73, ../scss/modules/icons.scss */
+/* line 80, ../scss/modules/icons.scss */
 .icon-circle-plus::after {
   content: "\e191";
   display: inline-block;
 }
 
-/* line 80, ../scss/modules/icons.scss */
+/* line 87, ../scss/modules/icons.scss */
 .icon-edit::after {
   content: "\e151";
   display: inline-block;
 }
 
-/* line 87, ../scss/modules/icons.scss */
+/* line 94, ../scss/modules/icons.scss */
 .icon-edit-pen::after {
   content: "\270f";
   display: inline-block;
 }
 
-/* line 94, ../scss/modules/icons.scss */
+/* line 101, ../scss/modules/icons.scss */
 .icon-settings::after {
   content: "\e281";
   display: inline-block;
 }
 
-/* line 101, ../scss/modules/icons.scss */
+/* line 108, ../scss/modules/icons.scss */
 .icon-cogwheel::after {
   content: "\e137";
   display: inline-block;
 }
 
-/* line 108, ../scss/modules/icons.scss */
+/* line 115, ../scss/modules/icons.scss */
 .icon-cogwheels::after {
   content: "\e138";
   display: inline-block;
 }
 
-/* line 115, ../scss/modules/icons.scss */
+/* line 122, ../scss/modules/icons.scss */
 .icon-caution::after {
   content: "\e197";
   display: inline-block;
 }
 
-/* line 122, ../scss/modules/icons.scss */
+/* line 129, ../scss/modules/icons.scss */
 .icon-contact-book::after {
   content: "\e089";
   display: inline-block;
 }
 
-/* line 129, ../scss/modules/icons.scss */
+/* line 136, ../scss/modules/icons.scss */
 .icon-parents::after {
   content: "\e025";
   display: inline-block;
 }
 
-/* line 135, ../scss/modules/icons.scss */
+/* line 142, ../scss/modules/icons.scss */
 .icon-keys {
   cursor: pointer;
 }
-/* line 137, ../scss/modules/icons.scss */
+/* line 144, ../scss/modules/icons.scss */
 .icon-keys::after {
   content: "\e045";
   display: inline-block;
 }
 
-/* line 143, ../scss/modules/icons.scss */
+/* line 150, ../scss/modules/icons.scss */
 .icon-floppy-save {
   cursor: pointer;
 }
-/* line 145, ../scss/modules/icons.scss */
+/* line 152, ../scss/modules/icons.scss */
 .icon-floppy-save::after {
   content: "\e447";
   display: inline-block;
 }
 
-/* line 152, ../scss/modules/icons.scss */
+/* line 159, ../scss/modules/icons.scss */
 .icon-building::after {
   content: "\e090";
   display: inline-block;
 }
 
-/* line 159, ../scss/modules/icons.scss */
+/* line 166, ../scss/modules/icons.scss */
 .icon-bank::after {
   content: "\e264";
   display: inline-block;
 }
 
-/* line 166, ../scss/modules/icons.scss */
+/* line 173, ../scss/modules/icons.scss */
 .icon-book::after {
   content: "\e072";
   display: inline-block;
 }
 
-/* line 173, ../scss/modules/icons.scss */
+/* line 180, ../scss/modules/icons.scss */
 .icon-book-open::after {
   content: "\e352";
   display: inline-block;
 }
 
-/* line 180, ../scss/modules/icons.scss */
+/* line 187, ../scss/modules/icons.scss */
 .icon-view::after {
   content: "\e052";
   display: inline-block;
 }
 
-/* line 187, ../scss/modules/icons.scss */
+/* line 194, ../scss/modules/icons.scss */
 .icon-delete::after {
   content: "\e017";
   display: inline-block;
 }
 
-/* line 194, ../scss/modules/icons.scss */
+/* line 201, ../scss/modules/icons.scss */
 .icon-factory::after {
   content: "\e451";
   display: inline-block;
 }
 
-/* line 201, ../scss/modules/icons.scss */
+/* line 208, ../scss/modules/icons.scss */
 .icon-live::after {
   content: "\e033";
   display: inline-block;
 }
 
-/* line 208, ../scss/modules/icons.scss */
+/* line 215, ../scss/modules/icons.scss */
 .icon-security::after {
   content: "\e205";
   display: inline-block;
 }
 
-/* line 215, ../scss/modules/icons.scss */
+/* line 222, ../scss/modules/icons.scss */
 .icon-lock::after {
   content: "\1f512";
   display: inline-block;
 }
 
-/* line 222, ../scss/modules/icons.scss */
+/* line 229, ../scss/modules/icons.scss */
 .icon-chevron-right::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e080";
   display: inline-block;
 }
 
-/* line 230, ../scss/modules/icons.scss */
+/* line 237, ../scss/modules/icons.scss */
 .icon-chevron-left::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e079";
   display: inline-block;
 }
 
-/* line 238, ../scss/modules/icons.scss */
+/* line 245, ../scss/modules/icons.scss */
 .icon-warning::after {
   content: "\e079";
   display: inline-block;
 }
 
-/* line 245, ../scss/modules/icons.scss */
+/* line 252, ../scss/modules/icons.scss */
 .icon-chevron-down::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e114";
   display: inline-block;
 }
 
-/* line 253, ../scss/modules/icons.scss */
+/* line 260, ../scss/modules/icons.scss */
 .icon-chevron-up::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e113";
   display: inline-block;
 }
 
-/* line 261, ../scss/modules/icons.scss */
+/* line 268, ../scss/modules/icons.scss */
 .icon-archive::after {
   content: "\e150";
   display: inline-block;
 }
 
-/* line 268, ../scss/modules/icons.scss */
+/* line 275, ../scss/modules/icons.scss */
 .icon-check::after {
   content: "\e153";
   display: inline-block;
 }
 
-/* line 275, ../scss/modules/icons.scss */
+/* line 282, ../scss/modules/icons.scss */
 .icon-adjust-alt::after {
   content: "\e140";
   display: inline-block;
 }
 
-/* line 282, ../scss/modules/icons.scss */
+/* line 289, ../scss/modules/icons.scss */
 .icon-list::after {
   content: "\e115";
   display: inline-block;
 }
 
-/* line 289, ../scss/modules/icons.scss */
+/* line 296, ../scss/modules/icons.scss */
 .icon-items::after {
   content: "\e319";
   display: inline-block;
 }
 
-/* line 296, ../scss/modules/icons.scss */
+/* line 303, ../scss/modules/icons.scss */
 .icon-star::after {
   content: "\e050";
   display: inline-block;
 }
 
-/* line 303, ../scss/modules/icons.scss */
+/* line 310, ../scss/modules/icons.scss */
 .icon-globe::after {
   content: "\e341";
   display: inline-block;
 }
 
-/* line 310, ../scss/modules/icons.scss */
+/* line 317, ../scss/modules/icons.scss */
 .icon-dashboard::after {
   content: "\e332";
   display: inline-block;
 }
 
-/* line 316, ../scss/modules/icons.scss */
+/* line 323, ../scss/modules/icons.scss */
 .icon-move, .text-block .head label::before {
   content: "\e188";
   display: inline-block;
@@ -3455,7 +3468,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   transform: rotate(90deg);
 }
 
-/* line 328, ../scss/modules/icons.scss */
+/* line 335, ../scss/modules/icons.scss */
 .icon-arrow-down::after {
   content: "\e224";
   display: inline-block;
@@ -3466,7 +3479,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   transform: rotate(90deg);
 }
 
-/* line 341, ../scss/modules/icons.scss */
+/* line 348, ../scss/modules/icons.scss */
 .icon-arrow-up::after {
   content: "\e225";
   display: inline-block;
@@ -3477,145 +3490,145 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   transform: rotate(90deg);
 }
 
-/* line 354, ../scss/modules/icons.scss */
+/* line 361, ../scss/modules/icons.scss */
 .icon-arrow::after {
   content: "\e223";
   display: inline-block;
 }
 
-/* line 361, ../scss/modules/icons.scss */
+/* line 368, ../scss/modules/icons.scss */
 .icon-internal-link::after {
   content: "\e051";
   display: inline-block;
 }
 
-/* line 368, ../scss/modules/icons.scss */
+/* line 375, ../scss/modules/icons.scss */
 .icon-external-link::after {
   content: "\e242";
   display: inline-block;
 }
 
-/* line 375, ../scss/modules/icons.scss */
+/* line 382, ../scss/modules/icons.scss */
 .icon-shadow-node::after {
   content: "\e223";
   display: inline-block;
 }
 
-/* line 382, ../scss/modules/icons.scss */
+/* line 389, ../scss/modules/icons.scss */
 .icon-brush::after {
   content: "\e235";
   display: inline-block;
 }
 
-/* line 389, ../scss/modules/icons.scss */
+/* line 396, ../scss/modules/icons.scss */
 .icon-user::after {
   content: "\e004";
   display: inline-block;
 }
 
-/* line 396, ../scss/modules/icons.scss */
+/* line 403, ../scss/modules/icons.scss */
 .icon-user-add::after {
   content: "\e007";
   display: inline-block;
 }
 
-/* line 403, ../scss/modules/icons.scss */
+/* line 410, ../scss/modules/icons.scss */
 .icon-asterisk::after {
   content: "\002a";
   display: inline-block;
 }
 
-/* line 410, ../scss/modules/icons.scss */
+/* line 417, ../scss/modules/icons.scss */
 .icon-bin::after {
   content: "\e017";
   display: inline-block;
 }
 
-/* line 417, ../scss/modules/icons.scss */
+/* line 424, ../scss/modules/icons.scss */
 .icon-retweet::after {
   content: "\e081";
   display: inline-block;
 }
 
-/* line 424, ../scss/modules/icons.scss */
+/* line 431, ../scss/modules/icons.scss */
 .icon-file::after {
   content: "\E037";
   display: inline-block;
 }
 
-/* line 431, ../scss/modules/icons.scss */
+/* line 438, ../scss/modules/icons.scss */
 .icon-file-import::after {
   content: "\e359";
   display: inline-block;
 }
 
-/* line 438, ../scss/modules/icons.scss */
+/* line 445, ../scss/modules/icons.scss */
 .icon-file-export::after {
   content: "\e360";
   display: inline-block;
 }
 
-/* line 445, ../scss/modules/icons.scss */
+/* line 452, ../scss/modules/icons.scss */
 .icon-show-thumbnails::after {
   content: "\e157";
   display: inline-block;
 }
 
-/* line 452, ../scss/modules/icons.scss */
+/* line 459, ../scss/modules/icons.scss */
 .icon-eye-open::after {
   content: "\e052";
   display: inline-block;
 }
 
-/* line 459, ../scss/modules/icons.scss */
+/* line 466, ../scss/modules/icons.scss */
 .icon-half-eye-open::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e105";
   display: inline-block;
 }
 
-/* line 467, ../scss/modules/icons.scss */
+/* line 474, ../scss/modules/icons.scss */
 .icon-half-eye-close::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e106";
   display: inline-block;
 }
 
-/* line 475, ../scss/modules/icons.scss */
+/* line 482, ../scss/modules/icons.scss */
 .icon-floppy-save::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e175";
   display: inline-block;
 }
 
-/* line 483, ../scss/modules/icons.scss */
+/* line 490, ../scss/modules/icons.scss */
 .icon-floppy-saved::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e173";
   display: inline-block;
 }
 
-/* line 491, ../scss/modules/icons.scss */
+/* line 498, ../scss/modules/icons.scss */
 .icon-half-ok::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e013";
   display: inline-block;
 }
 
-/* line 499, ../scss/modules/icons.scss */
+/* line 506, ../scss/modules/icons.scss */
 .icon-half-remove::after {
   font-family: "Glyphicons Halflings Regular";
   content: "\e014";
   display: inline-block;
 }
 
-/* line 507, ../scss/modules/icons.scss */
+/* line 514, ../scss/modules/icons.scss */
 .icon-remove2::after {
   content: "\e208";
   display: inline-block;
 }
 
-/* line 514, ../scss/modules/icons.scss */
+/* line 521, ../scss/modules/icons.scss */
 .icon-publish::after {
   content: "";
   display: inline-block;
@@ -3630,7 +3643,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   left: 0px;
 }
 
-/* line 530, ../scss/modules/icons.scss */
+/* line 537, ../scss/modules/icons.scss */
 .icon-unpublish::after {
   content: "";
   display: inline-block;
@@ -3645,7 +3658,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   left: 0px;
 }
 
-/* line 546, ../scss/modules/icons.scss */
+/* line 553, ../scss/modules/icons.scss */
 .icon-test::after {
   content: "";
   display: inline-block;
@@ -3660,25 +3673,25 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   left: 0px;
 }
 
-/* line 562, ../scss/modules/icons.scss */
+/* line 569, ../scss/modules/icons.scss */
 .icon-right-arrow::after {
   content: "\e212";
   display: inline-block;
 }
 
-/* line 569, ../scss/modules/icons.scss */
+/* line 576, ../scss/modules/icons.scss */
 .icon-step-backward::after {
   content: "\e171";
   display: inline-block;
 }
 
-/* line 576, ../scss/modules/icons.scss */
+/* line 583, ../scss/modules/icons.scss */
 .icon-step-forward::after {
   content: "\e179";
   display: inline-block;
 }
 
-/* line 583, ../scss/modules/icons.scss */
+/* line 590, ../scss/modules/icons.scss */
 .icon-disk-export::after {
   content: "\e420";
   display: inline-block;
@@ -3829,211 +3842,217 @@ hr.divider {
 .grid-row.no-spacing {
   margin-bottom: 0;
 }
-/* line 25, ../scss/modules/grid.scss */
+/* line 24, ../scss/modules/grid.scss */
+.grid-row.divider {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #cccccc;
+}
+/* line 29, ../scss/modules/grid.scss */
 .grid-row::after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 31, ../scss/modules/grid.scss */
+/* line 35, ../scss/modules/grid.scss */
 .grid-row img {
   max-width: 100%;
 }
 
-/* line 40, ../scss/modules/grid.scss */
+/* line 44, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-1.floating:nth-child(n+13) {
   margin-top: 10px;
 }
-/* line 45, ../scss/modules/grid.scss */
+/* line 49, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-2.floating:nth-child(n+7) {
   margin-top: 10px;
 }
-/* line 50, ../scss/modules/grid.scss */
+/* line 54, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-3.floating:nth-child(n+5) {
   margin-top: 10px;
 }
-/* line 55, ../scss/modules/grid.scss */
+/* line 59, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-4.floating:nth-child(n+4) {
   margin-top: 10px;
 }
-/* line 60, ../scss/modules/grid.scss */
+/* line 64, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-6.floating:nth-child(n+3) {
   margin-top: 10px;
 }
-/* line 65, ../scss/modules/grid.scss */
+/* line 69, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-12.floating:nth-child(n+2) {
   margin-top: 10px;
 }
 
-/* line 71, ../scss/modules/grid.scss */
+/* line 75, ../scss/modules/grid.scss */
 [class*="grid-col-"] {
   float: left;
   padding-left: 8px;
   padding-right: 8px;
   min-height: 1px;
 }
-/* line 77, ../scss/modules/grid.scss */
+/* line 81, ../scss/modules/grid.scss */
 [class*="grid-col-"]:first-of-type {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 82, ../scss/modules/grid.scss */
+/* line 86, ../scss/modules/grid.scss */
 [class*="grid-col-"]:last-of-type {
   padding-right: 0;
 }
-/* line 85, ../scss/modules/grid.scss */
+/* line 89, ../scss/modules/grid.scss */
 [class*="grid-col-"].no-padding {
   padding: 0;
 }
 
-/* line 90, ../scss/modules/grid.scss */
+/* line 94, ../scss/modules/grid.scss */
 .grid-col-1 {
   width: 8.33%;
 }
-/* line 94, ../scss/modules/grid.scss */
+/* line 98, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(n+13) {
   margin-top: 20px;
 }
-/* line 98, ../scss/modules/grid.scss */
+/* line 102, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 103, ../scss/modules/grid.scss */
+/* line 107, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n) {
   padding-right: 0;
 }
 
-/* line 109, ../scss/modules/grid.scss */
+/* line 113, ../scss/modules/grid.scss */
 .grid-col-2 {
   width: 16.66%;
 }
-/* line 113, ../scss/modules/grid.scss */
+/* line 117, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(n+7) {
   margin-top: 20px;
 }
-/* line 117, ../scss/modules/grid.scss */
+/* line 121, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 122, ../scss/modules/grid.scss */
+/* line 126, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n) {
   padding-right: 0;
 }
 
-/* line 128, ../scss/modules/grid.scss */
+/* line 132, ../scss/modules/grid.scss */
 .grid-col-3 {
   width: 25%;
 }
-/* line 132, ../scss/modules/grid.scss */
+/* line 136, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(n+5) {
   margin-top: 20px;
 }
-/* line 136, ../scss/modules/grid.scss */
+/* line 140, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 141, ../scss/modules/grid.scss */
+/* line 145, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n) {
   padding-right: 0;
 }
 
-/* line 147, ../scss/modules/grid.scss */
+/* line 151, ../scss/modules/grid.scss */
 .grid-col-4 {
   width: 33.33%;
 }
-/* line 151, ../scss/modules/grid.scss */
+/* line 155, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(n+4) {
   margin-top: 20px;
 }
-/* line 155, ../scss/modules/grid.scss */
+/* line 159, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 160, ../scss/modules/grid.scss */
+/* line 164, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n) {
   padding-right: 0;
 }
 
-/* line 166, ../scss/modules/grid.scss */
+/* line 170, ../scss/modules/grid.scss */
 .grid-col-5 {
   width: 41.66%;
 }
 
-/* line 170, ../scss/modules/grid.scss */
+/* line 174, ../scss/modules/grid.scss */
 .grid-col-6 {
   width: 50%;
 }
-/* line 175, ../scss/modules/grid.scss */
+/* line 179, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(n+3) {
   margin-top: 20px;
 }
-/* line 179, ../scss/modules/grid.scss */
+/* line 183, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(odd) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 184, ../scss/modules/grid.scss */
+/* line 188, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(even) {
   padding-right: 0;
 }
 
-/* line 190, ../scss/modules/grid.scss */
+/* line 194, ../scss/modules/grid.scss */
 .grid-col-7 {
   width: 58.33%;
 }
 
-/* line 194, ../scss/modules/grid.scss */
+/* line 198, ../scss/modules/grid.scss */
 .grid-col-8 {
   width: 66.66%;
 }
 
-/* line 198, ../scss/modules/grid.scss */
+/* line 202, ../scss/modules/grid.scss */
 .grid-col-9 {
   width: 75%;
 }
 
-/* line 202, ../scss/modules/grid.scss */
+/* line 206, ../scss/modules/grid.scss */
 .grid-col-10 {
   width: 83.33%;
 }
 
-/* line 206, ../scss/modules/grid.scss */
+/* line 210, ../scss/modules/grid.scss */
 .grid-col-11 {
   width: 91.66%;
 }
 
-/* line 210, ../scss/modules/grid.scss */
+/* line 214, ../scss/modules/grid.scss */
 .grid-col-12 {
   width: 100%;
 }
-/* line 214, ../scss/modules/grid.scss */
+/* line 218, ../scss/modules/grid.scss */
 .grid-col-12.floating:nth-child(n+2) {
   margin-top: 20px;
 }
-/* line 217, ../scss/modules/grid.scss */
+/* line 221, ../scss/modules/grid.scss */
 .grid-col-12.floating:nth-child(n) {
   padding-left: 0;
   padding-right: 0;
 }
 
 @media (max-width: 580px) {
-  /* line 226, ../scss/modules/grid.scss */
+  /* line 230, ../scss/modules/grid.scss */
   [class*="grid-col-"] {
     width: 100%;
     margin-top: 15px;
     padding-left: 0;
     padding-right: 0;
   }
-  /* line 233, ../scss/modules/grid.scss */
+  /* line 237, ../scss/modules/grid.scss */
   [class*="grid-col-"]:first-of-type {
     margin-top: 0;
     padding-right: 0;
   }
-  /* line 239, ../scss/modules/grid.scss */
+  /* line 243, ../scss/modules/grid.scss */
   [class*="grid-col-"].floating:nth-child(n) {
     padding-right: 0;
   }
@@ -5571,58 +5590,68 @@ table {
   padding-right: 30px;
 }
 /* line 19, ../scss/modules/btns.scss */
+.btn.only-icon {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+/* line 23, ../scss/modules/btns.scss */
 .btn.action {
   background-color: #249fbe;
   color: white;
 }
-/* line 23, ../scss/modules/btns.scss */
+/* line 27, ../scss/modules/btns.scss */
 .btn.action2 {
   background-color: #febc2f;
   color: white;
 }
-/* line 27, ../scss/modules/btns.scss */
+/* line 31, ../scss/modules/btns.scss */
 .btn.large {
   line-height: 40px;
   height: 40px;
 }
-/* line 31, ../scss/modules/btns.scss */
+/* line 35, ../scss/modules/btns.scss */
 .btn.small {
   font-size: 12px;
   height: 20px;
   line-height: 20px;
   border-radius: 3px;
 }
-/* line 37, ../scss/modules/btns.scss */
+/* line 41, ../scss/modules/btns.scss */
 .btn.small [class^="icon-"] {
   font-size: 10px;
 }
-/* line 40, ../scss/modules/btns.scss */
+/* line 44, ../scss/modules/btns.scss */
 .btn.small [class^="icon-"] + .text {
   top: -1px;
   font-size: 12px;
 }
-/* line 46, ../scss/modules/btns.scss */
+/* line 50, ../scss/modules/btns.scss */
 .btn.grey, .btn.gray {
   background-color: #cccccc;
   color: white;
 }
-/* line 50, ../scss/modules/btns.scss */
+/* line 54, ../scss/modules/btns.scss */
+.btn.gray-dark {
+  background-color: #999999;
+  color: white;
+}
+/* line 58, ../scss/modules/btns.scss */
 .btn.black {
   background-color: black;
   color: white;
 }
-/* line 54, ../scss/modules/btns.scss */
+/* line 62, ../scss/modules/btns.scss */
 .btn.inactive {
   cursor: default;
 }
-/* line 57, ../scss/modules/btns.scss */
+/* line 65, ../scss/modules/btns.scss */
 .btn [class^="icon-"] {
   font-size: 18px;
   margin-left: -15px;
   display: inline-block;
   margin-bottom: -5px;
 }
-/* line 63, ../scss/modules/btns.scss */
+/* line 71, ../scss/modules/btns.scss */
 .btn [class^="icon-"] + .text {
   font-size: 14px;
   display: inline-block;
@@ -5632,47 +5661,51 @@ table {
   top: -4px;
   left: 0px;
 }
+/* line 81, ../scss/modules/btns.scss */
+.btn [class^="icon-"]:only-child {
+  margin-left: 0;
+}
 
 /**
 ** Buttons-classes on the bottom and should be replaced in the code with the classes above
 **/
-/* line 78, ../scss/modules/btns.scss */
+/* line 90, ../scss/modules/btns.scss */
 a.btn {
   color: #000;
   text-decoration: none;
 }
 
-/* line 83, ../scss/modules/btns.scss */
+/* line 95, ../scss/modules/btns.scss */
 .btn-large {
   padding: 0 25px;
   font-size: 18px;
   line-height: 30px;
 }
 
-/* line 89, ../scss/modules/btns.scss */
+/* line 101, ../scss/modules/btns.scss */
 .btn-black {
   background-color: #000;
   color: white;
 }
 
-/* line 94, ../scss/modules/btns.scss */
+/* line 106, ../scss/modules/btns.scss */
 .btn-highlight {
   background-color: #249fbe;
   color: white;
 }
 
-/* line 99, ../scss/modules/btns.scss */
+/* line 111, ../scss/modules/btns.scss */
 a.btn-black, a.btn-highlight {
   color: white;
 }
 
-/* line 104, ../scss/modules/btns.scss */
+/* line 116, ../scss/modules/btns.scss */
 .btn-gray {
   background-color: #cccccc;
   color: black;
 }
 
-/* line 110, ../scss/modules/btns.scss */
+/* line 122, ../scss/modules/btns.scss */
 .addButton {
   border-radius: 3px;
   display: inline-block;
@@ -5685,7 +5718,7 @@ a.btn-black, a.btn-highlight {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 122, ../scss/modules/btns.scss */
+/* line 134, ../scss/modules/btns.scss */
 .addButton:before {
   content: '\e191';
   font-family: "Glyphicons";
@@ -6940,7 +6973,12 @@ a.btn-black, a.btn-highlight {
   top: 12px;
   min-width: 200px;
   max-width: 100%;
-  border-radius: 3px;
+  border-radius: 2px;
+}
+/* line 123, ../scss/modules/select.scss */
+.husky-select-container.small .dropdown-list.top {
+  top: auto;
+  bottom: -3px;
 }
 
 /* line 5, ../scss/modules/smart-content.scss */
@@ -7796,11 +7834,25 @@ a.btn-black, a.btn-highlight {
   display: block;
 }
 
-/* line 62, ../scss/modules/content-types.scss */
+/* line 63, ../scss/modules/content-types.scss */
+.empty .text-block .head .options {
+  display: none;
+}
+/* line 66, ../scss/modules/content-types.scss */
+.empty .text-block:hover .head .options {
+  display: none;
+}
+
+/* line 73, ../scss/modules/content-types.scss */
 .text-block-footer .desc {
   font-size: 12px;
   color: #999999;
   padding-left: 10px;
+}
+/* line 78, ../scss/modules/content-types.scss */
+.text-block-footer .btn.full {
+  background-color: #cccccc;
+  cursor: default;
 }
 
 /* line 5, ../scss/modules/toggler.scss */
