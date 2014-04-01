@@ -125,6 +125,9 @@ class Preview implements PreviewInterface
                 $content = $this->updateTemplate($content, $template, $webspaceKey, $languageCode);
                 $this->addReload($userId, $contentUuid);
             }
+            if ($languageCode !== null && $content->getLanguageCode() !== $languageCode) {
+                $this->addReload($userId, $contentUuid);
+            }
 
             if ($webspaceKey !== $content->getWebspaceKey()) {
                 $content->setWebspaceKey($webspaceKey);
