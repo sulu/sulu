@@ -71,6 +71,8 @@ class Import
         'streetNumberSplit' => true
     );
 
+
+    // TODO: extend mappings for accounts and contacts
     /**
      * @var array
      */
@@ -80,7 +82,6 @@ class Import
         'account_type' => 'Klasse',
         'account_division' => 'Name2',
         'account_disabled' => 'gesperrt',
-        'account_parent' => 'gesperrt',
         'account_uid' => 'UID_Nr',
         'url1' => 'Internet',
         'country' => 'LKZ',
@@ -179,8 +180,6 @@ class Import
      */
     public function processAccountFile($filename)
     {
-        $createAccount =
-
         $createParentRelations = function ($data, $row) {
             $this->createAccountParentRelation($data, $row);
         };
@@ -263,7 +262,7 @@ class Import
         // check if account allready exists
         $account = new Account();
         $this->accounts[] = $account;
-        $this->associativeAccounts[$this->compareFields['account_id']] = $account;
+        $this->associativeAccounts[$data[$this->compareFields['account_id']]] = $account;
         $account->setChanged(new \DateTime());
         $account->setCreated(new \DateTime());
 
@@ -272,6 +271,7 @@ class Import
         } else {
             // TODO: catch this exception
             //throw new \Exception('Account name not set at row ' . $row);
+            return;
         }
 
         if ($this->checkData('account_division', $data)) {
@@ -283,6 +283,11 @@ class Import
         if ($this->checkData('account_uid', $data)) {
             $account->setUid($data['account_uid']);
         }
+        if ($this->checkData('account_type', $data)) {
+            $account->setType($this->mapAccountType($data['account_type']));
+        }
+
+
 
         // set address
         $address = new Address();
@@ -309,21 +314,25 @@ class Import
         }
         if ($this->checkData('plz', $data)) {
             $address->setZip($data['plz']);
-            $addAddress = true;
+            $addAddress = $addAddress && true;
         }
         if ($this->checkData('city', $data)) {
             $address->setCity($data['city']);
-            $addAddress = true;
+            $addAddress = $addAddress && true;
+        } else {
+            $addAddress = $addAddress && false;
         }
         if ($this->checkData('country', $data)) {
             $country = $this->em->getRepository('SuluContactBundle:Country')->findOneByCode($this->mapCountryCode($data['country']));
 
             if (!$country) {
-                throw new EntityNotFoundException('Country');
+                throw new EntityNotFoundException('Country', $data['country']);
             }
 
             $address->setCountry($country);
-            $addAddress = true;
+            $addAddress = $addAddress && true;
+        } else {
+            $addAddress = $addAddress && false;
         }
         // only add address if part of it is defined
         if ($addAddress) {
@@ -523,7 +532,7 @@ class Import
             $account = $this->accounts[$row - 1];
 
             // get parent account
-            $parent = $this->associativeAccounts[$data['account_parent']];
+            $parent = $this->getAccountByKey($data['account_parent']);
             $account->setParent($parent);
         }
     }
@@ -566,6 +575,14 @@ class Import
         }
     }
 
+    private function mapAccountType($typeString)
+    {
+        if ($mappingIndex = array_search($typeString, $this->accountTypeMappings)) {
+            return $mappingIndex;
+        } else {
+            return Account::TYPE_BASIC;
+        }
+    }
 
     private function setHeaderData($data)
     {
@@ -668,6 +685,10 @@ class Import
         $defaults['phoneTypeIsdn'] = $this->em
             ->getRepository($phoneTypeEntity)
             ->find($config['phoneTypeIsdn']);
+
+        $defaults['phoneTypeMobile'] = $this->em
+            ->getRepository($phoneTypeEntity)
+            ->find($config['phoneTypeMobile']);
 
 
         $addressTypeEntity = 'SuluContactBundle:AddressType';
