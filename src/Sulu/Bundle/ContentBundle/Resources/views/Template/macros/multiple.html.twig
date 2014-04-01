@@ -1,6 +1,8 @@
 <div class="sortable" id="{{ property.name }}" data-type="collection" data-type-min="{{ property.minOccurs }}"
      data-type-max="{{ property.maxOccurs }}"
-     data-mapper-property='{"data": "{{ property.name }}", "tpl": "{{ property.name }}-tpl"}'>
+     data-mapper-property='{"data": "{{ property.name }}", "tpl": "{{ property.name }}-tpl"}'
+     data-mapper-full-class="full"
+     data-mapper-empty-class="empty">
 
     <script id="{{ property.name }}-tpl" type="text/template">
         <div class="text-block {{ property.name }}-element">
