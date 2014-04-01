@@ -20,9 +20,8 @@ define(function() {
                 template: function() {
                     var state = {
                             'id': 'state',
-                            'group': 'right',
-                            'class': 'highlight-gray',
-                            'position': 2,
+                            'group': 'left',
+                            'position': 100,
                             'type': 'select'
                         },
                         template = {
@@ -44,11 +43,29 @@ define(function() {
                                     this.sandbox.emit('sulu.edit-toolbar.dropdown.template.item-clicked', item);
                                 }.bind(this)
                             }
+                        },
+                        languageSelector = {
+                            id: 'language',
+                            iconSize: 'large',
+                            group: 'right',
+                            position: 10,
+                            type: 'select',
+                            title: '',
+                            hidden: true,
+                            itemsOption: {
+                                url: '/admin/content/languages/' + this.options.webspace,
+                                titleAttribute: 'name',
+                                idAttribute: 'localization',
+                                translate: false,
+                                callback: function(item) {
+                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.languages.item-clicked', item);
+                                }.bind(this)
+                            }
                         };
                     if (!this.options.id) {
-                        return [template, state];
+                        return [template, state, languageSelector];
                     } else {
-                        return [template, state];
+                        return [template, state, languageSelector];
                     }
                 }.bind(this)
             };
