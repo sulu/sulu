@@ -79,7 +79,13 @@
   padding-top: 5px;
 }
 
+<<<<<<< HEAD
 /* line 2, ../scss/modules/general.scss */
 .sortable-placeholder {
   margin-bottom: 20px;
+=======
+/* line 1, ../scss/modules/basic.scss */
+#language-selector {
+  width: 95px;
+>>>>>>> bc4e3ad87b91ff3085b49d81e18debd8d017d9f8
 }
