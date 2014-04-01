@@ -551,6 +551,7 @@ define(['app-config'], function(AppConfig) {
                 var data = JSON.parse(e.data);
 
                 if (data.command === 'start' && data.content === this.options.id && !!data.params.other) {
+                    // FIXME do it after restart form
                     this.updatePreview();
                 }
 

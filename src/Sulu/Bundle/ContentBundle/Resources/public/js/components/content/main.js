@@ -157,7 +157,7 @@ define([
         },
 
         getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : 'uuid=' + this.options.id + '&') + 'title=' + title + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
             this.sandbox.util.load(url)
                 .then(function(data) {
                     callback(data.resourceLocator);
