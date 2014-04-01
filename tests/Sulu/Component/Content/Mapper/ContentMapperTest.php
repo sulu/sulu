@@ -1692,4 +1692,45 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de', $result->getType()->getValue());
     }
+
+    public function testTranslatedResourceLocator()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'default'
+        );
+        $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
+        $content = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $contentDE = $this->mapper->load($structure->getUuid(), 'default', 'de');
+        $nodeEN = $this->session->getNode('/cmf/default/routes/en/news/test');
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals('', $contentDE->url);
+        $this->assertNotNull($nodeEN);
+        $this->assertFalse($nodeEN->getPropertyValue('sulu:history'));
+        $this->assertFalse($this->session->getNode('/cmf/default/routes/de')->hasNode('news/test'));
+        $this->assertNotNull($this->languageRoutes['en']->getNode('news/test'));
+
+        $data = array(
+            'title' => 'Testtitle',
+            'url' => '/neuigkeiten/test'
+        );
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+        $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
+        $contentEN = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $nodeDE = $this->session->getNode('/cmf/default/routes/de/neuigkeiten/test');
+        $this->assertEquals('/neuigkeiten/test', $content->url);
+        $this->assertEquals('/news/test', $contentEN->url);
+        $this->assertNotNull($nodeDE);
+        $this->assertFalse($nodeDE->getPropertyValue('sulu:history'));
+        $this->assertTrue($this->session->getNode('/cmf/default/routes/de')->hasNode('neuigkeiten/test'));
+        $this->assertFalse($this->session->getNode('/cmf/default/routes/de')->hasNode('news/test'));
+        $this->assertFalse($this->session->getNode('/cmf/default/routes/en')->hasNode('neuigkeiten/test'));
+        $this->assertTrue($this->session->getNode('/cmf/default/routes/en')->hasNode('news/test'));
+        $this->assertNotNull($this->languageRoutes['de']->getNode('neuigkeiten/test'));
+    }
 }

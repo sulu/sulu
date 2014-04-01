@@ -236,17 +236,18 @@ class ContentMapper implements ContentMapperInterface
             $node = $session->getNodeByIdentifier($uuid);
             if (!$node->hasProperty($this->properties->getName('template'))) {
                 $newTranslatedNode($node);
-            }
+            } else {
 
-            $hasSameLanguage = ($languageCode == $this->defaultLanguage);
-            $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
-            $hasDifferentTitle = !$node->hasProperty($titleProperty->getName()) ||
-                $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
+                $hasSameLanguage = ($languageCode == $this->defaultLanguage);
+                $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
+                $hasDifferentTitle = !$node->hasProperty($titleProperty->getName()) ||
+                    $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
 
-            if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
-                $path = $this->getUniquePath($path, $node->getParent());
-                $node->rename($path);
-                // FIXME refresh session here
+                if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
+                    $path = $this->getUniquePath($path, $node->getParent());
+                    $node->rename($path);
+                    // FIXME refresh session here
+                }
             }
         }
         $node->setProperty($this->properties->getName('template'), $templateKey);
@@ -619,7 +620,12 @@ class ContentMapper implements ContentMapperInterface
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $session = $this->getSession();
-        $uuid = $this->getResourceLocator()->loadContentNodeUuid($resourceLocator, $webspaceKey, $languageCode, $segmentKey);
+        $uuid = $this->getResourceLocator()->loadContentNodeUuid(
+            $resourceLocator,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode, $webspaceKey);
@@ -895,11 +901,13 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * @param $webspaceKey
+     * @param string $languageCode
+     * @param string $segment
      * @return NodeInterface
      */
-    protected function getRouteNode($webspaceKey)
+    protected function getRouteNode($webspaceKey, $languageCode, $segment)
     {
-        return $this->sessionManager->getRouteNode($webspaceKey);
+        return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segment);
     }
 
     /**
