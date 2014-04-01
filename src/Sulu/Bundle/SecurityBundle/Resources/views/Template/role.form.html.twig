@@ -16,8 +16,6 @@
                      data-aura-component="select@husky"
                      data-aura-instance-name="system"
                      data-aura-default-label="<%=translate('dropdown.please-choose')%>"
-                     data-aura-no-deselect="true"
-                     data-aura-single-select="true"
                      data-aura-data='{{ systems|json_encode() }}'
                     <% if(data.system == '') { %>
                      data-aura-pre-selected-elements='["{{ systems[0] }}"]"'
