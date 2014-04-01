@@ -39,7 +39,7 @@ define([], function() {
             this.saved = true;
             this.selectedSystem = '';
             permissionData = this.options.data.permissions;
-            console.log('bind it marcel');
+
             // wait for dropdown to initialize, then get the value and continue
             this.sandbox.on('husky.select.system.initialize', function() {
                 this.selectedSystem = this.sandbox.dom.attr('#system', 'data-selection-values');
