@@ -15,7 +15,8 @@ use PHPCR\NodeInterface;
 /**
  * InterfaceDefinition of Resource Locator Path Strategy
  */
-interface RLPStrategyInterface {
+interface RLPStrategyInterface
+{
 
     /**
      * returns name of RLP Strategy (e.g. whole-tree)
@@ -33,6 +34,17 @@ interface RLPStrategyInterface {
      * @return string whole path
      */
     public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * returns whole path for given ContentNode
+     * @param string $title title of new node
+     * @param string $uuid uuid for node to generate rl
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string whole path
+     */
+    public function generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * creates a new route for given path

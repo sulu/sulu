@@ -318,4 +318,34 @@ class PhpcrMapperTest extends PhpcrTestCase
             return $ex->getNewResourceLocator();
         }
     }
+
+    public function testGetParentPath()
+    {
+        $session = $this->sessionManager->getSession();
+
+        $c1 = $this->content1;
+        $c2 = $c1->addNode('content2');
+        $c2->addMixin('mix:referenceable');
+        $session->save();
+        $c3 = $c2->addNode('content3');
+        $c3->addMixin('mix:referenceable');
+        $session->save();
+        $c4 = $c3->addNode('content4');
+        $c4->addMixin('mix:referenceable');
+        $session->save();
+
+        // create routes for content
+        $this->rlpMapper->save($c2, '/news', 'default', 'de');
+        $this->rlpMapper->save($c3, '/news/news-1', 'default', 'de');
+        $this->rlpMapper->save($c4, '/news/news-1/sub-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+
+        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $session->save();
+
+        $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'de');
+        $this->assertEquals('/news/news-1', $result);
+    }
 }

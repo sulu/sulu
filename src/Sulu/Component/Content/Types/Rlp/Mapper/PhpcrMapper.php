@@ -288,6 +288,23 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
+     * returns resource locator for parent node
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string
+     */
+    public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $session = $this->sessionManager->getSession();
+        $contentNode = $session->getNodeByIdentifier($uuid);
+        $parentNode = $contentNode->getParent();
+
+        return $this->loadByContent($parentNode, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
      * create a node recursively
      * @param string $path path to node
      * @param NodeInterface $rootNode base node to begin

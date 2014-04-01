@@ -94,6 +94,16 @@ interface RlpMapperInterface
     public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
+     * returns resource locator for parent node
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string
+     */
+    public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
      * creates a new resourcelocator and creates the correct history
      * @param string $src old resource locator
      * @param string $dest new resource locator
