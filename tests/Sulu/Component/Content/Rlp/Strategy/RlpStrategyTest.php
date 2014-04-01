@@ -54,7 +54,8 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
                 'move',
                 'loadByContent',
                 'loadByContentUuid',
-                'loadByResourceLocator'
+                'loadByResourceLocator',
+                'getParentPath'
             ),
             array('test-mapper'),
             'TestMapper'
@@ -80,6 +81,9 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $this->mapper->expects($this->any())
             ->method('loadByResourceLocator')
             ->will($this->returnValue('this-is-a-uuid'));
+        $this->mapper->expects($this->any())
+            ->method('getParentPath')
+            ->will($this->returnValue('/parent'));
 
         $this->strategy = $this->getMockForAbstractClass(
             $this->className,
@@ -228,5 +232,11 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $this->strategy->move('/test/test', '/test/test-1', 'default', 'de');
 
         $this->assertTrue($this->isMoved);
+    }
+
+    public function testGenerateForUuid()
+    {
+        $result = $this->strategy->generateForUuid('test', '123-123-123', 'default', 'de');
+        $this->assertEquals('/parent/test', $result);
     }
 }
