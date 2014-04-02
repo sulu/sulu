@@ -16,6 +16,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
+use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
@@ -28,6 +29,7 @@ use Sulu\Component\Webspace\Webspace;
  */
 class ContentMapperTest extends PhpcrTestCase
 {
+
     public function setUp()
     {
         $this->prepareMapper();
@@ -42,6 +44,8 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(1);
         } elseif ($structureKey == 'default') {
             return $this->getStructureMock(2);
+        } elseif ($structureKey == 'complex') {
+            return $this->getStructureMock(3);
         }
 
         return null;
@@ -92,6 +96,17 @@ class ContentMapperTest extends PhpcrTestCase
                 $structureMock,
                 array(
                     new Property('blog', 'text_area')
+                )
+            );
+        } elseif ($type == 3) {
+            $blockProperty = new BlockProperty('block1', 'block', false, 2, 10);
+            $blockProperty->addChild(new Property('title', 'text_line'));
+            $blockProperty->addChild(new Property('article', 'text_area'));
+
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    $blockProperty
                 )
             );
         }
@@ -1732,5 +1747,62 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertFalse($this->session->getNode('/cmf/default/routes/en')->hasNode('neuigkeiten/test'));
         $this->assertTrue($this->session->getNode('/cmf/default/routes/en')->hasNode('news/test'));
         $this->assertNotNull($this->languageRoutes['de']->getNode('neuigkeiten/test'));
+    }
+
+    public function testBlock()
+    {
+        $data = array(
+            'title' => 'Test-Title',
+            'url' => '/test',
+            'block1' => array(
+                array(
+                    'title' => 'Block-Title-1',
+                    'article' => 'Block-Article-1'
+                ),
+                array(
+                    'title' => 'Block-Title-2',
+                    'article' => 'Block-Article-2'
+                )
+            )
+        );
+
+        // check save
+        $structure = $this->mapper->save($data, 'complex', 'default', 'de', 1);
+        $result = $structure->toArray();
+        $this->assertEquals(
+            $data,
+            array(
+                'title' => $result['title'],
+                'url' => $result['url'],
+                'block1' => $result['block1']
+            )
+        );
+
+        // change sorting
+        $tmp = $data['block1'][0];
+        $data['block1'][0] = $data['block1'][1];
+        $data['block1'][1] = $tmp;
+        $structure = $this->mapper->save($data, 'complex', 'default', 'de', 1, true, $structure->getUuid());
+        $result = $structure->toArray();
+        $this->assertEquals(
+            $data,
+            array(
+                'title' => $result['title'],
+                'url' => $result['url'],
+                'block1' => $result['block1']
+            )
+        );
+
+        // check load
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'de');
+        $result = $structure->toArray();
+        $this->assertEquals(
+            $data,
+            array(
+                'title' => $result['title'],
+                'url' => $result['url'],
+                'block1' => $result['block1']
+            )
+        );
     }
 }
