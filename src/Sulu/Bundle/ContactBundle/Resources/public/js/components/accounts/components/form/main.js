@@ -147,7 +147,7 @@ define(['app-config'], function(AppConfig) {
 
 
         /**
-         * Takes an array of fields and fields it up with empty fields till a minimum amount
+         * Takes an array of fields and fills it up with empty fields till a minimum amount
          * @param field {Object} array of fields to manipulate
          * @param minAmount {Number} minimum amount of fields to exist
          * @param value {Object} empty object to insert (for minimum amount of fields)
