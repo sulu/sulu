@@ -15,19 +15,16 @@ use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
- * Configures and starts an import from an translation catalogue
- *
- * @package Sulu\Bundle\TranslateBundle\Translate
+ * configures and executes an import for contact and account data from a CSV file
+ * @package Sulu\Bundle\ContactBundle\Import
  */
 class Import
 {
@@ -71,7 +68,6 @@ class Import
         'streetNumberSplit' => true
     );
 
-
     // TODO: extend mappings for accounts and contacts
     /**
      * @var array
@@ -96,11 +92,11 @@ class Import
         'fax' => 'Fax',
         'uid' => 'UID_Nr',
         'note1' => 'Bemerkung',
-        'contact_parent' =>'gehört_zu',
-        'contact_title' =>'Titel',
-        'contact_position' =>'Hauptfunktion',
-        'contact_firstname' =>'Vorname',
-        'contact_lastname' =>'Vor_Nachname',
+        'contact_parent' => 'gehört_zu',
+        'contact_title' => 'Titel',
+        'contact_position' => 'Hauptfunktion',
+        'contact_firstname' => 'Vorname',
+        'contact_lastname' => 'Vor_Nachname',
     );
 
     protected $compareFields = array(
@@ -138,7 +134,6 @@ class Import
      */
     private $associativeAccounts = array();
 
-
     function __construct(EntityManager $em, $configDefaults)
     {
         $this->em = $em;
@@ -155,28 +150,29 @@ class Import
                 throw new InvalidArgumentException('no account file specified for import');
             }
 
-            // TODO:
-            // clear database
-//            $this->clearDatabase();
+            // TODO clear database: $this->clearDatabase();
 
             // set default types
             $this->defaultTypes = $this->getDefaults();
 
-            // process accounts
-            $this->processAccountFile($this->accountFile);
+            // process account file if exists
+            if ($this->accountFile) {
+                $this->processAccountFile($this->accountFile);
+            }
 
+            // process contact file if exists
             if ($this->contactFile) {
                 $this->processContactFile($this->contactFile);
             }
 
         } catch (\Exception $e) {
             print($e->getMessage());
-            exit();
         }
     }
 
     /**
      * processes the account file
+     * @param string $filename path to fil file
      */
     public function processAccountFile($filename)
     {
@@ -184,11 +180,13 @@ class Import
             $this->createAccountParentRelation($data, $row);
         };
 
-
         // create accounts
-        $this->processCsvLoop($filename, function ($data, $row) {
-            $this->createAccount($data, $row);
-        });
+        $this->processCsvLoop(
+            $filename,
+            function ($data, $row) {
+                $this->createAccount($data, $row);
+            }
+        );
 
         // check for parents
         $this->processCsvLoop($filename, $createParentRelations);
@@ -196,6 +194,7 @@ class Import
 
     /**
      * processes the contact file
+     * @param string $filename path to file
      */
     public function processContactFile($filename)
     {
@@ -210,8 +209,10 @@ class Import
 
     /**
      * Loads the CSV Files and the Entities for the import
+     * @param string $filename path to file
+     * @param callable $function will be called for each row in file
      */
-    public function processCsvLoop($filename, $function)
+    protected function processCsvLoop($filename, $function)
     {
         $row = 0;
 
@@ -219,7 +220,6 @@ class Import
         if (($handle = fopen($filename, 'r')) !== false) {
             while (($data = fgetcsv($handle, 1000, ";")) !== false) {
                 try {
-
                     // for first row, save headers
                     if ($row === 0) {
                         $this->setHeaderData($data);
@@ -240,8 +240,7 @@ class Import
                     }
 
                     $row++;
-
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     print("error while processing data row $row \n");
                 }
             }
@@ -251,15 +250,10 @@ class Import
 
     /**
      * creates an account for given row data
-     * @param $data
-     * @param $row
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @throws \Exception
      */
     private function createAccount($data, $row)
     {
-
-        // check if account allready exists
+        // check if account already exists
         $account = new Account();
         $this->accounts[] = $account;
         $this->associativeAccounts[$data[$this->compareFields['account_id']]] = $account;
@@ -287,15 +281,11 @@ class Import
             $account->setType($this->mapAccountType($data['account_type']));
         }
 
-
-
         // set address
         $address = new Address();
         $addAddress = false;
 
-
         if ($this->checkData('street', $data)) {
-
             $street = $data['street'];
 
             // separate street and number
@@ -323,7 +313,9 @@ class Import
             $addAddress = $addAddress && false;
         }
         if ($this->checkData('country', $data)) {
-            $country = $this->em->getRepository('SuluContactBundle:Country')->findOneByCode($this->mapCountryCode($data['country']));
+            $country = $this->em->getRepository('SuluContactBundle:Country')->findOneByCode(
+                $this->mapCountryCode($data['country'])
+            );
 
             if (!$country) {
                 throw new EntityNotFoundException('Country', $data['country']);
@@ -334,13 +326,13 @@ class Import
         } else {
             $addAddress = $addAddress && false;
         }
+
         // only add address if part of it is defined
         if ($addAddress) {
             $address->setAddressType($this->defaultTypes['addressType']);
             $this->em->persist($address);
             $account->addAddresse($address);
         }
-
 
         // add emails
         for ($i = 0, $len = 10; ++$i < $len;) {
@@ -418,14 +410,17 @@ class Import
         $this->em->persist($account);
     }
 
-    private function createContact($data, $row) {
+    /**
+     * creates an contact for given row data
+     */
+    private function createContact($data, $row)
+    {
         $contact = new Contact();
-//        $contact->addEmail();
+        // $contact->addEmail();
 
-        if ($this->checkData('contact_firstname', $data) && $this->checkData('contact_lastname', $data))
-        {
+        if ($this->checkData('contact_firstname', $data) && $this->checkData('contact_lastname', $data)) {
             // TODO: catch this exception
-         //   throw new \Exception('contact lastname not set at row ' . $row);
+            //   throw new \Exception('contact lastname not set at row ' . $row);
         }
 
         if ($this->checkData('contact_firstname', $data)) {
@@ -456,7 +451,7 @@ class Import
             $account = $this->getAccountByKey($data['contact_parent']);
 
             if (!$account) {
-//                throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
+                // throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
             } else {
                 $contact->setAccount($account);
             }
@@ -513,15 +508,16 @@ class Import
         $this->em->persist($contact);
     }
 
-    // checks data for validity
-    private function checkData($index, $data) {
+    /**
+     * checks data for validity
+     */
+    private function checkData($index, $data)
+    {
         return array_key_exists($index, $data) && $data[$index] !== '';
     }
 
     /**
      * creates relation between parent and account
-     * @param $data
-     * @param $row
      */
     private function createAccountParentRelation($data, $row)
     {
@@ -537,26 +533,40 @@ class Import
         }
     }
 
+    /**
+     * truncate table for account and contact
+     */
     private function clearDatabase()
     {
         $this->clearTable('SuluContactBundle:Account');
+        $this->clearTable('SuluContactBundle:Contact');
     }
 
-
-    private function clearTable($tableName)
+    /**
+     * truncate one single table for given entity name
+     * @param string $entityName name of entity
+     */
+    private function clearTable($entityName)
     {
         $connection = $this->em->getConnection();
         $platform = $connection->getDatabasePlatform();
 
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 0;');
-        $truncateSql = $platform->getTruncateTableSQL($tableName);
+        $truncateSql = $platform->getTruncateTableSQL($entityName);
         $connection->executeUpdate($truncateSql);
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 1;');
     }
 
+    /**
+     * returns an associative array of data mapped by configuration
+     * @param array $data data of a single csv row
+     * @return array
+     */
     private function mapRowToAssociativeArray($data)
     {
+        $associativeData = array();
         foreach ($data as $index => $value) {
+            // search index in mapping config
             if ($mappingIndex = array_search($this->headerData[$index], $this->mappings)) {
                 $associativeData[$mappingIndex] = $value;
             } else {
@@ -566,6 +576,11 @@ class Import
         return $associativeData;
     }
 
+    /**
+     * TODO
+     * @param $countryCode
+     * @return mixed|string
+     */
     private function mapCountryCode($countryCode)
     {
         if ($mappingIndex = array_search($countryCode, $this->countryMappings)) {
@@ -575,6 +590,11 @@ class Import
         }
     }
 
+    /**
+     * TODO
+     * @param $typeString
+     * @return int|mixed
+     */
     private function mapAccountType($typeString)
     {
         if ($mappingIndex = array_search($typeString, $this->accountTypeMappings)) {
@@ -584,13 +604,17 @@ class Import
         }
     }
 
+    /**
+     * TODO
+     * @param $data
+     */
     private function setHeaderData($data)
     {
         $this->headerData = $data;
     }
 
-
     /**
+     * TODO
      * @param mixed $contactFile
      */
     public function setContactFile($contactFile)
@@ -599,6 +623,7 @@ class Import
     }
 
     /**
+     * TODO
      * @return mixed
      */
     public function getContactFile()
@@ -607,6 +632,7 @@ class Import
     }
 
     /**
+     * TODO
      * @param mixed $accountFile
      */
     public function setAccountFile($accountFile)
@@ -615,6 +641,7 @@ class Import
     }
 
     /**
+     * TODO
      * @return mixed
      */
     public function getAccountFile()
@@ -623,6 +650,7 @@ class Import
     }
 
     /**
+     * TODO
      * @param mixed $limit
      */
     public function setLimit($limit)
@@ -631,6 +659,7 @@ class Import
     }
 
     /**
+     * TODO
      * @return mixed
      */
     public function getLimit()
@@ -639,6 +668,7 @@ class Import
     }
 
     /**
+     * TODO
      * @param array $mappings
      */
     public function setMappings($mappings)
@@ -647,6 +677,7 @@ class Import
     }
 
     /**
+     * TODO
      * @return array
      */
     public function getMappings()
@@ -654,16 +685,21 @@ class Import
         return $this->mappings;
     }
 
-    public function getAccountByKey($key) {
+    /**
+     * TODO
+     * @param $key
+     * @return null
+     */
+    public function getAccountByKey($key)
+    {
         if (array_key_exists($key, $this->associativeAccounts)) {
             return $this->associativeAccounts[$key];
         }
         return null;
     }
 
-
-    // TODO: outsource this into a service! also used in template controller
     /**
+     * TODO outsource this into a service! also used in template controller
      * Returns the default values for the dropdowns
      * @return array
      */
@@ -689,7 +725,6 @@ class Import
         $defaults['phoneTypeMobile'] = $this->em
             ->getRepository($phoneTypeEntity)
             ->find($config['phoneTypeMobile']);
-
 
         $addressTypeEntity = 'SuluContactBundle:AddressType';
         $defaults['addressType'] = $this->em
