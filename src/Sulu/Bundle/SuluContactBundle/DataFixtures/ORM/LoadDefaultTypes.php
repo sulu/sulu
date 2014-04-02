@@ -110,7 +110,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $faxType1->setName('fax.work');
         $manager->persist($faxType1);
 
-        $faxType2 = new UrlType();
+        $faxType2 = new FaxType();
         $faxType2->setId(2);
         $faxType2->setName('fax.home');
         $manager->persist($faxType2);
