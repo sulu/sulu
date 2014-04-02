@@ -58,7 +58,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid');
 
     /**
      * {@inheritdoc}
@@ -169,6 +169,8 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setName($this->getRequest()->get('name'));
 
             $account->setType($this->getRequest()->get('type'));
+
+            $account->setDisabled(0);
 
             $parentData = $this->getRequest()->get('parent');
             if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {

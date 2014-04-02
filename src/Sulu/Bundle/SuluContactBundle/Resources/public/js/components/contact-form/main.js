@@ -56,7 +56,7 @@ define([], function() {
          * is emited after initialization
          * @event sulu.contact-form.initialized
          */
-        EVENT_INITIALIZED = function() {
+            EVENT_INITIALIZED = function() {
             return eventNamespace + '.initialized';
         },
 
@@ -64,7 +64,7 @@ define([], function() {
          * is emited when a field-type gets changed or a field gets deleted
          * @event sulu.contact-form.initialized
          */
-        EVENT_CHANGED = function() {
+            EVENT_CHANGED = function() {
             return eventNamespace + '.changed';
         },
 
@@ -90,18 +90,18 @@ define([], function() {
         /**
          * Binds events related to the edit-fields overlay
          */
-        bindEditEvents = function() {
+            bindEditEvents = function() {
             if (this.$editOverlayContent !== null) {
                 this.sandbox.dom.on(this.sandbox.dom.find('.grid-row', this.$editOverlayContent),
-                                    'click', deleteFieldHandler.bind(this),
-                                    constants.editDeleteSelector);
+                    'click', deleteFieldHandler.bind(this),
+                    constants.editDeleteSelector);
             }
         },
 
         /**
          * Handles the click on the edit-fields
          */
-        deleteFieldHandler = function(event) {
+            deleteFieldHandler = function(event) {
             var $row = this.sandbox.dom.$(event.delegateTarget),
                 $icon = this.sandbox.dom.find('[class^="icon"]', event.currentTarget),
                 deleted = JSON.parse(this.sandbox.dom.attr($row, 'data-deleted'));
@@ -112,7 +112,7 @@ define([], function() {
                 this.sandbox.dom.removeClass($icon, constants.editUndoDeleteIcon);
                 this.sandbox.dom.prependClass($icon, constants.editDeleteIcon);
                 this.sandbox.dom.attr($row, 'data-deleted', "false");
-            // mark as deleted
+                // mark as deleted
             } else {
                 this.sandbox.dom.addClass($row, constants.fadedClass);
                 this.sandbox.dom.removeClass($icon, constants.editDeleteIcon);
@@ -124,11 +124,11 @@ define([], function() {
         /**
          * Unbinds events related to the edit-fields overlay
          */
-        unbindEditEvents = function() {
+            unbindEditEvents = function() {
             this.sandbox.dom.off(this.$editOverlayContent);
         },
 
-        removeCollectionFilters = function(form) {
+        removeCollectionFilters = function() {
             // add collection filters
             this.sandbox.form.removeCollectionFilter(this.form, 'emails');
             this.sandbox.form.removeCollectionFilter(this.form, 'phones');
@@ -138,7 +138,7 @@ define([], function() {
         },
 
         addCollectionFilters = function(form) {
-            // set form
+
             this.form = form;
 
             // add collection filters
@@ -214,14 +214,11 @@ define([], function() {
                 fieldTypeId = this.sandbox.dom.data(fieldType, 'selection'),
                 data, dataType, dataObject;
 
-            if (!fieldId || !fieldTypeId) {
-            }
-
             data = this.dropdownDataArray[fieldId];
             dataType = getDataById(this.dropdownDataArray[fieldId].items, fieldTypeId);
             dataObject = {};
             dataObject[data.type] = '';
-            dataObject[data.type+'Type'] = {
+            dataObject[data.type + 'Type'] = {
                 id: fieldTypeId,
                 name: dataType.name
             };
@@ -241,7 +238,7 @@ define([], function() {
          * Handles the logic when the overlay to edit fields is closed with
          * a click on ok
          */
-        editOkClicked = function() {
+            editOkClicked = function() {
             var i, length, newTypeId, newType, dataObject, deleted;
             // loop through all editable fields get the selected type and map it back into the array
             for (i = -1, length = this.editFieldsData.length; ++i < length;) {
@@ -278,7 +275,7 @@ define([], function() {
          * @param id
          * @returns {Object|null}
          */
-        getTypeById = function(types, id) {
+            getTypeById = function(types, id) {
             for (var i = -1, length = types.length; ++i < length;) {
                 if (types[i].id === id) {
                     return types[i];
@@ -291,7 +288,7 @@ define([], function() {
             var translatedTypes = this.options.fieldTypes,
                 i, len, type;
             for (type in translatedTypes) {
-                for (i= -1, len = translatedTypes[type].length; ++i < len;) {
+                for (i = -1, len = translatedTypes[type].length; ++i < len;) {
                     translatedTypes[type][i].name = this.sandbox.translate(translatedTypes[type][i].name);
                 }
             }
@@ -303,29 +300,33 @@ define([], function() {
          * for the edit-fields overlay
          * @returns {*|HTMLElement}
          */
-        createEditOverlayContent = function() {
+            createEditOverlayContent = function() {
             this.editFieldsData = [];
             removeCollectionFilters.call(this);
             var data = this.sandbox.form.getData(this.form),
-                dataArray = {},
+                dataArray,
                 i, length, key,
                 $content = this.sandbox.dom.createElement('<div class="edit-fields"/>'),
                 $element, required, permanent;
             addCollectionFilters.call(this, this.form);
 
-            dataArray['address'] = data.addresses;
-            dataArray['email'] = data.emails;
-            dataArray['fax'] = data.faxes;
-            dataArray['phone'] = data.phones;
-            dataArray['url'] = data.urls;
+            dataArray = {
+                address: data.addresses,
+                email: data.emails,
+                fax: data.faxes,
+                phones: data.phones,
+                url: data.urls
+
+            };
 
             //loop through object properties
-            for(key in dataArray) {
+            for (key in dataArray) {
                 //foreach object property loop through its children
-                for(i = -1, length = dataArray[key].length; ++i < length;) {
+                for (i = -1, length = dataArray[key].length; ++i < length;) {
+
                     // look if belonging field is required
                     required = this.sandbox.dom.attr(
-                        this.sandbox.dom.$('[data-mapper-id="'+ dataArray[key][i].mapperId +'"]'),
+                        this.sandbox.dom.$('[data-mapper-id="' + dataArray[key][i].mapperId + '"]'),
                         'data-contactform-required'
                     );
 
@@ -336,22 +337,22 @@ define([], function() {
                     }
 
                     // create row form overlay-content
-                    $element = this.sandbox.dom.createElement(_.template(templates.editField)({
+                    $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.editField)({
                         dropdownId: 'edit-dropdown-' + key + '-' + i,
                         showDeleteButton: (!required && !permanent)
                     }));
 
                     this.editFieldsData.push({
-                         id: dataArray[key][i].id,
-                         typeName: key + 'Type',
-                         type: dataArray[key][i][key+'Type'],
-                         name: this.sandbox.translate('public.' + key),
-                         $element: $element,
-                         dropdownId: 'edit-dropdown-' + key + '-' + i,
-                         types: this.options.fieldTypes[key],
-                         mapperId: parseInt(dataArray[key][i].mapperId),
-                         dropdownData: null,
-                         $dropdown: null
+                        id: dataArray[key][i].id,
+                        typeName: key + 'Type',
+                        type: dataArray[key][i][key + 'Type'],
+                        name: this.sandbox.translate('public.' + key),
+                        $element: $element,
+                        dropdownId: 'edit-dropdown-' + key + '-' + i,
+                        types: this.options.fieldTypes[key],
+                        mapperId: parseInt(dataArray[key][i].mapperId),
+                        dropdownData: null,
+                        $dropdown: null
                     });
 
                     this.sandbox.dom.append($content, $element);
@@ -363,7 +364,7 @@ define([], function() {
         /**
          * Generate the Data for the all Edit-fields dropdowns
          */
-        generateEditFieldsDropdownData = function() {
+            generateEditFieldsDropdownData = function() {
             var i, length, x, xlength;
 
             //foreach edit-field
@@ -374,7 +375,7 @@ define([], function() {
                 for (x = -1, xlength = this.editFieldsData[i].types.length; ++x < xlength;) {
                     this.editFieldsData[i].dropdownData.push({
                         id: this.editFieldsData[i].types[x].id,
-                        name: this.editFieldsData[i].name + ' ('+ this.editFieldsData[i].types[x].name +')'
+                        name: this.editFieldsData[i].name + ' (' + this.editFieldsData[i].types[x].name + ')'
                     });
                 }
             }
@@ -383,29 +384,31 @@ define([], function() {
         /**
          * Start all edit-fields dropdowns
          */
-        startEditFieldsDropdowns = function() {
+            startEditFieldsDropdowns = function() {
             generateEditFieldsDropdownData.call(this);
             for (var i = -1, length = this.editFieldsData.length; ++i < length;) {
 
                 this.editFieldsData[i].$dropdown = this.sandbox.dom.find('#' + this.editFieldsData[i].dropdownId,
-                                                                         this.editFieldsData[i].$element);
+                    this.editFieldsData[i].$element);
 
-                this.sandbox.start([{
-                    name: 'select@husky',
-                    options: {
-                        el: this.editFieldsData[i].$dropdown,
-                        instanceName: this.editFieldsData[i].dropdownId,
-                        data: this.editFieldsData[i].dropdownData,
-                        preSelectedElements: [this.editFieldsData[i].type.id]
+                this.sandbox.start([
+                    {
+                        name: 'select@husky',
+                        options: {
+                            el: this.editFieldsData[i].$dropdown,
+                            instanceName: this.editFieldsData[i].dropdownId,
+                            data: this.editFieldsData[i].dropdownData,
+                            preSelectedElements: [this.editFieldsData[i].type.id]
+                        }
                     }
-                }]);
+                ]);
             }
         },
 
         /**
          * Create the edit-fields overlay
          */
-        createEditOverlay = function() {
+            createEditOverlay = function() {
             this.$editOverlayContent = createEditOverlayContent.call(this);
             this.sandbox.start([
                 {
@@ -517,7 +520,6 @@ define([], function() {
 
             // add new container
             this.sandbox.dom.append(this.$el, $container);
-
 
 
             // TODO: implement options dropdown functionality for adding and editing contact details
