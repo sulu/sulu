@@ -47,7 +47,7 @@ class NodeController extends RestController implements ClassResourceInterface
         } else {
             $complete = true;
         }
-        $ghostContent = $this->getRequest()->get('ghost-content', false);
+        $ghostContent = $this->getRequest()->get('ghost-content');
         if ($ghostContent === 'true') {
             $ghostContent = true;
         } elseif ($ghostContent === 'false') {
