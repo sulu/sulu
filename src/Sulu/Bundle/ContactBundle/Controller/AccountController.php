@@ -170,7 +170,12 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $account->setType($this->getRequest()->get('type'));
 
-            $account->setDisabled(0);
+
+            $disabled = $this->getRequest()->get('disabled');
+            if (is_null($disabled)) {
+                $disabled = false;
+            }
+            $account->setDisabled($disabled);
 
             $parentData = $this->getRequest()->get('parent');
             if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
@@ -270,6 +275,12 @@ class AccountController extends RestController implements ClassResourceInterface
 
                 // set name
                 $account->setName($this->getRequest()->get('name'));
+
+                // set disabled
+                $disabled = $this->getRequest()->get('disabled');
+                if (!is_null($disabled)) {
+                    $account->setDisabled($disabled);
+                }
 
                 // set parent
                 $parentData = $this->getRequest()->get('parent');

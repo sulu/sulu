@@ -24,8 +24,9 @@
                                 <label>
                                     <%=translate('public.address')%>
                                     <span class="label-container">
-                                        <span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}"></span>
-                                        <%= translate('{{ defaultAddressType.name }}') %>
+                                        <span class="type-value" data-form="true" data-mapper-property="addressType" data-type="label" data-type-label="name" data-type-id="id" data-id="{{ defaultAddressType.id }}">
+                                            <%= translate('{{ defaultAddressType.name }}') %>
+                                        </span>
                                     </span>
                                 </label>
 
@@ -37,9 +38,9 @@
                                     <~ if (typeof zip !== 'undefined') print(',') ~>
                                     <span data-mapper-property="zip" data-form="true"></span>
                                     <span data-mapper-property="city" data-form="true"></span>
-                                    <~ if (typeof state !== 'undefined') print(',') ~>
+                                    <~ if (typeof state !== 'undefined') print('state is '+state) ~>
                                     <span data-mapper-property="state" data-form="true"></span>
-                                    <~ if (typeof state !== 'country') print(',') ~>
+                                    <~ if (typeof country !== 'country') print(',') ~>
                                     <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
                                 </div>
                             </div>
