@@ -388,11 +388,13 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, '123-123-123');
-        $this->assertEquals(2, sizeof($changes));
+        $this->assertEquals(3, sizeof($changes));
         $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']['content']);
         $this->assertEquals('title', $changes['title']['property']);
         $this->assertEquals(['asdf'], $changes['article']['content']);
         $this->assertEquals('article', $changes['article']['property']);
+        $this->assertEquals(true, $changes['reload']['content']);
+        $this->assertEquals('reload', $changes['reload']['property']);
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, '123-123-123');
