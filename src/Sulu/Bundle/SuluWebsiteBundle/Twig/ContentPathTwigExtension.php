@@ -52,6 +52,10 @@ class ContentPathTwigExtension extends \Twig_Extension
             $rl = $item->getUrl();
         } elseif ($item instanceof StructureInterface) {
             $rl = $item->url;
+        } elseif (isset($item['url'])) {
+            $rl = $item['url'];
+        } else {
+            $rl = '/';
         }
         if ($this->requestAnalyzer !== null) {
             return $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $rl;
