@@ -189,7 +189,7 @@ define(['app-config'], function(AppConfig) {
         setFormData: function(data) {
             var initialize = this.sandbox.form.setData(this.formId, data);
 
-            if (!!data.id || data.title === '' || typeof data.title === 'undefined' || data.title === null) {
+            if (!!data.id && (data.title === '' || typeof data.title === 'undefined' || data.title === null)) {
                 this.sandbox.util.load('/admin/api/nodes/' + data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language + '&complete=false&ghost-content=true')
                     .then(function(data) {
                         this.sandbox.dom.attr('#title', 'placeholder', data.type.value + ': ' + data.title);
