@@ -159,34 +159,31 @@ define([], function() {
                     }
                 });
 
-                this.fillFields(contactJson.emails, 1, {
+                contactJson.emails = this.fillFields(contactJson.emails, 1, {
                     id: null,
                     email: '',
                     emailType: this.defaultTypes.emailType
                 });
-                this.fillFields(contactJson.phones, 1, {
+                contactJson.phones = this.fillFields(contactJson.phones, 1, {
                     id: null,
                     phone: '',
                     phoneType: this.defaultTypes.phoneType
                 });
-                this.fillFields(contactJson.faxes, 1, {
+                contactJson.faxes = this.fillFields(contactJson.faxes, 1, {
                     id: null,
                     fax: '',
                     faxType: this.defaultTypes.faxType
                 });
-                this.fillFields(contactJson.notes, 1, {
+                contactJson.notes = this.fillFields(contactJson.notes, 1, {
                     id: null,
                     value: ''
                 });
-//                this.fillFields(contactJson.urls, 1, {
-//                    id: null,
-//                    url: '',
-//                    urlType: this.defaultTypes.urlType
-//                });
-//                this.fillFields(contactJson.addresses, 1, {
-//                    id: null,
-//                    addressType: this.defaultTypes.addressType
-//                });
+                contactJson.urls = this.fillFields(contactJson.urls, 0, {
+                    id: null,
+                    url: '',
+                    urlType: this.defaultTypes.urlType
+                });
+
                 return contactJson;
             },
 
@@ -195,10 +192,42 @@ define([], function() {
                 $element.find('*.type-value').data('element').setValue(event);
             },
 
+            /**
+             * Takes an array of fields and fields it up with empty fields till a minimum amount
+             * @param field {Object} array of fields to manipulate
+             * @param minAmount {Number} minimum amount of fields to exist
+             * @param value {Object} empty object to insert (for minimum amount of fields)
+             * @returns {Object} manipulated fields array
+             */
             fillFields: function(field, minAmount, value) {
-                while (field.length < minAmount) {
-                    field.push(value);
+                var i = -1, length = field.length, attributes;
+
+                // if minimum fields stated is bigger than the actual length loop more times
+                if (length < minAmount) {
+                    length = minAmount;
                 }
+
+                for (;++i < length;) {
+
+                    // construct the attributes object for fields under and equal the minimum amount
+                    if ((i+1) > minAmount) {
+                        attributes = {};
+                    } else {
+                        attributes = {
+                            permanent: true
+                        };
+                    }
+
+                    // if no more fields exists push new, empty fields
+                    if (!field[i]) {
+                        field.push(value);
+                        field[field.length - 1].attributes = attributes;
+                    } else {
+                        field[i].attributes = attributes;
+                    }
+                }
+
+                return field;
             },
 
 
@@ -246,8 +275,6 @@ define([], function() {
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), "input");
-
-                // if a field-type gets changed or a field gets deleted
                 this.sandbox.on('sulu.contact-form.changed', function() {
                     this.setHeaderBar(false);
                 }.bind(this));

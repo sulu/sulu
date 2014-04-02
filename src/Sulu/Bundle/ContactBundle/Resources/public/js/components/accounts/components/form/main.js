@@ -146,13 +146,42 @@ define(['app-config'], function(AppConfig) {
         },
 
 
+        /**
+         * Takes an array of fields and fields it up with empty fields till a minimum amount
+         * @param field {Object} array of fields to manipulate
+         * @param minAmount {Number} minimum amount of fields to exist
+         * @param value {Object} empty object to insert (for minimum amount of fields)
+         * @returns {Object} manipulated fields array
+         */
         fillFields: function(field, minAmount, value) {
-            if (!field) {
-                return;
+            var i = -1, length = field.length, attributes;
+
+            // if minimum fields stated is bigger than the actual length loop more times
+            if (length < minAmount) {
+                length = minAmount;
             }
-            while (field.length < minAmount) {
-                field.push(value);
+
+            for (;++i < length;) {
+
+                // construct the attributes object for fields under and equal the minimum amount
+                if ((i+1) > minAmount) {
+                    attributes = {};
+                } else {
+                    attributes = {
+                        permanent: true
+                    };
+                }
+
+                // if no more fields exists push new, empty fields
+                if (!field[i]) {
+                    field.push(value);
+                    field[field.length - 1].attributes = attributes;
+                } else {
+                    field[i].attributes = attributes;
+                }
             }
+
+            return field;
         },
 
         initContactData: function() {
@@ -188,11 +217,6 @@ define(['app-config'], function(AppConfig) {
                 id: null,
                 value: ''
             });
-//            this.fillFields(contactJson.addresses, 1, {
-//                id: null,
-//                addressType: this.defaultTypes.addressType,
-//                street: this.sandbox.translate('contact.add.address')
-//            });
             return contactJson;
         },
 
