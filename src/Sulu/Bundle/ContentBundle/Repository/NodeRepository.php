@@ -75,6 +75,7 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $languageCode
      * @param int $depth
      * @param bool $complete
+     * @param bool $excludeGhosts
      * @return array
      */
     protected function prepareNode(
@@ -82,7 +83,8 @@ class NodeRepository implements NodeRepositoryInterface
         $webspaceKey,
         $languageCode,
         $depth = 1,
-        $complete = true
+        $complete = true,
+        $excludeGhosts = false
     )
     {
         $result = $structure->toArray($complete);
@@ -93,7 +95,7 @@ class NodeRepository implements NodeRepositoryInterface
         $result['_links'] = array(
             'self' => $this->apiBasePath . '/' . $structure->getUuid(),
             'children' => $this->apiBasePath . '?parent=' . $structure->getUuid()
-                . '&depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode
+                . '&depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
         );
 
         return $result;
@@ -183,19 +185,20 @@ class NodeRepository implements NodeRepositoryInterface
      * @param int $depth
      * @param bool $flat
      * @param bool $complete
+     * @param bool $excludeGhosts
      * @return array
      */
-    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true)
+    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true, $excludeGhosts = false)
     {
-        $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat);
+        $nodes = $this->getMapper()->loadByParent($parent, $webspaceKey, $languageCode, $depth, $flat, false, $excludeGhosts);
 
         if ($parent != null) {
             $parentNode = $this->getMapper()->load($parent, $webspaceKey, $languageCode);
         } else {
             $parentNode = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
         }
-        $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete);
-        $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete);
+        $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
+        $result['_embedded'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete, $excludeGhosts);
         $result['total'] = sizeof($result['_embedded']);
 
         return $result;
@@ -276,15 +279,22 @@ class NodeRepository implements NodeRepositoryInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param bool $complete
+     * @param bool $excludeGhosts
      * @return array
      */
-    private function prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete = true)
+    private function prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete = true, $excludeGhosts = false)
     {
         $results = array();
         foreach ($nodes as $node) {
-            $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete);
+            $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
             if ($node->getHasChildren() && $node->getChildren() != null) {
-                $result['_embedded'] = $this->prepareNodesTree($node->getChildren(), $webspaceKey, $languageCode);
+                $result['_embedded'] = $this->prepareNodesTree(
+                    $node->getChildren(),
+                    $webspaceKey,
+                    $languageCode,
+                    $complete,
+                    $excludeGhosts
+                );
             }
             $results[] = $result;
         }

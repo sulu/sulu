@@ -82,13 +82,13 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template, navigation) {
-                this.save(data, template, navigation);
+            this.sandbox.on('sulu.content.contents.save', function(data, template) {
+                this.save(data, template);
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.contents.load', function(id) {
-                this.load(id);
+            this.sandbox.on('sulu.content.contents.load', function(id, webspace, language) {
+                this.load(id, webspace, language);
             }, this);
 
             // add new content
@@ -107,12 +107,11 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.content.contents.list', function() {
-
+            this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
                 // uncollapse navigation
                 this.sandbox.emit('husky.navigation.uncollapse');
 
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 
             // return dropdown for state
@@ -158,8 +157,7 @@ define([
         },
 
         getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace;
-            // TODO portal
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
             this.sandbox.util.load(url)
                 .then(function(data) {
                     callback(data.resourceLocator);
@@ -271,10 +269,10 @@ define([
             });
         },
 
-        save: function(data, template, navigation) {
+        save: function(data, template) {
             this.content.set(data);
 
-            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
+            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
@@ -291,8 +289,8 @@ define([
             });
         },
 
-        load: function(id) {
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/content');
+        load: function(id, webspace, language) {
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + id + '/content');
         },
 
         add: function(parent) {
