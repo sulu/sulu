@@ -363,7 +363,9 @@ define([], function() {
 
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
                 if (widths.preview < constants.minWidthForToolbarExpanded) {
-                    this.sandbox.dom.hide(this.$toolbarRight);
+                    this.sandbox.dom.hide(this.$toolbarResolutions);
+                    this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
                 } else {
                     this.sandbox.dom.show(this.$toolbarRight);
                     this.sandbox.dom.show(this.$toolbarResolutions);
@@ -397,6 +399,7 @@ define([], function() {
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
                 if (widths.preview < constants.minWidthForToolbarCollapsed) {
                     this.sandbox.dom.hide(this.$toolbarResolutions);
+                    this.sandbox.dom.show(this.$toolbarOpenNewWindow);
                     this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
                 }
 
