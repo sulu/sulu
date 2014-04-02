@@ -536,9 +536,13 @@ define(['app-config'], function(AppConfig) {
             }
             this.previewInitiated = true;
 
-            this.sandbox.on('sulu.preview.update', function(property, value) {
+            this.sandbox.on('sulu.preview.update', function(property, value, changeOnKey) {
                 if (!!this.options.data.id) {
-                    this.updatePreview(property, value);
+                    if (this.ws !== null) {
+                        this.updatePreview(property, value);
+                    } else if(!changeOnKey) {
+                        this.updatePreview(property, value);
+                    }
                 }
             }, this);
         },
