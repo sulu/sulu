@@ -44,8 +44,8 @@ define([], function() {
                         '<div class="delete btn gray-dark fit only-icon pull-right">',
                             '<div class="icon-circle-minus"></div>',
                         '</div>',
-                    '<% } %>',
                     '</div>',
+                    '<% } %>',
                 '</div>'
             ].join('')
         },
@@ -225,6 +225,7 @@ define([], function() {
                 id: fieldTypeId,
                 name: dataType.name
             };
+            dataObject.attributes = {};
 
             // insert field
             this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
@@ -309,7 +310,7 @@ define([], function() {
                 dataArray = {},
                 i, length, key,
                 $content = this.sandbox.dom.createElement('<div class="edit-fields"/>'),
-                $element, required;
+                $element, required, permanent;
             addCollectionFilters.call(this, this.form);
 
             dataArray['address'] = data.addresses;
@@ -322,17 +323,22 @@ define([], function() {
             for(key in dataArray) {
                 //foreach object property loop through its children
                 for(i = -1, length = dataArray[key].length; ++i < length;) {
-
                     // look if belonging field is required
                     required = this.sandbox.dom.attr(
                         this.sandbox.dom.$('[data-mapper-id="'+ dataArray[key][i].mapperId +'"]'),
                         'data-contactform-required'
                     );
 
+                    // construct permanent boolean
+                    permanent = false;
+                    if (!!dataArray[key][i].attributes && !!dataArray[key][i].attributes.permanent) {
+                        permanent = dataArray[key][i].attributes.permanent;
+                    }
+
                     // create row form overlay-content
                     $element = this.sandbox.dom.createElement(_.template(templates.editField)({
                         dropdownId: 'edit-dropdown-' + key + '-' + i,
-                        showDeleteButton: !required
+                        showDeleteButton: (!required && !permanent)
                     }));
 
                     this.editFieldsData.push({
