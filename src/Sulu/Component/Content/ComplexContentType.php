@@ -18,7 +18,7 @@ abstract class ComplexContentType implements ContentTypeInterface
     /**
      * magic getter for twig templates
      * @param $property
-     * @return null
+     * @return mixed|null
      */
     public function __get($property)
     {

@@ -17,7 +17,9 @@ use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
-
+/**
+ * reads a template xml and returns a array representation
+ */
 class TemplateReader implements LoaderInterface
 {
     /**
@@ -38,7 +40,7 @@ class TemplateReader implements LoaderInterface
     /**
      * @var string
      */
-    private $pathToProperties = '/x:template/x:properties/x:property';
+    private $pathToProperties = '/x:template/x:properties/*';
 
     /**
      * @var string
@@ -49,6 +51,11 @@ class TemplateReader implements LoaderInterface
      * @var \DOMDocument
      */
     private $xmlDocument;
+
+    /**
+     * @var array
+     */
+    private $complexNodeTypes = array('block');
 
     /**
      * Reads all types from the given path
@@ -79,20 +86,68 @@ class TemplateReader implements LoaderInterface
             $nodes = $xpath->query($this->pathToProperties);
 
             foreach ($nodes as $node) {
+
                 /** @var \DOMNode $node */
                 $attributes = $this->getAllAttributesOfNode($node);
+
+                if(in_array($node->tagName, $this->complexNodeTypes)) {
+                    $attributes['type'] = $node->tagName;
+                }
+
                 $name = $attributes[$this->nameKey];
-                $params = $this->getChildrenOfNode($node, $this->pathToParams);
+                $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath);
                 $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
+
+                if(in_array($node->tagName, $this->complexNodeTypes)) {
+                    $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$node);
+                }
+
             }
 
         } catch (InvalidXmlException $ex) {
             throw $ex;
         } catch (Exception $ex) {
+            // TODO do not catch exceptions here but in the callee
             throw new InvalidArgumentException('Path is invalid: ' . $path);
         }
 
         return $template;
+    }
+
+    /**
+     * Parses childnodes and its attributes recursively and puts them into the properties element
+     * @param $xpath
+     * @param \DOMNode $node
+     * @return array with sub properties
+     */
+    private function parseSubproperties($xpath, $node){
+
+        $properties = array();
+
+        /** @var \DOMNodeList $children */
+        $children = $xpath->query('x:properties/*', $node);
+
+
+        /** @var \DOMNode $child */
+        foreach($children as $child) {
+
+            $attributes = $this->getAllAttributesOfNode($child);
+
+            if(in_array($child->tagName, $this->complexNodeTypes)) {
+                $attributes['type'] = $child->tagName;
+            }
+
+            $name = $attributes[$this->nameKey];
+            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath);
+            $properties[$name] = array_merge($attributes, $params);
+
+            if(in_array($child->tagName, $this->complexNodeTypes)) {
+                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$child);
+            }
+
+        }
+
+        return $properties;
     }
 
     /**
@@ -154,15 +209,17 @@ class TemplateReader implements LoaderInterface
      * Returns an array with all the attributes from the children of a node
      * @param \DOMNode $node
      * @param $path
+     * @param $xpath
      * @return array
      * @internal param $paramsTag
      */
-    private function getChildrenOfNode(\DOMNode $node, $path)
+    private function getChildrenOfNode(\DOMNode $node, $path, $xpath)
     {
 
         $keyValue = array();
+        $params = $children = $xpath->query($path, $node);
 
-        if ($node->hasChildNodes()) {
+        if ($params->length > 0) {
 
             $keyValue[$this->paramsKey] = array();
             $xpath = new \DOMXPath($this->xmlDocument);
@@ -222,7 +279,6 @@ class TemplateReader implements LoaderInterface
      */
     public function supports($resource, $type = null)
     {
-        // TODO
         throw new FeatureNotImplementedException();
     }
 

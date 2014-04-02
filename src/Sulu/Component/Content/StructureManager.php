@@ -58,7 +58,6 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         );
 
         if (!$cache->isFresh()) {
-
             $path = $this->options['template_dir'] . '/' . $key . '.xml';
             $result = $this->loader->load($path);
 
