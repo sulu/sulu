@@ -314,7 +314,7 @@ define([], function() {
                 address: data.addresses,
                 email: data.emails,
                 fax: data.faxes,
-                phones: data.phones,
+                phone: data.phones,
                 url: data.urls
 
             };
