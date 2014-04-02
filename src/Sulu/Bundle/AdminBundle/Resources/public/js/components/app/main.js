@@ -122,6 +122,7 @@ define(function() {
                 this.currentRoute = null;
 
                 this.bindCustomEvents();
+                this.bindDomEvents();
 
                 this.sandbox.emit(INITIALIZED.call(this));
             }
