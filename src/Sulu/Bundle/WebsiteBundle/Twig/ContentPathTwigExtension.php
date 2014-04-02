@@ -50,7 +50,7 @@ class ContentPathTwigExtension extends \Twig_Extension
     {
         if ($item instanceof NavigationItem) {
             $rl = $item->getUrl();
-        } elseif($item instanceof StructureInterface) {
+        } elseif ($item instanceof StructureInterface) {
             $rl = $item->url;
         }
         if ($this->requestAnalyzer !== null) {
