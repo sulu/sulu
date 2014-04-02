@@ -43,12 +43,12 @@ class PhpcrMapper extends RlpMapper
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
      * @param string $webspaceKey key of webspace
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @param string $languageCode
+     * @param string $segmentKey
      */
-    public function save(NodeInterface $contentNode, $path, $webspaceKey)
+    public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $routes = $this->getRoutes($webspaceKey);
+        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
 
         // check if route already exists
         if ($this->checkResourceLocator($routes, $path, $contentNode)) {
@@ -77,19 +77,27 @@ class PhpcrMapper extends RlpMapper
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function loadByContent(NodeInterface $contentNode, $webspaceKey)
+    public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // search for references with name 'content'
         foreach ($contentNode->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $parent = $ref->getParent();
-                if (false === $parent->getPropertyValue('sulu:history')) {
-                    return $this->getResourceLocator($ref->getParent()->getPath(), $webspaceKey);
+                $result = $this->getResourceLocator(
+                    $ref->getParent()->getPath(),
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey
+                );
+                if (false === $parent->getPropertyValue('sulu:history') && false !== $result) {
+                    return $result;
                 }
             }
         }
@@ -101,34 +109,37 @@ class PhpcrMapper extends RlpMapper
      * returns path for given contentNode
      * @param string $uuid uuid of contentNode
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function loadByContentUuid($uuid, $webspaceKey)
+    public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $session = $this->sessionManager->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
-        return $this->loadByContent($contentNode, $webspaceKey);
+        return $this->loadByContent($contentNode, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
-     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      * @return string uuid of content node
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $resourceLocator = ltrim($resourceLocator, '/');
 
-        $routes = $this->getRoutes($webspaceKey);
+        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
         if (!$routes->hasNode($resourceLocator) && $resourceLocator !== '') {
             throw new ResourceLocatorNotFoundException();
         }
@@ -151,7 +162,7 @@ class PhpcrMapper extends RlpMapper
                 $realPath = $route->getPropertyValue('sulu:content');
 
                 throw new ResourceLocatorMovedException(
-                    $this->getResourceLocator($realPath->getPath(), $webspaceKey),
+                    $this->getResourceLocator($realPath->getPath(), $webspaceKey, $languageCode, $segmentKey),
                     $realPath->getIdentifier()
                 );
             }
@@ -164,11 +175,13 @@ class PhpcrMapper extends RlpMapper
      * checks if given path is unique
      * @param string $path
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return bool
      */
-    public function unique($path, $webspaceKey)
+    public function unique($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $routes = $this->getRoutes($webspaceKey);
+        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
 
         return $this->isUnique($routes, $path);
     }
@@ -177,11 +190,13 @@ class PhpcrMapper extends RlpMapper
      * returns a unique path with "-1" if necessary
      * @param string $path
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    public function getUniquePath($path, $webspaceKey)
+    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $routes = $this->getRoutes($webspaceKey);
+        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
 
         if ($this->isUnique($routes, $path)) {
             // path is already unique
@@ -206,21 +221,23 @@ class PhpcrMapper extends RlpMapper
      * @param string $src old resource locator
      * @param string $dest new resource locator
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      */
-    public function move($src, $dest, $webspaceKey)
+    public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // get abs path
-        $absDestPath = $this->getPath($dest, $webspaceKey);
-        $absSrcPath = $this->getPath($src, $webspaceKey);
+        $absDestPath = $this->getPath($dest, $webspaceKey, $languageCode, $segmentKey);
+        $absSrcPath = $this->getPath($src, $webspaceKey, $languageCode, $segmentKey);
 
         // init session
         $session = $this->sessionManager->getSession();
         $rootNode = $session->getRootNode();
         $workspace = $session->getWorkspace();
-        $routes = $this->getRoutes($webspaceKey);
+        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
 
         $routeNode = $routes->getNode(ltrim($src, '/'));
         if (!$routeNode->hasProperty('sulu:content')) {
@@ -229,7 +246,7 @@ class PhpcrMapper extends RlpMapper
             $realPath = $routeNode->getPropertyValue('sulu:content');
 
             throw new ResourceLocatorMovedException(
-                $this->getResourceLocator($realPath->getPath(), $webspaceKey),
+                $this->getResourceLocator($realPath->getPath(), $webspaceKey, $languageCode, $segmentKey),
                 $realPath->getIdentifier()
             );
         }
@@ -268,6 +285,23 @@ class PhpcrMapper extends RlpMapper
                 $this->changePathToHistory($node, $session, $absSrcPath, $absDestPath);
             }
         }
+    }
+
+    /**
+     * returns resource locator for parent node
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string
+     */
+    public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $session = $this->sessionManager->getSession();
+        $contentNode = $session->getNodeByIdentifier($uuid);
+        $parentNode = $contentNode->getParent();
+
+        return $this->loadByContent($parentNode, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
@@ -339,37 +373,49 @@ class PhpcrMapper extends RlpMapper
     /**
      * returns base node of routes from phpcr
      * @param string $webspaceKey current session
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return \PHPCR\NodeInterface base node of routes
      */
-    private function getRoutes($webspaceKey)
+    private function getRoutes($webspaceKey, $languageCode, $segmentKey)
     {
         // trailing slash
-        return $this->sessionManager->getRouteNode($webspaceKey);
+        return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * returns the abspath
      * @param string $relPath
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    private function getPath($relPath = '', $webspaceKey)
+    private function getPath($relPath, $webspaceKey, $languageCode, $segmentKey)
     {
-        $basePath = $this->getRoutes($webspaceKey)->getPath();
+        $basePath = $this->getRoutes($webspaceKey, $languageCode, $segmentKey)->getPath();
         return '/' . ltrim($basePath, '/') . ($relPath !== '' ? '/' . ltrim($relPath, '/') : '');
     }
 
     /**
      * @param $path
      * @param $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    private function getResourceLocator($path, $webspaceKey)
+    private function getResourceLocator($path, $webspaceKey, $languageCode, $segmentKey)
     {
-        $basePath = $this->getRoutes($webspaceKey)->getPath();
+        $basePath = $this->getRoutes($webspaceKey, $languageCode, $segmentKey)->getPath();
         if ($path === $basePath) {
             return '/';
         }
-        return substr($path, strlen($basePath));
+        if (false !== strpos($path, $basePath . '/')) {
+            $result = str_replace($basePath . '/', '/', $path);
+            if (0 === strpos($result, '/')) {
+                return $result;
+            }
+        }
+        return false;
     }
 }

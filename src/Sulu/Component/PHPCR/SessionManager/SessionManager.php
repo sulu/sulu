@@ -49,11 +49,20 @@ class SessionManager implements SessionManagerInterface
     /**
      * returns the route node for given webspace
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segment
      * @return NodeInterface
      */
-    public function getRouteNode($webspaceKey = 'default')
+    public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
-        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['route'];
+        $path = sprintf(
+            '%s/%s/%s/%s%s',
+            $this->nodeNames['base'],
+            $webspaceKey,
+            $this->nodeNames['route'],
+            $languageCode,
+            ($segment !== null ? '/' . $segment : '')
+        );
         $root = $this->getSession()->getRootNode();
 
         return $root->getNode($path);
@@ -64,7 +73,7 @@ class SessionManager implements SessionManagerInterface
      * @param string $webspaceKey
      * @return NodeInterface
      */
-    public function getContentNode($webspaceKey = 'default')
+    public function getContentNode($webspaceKey)
     {
         $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['content'];
         $root = $this->getSession()->getRootNode();

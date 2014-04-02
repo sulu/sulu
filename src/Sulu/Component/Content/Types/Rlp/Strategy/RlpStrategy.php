@@ -88,10 +88,12 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * returns whole path for given ContentNode
      * @param string $title title of new node
      * @param string $parentPath parent path of new contentNode
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string whole path
      */
-    public function generate($title, $parentPath, $portalKey)
+    public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // get generated path from childClass
         $path = $this->generatePath($title, $parentPath);
@@ -100,9 +102,25 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $path = $this->cleanup($path);
 
         // get unique path
-        $path = $this->mapper->getUniquePath($path, $portalKey);
+        $path = $this->mapper->getUniquePath($path, $webspaceKey, $languageCode, $segmentKey);
 
         return $path;
+    }
+
+    /**
+     * returns whole path for given ContentNode
+     * @param string $title title of new node
+     * @param string $uuid uuid for node to generate rl
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string whole path
+     */
+    public function generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $parentPath = $this->mapper->getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey);
+
+        return $this->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
@@ -111,7 +129,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @param $parentPath
      * @return string
      */
-    protected abstract function generatePath($title, $parentPath);
+    protected abstract function generatePath($title, $parentPath = null);
 
     /**
      * returns a clean string
@@ -153,82 +171,83 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      */
-    public function save(NodeInterface $contentNode, $path, $portalKey)
+    public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // delegate to mapper
-        return $this->mapper->save($contentNode, $path, $portalKey);
+        return $this->mapper->save($contentNode, $path, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * creates a new resourcelocator and creates the correct history
      * @param string $src old resource locator
      * @param string $dest new resource locator
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      */
-    public function move($src, $dest, $portalKey)
+    public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // delegate to mapper
-        return $this->mapper->move($src, $dest, $portalKey);
+        return $this->mapper->move($src, $dest, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
-     *
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string path
      */
-    public function loadByContent(NodeInterface $contentNode, $portalKey)
+    public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // delegate to mapper
-        return $this->mapper->loadByContent($contentNode, $portalKey);
+        return $this->mapper->loadByContent($contentNode, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * returns path for given contentNode
      * @param string $uuid uuid of contentNode
-     * @param string $portalKey key of portal
-     *
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string path
      */
-    public function loadByContentUuid($uuid, $portalKey)
+    public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // delegate to mapper
-        return $this->mapper->loadByContentUuid($uuid, $portalKey);
+        return $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
-     * @param string $portalKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
-     *
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string uuid of content node
      */
-    public function loadByResourceLocator($resourceLocator, $portalKey)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // delegate to mapper
-        return $this->mapper->loadByResourceLocator($resourceLocator, $portalKey);
+        return $this->mapper->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * checks if path is valid
      * @param string $path path of route
-     * @param string $portalKey key of portal
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return bool
      */
-    public function isValid($path, $portalKey)
+    public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // check for valid signs and uniqueness
-        return preg_match($this->pattern, $path) && $this->mapper->unique($path, $portalKey);
+        return preg_match($this->pattern, $path) && $this->mapper->unique($path, $webspaceKey, $languageCode, $segmentKey);
     }
 }

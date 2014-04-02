@@ -31,8 +31,12 @@ class TreeStrategy extends RlpStrategy
      * @param string $parentPath
      * @return string
      */
-    protected function generatePath($title, $parentPath)
+    protected function generatePath($title, $parentPath = null)
     {
+        // if parent has no resource create a new tree
+        if ($parentPath == null) {
+            return '/' . $title;
+        }
         // concat parentPath and title to whole tree path
         return $parentPath . '/' . $title;
     }
