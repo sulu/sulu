@@ -364,6 +364,8 @@ define([], function() {
                     this.sandbox.dom.hide(this.$toolbarRight);
                 } else {
                     this.sandbox.dom.show(this.$toolbarRight);
+                    this.sandbox.dom.show(this.$toolbarResolutions);
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
                 }
 
                 this.animateCollapseAndExpand(true, widths);
