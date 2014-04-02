@@ -76,7 +76,6 @@ class NavigationTest extends PhpcrTestCase
         return null;
     }
 
-
     /**
      * @return StructureInterface[]
      */
