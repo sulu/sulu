@@ -60,7 +60,6 @@ define([], function() {
             },
 
             constants = {
-
                 breakPointBig: 980,
 
                 // needed to hide preview and show only new-window-button
@@ -118,11 +117,9 @@ define([], function() {
              */
                 HIDE = eventNamespace + 'hide';
 
-
         return {
 
             initialize: function() {
-
                 this.options = this.sandbox.util.extend({}, defaults, this.options);
 
                 // component vars
@@ -576,7 +573,6 @@ define([], function() {
                     margin = 0;
 
                 if (!!expanded) {
-
                     widths.preview = viewportWidth - constants.mainContentMinWidth - constants.marginPreviewExpandedLeft - constants.minMainContentMarginLeft;
 
                     if (!!resized) { // animation needs outer width
@@ -584,10 +580,7 @@ define([], function() {
                     } else {
                         widths.content = constants.mainContentMinWidthIncMarginLeft;
                     }
-
-
                 } else {
-
                     // when resized needed to have enough space for preview
                     // or rather for the content to have enough whitespace on the right
                     if (!!resized && viewportWidth < constants.breakPointBig) {
@@ -603,18 +596,7 @@ define([], function() {
                         widths.content = tmpWidth;
                         widths.preview = constants.previewMinWidth;
                     }
-
-//                    else if(tmpWidth <= constants.breakPointSmall){
-//                        widths.content = constants.breakPointSmall;
-//                        widths.preview = 0;
-//                    }
-
-
                 }
-
-                this.sandbox.logger.warn("content width", widths.content);
-                this.sandbox.logger.warn("real content width", this.sandbox.dom.width(this.$mainContent));
-                this.sandbox.logger.warn("preview width", widths.preview);
 
                 return widths;
             },
@@ -657,7 +639,6 @@ define([], function() {
 
                 return data;
             }
-
         };
     }
 );
