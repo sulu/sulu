@@ -58,7 +58,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected $fieldsHidden = array('created', 'type');
+    protected $fieldsHidden = array('created', 'type', 'division', 'disabled', 'uid');
 
     /**
      * {@inheritdoc}
