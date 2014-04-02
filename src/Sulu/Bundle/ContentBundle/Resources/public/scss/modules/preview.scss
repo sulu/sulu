@@ -10,12 +10,12 @@
     top: 0;
     right: 0;
     z-index: 100; /* because of a css bug in the toolbar */
+    border-left: 1px solid #666;
 }
 
 .preview-iframe {
     border: 0;
     height: 100%;
-    border-left: 1px solid #666;
 }
 
 .preview-toolbar {
