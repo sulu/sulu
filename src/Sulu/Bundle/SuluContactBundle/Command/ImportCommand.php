@@ -28,11 +28,12 @@ class ImportCommand extends ContainerAwareCommand
                 InputArgument::OPTIONAL,
                 'contact file to import'
             )
-            ->addOption('limit',
+            ->addOption(
+                'limit',
                 'l',
                 InputOption::VALUE_REQUIRED,
-                'limit import by a number of rows')
-        ;
+                'limit import by a number of rows'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

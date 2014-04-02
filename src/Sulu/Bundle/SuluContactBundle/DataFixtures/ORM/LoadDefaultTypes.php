@@ -17,7 +17,7 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 
-class LoadDefaultTypes extends AbstractFixture implements  OrderedFixtureInterface
+class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * {@inheritDoc}
@@ -100,7 +100,6 @@ class LoadDefaultTypes extends AbstractFixture implements  OrderedFixtureInterfa
         $manager->persist($urlType2);
 
         $manager->flush();
-
 
         $faxType1 = new FaxType();
         $faxType1->setId(1);
