@@ -288,7 +288,7 @@ define([], function() {
                 config = {};
                 config.roleId = value;
 
-                this.sandbox.emit('husky.select.languageSelector' + value + '.getChecked', function(selected) {
+                this.sandbox.emit('husky.select.languageSelector' + value + '.get-checked', function(selected) {
                     config.selection = selected;
                 });
 
