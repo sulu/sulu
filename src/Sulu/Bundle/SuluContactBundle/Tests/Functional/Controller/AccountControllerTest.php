@@ -48,6 +48,7 @@ class AccountControllerTest extends DatabaseTestCase
         self::$account = new Account();
         self::$account->setName('Company');
         self::$account->setType(Account::TYPE_BASIC);
+        self::$account->setDisabled(0);
         self::$account->setCreated(new DateTime());
         self::$account->setChanged(new DateTime());
 

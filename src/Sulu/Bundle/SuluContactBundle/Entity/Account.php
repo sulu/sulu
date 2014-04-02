@@ -26,6 +26,9 @@ class Account extends ApiEntity
     const TYPE_CUSTOMER = 2;
     const TYPE_SUPPLIER = 3;
 
+    const ENABLED = 0;
+    const DISABLED = 1;
+
     /**
      * array containing all the translations for CRM types
      * @Exclude
@@ -135,6 +138,21 @@ class Account extends ApiEntity
      * @var integer
      */
     private $type = self::TYPE_BASIC;
+
+    /**
+     * @var string
+     */
+    private $division;
+
+    /**
+     * @var integer
+     */
+    private $disabled = self::ENABLED;
+
+    /**
+     * @var string
+     */
+    private $uid;
 
 
     /**
@@ -657,22 +675,6 @@ class Account extends ApiEntity
     {
         return $this->faxes;
     }
-
-    /**
-     * @var string
-     */
-    private $division;
-
-    /**
-     * @var integer
-     */
-    private $disabled;
-
-    /**
-     * @var string
-     */
-    private $uid;
-
 
     /**
      * Set division
