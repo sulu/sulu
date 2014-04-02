@@ -13,15 +13,17 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 interface NodeRepositoryInterface
 {
-
     /**
      * returns node for given uuid
-     * @param $uuid
-     * @param $webspaceKey
-     * @param $languageCode
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param bool $breadcrumb
+     * @param bool $complete
+     * @param bool $excludeGhosts
      * @return array
      */
-    public function getNode($uuid, $webspaceKey, $languageCode);
+    public function getNode($uuid, $webspaceKey, $languageCode, $breadcrumb = false, $complete = true, $excludeGhosts = false);
 
     /**
      * returns a list of nodes

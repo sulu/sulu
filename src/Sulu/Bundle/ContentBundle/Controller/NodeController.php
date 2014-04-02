@@ -31,13 +31,43 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-        $breadcrumb = $this->getRequest()->get('breadcrumb', false);
+        $breadcrumb = $this->getRequest()->get('breadcrumb');
+        if ($breadcrumb === 'true') {
+            $breadcrumb = true;
+        } elseif ($breadcrumb === 'false') {
+            $breadcrumb = false;
+        } else {
+            $breadcrumb = false;
+        }
+        $complete = $this->getRequest()->get('complete');
+        if ($complete === 'true') {
+            $complete = true;
+        } elseif ($complete === 'false') {
+            $complete = false;
+        } else {
+            $complete = true;
+        }
+        $ghostContent = $this->getRequest()->get('ghost-content');
+        if ($ghostContent === 'true') {
+            $ghostContent = true;
+        } elseif ($ghostContent === 'false') {
+            $ghostContent = false;
+        } else {
+            $ghostContent = false;
+        }
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $webspace, $breadcrumb) {
+            function ($id) use ($language, $webspace, $breadcrumb, $complete, $ghostContent) {
                 try {
-                    return $this->getRepository()->getNode($id, $webspace, $language, $breadcrumb);
+                    return $this->getRepository()->getNode(
+                        $id,
+                        $webspace,
+                        $language,
+                        $breadcrumb,
+                        $complete,
+                        $ghostContent
+                    );
                 } catch (ItemNotFoundException $ex) {
                     return null;
                 }
