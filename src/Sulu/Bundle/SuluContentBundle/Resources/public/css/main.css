@@ -8,13 +8,13 @@
   right: 0;
   z-index: 100;
   /* because of a css bug in the toolbar */
+  border-left: 1px solid #666;
 }
 
-/* line 15, ../scss/modules/preview.scss */
+/* line 16, ../scss/modules/preview.scss */
 .preview-iframe {
   border: 0;
   height: 100%;
-  border-left: 1px solid #666;
 }
 
 /* line 21, ../scss/modules/preview.scss */

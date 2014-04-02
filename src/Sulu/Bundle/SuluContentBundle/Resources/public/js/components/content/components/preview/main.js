@@ -65,6 +65,8 @@ define([], function() {
                 // needed to hide preview and show only new-window-button
                 // 460 + margin + padding
                 breakPointSmall: 640,
+                breakPointSmallExpanded: 600,
+
 
                 minWidthForToolbarCollapsed: 240,
                 minWidthForToolbarExpanded: 240,
@@ -361,9 +363,13 @@ define([], function() {
 
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
                 if (widths.preview < constants.minWidthForToolbarExpanded) {
-                    this.sandbox.dom.hide(this.$toolbarRight);
+                    this.sandbox.dom.hide(this.$toolbarResolutions);
+                    this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
                 } else {
                     this.sandbox.dom.show(this.$toolbarRight);
+                    this.sandbox.dom.show(this.$toolbarResolutions);
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
                 }
 
                 this.animateCollapseAndExpand(true, widths);
@@ -379,7 +385,8 @@ define([], function() {
                 this.sandbox.emit('sulu.content.tabs.activate');
 
                 var $span = this.sandbox.dom.find('span', $target),
-                    widths = this.calculateCurrentWidths(false, false);
+                    widths = this.calculateCurrentWidths(false, false),
+                    widthViewport = this.sandbox.dom.width(window);
 
                 this.sandbox.dom.removeClass($target, 'expanded');
                 this.sandbox.dom.addClass($target, 'collapsed');
@@ -390,9 +397,17 @@ define([], function() {
                 this.sandbox.emit(COLLAPSING);
                 this.isExpanded = false;
 
+                // special case for extreme resized expanded preview
+                if(widthViewport < constants.breakPointSmall){
+                    this.adjustDisplayedComponents();
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
+                }
+
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
-                if (widths.preview < constants.minWidthForToolbarCollapsed) {
-                    this.sandbox.dom.hide(this.$toolbarRight);
+                else if (widths.preview < constants.minWidthForToolbarCollapsed) {
+                    this.sandbox.dom.hide(this.$toolbarResolutions);
+                    this.sandbox.dom.show(this.$toolbarOpenNewWindow);
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
                 }
 
                 this.animateCollapseAndExpand(false, widths);
@@ -478,7 +493,6 @@ define([], function() {
                         this.sandbox.dom.show(this.$toolbarRight);
                         this.sandbox.dom.show(this.$toolbarOpenNewWindow);
 
-
                         this.sandbox.dom.remove(this.$iframe);
                         this.iframeExists = false;
 
@@ -505,7 +519,8 @@ define([], function() {
 
                 } else if (!!this.isExpanded) {
 
-                    if (widths.preview < constants.previewMinWidth) {
+                    // hide preview except for open in new window button
+                   if (widths.preview < constants.previewMinWidth) {
 
                         this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.hide(this.$toolbarOpenNewWindow);
