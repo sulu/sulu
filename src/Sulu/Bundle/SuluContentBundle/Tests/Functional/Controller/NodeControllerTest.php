@@ -99,7 +99,9 @@ class NodeControllerTest extends DatabaseTestCase
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
         $webspace = $cmf->addNode('sulu_io');
-        $webspace->addNode('routes');
+        $nodes = $webspace->addNode('routes');
+        $nodes->addNode('de');
+        $nodes->addNode('en');
         $content = $webspace->addNode('contents');
         $content->setProperty('sulu_locale:en-template', 'overview');
         $content->setProperty('sulu_locale:en-creator', 1);
@@ -181,7 +183,7 @@ class NodeControllerTest extends DatabaseTestCase
                 'tag1',
                 'tag2'
             ),
-            'url' => '/de/test',
+            'url' => '/test',
             'article' => 'Test'
         );
 
@@ -200,13 +202,13 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Testtitle', $response->title);
         $this->assertEquals('Test', $response->article);
-        $this->assertEquals('/de/test', $response->url);
+        $this->assertEquals('/test', $response->url);
         $this->assertEquals(array('tag1', 'tag2'), $response->tags);
         $this->assertEquals(1, $response->creator);
         $this->assertEquals(1, $response->changer);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/sulu_io/routes/de/test');
+        $route = $root->getNode('cmf/sulu_io/routes/en/test');
 
         /** @var NodeInterface $content */
         $content = $route->getPropertyValue('sulu:content');
@@ -263,7 +265,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->changer);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/sulu_io/routes/news/test');
+        $route = $root->getNode('cmf/sulu_io/routes/en/news/test');
 
         /** @var NodeInterface $content */
         $content = $route->getPropertyValue('sulu:content');

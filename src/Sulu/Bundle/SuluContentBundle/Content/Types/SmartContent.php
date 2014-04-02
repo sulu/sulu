@@ -132,6 +132,10 @@ class SmartContent extends ComplexContentType
             $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
         }
 
+        // if whole smart-content container is pushed
+        if (isset($value['config'])) {
+            $value = $value['config'];
+        }
         $node->setProperty($property->getName(), json_encode($value));
     }
 

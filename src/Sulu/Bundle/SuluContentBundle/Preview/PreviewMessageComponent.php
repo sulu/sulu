@@ -175,20 +175,20 @@ class PreviewMessageComponent implements MessageComponentInterface
                     // get preview client
                     /** @var ConnectionInterface $previewClient */
                     $previewClient = $this->content[$id]['preview'];
-
-                    // send changes command
-                    $previewClient->send(
-                        json_encode(
-                            array(
-                                'command' => 'changes',
-                                'content' => $content,
-                                'type' => 'preview',
-                                'params' => array(
-                                    'changes' => $changes
-                                )
+                    $changes = json_encode(
+                        array(
+                            'command' => 'changes',
+                            'content' => $content,
+                            'type' => 'preview',
+                            'params' => array(
+                                'changes' => $changes
                             )
                         )
                     );
+                    $this->logger->debug("Changes send {$changes}");
+
+                    // send changes command
+                    $previewClient->send($changes);
                 }
             }
         }

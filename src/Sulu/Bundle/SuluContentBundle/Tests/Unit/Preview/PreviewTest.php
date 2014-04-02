@@ -15,6 +15,7 @@ use Doctrine\Common\Cache\Cache;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
+use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\TextArea;
@@ -143,6 +144,26 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
             )
         );
 
+        $block = new BlockProperty('block', false, false, 4, 2);
+        $prop = new Property('title', 'text_line');
+        $prop->setValue(array('Block-Title-1', 'Block-Title-2'));
+        $block->addChild($prop);
+        $prop = new Property('article', 'text_area', false, false, 4, 2);
+        $prop->setValue(
+            array(
+                array('Block-Article-1-1', 'Block-Article-1-2'),
+                array('Block-Article-2-1', 'Block-Article-2-2')
+            )
+        );
+        $block->addChild($prop);
+
+        $method->invokeArgs(
+            $structureMock,
+            array(
+                $block
+            )
+        );
+
         $structureMock->getProperty('title')->setValue('Title');
         $structureMock->getProperty('article')->setValue('Lorem Ipsum dolorem apsum');
 
@@ -156,19 +177,38 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         /** @var StructureInterface $content */
         $content = $args[1]['content'];
 
-        $result = $this->render($content->title, $content->article);
+        $result = $this->render($content->title, $content->article, $content->block);
         return $result;
     }
 
     public function indexCallback(StructureInterface $structure, $preview = false, $partial = false)
     {
-        return new Response($this->render($structure->title, $structure->article, $partial));
+        return new Response($this->render($structure->title, $structure->article, $structure->block, $partial));
 
     }
 
-    public function render($title, $article, $partial = false)
+    public function render($title, $article, $block, $partial = false)
     {
-        $template = '<h1 property="title">%s</h1><h1 property="title">PREF: %s</h1><div property="article">%s</div>';
+        $template = '
+            <div id="content" vocab="http://sulu.io/" typeof="Content">
+                <h1 property="title">%s</h1>
+                <h1 property="title">PREF: %s</h1>
+                <div property="article">%s</div>
+                <div property="block" typeof="collection">';
+        $i = 0;
+        foreach ($block as $b) {
+            $subTemplate = '';
+            foreach ($b['article'] as $a) {
+                $subTemplate .= sprintf('<li property="article">%s</li>', $a);
+            }
+            $template .= sprintf(
+                '<div rel="block" typeof="block"><h1 property="title">%s</h1><ul>%s</ul></div>',
+                $b['title'],
+                $subTemplate
+            );
+            $i++;
+        }
+        $template .= '</div></div>';
         if (!$partial) {
             $template = '<html vocab="http://schema.org/" typeof="Content"><body>' . $template . '</body></html>';
         }
@@ -220,12 +260,89 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
     }
 
+    public function testUpdateSequence()
+    {
+        $this->preview->start(1, '123-123-123', '', 'en', 'default', 'en');
+        $this->preview->update(1, '123-123-123', '', 'en', 'block,0,article,0', 'New-Block-Article-1-1');
+        $this->preview->update(1, '123-123-123', '', 'en', 'block,0,article,1', 'New-Block-Article-1-2');
+        $this->preview->update(1, '123-123-123', '', 'en', 'block,0,title', 'New-Block-Title-1');
+        $this->preview->update(1, '123-123-123', '', 'en', 'block,1,title', 'New-Block-Title-2');
+        $changes = $this->preview->getChanges(1, '123-123-123');
+
+        // check result
+        $this->assertEquals(['New-Block-Article-1-1', 'New-Block-Article-1-2'], $changes['block,0,article']['content']);
+
+        $this->assertEquals(1, sizeof($changes['block,0']['content']));
+        $this->assertEquals(
+            "<h1 property=\"title\">New-Block-Title-1</h1>\n" .
+            "<ul>\n" .
+            "<li property=\"article\">New-Block-Article-1-1</li>\n" .
+            "<li property=\"article\">New-Block-Article-1-2</li>\n" .
+            "</ul>",
+            $changes['block,0']['content'][0]
+        );
+        $this->assertEquals(1, sizeof($changes['block,1']['content']));
+        $this->assertEquals(
+            "<h1 property=\"title\">New-Block-Title-2</h1>\n" .
+            "<ul>\n" .
+            "<li property=\"article\">Block-Article-2-1</li>\n" .
+            "<li property=\"article\">Block-Article-2-2</li>\n" .
+            "</ul>",
+            $changes['block,1']['content'][0]
+        );
+
+        // check cache
+        $this->assertTrue($this->cache->contains('1:123-123-123'));
+        $content = $this->cache->fetch('1:123-123-123');
+        $this->assertEquals(
+            array(
+                array(
+                    'title' => 'New-Block-Title-1',
+                    'article' => array(
+                        'New-Block-Article-1-1',
+                        'New-Block-Article-1-2'
+                    )
+                ),
+                array(
+                    'title' => 'New-Block-Title-2',
+                    'article' => array(
+                        'Block-Article-2-1',
+                        'Block-Article-2-2'
+                    )
+                )
+            ),
+            $content->block
+        );
+    }
+
     public function testRender()
     {
         $this->preview->start(1, '123-123-123', 'default', 'en');
-        $response = $this->preview->render(1, '123-123-123');
+        $response = $this->preview->render(
+            1,
+            '123-123-123'
+        );
 
-        $expected = $this->render('Title', 'Lorem Ipsum dolorem apsum');
+        $expected = $this->render(
+            'Title',
+            'Lorem Ipsum dolorem apsum',
+            array(
+                array(
+                    'title' => 'Block-Title-1',
+                    'article' => array(
+                        'Block-Article-1-1',
+                        'Block-Article-1-2'
+                    )
+                ),
+                array(
+                    'title' => 'Block-Title-2',
+                    'article' => array(
+                        'Block-Article-2-1',
+                        'Block-Article-2-2'
+                    )
+                )
+            )
+        );
         $this->assertEquals($expected, $response);
     }
 
@@ -238,7 +355,26 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         // render PREVIEW
         $response = $this->preview->render(1, '123-123-123');
-        $expected = $this->render('Title', 'Lorem Ipsum dolorem apsum');
+        $expected = $this->render(
+            'Title',
+            'Lorem Ipsum dolorem apsum',
+            array(
+                array(
+                    'title' => 'Block-Title-1',
+                    'article' => array(
+                        'Block-Article-1-1',
+                        'Block-Article-1-2'
+                    )
+                ),
+                array(
+                    'title' => 'Block-Title-2',
+                    'article' => array(
+                        'Block-Article-2-1',
+                        'Block-Article-2-2'
+                    )
+                )
+            )
+        );
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
@@ -252,11 +388,13 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, '123-123-123');
-        $this->assertEquals(2, sizeof($changes));
+        $this->assertEquals(3, sizeof($changes));
         $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']['content']);
         $this->assertEquals('title', $changes['title']['property']);
         $this->assertEquals(['asdf'], $changes['article']['content']);
         $this->assertEquals('article', $changes['article']['property']);
+        $this->assertEquals(true, $changes['reload']['content']);
+        $this->assertEquals('reload', $changes['reload']['property']);
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, '123-123-123');
@@ -264,7 +402,26 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         // rerender PREVIEW
         $response = $this->preview->render(1, '123-123-123');
-        $expected = $this->render('New Title', 'asdf');
+        $expected = $this->render(
+            'New Title',
+            'asdf',
+            array(
+                array(
+                    'title' => 'Block-Title-1',
+                    'article' => array(
+                        'Block-Article-1-1',
+                        'Block-Article-1-2'
+                    )
+                ),
+                array(
+                    'title' => 'Block-Title-2',
+                    'article' => array(
+                        'Block-Article-2-1',
+                        'Block-Article-2-2'
+                    )
+                )
+            )
+        );
         $this->assertEquals($expected, $response);
     }
 }
