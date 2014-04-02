@@ -396,8 +396,14 @@ define([], function() {
                 this.sandbox.emit(COLLAPSING);
                 this.isExpanded = false;
 
+                // special case for extreme resized expanded preview
+                if(widths.preview < 60){
+                    this.adjustDisplayedComponents();
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
+                }
+
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
-                if (widths.preview < constants.minWidthForToolbarCollapsed) {
+                else if (widths.preview < constants.minWidthForToolbarCollapsed) {
                     this.sandbox.dom.hide(this.$toolbarResolutions);
                     this.sandbox.dom.show(this.$toolbarOpenNewWindow);
                     this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
