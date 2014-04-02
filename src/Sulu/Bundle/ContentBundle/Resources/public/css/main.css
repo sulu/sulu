@@ -79,7 +79,12 @@
   padding-top: 5px;
 }
 
-/* line 1, ../scss/modules/basic.scss */
+/* line 1, ../scss/modules/general.scss */
 #language-selector {
   width: 95px;
+}
+
+/* line 5, ../scss/modules/general.scss */
+.sortable-placeholder {
+  margin-bottom: 20px;
 }

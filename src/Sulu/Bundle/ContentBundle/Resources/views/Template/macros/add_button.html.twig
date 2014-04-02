@@ -1,3 +1,7 @@
-<div id="mapper-add-{{ property.name }}" class="pointer" data-mapper-add="{{ property.name }}">
-    <span class="icon-add"></span> add {{ property.name }} (<span id="current-counter-{{ property.name }}">{{ property.minOccurs }}</span> out of {{ property.maxOccurs }})
+<div class="text-block-footer">
+    <div id="mapper-add-{{ property.name }}" class="btn action small fit" data-mapper-add="{{ property.name }}">
+        <div class="icon-add"></div>
+        <div class="text">Add {{ property.name }}</div>
+    </div>
+    <span class="desc">(<span id="current-counter-{{ property.name }}">{{ property.minOccurs }}</span> out of <span>{{ property.maxOccurs }}</span>)</span>
 </div>
