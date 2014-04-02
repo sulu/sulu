@@ -30,6 +30,9 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
         $title = $this->getRequest()->get('title');
         $webspace = $this->getRequest()->get('webspace');
         $languageCode = $this->getRequest()->get('language');
+        if ($languageCode == null) {
+            throw new MissingArgumentException('ResourceLocator', 'languageCode');
+        }
         if ($title == null) {
             throw new MissingArgumentException('ResourceLocator', 'title');
         }
