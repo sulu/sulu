@@ -36,16 +36,16 @@ define([], function() {
             ].join(''),
             editField: [
                 '<div class="grid-row divider" data-deleted="false">',
-                '<div class="grid-col-7 pull-left">',
-                '<div id="<%= dropdownId %>"></div>',
-                '</div>',
-                '<div class="grid-col-2 pull-right">',
-                '<% if (showDeleteButton == true) { %>',
-                '<div class="delete btn gray-dark fit only-icon pull-right">',
-                '<div class="icon-circle-minus"></div>',
-                '</div>',
-                '<% } %>',
-                '</div>',
+                    '<div class="grid-col-7 pull-left">',
+                        '<div id="<%= dropdownId %>"></div>',
+                    '</div>',
+                    '<div class="grid-col-2 pull-right">',
+                    '<% if (showDeleteButton == true) { %>',
+                        '<div class="delete btn gray-dark fit only-icon pull-right">',
+                            '<div class="icon-circle-minus"></div>',
+                        '</div>',
+                    '</div>',
+                    '<% } %>',
                 '</div>'
             ].join('')
         },
@@ -222,6 +222,7 @@ define([], function() {
                 id: fieldTypeId,
                 name: dataType.name
             };
+            dataObject.attributes = {};
 
             // insert field
             this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
@@ -306,14 +307,14 @@ define([], function() {
                 dataArray,
                 i, length, key,
                 $content = this.sandbox.dom.createElement('<div class="edit-fields"/>'),
-                $element, required;
-            addCollectionFilters.call(this);
+                $element, required, permanent;
+            addCollectionFilters.call(this, this.form);
 
             dataArray = {
                 address: data.addresses,
                 email: data.emails,
                 fax: data.faxes,
-                phones: data.phones,
+                phone: data.phones,
                 url: data.urls
 
             };
@@ -329,10 +330,16 @@ define([], function() {
                         'data-contactform-required'
                     );
 
+                    // construct permanent boolean
+                    permanent = false;
+                    if (!!dataArray[key][i].attributes && !!dataArray[key][i].attributes.permanent) {
+                        permanent = dataArray[key][i].attributes.permanent;
+                    }
+
                     // create row form overlay-content
                     $element = this.sandbox.dom.createElement(this.sandbox.util.template(templates.editField)({
                         dropdownId: 'edit-dropdown-' + key + '-' + i,
-                        showDeleteButton: !required
+                        showDeleteButton: (!required && !permanent)
                     }));
 
                     this.editFieldsData.push({
