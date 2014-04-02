@@ -1,23 +1,25 @@
-<h2>{{ property.name|capitalize }}</h2>
-<div id="{{ property.name }}" data-type="collection" data-type-min="{{ property.minOccurs }}" data-type-max="{{ property.maxOccurs }}" data-mapper-property="{{ property.name }}">
+<div class="sortable" id="{{ property.name }}" data-type="collection" data-type-min="{{ property.minOccurs }}"
+     data-type-max="{{ property.maxOccurs }}"
+     data-mapper-property='{"data": "{{ property.name }}", "tpl": "{{ property.name }}-tpl"}'
+     data-mapper-full-class="full"
+     data-mapper-empty-class="empty">
 
-    {% for i in 1..property.minOccurs %}
-        <div class="{{ property.name }}-element grid-row">
-            <div class="grid-col-11">
-                {% include type.template with {'property': property, 'type': type, 'id': property.name ~ i} only %}
+    <script id="{{ property.name }}-tpl" type="text/template">
+        <div class="text-block {{ property.name }}-element">
+            <div class="head">
+                <label class="move">{{ property.name|capitalize }}</label>
+
+                <div data-mapper-remove="{{ property.name }}" class="icon-remove2 options mapper-remove-{{ property.name }}"></div>
             </div>
-            <div class="grid-col-1 m-top-15">
-                <div class="mapper-remove-{{ property.name }} pointer" data-mapper-remove="{{ property.name }}">
-                    <span class="icon-remove"></span>
-                </div>
+
+            <div class="container">
+            {% include type.template with {'property': property, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
             </div>
         </div>
-    {% endfor %}
+    </script>
 
 </div>
 
 {% if needsAddButton(property) %}
     {% include 'SuluContentBundle:Template:macros/add_button.html.twig' with {'property': property} only %}
 {% endif %}
-
-<hr class="divider"/>
