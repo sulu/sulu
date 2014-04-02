@@ -385,7 +385,8 @@ define([], function() {
                 this.sandbox.emit('sulu.content.tabs.activate');
 
                 var $span = this.sandbox.dom.find('span', $target),
-                    widths = this.calculateCurrentWidths(false, false);
+                    widths = this.calculateCurrentWidths(false, false),
+                    widthViewport = this.sandbox.dom.width(window);
 
                 this.sandbox.dom.removeClass($target, 'expanded');
                 this.sandbox.dom.addClass($target, 'collapsed');
@@ -397,7 +398,7 @@ define([], function() {
                 this.isExpanded = false;
 
                 // special case for extreme resized expanded preview
-                if(widths.preview < 60){
+                if(widthViewport < constants.breakPointSmall){
                     this.adjustDisplayedComponents();
                     this.sandbox.dom.css(this.$toolbarRight, 'float', 'right');
                 }
