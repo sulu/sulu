@@ -17579,6 +17579,7 @@ require.config({
         'type/label': 'js/types/label',
         'type/select': 'js/types/select',
         'type/collection': 'js/types/collection',
+        'type/attributes': 'js/types/attributes',
 
         'validator/default': 'js/validators/default',
         'validator/min': 'js/validators/min',
@@ -18268,6 +18269,48 @@ define('type/collection',[
             };
 
         return new Default($el, defaults, options, 'collection', subType);
+    };
+});
+
+/*
+ * This file is part of the Husky Validation.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+define('type/attributes',[
+    'type/default'
+], function(Default) {
+
+    
+
+    return function($el, options) {
+        var defaults = {
+            },
+
+            typeInterface = {
+                setValue: function(value) {
+                   this.$el.data('attributes', value);
+                },
+
+                getValue: function() {
+                    return this.$el.data('attributes');
+                },
+
+                needsValidation: function() {
+                    return false;
+                },
+
+                validate: function() {
+                    return true;
+                }
+            };
+
+        return new Default($el, defaults, options, 'attributes', typeInterface);
     };
 });
 
