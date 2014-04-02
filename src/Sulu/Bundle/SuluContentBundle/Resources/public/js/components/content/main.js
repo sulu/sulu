@@ -422,10 +422,10 @@ define([
                             }
                         ];
 
-                        // only start preview in content tab and at specific window width
-                        if (this.sandbox.dom.width(window) >= MIN_CONTAINER_WIDTH && tab.content === true) {
+//                        // only start preview in content tab and at specific window width
+//                        if (this.sandbox.dom.width(window) >= MIN_CONTAINER_WIDTH && tab.content === true) {
 
-                            this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
+//                            this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
 
                             components.push({
                                 name: 'content/components/preview@sulucontent',
@@ -452,7 +452,7 @@ define([
                                     }
                                 }
                             });
-                        }
+//                        }
 
                         this.sandbox.start(components);
                     }.bind(this),
