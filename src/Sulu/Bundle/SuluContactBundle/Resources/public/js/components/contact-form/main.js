@@ -137,7 +137,9 @@ define([], function() {
             this.sandbox.form.removeCollectionFilter(this.form, 'notes');
         },
 
-        addCollectionFilters = function() {
+        addCollectionFilters = function(form) {
+
+            this.form = form;
 
             // add collection filters
             this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
