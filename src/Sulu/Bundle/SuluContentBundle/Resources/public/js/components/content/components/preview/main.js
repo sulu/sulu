@@ -65,6 +65,8 @@ define([], function() {
                 // needed to hide preview and show only new-window-button
                 // 460 + margin + padding
                 breakPointSmall: 640,
+                breakPointSmallExpanded: 600,
+
 
                 minWidthForToolbarCollapsed: 240,
                 minWidthForToolbarExpanded: 240,
@@ -394,7 +396,8 @@ define([], function() {
 
                 // hide right part of toolbar when window size is below constants.minWidthForToolbarCollapsed
                 if (widths.preview < constants.minWidthForToolbarCollapsed) {
-                    this.sandbox.dom.hide(this.$toolbarRight);
+                    this.sandbox.dom.hide(this.$toolbarResolutions);
+                    this.sandbox.dom.css(this.$toolbarRight, 'float', 'left');
                 }
 
                 this.animateCollapseAndExpand(false, widths);
@@ -480,7 +483,6 @@ define([], function() {
                         this.sandbox.dom.show(this.$toolbarRight);
                         this.sandbox.dom.show(this.$toolbarOpenNewWindow);
 
-
                         this.sandbox.dom.remove(this.$iframe);
                         this.iframeExists = false;
 
@@ -507,7 +509,8 @@ define([], function() {
 
                 } else if (!!this.isExpanded) {
 
-                    if (widths.preview < constants.previewMinWidth) {
+                    // hide preview except for open in new window button
+                   if (widths.preview < constants.previewMinWidth) {
 
                         this.sandbox.dom.hide(this.$toolbarResolutions);
                         this.sandbox.dom.hide(this.$toolbarOpenNewWindow);
