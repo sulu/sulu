@@ -199,7 +199,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindDomEvents: function() {
-            if (!this.options.data.id) {
+            if (!this.options.data.id || !this.options.data.url) {
                 this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
             } else {
                 this.dfdListenForChange.resolve();
@@ -609,6 +609,7 @@ define(['app-config'], function(AppConfig) {
                 var data = JSON.parse(e.data);
 
                 if (data.command === 'start' && data.content === this.options.id && !!data.params.other) {
+                    // FIXME do it after restart form
                     this.updatePreview();
                 }
 

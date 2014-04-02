@@ -69,7 +69,7 @@ class NodeController extends RestController implements ClassResourceInterface
     {
         $language = $this->getRequest()->get('language', 'en');
         $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-        $excludeGhosts = $this->getRequest()->get('exclude-ghosts', false);
+        $excludeGhosts = $this->getRequest()->get('exclude-ghosts', 'false');
         if ($excludeGhosts === 'false') {
             $excludeGhosts = false;
         } else {
@@ -206,6 +206,10 @@ class NodeController extends RestController implements ClassResourceInterface
         );
     }
 
+    /**
+     * put index page
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     private function putIndex()
     {
         $language = $this->getRequest()->get('language', 'en');
