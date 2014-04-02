@@ -62,6 +62,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $routes;
 
     /**
+     * @var array
+     */
+    protected $languageRoutes;
+
+    /**
      * @var ContentMapperInterface
      */
     protected $mapper;
@@ -102,7 +107,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $contentTypeManager;
 
     /**
-     * @var array
+     * @var NodeInterface[]
      */
     protected $structureValueMap = array();
 
@@ -382,8 +387,30 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->session->save();
 
             $this->routes = $default->addNode('routes');
-            $this->routes->setProperty('sulu:content', $this->contents);
-            $this->routes->addMixin('sulu:path');
+            $this->session->save();
+
+            $dePath = $this->routes->addNode('de');
+            $dePath->addMixin('sulu:path');
+            $dePath->setProperty('sulu:content', $this->contents);
+            $this->languageRoutes['de'] = $dePath;
+            $this->session->save();
+
+            $de_atPath = $this->routes->addNode('de_at');
+            $de_atPath->setProperty('sulu:content', $this->contents);
+            $de_atPath->addMixin('sulu:path');
+            $this->languageRoutes['de_at'] = $de_atPath;
+            $this->session->save();
+
+            $enPath = $this->routes->addNode('en');
+            $enPath->setProperty('sulu:content', $this->contents);
+            $enPath->addMixin('sulu:path');
+            $this->languageRoutes['en'] = $enPath;
+            $this->session->save();
+
+            $en_usPath = $this->routes->addNode('en_us');
+            $en_usPath->setProperty('sulu:content', $this->contents);
+            $en_usPath->addMixin('sulu:path');
+            $this->languageRoutes['en_us'] = $en_usPath;
             $this->session->save();
         }
     }
