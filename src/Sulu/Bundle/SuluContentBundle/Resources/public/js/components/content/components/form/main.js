@@ -188,6 +188,14 @@ define(['app-config'], function(AppConfig) {
 
         setFormData: function(data) {
             var initialize = this.sandbox.form.setData(this.formId, data);
+
+            if (!!data.id || data.title === '' || typeof data.title === 'undefined' || data.title === null) {
+                this.sandbox.util.load('/admin/api/nodes/' + data.id + '?webspace=sulu_io&language=de&complete=false&ghost-content=true')
+                    .then(function(data) {
+                        this.sandbox.dom.attr('#title', 'placeholder', data.title);
+                    }.bind(this));
+            }
+
             this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'language', this.options.language);
             this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'language');
 
