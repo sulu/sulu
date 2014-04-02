@@ -190,9 +190,9 @@ define(['app-config'], function(AppConfig) {
             var initialize = this.sandbox.form.setData(this.formId, data);
 
             if (!!data.id || data.title === '' || typeof data.title === 'undefined' || data.title === null) {
-                this.sandbox.util.load('/admin/api/nodes/' + data.id + '?webspace=sulu_io&language=de&complete=false&ghost-content=true')
+                this.sandbox.util.load('/admin/api/nodes/' + data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language + '&complete=false&ghost-content=true')
                     .then(function(data) {
-                        this.sandbox.dom.attr('#title', 'placeholder', data.title);
+                        this.sandbox.dom.attr('#title', 'placeholder', data.type.value + ': ' + data.title);
                     }.bind(this));
             }
 
