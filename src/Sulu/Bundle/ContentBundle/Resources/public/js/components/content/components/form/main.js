@@ -337,7 +337,7 @@ define(['app-config'], function(AppConfig) {
             // expand navigation if back gets clicked
             this.sandbox.on('sulu.edit-toolbar.back', function() {
                 this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse', false);
+                this.sandbox.emit('husky.navigation.size.update');
             }.bind(this));
         },
 
