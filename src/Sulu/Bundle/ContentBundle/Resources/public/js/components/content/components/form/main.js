@@ -31,18 +31,20 @@ define(['app-config'], function(AppConfig) {
         hiddenTemplate: true,
 
         initialize: function() {
+            this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+
             this.saved = true;
             this.highlightSaveButton = this.sandbox.sulu.viewStates.justSaved;
-            delete this.sandbox.sulu.viewStates.justSaved;
 
+            delete this.sandbox.sulu.viewStates.justSaved;
             this.state = null;
+
             this.dfdListenForChange = this.sandbox.data.deferred();
 
             this.formId = '#contacts-form-container';
-
             this.render();
-            this.setTitle();
 
+            this.setTitle();
             this.setHeaderBar(true);
         },
 
@@ -159,7 +161,7 @@ define(['app-config'], function(AppConfig) {
                 // (un)bind event listener
                 this.sandbox.dom.unbind(sortable, 'sortupdate');
 
-                sortable.bind('sortupdate', function(event, ui) {
+                sortable.bind('sortupdate', function(event) {
                     var changes = this.sandbox.form.getData(this.formId),
                         propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
 
@@ -169,7 +171,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindFormEvents: function() {
-            this.sandbox.dom.on(this.formId, 'form-collection-init', function(e, propertyName) {
+            this.sandbox.dom.on(this.formId, 'form-collection-init', function() {
                 this.updatePreview();
             }.bind(this));
 
@@ -338,14 +340,12 @@ define(['app-config'], function(AppConfig) {
 
             // expand navigation if navigation item is clicked
             this.sandbox.on('husky.navigation.item.select', function() {
-                this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.uncollapse', false);
+                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'large', content: 'auto'});
             }.bind(this));
 
             // expand navigation if back gets clicked
             this.sandbox.on('sulu.edit-toolbar.back', function() {
-                this.sandbox.emit('husky.navigation.collapse');
-                this.sandbox.emit('husky.navigation.size.update');
+                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
             }.bind(this));
         },
 

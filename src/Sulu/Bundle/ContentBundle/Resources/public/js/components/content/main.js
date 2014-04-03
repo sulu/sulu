@@ -183,15 +183,7 @@ define([
                             processData: true,
 
                             success: function() {
-                                // reset navigation after preview
-                                this.sandbox.emit('husky.navigation.show');
-                                this.sandbox.emit('husky.navigation.uncollapse', false);
-
-                                // reset content after preview
-                                this.sandbox.emit('sulu.app.content.dimensions-change', {
-                                    width: 820,
-                                    left: 250,
-                                    paddingLeft: 50});
+                                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
 
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
