@@ -19,7 +19,7 @@
 
     <php>
         <server name="KERNEL_DIR" value="Tests/Resources/app"/>
-        <var name="APP_DB" value="pgsql"/>
+        <var name="APP_DB" value="mysql"/>
     </php>
 
 </phpunit>
