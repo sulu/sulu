@@ -256,14 +256,14 @@ define([
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                     this.sandbox.emit('sulu.labels.success.show',
                         'labels.state-changed.success-desc',
-                        'labels.state-changed.success',
+                        'labels.success',
                         'sulu.content.contents.state.label');
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('sulu.content.contents.state.changeFailed');
                     this.sandbox.emit('sulu.labels.error.show',
                         'labels.state-changed.error-desc',
-                        'labels.state-changed.error',
+                        'labels.error',
                         'sulu.content.contents.state.label');
                     this.sandbox.logger.log("error while saving profile");
                 }.bind(this)
