@@ -21,7 +21,7 @@ define([
             subType = {
                 initializeSub: function() {
                     App.on('husky.smart-content.' + options.instanceName + '.data-changed', function() {
-                        App.emit('sulu.preview.update', App.dom.data($el, 'mapperProperty'), App.dom.data($el, 'smart-content'));
+                        App.emit('sulu.preview.update', $el, App.dom.data($el, 'smart-content'));
                         App.emit('sulu.content.changed');
                     }.bind(this));
                 },
