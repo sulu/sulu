@@ -549,7 +549,7 @@ class ContentMapper implements ContentMapperInterface
                     );
                     if ($flat) {
                         $results = array_merge($results, $children);
-                    } else {
+                    } elseif ($result !== null) {
                         $result->setChildren($children);
                     }
                 }
