@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Cache\EventListener;
+namespace Sulu\Component\HttpCache\EventListener;
 
-use Sulu\Component\Cache\CacheManagerInterface;
+use Sulu\Component\HttpCache\HttpCacheManagerInterface;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 
 /**
@@ -20,14 +20,14 @@ use Sulu\Component\Content\Event\ContentNodeEvent;
 class ContentNodeListener
 {
     /**
-     * @var \Sulu\Component\Cache\CacheManagerInterface
+     * @var \Sulu\Component\HttpCache\HttpCacheManagerInterface
      */
     protected $cacheManager;
 
     /**
-     * @param CacheManagerInterface $cacheManager
+     * @param HttpCacheManagerInterface $cacheManager
      */
-    public function __construct(CacheManagerInterface $cacheManager)
+    public function __construct(HttpCacheManagerInterface $cacheManager)
     {
         $this->cacheManager = $cacheManager;
     }
@@ -37,6 +37,6 @@ class ContentNodeListener
      */
     public function onContentNodeSave(ContentNodeEvent $event)
     {
-        $this->cacheManager->expire($event->getNode());
+        $this->cacheManager->expire($event->getStructure());
     }
 }

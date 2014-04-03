@@ -8,17 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Cache;
+namespace Sulu\Component\HttpCache;
 
-use PHPCR\NodeInterface;
+use Sulu\Component\Content\StructureInterface;
 
 /**
  * Cache manager interface
  */
-interface CacheManagerInterface
+interface HttpCacheManagerInterface
 {
     /**
-     * @param NodeInterface $node
+     * @param StructureInterface $structure
      */
-    public function expire(NodeInterface $node);
+    public function expire(StructureInterface $structure);
 }

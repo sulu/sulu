@@ -8,15 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Cache;
+namespace Sulu\Component\HttpCache;
 
-use PHPCR\NodeInterface;
 use Psr\Log\NullLogger;
+use Sulu\Component\Content\StructureInterface;
 
 /**
  * Sulu cache manager
  */
-class CacheManager implements CacheManagerInterface
+class SymfonyHttpCacheManager implements HttpCacheManagerInterface
 {
     /**
      * @var \Psr\Log\LoggerInterface
@@ -34,8 +34,8 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function expire(NodeInterface $node)
+    public function expire(StructureInterface $structure)
     {
-        $this->logger->debug($node->getPath());
+        $this->logger->debug($structure->getPropertyValue('url'));
     }
 }

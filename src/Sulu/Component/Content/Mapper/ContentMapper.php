@@ -359,7 +359,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         // throw an content.node.save event
-        $event = new ContentNodeEvent($node);
+        $event = new ContentNodeEvent($node, $structure);
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
