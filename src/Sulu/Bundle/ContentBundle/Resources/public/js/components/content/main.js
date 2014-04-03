@@ -193,6 +193,7 @@ define([
                                     left: 250,
                                     paddingLeft: 50});
 
+                                this.sandbox.sulu.viewStates.nodeDeleted = true;
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
@@ -285,6 +286,7 @@ define([
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
+                    this.sandbox.emit('sulu.content.contents.save-error');
                 }.bind(this)
             });
         },
