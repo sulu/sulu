@@ -69,6 +69,15 @@ define(function() {
     },
 
     /**
+     * listens on and resets the ui according to given state
+     * @event sulu.app.reset.ui
+     * @param {string} state
+     */
+    RESET_UI = function(){
+        return createEventName('reset.ui');
+    },
+
+    /**
      * Creates the event-names
      */
     createEventName = function(postFix) {
@@ -307,6 +316,10 @@ define(function() {
             // change user locale
             this.sandbox.on('husky.navigation.user-locale.changed', function(locale) {
                 this.changeUserLocale(locale);
+            }.bind(this));
+
+            this.sandbox.on(RESET_UI.call(this), function(state){
+                this.sandbox.logger.warn(state);
             }.bind(this));
         },
 
