@@ -75,14 +75,15 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $userId = $input->getOption('user-id');
         $template = $input->getOption('template');
 
-        $output->writeln('Create basic nodes');
+        $output->write('Create basic nodes');
 
         /** @var Webspace $webspace */
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
 
-            $output->writeln("  {$webspace->getName()} = content: '{$contentsPath}'', routes: '{$routesPath}'");
+            $output->writeln("  {$webspace->getName()}");
+            $output->writeln("    content: '/{$contentsPath}'");
 
             // create basic nodes
             $content = $this->createRecursive($contentsPath, $root);
@@ -90,17 +91,17 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $content->addMixin('sulu:content');
             $session->save();
 
+            $output->writeln("    routes:");
             $route = $this->createRecursive($routesPath, $root);
-            $route->setProperty('sulu:content', $content);
-            $route->setProperty('sulu:history', false);
-
+            $this->createLanguageRoutes($webspace, $route, $content, $output);
             $session->save();
         }
+        $output->writeln('');
     }
 
     private function setBasicProperties(Webspace $webspace, NodeInterface $node, $template, $userId)
     {
-        foreach ($webspace->getLocalizations() as $local) {
+        foreach ($webspace->getAllLocalizations() as $local) {
             $this->setBasicLocalizationProperties($local, $node, $template, $userId);
         }
     }
@@ -143,5 +144,32 @@ class WebspacesInitCommand extends ContainerAwareCommand
             }
         }
         return $curNode;
+    }
+
+    /**
+     * @param Webspace $webspace
+     * @param NodeInterface $route
+     * @param NodeInterface $content
+     * @param OutputInterface $output
+     */
+    private function createLanguageRoutes(
+        Webspace $webspace,
+        NodeInterface $route,
+        NodeInterface $content,
+        OutputInterface $output
+    )
+    {
+        foreach ($webspace->getAllLocalizations() as $local) {
+            if (!$route->hasNode($local->getLocalization())) {
+                $node = $route->addNode($local->getLocalization());
+            } else {
+                $node = $route->getNode($local->getLocalization());
+            }
+            $node->addMixin('sulu:path');
+            $node->setProperty('sulu:content', $content);
+            $node->setProperty('sulu:history', false);
+
+            $output->writeln("      * '{$node->getPath()}'");
+        }
     }
 }

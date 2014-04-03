@@ -87,7 +87,6 @@ interface ContentTypeInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
-     * @return
      */
     public function remove(
         NodeInterface $node,

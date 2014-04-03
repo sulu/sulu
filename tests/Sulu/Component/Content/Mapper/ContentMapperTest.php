@@ -16,6 +16,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
+use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Property;
@@ -28,6 +29,7 @@ use Sulu\Component\Webspace\Webspace;
  */
 class ContentMapperTest extends PhpcrTestCase
 {
+
     public function setUp()
     {
         $this->prepareMapper();
@@ -42,6 +44,8 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(1);
         } elseif ($structureKey == 'default') {
             return $this->getStructureMock(2);
+        } elseif ($structureKey == 'complex') {
+            return $this->getStructureMock(3);
         }
 
         return null;
@@ -92,6 +96,17 @@ class ContentMapperTest extends PhpcrTestCase
                 $structureMock,
                 array(
                     new Property('blog', 'text_area')
+                )
+            );
+        } elseif ($type == 3) {
+            $blockProperty = new BlockProperty('block1', 'block', false, 2, 10);
+            $blockProperty->addChild(new Property('title', 'text_line'));
+            $blockProperty->addChild(new Property('article', 'text_area'));
+
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    $blockProperty
                 )
             );
         }
@@ -163,7 +178,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -236,7 +251,7 @@ class ContentMapperTest extends PhpcrTestCase
         $contentBefore = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
         /** @var NodeInterface $contentNode */
         $contentNode = $route->getPropertyValue('sulu:content');
         // simulate new property article, by deleting the property
@@ -344,7 +359,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -400,7 +415,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -456,7 +471,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -511,7 +526,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -573,7 +588,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
         $content = $route->getPropertyValue('sulu:content');
 
         // old properties exists in node
@@ -629,7 +644,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test/test/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test/test/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -641,7 +656,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
-        $oldRoute = $root->getNode('cmf/default/routes/news/test');
+        $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
         $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
@@ -753,7 +768,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // check repository
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/asdf/test/test');
+        $route = $root->getNode('cmf/default/routes/de/news/asdf/test/test');
 
         $content = $route->getPropertyValue('sulu:content');
 
@@ -766,7 +781,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
 
         // old resource locator is not a route (has property sulu:content), it is a history (has property sulu:route)
-        $oldRoute = $root->getNode('cmf/default/routes/news/test');
+        $oldRoute = $root->getNode('cmf/default/routes/de/news/test');
         $this->assertTrue($oldRoute->hasProperty('sulu:content'));
         $this->assertTrue($oldRoute->hasProperty('sulu:history'));
         $this->assertTrue($oldRoute->getPropertyValue('sulu:history'));
@@ -1352,7 +1367,7 @@ class ContentMapperTest extends PhpcrTestCase
         $content = $this->mapper->load($result->getUuid(), 'default', 'de');
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/default/routes/news/test');
+        $route = $root->getNode('cmf/default/routes/de/news/test');
         $node = $route->getPropertyValue('sulu:content');
 
         $this->assertTrue($node->getPropertyValue('sulu_locale:de-sulu-navigation'));
@@ -1691,5 +1706,103 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('Team-DE', $result->getPropertyValue('title'));
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de', $result->getType()->getValue());
+    }
+
+    public function testTranslatedResourceLocator()
+    {
+        $data = array(
+            'title' => 'Testtitle',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/news/test',
+            'article' => 'default'
+        );
+        $structure = $this->mapper->save($data, 'overview', 'default', 'en', 1);
+        $content = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $contentDE = $this->mapper->load($structure->getUuid(), 'default', 'de');
+        $nodeEN = $this->session->getNode('/cmf/default/routes/en/news/test');
+        $this->assertEquals('/news/test', $content->url);
+        $this->assertEquals('', $contentDE->url);
+        $this->assertNotNull($nodeEN);
+        $this->assertFalse($nodeEN->getPropertyValue('sulu:history'));
+        $this->assertFalse($this->session->getNode('/cmf/default/routes/de')->hasNode('news/test'));
+        $this->assertNotNull($this->languageRoutes['en']->getNode('news/test'));
+
+        $data = array(
+            'title' => 'Testtitle',
+            'url' => '/neuigkeiten/test'
+        );
+        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $structure->getUuid());
+        $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
+        $contentEN = $this->mapper->load($structure->getUuid(), 'default', 'en');
+        $nodeDE = $this->session->getNode('/cmf/default/routes/de/neuigkeiten/test');
+        $this->assertEquals('/neuigkeiten/test', $content->url);
+        $this->assertEquals('/news/test', $contentEN->url);
+        $this->assertNotNull($nodeDE);
+        $this->assertFalse($nodeDE->getPropertyValue('sulu:history'));
+        $this->assertTrue($this->session->getNode('/cmf/default/routes/de')->hasNode('neuigkeiten/test'));
+        $this->assertFalse($this->session->getNode('/cmf/default/routes/de')->hasNode('news/test'));
+        $this->assertFalse($this->session->getNode('/cmf/default/routes/en')->hasNode('neuigkeiten/test'));
+        $this->assertTrue($this->session->getNode('/cmf/default/routes/en')->hasNode('news/test'));
+        $this->assertNotNull($this->languageRoutes['de']->getNode('neuigkeiten/test'));
+    }
+
+    public function testBlock()
+    {
+        $data = array(
+            'title' => 'Test-Title',
+            'url' => '/test',
+            'block1' => array(
+                array(
+                    'title' => 'Block-Title-1',
+                    'article' => 'Block-Article-1'
+                ),
+                array(
+                    'title' => 'Block-Title-2',
+                    'article' => 'Block-Article-2'
+                )
+            )
+        );
+
+        // check save
+        $structure = $this->mapper->save($data, 'complex', 'default', 'de', 1);
+        $result = $structure->toArray();
+        $this->assertEquals(
+            $data,
+            array(
+                'title' => $result['title'],
+                'url' => $result['url'],
+                'block1' => $result['block1']
+            )
+        );
+
+        // change sorting
+        $tmp = $data['block1'][0];
+        $data['block1'][0] = $data['block1'][1];
+        $data['block1'][1] = $tmp;
+        $structure = $this->mapper->save($data, 'complex', 'default', 'de', 1, true, $structure->getUuid());
+        $result = $structure->toArray();
+        $this->assertEquals(
+            $data,
+            array(
+                'title' => $result['title'],
+                'url' => $result['url'],
+                'block1' => $result['block1']
+            )
+        );
+
+        // check load
+        $structure = $this->mapper->load($structure->getUuid(), 'default', 'de');
+        $result = $structure->toArray();
+        $this->assertEquals(
+            $data,
+            array(
+                'title' => $result['title'],
+                'url' => $result['url'],
+                'block1' => $result['block1']
+            )
+        );
     }
 }

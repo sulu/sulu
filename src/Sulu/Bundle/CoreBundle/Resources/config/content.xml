@@ -14,6 +14,7 @@
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
         <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
+        <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Block\BlockContentType</parameter>
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
@@ -87,6 +88,10 @@
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument>%sulu.content.type.resource_locator.template%</argument>
+        </service>
+        <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument>%sulu.content.type.block.template%</argument>
         </service>
 
     </services>

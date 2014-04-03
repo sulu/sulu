@@ -42,16 +42,16 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $value = $this->getResourceLocator($node, $webspaceKey);
+        $value = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
         $property->setValue($value);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $property->setValue($data);
     }
@@ -60,12 +60,14 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * reads the value for given property out of the database + sets the value of the property
      * @param NodeInterface $node
      * @param string $webspaceKey
-     * @return mixed
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string
      */
-    public function getResourceLocator(NodeInterface $node, $webspaceKey)
+    public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey = null)
     {
         try {
-            $value = $this->getStrategy()->loadByContent($node, $webspaceKey);
+            $value = $this->getStrategy()->loadByContent($node, $webspaceKey, $languageCode, $segmentKey);
         } catch (ResourceLocatorNotFoundException $ex) {
             $value = null;
         }
@@ -77,12 +79,14 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * reads the value for given property out of the database + sets the value of the property
      * @param string $uuid
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    public function getResourceLocatorByUuid($uuid, $webspaceKey)
+    public function getResourceLocatorByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         try {
-            $value = $this->getStrategy()->loadByContentUuid($uuid, $webspaceKey);
+            $value = $this->getStrategy()->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
         } catch (ResourceLocatorNotFoundException $ex) {
             $value = null;
         }
@@ -99,17 +103,17 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $userId,
         $webspaceKey,
         $languageCode,
-        $segmentKey
+        $segmentKey = null
     )
     {
         $value = $property->getValue();
         if ($value != null && $value != '') {
-            $old = $this->getResourceLocator($node, $webspaceKey);
+            $old = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
             if ($old !== '/') {
                 if ($old != null) {
-                    $this->getStrategy()->move($old, $value, $webspaceKey);
+                    $this->getStrategy()->move($old, $value, $webspaceKey, $languageCode, $segmentKey);
                 } else {
-                    $this->getStrategy()->save($node, $value, $webspaceKey);
+                    $this->getStrategy()->save($node, $value, $webspaceKey, $languageCode, $segmentKey);
                 }
             }
         } else {
@@ -120,7 +124,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey=null)
     {
         // TODO: Implement remove() method.
     }
@@ -129,11 +133,13 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      * returns the node uuid of referenced content node
      * @param string $resourceLocator
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    public function loadContentNodeUuid($resourceLocator, $webspaceKey)
+    public function loadContentNodeUuid($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $webspaceKey);
+        return $this->getStrategy()->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**

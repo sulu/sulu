@@ -20,15 +20,6 @@ use PHPCR\SimpleCredentials;
 
 class SessionManager implements SessionManagerInterface
 {
-    /**
-     * @var RepositoryFactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var string
-     */
-    private $parameters;
 
     /**
      * @var string[]
@@ -36,44 +27,14 @@ class SessionManager implements SessionManagerInterface
     private $nodeNames;
 
     /**
-     * @var RepositoryInterface
-     */
-    private $repository;
-
-    /**
-     * @var CredentialsInterface
-     */
-    private $credentials;
-
-    /**
      * @var SessionInterface
      */
     private $session;
 
-    function __construct(RepositoryFactoryInterface $factory, $options, $nodeNames)
+    function __construct(SessionInterface $session, $nodeNames)
     {
-        $this->options = $this->getOptions($options);
-
-        $this->parameters = array('jackalope.jackrabbit_uri' => $options['url']);
-        $this->factory = $factory;
-        $this->repository = $this->factory->getRepository($this->parameters);
-        $this->credentials = new SimpleCredentials($options['username'], $options['password']);
-
-        $this->session = $this->repository->login($this->credentials, $options['workspace']);
-
+        $this->session = $session;
         $this->nodeNames = $nodeNames;
-    }
-
-    private function getOptions($options)
-    {
-        $defaults = array(
-            'url' => 'http://localhost:8080/server',
-            'username' => 'admin',
-            'password' => 'admin',
-            'workspace' => 'default'
-        );
-
-        return array_merge($defaults, $options);
     }
 
     /**
@@ -88,11 +49,20 @@ class SessionManager implements SessionManagerInterface
     /**
      * returns the route node for given webspace
      * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segment
      * @return NodeInterface
      */
-    public function getRouteNode($webspaceKey = 'default')
+    public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
-        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['route'];
+        $path = sprintf(
+            '%s/%s/%s/%s%s',
+            $this->nodeNames['base'],
+            $webspaceKey,
+            $this->nodeNames['route'],
+            $languageCode,
+            ($segment !== null ? '/' . $segment : '')
+        );
         $root = $this->getSession()->getRootNode();
 
         return $root->getNode($path);
@@ -103,7 +73,7 @@ class SessionManager implements SessionManagerInterface
      * @param string $webspaceKey
      * @return NodeInterface
      */
-    public function getContentNode($webspaceKey = 'default')
+    public function getContentNode($webspaceKey)
     {
         $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['content'];
         $root = $this->getSession()->getRootNode();

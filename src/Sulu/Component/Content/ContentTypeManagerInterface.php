@@ -14,7 +14,7 @@ interface ContentTypeManagerInterface
 {
     /**
      * @param string $contentTypeName The name of the content to load.
-     * @return mixed
+     * @return ContentTypeInterface
      */
     public function get($contentTypeName);
 

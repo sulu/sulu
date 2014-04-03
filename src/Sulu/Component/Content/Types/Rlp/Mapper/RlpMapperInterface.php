@@ -28,69 +28,91 @@ interface RlpMapperInterface
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
-     * @param string $webspaceKey key of portal
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @param string $webspaceKey key of webspace
+     * @param string $languageCode
+     * @param string $segmentKey
      */
-    public function save(NodeInterface $contentNode, $path, $webspaceKey);
+    public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns path for given contentNode
      * @param NodeInterface $contentNode reference node
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function loadByContent(NodeInterface $contentNode, $webspaceKey);
+    public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns path for given contentNode
      * @param string $uuid uuid of contentNode
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      *
      * @return string path
      */
-    public function loadByContentUuid($uuid, $webspaceKey);
+    public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
-     *
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      * @return string uuid of content node
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey);
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * checks if given path is unique
      * @param string $path
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return bool
      */
-    public function unique($path, $webspaceKey);
+    public function unique($path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns a unique path with "-1" if necessary
      * @param string $path
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      * @return string
      */
-    public function getUniquePath($path, $webspaceKey);
+    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * returns resource locator for parent node
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string
+     */
+    public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * creates a new resourcelocator and creates the correct history
      * @param string $src old resource locator
      * @param string $dest new resource locator
      * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
      */
-    public function move($src, $dest, $webspaceKey);
+    public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null);
 }
