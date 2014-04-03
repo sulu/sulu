@@ -544,8 +544,9 @@ define(['app-config'], function(AppConfig) {
             }
             this.previewInitiated = true;
 
-            this.sandbox.on('sulu.preview.update', function(property, value, changeOnKey) {
+            this.sandbox.on('sulu.preview.update', function($el, value, changeOnKey) {
                 if (!!this.options.data.id) {
+                    var property = this.getSequence($el);
                     if (this.ws !== null) {
                         this.updatePreview(property, value);
                     } else if(!changeOnKey) {
@@ -555,26 +556,32 @@ define(['app-config'], function(AppConfig) {
             }, this);
         },
 
+        getSequence: function($element) {
+            $element = $($element);
+            var sequence = this.sandbox.dom.data($element, 'mapperProperty'),
+                $parents = $element.parents('*[data-mapper-property]'),
+                item = $element.parents('*[data-mapper-property-tpl]')[0];
+
+            while (!$element.data('element')) {
+                $element = $element.parent();
+            }
+
+            if ($parents.length > 0) {
+                sequence = [
+                    this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data,
+                    $(item).index(),
+                    this.sandbox.dom.data($element, 'mapperProperty')
+                ];
+            }
+            return sequence;
+        },
+
         updateEvent: function(e) {
             if (!!this.options.data.id && !!this.previewInitiated) {
                 var $element = $(e.currentTarget),
-                    sequence = this.sandbox.dom.data($element, 'mapperProperty'),
-                    element = this.sandbox.dom.data($element, 'element'),
-                    $parents = $element.parents('*[data-mapper-property]'),
-                    item = $element.parents('*[data-mapper-property-tpl]')[0];
+                    element = this.sandbox.dom.data($element, 'element');
 
-                while (!$element.data('element')) {
-                    $element = $element.parent();
-                }
-
-                if ($parents.length > 0) {
-                    sequence = [
-                        this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data,
-                        $(item).index(),
-                        this.sandbox.dom.data($element, 'mapperProperty')
-                    ];
-                }
-                this.updatePreview(sequence, element.getValue());
+                this.updatePreview(this.getSequence($element), element.getValue());
             }
         },
 
