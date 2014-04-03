@@ -71,10 +71,18 @@ define(function() {
     /**
      * listens on and resets the ui according to given state
      * @event sulu.app.reset.ui
-     * @param {string} state
+     * @param {Object} contains states of navigation and content (small | large)
      */
-    RESET_UI = function(){
-        return createEventName('reset.ui');
+    UI_RESET = function(){
+        return createEventName('ui.reset');
+    },
+
+    /**
+     * raised after reset of ui
+     * @event sulu.app.reseted.ui
+     */
+        UI_RESETED = function(){
+        return createEventName('ui.reseted');
     },
 
     /**
@@ -190,7 +198,7 @@ define(function() {
                 left: Math.round(
                     this.sandbox.dom.offset(this.$el).left + parseInt(this.sandbox.dom.css(this.$el, 'padding-left').replace(/[^-\d\.]/g, ''))
                 )
-            }
+            };
         },
 
         /**
@@ -318,9 +326,99 @@ define(function() {
                 this.changeUserLocale(locale);
             }.bind(this));
 
-            this.sandbox.on(RESET_UI.call(this), function(state){
-                this.sandbox.logger.warn(state);
+            this.sandbox.on(UI_RESET.call(this), function(states){
+               this.resetUI(states);
             }.bind(this));
+         },
+
+         /**
+         * Resets the ui according to the given states
+         * @param states
+         */
+         resetUI: function(states) {
+
+             if (!states.content || !states.navigation) {
+                 this.sandbox.logger.error('restUI: state for navigation and content are required');
+                 return;
+             } else if(states.content === 'small' && states.navigation === 'large'){
+                 this.sandbox.logger.error('restUI: invalid state combination');
+                 return;
+             }
+
+             // show navigation to be independent of currently active states
+             this.sandbox.emit('husky.navigation.show');
+
+             if (states.navigation === 'small') {
+
+                 this.sandbox.emit('husky.navigation.collapse', false);
+
+             } else if (states.navigation === 'large') {
+
+                 // worst case navigation is in overlay mode
+                 // have to collapse before resize
+                 this.sandbox.emit('husky.navigation.collapse', false);
+                 this.sandbox.emit('husky.navigation.uncollapse', false);
+
+             } else if (states.navigation === 'auto') {
+
+                 // let the navigation decide
+                 this.sandbox.emit('husky.navigation.collapse', false);
+                 this.sandbox.emit('husky.navigation.size.update');
+
+             } else {
+                 this.sandbox.logger.error("resetUI: invalid state for navigation (small or large or auto)!");
+                 return;
+             }
+
+             if (states.content === 'large') {
+                 this.resetToLargeContent();
+             } else if (states.content === 'small') {
+                 this.resetToSmallContent();
+             } else if (states.content === 'auto') {
+
+                 this.sandbox.dom.width(this.$content, '');
+                 this.sandbox.dom.css(this.$content, 'width', '');
+                 this.sandbox.dom.css(this.$content, 'max-width', '920px'); // TODO get previous width?
+
+             } else {
+                 this.sandbox.logger.error("resetUI: invalid state for navigation (small or large)!");
+                 return;
+             }
+
+             this.sandbox.emit(UI_RESETED.call(this));
+         },
+
+        /**
+         * Resets the content to the large state
+         */
+        resetToLargeContent:function(){
+            this.sandbox.emit('sulu.app.content.dimensions-change', {
+                width: 920,
+                left: 250,
+                paddingLeft: 50});
+
+             // TODO refactor values
+
+            this.sandbox.dom.width(this.$content, '');
+            this.sandbox.dom.css(this.$content, 'width', '');
+            this.sandbox.dom.css(this.$content, 'max-width', '920px');
+
+        },
+
+        /**
+         * Resets the content to the small state
+         */
+        resetToSmallContent: function(){
+            this.sandbox.emit('sulu.app.content.dimensions-change', {
+                width: 510,
+                left: 10,
+                paddingLeft: 0});
+
+            // TODO refactor values
+
+            this.sandbox.dom.width(this.$content, '');
+            this.sandbox.dom.css(this.$content, 'width', '');
+            this.sandbox.dom.css(this.$content, 'max-width', '510px');
         },
 
         /**
