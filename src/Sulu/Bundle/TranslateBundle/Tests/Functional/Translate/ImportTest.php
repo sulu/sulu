@@ -132,10 +132,22 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals(null, $codes[3]->getLength());
 
         $translations = self::$em->getRepository('SuluTranslateBundle:Translation')->findAll();
-        $this->assertEquals('Sulu ist wirklich toll!', $translations[0]->getValue());
-        $this->assertEquals('Sulu ist OpenSource!', $translations[1]->getValue());
-        $this->assertEquals('Sulu ist sehr toll!', $translations[2]->getValue());
-        $this->assertEquals('Sulu ist sogar OpenSource!', $translations[3]->getValue());
+
+        $values = array(
+            'Sulu ist wirklich toll!',
+            'Sulu ist OpenSource!',
+            'Sulu ist sehr toll!',
+            'Sulu ist sogar OpenSource!'
+        );
+        $this->assertTrue(in_array($translations[0]->getValue(), $values));
+        $values = array_diff($values, array($translations[0]->getValue()));
+        $this->assertTrue(in_array($translations[1]->getValue(), $values));
+        $values = array_diff($values, array($translations[1]->getValue()));
+        $this->assertTrue(in_array($translations[2]->getValue(), $values));
+        $values = array_diff($values, array($translations[2]->getValue()));
+        $this->assertTrue(in_array($translations[3]->getValue(), $values));
+        $values = array_diff($values, array($translations[3]->getValue()));
+        $this->assertEquals(0, sizeof($values));
 
         // FIXME needed because of strange doctrine behaviour
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
