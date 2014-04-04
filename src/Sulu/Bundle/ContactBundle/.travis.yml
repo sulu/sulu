@@ -11,7 +11,7 @@ env:
 
 before_script:
   - composer self-update
-  - composer install
+  - composer update
   - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE sulu_test;"; fi
   - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE sulu_test;" -U postgres; fi
   - php vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Testing/GeneratePhpunitConfig.php $DB
