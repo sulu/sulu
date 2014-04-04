@@ -21,4 +21,4 @@ doctrine:
                 alias: GedmoTree # this one is optional and will default to the name set for the mapping
                 is_bundle: false
         resolve_target_entities:
-            Sulu\Component\Security\UserInterface: Sulu\Bundle\ContactBundle\Entity\Contact
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
