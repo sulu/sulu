@@ -180,6 +180,10 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+                // start new subcomponents
+                this.sandbox.start($(e.currentTarget));
+
+                // update changes
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
