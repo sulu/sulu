@@ -302,13 +302,13 @@ class PackageControllerTest extends DatabaseTestCase
             'PUT',
             '/api/packages/1',
             array(
-                'name' => 'Portal'
+                'name' => 'ASDF'
             )
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('Portal', $response->name);
+        $this->assertEquals('ASDF', $response->name);
         $this->assertEquals(1, $response->id);
 
         $client->request(
@@ -318,8 +318,15 @@ class PackageControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('Portal', $response->_embedded[0]->name);
-        $this->assertEquals(1, $response->_embedded[0]->id);
+        if ($response->_embedded[0]->name === 'ASDF') {
+            $i = 0;
+        } elseif ($response->_embedded[1]->name === 'ASDF') {
+            $i = 1;
+        } elseif ($response->_embedded[2]->name === 'ASDF') {
+            $i = 2;
+        }
+        $this->assertEquals('ASDF', $response->_embedded[$i]->name);
+        $this->assertEquals(1, $response->_embedded[$i]->id);
     }
 
     public function testPutNotExisting()

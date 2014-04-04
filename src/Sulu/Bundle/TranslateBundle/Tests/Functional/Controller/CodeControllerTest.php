@@ -728,11 +728,18 @@ class CodeControllerTest extends DatabaseTestCase
         $this->assertEquals($request['length'], $response->length);
         $this->assertEquals($request['location']['id'], $response->location->id);
         $this->assertEquals(3, sizeof($response->translations));
-        $this->assertEquals($request['translations'][0]['value'], $response->translations[0]->value);
-        $this->assertEquals($request['translations'][1]['value'], $response->translations[1]->value);
-        $this->assertEquals($request['translations'][2]['value'], $response->translations[2]->value);
-
-
+        $values = array(
+            $request['translations'][0]['value'],
+            $request['translations'][1]['value'],
+            $request['translations'][2]['value']
+        );
+        $this->assertTrue(in_array($response->translations[0]->value, $values));
+        $values = array_diff($values, array($response->translations[0]->value));
+        $this->assertTrue(in_array($response->translations[1]->value, $values));
+        $values = array_diff($values, array($response->translations[1]->value));
+        $this->assertTrue(in_array($response->translations[2]->value, $values));
+        $values = array_diff($values, array($response->translations[2]->value));
+        $this->assertEquals(0, sizeof($values));
     }
 
     public function testPutNotExisting()

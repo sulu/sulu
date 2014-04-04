@@ -189,20 +189,47 @@ class TranslationsControllerTest extends DatabaseTestCase
         $this->assertEquals(3, $response->total);
         $this->assertEquals(3, sizeof($response->_embedded));
 
-        $this->assertEquals(1, $response->_embedded[0]->id);
-        $this->assertEquals('new code value 1.1', $response->_embedded[0]->value);
-        $this->assertEquals(1, $response->_embedded[0]->code->id);
-        $this->assertEquals('code.1', $response->_embedded[0]->code->code);
+        if ($response->_embedded[0]->id === 1) {
+            $i = 0;
+        } elseif ($response->_embedded[1]->id === 1) {
+            $i = 1;
+        } elseif ($response->_embedded[2]->id === 1) {
+            $i = 2;
+        } else {
+            $i = 0;
+        }
+        $this->assertEquals(1, $response->_embedded[$i]->id);
+        $this->assertEquals('new code value 1.1', $response->_embedded[$i]->value);
+        $this->assertEquals(1, $response->_embedded[$i]->code->id);
+        $this->assertEquals('code.1', $response->_embedded[$i]->code->code);
 
-        $this->assertEquals(2, $response->_embedded[1]->id);
-        $this->assertEquals('', $response->_embedded[1]->value);
-        $this->assertEquals(2, $response->_embedded[1]->code->id);
-        $this->assertEquals('code.2', $response->_embedded[1]->code->code);
+        if ($response->_embedded[0]->id === 2) {
+            $i = 0;
+        } elseif ($response->_embedded[1]->id === 2) {
+            $i = 1;
+        } elseif ($response->_embedded[2]->id === 2) {
+            $i = 2;
+        } else {
+            $i = 0;
+        }
+        $this->assertEquals(2, $response->_embedded[$i]->id);
+        $this->assertEquals('', $response->_embedded[$i]->value);
+        $this->assertEquals(2, $response->_embedded[$i]->code->id);
+        $this->assertEquals('code.2', $response->_embedded[$i]->code->code);
 
-        $this->assertEquals(4, $response->_embedded[2]->id);
-        $this->assertEquals('realy new Code', $response->_embedded[2]->value);
-        $this->assertEquals(4, $response->_embedded[2]->code->id);
-        $this->assertEquals('new.code', $response->_embedded[2]->code->code);
+        if ($response->_embedded[0]->id === 4) {
+            $i = 0;
+        } elseif ($response->_embedded[1]->id === 4) {
+            $i = 1;
+        } elseif ($response->_embedded[2]->id === 4) {
+            $i = 2;
+        } else {
+            $i = 0;
+        }
+        $this->assertEquals(4, $response->_embedded[$i]->id);
+        $this->assertEquals('realy new Code', $response->_embedded[$i]->value);
+        $this->assertEquals(4, $response->_embedded[$i]->code->id);
+        $this->assertEquals('new.code', $response->_embedded[$i]->code->code);
     }
 
 }
