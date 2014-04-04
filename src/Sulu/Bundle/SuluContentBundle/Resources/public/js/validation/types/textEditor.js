@@ -9,22 +9,28 @@
  */
 
 define([
-    'type/default',
-    'form/util'
-], function(Default, Util) {
+    'type/default'
+], function(Default) {
 
     'use strict';
 
     return function($el, options) {
-        var defaults = {},
+        var defaults = {
+                instanceName: null
+            },
 
             subType = {
                 initializeSub: function() {
-                    App.on('husky.ckeditor.changed', function(data, $el) {
+                    // remove event with same name and register new one
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.changed');
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.changed', function(data, $el) {
                         App.emit('sulu.preview.update', $el, data, true);
                         App.emit('sulu.content.changed');
                     }.bind(this));
-                    App.on('husky.ckeditor.focusout', function(data, $el) {
+
+                    // remove event with same name and register new one
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.focusout');
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.focusout', function(data, $el) {
                         App.emit('sulu.preview.update', $el, data);
                         App.emit('sulu.content.changed');
                     }.bind(this));

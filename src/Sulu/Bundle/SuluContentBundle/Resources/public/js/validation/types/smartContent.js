@@ -9,9 +9,8 @@
  */
 
 define([
-    'type/default',
-    'form/util'
-], function(Default, Util) {
+    'type/default'
+], function(Default) {
 
     'use strict';
 
@@ -20,6 +19,7 @@ define([
 
             subType = {
                 initializeSub: function() {
+                    App.off('husky.smart-content.' + options.instanceName + '.data-changed');
                     App.on('husky.smart-content.' + options.instanceName + '.data-changed', function() {
                         App.emit('sulu.preview.update', $el, App.dom.data($el, 'smart-content'));
                         App.emit('sulu.content.changed');
