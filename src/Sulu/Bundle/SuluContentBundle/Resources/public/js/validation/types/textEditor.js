@@ -14,6 +14,16 @@ define([
 
     'use strict';
 
+    var changeEvent = function(data, $el) {
+            App.emit('sulu.preview.update', $el, data, true);
+            App.emit('sulu.content.changed');
+        },
+
+        focusoutEvent = function(data, $el) {
+            App.emit('sulu.preview.update', $el, data);
+            App.emit('sulu.content.changed');
+        };
+
     return function($el, options) {
         var defaults = {
                 instanceName: null
@@ -22,18 +32,12 @@ define([
             subType = {
                 initializeSub: function() {
                     // remove event with same name and register new one
-                    App.off('husky.ckeditor.' + this.options.instanceName + '.changed');
-                    App.on('husky.ckeditor.' + this.options.instanceName + '.changed', function(data, $el) {
-                        App.emit('sulu.preview.update', $el, data, true);
-                        App.emit('sulu.content.changed');
-                    }.bind(this));
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.changed', changeEvent);
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.changed', changeEvent);
 
                     // remove event with same name and register new one
-                    App.off('husky.ckeditor.' + this.options.instanceName + '.focusout');
-                    App.on('husky.ckeditor.' + this.options.instanceName + '.focusout', function(data, $el) {
-                        App.emit('sulu.preview.update', $el, data);
-                        App.emit('sulu.content.changed');
-                    }.bind(this));
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutEvent);
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutEvent);
                 },
 
                 needsValidation: function() {
