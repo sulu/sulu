@@ -1,7 +1,8 @@
-<textarea id="{{ id }}" class="form-element"
+<textarea id="{{ id|raw }}" class="form-element"
           data-type="textEditor"
-          data-type-instance-name="{{ property.name }}"
+          data-type-instance-name="{{ id|raw }}"
           data-aura-component="ckeditor@husky"
           data-aura-height="300"
           data-mapper-property="{{ property.name }}"
+          data-aura-instance-name="{{ id|raw }}"
          {% if property.mandatory %}data-validation-required="true"{% endif %}></textarea>
