@@ -140,6 +140,8 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
