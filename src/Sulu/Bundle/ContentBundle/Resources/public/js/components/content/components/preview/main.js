@@ -577,7 +577,7 @@ define([], function() {
             /**
              * Calculates the widths for preview and content for expanded/collapsed state for current viewport width
              * @param {Boolean} expanded state
-             * @param {Boolean} resized triggered thourgh resize
+             * @param {Boolean} resized triggered through resize
              * @return {Object} widths for content and preview
              */
             calculateCurrentWidths: function(expanded, resized) {

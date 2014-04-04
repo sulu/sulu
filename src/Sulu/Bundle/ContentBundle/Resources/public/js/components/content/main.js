@@ -108,9 +108,6 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
-                // uncollapse navigation
-                this.sandbox.emit('husky.navigation.uncollapse');
-
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 

@@ -31,7 +31,7 @@ define(['app-config'], function(AppConfig) {
         hiddenTemplate: true,
 
         initialize: function() {
-            this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+            this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
 
             this.saved = true;
             this.highlightSaveButton = this.sandbox.sulu.viewStates.justSaved;
@@ -262,11 +262,6 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
             }, this);
 
-            // back to list
-            this.sandbox.on('sulu.edit-toolbar.back', function() {
-                this.sandbox.emit('sulu.content.contents.list');
-            }, this);
-
             this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
                 this.openPreviewWindow();
             }, this);
@@ -345,6 +340,7 @@ define(['app-config'], function(AppConfig) {
 
             // expand navigation if back gets clicked
             this.sandbox.on('sulu.edit-toolbar.back', function() {
+                this.sandbox.emit('sulu.content.contents.list');
                 this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
             }.bind(this));
         },
