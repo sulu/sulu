@@ -388,4 +388,70 @@ class Collection
     {
         return $this->creator;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $children;
+
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\Collection
+     */
+    private $parent;
+
+
+    /**
+     * Add children
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Collection $children
+     * @return Collection
+     */
+    public function addChildren(\Sulu\Bundle\MediaBundle\Entity\Collection $children)
+    {
+        $this->children[] = $children;
+    
+        return $this;
+    }
+
+    /**
+     * Remove children
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Collection $children
+     */
+    public function removeChildren(\Sulu\Bundle\MediaBundle\Entity\Collection $children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Collection $parent
+     * @return Collection
+     */
+    public function setParent(\Sulu\Bundle\MediaBundle\Entity\Collection $parent = null)
+    {
+        $this->parent = $parent;
+    
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\Collection 
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
 }

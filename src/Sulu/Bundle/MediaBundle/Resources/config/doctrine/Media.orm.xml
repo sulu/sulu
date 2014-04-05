@@ -14,7 +14,7 @@
         <field name="changed" type="datetime" column="changed"/>
 
         <one-to-many field="metas" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaMeta" mapped-by="media"/>
-        <one-to-many field="files" target-entity="Sulu\Bundle\MediaBundle\Entity\Files" mapped-by="media"/>
+        <one-to-many field="files" target-entity="Sulu\Bundle\MediaBundle\Entity\File" mapped-by="media"/>
 
         <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="medias">
             <join-columns>
@@ -32,7 +32,7 @@
             </join-columns>
         </many-to-one>
 
-        <many-to-many field="tags" target-entity="Sulu\Bundle\Tags\Entity\Tags" inversed-by="medias">
+        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag" inversed-by="medias">
             <join-table name="me_media_tags">
                 <join-columns>
                     <join-column name="idMedias" referenced-column-name="id"/>
