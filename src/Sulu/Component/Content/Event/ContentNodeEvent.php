@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Event;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -25,11 +26,18 @@ class ContentNodeEvent extends Event
     protected $node;
 
     /**
-     * @param NodeInterface $node
+     * @var StructureInterface
      */
-    public function __construct(NodeInterface $node)
+    protected $structure;
+
+    /**
+     * @param NodeInterface $node
+     * @param StructureInterface $structure
+     */
+    public function __construct(NodeInterface $node, StructureInterface $structure)
     {
         $this->node = $node;
+        $this->structure = $structure;
     }
 
     /**
@@ -38,5 +46,13 @@ class ContentNodeEvent extends Event
     public function getNode()
     {
         return $this->node;
+    }
+
+    /**
+     * @return StructureInterface
+     */
+    public function getStructure()
+    {
+        return $this->structure;
     }
 }

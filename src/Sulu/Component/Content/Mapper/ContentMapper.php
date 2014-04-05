@@ -359,7 +359,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         // throw an content.node.save event
-        $event = new ContentNodeEvent($node);
+        $event = new ContentNodeEvent($node, $structure);
         $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
 
         return $structure;
@@ -765,6 +765,10 @@ class ContentMapper implements ContentMapperInterface
                 null
             );
         }
+
+        // throw an content.node.load event
+        $event = new ContentNodeEvent($contentNode, $structure);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('contentManager.loadByNode');
