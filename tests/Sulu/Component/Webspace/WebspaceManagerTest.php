@@ -395,4 +395,19 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ca', $allLocalizations[2]->getCountry());
         $this->assertEquals(null, $allLocalizations[2]->getShadow());
     }
+
+    public function testFindUrlsByResourceLocator()
+    {
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
+        $this->assertEquals(
+            array(
+                'http://massiveart.lo/en-us/w/test',
+                'http://massiveart.lo/en-us/s/test'
+            ),
+            $result
+        );
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
+        $this->assertEquals(array('http://sulu.lo/test'), $result);
+    }
 }

@@ -164,7 +164,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns all the portals of this collection
      * @param string $environment Returns the portals for the given environment
-     * @return Portal[]
+     * @return array|Portal[]
      */
     public function getPortals($environment = null)
     {

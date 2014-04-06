@@ -79,12 +79,6 @@ class WebspaceManager implements WebspaceManagerInterface
      * Returns the portal with the given url (which has not necessarily to be the main url)
      * @param string $url The url to search for
      * @param string $environment The environment in which the url should be searched
-     * @return Portal
-     */
-
-    /**
-     * @param string $url
-     * @param string $environment
      * @return array|null
      */
     public function findPortalInformationByUrl($url, $environment)
@@ -110,6 +104,29 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return null;
+    }
+
+    /**
+     * Returns all possible urls for resourcelocator
+     * @param string $resourceLocator
+     * @param string $environment
+     * @param string $languageCode
+     * @param null|string $webspaceKey
+     * @return array
+     */
+    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null)
+    {
+        $urls = array();
+        $portals = $this->getWebspaceCollection()->getPortals($environment);
+        foreach ($portals as $url => $portal) {
+            $sameLocalization = $portal['localization']->getLocalization() === $languageCode;
+            $sameWebspace = $webspaceKey === null || $portal['portal']->getWebspace()->getKey() === $webspaceKey;
+            if ($sameLocalization && $sameWebspace) {
+                // TODO protocol
+                $urls[] = 'http://' . $url . $resourceLocator;
+            }
+        }
+        return $urls;
     }
 
     /**

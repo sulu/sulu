@@ -18,4 +18,11 @@ final class ContentEvents
      * @var string
      */
     const NODE_SAVE = 'sulu.content.node.save';
+
+    /**
+     * The sulu.content.node.load event is thrown when a Node is loaded.
+     * The event listener receives a ContentNodeEvent instance.
+     * @var string
+     */
+    const NODE_LOAD = 'sulu.content.node.load';
 }
