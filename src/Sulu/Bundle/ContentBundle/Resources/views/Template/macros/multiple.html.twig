@@ -1,10 +1,10 @@
-<div class="sortable" id="{{ property.name }}" data-type="collection" data-type-min="{{ property.minOccurs }}"
+<div class="sortable" id="{{ id|raw }}" data-type="collection" data-type-min="{{ property.minOccurs }}"
      data-type-max="{{ property.maxOccurs }}"
-     data-mapper-property='{"data": "{{ property.name }}", "tpl": "{{ property.name }}-tpl"}'
+     data-mapper-property='{"data": "{{ property.name }}", "tpl": "{{ id|raw }}-tpl"}'
      data-mapper-full-class="full"
      data-mapper-empty-class="empty">
 
-    <script id="{{ property.name }}-tpl" type="text/template">
+    <script id="{{ id|raw }}-tpl" type="text/template">
         <div class="text-block {{ property.name }}-element">
             <div class="head">
                 <label class="move">{{ property.name|capitalize }}</label>
@@ -13,7 +13,7 @@
             </div>
 
             <div class="container">
-            {% include type.template with {'property': property, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+            {% include type.template with {'property': property, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
             </div>
         </div>
     </script>
