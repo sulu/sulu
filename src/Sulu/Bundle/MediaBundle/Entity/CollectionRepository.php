@@ -12,4 +12,110 @@ use Doctrine\ORM\EntityRepository;
  */
 class CollectionRepository extends EntityRepository
 {
+
+
+    /**
+     * Get account by id
+     * @param $id
+     * @return mixed
+     */
+    public function findCollectionById($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('collection')
+                ->leftJoin('collection.metas', 'collectionMeta')
+                ->leftJoin('collection.collectionType', 'collectionType')
+                ->leftJoin('collection.parent', 'parent')
+                ->leftJoin('collection.medias', 'medias')
+                ->leftJoin('medias.tags', 'mediaTags')
+                ->leftJoin('medias.metas', 'mediaMetas')
+                ->leftJoin('medias.files', 'files')
+                ->leftJoin('files.fileVersions', 'fileVersions')
+                ->leftJoin('fileVersions.fileContentLanguages', 'fileContentLanguages')
+                ->leftJoin('fileVersions.filePublishLanguages', 'filePublishLanguages')
+                ->addSelect('collectionMeta')
+                ->addSelect('collectionType')
+                ->addSelect('parent')
+                ->addSelect('medias')
+                ->addSelect('mediaTags')
+                ->addSelect('medaMetas')
+                ->addSelect('files')
+                ->addSelect('fileVersions')
+                ->addSelect('fileContentLanguages')
+                ->addSelect('filePublishLanguages')
+                ->where('collection.id = :collectionId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('collectionId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * finds all accounts but only selects given fields
+     * @param array $fields
+     * @return array
+     */
+    public function findAllSelect($fields = array())
+    {
+        $qb = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->from($this->getEntityName(), 'collection');
+
+        foreach ($fields as $field) {
+            $qb->addSelect('collection.' . $field . ' AS ' . $field);
+        }
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+        return $query->getArrayResult();
+    }
+
+
+
+    /**
+     * Get collection by id to delete
+     * @param $id
+     * @return mixed
+     */
+    public function findCollectionByIdAndDelete($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('collection')
+                ->leftJoin('collection.metas', 'collectionMeta')
+                ->leftJoin('collection.collectionType', 'collectionType')
+                ->leftJoin('collection.parent', 'parent')
+                ->leftJoin('collection.medias', 'medias')
+                ->leftJoin('medias.tags', 'mediaTags')
+                ->leftJoin('medias.metas', 'mediaMetas')
+                ->leftJoin('medias.files', 'files')
+                ->leftJoin('files.fileVersions', 'fileVersions')
+                ->leftJoin('fileVersions.fileContentLanguages', 'fileContentLanguages')
+                ->leftJoin('fileVersions.filePublishLanguages', 'filePublishLanguages')
+                ->addSelect('collectionMeta')
+                ->addSelect('collectionType')
+                ->addSelect('parent')
+                ->addSelect('medias')
+                ->addSelect('mediaTags')
+                ->addSelect('medaMetas')
+                ->addSelect('files')
+                ->addSelect('fileVersions')
+                ->addSelect('fileContentLanguages')
+                ->addSelect('filePublishLanguages')
+                ->where('collection.id = :collectionId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('collectionId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 }
