@@ -19,7 +19,18 @@ class SuluMediaAdmin extends Admin
 
     public function __construct()
     {
-        $rootNavigationItem = new NavigationItem('Root');
+        $rootNavigationItem = new NavigationItem('Media');
+        $section = new NavigationItem('navigation.tools');
+
+        $media = new NavigationItem('navigation.media');
+        $media->setIcon('asterisk');
+
+        $products = new NavigationItem('navigation.media.collections', $media);
+        $products->setAction('media/collections');
+
+        $section->addChild($media);
+        $rootNavigationItem->addChild($section);
+
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
