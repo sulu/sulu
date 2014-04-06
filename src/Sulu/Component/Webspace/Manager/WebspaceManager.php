@@ -12,7 +12,6 @@ namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;

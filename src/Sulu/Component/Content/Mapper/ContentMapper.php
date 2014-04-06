@@ -766,9 +766,9 @@ class ContentMapper implements ContentMapperInterface
             );
         }
 
-        // throw an content.node.load event
-        $event = new ContentNodeEvent($contentNode, $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
+        // throw an content.node.load event (disabled for now)
+        //$event = new ContentNodeEvent($contentNode, $structure);
+        //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('contentManager.loadByNode');
