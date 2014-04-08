@@ -54,6 +54,7 @@ define([], function() {
                     url: '',
                     webspace: '',
                     language: '',
+                    template: '',
                     id: ''
                 }
 
@@ -151,7 +152,7 @@ define([], function() {
              * Initializes the rendering process
              */
             render: function() {
-                this.url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
+                this.url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id, this.options.iframeSource.template);
 
                 var widths = this.calculateCurrentWidths(false, false);
 
@@ -334,6 +335,15 @@ define([], function() {
 
                 // make preview responsive
                 this.sandbox.on('sulu.app.viewport.dimensions-changed', this.adjustDisplayedComponents.bind(this));
+
+                this.sandbox.on('sulu.content.preview.change-url', function(iframeSource) {
+                    this.sandbox.dom.remove(this.$iframe);
+                    this.iframeExists = false;
+
+                    var widths = this.calculateCurrentWidths(this.isExpanded, true);
+                    this.options.iframeSource = this.sandbox.util.extend({}, this.options.iframeSource, iframeSource);
+                    this.restoreIframe(widths.preview);
+                }.bind(this));
 
             },
 
@@ -554,7 +564,7 @@ define([], function() {
              */
             restoreIframe: function(width) {
                 if (!this.iframeExists) {
-                    var url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id);
+                    var url = this.getUrl(this.options.iframeSource.url, this.options.iframeSource.webspace, this.options.iframeSource.language, this.options.iframeSource.id, this.options.iframeSource.template);
                     this.renderIframe(width, url);
                     this.iframeExists = true;
                 }
@@ -622,11 +632,12 @@ define([], function() {
              * @param {String} webspace
              * @param {String} language
              * @param {String} id
+             * @param {String} template
              * @return {String} url string
              */
-            getUrl: function(url, webspace, language, id) {
+            getUrl: function(url, webspace, language, id, template) {
 
-                if (!url || !id || !webspace || !language) {
+                if (!url || !id || !webspace || !language || !template) {
                     this.sandbox.logger.error('not all url params for iframe definded!');
                     return '';
                 }
@@ -635,6 +646,7 @@ define([], function() {
                 url += id + '?';
                 url += 'webspace=' + webspace;
                 url += '&language=' + language;
+                url += '&template=' + template;
 
                 return url;
             },

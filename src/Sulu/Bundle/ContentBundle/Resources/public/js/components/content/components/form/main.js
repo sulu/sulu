@@ -118,10 +118,10 @@ define(['app-config'], function(AppConfig) {
          * Generates the Breadcrumb-string and sets it for the title-additon
          */
         setBreadcrumb: function() {
-            var breadcrumb = this.options.webspace.replace(/_/g, '.');
+            var breadcrumb = this.options.webspace.replace(/_/g, '.'), i, length;
             if (!!this.options.data.breadcrumb) {
                 // loop through breadcrumb skip home-page
-                for (var i = 0, length = this.options.data.breadcrumb.length; ++i < length;) {
+                for (i = 0, length = this.options.data.breadcrumb.length; ++i < length;) {
                     breadcrumb += ' &#187; ' + this.options.data.breadcrumb[i].title;
                 }
             }
@@ -159,7 +159,7 @@ define(['app-config'], function(AppConfig) {
                 // (un)bind event listener
                 this.sandbox.dom.unbind(sortable, 'sortupdate');
 
-                sortable.bind('sortupdate', function(event, ui) {
+                sortable.bind('sortupdate', function(event) {
                     var changes = this.sandbox.form.getData(this.formId),
                         propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
 
@@ -169,7 +169,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindFormEvents: function() {
-            this.sandbox.dom.on(this.formId, 'form-collection-init', function(e, propertyName) {
+            this.sandbox.dom.on(this.formId, 'form-collection-init', function() {
                 this.updatePreview();
             }.bind(this));
 
@@ -412,6 +412,8 @@ define(['app-config'], function(AppConfig) {
 
                         this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
                     }
+
+                    this.sandbox.emit('sulu.content.preview.change-url', {template: item.template});
 
                     //only update the tabs-content if the content tab is selected
                     if (this.options.tab.content === true) {

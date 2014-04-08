@@ -88,11 +88,22 @@ class PreviewController extends Controller
             array(
                 'debug' => $this->get('kernel')->getEnvironment() === 'dev',
                 'userId' => $uid,
-                'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
+                'ajaxUrl' => $this->generateUrl(
+                        'sulu_content.preview.changes',
+                        array(
+                            'contentUuid' => $contentUuid,
+                            'webspace' => $webspaceKey,
+                            'template' => $templateKey,
+                            'language' => $languageCode
+                        )
+                    ),
                 'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
+                'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval'),
                 'contentUuid' => $contentUuid,
-                'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval')
+                'webspaceKey' => $webspaceKey,
+                'templateKey' => $templateKey,
+                'languageCode' => $languageCode
             )
         );
 
@@ -136,7 +147,7 @@ class PreviewController extends Controller
         $changes = $request->get('changes', false);
         if (!!$changes) {
             foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $webspaceKey, $languageCode, $property, $content, $templateKey);
+                $preview->update($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode, $property, $content);
             }
         }
 
