@@ -407,13 +407,14 @@ define([
                 this.content.fullFetch(this.options.webspace, this.options.language, true, {
                     success: function(model) {
 
-                        var components = [
+                        var data = model.toJSON(),
+                            components = [
                             {
                                 name: 'content/components/form@sulucontent',
                                 options: {
                                     el: $form,
                                     id: this.options.id,
-                                    data: model.toJSON(),
+                                    data: data,
                                     webspace: this.options.webspace,
                                     language: this.options.language,
                                     preview: !!this.options.preview ? this.options.preview : false,
@@ -448,11 +449,11 @@ define([
                                         url: '/admin/content/preview/',
                                         webspace: this.options.webspace,
                                         language: this.options.language,
+                                        template: data.template,
                                         id: this.options.id
                                     }
                                 }
                             });
-//                        }
 
                         this.sandbox.start(components);
                     }.bind(this),
