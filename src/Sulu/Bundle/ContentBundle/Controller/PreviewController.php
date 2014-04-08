@@ -26,6 +26,26 @@ class PreviewController extends Controller
 
     const PREVIEW_ID = 'sulu_content.preview';
 
+    use RequestParameters;
+
+    /**
+     * returns language code from request
+     * @return string
+     */
+    private function getLanguage()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'language', true);
+    }
+
+    /**
+     * returns webspace key from request
+     * @return string
+     */
+    private function getWebspace()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'webspace', true);
+    }
+
     /**
      * render content for logged in user with data from FORM
      * @param string $contentUuid
@@ -36,8 +56,8 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
 
         if ($contentUuid === 'index') {
             /** @var ContentMapperInterface $contentMapper */
@@ -93,8 +113,8 @@ class PreviewController extends Controller
         $preview = $this->getPreview();
         $uid = $this->getUserId();
 
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
 
         if (!$preview->started($uid, $contentUuid)) {
             $preview->start($uid, $contentUuid, $webspace, $language);
