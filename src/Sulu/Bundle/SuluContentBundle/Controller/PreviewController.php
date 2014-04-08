@@ -33,16 +33,25 @@ class PreviewController extends Controller
      * returns language code from request
      * @return string
      */
-    private function getLanguage()
+    private function getLanguageCode()
     {
         return $this->getRequestParameter($this->getRequest(), 'language', true);
+    }
+
+    /**
+     * returns language code from request
+     * @return string
+     */
+    private function getTemplateKey()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'template', true);
     }
 
     /**
      * returns webspace key from request
      * @return string
      */
-    private function getWebspace()
+    private function getWebspaceKey()
     {
         return $this->getRequestParameter($this->getRequest(), 'webspace', true);
     }
@@ -57,21 +66,22 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
+        $webspaceKey = $this->getWebspaceKey();
+        $languageCode = $this->getLanguageCode();
+        $templateKey = $this->getTemplateKey();
 
         if ($contentUuid === 'index') {
             /** @var ContentMapperInterface $contentMapper */
             $contentMapper = $this->get('sulu.content.mapper');
-            $startPage = $contentMapper->loadStartPage($webspace, $language);
+            $startPage = $contentMapper->loadStartPage($webspaceKey, $languageCode);
             $contentUuid = $startPage->getUuid();
         }
 
-        if (!$preview->started($uid, $contentUuid)) {
-            $preview->start($uid, $contentUuid, $webspace, $language);
+        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
+            $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
         }
 
-        $content = $preview->render($uid, $contentUuid);
+        $content = $preview->render($uid, $contentUuid, $templateKey, $languageCode);
 
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
@@ -114,19 +124,19 @@ class PreviewController extends Controller
         $preview = $this->getPreview();
         $uid = $this->getUserId();
 
-        $language = $this->getLanguage();
-        $webspace = $this->getWebspace();
+        $webspaceKey = $this->getWebspaceKey();
+        $languageCode = $this->getLanguageCode();
+        $templateKey = $this->getTemplateKey();
 
-        if (!$preview->started($uid, $contentUuid)) {
-            $preview->start($uid, $contentUuid, $webspace, $language);
+        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
+            $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
         }
-        $template = $this->getRequest()->get('template');
 
         // get changes from request
         $changes = $request->get('changes', false);
         if (!!$changes) {
             foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $webspace, $language, $property, $content, $template);
+                $preview->update($uid, $contentUuid, $webspaceKey, $languageCode, $property, $content, $templateKey);
             }
         }
 
@@ -141,7 +151,10 @@ class PreviewController extends Controller
     public function changesAction($contentUuid)
     {
         $uid = $this->getUserId();
-        $changes = $this->getPreview()->getChanges($uid, $contentUuid);
+        $languageCode = $this->getLanguageCode();
+        $templateKey = $this->getTemplateKey();
+
+        $changes = $this->getPreview()->getChanges($uid, $contentUuid, $templateKey, $languageCode);
 
         return new JsonResponse($changes);
     }
