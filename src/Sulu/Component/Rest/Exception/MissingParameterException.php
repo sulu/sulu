@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\Exception;
 
-use Sulu\Component\Rest\Exception\RestException;
-
 /**
  * missing parameter in api
  */
@@ -28,6 +26,7 @@ class MissingParameterException extends RestException
 
     function __construct($controller, $name)
     {
+        parent::__construct(sprintf('Missing parameter %s in %s', $name, $controller), 0);
         $this->controller = $controller;
         $this->name = $name;
     }
