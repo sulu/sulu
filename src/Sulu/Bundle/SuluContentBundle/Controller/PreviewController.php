@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Rest\RequestParameters;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
