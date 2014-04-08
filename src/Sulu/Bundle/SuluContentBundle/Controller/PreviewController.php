@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * handles preview with ajax cals and renders basic preview
+ */
 class PreviewController extends Controller
 {
 
