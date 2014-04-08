@@ -95,7 +95,7 @@ class ListRestHelper
      */
     public function find($entityName, $where = array())
     {
-        return $this->getRepository($entityName, $this->dbDriver)->find($where);
+        return $this->getRepository($entityName)->find($where);
     }
 
     /**

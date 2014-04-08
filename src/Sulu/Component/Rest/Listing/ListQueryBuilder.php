@@ -349,9 +349,9 @@ class ListQueryBuilder
                     // if database driver is postgresql then cast column to text to avoid error when using like on numeric columns
                     if ($this->dbDriver === 'pdo_pgsql') {
                         $columnName = ' LOWER(CAST(' . $columnName . ' AS TEXT))';
-                        $search = 'LOWER('.$search.')';
+                        $search = 'LOWER(' . $search . ')';
                     }
-                    $searches[] .= $columnName . ' ' . $comparator . ' '. $search;
+                    $searches[] .= $columnName . ' ' . $comparator . ' ' . $search;
                 }
             }
 
