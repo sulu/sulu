@@ -10,10 +10,11 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * handles request paramters
+ * handles request parameters
  */
 trait RequestParameters
 {
