@@ -18,6 +18,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RequestParameters;
 use Sulu\Component\Rest\RestController;
 
 /**
