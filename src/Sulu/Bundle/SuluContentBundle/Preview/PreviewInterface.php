@@ -18,26 +18,31 @@ interface PreviewInterface
      * starts a preview for given user and content
      * @param int $userId
      * @param string $contentUuid
-     * @param string $workspaceKey
+     * @param string $webspaceKey
+     * @param string $templateKey
      * @param string $languageCode
      * @return StructureInterface
      */
-    public function start($userId, $contentUuid, $workspaceKey, $languageCode);
+    public function start($userId, $contentUuid, $webspaceKey, $templateKey, $languageCode);
 
     /**
      * stops a preview
      * @param int $userId
      * @param string $contentUuid
+     * @param string $templateKey
+     * @param string $languageCode
      */
-    public function stop($userId, $contentUuid);
+    public function stop($userId, $contentUuid, $templateKey, $languageCode);
 
     /**
      * returns if a preview started for user and content
-     * @param $userId
-     * @param $contentUuid
+     * @param int $userId
+     * @param string $contentUuid
+     * @param string $templateKey
+     * @param string $languageCode
      * @return bool
      */
-    public function started($userId, $contentUuid);
+    public function started($userId, $contentUuid, $templateKey, $languageCode);
 
     /**
      * saves changes for given user and content
@@ -47,26 +52,33 @@ interface PreviewInterface
      * @param string $languageCode
      * @param string $property propertyName which was changed
      * @param mixed $data new data
-     * @param string|null $template template key
+     * @param string $templateKey template key
      * @return \Sulu\Component\Content\StructureInterface
      */
-    public function update($userId, $contentUuid, $webspaceKey, $languageCode, $property, $data, $template = null);
+    public function update($userId, $contentUuid, $webspaceKey, $templateKey, $languageCode, $property, $data);
 
     /**
      * returns pending changes for given user and content
      * @param $userId
-     * @param $contentUuid
+     * @param string $contentUuid
+     * @param string $templateKey
+     * @param string $languageCode
+     * @throws PreviewNotFoundException
      * @return array
      */
-    public function getChanges($userId, $contentUuid);
+    public function getChanges($userId, $contentUuid, $templateKey, $languageCode);
+
 
     /**
      * renders a content for given user
      * @param int $userId
      * @param string $contentUuid
+     * @param string $templateKey
+     * @param string $languageCode
      * @param bool $partial
      * @param string|null $property
+     * @throws PreviewNotFoundException
      * @return string
      */
-    public function render($userId, $contentUuid, $partial = false, $property = null);
+    public function render($userId, $contentUuid, $templateKey, $languageCode, $partial = false, $property = null);
 } 

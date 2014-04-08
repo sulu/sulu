@@ -117,6 +117,9 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
             '\Sulu\Component\Content\Structure',
             array('overview', 'asdf', 'asdf', 2400)
         );
+        $structureMock->setLanguageCode('en');
+        $structureMock->setWebspaceKey('sulu_io');
+
 
         $method = new ReflectionMethod(
             get_class($structureMock), 'add'
@@ -223,51 +226,67 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testStartPreview()
     {
-        $content = $this->preview->start(1, '123-123-123', 'default', 'en');
+        $content = $this->preview->start(1, '123-123-123', 'default', 'overview', 'en');
         // check result
         $this->assertEquals('Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
         // check cache
-        $this->assertTrue($this->cache->contains('1:123-123-123'));
-        $content = $this->cache->fetch('1:123-123-123');
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
+        $content = $this->cache->fetch('U1:C123-123-123:Toverview:Len');
         $this->assertEquals('Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
     }
 
     public function testStopPreview()
     {
-        $this->preview->start(1, '123-123-123', 'default', 'en');
-        $this->assertTrue($this->cache->contains('1:123-123-123'));
+        $this->preview->start(1, '123-123-123', 'default', 'overview', 'en');
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
 
-        $this->preview->stop(1, '123-123-123');
-        $this->assertFalse($this->cache->contains('1:123-123-123'));
+        $this->preview->stop(1, '123-123-123', 'overview', 'en');
+        $this->assertFalse($this->cache->contains('U1:C123-123-123:Toverview:Len'));
     }
 
     public function testUpdate()
     {
-        $this->preview->start(1, '123-123-123', '', 'en', 'default', 'en');
-        $this->preview->update(1, '123-123-123', '', 'en', 'title', 'aaaa');
-        $content = $this->preview->getChanges(1, '123-123-123');
+        $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en', 'default', 'en');
+        $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'title', 'aaaa');
+        $content = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
 
         // check result
         $this->assertEquals(['aaaa', 'PREF: aaaa'], $content['title']['content']);
 
         // check cache
-        $this->assertTrue($this->cache->contains('1:123-123-123'));
-        $content = $this->cache->fetch('1:123-123-123');
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
+        $content = $this->cache->fetch('U1:C123-123-123:Toverview:Len');
         $this->assertEquals('aaaa', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
     }
 
     public function testUpdateSequence()
     {
-        $this->preview->start(1, '123-123-123', '', 'en', 'default', 'en');
-        $this->preview->update(1, '123-123-123', '', 'en', 'block,0,article,0', 'New-Block-Article-1-1');
-        $this->preview->update(1, '123-123-123', '', 'en', 'block,0,article,1', 'New-Block-Article-1-2');
-        $this->preview->update(1, '123-123-123', '', 'en', 'block,0,title', 'New-Block-Title-1');
-        $this->preview->update(1, '123-123-123', '', 'en', 'block,1,title', 'New-Block-Title-2');
-        $changes = $this->preview->getChanges(1, '123-123-123');
+        $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en');
+        $this->preview->update(
+            1,
+            '123-123-123',
+            'sulu_io',
+            'overview',
+            'en',
+            'block,0,article,0',
+            'New-Block-Article-1-1'
+        );
+        $this->preview->update(
+            1,
+            '123-123-123',
+            'sulu_io',
+            'overview',
+            'en',
+            'block,0,article,1',
+            'New-Block-Article-1-2'
+        );
+        $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'block,0,title', 'New-Block-Title-1');
+        $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'block,1,title', 'New-Block-Title-2');
+        $changes = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
 
         // check result
         $this->assertEquals(['New-Block-Article-1-1', 'New-Block-Article-1-2'], $changes['block,0,article']['content']);
@@ -292,8 +311,8 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         );
 
         // check cache
-        $this->assertTrue($this->cache->contains('1:123-123-123'));
-        $content = $this->cache->fetch('1:123-123-123');
+        $this->assertTrue($this->cache->contains('U1:C123-123-123:Toverview:Len'));
+        $content = $this->cache->fetch('U1:C123-123-123:Toverview:Len');
         $this->assertEquals(
             array(
                 array(
@@ -317,10 +336,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->preview->start(1, '123-123-123', 'default', 'en');
+        $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en');
         $response = $this->preview->render(
             1,
-            '123-123-123'
+            '123-123-123',
+            'overview',
+            'en'
         );
 
         $expected = $this->render(
@@ -349,12 +370,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
     public function testRealScenario()
     {
         // start preview from FORM
-        $content = $this->preview->start(1, '123-123-123', 'default', 'en');
+        $content = $this->preview->start(1, '123-123-123', 'sulu_io', 'overview', 'en');
         $this->assertEquals('Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
         // render PREVIEW
-        $response = $this->preview->render(1, '123-123-123');
+        $response = $this->preview->render(1, '123-123-123', 'overview', 'en');
         $expected = $this->render(
             'Title',
             'Lorem Ipsum dolorem apsum',
@@ -378,30 +399,28 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
-        $content = $this->preview->update(1, '123-123-123', '', 'en', 'title', 'New Title');
+        $content = $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'title', 'New Title');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->article);
 
-        $content = $this->preview->update(1, '123-123-123', '', 'en', 'article', 'asdf');
+        $content = $this->preview->update(1, '123-123-123', 'sulu_io', 'overview', 'en', 'article', 'asdf');
         $this->assertEquals('New Title', $content->title);
         $this->assertEquals('asdf', $content->article);
 
         // update PREVIEW
-        $changes = $this->preview->getChanges(1, '123-123-123');
-        $this->assertEquals(3, sizeof($changes));
+        $changes = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
+        $this->assertEquals(2, sizeof($changes));
         $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']['content']);
         $this->assertEquals('title', $changes['title']['property']);
         $this->assertEquals(['asdf'], $changes['article']['content']);
         $this->assertEquals('article', $changes['article']['property']);
-        $this->assertEquals(true, $changes['reload']['content']);
-        $this->assertEquals('reload', $changes['reload']['property']);
 
         // update PREVIEW
-        $changes = $this->preview->getChanges(1, '123-123-123');
+        $changes = $this->preview->getChanges(1, '123-123-123', 'overview', 'en');
         $this->assertEquals(0, sizeof($changes));
 
         // rerender PREVIEW
-        $response = $this->preview->render(1, '123-123-123');
+        $response = $this->preview->render(1, '123-123-123', 'overview', 'en');
         $expected = $this->render(
             'New Title',
             'asdf',
