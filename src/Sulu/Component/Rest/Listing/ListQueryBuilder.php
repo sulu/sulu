@@ -86,6 +86,12 @@ class ListQueryBuilder
     private $countQuery;
 
     /**
+     * current database driver
+     * @var string
+     */
+    private $dbDriver;
+
+    /**
      * @param $associationNames
      * @param $fieldNames
      * @param $entityName
@@ -93,6 +99,7 @@ class ListQueryBuilder
      * @param $sorting
      * @param $where
      * @param array $searchFields
+     * @param string $dbDriver
      */
     function __construct(
         $associationNames,
@@ -101,7 +108,8 @@ class ListQueryBuilder
         $fields,
         $sorting,
         $where,
-        $searchFields = array()
+        $searchFields = array(),
+        $dbDriver = null
     )
     {
         $this->associationNames = $associationNames;
@@ -111,6 +119,7 @@ class ListQueryBuilder
         $this->sorting = $sorting;
         $this->where = $where;
         $this->searchFields = $searchFields;
+        $this->dbDriver = $dbDriver;
     }
 
     /**
@@ -332,7 +341,17 @@ class ListQueryBuilder
                     $wheres[] .= $prefixActual . '.' . $col . ' = ' . $this->where[$key];
                 }
                 if (in_array($key, $this->searchFields)) {
-                    $searches[] .= $prefixActual . '.' . $col . ' LIKE :search';
+
+                    $columnName = $prefixActual . '.' . $col;
+                    $comparator = 'LIKE';
+                    $search = ':search';
+
+                    // if database driver is postgresql then cast column to text to avoid error when using like on numeric columns
+                    if ($this->dbDriver === 'pdo_pgsql') {
+                        $columnName = ' LOWER(CAST(' . $columnName . ' AS TEXT))';
+                        $search = 'LOWER('.$search.')';
+                    }
+                    $searches[] .= $columnName . ' ' . $comparator . ' '. $search;
                 }
             }
 

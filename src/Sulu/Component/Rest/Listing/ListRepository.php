@@ -22,14 +22,21 @@ class ListRepository extends EntityRepository
     private $helper;
 
     /**
+     * @var string
+     */
+    private $dbDriver;
+
+    /**
      * @param ObjectManager $em
      * @param ClassMetadata $class
      * @param ListRestHelper $helper
+     * @param string $dbDriver
      */
-    public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper)
+    public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper, $dbDriver)
     {
         parent::__construct($em, $class);
         $this->helper = $helper;
+        $this->dbDriver = $dbDriver;
     }
 
     /**
@@ -57,7 +64,8 @@ class ListRepository extends EntityRepository
             $this->helper->getFields(),
             $this->helper->getSorting(),
             $where,
-            $searchFields
+            $searchFields,
+            $this->dbDriver
         );
 
         if ($justCount) {

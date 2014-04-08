@@ -36,6 +36,12 @@ class ListRestHelper
      */
     protected $em;
 
+    /**
+     * the current database driver
+     * @var string
+     */
+    protected $dbDriver;
+
 
     /**
      * temp property for saving total amount of entities
@@ -62,11 +68,13 @@ class ListRestHelper
      * is injected by the service container
      * @param Request $request
      * @param ObjectManager $em
+     * @param string $dbDriver current database driver
      */
-    public function __construct(Request $request, ObjectManager $em)
+    public function __construct(Request $request, ObjectManager $em, $dbDriver)
     {
         $this->request = $request;
         $this->em = $em;
+        $this->dbDriver = $dbDriver;
     }
 
     /**
@@ -76,7 +84,7 @@ class ListRestHelper
      */
     public function getRepository($entityName)
     {
-        return new ListRepository($this->em, $this->em->getClassMetadata($entityName), $this);
+        return new ListRepository($this->em, $this->em->getClassMetadata($entityName), $this, $this->dbDriver);
     }
 
     /**
@@ -87,7 +95,7 @@ class ListRestHelper
      */
     public function find($entityName, $where = array())
     {
-        return $this->getRepository($entityName)->find($where);
+        return $this->getRepository($entityName, $this->dbDriver)->find($where);
     }
 
     /**
