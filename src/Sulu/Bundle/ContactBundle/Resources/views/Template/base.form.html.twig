@@ -11,9 +11,9 @@
             <div id="contact-edit-form">
                 <div class="pos-rel">
                     <h2 class="divider"><%=translate('contact.contacts.title')%></h2>
-        <span id="contact-options-dropdown" class="options-dropdown-container">
-            <a href="javascript:void(0)" class="contact-options-toggle options-toggle"><span class="icon-cogwheel"/></a>
-        </span>
+                    <span id="contact-options-dropdown" class="options-dropdown-container">
+                        <a href="javascript:void(0)" class="contact-options-toggle options-toggle"><span class="icon-cogwheel"/></a>
+                    </span>
                 </div>
 
                 <div class="grid-row small" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl"}]'>
@@ -38,9 +38,9 @@
                                     <~ if (typeof zip !== 'undefined') print(',') ~>
                                     <span data-mapper-property="zip" data-form="true"></span>
                                     <span data-mapper-property="city" data-form="true"></span>
-                                    <~ if (typeof state !== 'undefined') print('state is '+state) ~>
+                                    <~ if (typeof state !== 'undefined') print(',') ~>
                                     <span data-mapper-property="state" data-form="true"></span>
-                                    <~ if (typeof country !== 'country') print(',') ~>
+                                    <~ if (typeof country !== 'undefined') print(',') ~>
                                     <span data-mapper-property="country" data-form="true" data-type="readonly-select" data-type-id-property="id" data-type-output-property="name" data-type-data="{{ countries | json_encode() }}"></span>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                 <div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" type="text" class="form-element" data-mapper-property="fax">
+                                    <input id="<~= uid ~>" pattern="^[0-9 /+-]*$" type="text" class="form-element" data-mapper-property="fax">
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                 <div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" type="text" class="form-element phone-value" data-mapper-property="phone">
+                                    <input id="<~= uid ~>" pattern="^[0-9 /+-]*$" type="text" class="form-element phone-value" data-mapper-property="phone">
                                 </div>
                             </div>
                         </div>

@@ -686,6 +686,108 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals(1, count($response->notes));
     }
 
+
+    public function testPutDeleteAndAddWithoutId()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            '/api/contacts/1',
+            array(
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'title' => 'MBA',
+                'position' => 'Manager',
+                'emails' => array(
+                    array(
+                        'email' => 'john.doe@muster.de',
+                        'emailType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'phones' => array(
+                    array(
+                        'phone' => '789456123',
+                        'phoneType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'faxes' => array(
+                    array(
+                        'fax' => '147258369-1',
+                        'faxType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'addresses' => array(
+                    array(
+                        'street' => 'Street',
+                        'number' => '2',
+                        'zip' => '9999',
+                        'city' => 'Springfield',
+                        'state' => 'Colorado',
+                        'country' => array(
+                            'id' => 1,
+                            'name' => 'Musterland',
+                            'code' => 'ML'
+                        ),
+                        'addressType' => array(
+                            'id' => 1,
+                            'name' => 'Private'
+                        )
+                    )
+                ),
+                'notes' => array(
+                    array(
+                        'value' => 'Note 1_1'
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('John', $response->firstName);
+        $this->assertEquals('Doe', $response->lastName);
+        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('john.doe@muster.de', $response->emails[0]->email);
+        $this->assertEquals('789456123', $response->phones[0]->phone);
+        $this->assertEquals('147258369-1', $response->faxes[0]->fax);
+        $this->assertEquals('Street', $response->addresses[0]->street);
+        $this->assertEquals('2', $response->addresses[0]->number);
+        $this->assertEquals('9999', $response->addresses[0]->zip);
+        $this->assertEquals('Springfield', $response->addresses[0]->city);
+        $this->assertEquals('Colorado', $response->addresses[0]->state);
+        $this->assertEquals('Note 1_1', $response->notes[0]->value);
+        $this->assertEquals(1, count($response->notes));
+
+        $client->request('GET', '/api/contacts/' . $response->id);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('John', $response->firstName);
+        $this->assertEquals('Doe', $response->lastName);
+        $this->assertEquals('MBA', $response->title);
+        $this->assertEquals('Manager', $response->position);
+        $this->assertEquals('john.doe@muster.de', $response->emails[0]->email);
+        $this->assertEquals('789456123', $response->phones[0]->phone);
+        $this->assertEquals('147258369-1', $response->faxes[0]->fax);
+        $this->assertEquals('Street', $response->addresses[0]->street);
+        $this->assertEquals('2', $response->addresses[0]->number);
+        $this->assertEquals('9999', $response->addresses[0]->zip);
+        $this->assertEquals('Springfield', $response->addresses[0]->city);
+        $this->assertEquals('Colorado', $response->addresses[0]->state);
+        $this->assertEquals('Note 1_1', $response->notes[0]->value);
+        $this->assertEquals(1, count($response->notes));
+    }
+
     public function testPutNoEmail()
     {
         $client = $this->createTestClient();
