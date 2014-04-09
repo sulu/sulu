@@ -312,8 +312,12 @@ class AccountController extends RestController implements ClassResourceInterface
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
-//                $em->persist($user);
                 $em->flush();
+
+                // FIXME: this is just a hack to avoid relations that start with index != 0
+                // FIXME: otherwise deserialization process will parse relations as object instead of an array
+                $em->refresh($account);
+
                 $view = $this->view($account, 200);
             }
         } catch (EntityNotFoundException $enfe) {
