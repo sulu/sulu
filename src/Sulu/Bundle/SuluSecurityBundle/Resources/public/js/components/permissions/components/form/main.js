@@ -97,10 +97,10 @@ define([], function() {
          * default title as fallback
          */
         setTitle: function() {
-            if (!!this.options.data.user && !!this.options.data.user.id) {
-                this.sandbox.emit('sulu.content.set-title', this.options.data.user.fullName);
+            if (!!this.options.data.contact && !!this.options.data.contact.id) {
+                this.sandbox.emit('sulu.content.set-title', this.options.data.contact.fullName);
                 this.sandbox.emit('sulu.content.set-title-addition',
-                    this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.user.id
+                    this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.contact.id
                 );
             } else {
                 this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('contact.contacts.title'));

@@ -598,7 +598,7 @@ class UserController extends RestController implements ClassResourceInterface
             if ($contactId != null) {
                 $user = $this->getDoctrine()->getRepository($this->entityName)->findUserByContact($contactId);
                 if ($user == null) {
-                    $view = $this->view(null, 404);
+                    $view = $this->view(null, 204);
                 } else {
                     $view = $this->view($user, 200);
                 }
