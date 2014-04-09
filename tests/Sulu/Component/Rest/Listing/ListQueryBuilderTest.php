@@ -119,6 +119,27 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testFindWithWhereAndSearchPostgresql()
+    {
+        $builder = new ListQueryBuilder(
+            array(),
+            array(),
+            'SuluCoreBundle:Example',
+            array(),
+            array(),
+            array('field1' => 1, 'field2' => 2),
+            array('field1','field2'),
+            'pdo_pgsql'
+        );
+
+        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+
+        $this->assertEquals(
+            'SELECT u FROM SuluCoreBundle:Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (LOWER(CAST(u.field1 AS TEXT)) LIKE LOWER(:search) OR LOWER(CAST(u.field2 AS TEXT)) LIKE LOWER(:search))',
+            $dql
+        );
+    }
+
     public function testFindWithJoins()
     {
         $builder = new ListQueryBuilder(
