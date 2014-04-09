@@ -44,7 +44,6 @@ define([], function() {
                         id: 'delete',
                         icon: 'bin',
                         title: 'delete',
-                        group: '1',
                         disabled: true,
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.delete');
@@ -53,7 +52,6 @@ define([], function() {
                     {
                         id: 'settings',
                         icon: 'cogwheel',
-                        group: '1',
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.import'),
@@ -97,7 +95,6 @@ define([], function() {
                 defaults.splice(1, 0, {
                     icon: 'floppy-saved',
                     iconSize: 'large',
-                    group: '1',
                     disabled: true,
                     id: 'save',
                     title: this.sandbox.translate('sulu.list-toolbar.save'),
@@ -114,7 +111,7 @@ define([], function() {
                     postfix;
                 this.sandbox.on('husky.datagrid.number.selections', function(number) {
                     postfix = number > 0 ? 'enable' : 'disable';
-                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete');
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
                 }.bind(this));
             },
             defaultEditableList: function() {
@@ -221,6 +218,7 @@ define([], function() {
                         el: $container,
                         data: this.options.template,
                         instanceName: this.options.instanceName,
+                        showTitleAsTooltip: true,
                         searchOptions: {
                             placeholderText: 'public.search'
                         }

@@ -37,32 +37,6 @@ body {
     }
 }
 
-// tabs content
-#edit-toolbar-container {
-    z-index: 99;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-left: $contentPaddingLeft;
-    width: 100%;
-    background-color: $backgroundColor;
-    padding-top: $contentMarginTop;
-}
-
-#page-functions {
-    position: relative;
-    top: 0px;
-    left: 0px;
-}
-
-#edit-toolbar {
-    max-width: $contentMaxWidth;
-}
-
-#list-toolbar-container {
-    padding-bottom: 20px;
-}
-
 // Control elements
 /*----------------------------------------*/
 .control-label {

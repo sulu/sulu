@@ -217,9 +217,9 @@ define(function() {
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
                 if (!!trigger && this.currentRoute !== route && this.currentRoute !== null) {
-                    // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
+                    // FIXME - header does not get removed and because of that the dom element will be removed
                     // and the stop event will be called
-                    this.sandbox.stop('#edit-toolbar');
+                    this.sandbox.stop('#sulu-header-container');
                     this.sandbox.stop('#content > *');
                     this.sandbox.stop('#preview > *');
                 }
