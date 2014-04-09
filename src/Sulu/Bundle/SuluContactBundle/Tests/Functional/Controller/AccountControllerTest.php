@@ -822,6 +822,59 @@ class AccountControllerTest extends DatabaseTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+
+        $this->assertEquals(2, sizeof($response->urls));
+        $this->assertEquals('http://example.company.com', $response->urls[0]->url);
+        $this->assertEquals('Private', $response->urls[0]->urlType->name);
+        $this->assertEquals('http://test.company.com', $response->urls[1]->url);
+        $this->assertEquals('Private', $response->urls[1]->urlType->name);
+
+        $this->assertEquals(2, sizeof($response->emails));
+        $this->assertEquals('office@company.com', $response->emails[0]->email);
+        $this->assertEquals('Private', $response->emails[0]->emailType->name);
+        $this->assertEquals('erika.mustermann@company.com', $response->emails[1]->email);
+        $this->assertEquals('Private', $response->emails[1]->emailType->name);
+
+        $this->assertEquals(2, sizeof($response->phones));
+        $this->assertEquals('4567890', $response->phones[0]->phone);
+        $this->assertEquals('Private', $response->phones[0]->phoneType->name);
+        $this->assertEquals('789456123', $response->phones[1]->phone);
+        $this->assertEquals('Private', $response->phones[1]->phoneType->name);
+
+        $this->assertEquals(2, sizeof($response->faxes));
+        $this->assertEquals('4567890-1', $response->faxes[0]->fax);
+        $this->assertEquals('Private', $response->faxes[0]->faxType->name);
+        $this->assertEquals('789456123-1', $response->faxes[1]->fax);
+        $this->assertEquals('Private', $response->faxes[1]->faxType->name);
+
+        $this->assertEquals(2, sizeof($response->notes));
+        $this->assertEquals('Note1', $response->notes[0]->value);
+        $this->assertEquals('Note2', $response->notes[1]->value);
+
+        $this->assertEquals(2, sizeof($response->addresses));
+        $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
+        $this->assertEquals('2', $response->addresses[0]->number);
+        $this->assertEquals('0022', $response->addresses[0]->zip);
+        $this->assertEquals('Dornbirn', $response->addresses[0]->city);
+        $this->assertEquals('state1', $response->addresses[0]->state);
+        $this->assertEquals('Musterland', $response->addresses[0]->country->name);
+        $this->assertEquals('ML', $response->addresses[0]->country->code);
+        $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+
+        $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
+        $this->assertEquals('3', $response->addresses[1]->number);
+        $this->assertEquals('2222', $response->addresses[1]->zip);
+        $this->assertEquals('Dornbirn', $response->addresses[1]->city);
+        $this->assertEquals('state1', $response->addresses[1]->state);
+        $this->assertEquals('Musterland', $response->addresses[1]->country->name);
+        $this->assertEquals('ML', $response->addresses[1]->country->code);
+        $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+
+
         $client->request(
             'GET',
             '/api/accounts/1'
@@ -878,6 +931,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('ML', $response->addresses[1]->country->code);
         $this->assertEquals('Private', $response->addresses[1]->addressType->name);
     }
+
 
     public function testPutNoDetails()
     {

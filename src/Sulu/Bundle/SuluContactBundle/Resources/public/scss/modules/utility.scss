@@ -37,9 +37,21 @@
     }
 }
 
-#contact-edit-form:hover {
-    #contact-options-dropdown {
+#contact-edit-form {
+    &:hover {
+        #contact-options-dropdown {
+            display: block;
+        }
+    }
+
+    label {
+        line-height:14px;
+        text-overflow: hidden;
+    }
+
+    .label-container {
         display: block;
+        font-size: 11px;
     }
 }
 
