@@ -11,6 +11,7 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Rest\Exception\MissingParameterException;
+use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -43,6 +44,7 @@ trait RequestParametersTrait
      * @param bool $force TRUE if value is mandatory
      * @param mixed $default value if parameter not exists
      * @throws MissingParameterException parameter is mandatory but does not exists
+     * @throws ParameterDataTypeException parameter hast the wrong data type
      * @return boolean
      */
     protected function getBooleanRequestParameter($request, $name, $force = false, $default = null)
@@ -52,7 +54,10 @@ trait RequestParametersTrait
             $value = true;
         } elseif ($value === 'false') {
             $value = false;
+        } elseif ($value !== true && $value !== false) {
+            throw new ParameterDataTypeException(get_class($this), $name);
         }
+
         return $value;
     }
 } 
