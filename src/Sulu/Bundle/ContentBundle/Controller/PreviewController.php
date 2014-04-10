@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Rest\RequestParameters;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ class PreviewController extends Controller
 
     const PREVIEW_ID = 'sulu_content.preview';
 
-    use RequestParameters;
+    use RequestParametersTrait;
 
     /**
      * returns language code from request
