@@ -15,10 +15,17 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
 
             // Sulu
+            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\MediaBundle\SuluMediaBundle(),
+            new \Sulu\Bundle\TestBundle\SuluTestBundle(),
+            new \Sulu\Bundle\TagBundle\SuluTagBundle(),
+
+            new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle()
         );
 
         return $bundles;
@@ -26,6 +33,13 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config/config.yml');
+        if (array_key_exists('APP_DB', $GLOBALS) &&
+            file_exists(__DIR__ . '/config/config.' . $GLOBALS['APP_DB'] . '.yml')
+        ) {
+            $loader->load(__DIR__ . '/config/config.' . $GLOBALS['APP_DB'] . '.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/config.mysql.yml');
+        }
     }
+
 }
