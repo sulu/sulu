@@ -32,18 +32,12 @@ class StructureTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->titleProperty = $this->getMockBuilder('Sulu\Component\Content\PropertyInterface')
+            ->setMockClassName('TitleProperty')
             ->getMock();
-        $this->titleProperty
-            ->expects($this->any())
-            ->method('getTags')
-            ->will($this->returnValue(array()));
 
         $this->testProperty = $this->getMockBuilder('Sulu\Component\Content\PropertyInterface')
+            ->setMockClassName('TestProperty')
             ->getMock();
-        $this->testProperty
-            ->expects($this->any())
-            ->method('getTags')
-            ->will($this->returnValue(array()));
 
         $this->structure = $this->getMockBuilder('Sulu\Component\Content\Structure')
             ->disableOriginalConstructor()
@@ -63,18 +57,22 @@ class StructureTest extends \PHPUnit_Framework_TestCase
 
     public function testToArray()
     {
+        $this->titleProperty->expects($this->any())->method('getTags')->will(
+            $this->returnValue(array())
+        );
         $this->titleProperty->expects($this->any())->method('getName')->will(
             $this->returnValue('title')
         );
-
         $this->titleProperty->expects($this->any())->method('getValue')->will(
             $this->returnValue('titlevalue')
         );
 
+        $this->testProperty->expects($this->any())->method('getTags')->will(
+            $this->returnValue(array())
+        );
         $this->testProperty->expects($this->any())->method('getName')->will(
             $this->returnValue('test')
         );
-
         $this->testProperty->expects($this->any())->method('getValue')->will(
             $this->returnValue('testvalue')
         );
@@ -112,5 +110,63 @@ class StructureTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('test', $structureArray);
         $this->assertArrayNotHasKey('created', $structureArray);
         $this->assertArrayNotHasKey('changed', $structureArray);
+    }
+
+    public function testAddProperty()
+    {
+        $this->titleProperty->expects($this->any())->method('getTags')->will(
+            $this->returnValue(
+                array(
+                    new PropertyTag('tag1', 1),
+                    new PropertyTag('tag2', 6),
+                    new PropertyTag('tag3', 10),
+                    new PropertyTag('tag4', 10),
+                )
+            )
+        );
+        $this->titleProperty->expects($this->any())->method('getName')->will(
+            $this->returnValue('title')
+        );
+        $this->titleProperty->expects($this->any())->method('getValue')->will(
+            $this->returnValue('titlevalue')
+        );
+
+        $this->testProperty->expects($this->any())->method('getTags')->will(
+            $this->returnValue(
+                array(
+                    new PropertyTag('tag1', 10),
+                    new PropertyTag('tag2', 5),
+                    new PropertyTag('tag3', 1),
+                    new PropertyTag('tag5', 1),
+                )
+            )
+        );
+        $this->testProperty->expects($this->any())->method('getName')->will(
+            $this->returnValue('test')
+        );
+        $this->testProperty->expects($this->any())->method('getValue')->will(
+            $this->returnValue('testvalue')
+        );
+
+        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Structure', 'add');
+        $addMethod->setAccessible(true);
+
+        $addMethod->invoke($this->structure, $this->titleProperty);
+        $addMethod->invoke($this->structure, $this->testProperty);
+
+        $tag1Property = $this->structure->getPropertyByTagName('tag1');
+        $tag2Property = $this->structure->getPropertyByTagName('tag2');
+        $tag3Property = $this->structure->getPropertyByTagName('tag3');
+        $tag4Property = $this->structure->getPropertyByTagName('tag4');
+        $tag5Property = $this->structure->getPropertyByTagName('tag5');
+
+        $this->assertEquals($tag1Property, $this->testProperty);
+        $this->assertEquals($tag2Property, $this->titleProperty);
+        $this->assertEquals($tag3Property, $this->titleProperty);
+        $this->assertEquals($tag4Property, $this->titleProperty);
+        $this->assertEquals($tag5Property, $this->testProperty);
+
+        $this->setExpectedException('\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException');
+        $this->structure->getPropertyByTagName('test-tag');
     }
 }
