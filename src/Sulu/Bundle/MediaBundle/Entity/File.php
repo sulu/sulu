@@ -200,4 +200,49 @@ class File
     {
         return $this->creator;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fileVersions;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->fileVersions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add fileVersions
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $fileVersions
+     * @return File
+     */
+    public function addFileVersion(\Sulu\Bundle\MediaBundle\Entity\Media $fileVersions)
+    {
+        $this->fileVersions[] = $fileVersions;
+    
+        return $this;
+    }
+
+    /**
+     * Remove fileVersions
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\Media $fileVersions
+     */
+    public function removeFileVersion(\Sulu\Bundle\MediaBundle\Entity\Media $fileVersions)
+    {
+        $this->fileVersions->removeElement($fileVersions);
+    }
+
+    /**
+     * Get fileVersions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFileVersions()
+    {
+        return $this->fileVersions;
+    }
 }
