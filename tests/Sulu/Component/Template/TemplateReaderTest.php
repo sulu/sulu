@@ -113,11 +113,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
+                    'title' => 'properties.title',
+                    'tags' => 'sulu.node.name,sulu.node.title:10',
                     'type' => 'text_line',
                     'mandatory' => true
                 ),
                 'url' => array(
                     'name' => 'url',
+                    'title' => 'properties.url',
+                    'tags' => 'sulu.rlp.part:1',
                     'type' => 'resource_locator',
                     'mandatory' => true
                 ),
@@ -128,6 +132,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'block1' => array(
                     'name' => 'block1',
+                    'title' => 'properties.block1',
+                    'tags' => 'sulu.node.block:20,sulu.test.block:1',
                     'minOccurs' => '2',
                     'maxOccurs' => '10',
                     'mandatory' => true,
@@ -154,6 +160,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'properties' => array(
                                         'article1.1.1' => array(
                                             'name' => 'article1.1.1',
+                                            'title' => 'properties.title1',
+                                            'tags' => 'sulu.node.title:5',
                                             'type' => 'text_area',
                                             'mandatory' => true,
                                             'minOccurs' => 2
