@@ -58,6 +58,12 @@ class Property implements PropertyInterface
     private $params;
 
     /**
+     * tags defined in xml
+     * @var PropertyTag[]
+     */
+    private $tags;
+
+    /**
      * value of property
      * @var mixed
      */
@@ -70,6 +76,7 @@ class Property implements PropertyInterface
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
+        $tags = array(),
         $params = array()
     ) {
         $this->contentTypeName = $contentTypeName;
@@ -79,6 +86,7 @@ class Property implements PropertyInterface
         $this->multilingual = $multilingual;
         $this->name = $name;
         $this->params = $params;
+        $this->tags =$tags;
     }
 
     /**
@@ -124,6 +132,60 @@ class Property implements PropertyInterface
     public function getMaxOccurs()
     {
         return $this->maxOccurs;
+    }
+
+    /**
+     * sets field is mandatory
+     * @param boolean $mandatory
+     */
+    public function setMandatory($mandatory)
+    {
+        $this->mandatory = $mandatory;
+    }
+
+    /**
+     * returns field is mandatory
+     * @return boolean
+     */
+    public function getMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    /**
+     * sets field is multilingual
+     * @param boolean $multilingual
+     */
+    public function setMultilingual($multilingual)
+    {
+        $this->multilingual = $multilingual;
+    }
+
+    /**
+     * returns field is multilingual
+     * @return boolean
+     */
+    public function getMultilingual()
+    {
+        return $this->multilingual;
+    }
+
+    /**
+     * sets tags defined in xml
+     * @param \Sulu\Component\Content\PropertyTag[] $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * returns tags defined in xml
+     * @return \Sulu\Component\Content\PropertyTag[]
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**
