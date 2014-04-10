@@ -39,11 +39,9 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('media.tags', 'tag')
                 ->leftJoin('media.metas', 'mediaMeta')
                 ->leftJoin('media.files', 'file')
-                /*
                 ->leftJoin('file.fileVersions', 'fileVersion')
-                ->leftJoin('fileVersions.fileContentLanguages', 'fileContentLanguages')
-                ->leftJoin('fileVersions.filePublishLanguages', 'filePublishLanguages')
-                */
+                ->leftJoin('fileVersion.fileVersionContentLanguages', 'fileVersionContentLanguage')
+                ->leftJoin('fileVersion.fileVersionPublishLanguages', 'fileVersionPublishLanguage')
                 ->addSelect('collectionMeta')
                 ->addSelect('collectionType')
                 ->addSelect('parent')
@@ -51,10 +49,9 @@ class CollectionRepository extends EntityRepository
                 ->addSelect('tag')
                 ->addSelect('mediaMeta')
                 ->addSelect('file')
-                /*
                 ->addSelect('fileVersion')
-                ->addSelect('fileContentLanguages')
-                ->addSelect('filePublishLanguages')*/
+                ->addSelect('fileVersionContentLanguage')
+                ->addSelect('fileVersionPublishLanguage')
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
