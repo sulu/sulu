@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * CollectionRepository
@@ -34,23 +35,26 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('collection.metas', 'collectionMeta')
                 ->leftJoin('collection.collectionType', 'collectionType')
                 ->leftJoin('collection.parent', 'parent')
-                ->leftJoin('collection.medias', 'medias')
-                ->leftJoin('medias.tags', 'mediaTags')
-                ->leftJoin('medias.metas', 'mediaMetas')
-                ->leftJoin('medias.files', 'files')
-                ->leftJoin('files.fileVersions', 'fileVersions')
+                ->leftJoin('collection.medias', 'media')
+                ->leftJoin('media.tags', 'tag')
+                ->leftJoin('media.metas', 'mediaMeta')
+                ->leftJoin('media.files', 'file')
+                /*
+                ->leftJoin('file.fileVersions', 'fileVersion')
                 ->leftJoin('fileVersions.fileContentLanguages', 'fileContentLanguages')
                 ->leftJoin('fileVersions.filePublishLanguages', 'filePublishLanguages')
+                */
                 ->addSelect('collectionMeta')
                 ->addSelect('collectionType')
                 ->addSelect('parent')
-                ->addSelect('medias')
-                ->addSelect('mediaTags')
-                ->addSelect('medaMetas')
-                ->addSelect('files')
-                ->addSelect('fileVersions')
+                ->addSelect('media')
+                ->addSelect('tag')
+                ->addSelect('mediaMeta')
+                ->addSelect('file')
+                /*
+                ->addSelect('fileVersion')
                 ->addSelect('fileContentLanguages')
-                ->addSelect('filePublishLanguages')
+                ->addSelect('filePublishLanguages')*/
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
