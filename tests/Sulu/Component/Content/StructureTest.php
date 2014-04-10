@@ -33,9 +33,17 @@ class StructureTest extends \PHPUnit_Framework_TestCase
     {
         $this->titleProperty = $this->getMockBuilder('Sulu\Component\Content\PropertyInterface')
             ->getMock();
+        $this->titleProperty
+            ->expects($this->any())
+            ->method('getTags')
+            ->will($this->returnValue(array()));
 
         $this->testProperty = $this->getMockBuilder('Sulu\Component\Content\PropertyInterface')
             ->getMock();
+        $this->testProperty
+            ->expects($this->any())
+            ->method('getTags')
+            ->will($this->returnValue(array()));
 
         $this->structure = $this->getMockBuilder('Sulu\Component\Content\Structure')
             ->disableOriginalConstructor()

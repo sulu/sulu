@@ -53,12 +53,23 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 'article' => array(
                     'name' => 'article',
                     'type' => 'text_area',
-                    'mandatory' => false
+                    'mandatory' => false,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 5
+                        )
+                    )
                 ),
                 'pages' => array(
                     'name' => 'pages',
                     'type' => 'smart_content_selection',
-                    'mandatory' => false
+                    'mandatory' => false,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.title'
+                        )
+                    )
                 ),
                 'images' => array(
                     'name' => 'images',
