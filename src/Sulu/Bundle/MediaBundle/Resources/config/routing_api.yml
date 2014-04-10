@@ -1,0 +1,3 @@
+sulu_media.collections:
+    type: rest
+    resource: Sulu\Bundle\MediaBundle\Controller\CollectionController

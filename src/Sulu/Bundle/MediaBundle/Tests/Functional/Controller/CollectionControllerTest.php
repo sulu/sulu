@@ -50,6 +50,10 @@ class CollectionControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaMeta'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
             self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
         );
 
@@ -120,7 +124,12 @@ class CollectionControllerTest extends DatabaseTestCase
      * Tests
      */
 
+    public function testTest() {
+        $this->assertTrue(true);
+    }
+
     public function testGetById() {
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -128,9 +137,17 @@ class CollectionControllerTest extends DatabaseTestCase
             '/api/collections/1'
         );
 
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $style = array(
+            'type' => 'circle',
+            'color' => '#ffcc00'
+        );
+
+        $this->assertEquals(json_encode($style), $response->style);
+        $this->assertEquals(1, $response->id);
     }
 
 }
