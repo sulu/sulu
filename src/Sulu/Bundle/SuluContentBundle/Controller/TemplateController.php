@@ -18,8 +18,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * handles templates for this bundles
+ */
 class TemplateController extends Controller
 {
+    /**
+     * returns all structures in system
+     * @return JsonResponse
+     */
     public function getAction()
     {
         /** @var StructureManagerInterface $structureManager */
@@ -32,6 +39,11 @@ class TemplateController extends Controller
         return new JsonResponse($data);
     }
 
+    /**
+     * renders one structure as form
+     * @param string $key template key
+     * @return Response
+     */
     public function contentAction($key = null)
     {
         $fireEvent = false;
@@ -60,6 +72,15 @@ class TemplateController extends Controller
         );
     }
 
+    /**
+     * renders split screen
+     * @deprecated todo remove completly
+     *
+     * @param $webspace
+     * @param $language
+     * @param $contentUuid
+     * @return Response
+     */
     public function splitScreenAction($webspace, $language, $contentUuid)
     {
         return $this->render(
@@ -106,11 +127,21 @@ class TemplateController extends Controller
         return $this->container->get('sulu.content.structure_manager')->getStructure($key);
     }
 
+    /**
+     * renders list template
+     * @return Response
+     */
     public function listAction()
     {
         return $this->render('SuluContentBundle:Template:list.html.twig');
     }
 
+    /**
+     * renders column template
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return Response
+     */
     public function columnAction($webspaceKey, $languageCode)
     {
         /** @var WebspaceManagerInterface $webspaceManager */
@@ -135,6 +166,11 @@ class TemplateController extends Controller
             ));
     }
 
+    /**
+     * returns languages for webspaces
+     * @param string $webspaceKey
+     * @return JsonResponse
+     */
     public function getLanguagesAction($webspaceKey)
     {
         /** @var WebspaceManagerInterface $webspaceManager */
@@ -158,6 +194,10 @@ class TemplateController extends Controller
         return new JsonResponse($data);
     }
 
+    /**
+     * renders template fpr settings
+     * @return Response
+     */
     public function settingsAction()
     {
         return $this->render('SuluContentBundle:Template:settings.html.twig');

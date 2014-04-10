@@ -152,15 +152,15 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/nodes?template=overview', $data[0]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview', $data[1]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview', $data[1]);
         $data[1] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview&parent='.$data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview&parent='.$data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&parent='.$data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview&parent='.$data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent());
 
         return $data;

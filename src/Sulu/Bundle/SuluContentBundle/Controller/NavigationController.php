@@ -14,7 +14,9 @@ use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-
+/**
+ * handles navigation for this bundle
+ */
 class NavigationController extends Controller
 {
 
