@@ -15,15 +15,21 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "1.0.*",
         "jms/serializer-bundle": "@dev",
+        "stof/doctrine-extensions-bundle": "1.1.*@dev",
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
-        "imagine/imagine": "~0.5.0"
+        "sulu/tag-bundle": "dev-develop",
+        "imagine/imagine": "~0.5.0",
+
+        "sulu/security-bundle": "@dev",
+        "sulu/contact-bundle": "@dev"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.3.*",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "sulu/test-bundle": "dev-develop"
     },
     "autoload": {
         "psr-0": {
