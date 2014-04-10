@@ -18,10 +18,35 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RequestParameters;
 use Sulu\Component\Rest\RestController;
 
+/**
+ * handles content nodes
+ */
 class NodeController extends RestController implements ClassResourceInterface
 {
+
+    use RequestParameters;
+
+    /**
+     * returns language code from request
+     * @return string
+     */
+    private function getLanguage()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'language', true);
+    }
+
+    /**
+     * returns webspace key from request
+     * @return string
+     */
+    private function getWebspace()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'webspace', true);
+    }
+
     /**
      * returns a content item with given UUID as JSON String
      * @param $uuid
@@ -29,32 +54,11 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function getAction($uuid)
     {
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-        $breadcrumb = $this->getRequest()->get('breadcrumb');
-        if ($breadcrumb === 'true') {
-            $breadcrumb = true;
-        } elseif ($breadcrumb === 'false') {
-            $breadcrumb = false;
-        } else {
-            $breadcrumb = false;
-        }
-        $complete = $this->getRequest()->get('complete');
-        if ($complete === 'true') {
-            $complete = true;
-        } elseif ($complete === 'false') {
-            $complete = false;
-        } else {
-            $complete = true;
-        }
-        $ghostContent = $this->getRequest()->get('ghost-content');
-        if ($ghostContent === 'true') {
-            $ghostContent = true;
-        } elseif ($ghostContent === 'false') {
-            $ghostContent = false;
-        } else {
-            $ghostContent = false;
-        }
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
+        $breadcrumb = $this->getBooleanRequestParameter($this->getRequest(), 'breadcrumb', false, false);
+        $complete = $this->getBooleanRequestParameter($this->getRequest(), 'complete', false, true);
+        $ghostContent = $this->getBooleanRequestParameter($this->getRequest(), 'ghost-content', false, false);
 
         $view = $this->responseGetById(
             $uuid,
@@ -83,8 +87,8 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function indexAction()
     {
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
 
         $result = $this->getRepository()->getIndexNode($webspace, $language);
 
@@ -97,14 +101,9 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-        $excludeGhosts = $this->getRequest()->get('exclude-ghosts', 'false');
-        if ($excludeGhosts === 'false') {
-            $excludeGhosts = false;
-        } else {
-            $excludeGhosts = true;
-        }
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
+        $excludeGhosts = $this->getBooleanRequestParameter($this->getRequest(), 'exclude-ghosts', false, false);
 
         $parentUuid = $this->getRequest()->get('parent');
         $depth = $this->getRequest()->get('depth', 1);
@@ -127,12 +126,12 @@ class NodeController extends RestController implements ClassResourceInterface
     public function filterAction()
     {
         // load data from request
-        $dataSource = $this->getRequest()->get('dataSource', null);
-        $includeSubFolders = $this->getRequest()->get('includeSubFolders', 'false');
-        $limitResult = $this->getRequest()->get('limitResult', null);
-        $tagNames = $this->getRequest()->get('tags', null);
-        $sortBy = $this->getRequest()->get('sortBy', null);
-        $sortMethod = $this->getRequest()->get('sortMethod', 'asc');
+        $dataSource = $this->getRequestParameter($this->getRequest(), 'dataSource');
+        $includeSubFolders = $this->getBooleanRequestParameter($this->getRequest(), 'includeSubFolders', false, false);
+        $limitResult = $this->getRequestParameter($this->getRequest(), 'limitResult');
+        $tagNames = $this->getRequestParameter($this->getRequest(), 'tags');
+        $sortBy = $this->getRequestParameter($this->getRequest(), 'sortBy');
+        $sortMethod = $this->getRequestParameter($this->getRequest(), 'sortMethod', false, 'asc');
 
         // resolve tag names
         $resolvedTags = array();
@@ -161,15 +160,15 @@ class NodeController extends RestController implements ClassResourceInterface
 
         $filterConfig = array(
             'dataSource' => $dataSource,
-            'includeSubFolders' => ($includeSubFolders == 'false') ? false : true,
+            'includeSubFolders' => $includeSubFolders,
             'limitResult' => $limitResult,
             'tags' => $resolvedTags,
             'sortBy' => $sortColumns,
             'sortMethod' => $sortMethod
         );
 
-        $webspaceKey = $this->getRequest()->get('webspace');
-        $languageCode = $this->getRequest()->get('language');
+        $webspaceKey = $this->getWebspace();
+        $languageCode = $this->getLanguage();
 
         $structures = array();
 
@@ -203,17 +202,17 @@ class NodeController extends RestController implements ClassResourceInterface
             return $this->putIndex();
         }
 
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-        $template = $this->getRequest()->get('template');
-        $navigation = $this->getRequest()->get('navigation');
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
+        $template = $this->getRequestParameter($this->getRequest(), 'template', true);
+        $navigation = $this->getRequestParameter($this->getRequest(), 'navigation');
         if ($navigation === false || $navigation === '0') {
             $navigation = false;
         } else {
             // default navigation
             $navigation = 'main';
         }
-        $state = $this->getRequest()->get('state');
+        $state = $this->getRequestParameter($this->getRequest(), 'state');
         if ($state !== null) {
             $state = intval($state);
         }
@@ -242,9 +241,9 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     private function putIndex()
     {
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-        $template = $this->getRequest()->get('template', 'overview');
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
+        $template = $this->getRequestParameter($this->getRequest(), 'template', true);
         $data = $this->getRequest()->request->all();
 
         try {
@@ -276,11 +275,11 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function postAction()
     {
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-        $template = $this->getRequest()->get('template', 'overview');
-        $navigation = $this->getRequest()->get('navigation');
-        $parent = $this->getRequest()->get('parent');
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
+        $template = $this->getRequestParameter($this->getRequest(), 'template', true);
+        $navigation = $this->getRequestParameter($this->getRequest(), 'navigation');
+        $parent = $this->getRequestParameter($this->getRequest(), 'parent');
         $data = $this->getRequest()->request->all();
 
         if ($navigation === '0') {
@@ -314,8 +313,8 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($uuid)
     {
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+        $language = $this->getLanguage();
+        $webspace = $this->getWebspace();
 
         $view = $this->responseDelete(
             $uuid,
