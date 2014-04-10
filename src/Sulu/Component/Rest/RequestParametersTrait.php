@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * handles request parameters
  */
-trait RequestParameters
+trait RequestParametersTrait
 {
     /**
      * returns request parameter with given name
