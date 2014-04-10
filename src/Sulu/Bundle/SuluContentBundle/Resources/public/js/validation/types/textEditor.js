@@ -14,12 +14,12 @@ define([
 
     'use strict';
 
-    var changeEvent = function(data, $el) {
+    var changedHandler = function(data, $el) {
             App.emit('sulu.preview.update', $el, data, true);
             App.emit('sulu.content.changed');
         },
 
-        focusoutEvent = function(data, $el) {
+        focusoutHandler = function(data, $el) {
             App.emit('sulu.preview.update', $el, data);
             App.emit('sulu.content.changed');
         };
@@ -32,12 +32,12 @@ define([
             subType = {
                 initializeSub: function() {
                     // remove event with same name and register new one
-                    App.off('husky.ckeditor.' + this.options.instanceName + '.changed', changeEvent);
-                    App.on('husky.ckeditor.' + this.options.instanceName + '.changed', changeEvent);
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.changed', changedHandler);
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.changed', changedHandler);
 
                     // remove event with same name and register new one
-                    App.off('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutEvent);
-                    App.on('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutEvent);
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutHandler);
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutHandler);
                 },
 
                 needsValidation: function() {
