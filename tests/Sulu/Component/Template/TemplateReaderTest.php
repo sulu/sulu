@@ -203,7 +203,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
                     )
                 ),
-
                 'blog' => array(
                     'name' => 'blog',
                     'type' => 'text_editor',
