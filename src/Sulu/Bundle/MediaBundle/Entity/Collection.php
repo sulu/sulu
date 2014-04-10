@@ -20,11 +20,6 @@ class Collection
     /**
      * @var string
      */
-    private $name;
-
-    /**
-     * @var string
-     */
     private $style;
 
     /**
@@ -89,29 +84,6 @@ class Collection
     {
         $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->medias = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Collection
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -461,5 +433,27 @@ class Collection
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * generateColor
+     * @return string
+     */
+    static public function generateColor()
+    {
+        $colorRange = 192 - 64;
+        $colorFactor = $colorRange / 256;
+        $colorOffset = 64;
+
+        $base_hash = substr(md5(rand()), 0, 6);
+        $baseRed = hexdec(substr($base_hash,0,2));
+        $baseGreen = hexdec(substr($base_hash,2,2));
+        $baseBlue = hexdec(substr($base_hash,4,2));
+
+        $red = floor((floor($baseRed * $colorFactor) + $colorOffset) / 16) * 16;
+        $green = floor((floor($baseGreen * $colorFactor) + $colorOffset) / 16) * 16;
+        $blue = floor((floor($baseBlue * $colorFactor) + $colorOffset) / 16) * 16;
+
+        return sprintf('#%02x%02x%02x', $red, $green, $blue);
     }
 }
