@@ -262,4 +262,19 @@ interface StructureInterface extends \JsonSerializable
      * @return array
      */
     public function toArray($complete = true);
+
+    /**
+     * returns a property instance with given tag name
+     * @param string $tagName
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getPropertyByTagName($tagName);
+
+    /**
+     * returns value of property with given tag name
+     * @param string $tagName
+     * @return mixed
+     */
+    public function getPropertyValueByTagName($tagName);
 }

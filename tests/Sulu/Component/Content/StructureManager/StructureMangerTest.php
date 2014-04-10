@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Mapper;
 
 use Jackalope\Session;
 use PHPCR\Util\NodeHelper;
+use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -96,6 +97,17 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getParams()
         );
+        $this->assertEquals(2, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.node.name', 1),
+            $property->getTags()['sulu.node.name']
+        );
+        $this->assertEquals(
+            new PropertyTag('sulu.node.title', 10),
+            $property->getTags()['sulu.node.title']
+        );
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.title'));
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.name'));
 
         // check url
         $this->assertArrayHasKey('url', $properties);
@@ -111,6 +123,12 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getParams()
         );
+        $this->assertEquals(1, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.rlp.part', 1),
+            $property->getTags()['sulu.rlp.part']
+        );
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.rlp.part'));
 
         // check article
         $this->assertArrayHasKey('article', $properties);
@@ -126,6 +144,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getParams()
         );
+        $this->assertEquals(1, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.node.title', 5),
+            $property->getTags()['sulu.node.title']
+        );
 
         // check pages
         $this->assertArrayHasKey('pages', $properties);
@@ -140,6 +163,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(),
             $property->getParams()
+        );
+        $this->assertEquals(1, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.node.title', 1),
+            $property->getTags()['sulu.node.title']
         );
 
         // check images
@@ -158,6 +186,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
                 'maxLinks' => '10'
             ),
             $property->getParams()
+        );
+        $this->assertEquals(
+            array(),
+            $property->getTags()
         );
     }
 

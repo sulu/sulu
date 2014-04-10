@@ -76,9 +76,10 @@ class Property implements PropertyInterface
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $tags = array(),
-        $params = array()
-    ) {
+        $params = array(),
+        $tags = array()
+    )
+    {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
         $this->maxOccurs = $maxOccurs;
@@ -135,15 +136,6 @@ class Property implements PropertyInterface
     }
 
     /**
-     * sets field is mandatory
-     * @param boolean $mandatory
-     */
-    public function setMandatory($mandatory)
-    {
-        $this->mandatory = $mandatory;
-    }
-
-    /**
      * returns field is mandatory
      * @return boolean
      */
@@ -153,30 +145,12 @@ class Property implements PropertyInterface
     }
 
     /**
-     * sets field is multilingual
-     * @param boolean $multilingual
-     */
-    public function setMultilingual($multilingual)
-    {
-        $this->multilingual = $multilingual;
-    }
-
-    /**
      * returns field is multilingual
      * @return boolean
      */
     public function getMultilingual()
     {
         return $this->multilingual;
-    }
-
-    /**
-     * sets tags defined in xml
-     * @param \Sulu\Component\Content\PropertyTag[] $tags
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
     }
 
     /**

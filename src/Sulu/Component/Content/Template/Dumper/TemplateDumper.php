@@ -16,7 +16,9 @@ class TemplateDumper
     protected function render($template, $parameters)
     {
         //TODO set path in a more elegant way
-        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/Skeleton/'));
+        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/Skeleton/'), array('debug' => true));
+
+        $twig->addExtension(new \Twig_Extension_Debug());
 
         return $twig->render($template, $parameters);
     }

@@ -169,4 +169,31 @@ class TranslatedProperty implements PropertyInterface
     {
         return $this->property->getIsMultiple();
     }
+
+    /**
+     * returns field is mandatory
+     * @return boolean
+     */
+    public function getMandatory()
+    {
+        return $this->property->getMandatory();
+    }
+
+    /**
+     * returns field is multilingual
+     * @return boolean
+     */
+    public function getMultilingual()
+    {
+        return $this->property->getMultilingual();
+    }
+
+    /**
+     * returns tags defined in xml
+     * @return \Sulu\Component\Content\PropertyTag[]
+     */
+    public function getTags()
+    {
+        return $this->property->getTags();
+    }
 }

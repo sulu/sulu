@@ -80,4 +80,22 @@ interface PropertyInterface
      * @return bool
      */
     public function getIsMultiple();
+
+    /**
+     * returns field is mandatory
+     * @return boolean
+     */
+    public function getMandatory();
+
+    /**
+     * returns field is multilingual
+     * @return boolean
+     */
+    public function getMultilingual();
+
+    /**
+     * returns tags defined in xml
+     * @return \Sulu\Component\Content\PropertyTag[]
+     */
+    public function getTags();
 }

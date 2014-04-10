@@ -139,6 +139,11 @@ abstract class Structure implements StructureInterface
     private $type;
 
     /**
+     * @var array
+     */
+    private $tags = array();
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -165,6 +170,19 @@ abstract class Structure implements StructureInterface
      */
     protected function add(PropertyInterface $property)
     {
+        foreach ($property->getTags() as $tag) {
+            if (!array_key_exists($tag->getName(), $this->tags)) {
+                $this->tags[$tag->getName()] = array(
+                    'tag' => $tag,
+                    'property' => $property
+                );
+            } elseif ($this->tags[$tag->getName()]['tag']->getPriority() < $tag->getPriority()) {
+                $this->tags[$tag->getName()] = array(
+                    'tag' => $tag,
+                    'property' => $property
+                );
+            }
+        }
         $this->properties[$property->getName()] = $property;
     }
 
@@ -345,6 +363,21 @@ abstract class Structure implements StructureInterface
     }
 
     /**
+     * returns a property instance with given tag name
+     * @param string $tagName
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getPropertyByTagName($tagName)
+    {
+        if (array_key_exists($tagName, $this->tags)) {
+            return $this->tags[$tagName]['property'];
+        } else {
+            throw new NoSuchPropertyException();
+        }
+    }
+
+    /**
      * return value of property with given name
      * @param $name string name of property
      * @return mixed
@@ -352,6 +385,16 @@ abstract class Structure implements StructureInterface
     public function getPropertyValue($name)
     {
         return $this->getProperty($name)->getValue();
+    }
+
+    /**
+     * returns value of property with given tag name
+     * @param string $tagName
+     * @return mixed
+     */
+    public function getPropertyValueByTagName($tagName)
+    {
+        return $this->getPropertyByTagName($tagName)->getValue();
     }
 
     /**
