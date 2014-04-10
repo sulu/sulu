@@ -19,12 +19,12 @@ use Symfony\Component\HttpFoundation\Request;
 trait RequestParameters
 {
     /**
-     * returns
+     * returns request parameter with given name
      * @param Request $request
      * @param string $name
-     * @param bool $force
-     * @param mixed $default
-     * @throws MissingParameterException
+     * @param bool $force TRUE if value is mandatory
+     * @param mixed $default value if parameter not exists
+     * @throws MissingParameterException parameter is mandatory but does not exists
      * @return string
      */
     protected function getRequestParameter(Request $request, $name, $force = false, $default = null)
@@ -37,11 +37,12 @@ trait RequestParameters
     }
 
     /**
+     * returns request parameter as boolean 'true' => true , 'false' => false
      * @param Request $request
      * @param string $name
-     * @param bool $force
-     * @param mixed $default
-     * @throws MissingParameterException
+     * @param bool $force TRUE if value is mandatory
+     * @param mixed $default value if parameter not exists
+     * @throws MissingParameterException parameter is mandatory but does not exists
      * @return boolean
      */
     protected function getBooleanRequestParameter($request, $name, $force = false, $default = null)
