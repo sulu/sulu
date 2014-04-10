@@ -54,7 +54,7 @@ trait RequestParametersTrait
             $value = true;
         } elseif ($value === 'false') {
             $value = false;
-        } elseif ($value !== true && $value !== false) {
+        } elseif ($force && $value !== true && $value !== false) {
             throw new ParameterDataTypeException(get_class($this), $name);
         }
 

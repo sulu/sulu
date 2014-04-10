@@ -134,4 +134,18 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
 
         $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
     }
+
+    public function testGetBooleanRequestWrongParameter()
+    {
+        $this->setExpectedException('Sulu\Component\Rest\Exception\ParameterDataTypeException');
+
+        $getRequestParameterReflection = $this->getGetBooleanRequestParameterReflection();
+        $request = $this->getRequestMock(
+            array(
+                array('test', null, false, 'asdf')
+            )
+        );
+
+        $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
+    }
 }
