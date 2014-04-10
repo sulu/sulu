@@ -14,6 +14,10 @@ define([
 
     'use strict';
 
+    var itemHandler = function() {
+        App.emit('sulu.content.changed');
+    };
+
     return function($el, options) {
         var defaults = {
 
@@ -21,12 +25,11 @@ define([
 
             typeInterface = {
                 initializeSub: function() {
-                    App.on('husky.auto-complete-list.tags.item-added', function() {
-                        App.emit('sulu.content.changed');
-                    }.bind(this));
-                    App.on('husky.auto-complete-list.tags.item-deleted', function() {
-                        App.emit('sulu.content.changed');
-                    }.bind(this));
+                    App.off('husky.auto-complete-list.tags.item-added', itemHandler);
+                    App.on('husky.auto-complete-list.tags.item-added', itemHandler);
+
+                    App.off('husky.auto-complete-list.tags.item-deleted', itemHandler);
+                    App.on('husky.auto-complete-list.tags.item-deleted', itemHandler);
                 },
 
                 setValue: function(value) {
