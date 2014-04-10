@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CollectionBundle\Controller;
+namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -125,6 +125,14 @@ class CollectionController extends RestController implements ClassResourceInterf
                     ->findCollectionById($id);
             }
         );
+
+        return $this->handleView($view);
+    }
+
+    public function cgetAction()
+    {
+        $collections = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+        $view = $this->view($this->createHalResponse($collections), 200);
 
         return $this->handleView($view);
     }
