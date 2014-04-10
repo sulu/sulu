@@ -11,8 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Xml;
 
 use Sulu\Component\Content\Template\TemplateReader;
-use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
-use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 
 class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,16 +26,29 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 'title' => array(
                     'name' => 'title',
                     'title' => 'properties.title',
-                    'tags' => 'sulu.node.name,sulu.node.title:10',
                     'type' => 'text_line',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.name'
+                        ),
+                        array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 10
+                        )
+                    )
                 ),
                 'url' => array(
                     'name' => 'url',
                     'title' => 'properties.url',
-                    'tags' => 'sulu.rlp.part:1',
                     'type' => 'resource_locator',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp.part',
+                            'priority' => 1
+                        )
+                    )
                 ),
                 'article' => array(
                     'name' => 'article',
@@ -55,8 +66,14 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'minOccurs' => 0,
                     'maxOccurs' => 2,
                     'params' => array(
-                        'minLinks' => 1,
-                        'maxLinks' => 10
+                        array(
+                            'name' => 'minLinks',
+                            'value' => 1
+                        ),
+                        array(
+                            'name' => 'maxLinks',
+                            'value' => 10
+                        )
                     )
 
                 )
@@ -114,16 +131,29 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 'title' => array(
                     'name' => 'title',
                     'title' => 'properties.title',
-                    'tags' => 'sulu.node.name,sulu.node.title:10',
                     'type' => 'text_line',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.name'
+                        ),
+                        array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 10
+                        )
+                    )
                 ),
                 'url' => array(
                     'name' => 'url',
                     'title' => 'properties.url',
-                    'tags' => 'sulu.rlp.part:1',
                     'type' => 'resource_locator',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp.part',
+                            'priority' => 1
+                        )
+                    )
                 ),
                 'article' => array(
                     'name' => 'article',
@@ -133,11 +163,20 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 'block1' => array(
                     'name' => 'block1',
                     'title' => 'properties.block1',
-                    'tags' => 'sulu.node.block:20,sulu.test.block:1',
                     'minOccurs' => '2',
                     'maxOccurs' => '10',
                     'mandatory' => true,
                     'type' => 'block',
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.block',
+                            'priority' => 20
+                        ),
+                        array(
+                            'name' => 'sulu.test.block',
+                            'priority' => 1
+                        )
+                    ),
                     'properties' => array(
                         'title1.1' => array(
                             'name' => 'title1.1',
@@ -161,10 +200,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                         'article1.1.1' => array(
                                             'name' => 'article1.1.1',
                                             'title' => 'properties.title1',
-                                            'tags' => 'sulu.node.title:5',
                                             'type' => 'text_area',
                                             'mandatory' => true,
-                                            'minOccurs' => 2
+                                            'minOccurs' => 2,
+                                            'tags' => array(
+                                                array(
+                                                    'name' => 'sulu.node.title',
+                                                    'priority' => 5
+                                                )
+                                            ),
                                         ),
                                         'article2.1.2' => array(
                                             'name' => 'article2.1.2',

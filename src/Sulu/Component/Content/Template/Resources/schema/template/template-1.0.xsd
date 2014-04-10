@@ -39,14 +39,13 @@
 
 
     <xs:complexType name="propertyType" mixed="true">
-
-        <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
+        </xs:choice>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="title" use="optional"/>
-        <xs:attribute type="xs:string" name="tags" use="optional"/>
         <xs:attribute type="xs:string" name="type" use="required"/>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
@@ -58,13 +57,13 @@
 
     <xs:complexType name="blockType">
 
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element type="blockPropertiesType" name="properties"/>
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="blockPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="title" use="optional"/>
-        <xs:attribute type="xs:string" name="tags" use="optional"/>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
         <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
@@ -72,6 +71,14 @@
 
     </xs:complexType>
 
+    <xs:complexType name="tagType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:int" name="priority" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
     <xs:complexType name="paramsType">
         <xs:sequence>

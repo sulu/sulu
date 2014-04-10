@@ -40,12 +40,22 @@ class TemplateReader implements LoaderInterface
     /**
      * @var string
      */
+    private $tagKey = 'tags';
+
+    /**
+     * @var string
+     */
     private $pathToProperties = '/x:template/x:properties/*';
 
     /**
      * @var string
      */
     private $pathToParams = 'x:params/x:param';
+
+    /**
+     * @var string
+     */
+    private $pathToTags = 'x:tag';
 
     /**
      * @var \DOMDocument
@@ -95,8 +105,9 @@ class TemplateReader implements LoaderInterface
                 }
 
                 $name = $attributes[$this->nameKey];
-                $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath);
-                $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
+                $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath, $this->paramsKey);
+                $tags = $this->getChildrenOfNode($node, $this->pathToTags, $xpath, $this->tagKey);
+                $template[$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
 
                 if(in_array($node->tagName, $this->complexNodeTypes)) {
                     $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$node);
@@ -138,8 +149,9 @@ class TemplateReader implements LoaderInterface
             }
 
             $name = $attributes[$this->nameKey];
-            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath);
-            $properties[$name] = array_merge($attributes, $params);
+            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath, $this->paramsKey);
+            $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
+            $properties[$name] = array_merge($attributes, $tags, $params);
 
             if(in_array($child->tagName, $this->complexNodeTypes)) {
                 $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$child);
@@ -210,28 +222,18 @@ class TemplateReader implements LoaderInterface
      * @param \DOMNode $node
      * @param $path
      * @param $xpath
+     * @param $name
      * @return array
-     * @internal param $paramsTag
      */
-    private function getChildrenOfNode(\DOMNode $node, $path, $xpath)
+    private function getChildrenOfNode(\DOMNode $node, $path, $xpath, $name)
     {
-
         $keyValue = array();
-        $params = $children = $xpath->query($path, $node);
+        $items = $xpath->query($path, $node);
 
-        if ($params->length > 0) {
-
-            $keyValue[$this->paramsKey] = array();
-            $xpath = new \DOMXPath($this->xmlDocument);
-            $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
-
-            $children = $xpath->query($path, $node);
-
-            foreach ($children as $child) {
-                $keyValue[$this->paramsKey] = array_merge(
-                    $keyValue[$this->paramsKey],
-                    $this->getAttributesAsKeyValuePairs($child)
-                );
+        if ($items->length > 0) {
+            $keyValue[$name] = array();
+            foreach ($items as $child) {
+                $keyValue[$name][] = $this->getAttributesAsKeyValuePairs($child);
             }
         }
 
@@ -245,15 +247,14 @@ class TemplateReader implements LoaderInterface
      */
     private function getAttributesAsKeyValuePairs(\DOMNode $node)
     {
-
-        $keyValues = array();
-
+        $values = array();
         if ($node->hasAttributes()) {
-            $keyValues[$node->attributes->item(0)->nodeValue] = $node->attributes->item(1)->nodeValue;
+            for ($i = 0; $i < $node->attributes->length; $i++) {
+                $attr = $node->attributes->item($i);
+                $values[$attr->nodeName] = $attr->nodeValue;
+            }
         }
-
-        return $keyValues;
-
+        return $values;
     }
 
     /**
