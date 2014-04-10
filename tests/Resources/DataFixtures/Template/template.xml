@@ -10,8 +10,8 @@
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
-        <property name="title" type="text_line" mandatory="true"/>
-        <property name="url" type="resource_locator" mandatory="true"/>
+        <property name="title" title="properties.title"  tags="sulu.node.name,sulu.node.title:10" type="text_line" mandatory="true"/>
+        <property name="url" title="properties.url" tags="sulu.rlp.part:1" type="resource_locator" mandatory="true"/>
         <property name="article" type="text_area" mandatory="false"/>
         <property name="pages" type="smart_content_selection" mandatory="false"/>
 

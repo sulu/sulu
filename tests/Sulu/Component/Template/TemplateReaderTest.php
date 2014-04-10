@@ -27,11 +27,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
+                    'title' => 'properties.title',
+                    'tags' => 'sulu.node.name,sulu.node.title:10',
                     'type' => 'text_line',
                     'mandatory' => true
                 ),
                 'url' => array(
                     'name' => 'url',
+                    'title' => 'properties.url',
+                    'tags' => 'sulu.rlp.part:1',
                     'type' => 'resource_locator',
                     'mandatory' => true
                 ),
