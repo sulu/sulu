@@ -13,75 +13,102 @@ define(function() {
 
     var router,
 
-    eventNamespace = 'sulu.app.',
+        constants = {
+            contentMaxWidth: 920,
+            contentMaxMarginLeft: 250,
+            contentMaxPaddingLeft: 50,
 
-    /**
-     * raised after the initialization has finished
-     * @event sulu.app.initialized
-     */
-    INITIALIZED = function() {
-        return createEventName('initialized');
-    },
+            contentMinWidth: 510,
+            contentMinMarginLeft: 10,
+            contentMinPaddingLeft: 0
+        },
 
-    /**
-     * raised if width height, or position of content-container changes
-     * @event sulu.app.content.dimensions-changed
-     * @param {object} Object containing width, and position from the left
-     */
-     CONTENT_DIMENSIONS_CHANGED = function() {
-        return createEventName('content.dimensions-changed');
-     },
+        eventNamespace = 'sulu.app.',
 
-    /**
-     * raised if width height, or position of view port changes
-     * @event sulu.app.content.dimensions-changed
-     * @param {object} Object containing width, and position from the left
-     */
-        VIEWPORT_DIMENSIONS_CHANGED = function() {
-        return createEventName('viewport.dimensions-changed');
-     },
+        /**
+         * raised after the initialization has finished
+         * @event sulu.app.initialized
+         */
+            INITIALIZED = function() {
+            return createEventName('initialized');
+        },
 
-    /**
-     * listens on and changes the dimensions of the content
-     * @event sulu.app.content.dimensions-change
-     * @param {object} Object containing width, and position from the left
-     */
-        CONTENT_DIMENSIONS_CHANGE = function() {
-        return createEventName('content.dimensions-change');
-    },
+        /**
+         * raised if width height, or position of content-container changes
+         * @event sulu.app.content.dimensions-changed
+         * @param {object} Object containing width, and position from the left
+         */
+            CONTENT_DIMENSIONS_CHANGED = function() {
+            return createEventName('content.dimensions-changed');
+        },
 
-    /**
-     * listens on and pass an object with the dimensions to the passed callback
-     * @event sulu.app.content.get-dimensions
-     * @param {function} callback The callback to pass the dimensions to
-     */
-     GET_CONTENT_DIMENSIONS = function() {
-        return createEventName('content.get-dimensions');
-     },
+        /**
+         * raised if width height, or position of view port changes
+         * @event sulu.app.content.dimensions-changed
+         * @param {object} Object containing width, and position from the left
+         */
+            VIEWPORT_DIMENSIONS_CHANGED = function() {
+            return createEventName('viewport.dimensions-changed');
+        },
 
-    /**
-     * listens on and returns true
-     * @event sulu.app.content.has-started
-     * @param {function} callback The callback to pass true on
-     */
-    HAS_STARTED = function() {
-        return createEventName('has-started');
-    },
+        /**
+         * listens on and changes the dimensions of the content
+         * @event sulu.app.content.dimensions-change
+         * @param {object} Object containing width, and position from the left
+         */
+            CONTENT_DIMENSIONS_CHANGE = function() {
+            return createEventName('content.dimensions-change');
+        },
 
-    /**
-     * Creates the event-names
-     */
-    createEventName = function(postFix) {
-        return eventNamespace + postFix;
-    },
+        /**
+         * listens on and pass an object with the dimensions to the passed callback
+         * @event sulu.app.content.get-dimensions
+         * @param {function} callback The callback to pass the dimensions to
+         */
+            GET_CONTENT_DIMENSIONS = function() {
+            return createEventName('content.get-dimensions');
+        },
 
-    /**
-     * Changes the left margin of the content-container
-     * @param marginLeft {number} The margin to set
-     */
-    changeContentMarginLeft = function(marginLeft) {
-        this.sandbox.dom.css(this.$el, {'margin-left': marginLeft});
-    };
+        /**
+         * listens on and returns true
+         * @event sulu.app.content.has-started
+         * @param {function} callback The callback to pass true on
+         */
+            HAS_STARTED = function() {
+            return createEventName('has-started');
+        },
+
+        /**
+         * listens on and resets the ui according to given state
+         * @event sulu.app.reset.ui
+         * @param {Object} contains states of navigation and content (small | large)
+         */
+            UI_RESET = function() {
+            return createEventName('ui.reset');
+        },
+
+        /**
+         * raised after reset of ui
+         * @event sulu.app.reseted.ui
+         */
+            UI_RESETED = function() {
+            return createEventName('ui.reseted');
+        },
+
+        /**
+         * Creates the event-names
+         */
+            createEventName = function(postFix) {
+            return eventNamespace + postFix;
+        },
+
+        /**
+         * Changes the left margin of the content-container
+         * @param marginLeft {number} The margin to set
+         */
+            changeContentMarginLeft = function(marginLeft) {
+            this.sandbox.dom.css(this.$el, {'margin-left': marginLeft});
+        };
 
     return {
         name: 'Sulu App',
@@ -140,7 +167,7 @@ define(function() {
          * Bind DOM-related Events
          */
         bindDomEvents: function() {
-            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function(){
+            this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 this.emitContentDimensionsChangedEvent();
                 this.emitViewPortDimensionsChanged();
             }.bind(this));
@@ -149,11 +176,11 @@ define(function() {
         /**
          * Emits an event with the new dimensions of the viewport
          */
-        emitViewPortDimensionsChanged: function(){
+        emitViewPortDimensionsChanged: function() {
             var width = this.sandbox.dom.width(window),
                 height = this.sandbox.dom.height(window);
 
-            this.sandbox.emit(VIEWPORT_DIMENSIONS_CHANGED.call(this),{width: width, height: height});
+            this.sandbox.emit(VIEWPORT_DIMENSIONS_CHANGED.call(this), {width: width, height: height});
         },
 
         /**
@@ -181,7 +208,7 @@ define(function() {
                 left: Math.round(
                     this.sandbox.dom.offset(this.$el).left + parseInt(this.sandbox.dom.css(this.$el, 'padding-left').replace(/[^-\d\.]/g, ''))
                 )
-            }
+            };
         },
 
         /**
@@ -190,7 +217,7 @@ define(function() {
         startLoader: function() {
             var $element = this.sandbox.dom.createElement('<div class="sulu-app-loader">');
             this.sandbox.dom.css($element, {
-                'margin-top': (this.sandbox.dom.height(this.sandbox.dom.$window)/2 - 75) + 'px'
+                'margin-top': (this.sandbox.dom.height(this.sandbox.dom.$window) / 2 - 75) + 'px'
             });
             this.sandbox.dom.append(this.$el, $element);
 
@@ -228,7 +255,7 @@ define(function() {
                 this.sandbox.mvc.Store.reset();
 
                 // reset content max-width, which might was set by datagrid-list
-                this.sandbox.dom.css('#content','max-width','');
+                this.sandbox.dom.css('#content', 'max-width', '');
 
                 // navigate
                 router.navigate(route, {trigger: trigger});
@@ -308,6 +335,100 @@ define(function() {
             this.sandbox.on('husky.navigation.user-locale.changed', function(locale) {
                 this.changeUserLocale(locale);
             }.bind(this));
+
+            this.sandbox.on(UI_RESET.call(this), function(states) {
+                this.resetUI(states);
+            }.bind(this));
+        },
+
+        /**
+         * Resets the ui according to the given states
+         * @param states
+         */
+        resetUI: function(states) {
+
+            if (!states.content || !states.navigation) {
+                this.sandbox.logger.error('restUI: state for navigation and content are required');
+                return;
+            } else if (states.content === 'small' && states.navigation === 'large') {
+                this.sandbox.logger.error('restUI: invalid state combination');
+                return;
+            }
+
+            // show navigation to be independent of currently active states
+            this.sandbox.emit('husky.navigation.show');
+
+            if (states.navigation === 'small') {
+
+                this.sandbox.emit('husky.navigation.collapse', true);
+
+            } else if (states.navigation === 'large') {
+
+                // worst case navigation is in overlay mode
+                // have to collapse before resize
+                this.sandbox.emit('husky.navigation.collapse', false);
+                this.sandbox.emit('husky.navigation.uncollapse', false);
+
+            } else if (states.navigation === 'auto') {
+
+                // let the navigation decide
+                this.sandbox.emit('husky.navigation.collapse', false);
+                this.sandbox.emit('husky.navigation.size.update');
+
+            } else {
+                this.sandbox.logger.error("resetUI: invalid state for navigation (small or large or auto)!");
+                return;
+            }
+
+            if (states.content === 'large') {
+                this.resetToLargeContent();
+            } else if (states.content === 'small') {
+                this.resetToSmallContent();
+            } else if (states.content === 'auto') {
+
+                this.restoreContentWidthProperties();
+
+            } else {
+                this.sandbox.logger.error("resetUI: invalid state for navigation (small or large)!");
+                return;
+            }
+
+            this.sandbox.emit(UI_RESETED.call(this));
+        },
+
+        /**
+         * Resets the content to the large state
+         */
+        resetToLargeContent: function() {
+            this.sandbox.emit('sulu.app.content.dimensions-change', {
+                width: constants.contentMaxWidth,
+                left: constants.contentMaxMarginLeft,
+                paddingLeft: constants.contentMaxPaddingLeft});
+
+            this.restoreContentWidthProperties();
+        },
+
+        /**
+         * Removes possible width attribute and width css property and resets max-width
+         */
+        restoreContentWidthProperties: function() {
+            this.sandbox.dom.width(this.$el, '');
+            this.sandbox.dom.css(this.$el, 'width', '');
+            this.sandbox.dom.css(this.$el, 'max-width', '920px');
+        },
+
+        /**
+         * Resets the content to the small state
+         */
+        resetToSmallContent: function() {
+            this.sandbox.emit('sulu.app.content.dimensions-change', {
+                width: constants.contentMinWidth,
+                left: constants.contentMinMarginLeft,
+                paddingLeft: constants.contentMinPaddingLeft});
+
+            this.sandbox.dom.width(this.$el, '');
+            this.sandbox.dom.css(this.$el, 'width', '');
+            this.sandbox.dom.css(this.$el, 'max-width', '510px');
         },
 
         /**
