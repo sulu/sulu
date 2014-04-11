@@ -74,19 +74,25 @@ class ListQueryBuilder
     private $countQuery;
 
     /**
+     * The names of columns of the root entity
+     * @var array
+     */
+    private $fieldNames;
+
+    /**
      * contains all fieldnames that are searched
      * @var array
      */
     private $searchFields;
 
     /**
-     * contains all fieldnames that can be queried by LIKE
+     * contains searched fieldnames that can be queried by LIKE
      * @var array
      */
     private $searchTextFields;
 
     /**
-     * contains all fieldnames that can be queried by LIKE
+     * contains searched fieldnames that are numeric
      * @var array
      */
     private $searchNumberFields;

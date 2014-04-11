@@ -200,7 +200,8 @@ class ListRestHelper
      * @param $where
      * @return int
      */
-    public function getTotalNumberOfElements($entityName, $where) {
+    public function getTotalNumberOfElements($entityName, $where)
+    {
         $this->totalNumberOfElements = $this->getRepository($entityName)->getCount($where);
         return $this->totalNumberOfElements;
     }
