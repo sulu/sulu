@@ -33,6 +33,12 @@ class ImportCommand extends ContainerAwareCommand
                 'l',
                 InputOption::VALUE_REQUIRED,
                 'limit import by a number of rows'
+            )
+            ->addOption(
+                'mappings',
+                'm',
+                InputOption::VALUE_REQUIRED,
+                'json file containing mappings'
             );
     }
 
@@ -42,6 +48,7 @@ class ImportCommand extends ContainerAwareCommand
         $contactFile = $input->getArgument('contactFile');
 
         $limit = $input->getOption('limit');
+        $mappings = $input->getOption('mappings');
 
 
         /** @var Import $import */
@@ -55,8 +62,29 @@ class ImportCommand extends ContainerAwareCommand
             $import->setContactFile($contactFile);
         }
 
+        // set limit number of columns to import
         if ($limit) {
             $import->setLimit($limit);
+        }
+
+        // import mappings
+        if ($mappings && ($mappingsContent = file_get_contents($mappings))) {
+            $mappings = json_decode($mappingsContent, true);
+            if (array_key_exists('columns', $mappings)) {
+                $import->setColumnMappings($mappings['columns']);
+            }
+            if (array_key_exists('ids', $mappings)) {
+                $import->setIdMappings($mappings['ids']);
+            }
+            if (array_key_exists('options', $mappings)) {
+                $import->setOptions($mappings['options']);
+            }
+            if (array_key_exists('countries', $mappings)) {
+                $import->setCountryMappings($mappings['countries']);
+            }
+            if (array_key_exists('accountTypes', $mappings)) {
+                $import->setAccountTypeMappings($mappings['accountTypes']);
+            }
         }
 
         $import->execute();

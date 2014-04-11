@@ -1,0 +1,46 @@
+{
+    "options" : {
+        "streetNumberSplit" : "true"
+    },
+    "accountTypes" : {
+        "0" : "Kontakt",
+        "1" : "Interessent",
+        "2" : "Kunde",
+        "3" : "Lieferant"
+    },
+    "countries":
+    {
+        "DE" : "D",
+        "AT" : "A",
+        "CH" : "CH"
+    },
+    "ids": {
+       "account_id" : ""
+    },
+    "columns":
+    {
+        "email1" : "E_Mail",
+        "account_name" : "Firma",
+        "account_type" : "Klasse",
+        "account_division" : "Name2",
+        "account_disabled" : "gesperrt",
+        "account_uid" : "UID_Nr",
+        "url1" : "Internet",
+        "country" : "LKZ",
+        "plz" : "PLZ",
+        "street" : "Strasse",
+        "city" : "Ort",
+        "phone1" : "Telefon",
+        "phone2" : "Tel2_Ort",
+        "phone_isdn" : "ISDN",
+        "phone_mobile" : "Mobil",
+        "phone_emergency" : "Notruf",
+        "fax" : "Fax","uid" : "UID_Nr",
+        "note1" : "Bemerkung",
+        "contact_parent" : "gehört_zu",
+        "contact_title" : "Titel",
+        "contact_position" : "Hauptfunktion",
+        "contact_firstname" : "Vorname",
+        "contact_lastname" : "Vor_Nachname"
+    }
+}

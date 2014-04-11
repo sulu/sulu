@@ -68,38 +68,38 @@ class Import
         'streetNumberSplit' => true
     );
 
-    // TODO: extend mappings for accounts and contacts
+    // TODO: split mappings for accounts and contacts
     /**
      * @var array
      */
-    protected $mappings = array(
-        'email1' => 'E_Mail',
-        'account_name' => 'Firma',
-        'account_type' => 'Klasse',
-        'account_division' => 'Name2',
-        'account_disabled' => 'gesperrt',
-        'account_uid' => 'UID_Nr',
-        'url1' => 'Internet',
-        'country' => 'LKZ',
-        'plz' => 'PLZ',
-        'street' => 'Strasse',
-        'city' => 'Ort',
-        'phone1' => 'Telefon',
-        'phone2' => 'Tel2_Ort',
-        'phone_isdn' => 'ISDN',
-        'phone_mobile' => 'Mobil',
-        'phone_emergency' => 'Notruf',
-        'fax' => 'Fax',
-        'uid' => 'UID_Nr',
-        'note1' => 'Bemerkung',
-        'contact_parent' => 'gehört_zu',
-        'contact_title' => 'Titel',
-        'contact_position' => 'Hauptfunktion',
-        'contact_firstname' => 'Vorname',
-        'contact_lastname' => 'Vor_Nachname',
+    protected $columnMappings = array(
+//        'email1' => 'E_Mail',
+//        'account_name' => 'Firma',
+//        'account_type' => 'Klasse',
+//        'account_division' => 'Name2',
+//        'account_disabled' => 'gesperrt',
+//        'account_uid' => 'UID_Nr',
+//        'url1' => 'Internet',
+//        'country' => 'LKZ',
+//        'plz' => 'PLZ',
+//        'street' => 'Strasse',
+//        'city' => 'Ort',
+//        'phone1' => 'Telefon',
+//        'phone2' => 'Tel2_Ort',
+//        'phone_isdn' => 'ISDN',
+//        'phone_mobile' => 'Mobil',
+//        'phone_emergency' => 'Notruf',
+//        'fax' => 'Fax',
+//        'uid' => 'UID_Nr',
+//        'note1' => 'Bemerkung',
+//        'contact_parent' => 'gehört_zu',
+//        'contact_title' => 'Titel',
+//        'contact_position' => 'Hauptfunktion',
+//        'contact_firstname' => 'Vorname',
+//        'contact_lastname' => 'Vor_Nachname',
     );
 
-    protected $compareFields = array(
+    protected $idMappings = array(
         'account_id' => 'MatchCode'
     );
 
@@ -256,7 +256,7 @@ class Import
         // check if account already exists
         $account = new Account();
         $this->accounts[] = $account;
-        $this->associativeAccounts[$data[$this->compareFields['account_id']]] = $account;
+        $this->associativeAccounts[$data[$this->idMappings['account_id']]] = $account;
         $account->setChanged(new \DateTime());
         $account->setCreated(new \DateTime());
 
@@ -567,7 +567,7 @@ class Import
         $associativeData = array();
         foreach ($data as $index => $value) {
             // search index in mapping config
-            if ($mappingIndex = array_search($this->headerData[$index], $this->mappings)) {
+            if ($mappingIndex = array_search($this->headerData[$index], $this->columnMappings)) {
                 $associativeData[$mappingIndex] = $value;
             } else {
                 $associativeData[($this->headerData[$index])] = $value;
@@ -668,21 +668,19 @@ class Import
     }
 
     /**
-     * TODO
-     * @param array $mappings
+     * @param array $columnMappings
      */
-    public function setMappings($mappings)
+    public function setColumnMappings($columnMappings)
     {
-        $this->mappings = $mappings;
+        $this->columnMappings = $columnMappings;
     }
 
     /**
-     * TODO
      * @return array
      */
-    public function getMappings()
+    public function getColumnMappings()
     {
-        return $this->mappings;
+        return $this->columnMappings;
     }
 
     /**
@@ -697,6 +695,64 @@ class Import
         }
         return null;
     }
+
+    /**
+     * @param array $countryMappings
+     */
+    public function setCountryMappings($countryMappings)
+    {
+        $this->countryMappings = $countryMappings;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCountryMappings()
+    {
+        return $this->countryMappings;
+    }
+
+    /**
+     * @param array $idMappings
+     */
+    public function setIdMappings($idMappings)
+    {
+        $this->idMappings = $idMappings;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIdMappings()
+    {
+        return $this->idMappings;
+    }
+
+    /**
+     * @param array $accountTypeMappings
+     */
+    public function setAccountTypeMappings($accountTypeMappings)
+    {
+        $this->accountTypeMappings = $accountTypeMappings;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAccountTypeMappings()
+    {
+        return $this->accountTypeMappings;
+    }
+
+    /**
+     * @param array $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+
+
 
     /**
      * TODO outsource this into a service! also used in template controller

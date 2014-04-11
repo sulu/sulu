@@ -355,11 +355,6 @@ class ContactController extends RestController implements ClassResourceInterface
 
                 $em->flush();
 
-                // FIXME: this is just a hack to avoid relations that start with index != 0
-                // FIXME: which does not happen if id for an entity is set (could be a doctrine bug)
-                // FIXME: otherwise deserialization process will parse relations as object instead of an array
-                $em->refresh($contact);
-
                 $view = $this->view($contact, 200);
             }
         } catch (EntityNotFoundException $exc) {
