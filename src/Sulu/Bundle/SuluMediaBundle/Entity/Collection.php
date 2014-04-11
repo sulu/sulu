@@ -17,10 +17,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Collection
 {
+    const TYPE_DEFAULT = 1;
+
     /**
      * @var string
      */
     private $style;
+
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionType
+     */
+    private $type;
 
     /**
      * @var integer
@@ -63,17 +70,12 @@ class Collection
     private $medias;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionType
-     */
-    private $collectionType;
-
-    /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $creator;
 
@@ -107,6 +109,29 @@ class Collection
     public function getStyle()
     {
         return $this->style;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $type
+     * @return Collection
+     */
+    public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -301,35 +326,12 @@ class Collection
     }
 
     /**
-     * Set collectionType
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $collectionType
-     * @return Collection
-     */
-    public function setCollectionType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $collectionType)
-    {
-        $this->collectionType = $collectionType;
-    
-        return $this;
-    }
-
-    /**
-     * Get collectionType
-     *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType 
-     */
-    public function getCollectionType()
-    {
-        return $this->collectionType;
-    }
-
-    /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param \Sulu\Component\Security\UserInterface $changer
      * @return Collection
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
     
@@ -339,7 +341,7 @@ class Collection
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
@@ -349,10 +351,10 @@ class Collection
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param \Sulu\Component\Security\UserInterface $creator
      * @return Collection
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
     
@@ -362,7 +364,7 @@ class Collection
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Bundle\SecurityBundle\Entity\UserInterface
      */
     public function getCreator()
     {
