@@ -409,6 +409,7 @@ define(['app-config'], function(AppConfig) {
                         this.options.data = this.sandbox.util.extend({}, tmp, this.options.data);
                     }
 
+                    this.writeStartMessage();
                     this.sandbox.emit('sulu.content.preview.change-url', {template: item.template});
 
                     //only update the tabs-content if the content tab is selected
@@ -551,7 +552,7 @@ define(['app-config'], function(AppConfig) {
                     var property = this.getSequence($el);
                     if (this.ws !== null) {
                         this.updatePreview(property, value);
-                    } else if(!changeOnKey) {
+                    } else if (!changeOnKey) {
                         this.updatePreview(property, value);
                     }
                 }
@@ -605,18 +606,8 @@ define(['app-config'], function(AppConfig) {
 
                 this.sandbox.dom.on(this.formId, 'keyup', this.updateEvent.bind(this), '.preview-update');
 
-                // send start command
-                var message = {
-                    command: 'start',
-                    content: this.options.data.id,
-                    type: 'form',
-                    user: AppConfig.getUser().id,
-                    webspaceKey: this.options.webspace,
-                    languageCode: this.options.language,
-                    templateKey: this.template,
-                    params: {}
-                };
-                this.ws.send(JSON.stringify(message));
+                // write start message
+                this.writeStartMessage();
             }.bind(this);
 
             this.ws.onclose = function() {
@@ -645,6 +636,23 @@ define(['app-config'], function(AppConfig) {
                 this.ws = null;
                 this.initAjax();
             }.bind(this);
+        },
+
+        writeStartMessage: function() {
+            if (this.ws !== null) {
+                // send start command
+                var message = {
+                    command: 'start',
+                    content: this.options.data.id,
+                    type: 'form',
+                    user: AppConfig.getUser().id,
+                    webspaceKey: this.options.webspace,
+                    languageCode: this.options.language,
+                    templateKey: this.template,
+                    params: {}
+                };
+                this.ws.send(JSON.stringify(message));
+            }
         },
 
         updatePreview: function(property, value) {
@@ -690,17 +698,19 @@ define(['app-config'], function(AppConfig) {
         },
 
         updateWs: function(changes) {
-            var message = {
-                command: 'update',
-                content: this.options.data.id,
-                type: 'form',
-                user: AppConfig.getUser().id,
-                webspaceKey: this.options.webspace,
-                languageCode: this.options.language,
-                templateKey: this.template,
-                params: {changes: changes}
-            };
-            this.ws.send(JSON.stringify(message));
+            if (this.ws !== null && this.ws.readyState === this.ws.OPEN) {
+                var message = {
+                    command: 'update',
+                    content: this.options.data.id,
+                    type: 'form',
+                    user: AppConfig.getUser().id,
+                    webspaceKey: this.options.webspace,
+                    languageCode: this.options.language,
+                    templateKey: this.template,
+                    params: {changes: changes}
+                };
+                this.ws.send(JSON.stringify(message));
+            }
         }
 
     };
