@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Rest;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
@@ -516,6 +517,17 @@ abstract class RestController extends FOSRestController
                     break;
                 }
                 $success = $addCallback($entity);
+            }
+        }
+
+        // FIXME: this is just a hack to avoid relations that start with index != 0
+        // FIXME: otherwise deserialization process will parse relations as object instead of an array
+        // reindex entities
+        if (sizeof($entities) > 0 && method_exists($entities, 'getValues')) {
+            $newEntities = $entities->getValues();
+            $entities->clear();
+            foreach ($newEntities as $value) {
+                $entities->add($value);
             }
         }
 

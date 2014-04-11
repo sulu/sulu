@@ -33,7 +33,7 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
             'pageSize' => 10,
             'page' => 3
         ));
-        $helper = new ListRestHelper($request, $this->em, 'pdo_mysql');
+        $helper = new ListRestHelper($request, $this->em);
 
         $this->assertEquals(array('field1', 'field2', 'field3'), $helper->getFields());
         $this->assertEquals(array('id' => 'desc'), $helper->getSorting());

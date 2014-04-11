@@ -22,21 +22,14 @@ class ListRepository extends EntityRepository
     private $helper;
 
     /**
-     * @var string
-     */
-    private $dbDriver;
-
-    /**
      * @param ObjectManager $em
      * @param ClassMetadata $class
      * @param ListRestHelper $helper
-     * @param string $dbDriver
      */
-    public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper, $dbDriver)
+    public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper)
     {
         parent::__construct($em, $class);
         $this->helper = $helper;
-        $this->dbDriver = $dbDriver;
     }
 
     /**
@@ -57,6 +50,13 @@ class ListRepository extends EntityRepository
             $searchFields = $this->getEntityManager()->getClassMetadata($this->getEntityName())->getFieldNames();
         }
 
+        $textFields = $this->getFieldsWitTypes(array('text', 'string', 'guid'), $searchFields);
+        if (is_numeric($searchPattern)) {
+            $numberFields = $this->getFieldsWitTypes(array('integer', 'float', 'decimal'), $searchFields);
+        } else {
+            $numberFields = array();
+        }
+
         $queryBuilder = new ListQueryBuilder(
             $this->getClassMetadata()->getAssociationNames(),
             $this->getClassMetadata()->getFieldNames(),
@@ -64,8 +64,8 @@ class ListRepository extends EntityRepository
             $this->helper->getFields(),
             $this->helper->getSorting(),
             $where,
-            $searchFields,
-            $this->dbDriver
+            $textFields,
+            $numberFields
         );
 
         if ($justCount) {
@@ -82,7 +82,14 @@ class ListRepository extends EntityRepository
                 ->setMaxResults($this->helper->getLimit());
         }
         if ($searchPattern != null && $searchPattern != '') {
-            $query->setParameter('search', '%' . $searchPattern . '%');
+            if (sizeof($searchFields) > 0) {
+                if (sizeof($textFields) > 0) {
+                    $query->setParameter('search', '%' . $searchPattern . '%');
+                }
+                if (sizeof($numberFields) > 0) {
+                    $query->setParameter('strictSearch', $searchPattern);
+                }
+            }
         }
 
         // if just used for counting
@@ -102,5 +109,27 @@ class ListRepository extends EntityRepository
     public function getCount($where = array(), $prefix = 'u')
     {
         return $this->find($where, $prefix, true);
+    }
+
+    /**
+     * returns all fields with a specified type
+     * @param array $types
+     * @param null $intersectArray only return fields that are defined in this array
+     * @return array
+     */
+    public function getFieldsWitTypes(array $types, $intersectArray = null)
+    {
+        $result = array();
+        foreach ($this->getClassMetadata()->getFieldNames() as $field) {
+            $type = $this->getClassMetadata()->getTypeOfField($field);
+            if (in_array($type, $types)) {
+                $result[] = $field;
+            }
+        }
+        // calculate intersection
+        if (!is_null($intersectArray)) {
+            $result = array_intersect($result, $intersectArray);
+        }
+        return $result;
     }
 }
