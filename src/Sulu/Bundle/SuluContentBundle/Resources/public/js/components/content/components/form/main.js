@@ -611,8 +611,9 @@ define(['app-config'], function(AppConfig) {
                     content: this.options.data.id,
                     type: 'form',
                     user: AppConfig.getUser().id,
-                    webspace: this.options.webspace,
-                    language: this.options.language,
+                    webspaceKey: this.options.webspace,
+                    languageCode: this.options.language,
+                    templateKey: this.template,
                     params: {}
                 };
                 this.ws.send(JSON.stringify(message));
@@ -696,7 +697,8 @@ define(['app-config'], function(AppConfig) {
                 user: AppConfig.getUser().id,
                 webspaceKey: this.options.webspace,
                 languageCode: this.options.language,
-                params: {changes: changes, template: this.template}
+                templateKey: this.template,
+                params: {changes: changes}
             };
             this.ws.send(JSON.stringify(message));
         }

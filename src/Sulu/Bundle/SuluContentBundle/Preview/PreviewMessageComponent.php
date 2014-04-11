@@ -79,11 +79,14 @@ class PreviewMessageComponent implements MessageComponentInterface
     {
         $content = $msg['content'];
         $type = strtolower($msg['type']);
+        $templateKey = $msg['templateKey'];
+        $languageCode = $msg['languageCode'];
+        $webspaceKey = $msg['webspaceKey'];
 
         // if preview is started
-        if (!$this->preview->started($user, $content)) {
+        if (!$this->preview->started($user, $content, $templateKey, $languageCode)) {
             // TODO workspace, language
-            $this->preview->start($user, $content, '', '');
+            $this->preview->start($user, $content, $webspaceKey, $templateKey, $languageCode);
         }
 
         // generate unique cache id
@@ -137,18 +140,22 @@ class PreviewMessageComponent implements MessageComponentInterface
 
         // if params correct
         // FIXME implement error handling
-        if ($type == 'form' && isset($params['changes']) && isset($params['template'])) {
+        if ($type == 'form' && isset($params['changes'])) {
+
+            $templateKey = $msg['templateKey'];
+            $languageCode = $msg['languageCode'];
+            $webspaceKey = $msg['webspaceKey'];
 
             foreach ($params['changes'] as $property => $data) {
                 // update property
                 $this->preview->update(
                     $user,
                     $content,
-                    $msg['webspaceKey'],
-                    $msg['languageCode'],
+                    $webspaceKey,
+                    $templateKey,
+                    $languageCode,
                     $property,
-                    $data,
-                    $params['template']
+                    $data
                 );
             }
 
@@ -169,7 +176,12 @@ class PreviewMessageComponent implements MessageComponentInterface
                 isset($this->content[$id]['preview'])
             ) {
                 // get changes
-                $changes = $this->preview->getChanges($user, $content);
+                $changes = $this->preview->getChanges(
+                    $user,
+                    $content,
+                    $templateKey,
+                    $languageCode
+                );
 
                 if (sizeof($changes) > 0) {
                     // get preview client
@@ -198,11 +210,13 @@ class PreviewMessageComponent implements MessageComponentInterface
     {
         $content = $msg['content'];
         $type = strtolower($msg['type']);
+        $templateKey = $msg['templateKey'];
+        $languageCode = $msg['language'];
         $otherType = ($type == 'form' ? 'preview' : 'form');
         $id = $user . '-' . $content;
 
         // stop preview
-        $this->preview->stop($user, $content);
+        $this->preview->stop($user, $content, $templateKey, $languageCode);
 
         // close connection
         $from->close();
