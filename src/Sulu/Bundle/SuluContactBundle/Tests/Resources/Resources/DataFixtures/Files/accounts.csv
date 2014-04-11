@@ -1,0 +1,2 @@
+type;id;name;division;street;number;country;zip;city;phone;phone2;uid;disabled;note;fax;isdn;email;url;parent;
+supplier;1;Test Company 1;Office;Street;1;A;6850;Dornbirn;+43 (123) 456-0;;ATU 1234 5678;0;just a simple note;+43 (123) 456-78;;test@test.com;www.test.com;;

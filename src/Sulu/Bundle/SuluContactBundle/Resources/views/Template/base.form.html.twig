@@ -7,7 +7,10 @@
 
         {% endblock %}
 
+
+
         {% block contact %}
+            <% var phonePattern = '^[0-9 \\(\\)/+-]*$' %>
             <div id="contact-edit-form">
                 <div class="pos-rel">
                     <h2 class="divider"><%=translate('contact.contacts.title')%></h2>
@@ -85,7 +88,7 @@
                                 <div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" pattern="^[0-9 /+-]*$" type="text" class="form-element" data-mapper-property="fax">
+                                    <input id="<~= uid ~>" pattern="<%= phonePattern %>" type="text" class="form-element" data-mapper-property="fax">
                                 </div>
                             </div>
                         </div>
@@ -106,7 +109,7 @@
                                 <div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" pattern="^[0-9 /+-]*$" type="text" class="form-element phone-value" data-mapper-property="phone">
+                                    <input id="<~= uid ~>" pattern="<%= phonePattern %>" type="text" class="form-element phone-value" data-mapper-property="phone">
                                 </div>
                             </div>
                         </div>

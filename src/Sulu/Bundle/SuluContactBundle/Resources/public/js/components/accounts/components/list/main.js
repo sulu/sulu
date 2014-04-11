@@ -85,7 +85,7 @@ define([
                         break;
                     }
                 }
-                dataUrlAddition += '&searchFields=type&search=' + accountType.id;
+                dataUrlAddition += '&type=' + accountType.id;
             }
 
             // -- initialize filter tabs --
