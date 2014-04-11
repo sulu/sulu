@@ -410,8 +410,9 @@ define(['app-config'], function(AppConfig) {
                     }
 
                     this.writeStartMessage();
-                    this.sandbox.emit('sulu.content.preview.change-url', {template: item.template});
-
+                    if (!!item) {
+                        this.sandbox.emit('sulu.content.preview.change-url', {template: item.template});
+                    }
                     //only update the tabs-content if the content tab is selected
                     if (this.options.tab.content === true) {
                         url = 'text!/admin/content/template/form';
