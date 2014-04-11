@@ -12,7 +12,6 @@
         <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" scope="request">
             <argument type="service" id="request"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="string">%database_driver%</argument>
         </service>
 
     </services>

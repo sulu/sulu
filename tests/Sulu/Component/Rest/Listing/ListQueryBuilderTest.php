@@ -119,7 +119,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFindWithWhereAndSearchPostgresql()
+    public function testFindWithWhereAndNumericSearch()
     {
         $builder = new ListQueryBuilder(
             array(),
@@ -128,14 +128,14 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             array(),
             array(),
             array('field1' => 1, 'field2' => 2),
-            array('field1','field2'),
-            'pdo_pgsql'
+            array('field1'),
+            array('field2','field3')
         );
 
         $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals(
-            'SELECT u FROM SuluCoreBundle:Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (LOWER(CAST(u.field1 AS TEXT)) LIKE LOWER(:search) OR LOWER(CAST(u.field2 AS TEXT)) LIKE LOWER(:search))',
+            'SELECT u FROM SuluCoreBundle:Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (u.field1 LIKE :search OR u.field2 = :strictSearch OR u.field3 = :strictSearch)',
             $dql
         );
     }

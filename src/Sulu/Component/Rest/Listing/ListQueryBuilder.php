@@ -62,18 +62,6 @@ class ListQueryBuilder
     private $associationNames;
 
     /**
-     * The names of columns of the root entity
-     * @var array
-     */
-    private $fieldNames;
-
-    /**
-     * An array containing all the fields in which the search is executed
-     * @var array
-     */
-    private $searchFields;
-
-    /**
      * cache variable for replacing select string in some cases
      * @var string
      */
@@ -86,10 +74,28 @@ class ListQueryBuilder
     private $countQuery;
 
     /**
-     * current database driver
-     * @var string
+     * The names of columns of the root entity
+     * @var array
      */
-    private $dbDriver;
+    private $fieldNames;
+
+    /**
+     * contains all fieldnames that are searched
+     * @var array
+     */
+    private $searchFields;
+
+    /**
+     * contains searched fieldnames that can be queried by LIKE
+     * @var array
+     */
+    private $searchTextFields;
+
+    /**
+     * contains searched fieldnames that are numeric
+     * @var array
+     */
+    private $searchNumberFields;
 
     /**
      * @param $associationNames
@@ -98,8 +104,8 @@ class ListQueryBuilder
      * @param $fields
      * @param $sorting
      * @param $where
-     * @param array $searchFields
-     * @param string $dbDriver
+     * @param array $searchTextFields
+     * @param array $searchNumberFields
      */
     function __construct(
         $associationNames,
@@ -108,8 +114,8 @@ class ListQueryBuilder
         $fields,
         $sorting,
         $where,
-        $searchFields = array(),
-        $dbDriver = null
+        $searchTextFields = array(),
+        $searchNumberFields = array()
     )
     {
         $this->associationNames = $associationNames;
@@ -118,8 +124,9 @@ class ListQueryBuilder
         $this->fields = (is_array($fields)) ? $fields : array();
         $this->sorting = $sorting;
         $this->where = $where;
-        $this->searchFields = $searchFields;
-        $this->dbDriver = $dbDriver;
+        $this->searchFields = array_merge($searchTextFields, $searchNumberFields);
+        $this->searchTextFields = $searchTextFields;
+        $this->searchNumberFields = $searchNumberFields;
     }
 
     /**
@@ -168,7 +175,7 @@ class ListQueryBuilder
             array_keys($this->where)
         );
 
-        $fieldsWhere = array_merge($fieldsWhere, $this->searchFields);
+        $fieldsWhere = array_merge($fieldsWhere, $this->searchTextFields, $this->searchNumberFields);
 
         if ($fieldsWhere != null && sizeof($fieldsWhere) >= 0) {
             foreach ($fieldsWhere as $field) {
@@ -341,17 +348,15 @@ class ListQueryBuilder
                     $wheres[] .= $prefixActual . '.' . $col . ' = ' . $this->where[$key];
                 }
                 if (in_array($key, $this->searchFields)) {
+                    $comparator = '=';
+                    $search = ':strictSearch';
 
-                    $columnName = $prefixActual . '.' . $col;
-                    $comparator = 'LIKE';
-                    $search = ':search';
-
-                    // if database driver is postgresql then cast column to text to avoid error when using like on numeric columns
-                    if ($this->dbDriver === 'pdo_pgsql') {
-                        $columnName = 'LOWER(CAST(' . $columnName . ' AS TEXT))';
-                        $search = 'LOWER(' . $search . ')';
+                    // search by like
+                    if (in_array($key, $this->searchTextFields)) {
+                        $comparator = 'LIKE';
+                        $search = ':search';
                     }
-                    $searches[] .= $columnName . ' ' . $comparator . ' ' . $search;
+                    $searches[] .= $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
                 }
             }
 
