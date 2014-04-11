@@ -16,13 +16,19 @@ use FOS\RestBundle\Controller\Annotations\Put;
 
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\ContactBundle\Entity\Media;
-
+use Sulu\Bundle\ContactBundle\Entity\MediaMeta;
+use Sulu\Bundle\ContactBundle\Entity\File;
+use Sulu\Bundle\ContactBundle\Entity\FileVersion;
+use Sulu\Bundle\ContactBundle\Entity\FileVersionContentLanguage;
+use Sulu\Bundle\ContactBundle\Entity\FileVersionPublishLanguage;
 
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use \DateTime;
 
 /**
  * Makes collections available through a REST API
@@ -129,6 +135,11 @@ class CollectionController extends RestController implements ClassResourceInterf
         return $this->handleView($view);
     }
 
+
+    /**
+     * lists all collections
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function cgetAction()
     {
         $collections = $this->getDoctrine()->getRepository($this->entityName)->findAll();
@@ -149,7 +160,17 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collection = new Collection();
 
             $collection->setStyle($this->getRequest()->get('style'));
-            $collection->setCollectionType($this->getRequest()->get('idCollectionTypes'));
+
+
+            $typeData = $this->getRequest()->get('type');
+
+            if ($typeData != null && isset($typeData['id']) && $typeData['id'] != 'null' && $typeData['id'] != '') {
+                $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
+                if (!$type) {
+                    throw new EntityNotFoundException($this->entityName, $typeData['id']);
+                }
+                $collection->setType($type);
+            }
 
             $parentData = $this->getRequest()->get('parent');
             if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
@@ -174,8 +195,6 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $this->addMetas($collection, $metaData);
                 }
             }
-
-
 
             $em->persist($collection);
 
@@ -342,10 +361,10 @@ class CollectionController extends RestController implements ClassResourceInterf
             throw new EntityIdAlreadySetException($metaEntity, $metaData['id']);
         } else {
             $meta = new CollectionMeta();
-            $meta->setCollection($collection->getId());
-            $meta->setTitle($meta['title']);
-            $meta->setDescription($meta['description']);
-            $meta->setLocale($meta['locale']);
+            $meta->setCollection($collection);
+            $meta->setTitle($metaData['title']);
+            $meta->setDescription($metaData['description']);
+            $meta->setLocale($metaData['locale']);
 
             $em->persist($meta);
             $collection->addMeta($meta);
