@@ -38,14 +38,12 @@ define([
         },
 
         selectFilter = function(item) {
-            var searchString = '',
-                searchFields = '';
+            var type = null;
 
             if (item.id !== 'all') {
-                searchFields = 'type';
-                searchString = item.id;
+                type = item.id;
             }
-            this.sandbox.emit('husky.datagrid.data.search', searchString, searchFields);
+            this.sandbox.emit('husky.datagrid.url.update', {'type': type});
             this.sandbox.emit('sulu.contacts.accounts.list', item.name, true); // change url, but do not reload
         },
 
