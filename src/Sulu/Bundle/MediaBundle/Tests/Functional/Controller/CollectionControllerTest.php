@@ -150,6 +150,50 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals(json_encode($style), $response->style);
         $this->assertEquals(1, $response->id);
+        $this->assertEquals(1, $response->collectionType->id);
+        $this->assertEquals(2, count($response->metas));
+        $this->assertNotEmpty($response->created);
+        $this->assertNotEmpty($response->changed);
+        $this->assertEquals('Test Collection', $response->metas[0]->title);
+        $this->assertEquals('This Description is only for testing', $response->metas[0]->description);
+        $this->assertEquals('en-gb', $response->metas[0]->locale);
+        $this->assertEquals('Test Kollektion', $response->metas[1]->title);
+        $this->assertEquals('Dies ist eine Test Beschreibung', $response->metas[1]->description);
+        $this->assertEquals('de', $response->metas[1]->locale);
+    }
+
+    public function testcGet() {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/collections'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, count($response));
+    }
+
+    public function testGetByIdNotExisting()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/collections/10'
+        );
+
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->code);
+        $this->assertTrue(isset($response->message));
     }
 
 }
