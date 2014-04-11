@@ -208,53 +208,16 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     private function close(ConnectionInterface $from, $msg, $user)
     {
-        $content = $msg['content'];
-        $type = strtolower($msg['type']);
-        $templateKey = $msg['templateKey'];
-        $languageCode = $msg['language'];
-        $otherType = ($type == 'form' ? 'preview' : 'form');
-        $id = $user . '-' . $content;
-
-        // stop preview
-        $this->preview->stop($user, $content, $templateKey, $languageCode);
-
-        // close connection
-        $from->close();
-
-        // close other part
-        if (isset($this->content[$id][$otherType])) {
-            /** @var ConnectionInterface $other */
-            $other = $this->content[$id][$otherType];
-            $other->close();
-        }
-
-        // cleanUp cache
-        unset($this->content[$id]);
+        $this->logger->debug("Connection {$from->resourceId} has called close");
     }
 
     public function onClose(ConnectionInterface $conn)
     {
-        /** @var ConnectionInterface $other */
-        $other = null;
-        foreach ($this->content as $data) {
-            if (isset($data['form']) && ($data['form'] == $conn || isset($data['preview']))) {
-                $other = $data['preview'];
-            } elseif (isset($data['preview']) && ($data['preview'] == $conn && isset($data['form']))) {
-                $other = $data['form'];
-            }
-        }
-
-        if ($other != null) {
-            $other->close();
-        }
-
         $this->logger->debug("Connection {$conn->resourceId} has disconnected");
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $this->logger->error("An error has occurred: {$e->getMessage()}");
-
-        $conn->close();
     }
 }
