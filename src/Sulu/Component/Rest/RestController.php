@@ -519,6 +519,17 @@ abstract class RestController extends FOSRestController
             }
         }
 
+        // FIXME: this is just a hack to avoid relations that start with index != 0
+        // FIXME: otherwise deserialization process will parse relations as object instead of an array
+        // reindex entities
+        if (sizeof($entities) > 0 && method_exists($entities, 'getValues')) {
+            $newEntities = $entities->getValues();
+            $entities->clear();
+            foreach ($newEntities as $value) {
+                $entities->add($value);
+            }
+        }
+
         return $success;
     }
 
