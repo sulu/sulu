@@ -17,12 +17,12 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\ContactBundle\Entity\Media;
-use Sulu\Bundle\ContactBundle\Entity\MediaMeta;
-use Sulu\Bundle\ContactBundle\Entity\File;
-use Sulu\Bundle\ContactBundle\Entity\FileVersion;
-use Sulu\Bundle\ContactBundle\Entity\FileVersionContentLanguage;
-use Sulu\Bundle\ContactBundle\Entity\FileVersionPublishLanguage;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaMeta;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -316,6 +316,9 @@ class CollectionController extends RestController implements ClassResourceInterf
             if (!is_null($this->getRequest()->get('removeMedias')) &&
                 $this->getRequest()->get('removeMedias') == "true"
             ) {
+                /**
+                 * @var Media $media
+                 */
                 foreach ($collection->getMedias() as $media) {
                     $em->remove($media);
                 }
