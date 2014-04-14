@@ -71,9 +71,9 @@ define([], function() {
 
 
         changeStateCallbacks = {
-            default: function(saved) {
+            default: function(saved, type, highlight) {
                 if (!!saved) {
-                    this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button');
+                    this.sandbox.emit('husky.edit-toolbar.item.disable', 'save-button', !!highlight);
                 } else {
                     this.sandbox.emit('husky.edit-toolbar.item.enable', 'save-button', false);
                 }
@@ -116,6 +116,11 @@ define([], function() {
 
             this.buildTemplate(this.options.template, this.options.parentTemplate);
             this.startComponent();
+
+            //contains the sum of the width of all buttons
+            this.buttonsWidth = null;
+            this.collapsed = false;
+            this.toolbarWidth = null;
 
             //start component with the right dimensions
             this.sandbox.emit('sulu.app.content.get-dimensions', this.resizeListener.bind(this));
@@ -172,8 +177,8 @@ define([], function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
 
             // load component on start
-            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', function(type, saved){
-                this.changeState(type, saved);
+            this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'state.change', function(type, saved, highlight){
+                this.changeState(type, saved, highlight);
             }.bind(this));
 
             //make sure container keeps the width of the content
@@ -208,6 +213,23 @@ define([], function() {
             this.sandbox.on('sulu.edit-toolbar.' + instanceName + 'item.enable', function(id, highlight) {
                 this.sandbox.emit('husky.edit-toolbar.item.enable', id, highlight);
             }.bind(this));
+
+            // set buttons width
+            this.sandbox.on('husky.edit-toolbar.initialized', function() {
+                this.sandbox.emit('husky.edit-toolbar.get-buttons-width', function(buttonsWidth) {
+                    this.buttonsWidth = buttonsWidth;
+                    this.collapseHandler();
+                }.bind(this));
+            }.bind(this));
+
+            // update buttons width
+            this.sandbox.on('husky.edit-toolbar.buttons.width-changed', function() {
+                this.sandbox.emit('husky.edit-toolbar.get-buttons-width', function(buttonsWidth) {
+                    this.buttonsWidth = buttonsWidth;
+                    this.collapseHandler();
+                    this.setMinWidth();
+                }.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -216,15 +238,57 @@ define([], function() {
          */
         resizeListener: function(dimensions) {
             this.sandbox.dom.width(this.$el, dimensions.width);
+            this.toolbarWidth = dimensions.width;
             this.sandbox.dom.css(this.$container, {'padding-left': dimensions.left + 'px'});
+
+            this.collapseHandler();
         },
 
-        changeState: function(type, saved) {
+        /**
+         * Decides whether to expand, to collapse or do nothing
+         */
+        collapseHandler: function() {
+            if (this.buttonsWidth !== null) {
+                if (this.buttonsWidth + 5 >= this.toolbarWidth && this.collapsed === false) {
+                    this.collapse();
+                } else if (this.buttonsWidth + 5 < this.toolbarWidth && this.collapsed === true) {
+                    this.expand();
+                }
+            }
+        },
+
+        /**
+         * Set the toolbars min-width
+         */
+        setMinWidth: function() {
+            this.sandbox.emit('husky.edit-toolbar.get-buttons-collapsed-width', function(buttonsWidth) {
+                this.sandbox.dom.css(this.$el, {'min-width': buttonsWidth+'px'});
+            }.bind(this));
+        },
+
+        /**
+         * Collapses the buttons of the toolbar
+         */
+        collapse: function() {
+            this.sandbox.emit('husky.edit-toolbar.collapse');
+            this.collapsed = true;
+            this.setMinWidth();
+        },
+
+        /**
+         * Expands the buttons of the toolbar
+         */
+        expand: function() {
+            this.sandbox.emit('husky.edit-toolbar.expand');
+            this.collapsed = false;
+        },
+
+        changeState: function(type, saved, highlight) {
             if (typeof this.options.changeStateCallback === 'function') {
-                this.options.changeStateCallback.call(this, saved, type);
+                this.options.changeStateCallback.call(this, saved, type, highlight);
             }
             if (typeof this.options.parentChangeStateCallback === 'function') {
-                this.options.parentChangeStateCallback.call(this, saved, type);
+                this.options.parentChangeStateCallback.call(this, saved, type, highlight);
             }
         }
     };

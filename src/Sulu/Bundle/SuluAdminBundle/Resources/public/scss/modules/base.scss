@@ -15,14 +15,13 @@ body {
 // Content
 /*----------------------------------------*/
 #content {
-
     max-width: $contentMaxWidth + $contentPaddingLeft + $contentPaddingRight;
     min-width: $contenMinWidth;
     margin-left: $contentMarginLeft;
     padding-left: $contentPaddingLeft;
-    padding-top: $contentPaddingTop;
+    margin-top: $contentMarginTop;
     padding-right: $contentPaddingRight;
-    padding-bottom: $contentPaddingBottom;
+    padding-bottom: $contentMarginBottom;
     @include single-transition(margin,  $transitionDuration);
 
     h2.mainheadline {
@@ -34,7 +33,7 @@ body {
     }
 
     .content-tabs-content {
-        margin-top: 80px;
+        padding-top: 80px;
     }
 }
 
@@ -47,7 +46,13 @@ body {
     padding-left: $contentPaddingLeft;
     width: 100%;
     background-color: $backgroundColor;
-    padding-top: $contentPaddingTop;
+    padding-top: $contentMarginTop;
+}
+
+#page-functions {
+    position: relative;
+    top: 0px;
+    left: 0px;
 }
 
 #edit-toolbar {
@@ -55,17 +60,7 @@ body {
 }
 
 #list-toolbar-container {
-    margin-bottom: 40px;
-}
-
-#content-tabs-component {
-    margin-top: 40px;
-}
-
-#page-functions + #edit-toolbar {
-    .edit-toolbar-left {
-        margin-left: -50px;
-    }
+    padding-bottom: 20px;
 }
 
 // Control elements

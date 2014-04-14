@@ -1,23 +1,24 @@
 {
-    "name": "sulu-admin",
-    "version": "0.1.0",
-    "homepage": "https://github.com/massiveart/SuluAdminBundle",
-    "authors": [],
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "husky": "0.1.*",
-        "backbone-relational": "0.8.*",
-        "globalize": "0.1.*",
-        "jquery": "1.10.*"
-    },
-    "resolutions": {
-        "jquery": "1.10.*"
-    }
+  "name": "sulu-admin",
+  "version": "0.2.0",
+  "homepage": "https://github.com/massiveart/SuluAdminBundle",
+  "authors": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "husky": "0.2.*",
+    "backbone-relational": "0.8.*",
+    "globalize": "0.1.*",
+    "jquery": "1.10.*"
+  },
+  "resolutions": {
+    "jquery": "1.10.*",
+    "backbone": "~1.0.0"
+  }
 }

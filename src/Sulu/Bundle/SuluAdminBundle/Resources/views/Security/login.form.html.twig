@@ -21,31 +21,53 @@
     <!-- endbuild -->
 </head>
 <body>
-<div id="main">
-    <div id="login">
-        {% if error %}
-            <div>{{ error.message }}</div>
-        {% endif %}
-
-        <form action="{{ path('sulu_admin.login_check') }}" method="post">
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input class="form-element" type="text" id="username" name="_username" value="{{ username }}"/>
+<div id="main" class="login">
+    <div id="login-wrapper">
+        <div id="login">
+            <div class="logo">
+                <div id="placeholderLogoRemoveLater">S</div>
+            </div>
+            <form name="login" action="{{ path('sulu_admin.login_check') }}" method="post"
+                {% if error %}
+                    class="husky-validate-error"
+                {% endif %}
+            >
+                <div class="grid-row small">
+                    <input class="form-element input-large husky-validate" type="text" id="username" name="_username" placeholder="Email" value="{{ username }}"/>
                 </div>
-            </div>
-            <div class="grid-row">
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input class="form-element" type="password" id="password" name="_password"/>
+                <div class="grid-row small">
+                    <input class="form-element input-large husky-validate" type="password" id="password" placeholder="Password" name="_password"/>
                 </div>
-            </div>
-
-            <div class="grid-row">
-                <input type="hidden" name="_target_path" value="/admin/"/>
-                <button class="form-element" type="submit">login</button>
-            </div>
-        </form>
+                {% if error %}
+                    <div class="grid-row small">
+                        <span class="error">Your Email/Password combination appears to be wrong. Please try again.</span>
+                    </div>
+                {% endif %}
+                <div class="grid-row">
+                    <input type="hidden" name="_target_path" value="/admin/"/>
+                    <div class="grid-col-4 no-padding">
+                        <div
+                            {% if error %}
+                                class="btn large action2"
+                            {% else %}
+                                class="btn large grey"
+                            {% endif %}
+                        >
+                            <span class="icon-warning"></span>
+                            <span class="text">Help</span>
+                        </div>
+                    </div>
+                    <div class="grid-col-4 no-padding"></div>
+                    <div class="grid-col-4 no-padding">
+                        <div onclick="javascript:document.forms['login'].submit();" id="submit" class="btn action large">
+                            <span class="icon-security"></span>
+                            <span class="text">Login</span>
+                        </div>
+                        <input type="submit" style="visibility: hidden;" />
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>
