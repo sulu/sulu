@@ -11,8 +11,8 @@
              *********/
 
             // load settings
-            var settings = app.sandbox.util.extend(true, {}, SULU.user.settings),
-                getObjectIds = function(array, swap) {
+            app.sandbox.sulu.userSettings = app.sandbox.util.extend(true, {}, SULU.user.settings);
+            var getObjectIds = function(array, swap) {
                     var temp = swap ? {} : [], i;
                     for (i = 0; i < array.length; i++) {
                         if (swap) {
@@ -32,19 +32,25 @@
                     SULU_FIELDS_LOADED = 'sulu.fields.loaded';
 
             /**
+             * Object to store that by views
+             * @type {Object}
+             */
+            app.sandbox.sulu.viewStates = {};
+
+            /**
              * load user settings
              * @param key
              * @param url Where to get data from, if not already available
              * @param callback Function to return settings value
              */
             app.sandbox.sulu.loadUserSetting = function(key, url, callback) {
-                if (settings[key]) {
-                    callback(settings[key]);
+                if (!!app.sandbox.sulu.userSettings[key]) {
+                    callback(app.sandbox.sulu.userSettings[key]);
                 } else {
                     // get from server
                     app.sandbox.util.load(url)
                         .then(function(data) {
-                            settings[key] = data;
+                            app.sandbox.sulu.userSettings[key] = data;
                             callback(data);
                         }.bind(this))
                         .fail(function(data) {
@@ -103,7 +109,7 @@
                             settingsArray = serverFields;
                         }
 
-                        settings[key] = settingsArray;
+                        app.sandbox.sulu.userSettings[key] = settingsArray;
                         app.sandbox.emit(SULU_FIELDS_LOADED, data);
                         callback(settingsArray);
 
@@ -117,7 +123,7 @@
              * @returns mixed
              */
             app.sandbox.sulu.getUserSetting = function(key) {
-                return settings[key] ? settings[key] : null;
+                return (typeof app.sandbox.sulu.userSettings[key] !== 'undefined') ? app.sandbox.sulu.userSettings[key] : null;
             };
 
             /**
@@ -127,11 +133,15 @@
              * @param url Defines where to save data to
              */
             app.sandbox.sulu.saveUserSetting = function(key, value, url) {
-                settings[key] = value;
+                app.sandbox.sulu.userSettings[key] = value;
+
+                if (!url) {
+                    url = '/admin/api/users/'+ SULU.user.id +'/settings/' + key;
+                }
 
                 var data = {
                     key: key,
-                    data: value
+                    value: value
                 };
                 // save to server
                 app.sandbox.util.ajax({

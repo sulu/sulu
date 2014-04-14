@@ -13,10 +13,10 @@ body {
 /* line 17, ../scss/modules/base.scss */
 #content {
   max-width: 920px;
-  min-width: 300px;
+  min-width: 510px;
   margin-left: 250px;
   padding-left: 50px;
-  padding-top: 40px;
+  margin-top: 40px;
   padding-right: 50px;
   padding-bottom: 40px;
   -webkit-transition: margin 0.5s;
@@ -24,20 +24,20 @@ body {
   -o-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 28, ../scss/modules/base.scss */
+/* line 27, ../scss/modules/base.scss */
 #content h2.mainheadline {
   margin-top: 35px;
 }
-/* line 32, ../scss/modules/base.scss */
+/* line 31, ../scss/modules/base.scss */
 #content h1:first-child {
   margin-top: 0;
 }
-/* line 36, ../scss/modules/base.scss */
+/* line 35, ../scss/modules/base.scss */
 #content .content-tabs-content {
-  margin-top: 80px;
+  padding-top: 80px;
 }
 
-/* line 42, ../scss/modules/base.scss */
+/* line 41, ../scss/modules/base.scss */
 #edit-toolbar-container {
   z-index: 99;
   position: fixed;
@@ -49,28 +49,25 @@ body {
   padding-top: 40px;
 }
 
-/* line 53, ../scss/modules/base.scss */
+/* line 52, ../scss/modules/base.scss */
+#page-functions {
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+/* line 58, ../scss/modules/base.scss */
 #edit-toolbar {
   max-width: 820px;
 }
 
-/* line 57, ../scss/modules/base.scss */
+/* line 62, ../scss/modules/base.scss */
 #list-toolbar-container {
-  margin-bottom: 40px;
-}
-
-/* line 61, ../scss/modules/base.scss */
-#content-tabs-component {
-  margin-top: 40px;
-}
-
-/* line 66, ../scss/modules/base.scss */
-#page-functions + #edit-toolbar .edit-toolbar-left {
-  margin-left: -50px;
+  padding-bottom: 20px;
 }
 
 /*----------------------------------------*/
-/* line 73, ../scss/modules/base.scss */
+/* line 68, ../scss/modules/base.scss */
 .control-label {
   padding-left: 5px;
   padding-right: 5px;
@@ -78,30 +75,30 @@ body {
 }
 
 /*----------------------------------------*/
-/* line 81, ../scss/modules/base.scss */
+/* line 76, ../scss/modules/base.scss */
 input, select {
   font-family: Helvetica, Arial;
 }
 
 /*----------------------------------------*/
-/* line 88, ../scss/modules/base.scss */
+/* line 83, ../scss/modules/base.scss */
 .navigation-container {
   z-index: 101;
 }
 
 /*----------------------------------------*/
-/* line 95, ../scss/modules/base.scss */
+/* line 90, ../scss/modules/base.scss */
 .pointer {
   cursor: pointer;
 }
 
-/* line 99, ../scss/modules/base.scss */
+/* line 94, ../scss/modules/base.scss */
 .block {
   display: block;
 }
 
 /*----------------------------------------*/
-/* line 106, ../scss/modules/base.scss */
+/* line 101, ../scss/modules/base.scss */
 .m-top-1 {
   margin-top: 1px !important;
 }
@@ -113,14 +110,43 @@ input, select {
 }
 
 /* line 1, ../scss/modules/login.scss */
-#login {
-  position: absolute;
+#main.login {
+  width: 100%;
+  height: 100%;
+}
+
+/* line 5, ../scss/modules/login.scss */
+#login-wrapper {
+  position: relative;
+  top: 0px;
   left: 50%;
-  top: 50%;
-  width: 300px;
-  height: 190px;
   margin-left: -150px;
-  margin-top: -95px;
+  display: table;
+  width: 300px;
+  height: 100%;
+}
+
+/* line 14, ../scss/modules/login.scss */
+#login {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* line 18, ../scss/modules/login.scss */
+#login .logo {
+  margin-bottom: 50px;
+  text-align: center;
+}
+/* line 23, ../scss/modules/login.scss */
+#login #placeholderLogoRemoveLater {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  background: #D8D8D8;
+  line-height: 100px;
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 50px;
+  display: inline-block;
 }
 
 /* line 1, ../scss/modules/labels.scss */

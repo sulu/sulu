@@ -14,29 +14,34 @@
 
         <!-- build:css app.min.css -->
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css"/>
+        <!-- endbuild -->
+
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulutranslate/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.min.css"/>
-        <!-- endbuild -->
+        <link rel="stylesheet" type="text/css" href="/bundles/sulucontent/css/main.min.css"/>
     </head>
     <body>
         <div id="main">
             <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                {% if user.username is defined %}
-                data-aura-footer-template="<div>{{ user.fullname }}</div>
+                {% if user.username is not defined %}
+                data-aura-footer="false"
                 {% endif %}
-                {% if user.logout is defined %}
-                <div><a href='{{ user.logout }}'>logout</a></div>
-                {% endif %}
-                <div class='version'>Sulu 2</div>"
+                 data-aura-user-name="{{ user.fullname }}"
+                 data-aura-system-name="{{ name }}"
+                 data-aura-system-version="0.1"
+                 data-aura-user-locales='["en", "de"]'
+                 data-aura-user-locale="{{ user.locale }}"
+                 data-aura-logout-route="{{ user.logout }}"
             ></div>
 
-            <main class="grid" id="content" data-aura-component="app@suluadmin"></main>
+            <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
 
         </div>
 
         <div id="labels-container" data-aura-component="labels@suluadmin"></div>
         <div id="dialogContainer" data-aura-component="dialog@suluadmin"></div>
+        <div id="preview"></div>
 
         <script type="text/javascript">
             {% autoescape false %}
@@ -46,7 +51,8 @@
                     id: '{{ user.id }}',
                     locale: '{{ user.locale is defined ? user.locale : 'en' }}',
                     settings: {{ user.settings }}
-                }
+                },
+                sections: {{ config | json_encode }}
             };
             {% endautoescape %}
 
