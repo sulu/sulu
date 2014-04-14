@@ -16,10 +16,10 @@
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "friendsofsymfony/rest-bundle": "1.0.*",
         "jms/serializer-bundle": "@dev",
-        "sulu/contact-bundle": "0.2.*",
-        "sulu/sulu": "0.2.*",
-        "sulu/admin-bundle": "0.2.*",
-        "sulu/security-bundle": "0.2.*"
+        "sulu/contact-bundle": "dev-develop",
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
