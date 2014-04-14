@@ -1,0 +1,1 @@
+define(function(){"use strict";return{content:{url:"/admin/security/navigation/roles",title:"security.roles.title"}}});

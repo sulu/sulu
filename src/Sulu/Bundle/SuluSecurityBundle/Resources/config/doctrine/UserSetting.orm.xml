@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\UserSetting" table="se_user_settings">
+
+        <id name="user" association-key="true" />
+        <id name="key" type="string" length="150" column="settingsKey"/>
+        <field name="value" type="text" column="settingsValue"/>
+
+        <many-to-one field="user" target-entity="Sulu\Component\Security\UserInterface" inversed-by="userSettings">
+            <join-column name="idUsers" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
