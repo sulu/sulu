@@ -900,7 +900,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   display: block;
   float: left;
   font-size: 12px;
-  margin: 0 -3px 0 0;
+  margin: 0 -5px 0 0;
   padding: 0;
   cursor: pointer;
   height: 100%;
@@ -5796,15 +5796,16 @@ a.btn-black, a.btn-highlight {
 /* line 5, ../scss/modules/tabs.scss */
 .tabs-container {
   background-color: white;
+  border-bottom: 1px solid #f1f1f1;
   padding: 20px 50px 0 50px;
 }
-/* line 12, ../scss/modules/tabs.scss */
+/* line 13, ../scss/modules/tabs.scss */
 .tabs-container ul {
   padding: 0;
   margin: 0;
   white-space: nowrap;
 }
-/* line 17, ../scss/modules/tabs.scss */
+/* line 18, ../scss/modules/tabs.scss */
 .tabs-container ul li {
   display: inline-block;
   list-style-type: none;
@@ -5814,27 +5815,27 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   border-radius: 4px 4px 0 0;
 }
-/* line 26, ../scss/modules/tabs.scss */
+/* line 27, ../scss/modules/tabs.scss */
 .tabs-container ul li a {
   color: black;
   text-decoration: none;
   font-size: 14px;
 }
-/* line 32, ../scss/modules/tabs.scss */
+/* line 33, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected {
   background-color: #f1f1f1;
 }
-/* line 35, ../scss/modules/tabs.scss */
+/* line 36, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected a {
   color: #249fbe;
   font-weight: bold;
 }
-/* line 45, ../scss/modules/tabs.scss */
+/* line 46, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li a, .tabs-container.deactivated ul li a:hover {
   color: #999999;
   cursor: default;
 }
-/* line 49, ../scss/modules/tabs.scss */
+/* line 50, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li.is-selected a {
   color: #249fbe;
 }
