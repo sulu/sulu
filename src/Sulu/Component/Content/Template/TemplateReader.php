@@ -73,6 +73,13 @@ class TemplateReader implements LoaderInterface
     private $tags = array();
 
     /**
+     * @var array
+     */
+    private $requiredTags = array(
+        'sulu.node.name'
+    );
+
+    /**
      * Reads all types from the given path
      * @param $path string path to file with type definitions
      * @param $mandatoryNodes array with key of mandatory node names
@@ -82,7 +89,6 @@ class TemplateReader implements LoaderInterface
      */
     private function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
     {
-
         $template = array();
         $this->xmlDocument = new \DOMDocument();
 
@@ -94,7 +100,7 @@ class TemplateReader implements LoaderInterface
             // TODO do not catch exceptions here but in the callee
             throw new InvalidArgumentException('Path is invalid: ' . $path);
         }
-        
+
         if (!empty($mandatoryNodes)) {
             $template = $this->getMandatoryNodes($mandatoryNodes);
         }
@@ -124,16 +130,28 @@ class TemplateReader implements LoaderInterface
             if (in_array($node->tagName, $this->complexNodeTypes)) {
                 $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $node);
             }
-
         }
 
         // check combination of tag and priority of uniqueness
+        // check required properties
+        $required = array_merge(array(), $this->requiredTags);
         for ($x = 0; $x < sizeof($this->tags); $x++) {
+            // check required properties
+            for ($y = 0; $y < sizeof($required); $y++) {
+                if ($required[$y] === $this->tags[$x]['name']) {
+                    break;
+                }
+            }
+            unset($required[$y]);
+
+            // extract name and prio
             $xName = $this->tags[$x]['name'];
             $xPriority = isset($this->tags[$x]['priority']) ? $this->tags[$x]['priority'] : 1;
             for ($y = 0; $y < sizeof($this->tags); $y++) {
+                // extract name and prio
                 $yName = $this->tags[$y]['name'];
                 $yPriority = isset($this->tags[$y]['priority']) ? $this->tags[$y]['priority'] : 1;
+                // check of uniqueness
                 if ($x !== $y && $xName === $yName && $xPriority === $yPriority) {
                     throw new InvalidXmlException(sprintf(
                         'Priority %s of tag %s exists duplicated',
@@ -142,6 +160,14 @@ class TemplateReader implements LoaderInterface
                     ));
                 }
             }
+        }
+
+        // throw exception if not all required tags are set
+        if (sizeof($required) > 0) {
+            throw new InvalidXmlException(sprintf(
+                'Tag(s) %s required but not found',
+                join(',', $required)
+            ));
         }
 
         return $template;

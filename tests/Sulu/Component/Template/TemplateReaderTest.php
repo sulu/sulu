@@ -117,6 +117,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array()
         );
 
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
+            'The given XML is invalid! Tag(s) sulu.node.name required but not found'
+        );
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
             __DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_properties.xml'
