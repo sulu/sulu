@@ -29,6 +29,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -84,30 +85,9 @@ class ContentMapper implements ContentMapperInterface
     private $stopwatch;
 
     /**
-     * TODO abstract with cleanup from RLPStrategy
-     * replacers for cleanup
-     * @var array
+     * @var PathCleanupInterface
      */
-    protected $replacers = array(
-        'default' => array(
-            ' ' => '-',
-            '+' => '-',
-            'ä' => 'ae',
-            'ö' => 'oe',
-            'ü' => 'ue',
-            // because strtolower ignores Ä,Ö,Ü
-            'Ä' => 'ae',
-            'Ö' => 'oe',
-            'Ü' => 'ue'
-            // TODO should be filled
-        ),
-        'de' => array(
-            '&' => 'und'
-        ),
-        'en' => array(
-            '&' => 'and'
-        )
-    );
+    private $cleaner;
 
     /**
      * excepted states
@@ -127,6 +107,7 @@ class ContentMapper implements ContentMapperInterface
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
+        PathCleanupInterface $cleaner,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
@@ -141,6 +122,7 @@ class ContentMapper implements ContentMapperInterface
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
+        $this->cleaner = $cleaner;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -203,7 +185,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
-        $path = $this->cleanUp($data[$nodeNameProperty->getName()]);
+        $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
 
         $dateTime = new \DateTime();
 
@@ -915,42 +897,6 @@ class ContentMapper implements ContentMapperInterface
     protected function getRouteNode($webspaceKey, $languageCode, $segment)
     {
         return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segment);
-    }
-
-    /**
-     * TODO abstract with cleanup from RLPStrategy
-     * @param string $dirty
-     * @return string
-     */
-    protected function cleanUp($dirty)
-    {
-        $clean = strtolower($dirty);
-
-        // TODO language
-        $languageCode = 'de';
-        $replacers = array_merge($this->replacers['default'], $this->replacers[$languageCode]);
-
-        if (count($replacers) > 0) {
-            foreach ($replacers as $key => $value) {
-                $clean = str_replace($key, $value, $clean);
-            }
-        }
-
-        // Inspired by ZOOLU
-        // delete problematic characters
-        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
-
-        // replace multiple minus with one
-        $clean = preg_replace('/([-]+)/', '-', $clean);
-
-        // delete minus at the beginning or end
-        $clean = preg_replace('/^([-])/', '', $clean);
-        $clean = preg_replace('/([-])$/', '', $clean);
-
-        // remove double slashes
-        $clean = str_replace('//', '/', $clean);
-
-        return $clean;
     }
 
     /**
