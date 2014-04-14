@@ -129,7 +129,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('default_template')
-                    ->defaultValue('overview')
+                    ->defaultValue('default')
                 ->end()
                 ->arrayNode('language')
                     ->addDefaultsIfNotSet()

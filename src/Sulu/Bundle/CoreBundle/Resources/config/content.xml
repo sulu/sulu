@@ -4,6 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="sulu.content.pathcleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
@@ -15,6 +16,7 @@
         <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
         <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Block\BlockContentType</parameter>
+
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
@@ -22,6 +24,7 @@
 
     <services>
 
+        <service id="sulu.content.pathcleaner" public="false" class="%sulu.content.pathcleaner.class%"/>
         <!-- content mapper -->
         <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
@@ -30,6 +33,7 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.localization_finder"/>
+            <argument type="service" id="sulu.content.pathcleaner"/>
             <argument>%sulu.content.language.default%</argument>
             <argument>%sulu.content.template.default%</argument>
             <argument>%sulu.content.language.namespace%</argument>
@@ -71,6 +75,7 @@
         <!-- rlp strategies -->
         <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
             <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
+            <argument type="service" id="sulu.content.pathcleaner"/>
         </service>
 
         <!-- simple content types -->
