@@ -27,6 +27,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     function __construct(
         $name,
+        $title,
         $mandatory = false,
         $multilingual = false,
         $maxOccurs = 1,
@@ -34,7 +35,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $params = array()
     )
     {
-        parent::__construct($name, 'block', $mandatory, $multilingual, $maxOccurs, $minOccurs, $params);
+        parent::__construct($name, $title, 'block', $mandatory, $multilingual, $maxOccurs, $minOccurs, $params);
     }
 
     /**

@@ -69,14 +69,14 @@ class ContentMapperTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('name', 'text_line', false, true, 1, 1, array(), array(new PropertyTag('sulu.node.name', 10)))
+                new Property('name', '', 'text_line', false, true, 1, 1, array(), array(new PropertyTag('sulu.node.name', 10)))
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'resource_locator', false, true)
+                new Property('url', '', 'resource_locator', false, true)
             )
         );
 
@@ -84,14 +84,14 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('tags', 'text_line', false, true, 2, 10)
+                    new Property('tags', '', 'text_line', false, true, 2, 10)
                 )
             );
 
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('article', 'text_area', false, true)
+                    new Property('article', '', 'text_area', false, true)
                 )
             );
         } elseif ($type == 2) {
@@ -99,13 +99,13 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', 'text_area', false, false)
+                    new Property('blog', '', 'text_area', false, false)
                 )
             );
         } elseif ($type == 3) {
-            $blockProperty = new BlockProperty('block1', false, true, 2, 10);
-            $blockProperty->addChild(new Property('name', 'text_line', false, true));
-            $blockProperty->addChild(new Property('article', 'text_area', false, true));
+            $blockProperty = new BlockProperty('block1', '', false, true, 2, 10);
+            $blockProperty->addChild(new Property('name', '', 'text_line', false, true));
+            $blockProperty->addChild(new Property('article', '', 'text_area', false, true));
 
             $method->invokeArgs(
                 $structureMock,
@@ -117,7 +117,7 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', 'text_line', true, true)
+                    new Property('blog', '', 'text_line', true, true)
                 )
             );
         }

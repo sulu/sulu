@@ -50,6 +50,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% macro complextype(property) %}
 new BlockProperty(
             '{{ property.name }}',
+            '{{ property.title }}',
             {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
             {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
             {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
@@ -69,6 +70,7 @@ new BlockProperty(
 {% macro basictype(property) %}
             new Property(
                 '{{ property.name }}',
+                '{{ property.title }}',
                 '{{ property.type }}',
                 {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
                 {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},

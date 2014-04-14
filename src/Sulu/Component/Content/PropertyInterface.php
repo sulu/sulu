@@ -105,4 +105,10 @@ interface PropertyInterface
      * @return PropertyTag
      */
     public function getTag($tagName);
+
+    /**
+     * returns title of property
+     * @return string
+     */
+    public function getTitle();
 }

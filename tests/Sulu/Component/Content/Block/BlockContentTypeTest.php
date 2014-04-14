@@ -78,26 +78,26 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function prepareSingleBlockProperty()
     {
-        $this->blockProperty = new BlockProperty('block1', false, true);
-        $this->blockProperty->addChild(new Property('title', 'text_line', false, true));
-        $this->blockProperty->addChild(new Property('article', 'text_area', false, true));
+        $this->blockProperty = new BlockProperty('block1', '', false, true);
+        $this->blockProperty->addChild(new Property('title', '', 'text_line', false, true));
+        $this->blockProperty->addChild(new Property('article', '', 'text_area', false, true));
 
-        $this->subBlockProperty = new BlockProperty('sub-block', false, true);
-        $this->subBlockProperty->addChild(new Property('title', 'text_line', false, true));
-        $this->subBlockProperty->addChild(new Property('article', 'text_area', false, true));
+        $this->subBlockProperty = new BlockProperty('sub-block', '', false, true);
+        $this->subBlockProperty->addChild(new Property('title', '', 'text_line', false, true));
+        $this->subBlockProperty->addChild(new Property('article', '', 'text_area', false, true));
 
         $this->blockProperty->addChild($this->subBlockProperty);
     }
 
     protected function prepareMultipleBlockProperty()
     {
-        $this->blockProperty = new BlockProperty('block1', false, true, 1, 10);
-        $this->blockProperty->addChild(new Property('title', 'text_line', false, true));
-        $this->blockProperty->addChild(new Property('article', 'text_area'));
+        $this->blockProperty = new BlockProperty('block1', '', false, true, 1, 10);
+        $this->blockProperty->addChild(new Property('title', '', 'text_line', false, true));
+        $this->blockProperty->addChild(new Property('article', '', 'text_area'));
 
-        $this->subBlockProperty = new BlockProperty('sub-block', false, true);
-        $this->subBlockProperty->addChild(new Property('title', 'text_line', false, true));
-        $this->subBlockProperty->addChild(new Property('article', 'text_area', false, true));
+        $this->subBlockProperty = new BlockProperty('sub-block', '', false, true);
+        $this->subBlockProperty->addChild(new Property('title', '', 'text_line', false, true));
+        $this->subBlockProperty->addChild(new Property('article', '', 'text_area', false, true));
 
         $this->blockProperty->addChild($this->subBlockProperty);
     }

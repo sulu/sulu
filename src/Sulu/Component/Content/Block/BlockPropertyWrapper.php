@@ -202,4 +202,13 @@ class BlockPropertyWrapper implements PropertyInterface
     {
         return $this->property->getTag($tagName);
     }
+
+    /**
+     * returns title of property
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->property->getTitle();
+    }
 }

@@ -22,6 +22,11 @@ class Property implements PropertyInterface
     private $name;
 
     /**
+     * @var string title of property
+     */
+    private $title;
+
+    /**
      * is property mandatory
      * @var bool
      */
@@ -71,6 +76,7 @@ class Property implements PropertyInterface
 
     function __construct(
         $name,
+        $title,
         $contentTypeName,
         $mandatory = false,
         $multilingual = false,
@@ -86,6 +92,7 @@ class Property implements PropertyInterface
         $this->minOccurs = $minOccurs;
         $this->multilingual = $multilingual;
         $this->name = $name;
+        $this->title = $title;
         $this->params = $params;
         $this->tags =$tags;
     }
@@ -170,6 +177,15 @@ class Property implements PropertyInterface
     public function getTag($tagName)
     {
         return $this->tags[$tagName];
+    }
+
+    /**
+     * returns title of property
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
