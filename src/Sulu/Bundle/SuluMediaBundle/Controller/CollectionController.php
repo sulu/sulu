@@ -159,9 +159,10 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $collection = new Collection();
 
+            // set style
             $collection->setStyle($this->getRequest()->get('style'));
 
-
+            // set type
             $typeData = $this->getRequest()->get('type');
 
             if ($typeData != null && isset($typeData['id']) && $typeData['id'] != 'null' && $typeData['id'] != '') {
@@ -172,6 +173,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $collection->setType($type);
             }
 
+            // set parent
             $parentData = $this->getRequest()->get('parent');
             if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
                 $parent = $this->getDoctrine()
@@ -183,12 +185,14 @@ class CollectionController extends RestController implements ClassResourceInterf
                 }
                 $collection->setParent($parent);
             }
+
             // set creator / changer
             $collection->setCreated(new DateTime());
             $collection->setChanged(new DateTime());
             $collection->setCreator($this->getUser());
             $collection->setChanger($this->getUser());
 
+            // set metas
             $metas = $this->getRequest()->get('metas');
             if (!empty($metas)) {
                 foreach ($metas as $metaData) {
@@ -233,6 +237,19 @@ class CollectionController extends RestController implements ClassResourceInterf
             } else {
                 $em = $this->getDoctrine()->getManager();
 
+                // set style
+                $collection->setStyle($this->getRequest()->get('style'));
+
+                // set type
+                $typeData = $this->getRequest()->get('type');
+
+                if ($typeData != null && isset($typeData['id']) && $typeData['id'] != 'null' && $typeData['id'] != '') {
+                    $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
+                    if (!$type) {
+                        throw new EntityNotFoundException($this->entityName, $typeData['id']);
+                    }
+                    $collection->setType($type);
+                }
 
                 // set parent
                 $parentData = $this->getRequest()->get('parent');
@@ -293,11 +310,6 @@ class CollectionController extends RestController implements ClassResourceInterf
                 throw new EntityNotFoundException($entityName, $id);
             }
 
-            // do not allow to delete entity if child is existent
-            if (!$collection->getChildren()->count()) {
-                // return 405 error
-            }
-
             $em = $this->getDoctrine()->getManager();
 
             // remove related media if removeMedias is true
@@ -307,6 +319,10 @@ class CollectionController extends RestController implements ClassResourceInterf
                 foreach ($collection->getMedias() as $media) {
                     $em->remove($media);
                 }
+            }
+
+            foreach ($collection->getMetas() as $meta) {
+                $em->remove($meta);
             }
 
             $em->remove($collection);
@@ -337,8 +353,8 @@ class CollectionController extends RestController implements ClassResourceInterf
             return $this->updateMeta($meta, $matchedEntry);
         };
 
-        $add = function ($url) use ($collection) {
-            $this->addMetas($collection, $url);
+        $add = function ($meta) use ($collection) {
+            $this->addMetas($collection, $meta);
 
             return true;
         };
@@ -384,7 +400,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         $meta->setTitle($entry['title']);
         $meta->setDescription($entry['description']);
-        $meta->setLocale($entry['local']);
+        $meta->setLocale($entry['locale']);
 
         return $success;
     }
