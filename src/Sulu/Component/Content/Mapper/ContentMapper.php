@@ -174,6 +174,7 @@ class ContentMapper implements ContentMapperInterface
      * @param int $state state of node
      * @param string $showInNavigation
      *
+     * @throws \Exception
      * @return StructureInterface
      */
     public function save(

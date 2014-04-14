@@ -56,6 +56,7 @@ interface ContentMapperInterface
      * @param bool $partialUpdate ignore missing property
      *
      * @throws \PHPCR\ItemExistsException if new title already exists
+     * @throws \Exception
      *
      * @return StructureInterface
      */
