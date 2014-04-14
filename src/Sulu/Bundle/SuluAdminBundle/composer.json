@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "sulu/sulu": "0.2.*"
+        "sulu/sulu": "dev-develop"
     },
     "autoload": {
         "psr-0": {
