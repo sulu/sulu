@@ -22,19 +22,14 @@ define([
             return this.save.call(this, attributes, options);
         },
 
-        fullSave: function(template, webspace, language, parent, state, navigation, attributes, options) {
-            if(!!navigation){
-                navigation = '1';
-            }else{
-                navigation = '0';
-            }
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + '&template=' + template + (!!parent ? '&parent=' + parent : '') + (!!state ? '&state=' + state : '')+(!!navigation? '&navigation=' + navigation:'')});
+        fullSave: function(template, webspace, language, parent, state, attributes, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + '&template=' + template + (!!parent ? '&parent=' + parent : '') + (!!state ? '&state=' + state : '')});
 
             return this.save.call(this, attributes, options);
         },
 
-        fullFetch: function(webspace, language, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+        fullFetch: function(webspace, language, breadcrumb, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language + '&breadcrumb=' + !!breadcrumb});
 
             return this.fetch.call(this, options);
         },

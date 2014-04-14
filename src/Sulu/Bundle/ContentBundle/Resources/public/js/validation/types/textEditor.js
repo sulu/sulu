@@ -9,21 +9,35 @@
  */
 
 define([
-    'type/default',
-    'form/util'
-], function(Default, Util) {
+    'type/default'
+], function(Default) {
 
     'use strict';
 
+    var changedHandler = function(data, $el) {
+            App.emit('sulu.preview.update', $el, data, true);
+            App.emit('sulu.content.changed');
+        },
+
+        focusoutHandler = function(data, $el) {
+            App.emit('sulu.preview.update', $el, data);
+            App.emit('sulu.content.changed');
+        };
+
     return function($el, options) {
-        var defaults = {},
+        var defaults = {
+                instanceName: null
+            },
 
             subType = {
                 initializeSub: function() {
-                    App.on('husky.ckeditor.changed', function(data, $el) {
-                        App.emit('sulu.preview.update', $el.data('mapperProperty'), data);
-                        App.emit('sulu.content.changed');
-                    }.bind(this));
+                    // remove event with same name and register new one
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.changed', changedHandler);
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.changed', changedHandler);
+
+                    // remove event with same name and register new one
+                    App.off('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutHandler);
+                    App.on('husky.ckeditor.' + this.options.instanceName + '.focusout', focusoutHandler);
                 },
 
                 needsValidation: function() {

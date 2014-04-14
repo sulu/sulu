@@ -12,17 +12,52 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * handles preview with ajax cals and renders basic preview
+ */
 class PreviewController extends Controller
 {
 
     const PREVIEW_ID = 'sulu_content.preview';
 
+    use RequestParametersTrait;
+
     /**
-     * render content for logedin user with data from FORM
+     * returns language code from request
+     * @return string
+     */
+    private function getLanguageCode()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'language', true);
+    }
+
+    /**
+     * returns language code from request
+     * @return string
+     */
+    private function getTemplateKey()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'template', true);
+    }
+
+    /**
+     * returns webspace key from request
+     * @return string
+     */
+    private function getWebspaceKey()
+    {
+        return $this->getRequestParameter($this->getRequest(), 'webspace', true);
+    }
+
+    /**
+     * render content for logged in user with data from FORM
      * @param string $contentUuid
      * @return Response
      */
@@ -31,23 +66,44 @@ class PreviewController extends Controller
         $uid = $this->getUserId();
         $preview = $this->getPreview();
 
-        if (!$preview->started($uid, $contentUuid)) {
-            $language = $this->getRequest()->get('language', 'en');
-            $webspace = $this->getRequest()->get('webspace', 'sulu_io');
-            $preview->start($uid, $contentUuid, $webspace, $language);
+        $webspaceKey = $this->getWebspaceKey();
+        $languageCode = $this->getLanguageCode();
+        $templateKey = $this->getTemplateKey();
+
+        if ($contentUuid === 'index') {
+            /** @var ContentMapperInterface $contentMapper */
+            $contentMapper = $this->get('sulu.content.mapper');
+            $startPage = $contentMapper->loadStartPage($webspaceKey, $languageCode);
+            $contentUuid = $startPage->getUuid();
         }
 
-        $content = $preview->render($uid, $contentUuid);
+        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
+            $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
+        }
+
+        $content = $preview->render($uid, $contentUuid, $templateKey, $languageCode);
 
         $script = $this->render(
             'SuluContentBundle:Preview:script.html.twig',
             array(
+                'debug' => $this->get('kernel')->getEnvironment() === 'dev',
                 'userId' => $uid,
-                'ajaxUrl' => $this->generateUrl('sulu_content.preview.changes', array('contentUuid' => $contentUuid)),
+                'ajaxUrl' => $this->generateUrl(
+                        'sulu_content.preview.changes',
+                        array(
+                            'contentUuid' => $contentUuid,
+                            'webspace' => $webspaceKey,
+                            'template' => $templateKey,
+                            'language' => $languageCode
+                        )
+                    ),
                 'wsUrl' => 'ws://' . $this->getRequest()->getHttpHost(),
                 'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
-                'contenUuid' => $contentUuid,
-                'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval')
+                'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval'),
+                'contentUuid' => $contentUuid,
+                'webspaceKey' => $webspaceKey,
+                'templateKey' => $templateKey,
+                'languageCode' => $languageCode
             )
         );
 
@@ -79,23 +135,23 @@ class PreviewController extends Controller
         $preview = $this->getPreview();
         $uid = $this->getUserId();
 
-        $language = $this->getRequest()->get('language', 'en');
-        $webspace = $this->getRequest()->get('webspace', 'sulu_io');
+        $webspaceKey = $this->getWebspaceKey();
+        $languageCode = $this->getLanguageCode();
+        $templateKey = $this->getTemplateKey();
 
-        if (!$preview->started($uid, $contentUuid)) {
-            $preview->start($uid, $contentUuid, $webspace, $language);
+        if (!$preview->started($uid, $contentUuid, $templateKey, $languageCode)) {
+            $preview->start($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode);
         }
-        $template = $this->getRequest()->get('template');
 
         // get changes from request
         $changes = $request->get('changes', false);
         if (!!$changes) {
             foreach ($changes as $property => $content) {
-                $preview->update($uid, $contentUuid, $webspace, $language, $property, $content, $template);
+                $preview->update($uid, $contentUuid, $webspaceKey, $templateKey, $languageCode, $property, $content);
             }
         }
 
-        return new Response();
+        return new JsonResponse();
     }
 
     /**
@@ -106,9 +162,12 @@ class PreviewController extends Controller
     public function changesAction($contentUuid)
     {
         $uid = $this->getUserId();
-        $changes = $this->getPreview()->getChanges($uid, $contentUuid);
+        $languageCode = $this->getLanguageCode();
+        $templateKey = $this->getTemplateKey();
 
-        return new Response(json_encode($changes));
+        $changes = $this->getPreview()->getChanges($uid, $contentUuid, $templateKey, $languageCode);
+
+        return new JsonResponse($changes);
     }
 
     /**
@@ -124,8 +183,7 @@ class PreviewController extends Controller
      */
     private function getUserId()
     {
-        return $this->getUser()
-            ->getId();
+        return $this->getUser()->getId();
     }
 
 }

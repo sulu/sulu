@@ -9,21 +9,23 @@
  */
 
 define([
-    'type/default',
-    'form/util'
-], function(Default, Util) {
+    'type/default'
+], function(Default) {
 
     'use strict';
+
+    var dataChangedHandler = function(data, $el) {
+        App.emit('sulu.preview.update', $el, data);
+        App.emit('sulu.content.changed');
+    };
 
     return function($el, options) {
         var defaults = {},
 
             subType = {
                 initializeSub: function() {
-                    App.on('husky.smart-content.' + options.instanceName + '.data-changed', function() {
-                        App.emit('sulu.preview.update', App.dom.data($el, 'mapperProperty'), App.dom.data($el, 'smart-content'));
-                        App.emit('sulu.content.changed');
-                    }.bind(this));
+                    App.off('husky.smart-content.' + options.instanceName + '.data-changed', dataChangedHandler);
+                    App.on('husky.smart-content.' + options.instanceName + '.data-changed', dataChangedHandler);
                 },
 
                 setValue: function(value) {

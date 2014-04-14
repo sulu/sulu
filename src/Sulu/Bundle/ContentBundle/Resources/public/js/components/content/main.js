@@ -13,7 +13,10 @@ define([
 
     'use strict';
 
+    var MIN_CONTAINER_WIDTH = 980;
+
     return {
+
 
         stateDropdownItems: {
             publish: function() {
@@ -63,6 +66,10 @@ define([
                 this.renderForm();
             } else if (this.options.display === 'column') {
                 this.renderColumn();
+            } else if (this.options.display === 'settings') {
+                this.renderForm({
+                    settings: true
+                });
             } else {
                 throw 'display type wrong';
             }
@@ -75,13 +82,13 @@ define([
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data, template, navigation) {
-                this.save(data, template, navigation);
+            this.sandbox.on('sulu.content.contents.save', function(data, template) {
+                this.save(data, template);
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.contents.load', function(id) {
-                this.load(id);
+            this.sandbox.on('sulu.content.contents.load', function(id, webspace, language) {
+                this.load(id, webspace, language);
             }, this);
 
             // add new content
@@ -100,8 +107,8 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.content.contents.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
+            this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 
             // return dropdown for state
@@ -147,8 +154,7 @@ define([
         },
 
         getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace;
-            // TODO portal
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
             this.sandbox.util.load(url)
                 .then(function(data) {
                     callback(data.resourceLocator);
@@ -174,6 +180,8 @@ define([
                             processData: true,
 
                             success: function() {
+                                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
@@ -235,32 +243,33 @@ define([
                 success: function() {
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                     this.sandbox.emit('sulu.labels.success.show',
-                                      'labels.state-changed.success-desc',
-                                      'labels.state-changed.success',
-                                      'sulu.content.contents.state.label');
+                        'labels.state-changed.success-desc',
+                        'labels.state-changed.success',
+                        'sulu.content.contents.state.label');
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('sulu.content.contents.state.changeFailed');
                     this.sandbox.emit('sulu.labels.error.show',
-                                      'labels.state-changed.error-desc',
-                                      'labels.state-changed.error',
-                                      'sulu.content.contents.state.label');
+                        'labels.state-changed.error-desc',
+                        'labels.state-changed.error',
+                        'sulu.content.contents.state.label');
                     this.sandbox.logger.log("error while saving profile");
                 }.bind(this)
             });
         },
 
-        save: function(data, template, navigation) {
+        save: function(data, template) {
             this.content.set(data);
 
-            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, navigation, null, {
+            this.content.fullSave(template, this.options.webspace, this.options.language, this.options.parent, null, null, {
                 // on success save contents id
                 success: function(response) {
                     var model = response.toJSON();
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.content.contents.saved', model.id);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/details');
+                        this.sandbox.sulu.viewStates.justSaved = true;
+                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/content');
                     }
                 }.bind(this),
                 error: function() {
@@ -269,16 +278,15 @@ define([
             });
         },
 
-        load: function(id) {
-            // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + id + '/details');
+        load: function(id, webspace, language) {
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + id + '/content');
         },
 
         add: function(parent) {
             if (!!parent) {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/content');
             } else {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/details');
+                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/content');
             }
         },
 
@@ -348,6 +356,7 @@ define([
         renderList: function() {
             var $list = this.sandbox.dom.createElement('<div id="contacts-list-container"/>');
             this.html($list);
+
             this.sandbox.start([
                 {name: 'content/components/list@sulucontent', options: { el: $list}}
             ]);
@@ -368,34 +377,84 @@ define([
             ]);
         },
 
-        renderForm: function() {
-            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>');
+        renderForm: function(tab) {
+            var $form = this.sandbox.dom.createElement('<div id="contacts-form-container"/>'),
+                $preview = this.sandbox.dom.createElement('<div id="preview-container"/>'), data;
+            tab = (typeof tab === 'object') ? tab : {content: true};
+
             this.html($form);
+            this.sandbox.dom.append('#preview', $preview);
+
             // load data and show form
             this.content = new Content();
             if (!!this.options.id) {
+
+                // collapse navigation
+                this.sandbox.emit('husky.navigation.collapse', true);
+
                 this.content = new Content({id: this.options.id});
-                this.content.fullFetch(this.options.webspace, this.options.language, {
+                this.content.fullFetch(this.options.webspace, this.options.language, true, {
                     success: function(model) {
-                        this.sandbox.start([
+
+                        var data = model.toJSON(),
+                            components = [
                             {
                                 name: 'content/components/form@sulucontent',
                                 options: {
                                     el: $form,
                                     id: this.options.id,
-                                    data: model.toJSON(),
+                                    data: data,
                                     webspace: this.options.webspace,
                                     language: this.options.language,
-                                    preview: !!this.options.preview ? this.options.preview : false
+                                    preview: !!this.options.preview ? this.options.preview : false,
+                                    tab: tab
                                 }
                             }
-                        ]);
+                        ];
+
+//                        // only start preview in content tab and at specific window width
+//                        if (this.sandbox.dom.width(window) >= MIN_CONTAINER_WIDTH && tab.content === true) {
+
+//                            this.sandbox.logger.log("window width:", this.sandbox.dom.width(window));
+
+                            components.push({
+                                name: 'content/components/preview@sulucontent',
+                                options: {
+                                    el: '#preview-container',
+                                    toolbar: {
+                                        resolutions: [
+                                            1680,
+                                            1440,
+                                            1024,
+                                            800,
+                                            600,
+                                            480
+                                        ],
+                                        showLeft: true,
+                                        showRight: true
+                                    },
+                                    mainContentElementIdentifier: 'content',
+                                    iframeSource: {
+                                        url: '/admin/content/preview/',
+                                        webspace: this.options.webspace,
+                                        language: this.options.language,
+                                        template: data.template,
+                                        id: this.options.id
+                                    }
+                                }
+                            });
+
+                        this.sandbox.start(components);
                     }.bind(this),
                     error: function() {
                         this.sandbox.logger.log("error while fetching content");
                     }.bind(this)
                 });
             } else {
+
+                // uncollapse navigation
+                this.sandbox.emit('husky.navigation.uncollapse');
+
                 this.sandbox.start([
                     {
                         name: 'content/components/form@sulucontent',
@@ -404,7 +463,8 @@ define([
                             data: this.content.toJSON(),
                             webspace: this.options.webspace,
                             language: this.options.language,
-                            preview: !!this.options.preview ? true : false
+                            preview: !!this.options.preview ? true : false,
+                            tab: tab
                         }
                     }
                 ]);

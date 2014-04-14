@@ -1,11 +1,13 @@
 language: php
 
 php:
-  - 5.5
   - 5.4
+  - 5.5
+  - hhvm
 
 env:
   - DB=mysql
+  - DB=pgsql
 
 before_script:
   - composer self-update
@@ -13,6 +15,17 @@ before_script:
   - ./bin/jackrabbit.sh
   - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE sulu_test;"; fi
   - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE sulu_test;" -U postgres; fi
+  - php vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Testing/GeneratePhpunitConfig.php $DB
   - php bin/jackrabbit.php
 
-script: phpunit --coverage-text
+script: phpunit -c $DB.phpunit.xml --coverage-text
+
+notifications:
+  irc: "irc.freenode.org#sulu-cmf"
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  exclude:
+    - php: hhvm
+      env: DB=pgsql  # driver currently unsupported by HHVM

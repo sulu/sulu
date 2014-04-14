@@ -13,15 +13,17 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 interface NodeRepositoryInterface
 {
-
     /**
      * returns node for given uuid
-     * @param $uuid
-     * @param $webspaceKey
-     * @param $languageCode
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param bool $breadcrumb
+     * @param bool $complete
+     * @param bool $excludeGhosts
      * @return array
      */
-    public function getNode($uuid, $webspaceKey, $languageCode);
+    public function getNode($uuid, $webspaceKey, $languageCode, $breadcrumb = false, $complete = true, $excludeGhosts = false);
 
     /**
      * returns a list of nodes
@@ -30,9 +32,11 @@ interface NodeRepositoryInterface
      * @param string $languageCode
      * @param int $depth
      * @param bool $flat
+     * @param bool $complete
+     * @param bool $excludeGhosts
      * @return array
      */
-    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true);
+    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true, $excludeGhosts = false);
 
     /**
      * Returns the content of a smartcontent configuration
