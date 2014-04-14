@@ -32,7 +32,7 @@
             </join-columns>
             <gedmo:tree-parent/>
         </many-to-one>
-        <many-to-one field="collectionType" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionType" inversed-by="collections">
+        <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionType" inversed-by="collections">
             <join-columns>
                 <join-column name="idCollectionTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
