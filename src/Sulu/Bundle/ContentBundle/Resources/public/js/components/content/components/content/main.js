@@ -40,7 +40,7 @@ define(function() {
                                 translate: true,
                                 languageNamespace: 'template.',
                                 callback: function(item) {
-                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.template.item-clicked', item);
+                                    this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                 }.bind(this)
                             }
                         },
@@ -52,13 +52,14 @@ define(function() {
                             type: 'select',
                             title: '',
                             hidden: true,
+                            class: 'highlight-white',
                             itemsOption: {
                                 url: '/admin/content/languages/' + this.options.webspace,
                                 titleAttribute: 'name',
                                 idAttribute: 'localization',
                                 translate: false,
                                 callback: function(item) {
-                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.languages.item-clicked', item);
+                                    this.sandbox.emit('sulu.dropdown.languages.item-clicked', item);
                                 }.bind(this)
                             }
                         };
