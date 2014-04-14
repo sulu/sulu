@@ -68,6 +68,11 @@ class TemplateReader implements LoaderInterface
     private $complexNodeTypes = array('block');
 
     /**
+     * @var array
+     */
+    private $tags = array();
+
+    /**
      * Reads all types from the given path
      * @param $path string path to file with type definitions
      * @param $mandatoryNodes array with key of mandatory node names
@@ -83,43 +88,60 @@ class TemplateReader implements LoaderInterface
 
         try {
             $this->xmlDocument->load($path);
-
-            if (!empty($mandatoryNodes)) {
-                $template = $this->getMandatoryNodes($mandatoryNodes);
-            }
-
-            $template[$this->propertiesKey] = array();
-            $xpath = new \DOMXPath($this->xmlDocument);
-            $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
-
-            /** @var \DOMNodeList $nodes */
-            $nodes = $xpath->query($this->pathToProperties);
-
-            foreach ($nodes as $node) {
-
-                /** @var \DOMNode $node */
-                $attributes = $this->getAllAttributesOfNode($node);
-
-                if(in_array($node->tagName, $this->complexNodeTypes)) {
-                    $attributes['type'] = $node->tagName;
-                }
-
-                $name = $attributes[$this->nameKey];
-                $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath, $this->paramsKey);
-                $tags = $this->getChildrenOfNode($node, $this->pathToTags, $xpath, $this->tagKey);
-                $template[$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
-
-                if(in_array($node->tagName, $this->complexNodeTypes)) {
-                    $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$node);
-                }
-
-            }
-
         } catch (InvalidXmlException $ex) {
             throw $ex;
         } catch (Exception $ex) {
             // TODO do not catch exceptions here but in the callee
             throw new InvalidArgumentException('Path is invalid: ' . $path);
+        }
+        
+        if (!empty($mandatoryNodes)) {
+            $template = $this->getMandatoryNodes($mandatoryNodes);
+        }
+
+        $template[$this->propertiesKey] = array();
+        $xpath = new \DOMXPath($this->xmlDocument);
+        $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
+
+        /** @var \DOMNodeList $nodes */
+        $nodes = $xpath->query($this->pathToProperties);
+
+        foreach ($nodes as $node) {
+
+            /** @var \DOMNode $node */
+            $attributes = $this->getAllAttributesOfNode($node);
+
+            if (in_array($node->tagName, $this->complexNodeTypes)) {
+                $attributes['type'] = $node->tagName;
+            }
+
+            $name = $attributes[$this->nameKey];
+            $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath, $this->paramsKey);
+            $tags = $this->getChildrenOfNode($node, $this->pathToTags, $xpath, $this->tagKey);
+            $this->tags = array_merge($this->tags, (isset($tags['tags']) ? $tags['tags'] : array()));
+            $template[$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
+
+            if (in_array($node->tagName, $this->complexNodeTypes)) {
+                $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $node);
+            }
+
+        }
+
+        // check combination of tag and priority of uniqueness
+        for ($x = 0; $x < sizeof($this->tags); $x++) {
+            $xName = $this->tags[$x]['name'];
+            $xPriority = isset($this->tags[$x]['priority']) ? $this->tags[$x]['priority'] : 1;
+            for ($y = 0; $y < sizeof($this->tags); $y++) {
+                $yName = $this->tags[$y]['name'];
+                $yPriority = isset($this->tags[$y]['priority']) ? $this->tags[$y]['priority'] : 1;
+                if ($x !== $y && $xName === $yName && $xPriority === $yPriority) {
+                    throw new InvalidXmlException(sprintf(
+                        'Priority %s of tag %s exists duplicated',
+                        $xPriority,
+                        $xName
+                    ));
+                }
+            }
         }
 
         return $template;
@@ -131,7 +153,8 @@ class TemplateReader implements LoaderInterface
      * @param \DOMNode $node
      * @return array with sub properties
      */
-    private function parseSubproperties($xpath, $node){
+    private function parseSubproperties($xpath, $node)
+    {
 
         $properties = array();
 
@@ -140,11 +163,11 @@ class TemplateReader implements LoaderInterface
 
 
         /** @var \DOMNode $child */
-        foreach($children as $child) {
+        foreach ($children as $child) {
 
             $attributes = $this->getAllAttributesOfNode($child);
 
-            if(in_array($child->tagName, $this->complexNodeTypes)) {
+            if (in_array($child->tagName, $this->complexNodeTypes)) {
                 $attributes['type'] = $child->tagName;
             }
 
@@ -153,8 +176,8 @@ class TemplateReader implements LoaderInterface
             $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
             $properties[$name] = array_merge($attributes, $tags, $params);
 
-            if(in_array($child->tagName, $this->complexNodeTypes)) {
-                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$child);
+            if (in_array($child->tagName, $this->complexNodeTypes)) {
+                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $child);
             }
 
         }
@@ -273,7 +296,7 @@ class TemplateReader implements LoaderInterface
      * Returns true if this class supports the given resource.
      *
      * @param mixed $resource A resource
-     * @param string $type     The resource type
+     * @param string $type The resource type
      *
      * @throws \Sulu\Exception\FeatureNotImplementedException
      * @return Boolean true if this class supports the given resource, false otherwise

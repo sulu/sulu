@@ -102,7 +102,9 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReadTypesInvalidPath()
     {
         $templateReader = new TemplateReader();
-        $templateReader->load('');
+        $templateReader->load(
+            __DIR__ . '/../../../Resources/DataFixtures/Template/template_not_exists.xml'
+        );
     }
 
     public function testReadTypesEmptyProperties()
@@ -269,6 +271,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block.xml');
         $this->assertEquals($template, $result);
+    }
+
+    public function testDuplicatedPriority()
+    {
+        $this->setExpectedException('\Sulu\Component\Content\Template\Exception\InvalidXmlException','The given XML is invalid! Priority 10 of tag sulu.node.title exists duplicated');
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_duplicated_priority.xml');
     }
 
 }
