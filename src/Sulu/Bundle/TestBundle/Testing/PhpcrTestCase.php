@@ -32,6 +32,7 @@ use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
+use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -169,18 +170,20 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareEventDispatcher();
             $this->prepareLocalizationFinder();
 
+            $cleaner = new PathCleanup();
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,
                 $this->structureManager,
                 $this->sessionManager,
                 $this->eventDispatcher,
                 $this->localizationFinder,
+                $cleaner,
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace
             );
 
-            $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes')), 'not in use');
+            $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner), 'not in use');
             $this->containerValueMap = array_merge(
                 $this->containerValueMap,
                 array(
