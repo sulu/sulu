@@ -10,11 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Preview;
 
-
 use Doctrine\Common\Cache\ArrayCache;
-use Ratchet\Http\HttpServer;
-use Ratchet\Server\IoServer;
-use Ratchet\WebSocket\WsServer;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent;
@@ -23,7 +19,6 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
-use Sulu\Component\Testing\WebsocketClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -69,6 +64,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'start',
                     'content' => '123-123-123',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'form',
                     'user' => '1',
                     'params' => array()
@@ -82,6 +80,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'start',
                     'content' => '123-123-123',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'preview',
                     'user' => '1',
                     'params' => array()
@@ -153,6 +154,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'start',
                     'content' => '456-456-456',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'form',
                     'user' => '1',
                     'params' => array()
@@ -178,6 +182,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'start',
                     'content' => '456-456-456',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'preview',
                     'user' => '1',
                     'params' => array()
@@ -191,6 +198,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'start',
                     'content' => '123-123-123',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'form',
                     'user' => '1',
                     'params' => array()
@@ -204,6 +214,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'start',
                     'content' => '123-123-123',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'preview',
                     'user' => '1',
                     'params' => array()
@@ -217,6 +230,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'update',
                     'content' => '123-123-123',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'form',
                     'user' => '1',
                     'params' => array(
@@ -234,6 +250,9 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                 array(
                     'command' => 'update',
                     'content' => '123-123-123',
+                    'templateKey' => 'overview',
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
                     'type' => 'form',
                     'user' => '1',
                     'params' => array(
@@ -241,185 +260,6 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
                             'article' => 'qwertz'
                         )
                     )
-                )
-            )
-        );
-    }
-
-    public function testUpdateTemplate()
-    {
-        $clientForm = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-            },
-            $this->any(),
-            'form',
-            function () {
-                $this->assertTrue(true);
-            },
-            $this->any()
-        );
-        $clientPreview = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-                if ($data->command === 'changes') {
-                    $this->assertTrue($data->params->changes->reload->content);
-                }
-            },
-            $this->exactly(2),
-            'preview',
-            function () {
-                $this->assertTrue(true);
-            },
-            $this->any()
-        );
-
-        $this->component->onMessage(
-            $clientForm,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => '123-123-123',
-                    'type' => 'form',
-                    'user' => '1',
-                    'params' => array()
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientPreview,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => '123-123-123',
-                    'type' => 'preview',
-                    'user' => '1',
-                    'params' => array()
-                )
-            )
-        );
-        $this->component->onMessage(
-            $clientForm,
-            json_encode(
-                array(
-                    'command' => 'update',
-                    'content' => '123-123-123',
-                    'type' => 'form',
-                    'user' => '1',
-                    'webspaceKey' => 'sulu_io',
-                    'languageCode' => 'en',
-                    'params' => array(
-                        'template' => 'simple',
-                        'changes' => array(
-                            'article' => 'qwertz'
-                        )
-                    )
-                )
-            )
-        );
-    }
-
-    public function testClose()
-    {
-        $i = -1;
-
-        $clientForm = $this->prepareClient(
-            function ($string) use (&$i) {
-                $data = json_decode($string);
-                $this->assertEquals($data->params->msg, 'OK');
-
-                $i++;
-                if ($i == 0) {
-                    $this->assertEquals($data->params->other, false);
-                } else {
-                    $this->assertEquals($data->params->other, true);
-                }
-            },
-            $this->exactly(2),
-            'form',
-            function () {
-                $this->assertTrue(true);
-            },
-            $this->once()
-        );
-        $clientPreview = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-                $this->assertEquals($data->params->msg, 'OK');
-                $this->assertEquals($data->params->other, true);
-            },
-            $this->once(),
-            'preview',
-            function () {
-                $this->assertTrue(true);
-            },
-            $this->once()
-        );
-
-        $clientForm2 = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-
-                if ($data->command != 'start') {
-                    // no update will be sent
-                    $this->assertTrue(false);
-                }
-            },
-            $this->any(),
-            'form2',
-            function () {
-            },
-            $this->never()
-        );
-        $this->component->onMessage(
-            $clientForm2,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => '456-456-456',
-                    'type' => 'form',
-                    'user' => '1',
-                    'params' => array()
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientForm,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => '123-123-123',
-                    'type' => 'form',
-                    'user' => '1',
-                    'params' => array()
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientPreview,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => '123-123-123',
-                    'type' => 'preview',
-                    'user' => '1',
-                    'params' => array()
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientForm,
-            json_encode(
-                array(
-                    'command' => 'close',
-                    'content' => '123-123-123',
-                    'type' => 'form',
-                    'user' => '1',
-                    'params' => array()
                 )
             )
         );

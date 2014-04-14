@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<workspace xmlns="http://schemas.sulu.io/workspace/workspace"
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://schemas.sulu.io/workspace/workspace http://schemas.sulu.io/workspace/workspace-1.0.xsd">
+           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
 
     <name>Sulu CMF</name>
     <key>sulu_io</key>
@@ -10,6 +10,7 @@
         <localization language="en" country="us" shadow="auto"/>
         <localization language="de" country="at"/>
         <localization language="de"/>
+        <localization language="en"/>
     </localizations>
 
     <theme>
@@ -55,4 +56,4 @@
             </environments>
         </portal>
     </portals>
-</workspace>
+</webspace>

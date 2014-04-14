@@ -99,7 +99,9 @@ class NodeControllerTest extends DatabaseTestCase
 
         $cmf = $this->session->getRootNode()->addNode('cmf');
         $webspace = $cmf->addNode('sulu_io');
-        $webspace->addNode('routes');
+        $nodes = $webspace->addNode('routes');
+        $nodes->addNode('de');
+        $nodes->addNode('en');
         $content = $webspace->addNode('contents');
         $content->setProperty('sulu_locale:en-template', 'overview');
         $content->setProperty('sulu_locale:en-creator', 1);
@@ -138,6 +140,8 @@ class NodeControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
@@ -181,7 +185,7 @@ class NodeControllerTest extends DatabaseTestCase
                 'tag1',
                 'tag2'
             ),
-            'url' => '/de/test',
+            'url' => '/test',
             'article' => 'Test'
         );
 
@@ -193,20 +197,20 @@ class NodeControllerTest extends DatabaseTestCase
             )
         );
 
-        $client->request('POST', '/api/nodes?template=overview', $data);
+        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Testtitle', $response->title);
         $this->assertEquals('Test', $response->article);
-        $this->assertEquals('/de/test', $response->url);
+        $this->assertEquals('/test', $response->url);
         $this->assertEquals(array('tag1', 'tag2'), $response->tags);
         $this->assertEquals(1, $response->creator);
         $this->assertEquals(1, $response->changer);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/sulu_io/routes/de/test');
+        $route = $root->getNode('cmf/sulu_io/routes/en/test');
 
         /** @var NodeInterface $content */
         $content = $route->getPropertyValue('sulu:content');
@@ -246,12 +250,16 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/nodes?template=overview', $data1);
+        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data1);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $uuid = $response->id;
 
-        $client->request('POST', '/api/nodes?template=overview&parent=' . $uuid, $data2);
+        $client->request(
+            'POST',
+            '/api/nodes?template=overview&parent=' . $uuid . '&webspace=sulu_io&language=en',
+            $data2
+        );
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -263,7 +271,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->changer);
 
         $root = $this->session->getRootNode();
-        $route = $root->getNode('cmf/sulu_io/routes/news/test');
+        $route = $root->getNode('cmf/sulu_io/routes/en/news/test');
 
         /** @var NodeInterface $content */
         $content = $route->getPropertyValue('sulu:content');
@@ -304,6 +312,8 @@ class NodeControllerTest extends DatabaseTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
+        $mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
+
         $client = $this->createClient(
             array(),
             array(
@@ -313,7 +323,7 @@ class NodeControllerTest extends DatabaseTestCase
         );
 
         for ($i = 0; $i < count($data); $i++) {
-            $client->request('POST', '/api/nodes?template=overview', $data[$i]);
+            $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data[$i]);
             $data[$i] = (array) json_decode($client->getResponse()->getContent());
         }
 
@@ -331,15 +341,16 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('GET', '/api/nodes/' . $data[0]['id']);
+        $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($data[0]['title'], $response->title);
-        $this->assertEquals($data[0]['tags'], $response->tags);
-        $this->assertEquals($data[0]['url'], $response->url);
-        $this->assertEquals($data[0]['article'], $response->article);
+        $this->assertEquals(17, sizeof($response));
+        $this->assertEquals($data[0]['title'], $response['title']);
+        $this->assertEquals($data[0]['tags'], $response['tags']);
+        $this->assertEquals($data[0]['url'], $response['url']);
+        $this->assertEquals($data[0]['article'], $response['article']);
     }
 
     public function testDelete()
@@ -353,10 +364,10 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $data = $this->beforeTestGet();
 
-        $client->request('DELETE', '/api/nodes/' . $data[0]['id']);
+        $client->request('DELETE', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/nodes/' . $data[0]['id']);
+        $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
@@ -375,7 +386,7 @@ class NodeControllerTest extends DatabaseTestCase
         $data[0]['tags'] = array('new tag');
         $data[0]['article'] = 'thats a new article';
 
-        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?template=overview', $data[0]);
+        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?template=overview&webspace=sulu_io&language=en', $data[0]);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -387,7 +398,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->creator);
         $this->assertEquals(1, $response->creator);
 
-        $client->request('GET', '/api/nodes?depth=1');
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -396,18 +407,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(2, sizeof($response->_embedded));
 
         $this->assertEquals($data[1]['title'], $response->_embedded[0]->title);
-        $this->assertEquals($data[1]['tags'], $response->_embedded[0]->tags);
-        $this->assertEquals($data[1]['url'], $response->_embedded[0]->url);
-        $this->assertEquals($data[1]['article'], $response->_embedded[0]->article);
-        $this->assertEquals(1, $response->_embedded[0]->creator);
-        $this->assertEquals(1, $response->_embedded[0]->creator);
-
         $this->assertEquals($data[0]['title'], $response->_embedded[1]->title);
-        $this->assertEquals($data[0]['tags'], $response->_embedded[1]->tags);
-        $this->assertEquals($data[0]['url'], $response->_embedded[1]->url);
-        $this->assertEquals($data[0]['article'], $response->_embedded[1]->article);
-        $this->assertEquals(1, $response->_embedded[1]->creator);
-        $this->assertEquals(1, $response->_embedded[1]->creator);
     }
 
     private function buildTree()
@@ -464,15 +464,15 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/nodes?template=overview', $data[0]);
+        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview', $data[1]);
+        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data[1]);
         $data[1] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&parent='.$data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&parent='.$data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en&parent='.$data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent());
 
         return $data;
@@ -490,7 +490,7 @@ class NodeControllerTest extends DatabaseTestCase
         $data = $this->buildTree();
 
         // get child nodes from root
-        $client->request('GET', '/api/nodes?depth=1');
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -536,7 +536,7 @@ class NodeControllerTest extends DatabaseTestCase
         $data = $this->buildTree();
 
         // get child nodes from root
-        $client->request('GET', '/api/nodes?depth=1');
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -550,7 +550,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertTrue($items[1]->hasSub);
 
         // get child nodes from root
-        $client->request('GET', '/api/nodes?depth=2');
+        $client->request('GET', '/api/nodes?depth=2&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -570,7 +570,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertTrue($items[3]->hasSub);
 
         // get child nodes from root
-        $client->request('GET', '/api/nodes?depth=3');
+        $client->request('GET', '/api/nodes?depth=3&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -593,7 +593,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertFalse($items[4]->hasSub);
 
         // get child nodes from subNode
-        $client->request('GET', '/api/nodes?depth=3&parent=' . $data[3]['id']);
+        $client->request('GET', '/api/nodes?depth=3&webspace=sulu_io&language=en&parent=' . $data[3]['id']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -616,7 +616,7 @@ class NodeControllerTest extends DatabaseTestCase
         $data = $this->buildTree();
 
         // get child nodes from root
-        $client->request('GET', '/api/nodes?depth=1&flat=false');
+        $client->request('GET', '/api/nodes?depth=1&flat=false&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -632,7 +632,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(0, sizeof($items[1]->_embedded));
 
         // get child nodes from root
-        $client->request('GET', '/api/nodes?depth=2&flat=false');
+        $client->request('GET', '/api/nodes?depth=2&flat=false&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -658,7 +658,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(0, sizeof($items[1]->_embedded));
 
         // get child nodes from root
-        $client->request('GET', '/api/nodes?depth=3&flat=false');
+        $client->request('GET', '/api/nodes?depth=3&flat=false&webspace=sulu_io&language=en');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -690,7 +690,7 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(0, sizeof($items[0]->_embedded));
 
         // get child nodes from subNode
-        $client->request('GET', '/api/nodes?depth=3&flat=false&parent=' . $data[3]['id']);
+        $client->request('GET', '/api/nodes?depth=3&flat=false&webspace=sulu_io&language=en&parent=' . $data[3]['id']);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded;
@@ -746,5 +746,76 @@ class NodeControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
         $response = json_decode($client->getResponse()->getContent())->_embedded;
         $this->assertEquals(2, sizeof($response));
+    }
+
+    public function testBreadcrumb()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+        $mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'en', 1);
+
+        $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true&webspace=sulu_io&language=en');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($data[4]['title'], $response->title);
+        $this->assertEquals($data[4]['tags'], $response->tags);
+        $this->assertEquals($data[4]['url'], $response->url);
+        $this->assertEquals($data[4]['article'], $response->article);
+
+        $this->assertEquals(3, sizeof($response->breadcrumb));
+        $this->assertEquals('Start Page', $response->breadcrumb[0]->title);
+        $this->assertEquals('test2', $response->breadcrumb[1]->title);
+        $this->assertEquals('test4', $response->breadcrumb[2]->title);
+    }
+
+    public function testSmallResponse()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = $this->buildTree();
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded'];
+
+        $this->assertEquals(2, sizeof($items));
+
+        $this->assertEquals(9, sizeof($items[0]));
+        $this->assertArrayHasKey('id', $items[0]);
+        $this->assertEquals('test1', $items[0]['title']);
+        $this->assertEquals(1, $items[0]['nodeState']);
+        $this->assertEquals(1, $items[0]['globalState']);
+        $this->assertFalse($items[0]['publishedState']);
+        $this->assertEquals('main', $items[0]['navigation']);
+        $this->assertFalse($items[0]['hasSub']);
+        $this->assertEquals(0, sizeof($items[0]['_embedded']));
+        $this->assertArrayHasKey('_links', $items[0]);
+
+        $this->assertEquals(9, sizeof($items[1]));
+        $this->assertArrayHasKey('id', $items[1]);
+        $this->assertEquals('test2', $items[1]['title']);
+        $this->assertEquals(1, $items[1]['nodeState']);
+        $this->assertEquals(1, $items[1]['globalState']);
+        $this->assertFalse($items[1]['publishedState']);
+        $this->assertEquals('main', $items[1]['navigation']);
+        $this->assertTrue($items[1]['hasSub']);
+        $this->assertEquals(0, sizeof($items[1]['_embedded']));
+        $this->assertArrayHasKey('_links', $items[1]);
     }
 }

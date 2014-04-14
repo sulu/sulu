@@ -1,6 +1,3 @@
-<textarea id="{{ id }}"
-          class="form-element preview-update trigger-save-button"
+<textarea id="{{ id|raw }}" class="form-element preview-update trigger-save-button"
           data-mapper-property="{{ property.name }}"
-        {% if property.mandatory %}
-    data-validation-required="true"
-        {% endif %}></textarea>
+          {% if property.mandatory %}data-validation-required="true"{% endif %}></textarea>

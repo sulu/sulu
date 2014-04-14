@@ -1,0 +1,83 @@
+.preview {
+
+}
+
+.preview-wrapper {
+    overflow: scroll;
+    background-color: #ffffff;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: 100; /* because of a css bug in the toolbar */
+    border-left: 1px solid #666;
+}
+
+.preview-iframe {
+    border: 0;
+    height: 100%;
+}
+
+.preview-toolbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 101;
+    height: 30px;
+    color: #fff;
+    font-weight: 100;
+
+    .right {
+        float: right;
+        background: #3e3e3e;
+        height: 100%;
+
+        .new-window {
+            width: 30px;
+            overflow: hidden;
+            text-align: center;
+            padding-top: 5px;
+            border-left: 1px solid #4d4d4d;
+            height:30px;
+        }
+
+        .resolutions {
+
+
+            .drop-down-trigger {
+                color: #fff;
+                padding: 5px 10px;
+            }
+
+            .dropdown-toggle {
+                display: inline-block;
+                &::after {
+                    top: -1px;
+                    margin-left: 0px;
+                    margin-right: 5px;
+                    border-top: 6px solid #fff;
+                }
+            }
+
+            .dropdown-menu {
+                background: #3e3e3e;
+                color: #fff;
+                z-index: 105;
+                top: 35px;
+                left: -5px;
+                border: 0;
+                width: auto;
+            }
+        }
+    }
+
+    .left {
+        float: left;
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+        background: #3e3e3e;
+        text-align: center;
+        padding-top: 5px;
+    }
+}

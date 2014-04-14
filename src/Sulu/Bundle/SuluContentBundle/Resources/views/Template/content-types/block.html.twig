@@ -1,0 +1,13 @@
+<div class="block block-{{ property.name }}">
+    {% for child in property.childProperties %}
+
+        {# set defaults for property#}
+        {% set type = getType(child.contentTypeName) %}
+
+        {% if child is multiple %}
+            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'type': type, 'id': id ~ '-' ~ child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+        {% else %}
+            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'type': type, 'id': id ~ '-' ~ child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+        {% endif %}
+    {% endfor %}
+</div>

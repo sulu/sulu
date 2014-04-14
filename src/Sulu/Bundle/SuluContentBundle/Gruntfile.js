@@ -44,10 +44,10 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
-                tasks: ['compass:dev']
+                tasks: ['publish']
             },
             scripts: {
-                files: ['Resources/public/**'],
+                files: ['Resources/public/js/{,*/}*.js'],
                 tasks: ['publish']
             }
         },
@@ -60,7 +60,7 @@ module.exports = function (grunt) {
             // TODO: options: { banner: '<%= meta.banner %>' },
             compress: {
                 files: {
-                    'dist/main.min.css': ['Resources/public/css/']
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
                 }
             }
         },
@@ -138,6 +138,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('publish', [
+        'compass:dev',
+        'cssmin',
         'clean:public',
         'copy:public'
     ]);

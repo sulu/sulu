@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('interval')
-                                    ->defaultValue('1000')
+                                    ->defaultValue('5000')
                                 ->end()
                             ->end()
                         ->end()
