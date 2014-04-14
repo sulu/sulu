@@ -28,7 +28,7 @@
 
         <many-to-one field="parent" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="children">
             <join-columns>
-                <join-column name="idCollectionsParent" referenced-column-name="id"/>
+                <join-column name="idCollectionsParent" referenced-column-name="id" on-delete="SET NULL" />
             </join-columns>
             <gedmo:tree-parent/>
         </many-to-one>
