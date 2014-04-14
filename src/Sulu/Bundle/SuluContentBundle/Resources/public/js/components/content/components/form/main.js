@@ -339,8 +339,11 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             // expand navigation if navigation item is clicked
-            this.sandbox.on('husky.navigation.item.select', function() {
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'large', content: 'auto'});
+            this.sandbox.on('husky.navigation.item.select', function(event) {
+                // when navigation item is already opended do nothing - relevant for homepage
+                if(event.id !== this.options.id) {
+                    this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+                }
             }.bind(this));
 
             // expand navigation if back gets clicked
