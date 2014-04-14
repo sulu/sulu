@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://schemas.sulu.io/template/template"
+           xmlns="http://schemas.sulu.io/template/template"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="template" type="templateType"/>
+
+    <xs:complexType name="templateType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="key"/>
+            <xs:element type="xs:string" name="view"/>
+            <xs:element type="xs:string" name="controller"/>
+            <xs:element type="xs:integer" name="cacheLifetime"/>
+            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="propertiesType">
+
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+
+    </xs:complexType>
+
+
+    <xs:complexType name="blockPropertiesType">
+
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="propertyType" name="property"/>
+            <xs:element type="blockType" name="block"/>
+        </xs:choice>
+
+    </xs:complexType>
+
+
+    <xs:complexType name="propertyType" mixed="true">
+
+        <xs:sequence>
+            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="type" use="required"/>
+        <xs:attribute type="xs:string" name="mandatory" use="optional"/>
+        <xs:attribute type="xs:string" name="multilingual" use="optional"/>
+        <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
+        <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
+
+    </xs:complexType>
+
+
+    <xs:complexType name="blockType">
+
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element type="blockPropertiesType" name="properties"/>
+        </xs:sequence>
+
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="mandatory" use="optional"/>
+        <xs:attribute type="xs:string" name="multilingual" use="optional"/>
+        <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
+        <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
+
+    </xs:complexType>
+
+
+    <xs:complexType name="paramsType">
+        <xs:sequence>
+            <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="paramType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+                <xs:attribute type="xs:string" name="value" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+
+</xs:schema>

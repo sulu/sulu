@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class ListQueryBuilder
 {
     /**
@@ -64,30 +62,72 @@ class ListQueryBuilder
     private $associationNames;
 
     /**
-     * An array containing all the fields in which the search is executed
+     * cache variable for replacing select string in some cases
+     * @var string
+     */
+    private $replaceSelect;
+
+    /**
+     * defines if query is used for counting
+     * @var bool
+     */
+    private $countQuery;
+
+    /**
+     * The names of columns of the root entity
+     * @var array
+     */
+    private $fieldNames;
+
+    /**
+     * contains all fieldnames that are searched
      * @var array
      */
     private $searchFields;
 
     /**
-     * @param array $associationNames
-     * @param string $entityName
-     * @param array $fields
-     * @param array $sorting
-     * @param array $where
-     * @param string $search
-     * @param array $searchFields
+     * contains searched fieldnames that can be queried by LIKE
+     * @var array
      */
-    function __construct($associationNames, $entityName, $fields, $sorting, $where, $searchFields = array())
+    private $searchTextFields;
+
+    /**
+     * contains searched fieldnames that are numeric
+     * @var array
+     */
+    private $searchNumberFields;
+
+    /**
+     * @param $associationNames
+     * @param $fieldNames
+     * @param $entityName
+     * @param $fields
+     * @param $sorting
+     * @param $where
+     * @param array $searchTextFields
+     * @param array $searchNumberFields
+     */
+    function __construct(
+        $associationNames,
+        $fieldNames,
+        $entityName,
+        $fields,
+        $sorting,
+        $where,
+        $searchTextFields = array(),
+        $searchNumberFields = array()
+    )
     {
         $this->associationNames = $associationNames;
+        $this->fieldNames = $fieldNames;
         $this->entityName = $entityName;
         $this->fields = (is_array($fields)) ? $fields : array();
         $this->sorting = $sorting;
         $this->where = $where;
-        $this->searchFields = $searchFields;
+        $this->searchFields = array_merge($searchTextFields, $searchNumberFields);
+        $this->searchTextFields = $searchTextFields;
+        $this->searchNumberFields = $searchNumberFields;
     }
-
 
     /**
      * Searches Entity by filter for fields, pagination and sorted by a column
@@ -99,10 +139,23 @@ class ListQueryBuilder
     {
         $selectFromDQL = $this->getSelectFrom($prefix);
         $whereDQL = $this->getWhere($prefix);
-        $orderDQL = $this->getOrderBy($prefix);
+        if ($this->countQuery != true) {
+            $orderDQL = $this->getOrderBy($prefix);
+        } else {
+            $orderDQL = '';
+        }
         $dql = sprintf('%s %s %s', $selectFromDQL, $whereDQL, $orderDQL);
 
         return $dql;
+    }
+
+    /**
+     * just return count
+     */
+    public function justCount($countAttribute = 'u.id', $alias = 'totalcount')
+    {
+        $this->countQuery = true;
+        $this->replaceSelect = 'COUNT(' . $countAttribute . ') as ' . $alias;
     }
 
     /**
@@ -122,7 +175,7 @@ class ListQueryBuilder
             array_keys($this->where)
         );
 
-        $fieldsWhere = array_merge($fieldsWhere, $this->searchFields);
+        $fieldsWhere = array_merge($fieldsWhere, $this->searchTextFields, $this->searchNumberFields);
 
         if ($fieldsWhere != null && sizeof($fieldsWhere) >= 0) {
             foreach ($fieldsWhere as $field) {
@@ -130,7 +183,9 @@ class ListQueryBuilder
             }
         }
         // if no field is selected take prefix
-        if (strlen($this->select) == 0) {
+        if ($this->countQuery === true) {
+            $this->select = $this->replaceSelect;
+        } elseif (strlen($this->select) == 0) {
             $this->select = $prefix;
         }
 
@@ -168,7 +223,7 @@ class ListQueryBuilder
 
                 $this->addToSelect($parent, $tempField, $alias);
             }
-        } elseif (in_array($field, $this->fields)) {
+        } elseif (in_array($field, $this->fields) && in_array($field, $this->fieldNames)) {
             $this->addToSelect($prefix, $field);
         }
     }
@@ -240,7 +295,7 @@ class ListQueryBuilder
     {
         // JOIN {parent}.{associationName} {associationPrefix}
         $format = '
-                JOIN %s.%s %s';
+                LEFT JOIN %s.%s %s';
 
         return sprintf($format, $parent, $field, $alias);
     }
@@ -275,7 +330,7 @@ class ListQueryBuilder
             // Get all fields which will appear in the where clause
             // The search fields already have the right format, and we have to use only the keys of where, because its
             // values contain the filter expression
-            $fields = array_merge($whereKeys, $this->searchFields);
+            $fields = array_unique(array_merge($whereKeys, $this->searchFields));
 
             foreach ($fields as $key) {
                 $keys = explode('_', $key);
@@ -293,7 +348,15 @@ class ListQueryBuilder
                     $wheres[] .= $prefixActual . '.' . $col . ' = ' . $this->where[$key];
                 }
                 if (in_array($key, $this->searchFields)) {
-                    $searches[] .= $prefixActual . '.' . $col . ' LIKE :search';
+                    $comparator = '=';
+                    $search = ':strictSearch';
+
+                    // search by like
+                    if (in_array($key, $this->searchTextFields)) {
+                        $comparator = 'LIKE';
+                        $search = ':search';
+                    }
+                    $searches[] .= $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
                 }
             }
 
@@ -306,7 +369,7 @@ class ListQueryBuilder
                 if ($result != '') {
                     $result .= ' AND ';
                 }
-                $result .= '('.implode(' OR ', $searches).')';
+                $result .= '(' . implode(' OR ', $searches) . ')';
             }
 
             $result = 'WHERE ' . $result;

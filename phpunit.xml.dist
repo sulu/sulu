@@ -3,7 +3,7 @@
 
     <testsuites>
         <testsuite name="Sulu Test Suite">
-            <directory suffix="Test.php">./Tests</directory>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
 
@@ -16,11 +16,5 @@
             </exclude>
         </whitelist>
     </filter>
-
-    <!--
-    <php>
-        <server name="KERNEL_DIR" value="Tests/Resources/app"/>
-    </php>
-    -->
 
 </phpunit>

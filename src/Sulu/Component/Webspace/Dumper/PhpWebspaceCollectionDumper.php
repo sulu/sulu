@@ -1,0 +1,43 @@
+<?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Webspace\Dumper;
+
+use Sulu\Component\Webspace\WebspaceCollection;
+
+class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
+{
+    /**
+     * @var WebspaceCollection
+     */
+    private $webspaceCollection;
+
+    public function __construct(WebspaceCollection $webspaceCollection)
+    {
+        $this->webspaceCollection = $webspaceCollection;
+    }
+
+    /**
+     * Creates a new class with the data from the given collection
+     * @param array $options
+     * @return string
+     */
+    public function dump($options = array())
+    {
+        return $this->render(
+            'WebspaceCollectionClass.php.twig',
+            array(
+                'cache_class' => $options['cache_class'],
+                'base_class' => $options['base_class'],
+                'webspaces' => $this->webspaceCollection->toArray()
+            )
+        );
+    }
+}
