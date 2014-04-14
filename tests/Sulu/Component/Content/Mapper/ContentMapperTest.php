@@ -47,6 +47,8 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getStructureMock(2);
         } elseif ($structureKey == 'complex') {
             return $this->getStructureMock(3);
+        } elseif ($structureKey == 'mandatory') {
+            return $this->getStructureMock(4);
         }
 
         return null;
@@ -109,6 +111,13 @@ class ContentMapperTest extends PhpcrTestCase
                 $structureMock,
                 array(
                     $blockProperty
+                )
+            );
+        } elseif ($type == 4) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('blog', 'text_line', true, true)
                 )
             );
         }
@@ -1850,5 +1859,26 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertFalse($content->hasProperty('sulu_locale:de-blog'));
         $this->assertFalse($content->hasProperty('sulu_locale:en-blog'));
         $this->assertFalse($content->hasProperty('name'));
+    }
+
+    public function testMandatory()
+    {
+        $data = array(
+            'name' => 'Testname',
+            'blog' => 'German',
+            'url' => '/news/test'
+        );
+        $structure = $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
+
+        $this->assertEquals($data['name'], $structure->getPropertyValue('name'));
+        $this->assertEquals($data['blog'], $structure->getPropertyValue('blog'));
+        $this->assertEquals($data['url'], $structure->getPropertyValue('url'));
+
+        $this->setExpectedException('\Sulu\Component\Content\Exception\PropertyIsMandatoryException', 'Data for mandatory property blog in template mandatory not found');
+        $data = array(
+            'name' => 'Testname',
+            'url' => '/news/test'
+        );
+        $this->mapper->save($data, 'mandatory', 'default', 'de', 1);
     }
 }
