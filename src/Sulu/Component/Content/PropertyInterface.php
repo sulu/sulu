@@ -98,4 +98,11 @@ interface PropertyInterface
      * @return \Sulu\Component\Content\PropertyTag[]
      */
     public function getTags();
+
+    /**
+     * returns tag with given name
+     * @param string $tagName
+     * @return PropertyTag
+     */
+    public function getTag($tagName);
 }

@@ -163,6 +163,16 @@ class Property implements PropertyInterface
     }
 
     /**
+     * returns tag with given name
+     * @param string $tagName
+     * @return PropertyTag
+     */
+    public function getTag($tagName)
+    {
+        return $this->tags[$tagName];
+    }
+
+    /**
      * sets the value from property
      * @param mixed $value
      */

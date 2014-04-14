@@ -174,13 +174,24 @@ abstract class Structure implements StructureInterface
             if (!array_key_exists($tag->getName(), $this->tags)) {
                 $this->tags[$tag->getName()] = array(
                     'tag' => $tag,
-                    'property' => $property
+                    'properties' => array($tag->getPriority() => $property),
+                    'highest' => $property,
+                    'lowest' => $property
                 );
-            } elseif ($this->tags[$tag->getName()]['tag']->getPriority() < $tag->getPriority()) {
-                $this->tags[$tag->getName()] = array(
-                    'tag' => $tag,
-                    'property' => $property
-                );
+            } else {
+                $this->tags[$tag->getName()]['properties'][$tag->getPriority()] = $property;
+
+                // replace highest priority property
+                $highestProperty = $this->tags[$tag->getName()]['highest'];
+                if ($highestProperty->getTag($tag->getName())->getPriority() < $tag->getPriority()) {
+                    $this->tags[$tag->getName()]['highest'] = $property;
+                }
+
+                // replace lowest priority property
+                $lowestProperty = $this->tags[$tag->getName()]['lowest'];
+                if ($lowestProperty->getTag($tag->getName())->getPriority() > $tag->getPriority()) {
+                    $this->tags[$tag->getName()]['lowest'] = $property;
+                }
             }
         }
         $this->properties[$property->getName()] = $property;
@@ -365,13 +376,29 @@ abstract class Structure implements StructureInterface
     /**
      * returns a property instance with given tag name
      * @param string $tagName
+     * @param boolean $highest
      * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      * @return PropertyInterface
      */
-    public function getPropertyByTagName($tagName)
+    public function getPropertyByTagName($tagName, $highest = true)
     {
         if (array_key_exists($tagName, $this->tags)) {
-            return $this->tags[$tagName]['property'];
+            return $this->tags[$tagName][$highest === true ? 'highest' : 'lowest'];
+        } else {
+            throw new NoSuchPropertyException();
+        }
+    }
+
+    /**
+     * returns properties with given tag name sorted by priority
+     * @param string $tagName
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @return PropertyInterface
+     */
+    public function getPropertiesByTagName($tagName)
+    {
+        if (array_key_exists($tagName, $this->tags)) {
+            return $this->tags[$tagName]['properties'];
         } else {
             throw new NoSuchPropertyException();
         }
@@ -394,7 +421,7 @@ abstract class Structure implements StructureInterface
      */
     public function getPropertyValueByTagName($tagName)
     {
-        return $this->getPropertyByTagName($tagName)->getValue();
+        return $this->getPropertyByTagName($tagName, true)->getValue();
     }
 
     /**

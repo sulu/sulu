@@ -266,10 +266,10 @@ interface StructureInterface extends \JsonSerializable
     /**
      * returns a property instance with given tag name
      * @param string $tagName
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @param $highest
      * @return PropertyInterface
      */
-    public function getPropertyByTagName($tagName);
+    public function getPropertyByTagName($tagName, $highest = true);
 
     /**
      * returns value of property with given tag name

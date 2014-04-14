@@ -106,8 +106,8 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             new PropertyTag('sulu.node.title', 10),
             $property->getTags()['sulu.node.title']
         );
-        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.title'));
-        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.name'));
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.title', true));
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.name', true));
 
         // check url
         $this->assertArrayHasKey('url', $properties);
@@ -128,7 +128,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             new PropertyTag('sulu.rlp.part', 1),
             $property->getTags()['sulu.rlp.part']
         );
-        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.rlp.part'));
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.rlp.part', true));
 
         // check article
         $this->assertArrayHasKey('article', $properties);
