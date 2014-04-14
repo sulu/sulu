@@ -4,6 +4,7 @@
     "description": "The sulu bundle for managing contacts",
     "license": "MIT",
     "keywords": ["contact", "crm"],
+    "version": "0.2.0",
     "authors": [
         {
             "name": "Sulu Community",
@@ -13,16 +14,19 @@
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "0.12.*",
+        "friendsofsymfony/rest-bundle": "1.0.*",
         "jms/serializer-bundle": "@dev",
-        "sulu/core-bundle": "dev-develop",
-        "sulu/admin-bundle": "dev-feature/registration"
+        "stof/doctrine-extensions-bundle": "1.1.*@dev",
+
+        "sulu/sulu": "0.2.*",
+        "sulu/admin-bundle": "0.2.*"
     },
     "require-dev": {
         "symfony/symfony": "2.3.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.3.*",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "sulu/test-bundle": "0.2.*"
     },
     "autoload": {
         "psr-0": {

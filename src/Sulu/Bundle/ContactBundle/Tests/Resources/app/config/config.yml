@@ -1,0 +1,50 @@
+framework:
+    secret: secret
+    router: { resource: "%kernel.root_dir%/config/routing.yml" }
+    templating: { engines: ['twig'] }
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        enabled: false
+
+fos_rest:
+    routing_loader:
+        default_format: json
+
+stof_doctrine_extensions:
+    orm:
+        default:
+            tree: true
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+
+sulu_admin:
+    name: SULU 2.0
+
+parameters:
+    # Just a dirty hack to get the jms serializer bundle correctly working
+    # https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
+    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+
+sulu_core:
+    phpcr:
+        backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
+        workspace: test
+        username: admin
+        password: admin
+    content:
+        ~
+    webspace:
+        ~

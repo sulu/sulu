@@ -1,4 +1,12 @@
 <?php
+/*
+* This file is part of the Sulu CMS.
+*
+* (c) MASSIVE ART WebServices GmbH
+*
+* This source file is subject to the MIT license that is bundled
+* with this source code in the file LICENSE.
+*/
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
@@ -18,7 +26,24 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_contact');
+
+        $treeBuilder->root('sulu_contact')
+            ->children()
+                ->arrayNode('defaults')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('phoneType')->defaultValue('1')->end()
+                        ->scalarNode('phoneTypeMobile')->defaultValue('3')->end()
+                        ->scalarNode('phoneTypeIsdn')->defaultValue('4')->end()
+                        ->scalarNode('emailType')->defaultValue('1')->end()
+                        ->scalarNode('addressType')->defaultValue('1')->end()
+                        ->scalarNode('urlType')->defaultValue('1')->end()
+                        ->scalarNode('faxType')->defaultValue('1')->end()
+                        ->scalarNode('country')->defaultValue('1')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
