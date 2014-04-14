@@ -30,7 +30,13 @@ class SuluTagExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        // set content types
+        $container->setParameter(
+            'sulu.content.type.tag_list.template',
+            $config['content']['types']['tag_list']['template']
+        );
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }

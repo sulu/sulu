@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sulutag: '../../sulutag/js'
+        sulutag: '../../sulutag/js',
+        "type/tagList": '../../sulutag/js/validation/types/tagList'
     }
 });
 
@@ -25,12 +26,11 @@ define({
 
         app.components.addSource('sulutag', '/bundles/sulutag/js/components');
 
-        // Example: list all contacts
-        // sandbox.mvc.routes.push({
-        //     route: 'contacts/contacts',
-        //    callback: function(){
-        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
-        //     }
-        // });
+        sandbox.mvc.routes.push({
+             route: 'settings/tags',
+             callback: function(){
+                 this.html('<div data-aura-component="tags@sulutag" data-aura-display="list"/>');
+             }
+        });
     }
 });

@@ -21,6 +21,8 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        resolve_target_entities:
+                    Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
 
 monolog:
     handlers:
@@ -35,8 +37,34 @@ monolog:
 
 sulu_admin:
     name: SULU 2.0
+
+sulu_core:
+    phpcr:
+        backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
+        workspace: test
+        username: admin
+        password: admin
+    content: ~
+    webspace: ~
+
             
-parameters:
-    # Just a dirty hack to get the jms serializer bundle correctly working
-    # schmittjoh/JMSSerializerBundle#270 (comment)
-    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+# Configuration file for security in the test environment
+# Grants access to every User
+# DO NOT USE IN PRODUCTION ENVIRONMENT
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:
