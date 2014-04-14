@@ -35,6 +35,11 @@ class TestUser implements UserInterface
     private $id;
 
     /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * Set username
      *
      * @param string $username
@@ -78,6 +83,26 @@ class TestUser implements UserInterface
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set locale
+     *
+     * @param $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 
     /**

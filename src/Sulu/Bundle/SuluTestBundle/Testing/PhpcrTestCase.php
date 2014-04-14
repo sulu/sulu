@@ -16,9 +16,13 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
+use Sulu\Component\Content\Block\BlockContentType;
 use Sulu\Component\Content\ContentTypeManager;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
+use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
@@ -30,8 +34,10 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -54,6 +60,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var NodeInterface
      */
     protected $routes;
+
+    /**
+     * @var array
+     */
+    protected $languageRoutes;
 
     /**
      * @var ContentMapperInterface
@@ -81,7 +92,22 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $structureManager;
 
     /**
-     * @var array
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    protected $webspaceManager;
+
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    protected $contentTypeManager;
+
+    /**
+     * @var NodeInterface[]
      */
     protected $structureValueMap = array();
 
@@ -89,6 +115,29 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * @var SecurityContextInterface
      */
     protected $securityContext;
+
+    /**
+     * @var LocalizationFinderInterface
+     */
+    protected $localizationFinder;
+
+    /**
+     * The default language for the content mapper
+     * @var string
+     */
+    protected $language = 'de';
+
+    /**
+     * The default template for the content mapper
+     * @var string
+     */
+    protected $defaultTemplate = 'default';
+
+    /**
+     * The language namespace
+     * @var string
+     */
+    protected $languageNamespace = 'sulu_locale';
 
     /**
      * purge webspace at tear down
@@ -109,16 +158,27 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
         if ($this->mapper === null) {
             $this->prepareContainer();
 
-            $contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
-            $this->mapper = new ContentMapper($contentTypeManager, 'de', 'default_template', 'sulu_locale');
-            $this->mapper->setContainer($this->container);
-
             $this->prepareSession();
             $this->prepareRepository();
 
+            $this->prepareContentTypeManager();
             $this->prepareStructureManager();
             $this->prepareSecurityContext();
             $this->prepareSessionManager();
+            $this->prepareWebspaceManager();
+            $this->prepareEventDispatcher();
+            $this->prepareLocalizationFinder();
+
+            $this->mapper = new ContentMapper(
+                $this->contentTypeManager,
+                $this->structureManager,
+                $this->sessionManager,
+                $this->eventDispatcher,
+                $this->localizationFinder,
+                $this->language,
+                $this->defaultTemplate,
+                $this->languageNamespace
+            );
 
             $resourceLocator = new ResourceLocator(new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes')), 'not in use');
             $this->containerValueMap = array_merge(
@@ -129,9 +189,44 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'sulu.content.type.text_line' => new TextLine('not in use'),
                     'sulu.content.type.text_area' => new TextArea('not in use'),
                     'sulu.content.type.resource_locator' => $resourceLocator,
+                    'sulu.content.type.block' => new BlockContentType($this->contentTypeManager, 'not in use'),
                     'security.context' => $this->securityContext
                 )
             );
+        }
+    }
+
+    protected function prepareContentTypeManager()
+    {
+        if ($this->contentTypeManager === null) {
+            $this->contentTypeManager = new ContentTypeManager($this->container, 'sulu.content.type.');
+        }
+    }
+
+    /**
+     * prepares event dispatcher manager
+     */
+    protected function prepareEventDispatcher()
+    {
+        if ($this->eventDispatcher === null) {
+            $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        }
+    }
+
+    protected function prepareLocalizationFinder()
+    {
+        if ($this->localizationFinder === null) {
+            $this->localizationFinder = new ParentChildAnyFinder($this->webspaceManager, 'sulu_locale');
+        }
+    }
+
+    /**
+     * prepares webspace manager
+     */
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
         }
     }
 
@@ -194,13 +289,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->sessionManager === null) {
             $this->sessionManager = new SessionManager(
-                new RepositoryFactoryJackrabbit(),
-                array(
-                    'url' => 'http://localhost:8080/server',
-                    'username' => 'admin',
-                    'password' => 'admin',
-                    'workspace' => 'test'
-                ),
+                $this->session,
                 array(
                     'base' => 'cmf',
                     'route' => 'routes',
@@ -298,8 +387,30 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->session->save();
 
             $this->routes = $default->addNode('routes');
-            $this->routes->setProperty('sulu:content', $this->contents);
-            $this->routes->addMixin('sulu:path');
+            $this->session->save();
+
+            $dePath = $this->routes->addNode('de');
+            $dePath->addMixin('sulu:path');
+            $dePath->setProperty('sulu:content', $this->contents);
+            $this->languageRoutes['de'] = $dePath;
+            $this->session->save();
+
+            $de_atPath = $this->routes->addNode('de_at');
+            $de_atPath->setProperty('sulu:content', $this->contents);
+            $de_atPath->addMixin('sulu:path');
+            $this->languageRoutes['de_at'] = $de_atPath;
+            $this->session->save();
+
+            $enPath = $this->routes->addNode('en');
+            $enPath->setProperty('sulu:content', $this->contents);
+            $enPath->addMixin('sulu:path');
+            $this->languageRoutes['en'] = $enPath;
+            $this->session->save();
+
+            $en_usPath = $this->routes->addNode('en_us');
+            $en_usPath->setProperty('sulu:content', $this->contents);
+            $en_usPath->addMixin('sulu:path');
+            $this->languageRoutes['en_us'] = $en_usPath;
             $this->session->save();
         }
     }
