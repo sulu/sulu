@@ -405,7 +405,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(1, $response->total);
     }
 
 
