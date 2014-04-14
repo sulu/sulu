@@ -202,12 +202,13 @@ class ContentMapper implements ContentMapperInterface
             $root = $this->getContentNode($webspaceKey);
         }
 
-        $path = $this->cleanUp($data['title']);
+        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+        $path = $this->cleanUp($data[$nodeNameProperty->getName()]);
 
         $dateTime = new \DateTime();
 
-        $titleProperty = new TranslatedProperty(
-            $structure->getProperty('title'),
+        $translatedNodeNameProperty = new TranslatedProperty(
+            $nodeNameProperty,
             $languageCode,
             $this->languageNamespace
         );
@@ -241,8 +242,8 @@ class ContentMapper implements ContentMapperInterface
 
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
                 $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
-                $hasDifferentTitle = !$node->hasProperty($titleProperty->getName()) ||
-                    $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
+                $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
+                    $node->getPropertyValue($translatedNodeNameProperty->getName()) !== $data[$nodeNameProperty->getName()];
 
                 if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->getUniquePath($path, $node->getParent());
@@ -812,7 +813,8 @@ class ContentMapper implements ContentMapperInterface
                 $this->defaultTemplate
             );
             $structure = $this->getStructure($templateKey);
-            $property = $structure->getProperty('title');
+            $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+            $property = $structure->getProperty($nodeNameProperty->getName());
             $type = $this->getContentType($property->getContentTypeName());
             $type->read(
                 $node,
