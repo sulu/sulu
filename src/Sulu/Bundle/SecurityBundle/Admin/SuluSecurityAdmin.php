@@ -17,9 +17,20 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 class SuluSecurityAdmin extends Admin
 {
 
-    public function __construct()
+    public function __construct($title)
     {
-        $rootNavigationItem = new NavigationItem('Root');
+        $rootNavigationItem = new NavigationItem($title);
+        $section = new NavigationItem('navigation.tools');
+
+        $settings = new NavigationItem('navigation.settings');
+        $settings->setIcon('cogwheels');
+
+        $roles = new NavigationItem('navigation.settings.roles', $settings);
+        $roles->setAction('settings/roles');
+        $roles->setIcon('settings');
+
+        $section->addChild($settings);
+        $rootNavigationItem->addChild($section);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
@@ -31,4 +42,15 @@ class SuluSecurityAdmin extends Admin
         return array();
     }
 
+    public function getSecurityContexts()
+    {
+        return array(
+            'Sulu' => array(
+                'Security' => array(
+                    'sulu.security.roles',
+                    'sulu.security.groups'
+                )
+            )
+        );
+    }
 }
