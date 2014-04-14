@@ -60,7 +60,11 @@ class TranslatedProperty implements PropertyInterface
      */
     public function getName()
     {
-        return $this->languageNamespace . ':' . $this->localization . '-' . $this->property->getName();
+        if ($this->property->getMultilingual()) {
+            return $this->languageNamespace . ':' . $this->localization . '-' . $this->property->getName();
+        } else {
+            return $this->property->getName();
+        }
     }
 
     /**

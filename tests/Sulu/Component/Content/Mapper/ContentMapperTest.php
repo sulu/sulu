@@ -67,14 +67,14 @@ class ContentMapperTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('name', 'text_line', false, false, 1, 1, array(), array(new PropertyTag('sulu.node.name', 10)))
+                new Property('name', 'text_line', false, true, 1, 1, array(), array(new PropertyTag('sulu.node.name', 10)))
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'resource_locator')
+                new Property('url', 'resource_locator', false, true)
             )
         );
 
@@ -82,27 +82,28 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('tags', 'text_line', false, false, 2, 10)
+                    new Property('tags', 'text_line', false, true, 2, 10)
                 )
             );
 
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('article', 'text_area')
+                    new Property('article', 'text_area', false, true)
                 )
             );
         } elseif ($type == 2) {
+            // not translated
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', 'text_area')
+                    new Property('blog', 'text_area', false, false)
                 )
             );
         } elseif ($type == 3) {
-            $blockProperty = new BlockProperty('block1', 'block', false, 2, 10);
-            $blockProperty->addChild(new Property('name', 'text_line'));
-            $blockProperty->addChild(new Property('article', 'text_area'));
+            $blockProperty = new BlockProperty('block1', false, true, 2, 10);
+            $blockProperty->addChild(new Property('name', 'text_line', false, true));
+            $blockProperty->addChild(new Property('article', 'text_area', false, true));
 
             $method->invokeArgs(
                 $structureMock,
@@ -598,7 +599,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         // property of new structure exists
         $this->assertEquals('Testname', $content->getProperty('sulu_locale:de-name')->getString());
-        $this->assertEquals('this is a blog test', $content->getPropertyValue('sulu_locale:de-blog'));
+        $this->assertEquals('this is a blog test', $content->getPropertyValue('blog'));
         $this->assertEquals('default', $content->getPropertyValue('sulu_locale:de-sulu-template'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-creator'));
         $this->assertEquals(1, $content->getPropertyValue('sulu_locale:de-sulu-changer'));
@@ -1805,5 +1806,49 @@ class ContentMapperTest extends PhpcrTestCase
                 'block1' => $result['block1']
             )
         );
+    }
+
+    public function testMultilingual()
+    {
+        // change simple content
+        $dataDe = array(
+            'name' => 'Testname-DE',
+            'blog' => 'German',
+            'url' => '/news/test'
+        );
+
+        // update content
+        $structureDe = $this->mapper->save($dataDe, 'default', 'default', 'de', 1);
+
+        $dataEn = array(
+            'name' => 'Testname-EN',
+            'blog' => 'English'
+        );
+        $structureEn = $this->mapper->save($dataEn, 'default', 'default', 'en', 1, true, $structureDe->getUuid());
+        $structureDe = $this->mapper->load($structureDe->getUuid(), 'default', 'de');
+
+        // check data
+        $this->assertNotEquals($structureDe->getPropertyValue('name'), $structureEn->getPropertyValue('name'));
+        $this->assertEquals($structureDe->getPropertyValue('blog'), $structureEn->getPropertyValue('blog'));
+
+        $this->assertEquals($dataEn['name'], $structureEn->getPropertyValue('name'));
+        $this->assertEquals($dataEn['blog'], $structureEn->getPropertyValue('blog'));
+
+        $this->assertEquals($dataDe['name'], $structureDe->getPropertyValue('name'));
+        // En has overritten german content
+        $this->assertEquals($dataEn['blog'], $structureDe->getPropertyValue('blog'));
+
+        $root = $this->session->getRootNode();
+        $route = $root->getNode('cmf/default/routes/de/news/test');
+        /** @var NodeInterface $content */
+        $content = $route->getPropertyValue('sulu:content');
+        $this->assertEquals($dataDe['name'], $content->getPropertyValue('sulu_locale:de-name'));
+        $this->assertNotEquals($dataDe['blog'], $content->getPropertyValue('blog'));
+        $this->assertEquals($dataEn['name'], $content->getPropertyValue('sulu_locale:en-name'));
+        $this->assertEquals($dataEn['blog'], $content->getPropertyValue('blog'));
+
+        $this->assertFalse($content->hasProperty('sulu_locale:de-blog'));
+        $this->assertFalse($content->hasProperty('sulu_locale:en-blog'));
+        $this->assertFalse($content->hasProperty('name'));
     }
 }

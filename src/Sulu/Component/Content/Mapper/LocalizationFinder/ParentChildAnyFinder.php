@@ -41,7 +41,7 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
     {
         // use title field to check localization availability
         $property = new TranslatedProperty(
-            new Property('sulu-created', 'none'), // FIXME none as type is a dirty hack
+            new Property('sulu-created', 'none', false, true), // FIXME none as type is a dirty hack
             $localizationCode,
             $this->localizationNamespace
         );
