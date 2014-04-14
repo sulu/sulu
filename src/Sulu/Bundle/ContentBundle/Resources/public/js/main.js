@@ -37,7 +37,7 @@ define({
             route: 'content/contents/:webspace',
             callback: function(webspace) {
                 var language = getContentLanguage();
-                sandbox.emit('sulu.router.navigate', 'content/contents/'+webspace+'/'+language);
+                sandbox.emit('sulu.router.navigate', 'content/contents/'+webspace+'/'+language, false);
             }
         });
 
