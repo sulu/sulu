@@ -39,7 +39,7 @@ class NavigationMapper implements NavigationMapperInterface
      */
     public function getNavigation($parent, $webspace, $language, $depth = 1, $preview = false)
     {
-        $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true);
+        $contents = $this->contentMapper->loadByParent($parent, $webspace, $language, $depth, false, true, true);
 
         return $this->generateNavigation($contents, $preview);
     }
@@ -72,7 +72,7 @@ class NavigationMapper implements NavigationMapperInterface
             if (is_array($content->getChildren()) && sizeof($content->getChildren()) > 0) {
                 $children = $this->generateNavigation($content->getChildren(), $preview);
             }
-            if (($preview || $content->getPublishedState()) && $content->getNavigation() !== false) {
+            if (($preview || ($content->getPublishedState() && $content->getNavigation() !== false))) {
                 $result[] = new NavigationItem(
                     $content, $content->title, $content->url, $children, $content->getUuid()
                 );
