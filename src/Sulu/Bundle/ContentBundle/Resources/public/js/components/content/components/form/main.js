@@ -179,6 +179,7 @@ define(['app-config'], function(AppConfig) {
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
+                this.setHeaderBar(false);
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
