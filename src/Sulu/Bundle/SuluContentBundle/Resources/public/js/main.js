@@ -69,6 +69,15 @@ define({
             }
         });
 
+        // redirects to edit with specific language
+        sandbox.mvc.routes.push({
+            route: 'content/contents/:webspace/edit::id/:content',
+            callback: function(webspace, id, content) {
+                var language = getContentLanguage();
+                sandbox.emit('sulu.router.navigate', 'content/contents/'+webspace+'/'+language+'/edit:'+id+'/'+content);
+            }
+        });
+
         // show form for editing a content
         sandbox.mvc.routes.push({
             route: 'content/contents/:webspace/:language/edit::id/:content',
