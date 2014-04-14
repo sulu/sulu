@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 
 /**
@@ -33,7 +34,7 @@ class CollectionRepository extends EntityRepository
         try {
             $qb = $this->createQueryBuilder('collection')
                 ->leftJoin('collection.metas', 'collectionMeta')
-                ->leftJoin('collection.collectionType', 'collectionType')
+                ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.medias', 'media')
                 ->leftJoin('media.tags', 'tag')
@@ -43,7 +44,7 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('fileVersion.fileVersionContentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.fileVersionPublishLanguages', 'fileVersionPublishLanguage')
                 ->addSelect('collectionMeta')
-                ->addSelect('collectionType')
+                ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('media')
                 ->addSelect('tag')
@@ -97,7 +98,7 @@ class CollectionRepository extends EntityRepository
         try {
             $qb = $this->createQueryBuilder('collection')
                 ->leftJoin('collection.metas', 'collectionMeta')
-                ->leftJoin('collection.collectionType', 'collectionType')
+                ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.medias', 'media')
                 ->leftJoin('media.tags', 'tag')
@@ -107,7 +108,7 @@ class CollectionRepository extends EntityRepository
                 ->leftJoin('fileVersion.fileVersionContentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.fileVersionPublishLanguages', 'fileVersionPublishLanguage')
                 ->addSelect('collectionMeta')
-                ->addSelect('collectionType')
+                ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('media')
                 ->addSelect('tag')

@@ -9,6 +9,6 @@
         <field name="name" type="string" column="name" length="60"/>
         <field name="description" type="text" column="description" nullable="true"/>
         <one-to-many field="collections" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection"
-                     mapped-by="collectionType"/>
+                     mapped-by="type"/>
     </entity>
 </doctrine-mapping>
