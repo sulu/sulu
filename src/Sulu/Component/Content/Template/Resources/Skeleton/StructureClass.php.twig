@@ -51,7 +51,7 @@ class {{ cache_class }} extends {{ base_class }}
 new BlockProperty(
             '{{ property.name }}',
             {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
+            {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
             {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
             {{ property.minOccurs is defined ? property.minOccurs : 1 }},
             {{ 'array(' }}
@@ -71,7 +71,7 @@ new BlockProperty(
                 '{{ property.name }}',
                 '{{ property.type }}',
                 {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-                {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
+                {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
                 {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
                 {{ property.minOccurs is defined ? property.minOccurs : 1 }},
                 {{ 'array(' }}

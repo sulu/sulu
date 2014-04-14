@@ -89,6 +89,7 @@ class TemplateReader implements LoaderInterface
      */
     private function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
     {
+        $this->tags = array();
         $template = array();
         $this->xmlDocument = new \DOMDocument();
 
