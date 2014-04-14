@@ -62,7 +62,6 @@ define([], function() {
                 name: 'header@suluadmin',
                 options: {
                     el: '#sulu-header-container',
-                    instanceName: this.options.instanceName,
                     toolbarTemplate: this.options.template,
                     toolbarParentTemplate: this.options.parentTemplate,
                     heading: this.options.heading,
@@ -78,22 +77,13 @@ define([], function() {
         bindCustomEvents: function() {
             var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
-            this.sandbox.on('husky.tabs.' + instanceName + 'initialized', this.startTabComponent.bind(this));
+            this.sandbox.on('husky.tabs.header.initialized', this.startTabComponent.bind(this));
+
             // load component after click
-            this.sandbox.on('husky.tabs.' + instanceName + 'item.select', this.startTabComponent.bind(this));
-
-            // abstract husky event
-            this.sandbox.on('sulu.content.tabs.deactivate', function() {
-                this.sandbox.emit('husky.tabs.' + instanceName + 'deactivate');
-            }.bind(this));
-
-            // abstract husky event
-            this.sandbox.on('sulu.content.tabs.activate', function() {
-                this.sandbox.emit('husky.tabs.' + instanceName + 'activate');
-            }.bind(this));
+            this.sandbox.on('husky.tabs.header.item.select', this.startTabComponent.bind(this));
 
             // if the header has initialized move the content down the height of the header
-            this.sandbox.on('sulu.header.content.initialized', this.setTopSpacing.bind(this));
+            this.sandbox.on('sulu.header.initialized', this.setTopSpacing.bind(this));
         },
 
         /**
