@@ -215,6 +215,11 @@ class WebspaceCollection implements \IteratorAggregate
             $webspaceData['name'] = $webspace->getName();
             $webspaceData['localizations'] = $this->toArrayLocalizations($webspace->getLocalizations());
 
+            $webspaceSecurity = $webspace->getSecurity();
+            if ($webspaceSecurity != null) {
+                $webspaceData['security']['system'] = $webspaceSecurity->getSystem();
+            }
+
             $webspaceData = $this->toArraySegments($webspace, $webspaceData);
 
             $webspaceData['portals'] = array();
