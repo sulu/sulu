@@ -21,13 +21,27 @@ define({
     name: "Sulu Content Bundle",
 
     initialize: function(app) {
+
         'use strict';
 
         var sandbox = app.sandbox;
 
         app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
-        // list all contacts
+        function getContentLanguage(){
+            return sandbox.sulu.getUserSetting('contentLanguage') || sandbox.sulu.user.locale;
+        }
+
+        // redirects to list with specific language
+        sandbox.mvc.routes.push({
+            route: 'content/contents/:webspace',
+            callback: function(webspace) {
+                var language = getContentLanguage();
+                sandbox.emit('sulu.router.navigate', 'content/contents/'+webspace+'/'+language);
+            }
+        });
+
+        // list all contents for a language
         sandbox.mvc.routes.push({
             route: 'content/contents/:webspace/:language',
             callback: function(webspace, language) {
