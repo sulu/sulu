@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyTag;
 
 class BlockPropertyWrapper implements PropertyInterface
 {
@@ -185,10 +186,20 @@ class BlockPropertyWrapper implements PropertyInterface
 
     /**
      * returns tags defined in xml
-     * @return \Sulu\Component\Content\PropertyTag[]
+     * @return PropertyTag[]
      */
     public function getTags()
     {
         return $this->property->getTags();
+    }
+
+    /**
+     * returns tag with given name
+     * @param string $tagName
+     * @return PropertyTag
+     */
+    public function getTag($tagName)
+    {
+        return $this->property->getTag($tagName);
     }
 }
