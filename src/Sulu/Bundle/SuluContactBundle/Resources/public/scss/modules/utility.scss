@@ -1,0 +1,65 @@
+#contact-form {
+  img.logo {
+    padding-top: 30px;
+    max-height: 140px;
+  }
+
+  .control-label {
+    padding-left: 5px;
+    padding-right: 10px;
+    cursor: pointer;
+  }
+
+  div.remove-email,
+  div.remove-phone,
+  div.remove-address {
+    display: none;
+  }
+
+  #phones div:hover > div.remove-phone,
+  #addresses div:hover > div.remove-address,
+  #emails div:hover > div.remove-email {
+    display: block;
+  }
+
+  #emails .husky-validate-success label::after,
+  #phones .husky-validate-success label::after,
+  #addresses .husky-validate-success label::after {
+    content: "";
+  }
+}
+
+#contact-options-dropdown {
+    display: none;
+
+    &.is-active {
+        display: block;
+    }
+}
+
+#contact-edit-form {
+    &:hover {
+        #contact-options-dropdown {
+            display: block;
+        }
+    }
+
+    label {
+        line-height:14px;
+        text-overflow: hidden;
+    }
+
+    .label-container {
+        display: block;
+        font-size: 11px;
+    }
+}
+
+.type-value {
+    &:before {
+        content: '(';
+    }
+    &:after {
+        content: ')';
+    }
+}
