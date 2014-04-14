@@ -10,6 +10,7 @@
 define(['app-config'], function(AppConfig) {
 
     'use strict';
+    var CONTENT_LANGUAGE = 'contentLanguage';
 
     return {
 
@@ -300,6 +301,7 @@ define(['app-config'], function(AppConfig) {
 
             // change language
             this.sandbox.on('sulu.edit-toolbar.dropdown.languages.item-clicked', function(item) {
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
             }, this);
 
