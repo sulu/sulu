@@ -12,8 +12,10 @@ define(function() {
     'use strict';
 
     return {
-        content: {
-            url: '/admin/security/navigation/roles',
+        header: {
+            tabs: {
+                url: '/admin/security/navigation/roles',
+            },
             title: 'security.roles.title'
         }
     };
