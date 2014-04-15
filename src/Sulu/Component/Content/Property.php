@@ -13,7 +13,7 @@ namespace Sulu\Component\Content;
 /**
  * Property of Structure generated from Structure Manager to map a template
  */
-class Property implements PropertyInterface
+class Property implements PropertyInterface, \JsonSerializable
 {
     /**
      * name of property
@@ -254,5 +254,31 @@ class Property implements PropertyInterface
         } else {
             return null;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        $result = array(
+            'name' => $this->getName(),
+            'title' => $this->getTitle(),
+            'mandatory' => $this->getMandatory(),
+            'multilingual' => $this->getMultilingual(),
+            'minOccurs' => $this->getMinOccurs(),
+            'maxOccurs' => $this->getMaxOccurs(),
+            'contentTypeName' => $this->getContentTypeName(),
+            'params' => $this->getParams(),
+            'tags' => array()
+        );
+        foreach ($this->getTags() as $tag) {
+            $result['tags'][] = array(
+                'name' => $tag->getName(),
+                'priority' => $tag->getPriority()
+            );
+        }
+
+        return $result;
     }
 }
