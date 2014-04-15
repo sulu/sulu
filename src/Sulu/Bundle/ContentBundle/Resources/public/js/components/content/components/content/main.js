@@ -13,18 +13,23 @@ define(function() {
 
     return {
 
-        content: function() {
+        header: function() {
             return {
-                url: '/admin/content/navigation/content',
-                parentTemplate: 'default',
-                template: function() {
-                    var state = {
+
+                tabs: {
+                    url: '/admin/content/navigation/content'
+                },
+
+                toolbar: {
+                    parentTemplate: 'default',
+                    template: [
+                        {
                             'id': 'state',
                             'group': 'left',
                             'position': 100,
                             'type': 'select'
                         },
-                        template = {
+                        {
                             id: 'template',
                             icon: 'brush',
                             iconSize: 'large',
@@ -44,7 +49,7 @@ define(function() {
                                 }.bind(this)
                             }
                         },
-                        languageSelector = {
+                        {
                             id: 'language',
                             iconSize: 'large',
                             group: 'right',
@@ -62,13 +67,9 @@ define(function() {
                                     this.sandbox.emit('sulu.dropdown.languages.item-clicked', item);
                                 }.bind(this)
                             }
-                        };
-                    if (!this.options.id) {
-                        return [template, state, languageSelector];
-                    } else {
-                        return [template, state, languageSelector];
-                    }
-                }.bind(this)
+                        }
+                    ]
+                }
             };
         }
     };
