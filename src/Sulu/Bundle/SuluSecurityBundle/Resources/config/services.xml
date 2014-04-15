@@ -21,6 +21,7 @@
         <parameter key="sulu_security.admin.roles_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation</parameter>
         <parameter key="sulu_security.permission_voter.class">Sulu\Bundle\SecurityBundle\Permission\PermissionVoter</parameter>
         <parameter key="sulu_security.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
+        <parameter key="sulu_security.user_repository_factory.class">Sulu\Bundle\SecurityBundle\Factory\UserRepositoryFactory</parameter>
     </parameters>
 
     <services>
@@ -52,9 +53,14 @@
             <tag name="security.voter"/>
         </service>
 
+        <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%"
+                public="false">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+
         <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"
-                factory-service="doctrine.orm.entity_manager" factory-method="getRepository">
-            <argument>SuluSecurityBundle:User</argument>
+                factory-service="sulu_security.user_repository_factory" factory-method="getRepository">
         </service>
     </services>
 </container>
