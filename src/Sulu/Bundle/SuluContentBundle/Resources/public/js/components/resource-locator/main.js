@@ -17,19 +17,108 @@ define([], function() {
 
     'use strict';
 
-    var defaults = {},
-        skeleton = function() {
+    var defaults = {
+            instanceName: null,
+            url: null
+        },
+
+        skeleton = function(options) {
             return [
-                '<div class="resource-locator">',
-                '   <p>VERY NICE</p>',
+                '<div class="resource-locator ">',
+                '<span class="icon-cogwheel pointer" id="', options.ids.edit, '"></span>',
+                (!!options.url) ? '   <span id="' + options.ids.url + '" class="url">' + options.url + '</span>' : '',
+                '   <span id="' + options.ids.tree + '" class="tree"></span>',
+                '   <input type="text" readonly="readonly" id="' + options.ids.input + '" class="form-element"/>',
+                '   <span class="icon-chevron-right pointer" id="', options.ids.toggle, '"></span>',
+                '   <div id="', options.ids.history, '" class="hidden">',
+                '   </div>',
                 '</div>'
             ].join('');
         },
+
+        getId = function(type) {
+            return '#' + this.options.ids[type];
+        },
+
         render = function() {
-            this.sandbox.dom.html(skeleton());
+            this.options.ids = {
+                url: 'resource-locator-' + this.options.instanceName + '-url',
+                tree: 'resource-locator-' + this.options.instanceName + '-tree',
+                input: 'resource-locator-' + this.options.instanceName + '-input',
+                edit: 'resource-locator-' + this.options.instanceName + '-edit',
+                toggle: 'resource-locator-' + this.options.instanceName + '-toggle',
+                history: 'resource-locator-' + this.options.instanceName + '-history'
+            };
+            this.sandbox.dom.html(this.$el, skeleton(this.options));
+
+            setValue.call(this);
+
+            bindDomEvents.call(this);
+        },
+
+        bindDomEvents = function() {
+            this.sandbox.dom.on(this.$el, 'data-changed', setValue.bind(this));
+            this.sandbox.dom.on(getId.call(this, 'edit'), 'click', editClicked.bind(this));
+            this.sandbox.dom.on(getId.call(this, 'toggle'), 'click', toggleClicked.bind(this));
+        },
+
+        setValue = function(value) {
+            if (!value) {
+                value = this.sandbox.dom.data(this.$el, 'value');
+            }
+            var parts = value.split('/');
+            this.sandbox.dom.val(getId.call(this, 'input'), parts.pop());
+            this.sandbox.dom.html(getId.call(this, 'tree'), parts.join('/') + '/');
+        },
+
+        editClicked = function() {
+            this.sandbox.dom.removeAttr(getId.call(this, 'input'), 'readonly');
+        },
+
+        toggleClicked = function() {
+            var toggleId = getId.call(this, 'toggle');
+            if (this.historyClosed) {
+                this.sandbox.dom.removeClass(toggleId, 'icon-chevron-right');
+                this.sandbox.dom.removeClass(toggleId, 'pointer');
+                this.sandbox.dom.addClass(toggleId, 'icon-chevron-down');
+                this.sandbox.dom.addClass(toggleId, 'pointer');
+                this.historyClosed = false;
+
+                loadHistory.call(this);
+            } else {
+                this.sandbox.dom.removeClass(toggleId, 'icon-chevron-down');
+                this.sandbox.dom.removeClass(toggleId, 'pointer');
+                this.sandbox.dom.addClass(toggleId, 'icon-chevron-right');
+                this.sandbox.dom.addClass(toggleId, 'pointer');
+                this.sandbox.dom.addClass(getId.call(this, 'history'), 'hidden');
+                this.historyClosed = true;
+            }
+        },
+
+        loadHistory = function() {
+            var data = [
+                    '/products/drill-history-1',
+                    '/products/drill-history-2',
+                    '/products/drill-history-3',
+                    '/products/drill-history-4',
+                    '/products/drill-history-5',
+                    '/my-best-url-ever'
+                ],
+                html = ['<ul>'];
+
+
+            this.sandbox.util.foreach(data, function(url) {
+                html.push('<li>' + url + '</li>');
+            }.bind(this));
+            html.push('</ul>');
+
+            this.sandbox.dom.html(getId.call(this, 'history'), html.join(''));
+            this.sandbox.dom.removeClass(getId.call(this, 'history'), 'hidden');
         };
 
     return {
+        historyClosed: true,
+
         initialize: function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);

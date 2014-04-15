@@ -19,6 +19,10 @@ define([
         var defaults = {},
 
             subType = {
+                setValue: function(value) {
+                    App.dom.data($el, 'value', value).trigger('data-changed');
+                },
+
                 validate: function() {
                     // TODO validate
                     return true;
