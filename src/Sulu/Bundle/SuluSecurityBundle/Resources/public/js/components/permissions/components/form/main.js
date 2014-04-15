@@ -62,7 +62,7 @@ define([], function() {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, true);
+                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
             }
             this.saved = saved;
         },
@@ -98,12 +98,10 @@ define([], function() {
          */
         setTitle: function() {
             if (!!this.options.data.contact && !!this.options.data.contact.id) {
-                this.sandbox.emit('sulu.content.set-title', this.options.data.contact.fullName);
-                this.sandbox.emit('sulu.content.set-title-addition',
-                    this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.contact.id
-                );
+                this.sandbox.emit('sulu.header.set-title', this.options.data.contact.fullName);
+                // TODO make breadcrumb
             } else {
-                this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('contact.contacts.title'));
+                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('contact.contacts.title'));
             }
         },
 
@@ -219,7 +217,7 @@ define([], function() {
 
         bindCustomEvents: function() {
             // delete contact
-            this.sandbox.on('sulu.edit-toolbar.delete', function() {
+            this.sandbox.on('sulu.header.toolbar.delete', function() {
                 this.sandbox.emit('sulu.user.permissions.delete', this.contact.id);
             }, this);
 
@@ -229,11 +227,11 @@ define([], function() {
                 this.setHeaderBar(true);
             }, this);
 
-            this.sandbox.on('sulu.edit-toolbar.save', function() {
+            this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.save();
             }, this);
 
-            this.sandbox.on('sulu.edit-toolbar.back', function(){
+            this.sandbox.on('sulu.header.back', function(){
                 this.sandbox.emit('sulu.contacts.contacts.list');
             }, this);
 
