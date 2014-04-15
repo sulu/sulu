@@ -30,8 +30,13 @@ define(['app-config'], function(AppConfig) {
 
         hiddenTemplate: true,
 
+        // property configuration object
+        propertyConfiguration: null,
+
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
+
+            this.propertyConfiguration = {};
 
             this.saved = true;
             this.highlightSaveButton = this.sandbox.sulu.viewStates.justSaved;
@@ -131,10 +136,14 @@ define(['app-config'], function(AppConfig) {
         },
 
         createForm: function(data) {
-            var formObject = this.sandbox.form.create(this.formId);
-            formObject.initialized.then(function() {
-                this.setFormData(data).then(function() {
+            var formObject = this.sandbox.form.create(this.formId),
+                dfd = this.sandbox.data.deferred();
 
+            formObject.initialized.then(function() {
+                this.createConfiguration(this.formId);
+                dfd.resolve();
+
+                this.setFormData(data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
                     this.initSortableBlock();
                     this.bindFormEvents();
@@ -142,6 +151,54 @@ define(['app-config'], function(AppConfig) {
                     if (!!this.options.preview) {
                         this.initPreview();
                         this.options.preview = false;
+                    }
+                }.bind(this));
+            }.bind(this));
+
+            return dfd.promise();
+        },
+
+        createConfiguration: function($el) {
+            var $items = this.sandbox.dom.find('*[data-property]', $el);
+            // foreach property
+            this.sandbox.dom.each($items, function(key, item) {
+                var property = this.sandbox.dom.data(item, 'property');
+                property.$el = this.sandbox.dom.$(item);
+
+                // remove property from data
+                // FIXME move to sandbox data remove
+                $(item).data('property', null);
+                $(item).removeAttr('data-property', null);
+
+                // foreach tag
+                this.sandbox.util.foreach(property.tags, function(tag) {
+                    if (!this.propertyConfiguration[tag.name]) {
+                        this.propertyConfiguration[tag.name] = {
+                            properties: {},
+                            highestProperty: property,
+                            highestPriority: tag.priority,
+                            lowestProperty: property,
+                            lowestPriority: tag.priority,
+                        };
+                        this.propertyConfiguration[tag.name].properties[tag.priority] = [property];
+                    } else {
+                        if (!this.propertyConfiguration[tag.name].properties[tag.priority]) {
+                            this.propertyConfiguration[tag.name].properties[tag.priority] = [property];
+                        } else {
+                            this.propertyConfiguration[tag.name].properties[tag.priority].push(property);
+                        }
+
+                        // replace highest if priority is higher
+                        if (this.propertyConfiguration[tag.name].highestPriority < tag.priority) {
+                            this.propertyConfiguration[tag.name].highestProperty = property;
+                            this.propertyConfiguration[tag.name].highestPriority = tag.priority;
+                        }
+
+                        // replace lowest if priority is lower
+                        if (this.propertyConfiguration[tag.name].lowestPriority > tag.priority) {
+                            this.propertyConfiguration[tag.name].lowestProperty = property;
+                            this.propertyConfiguration[tag.name].lowestPriority = tag.priority;
+                        }
                     }
                 }.bind(this));
             }.bind(this));
@@ -176,12 +233,16 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
+                // TODO removed elements remove from config
+
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+                this.createConfiguration(e.currentTarget);
+
                 // start new subcomponents
                 this.sandbox.start($(e.currentTarget));
 
@@ -212,25 +273,60 @@ define(['app-config'], function(AppConfig) {
             return initialize;
         },
 
+        getDomElementsForTagName: function(tagName, callback) {
+            var result = $(), key;
+            if (this.propertyConfiguration.hasOwnProperty(tagName)) {
+                for (key in this.propertyConfiguration[tagName].properties) {
+                    if (this.propertyConfiguration[tagName].properties.hasOwnProperty(key)) {
+                        this.sandbox.util.foreach(this.propertyConfiguration[tagName].properties[key], function(property) {
+                            $.merge(result, property.$el);
+                            if (!!callback) {
+                                callback(property);
+                            }
+                        });
+                    }
+                }
+            }
+            return result;
+        },
+
         bindDomEvents: function() {
-            if (!this.options.data.id || !this.options.data.url) {
-                this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            var startListening = false;
+            this.getDomElementsForTagName('sulu.rlp.input', function(property) {
+                if (property.$el.data('element').getValue() !== '') {
+                    startListening = true;
+                }
+            }.bind(this));
+
+            if (!this.options.data.id || startListening) {
+                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             } else {
                 this.dfdListenForChange.resolve();
             }
         },
 
         setResourceLocator: function() {
-            var title = this.sandbox.dom.val('#title'),
-                url = '#url';
+            var parts = {},
+                complete = true;
 
-            if (title !== '') {
-                this.sandbox.dom.addClass(url, 'is-loading');
-                this.sandbox.dom.css(url, 'background-position', '99%');
+            // check if each part has a value
+            this.getDomElementsForTagName('sulu.rlp.part', function(property) {
+                var value = property.$el.data('element').getValue();
+                if (value !== '') {
+                    parts[property.$el.data('mapperProperty')] = value;
+                } else {
+                    complete = false;
+                }
+            }.bind(this));
 
-                this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
-                    this.sandbox.dom.removeClass(url, 'is-loading');
-                    this.sandbox.dom.val(url, rl);
+            if (!!complete) {
+                this.sandbox.emit('sulu.content.contents.getRL', parts, this.template, function(rl) {
+                    // set resource locator to empty input fields
+                    this.getDomElementsForTagName('sulu.rlp.input', function(property) {
+                        if (property.$el.data('element').getValue() === '') {
+                            property.$el.data('element').setValue(rl);
+                        }
+                    }.bind(this));
 
                     this.dfdListenForChange.resolve();
 
@@ -238,7 +334,7 @@ define(['app-config'], function(AppConfig) {
                     this.contentChanged = true;
                 }.bind(this));
             } else {
-                this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             }
         },
 
@@ -434,14 +530,16 @@ define(['app-config'], function(AppConfig) {
                             this.sandbox.dom.remove(this.formId + ' *');
                             this.sandbox.dom.html(this.$el, tpl);
                             this.setStateDropdown(data);
-                            this.createForm(data);
 
-                            this.bindDomEvents();
-                            this.listenForChange();
+                            this.propertyConfiguration = {};
+                            this.createForm(data).then(function() {
+                                this.bindDomEvents();
+                                this.listenForChange();
 
-                            this.updatePreviewOnly();
+                                this.updatePreviewOnly();
 
-                            this.changeTemplateDropdownHandler();
+                                this.changeTemplateDropdownHandler();
+                            }.bind(this));
                         }.bind(this));
                     } else {
                         this.changeTemplateDropdownHandler();
