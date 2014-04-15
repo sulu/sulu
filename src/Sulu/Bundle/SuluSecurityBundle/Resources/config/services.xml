@@ -53,8 +53,7 @@
             <tag name="security.voter"/>
         </service>
 
-        <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%"
-                public="false">
+        <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
         </service>
