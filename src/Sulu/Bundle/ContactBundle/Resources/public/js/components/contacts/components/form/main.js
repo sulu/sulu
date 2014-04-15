@@ -71,12 +71,10 @@ define([], function() {
              */
             setTitle: function() {
                 if (!!this.options.data && !!this.options.data.id) {
-                    this.sandbox.emit('sulu.content.set-title', this.options.data.fullName);
-                    this.sandbox.emit('sulu.content.set-title-addition',
-                        this.sandbox.translate('contact.contacts.title') + ' #' + this.options.data.id
-                    );
+                    this.sandbox.emit('sulu.header.set-title', this.options.data.fullName);
+                    //todo set breadcrumb here
                 } else {
-                    this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('contact.contacts.title'));
+                    this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('contact.contacts.title'));
                 }
             },
 
@@ -126,7 +124,7 @@ define([], function() {
 
             bindCustomEvents: function() {
                 // delete contact
-                this.sandbox.on('sulu.edit-toolbar.delete', function() {
+                this.sandbox.on('sulu.header.toolbar.delete', function() {
                     this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
                 }, this);
 
@@ -139,12 +137,12 @@ define([], function() {
                 }, this);
 
                 // contact save
-                this.sandbox.on('sulu.edit-toolbar.save', function() {
+                this.sandbox.on('sulu.header.toolbar.save', function() {
                     this.submit();
                 }, this);
 
                 // back to list
-                this.sandbox.on('sulu.edit-toolbar.back', function() {
+                this.sandbox.on('sulu.header.back', function() {
                     this.sandbox.emit('sulu.contacts.contacts.list');
                 }, this);
             },
