@@ -1,1 +1,1 @@
-define(["type/default","form/util"],function(a){"use strict";return function(b,c){var d={},e={validate:function(){return!0}};return new a(b,d,c,"resourceLocator",e)}});
+define(["type/default","form/util"],function(a){"use strict";return function(b,c){var d={},e={setValue:function(a){App.dom.data(b,"value",a).trigger("data-changed")},validate:function(){return!0}};return new a(b,d,c,"resourceLocator",e)}});
