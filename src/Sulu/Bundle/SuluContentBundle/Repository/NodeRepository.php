@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Types\ResourceLocator;
+use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class NodeRepository implements NodeRepositoryInterface
@@ -38,15 +40,22 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $userManager;
 
+    /**
+     * @var ResourceLocatorInterface
+     */
+    private $resourceLocator;
+
     function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
-        UserManagerInterface $userManager
+        UserManagerInterface $userManager,
+        ResourceLocatorInterface $resourceLocator
     )
     {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
+        $this->resourceLocator = $resourceLocator;
     }
 
     /**
@@ -172,11 +181,11 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * removes given node
      * @param $uuid
-     * @param $portalKey
+     * @param $webspaceKey
      */
-    public function deleteNode($uuid, $portalKey)
+    public function deleteNode($uuid, $webspaceKey)
     {
-        $this->getMapper()->delete($uuid, $portalKey);
+        $this->getMapper()->delete($uuid, $webspaceKey);
     }
 
     /**
@@ -333,5 +342,13 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $this->prepareNode($node, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHistory($uuid, $webspaceKey, $languageCode)
+    {
+        return $this->resourceLocator->getHistoryByUuid($uuid, $webspaceKey, $languageCode);
     }
 }
