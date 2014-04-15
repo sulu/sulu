@@ -7,6 +7,11 @@
         initialize: function(app) {
 
             /*********
+             * Sulu namespace
+             *********/
+            app.sandbox.sulu = {};
+
+            /*********
              * USER SETTINGS
              *********/
 

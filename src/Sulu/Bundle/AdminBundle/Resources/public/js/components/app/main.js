@@ -120,6 +120,7 @@ define(function() {
          */
         initialize: function() {
             this.title = document.title;
+            this.headerVisible = false;
 
             if (!!this.sandbox.mvc.routes) {
 
@@ -260,12 +261,17 @@ define(function() {
                 // default vars
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-                if (!!trigger && this.currentRoute !== route && this.currentRoute !== null) {
+                if (!!trigger && this.currentRoute !== route && route !== null) {
                     // FIXME - header does not get removed and because of that the dom element will be removed
                     // and the stop event will be called
+                    this.sandbox.stop('#sulu-content-container');
                     this.sandbox.stop('#sulu-header-container');
                     this.sandbox.stop('#content > *');
                     this.sandbox.stop('#preview > *');
+
+                    // remove eventual spacing because of header
+                    this.headerVisible = false;
+                    this.changeTopSpacing();
                 }
 
                 // reset store for cleaning environment
@@ -339,6 +345,12 @@ define(function() {
             // stop the loader if a view gets initialized
             this.sandbox.on('sulu.view.initialize', function() {
                 this.sandbox.stop('.sulu-app-loader');
+            }.bind(this));
+
+            // listener for header (add top-spacing)
+            this.sandbox.on('sulu.header.initialized', function() {
+                this.headerVisible = true;
+                this.changeTopSpacing();
             }.bind(this));
 
             // select right navigation-item on navigation startup
@@ -484,6 +496,23 @@ define(function() {
             });
 
             changeContentMarginLeft.call(this, styles.left);
+        },
+
+        /**
+         * Adds spacing to the top if there is a header, removes it if there isn't any
+         */
+        changeTopSpacing: function() {
+            if (this.headerVisible === true) {
+                this.sandbox.emit('sulu.header.get-height', function(height) {
+                    this.sandbox.dom.css(this.$el, {
+                        'padding-top': height + 'px'
+                    });
+                }.bind(this));
+            } else {
+                this.sandbox.dom.css(this.$el, {
+                    'padding-top': '0'
+                });
+            }
         },
 
         /**
