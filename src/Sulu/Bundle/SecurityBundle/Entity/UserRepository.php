@@ -25,6 +25,30 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
     /**
+     * The security system
+     * @var string
+     */
+    private $system;
+
+    /**
+     * Sets the security system
+     * @param string $system
+     */
+    public function setSystem($system)
+    {
+        $this->system = $system;
+    }
+
+    /**
+     * Returns the security system
+     * @return string
+     */
+    public function getSystem()
+    {
+        return $this->system;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function findUserById($id)
