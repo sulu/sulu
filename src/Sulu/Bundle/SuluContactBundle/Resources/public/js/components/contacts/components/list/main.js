@@ -31,8 +31,14 @@ define(function() {
     };
 
     return {
-
         view: true,
+
+        header: {
+            title: 'contact.contacts.title',
+            toolbar: {
+                template: []
+            }
+        },
 
         templates: ['/admin/contact/template/contact/list'],
 

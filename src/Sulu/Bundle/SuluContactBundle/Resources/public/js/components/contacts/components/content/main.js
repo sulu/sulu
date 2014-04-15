@@ -12,8 +12,10 @@ define(function() {
     'use strict';
 
     return {
-        content: {
-            url: '/admin/contact/navigation/contact'
+        header: {
+            tabs: {
+                url: '/admin/contact/navigation/contact'
+            }
         }
     };
 });
