@@ -25,10 +25,30 @@ module.exports = function (grunt) {
                 files: [
                     {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../web/bundles/suluwebsite/'}
                 ]
+            },
+            hooks: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'bin/hooks/*'
+                        ],
+                        dest: '.git/hooks/'
+                    }
+                ]
             }
         },
+
+        exec: {
+            hookrights: {
+                command: 'chmod +x .git/hooks/pre-push'
+            }
+        },
+
         clean: {
             options: { force: true },
+            hooks: ['.git/hooks/*'],
             public: {
                 files: [
                     {
@@ -103,5 +123,11 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'watch'
+    ]);
+
+    grunt.registerTask('install:hooks', [
+        'clean:hooks',
+        'copy:hooks',
+        'exec:hookrights'
     ]);
 };
