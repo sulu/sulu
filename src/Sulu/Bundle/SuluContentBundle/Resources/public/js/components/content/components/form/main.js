@@ -10,6 +10,7 @@
 define(['app-config'], function(AppConfig) {
 
     'use strict';
+    var CONTENT_LANGUAGE = 'contentLanguage';
 
     return {
 
@@ -179,6 +180,7 @@ define(['app-config'], function(AppConfig) {
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
+                this.setHeaderBar(false);
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
@@ -299,6 +301,7 @@ define(['app-config'], function(AppConfig) {
 
             // change language
             this.sandbox.on('sulu.edit-toolbar.dropdown.languages.item-clicked', function(item) {
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
             }, this);
 
@@ -338,8 +341,11 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             // expand navigation if navigation item is clicked
-            this.sandbox.on('husky.navigation.item.select', function() {
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'large', content: 'auto'});
+            this.sandbox.on('husky.navigation.item.select', function(event) {
+                // when navigation item is already opended do nothing - relevant for homepage
+                if(event.id !== this.options.id) {
+                    this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+                }
             }.bind(this));
 
             // expand navigation if back gets clicked
