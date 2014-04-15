@@ -38,7 +38,7 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
     public function getRepository()
     {
         /** @var UserRepositoryInterface $repository */
-        $repository = $this->em->getRepository('Sulu\Component\Security\UserInterface');
+        $repository = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User');
         if ($this->requestAnalyzer == null) {
             $repository->setSystem('Sulu'); // FIXME Do not hardcode!
         } else {

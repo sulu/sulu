@@ -153,7 +153,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 'EXISTS(
                     SELECT ur.id
                     FROM Sulu\Bundle\SecurityBundle\Entity\Role r
-                    LEFT JOIN r.userRoles as ur
+                    LEFT JOIN r.userRoles ur
                     LEFT JOIN ur.user u
                     WHERE u.id = user.id
                     AND r.system = :system
