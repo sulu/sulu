@@ -16,7 +16,7 @@ define(function() {
         content: function() {
             return {
                 url: '/admin/content/navigation/content',
-                parentTemplate: 'default',
+                parentTemplate: 'defaultHomepage',
                 template: function() {
                     var state = {
                             'id': 'state',

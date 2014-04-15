@@ -21,13 +21,27 @@ define({
     name: "Sulu Content Bundle",
 
     initialize: function(app) {
+
         'use strict';
 
         var sandbox = app.sandbox;
 
         app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
-        // list all contacts
+        function getContentLanguage() {
+            return sandbox.sulu.getUserSetting('contentLanguage') || sandbox.sulu.user.locale;
+        }
+
+        // redirects to list with specific language
+        sandbox.mvc.routes.push({
+            route: 'content/contents/:webspace',
+            callback: function(webspace) {
+                var language = getContentLanguage();
+                sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language);
+            }
+        });
+
+        // list all contents for a language
         sandbox.mvc.routes.push({
             route: 'content/contents/:webspace/:language',
             callback: function(webspace, language) {
@@ -35,7 +49,7 @@ define({
             }
         });
 
-        // show form for new content
+        // show form for new content with a parent page
         sandbox.mvc.routes.push({
             route: 'content/contents/:webspace/:language/add::id/:content',
             callback: function(webspace, language, id, content) {
@@ -55,12 +69,21 @@ define({
             }
         });
 
+        // redirects to edit with specific language
+        sandbox.mvc.routes.push({
+            route: 'content/contents/:webspace/edit::id/:content',
+            callback: function(webspace, id, content) {
+                var language = getContentLanguage();
+                sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language + '/edit:' + id + '/' + content);
+            }
+        });
+
         // show form for editing a content
         sandbox.mvc.routes.push({
             route: 'content/contents/:webspace/:language/edit::id/:content',
             callback: function(webspace, language, id, content) {
                 this.html(
-                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="'+ content +'" data-aura-id="' + id + '" data-aura-preview="true"/>'
+                    '<div data-aura-component="content/components/content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>'
                 );
             }
         });

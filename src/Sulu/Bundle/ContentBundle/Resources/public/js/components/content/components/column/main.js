@@ -11,7 +11,8 @@ define(function() {
 
     'use strict';
 
-    var SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages';
+    var SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages',
+        CONTENT_LANGUAGE = 'contentLanguage';
 
     return {
 
@@ -89,6 +90,7 @@ define(function() {
 
         changeLanguage: function(language) {
             this.sandbox.emit('sulu.content.contents.list', this.options.webspace, language);
+            this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, language);
         },
 
         render: function() {
