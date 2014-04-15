@@ -163,7 +163,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $query = $qb->getQuery();
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
-        $query->setParameter('system', $this->getSystem()); // TODO change to real value
+        $query->setParameter('system', $this->getSystem());
 
         try {
             return $query->getSingleResult();
@@ -208,23 +208,5 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function supportsClass($class)
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
-    }
-
-    /**
-     * Sets the security system
-     * @param string $system
-     */
-    public function setSystem($system)
-    {
-        // TODO: Implement setSystem() method.
-    }
-
-    /**
-     * Returns the security system
-     * @return string
-     */
-    public function getSystem()
-    {
-        // TODO: Implement getSystem() method.
     }
 }
