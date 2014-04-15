@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -29942,7 +29943,7 @@ define('__component__$toolbar@husky',[],function() {
             if (item.loading) {
                 item.loading = false;
                 $itemLink = this.sandbox.dom.find('a', $item);
-                this.sandbox.dom.remove(this.sandbox.dom.find('.item-loader', $item));
+                this.sandbox.stop(this.sandbox.dom.find('.item-loader', $item));
                 this.sandbox.dom.show($itemLink);
             }
 
@@ -37742,4 +37743,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
