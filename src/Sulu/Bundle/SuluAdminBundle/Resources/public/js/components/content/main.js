@@ -18,22 +18,35 @@ define([], function() {
     'use strict';
 
     var defaults = {
-            heading: '',
-            headingAddition: '',
-            tabsData: null,
             instanceName: 'content',
-            template: 'default',
-            parentTemplate: null
+            contentOptions: {},
+            tabsData: null
         },
 
         templates = {
             skeleton: function() {
                 return [
-                    '<div id="sulu-header-container"></div>',
-                    '   <div id="content-tabs" />',
-                    '</div>'
+                    '<div id="content-tabs"></div>'
                 ].join('');
             }
+        },
+
+        /**
+         * trigger after initialization has finished
+         *
+         * @event sulu.content.[INSTANCE_NAME].initialized
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
+
+        /**
+         * Creates the event names
+         * @param postfix {string}
+         * @returns {string}
+         */
+        createEventName = function(postfix) {
+            return 'sulu.content.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
         };
 
     return {
@@ -50,40 +63,18 @@ define([], function() {
             // bind events (also initializes first component)
             this.bindCustomEvents();
 
-            // initialize header
-            this.initializeHeader();
-        },
-
-        /**
-         * Starts the sulu-header component
-         */
-        initializeHeader: function() {
-            this.sandbox.start([{
-                name: 'header@suluadmin',
-                options: {
-                    el: '#sulu-header-container',
-                    toolbarTemplate: this.options.template,
-                    toolbarParentTemplate: this.options.parentTemplate,
-                    heading: this.options.heading,
-                    tabsData: this.options.tabsData
-                }
-            }
-            ]);
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
          * listens to tab events
          */
         bindCustomEvents: function() {
-            var instanceName = (this.options.instanceName && this.options.instanceName !== '') ? this.options.instanceName + '.' : '';
             // load component on start
             this.sandbox.on('husky.tabs.header.initialized', this.startTabComponent.bind(this));
 
             // load component after click
             this.sandbox.on('husky.tabs.header.item.select', this.startTabComponent.bind(this));
-
-            // if the header has initialized move the content down the height of the header
-            this.sandbox.on('sulu.header.initialized', this.setTopSpacing.bind(this));
         },
 
         /**
@@ -119,15 +110,6 @@ define([], function() {
             if (!!item) {
                 this.action = item.action;
             }
-        },
-
-        /**
-         * Sets the top spacing equal to the height of the header
-         */
-        setTopSpacing: function() {
-            this.sandbox.dom.css(this.$el, {
-                'padding-top': this.sandbox.dom.outerHeight(this.$find('#sulu-header-container')) + 'px'
-            });
         }
     };
 });

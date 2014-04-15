@@ -19,7 +19,13 @@ define([], function() {
             instanceName: '',
             changeStateCallback: null,
             parentChangeStateCallback: null,
-            tabsData: null
+            tabsData: null,
+            tabsComponentOptions: {},
+            contentEl: null,
+            toolbarOptions: {},
+            tabsOptions: {},
+            tabsFullControl: false,
+            breadcrumb: null
         },
 
         constants = {
@@ -190,7 +196,7 @@ define([], function() {
         /**
          * listens on and changes the state of the toolbar
          *
-         * @event sulu.header.[INSTANCE_NAME].show-back
+         * @event sulu.header.[INSTANCE_NAME].toolbar.state.change
          * @param {string} type 'add' or 'edit'
          * @param {boolean} saved If false toolbar gets set in dirty state
          * @param {boolean} highlight True to change with highlight effect
@@ -198,6 +204,16 @@ define([], function() {
         TOOLBAR_STATE_CHANGE = function() {
             return createEventName.call(this, 'toolbar.state.change');
         },
+
+        /**
+         * listens on and passes the outer height of the components element to a callback
+         *
+         * @event sulu.header.[INSTANCE_NAME].get-height
+         * @param {function} callback to pass the outer-height to
+         */
+         GET_HEIGHT = function() {
+            return createEventName.call(this, 'get-height');
+         },
 
         /*********************************************
          *   Abstract events
@@ -315,7 +331,7 @@ define([], function() {
          */
         setPosition: function() {
             // wait for tabs to initialize if there are tabs
-            if (this.options.tabsData !== null) {
+            if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
                 this.sandbox.on('husky.tabs.header'+ this.options.instanceName +'.initialized', function() {
                     this.sandbox.emit('sulu.app.content.get-dimensions', this.setDimensions.bind(this));
                 }.bind(this));
@@ -353,6 +369,11 @@ define([], function() {
             }));
 
             this.$inner = this.$find(constants.innerSelector);
+
+            // render breadcrumb if set
+            if (this.options.breadcrumb !== null) {
+                this.setBreadcrumb(this.options.breadcrumb);
+            }
         },
 
         /**
@@ -380,10 +401,20 @@ define([], function() {
          * Handles the start of the Tabs
          */
         startTabs: function() {
-            if (this.options.tabsData !== null) {
+            if (this.options.tabsData !== null || !!this.options.tabsOptions.data) {
                 this.$tabs = this.sandbox.dom.createElement('<div class="'+ constants.tabsClass +'"></div>');
                 this.sandbox.dom.append(this.$el, this.$tabs);
-                this.startTabsComponent();
+
+                if (this.options.tabsFullControl !== true) {
+                    // first start the content-component responsible for the tabs-content-handling
+                    this.startContentComponent();
+                    // wait for content-component to initialize
+                    this.sandbox.on('sulu.content.content.initialized', function() {
+                        this.startTabsComponent();
+                    }.bind(this));
+                } else {
+                    this.startTabsComponent();
+                }
             }
         },
 
@@ -392,19 +423,23 @@ define([], function() {
          */
         startTabsComponent: function() {
             this.sandbox.stop(this.$find('.' + constants.tabsClass));
-            var $container = this.sandbox.dom.createElement('<div/>');
+            var $container = this.sandbox.dom.createElement('<div/>'),
+                options = {
+                    el: $container,
+                    data: this.options.tabsData,
+                    instanceName: 'header' + this.options.instanceName,
+                    forceReload: false,
+                    forceSelect: true
+                };
+
             this.sandbox.dom.html(this.$find('.' + constants.tabsClass), $container);
+            // merge default tabs-options with passed ones
+            options = this.sandbox.util.extend(true, {}, options, this.options.tabsOptions);
 
             this.sandbox.start([
                 {
                     name: 'tabs@husky',
-                    options: {
-                        el: $container,
-                        data: this.options.tabsData,
-                        instanceName: 'header' + this.options.instanceName,
-                        forceReload: false,
-                        forceSelect: true
-                    }
+                    options: options
                 }
             ]);
         },
@@ -421,24 +456,28 @@ define([], function() {
          * Starts the husky-component
          */
         startToolbarComponent: function() {
-            var $container = this.sandbox.dom.createElement('<div />');
+            var $container = this.sandbox.dom.createElement('<div />'),
+                options = {
+                    el: $container,
+                    groups: [
+                        {id: 'left', align: 'left'},
+                        {id: 'right', align: 'right'}
+                    ],
+                    data: this.options.toolbarTemplate,
+                    skin: 'blueish',
+                    instanceName: 'header' + this.options.instanceName
+                };
 
             this.sandbox.stop(this.$find('.' + constants.toolbarClass));
             this.sandbox.dom.html(this.$find('.' + constants.toolbarClass), $container);
 
+            // merge default tabs-options with passed ones
+            options = this.sandbox.util.extend(true, {}, options, this.options.toolbarOptions);
+
             this.sandbox.start([
                 {
                     name: 'toolbar@husky',
-                    options: {
-                        el: $container,
-                        groups: [
-                            {id: 'left', align: 'left'},
-                            {id: 'right', align: 'right'}
-                        ],
-                        data: this.options.toolbarTemplate,
-                        skin: 'blueish',
-                        instanceName: 'header' + this.options.instanceName
-                    }
+                    options: options
                 }
             ]);
         },
@@ -464,6 +503,11 @@ define([], function() {
 
             // change the title
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
+
+            // get height event
+            this.sandbox.on(GET_HEIGHT.call(this), function(callback) {
+                callback(this.sandbox.dom.outerHeight(this.$el));
+            }.bind(this));
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
@@ -578,6 +622,22 @@ define([], function() {
             }
             if (typeof this.options.parentChangeStateCallback === 'function') {
                 this.options.parentChangeStateCallback.call(this, saved, type, highlight);
+            }
+        },
+
+        /**
+         * Starts the content component necessary and responsible for the tabs
+         */
+        startContentComponent: function() {
+            if (this.options.contentEl !== null) {
+                this.sandbox.start([{
+                    name: 'content@suluadmin',
+                    options: {
+                        el: this.sandbox.dom.$(this.options.contentEl),
+                        contentOptions: this.options.tabsComponentOptions,
+                        tabsData: this.options.tabsData
+                    }
+                }]);
             }
         },
 

@@ -180,7 +180,6 @@ define([], function() {
     return {
         view: true,
 
-
         initialize: function() {
 
             // merge defaults
@@ -225,14 +224,6 @@ define([], function() {
                     }
                 }
             ]);
-        },
-
-
-        /**
-         * listens to tab events
-         */
-        bindCustomEvents: function() {
-
         }
     };
 });
