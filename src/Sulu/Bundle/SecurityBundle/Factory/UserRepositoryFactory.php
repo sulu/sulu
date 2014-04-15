@@ -42,9 +42,9 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
         if ($this->requestAnalyzer == null) {
             $repository->setSystem('Sulu'); // FIXME Do not hardcode!
         } else {
-
-            $webspaceSecurity = $this->requestAnalyzer->getCurrentPortal()->getWebspace()->getSecurity();
-            if ($webspaceSecurity) {
+            if ($this->requestAnalyzer->getCurrentPortal() != null &&
+                $webspaceSecurity = $this->requestAnalyzer->getCurrentPortal()->getWebspace()->getSecurity()
+            ) {
                 $repository->setSystem(
                     $webspaceSecurity->getSystem()
                 );
