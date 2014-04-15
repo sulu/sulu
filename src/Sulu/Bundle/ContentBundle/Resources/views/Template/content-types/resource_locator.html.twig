@@ -1,4 +1,10 @@
-<input id="{{ id|raw }}" type="text" class="form-element preview-update trigger-save-button"
+<!--<input id="{{ id|raw }}" type="text" class="form-element preview-update trigger-save-button"
        data-mapper-property="{{ property.name }}"
        data-type="resourceLocator"
-       {% if property.mandatory %}data-validation-required="true"{% endif %}/>
+       {% if property.mandatory %}data-validation-required="true"{% endif %}/>-->
+
+<div id="{{ id|raw }}"
+     data-mapper-property="{{ property.name }}"
+     data-type="resourceLocator"
+     data-aura-component="resource-locator@sulucontent"
+     {% if property.mandatory %}data-validation-required="true"{% endif %} ></div>
