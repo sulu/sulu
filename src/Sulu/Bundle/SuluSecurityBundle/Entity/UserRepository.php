@@ -174,4 +174,22 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
     }
+
+    /**
+     * Sets the security system
+     * @param string $system
+     */
+    public function setSystem($system)
+    {
+        // TODO: Implement setSystem() method.
+    }
+
+    /**
+     * Returns the security system
+     * @return string
+     */
+    public function getSystem()
+    {
+        // TODO: Implement getSystem() method.
+    }
 }
