@@ -125,6 +125,14 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        return array();
+    }
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal

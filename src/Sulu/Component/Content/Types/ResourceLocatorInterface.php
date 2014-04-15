@@ -46,4 +46,14 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @return string
      */
     public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * returns a list of history resource locators
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return mixed
+     */
+    public function getHistoryByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 }

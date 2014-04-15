@@ -87,6 +87,16 @@ interface RLPStrategyInterface
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
+     * returns history for given contentNode
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return mixed
+     */
+    public function getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
@@ -105,4 +115,6 @@ interface RLPStrategyInterface
      * @return bool
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null);
+
+
 }

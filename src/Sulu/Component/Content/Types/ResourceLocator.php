@@ -97,6 +97,14 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
+    public function getHistoryByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        return $this->getStrategy()->getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,

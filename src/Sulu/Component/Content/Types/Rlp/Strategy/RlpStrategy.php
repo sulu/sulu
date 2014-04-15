@@ -224,6 +224,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        return $this->mapper->getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
      * returns the uuid of referenced content node
      * @param string $resourceLocator requested RL
      * @param string $webspaceKey key of portal
