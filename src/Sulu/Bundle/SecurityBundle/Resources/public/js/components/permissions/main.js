@@ -48,7 +48,7 @@ define([
                     if (wasConfirmed) {
                         var contactModel = Contact.findOrCreate({id: id});
 
-                        this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'options-button');
+                        this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                         contactModel.destroy({
                             success: function() {
                                 this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
@@ -61,7 +61,7 @@ define([
         },
 
         save: function(data) {
-            this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);

@@ -73,7 +73,7 @@ define([
 
         // saves the data, which is thrown together with a sulu.roles.save event
         save: function(data) {
-            this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             this.role.set(data);
             this.role.save(null, {
                 success: function(data) {
@@ -98,7 +98,7 @@ define([
 
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'options-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     if (typeof this.idDelete === 'number' || typeof this.idDelete === 'string') {
                         this.delSubmitOnce(this.idDelete, true);
                     } else {
