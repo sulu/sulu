@@ -161,7 +161,7 @@ define([
                 packageModel = this.getModel(data.id);
             }
 
-            this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             packageModel.set(data);
             packageModel.save(null, {
                 // on success save contacts id
@@ -251,7 +251,7 @@ define([
                     }
                 };
 
-            this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.sandbox.util.each(codesToDelete, function(index) {
                 promiseCounter++;
