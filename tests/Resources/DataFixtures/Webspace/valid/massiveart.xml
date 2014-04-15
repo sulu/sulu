@@ -6,6 +6,10 @@
     <name>Massive Art</name>
     <key>massiveart</key>
 
+    <security>
+        <system>massiveart</system>
+    </security>
+
     <localizations>
         <localization language="en" country="us" shadow="auto">
             <localization language="en" country="ca"/>

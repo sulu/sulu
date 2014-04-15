@@ -19,6 +19,18 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 interface UserRepositoryInterface extends UserProviderInterface
 {
     /**
+     * Sets the security system
+     * @param string $system
+     */
+    public function setSystem($system);
+
+    /**
+     * Returns the security system
+     * @return string
+     */
+    public function getSystem();
+
+    /**
      * Returns the user with the given id
      * @param int $id The user to find
      * @return UserInterface

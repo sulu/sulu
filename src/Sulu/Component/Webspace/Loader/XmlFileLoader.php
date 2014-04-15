@@ -14,6 +14,7 @@ use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Url;
@@ -83,6 +84,9 @@ class XmlFileLoader extends FileLoader
         $this->webspace->setName($this->xpath->query('/x:webspace/x:name')->item(0)->nodeValue);
         $this->webspace->setKey($this->xpath->query('/x:webspace/x:key')->item(0)->nodeValue);
         $this->webspace->setTheme($this->generateTheme());
+
+        // set security
+        $this->generateSecurity();
 
         // set localizations on webspaces
         $this->generateWebspaceLocalizations();
@@ -164,6 +168,16 @@ class XmlFileLoader extends FileLoader
         }
 
         return $localization;
+    }
+
+    private function generateSecurity()
+    {
+        $securitySystemNode = $this->xpath->query('/x:webspace/x:security/x:system');
+        if ($securitySystemNode->length > 0) {
+            $security = new Security();
+            $security->setSystem($securitySystemNode->item(0)->nodeValue);
+            $this->webspace->setSecurity($security);
+        }
     }
 
     private function generateWebspaceLocalizations()
