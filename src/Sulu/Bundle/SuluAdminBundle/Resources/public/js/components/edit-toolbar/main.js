@@ -86,7 +86,6 @@ define([], function() {
             }
         },
 
-
         changeStateCallbacks = {
             default: function(saved, type, highlight) {
                 if (!!saved) {
