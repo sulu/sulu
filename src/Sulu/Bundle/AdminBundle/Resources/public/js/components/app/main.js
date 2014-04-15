@@ -20,7 +20,9 @@ define(function() {
 
             contentMinWidth: 510,
             contentMinMarginLeft: 10,
-            contentMinPaddingLeft: 0
+            contentMinPaddingLeft: 0,
+
+            suluNavigateAMark: '[data-sulu-navigate="true"]' //a tags which match this mark will use the sulu.navigate method
         },
 
         eventNamespace = 'sulu.app.',
@@ -167,10 +169,25 @@ define(function() {
          * Bind DOM-related Events
          */
         bindDomEvents: function() {
+            // start centralized resize-listener
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 this.emitContentDimensionsChangedEvent();
                 this.emitViewPortDimensionsChanged();
             }.bind(this));
+
+            // call navigate event for marked a-tags
+            this.sandbox.dom.on(this.sandbox.dom.$document, 'click', function(event) {
+                // prevent the default action for the anchor tag
+                this.sandbox.dom.preventDefault(event);
+
+                // if valid href attribute is set navigate to it using the sulu.navigate method
+                if (!!event.currentTarget.attributes.href &&
+                    !!event.currentTarget.attributes.href.value &&
+                    event.currentTarget.attributes.href.value !== '#') {
+
+                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
+                }
+            }.bind(this), 'a' + constants.suluNavigateAMark);
         },
 
         /**
@@ -244,9 +261,9 @@ define(function() {
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
                 if (!!trigger && this.currentRoute !== route && this.currentRoute !== null) {
-                    // FIXME - edit toolbar does not get removed and because of that the dom element will be removed
+                    // FIXME - header does not get removed and because of that the dom element will be removed
                     // and the stop event will be called
-                    this.sandbox.stop('#edit-toolbar');
+                    this.sandbox.stop('#sulu-header-container');
                     this.sandbox.stop('#content > *');
                     this.sandbox.stop('#preview > *');
                 }

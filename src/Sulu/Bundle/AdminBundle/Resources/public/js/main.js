@@ -20,7 +20,7 @@ require.config({
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$content@suluadmin': 'components/content/main',
         '__component__$dialog@suluadmin': 'components/dialog/main',
-        '__component__$edit-toolbar@suluadmin': 'components/edit-toolbar/main',
+        '__component__$header@suluadmin': 'components/header/main',
         '__component__$list-toolbar@suluadmin': 'components/list-toolbar/main',
         '__component__$labels@suluadmin': 'components/labels/main'
     },
@@ -35,7 +35,7 @@ require.config({
         '__component__$app@suluadmin',
         '__component__$content@suluadmin',
         '__component__$dialog@suluadmin',
-        '__component__$edit-toolbar@suluadmin',
+        '__component__$header@suluadmin',
         '__component__$list-toolbar@suluadmin',
         '__component__$labels@suluadmin'
     ],
