@@ -14,6 +14,7 @@
         "matchdep": "~0.1.1",
 
         "grunt-contrib-requirejs": "*",
-        "grunt-replace": "~0.4.4"
+        "grunt-replace": "~0.4.4",
+        "grunt-exec": "~0.4.5"
     }
 }
