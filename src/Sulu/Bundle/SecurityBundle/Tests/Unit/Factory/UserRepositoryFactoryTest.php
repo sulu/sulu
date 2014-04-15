@@ -28,7 +28,7 @@ class UserRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
         $entityManagerMock->expects($this->once())->method('getRepository')->will(
             $this->returnValueMap(
                 array(
-                    array('Sulu\Component\Security\UserInterface', $userRepositoryMock)
+                    array('Sulu\Bundle\SecurityBundle\Entity\User', $userRepositoryMock)
                 )
             )
         );
@@ -45,13 +45,12 @@ class UserRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
             $webspace = new Webspace();
             $webspace->setSecurity($security);
 
-            $portal = new Portal();
-            $portal->setWebspace($webspace);
-
-            $requestAnalyzerMock->expects($this->once())->method('getCurrentPortal')->will($this->returnValue($portal));
+            $requestAnalyzerMock->expects($this->once())->method('getCurrentWebspace')->will(
+                $this->returnValue($webspace)
+            );
         }
 
-        return new UserRepositoryFactory($entityManagerMock, $requestAnalyzerMock);
+        return new UserRepositoryFactory($entityManagerMock, 'Sulu', $requestAnalyzerMock);
     }
 
     public function testGetRepositoryWithoutRequestAnalyzer()
