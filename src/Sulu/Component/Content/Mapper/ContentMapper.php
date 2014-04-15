@@ -809,6 +809,11 @@ class ContentMapper implements ContentMapperInterface
                 null
             );
             $title = $property->getValue();
+            $structure->setUuid($node->getPropertyValue('jcr:uuid'));
+
+            // throw an content.node.load event (disabled for now)
+            //$event = new ContentNodeEvent($node, $structure);
+            //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
 
             $result[] = new BreadcrumbItem($depth, $nodeUuid, $title);
         }
