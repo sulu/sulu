@@ -88,3 +88,8 @@
 .sortable-placeholder {
   margin-bottom: 20px;
 }
+
+/* line 2, ../scss/modules/resource-locator.scss */
+.resource-locator input {
+  width: auto;
+}
