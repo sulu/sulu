@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>{{ name }}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1397545282583.css">
+
+        <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="/bundles/sulutranslate/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/bundles/sulucontent/css/main.min.css"/>
+    </head>
+    <body>
+        <div id="main">
+            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
+                {% if user.username is not defined %}
+                data-aura-footer="false"
+                {% endif %}
+                 data-aura-user-name="{{ user.fullname }}"
+                 data-aura-system-name="{{ name }}"
+                 data-aura-system-version="0.1"
+                 data-aura-user-locales='["en", "de"]'
+                 data-aura-user-locale="{{ user.locale }}"
+                 data-aura-logout-route="{{ user.logout }}"
+            ></div>
+
+            <main class="grid" id="content" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}"></main>
+
+        </div>
+
+        <div id="labels-container" data-aura-component="labels@suluadmin"></div>
+        <div id="dialogContainer" data-aura-component="dialog@suluadmin"></div>
+        <div id="preview"></div>
+
+        <script type="text/javascript">
+            {% autoescape false %}
+            var SULU = {
+                debug: false,
+                user: {
+                    id: '{{ user.id }}',
+                    locale: '{{ user.locale is defined ? user.locale : 'en' }}',
+                    settings: {{ user.settings }}
+                },
+                sections: {{ config | json_encode }}
+            };
+            {% endautoescape %}
+
+            // CKEditor needs base path to load some other files
+            var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
+        </script>
+
+        <script data-main="/bundles/suluadmin/dist/app.min.1397545282583" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+
+    </body>
+</html>
+
