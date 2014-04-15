@@ -147,12 +147,23 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->addSelect('grp')
             ->addSelect('settings')
             ->addSelect('permissions')
-            ->where('user.username=:username');
+            ->where('user.username=:username')
+            // TODO add groups for system recognition
+            ->andWhere(
+                'EXISTS(
+                    SELECT ur.id
+                    FROM Sulu\Bundle\SecurityBundle\Entity\Role r
+                    LEFT JOIN r.userRoles as ur
+                    LEFT JOIN ur.user u
+                    WHERE u.id = user.id
+                    AND r.system = :system
+                )'
+            );
 
         $query = $qb->getQuery();
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
-
+        $query->setParameter('system', $this->getSystem()); // TODO change to real value
 
         try {
             return $query->getSingleResult();
