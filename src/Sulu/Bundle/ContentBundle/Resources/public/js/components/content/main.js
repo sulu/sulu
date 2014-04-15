@@ -102,8 +102,8 @@ define([
             }, this);
 
             // get resource locator
-            this.sandbox.on('sulu.content.contents.getRL', function(title, callback) {
-                this.getResourceLocator(title, callback);
+            this.sandbox.on('sulu.content.contents.getRL', function(title, template, callback) {
+                this.getResourceLocator(title, template, callback);
             }, this);
 
             // load list view
@@ -153,8 +153,8 @@ define([
             return this.stateDropdownItems[state].call(this);
         },
 
-        getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
+        getResourceLocator: function(parts, template, callback) {
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'parts=' + JSON.stringify(parts) + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
             this.sandbox.util.load(url)
                 .then(function(data) {
                     callback(data.resourceLocator);
