@@ -293,12 +293,12 @@ define(['app-config'], function(AppConfig) {
         bindDomEvents: function() {
             var startListening = false;
             this.getDomElementsForTagName('sulu.rlp.input', function(property) {
-                if (property.$el.data('element').getValue() !== '') {
+                if (property.$el.data('element').getValue() === '') {
                     startListening = true;
                 }
             }.bind(this));
 
-            if (!this.options.data.id || startListening) {
+            if (startListening) {
                 this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             } else {
                 this.dfdListenForChange.resolve();
