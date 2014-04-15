@@ -152,15 +152,15 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview', $data[0]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview', $data[1]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default', $data[1]);
         $data[1] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview&parent='.$data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview&parent='.$data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=overview&parent='.$data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&template=default&parent='.$data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent());
 
         return $data;
@@ -168,22 +168,22 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
 
     public function testGet()
     {
-        $this->client->request('GET', '/content/resourcelocator.json?title=test&webspace=sulu_io&language=en');
+        $this->client->request('GET', '/content/resourcelocator.json?parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&title=test&webspace=sulu_io&language=en');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/products/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&title=test&webspace=sulu_io&language=en');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-2', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&title=test&webspace=sulu_io&language=en');
+        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);
