@@ -234,6 +234,23 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('de_at', $portalInformation['localization']->getLocalization());
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
+        /** @var Webspace $webspace */
+        $webspace = $portalInformation['webspace'];
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+        $this->assertCount(2, $webspace->getLocalizations());
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertCount(1, $webspace->getTheme()->getExcludedTemplates());
+        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
+
         /** @var Portal $portal */
         $portal = $portalInformation['portal'];
 
@@ -263,6 +280,23 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('segment', $portalInformation);
 
         /** @var Portal $portal */
+        /** @var Webspace $webspace */
+        $webspace = $portalInformation['webspace'];
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+        $this->assertCount(2, $webspace->getLocalizations());
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertCount(1, $webspace->getTheme()->getExcludedTemplates());
+        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
+
         $portal = $portalInformation['portal'];
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
@@ -364,6 +398,23 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('sulu.at', $portalInformation['redirect']);
         $this->assertEquals('www.sulu.at', $portalInformation['url']);
+        
+        /** @var Webspace $webspace */
+        $webspace = $portalInformation['webspace'];
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+        $this->assertCount(2, $webspace->getLocalizations());
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertCount(1, $webspace->getTheme()->getExcludedTemplates());
+        $this->assertEquals('overview', $webspace->getTheme()->getExcludedTemplates()[0]);
     }
 
     public function testLocalizations()

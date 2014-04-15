@@ -15,6 +15,7 @@ use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
 class RequestAnalyzer implements RequestAnalyzerInterface
@@ -30,6 +31,12 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * @var string
      */
     private $environment;
+
+    /**
+     * The current webspace valid for the current request
+     * @var Webspace
+     */
+    private $webspace;
 
     /**
      * The current portal valid for the current request
@@ -96,10 +103,12 @@ class RequestAnalyzer implements RequestAnalyzerInterface
             if (array_key_exists('redirect', $portalInformation)) {
                 $this->setCurrentPortalUrl($portalInformation['url']);
                 $this->setCurrentRedirect($portalInformation['redirect']);
+                $this->setCurrentWebspace($portalInformation['webspace']);
             } else {
                 $this->setCurrentPortalUrl($portalInformation['url']);
                 $this->setCurrentLocalization($portalInformation['localization']);
                 $this->setCurrentPortal($portalInformation['portal']);
+                $this->setCurrentWebspace($portalInformation['webspace']);
 
                 if (array_key_exists('segment', $portalInformation)) {
                     $this->setCurrentSegment($portalInformation['segment']);
@@ -124,6 +133,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         } else {
             throw new UrlMatchNotFoundException($request->getUri());
         }
+    }
+
+    /**
+     * Returns the current webspace for this request
+     * @return Webspace
+     */
+    public function getCurrentWebspace()
+    {
+        return $this->webspace;
     }
 
     /**
@@ -196,6 +214,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     protected function setCurrentLocalization($localization)
     {
         $this->localization = $localization;
+    }
+
+    /**
+     * Sets the current webspace
+     * @param \Sulu\Component\Webspace\Webspace $webspace
+     */
+    protected function setCurrentWebspace($webspace)
+    {
+        $this->webspace = $webspace;
     }
 
     /**
