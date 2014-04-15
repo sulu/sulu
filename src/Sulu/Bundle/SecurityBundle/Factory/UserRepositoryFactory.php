@@ -41,14 +41,8 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
         $repository = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User');
         if ($this->requestAnalyzer == null) {
             $repository->setSystem('Sulu'); // FIXME Do not hardcode!
-        } else {
-            if ($this->requestAnalyzer->getCurrentPortal() != null &&
-                $webspaceSecurity = $this->requestAnalyzer->getCurrentPortal()->getWebspace()->getSecurity()
-            ) {
-                $repository->setSystem(
-                    $webspaceSecurity->getSystem()
-                );
-            }
+        } elseif ($webspaceSecurity = $this->requestAnalyzer->getCurrentWebspace()->getSecurity()) {
+            $repository->setSystem($webspaceSecurity->getSystem());
         }
 
         return $repository;
