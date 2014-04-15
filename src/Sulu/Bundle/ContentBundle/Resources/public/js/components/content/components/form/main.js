@@ -49,7 +49,6 @@ define(['app-config'], function(AppConfig) {
             this.formId = '#contacts-form-container';
             this.render();
 
-            this.setTitle();
             this.setHeaderBar(true);
         },
 
@@ -113,8 +112,9 @@ define(['app-config'], function(AppConfig) {
          * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
          */
         setTitle: function() {
-            if (!!this.options.id && !!this.options.data.title) {
-                this.sandbox.emit('sulu.content.set-title', this.options.data.title);
+            var value = this.propertyConfiguration['sulu.node.name'].highestProperty.$el.data('element').getValue();
+            if (!!this.options.id && value !== '') {
+                this.sandbox.emit('sulu.content.set-title', value);
                 this.setBreadcrumb();
             } else {
                 this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('content.contents.title'));
@@ -270,6 +270,9 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
+
+            this.setTitle();
+
             return initialize;
         },
 
