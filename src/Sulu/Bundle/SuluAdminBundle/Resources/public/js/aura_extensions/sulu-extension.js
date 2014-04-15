@@ -5,12 +5,10 @@
     define([], {
 
         initialize: function(app) {
-
             /**
              * Userproperties
              */
             app.sandbox.sulu.user = app.sandbox.util.extend(false, {}, SULU.user);
-
 
             /*********
              * USER SETTINGS
@@ -121,7 +119,6 @@
 
                     }.bind(this));
             };
-
 
             /**
              * returns settings for a specified key
