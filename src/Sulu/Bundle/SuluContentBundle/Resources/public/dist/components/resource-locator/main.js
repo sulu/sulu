@@ -1,0 +1,1 @@
+define([],function(){"use strict";var a={},b=function(){return['<div class="resource-locator">',"   <p>VERY NICE</p>","</div>"].join("")},c=function(){this.sandbox.dom.html(b())};return{initialize:function(){this.options=this.sandbox.util.extend({},a,this.options),c.call(this)}}});
