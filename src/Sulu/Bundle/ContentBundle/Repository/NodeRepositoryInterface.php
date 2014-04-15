@@ -87,7 +87,7 @@ interface NodeRepositoryInterface
      * @param string $templateKey
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param $userId
+     * @param integer $userId
      * @return array
      */
     public function saveIndexNode($data, $templateKey, $webspaceKey, $languageCode, $userId);
@@ -95,7 +95,15 @@ interface NodeRepositoryInterface
     /**
      * removes given node
      * @param $uuid
-     * @param $portalKey
+     * @param $webspaceKey
      */
-    public function deleteNode($uuid, $portalKey);
+    public function deleteNode($uuid, $webspaceKey);
+
+    /**
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return array
+     */
+    public function getHistory($uuid, $webspaceKey, $languageCode);
 }
