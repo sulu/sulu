@@ -30,6 +30,17 @@ define(function() {
     return {
         name: 'Sulu Security Role List',
 
+        header: function() {
+            return {
+                title: 'security.roles.title',
+
+                breadcrumb: [
+                    {title: 'navigation.settings'},
+                    {title: 'security.roles.title'}
+                ]
+            };
+        },
+
         templates: ['/admin/security/template/role/list'],
 
         initialize: function() {
@@ -44,7 +55,8 @@ define(function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'rolesFields', '/admin/api/roles/fields',
                 {
                     el: '#list-toolbar-container',
-                    instanceName: 'roles'
+                    instanceName: 'roles',
+                    inHeader: true
                 },
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
