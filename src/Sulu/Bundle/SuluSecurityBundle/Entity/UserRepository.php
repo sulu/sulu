@@ -31,24 +31,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     private $system;
 
     /**
-     * Sets the security system
-     * @param string $system
-     */
-    public function setSystem($system)
-    {
-        $this->system = $system;
-    }
-
-    /**
-     * Returns the security system
-     * @return string
-     */
-    public function getSystem()
-    {
-        return $this->system;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function findUserById($id)
@@ -133,7 +115,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      */
     public function loadUserByUsername($username)
     {
-
         $qb = $this->createQueryBuilder('user')
             ->leftJoin('user.userRoles', 'userRoles')
             ->leftJoin('userRoles.role', 'role')
@@ -208,5 +189,23 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function supportsClass($class)
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
+    }
+
+    /**
+     * Sets the security system
+     * @param string $system
+     */
+    public function setSystem($system)
+    {
+        $this->system = $system;
+    }
+
+    /**
+     * Returns the security system
+     * @return string
+     */
+    public function getSystem()
+    {
+        return $this->system;
     }
 }
