@@ -122,7 +122,8 @@ define(['app-config'], function(AppConfig) {
         setBreadcrumb: function() {
             if (!!this.options.data.breadcrumb) {
                 var breadcrumb = [{
-                    title: this.options.webspace.replace(/_/g, '.')
+                    title: this.options.webspace.replace(/_/g, '.'),
+                    event: 'sulu.content.contents.list'
                 }], length, i;
 
                 // loop through breadcrumb skip home-page
@@ -353,7 +354,6 @@ define(['app-config'], function(AppConfig) {
             // expand navigation if back gets clicked
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.content.contents.list');
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
             }.bind(this));
         },
 
