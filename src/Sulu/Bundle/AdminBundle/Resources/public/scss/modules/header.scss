@@ -33,11 +33,28 @@
         }
     }
 
-    .toolbar {
+    .bottom-row {
         position: absolute;
         bottom: 10px;
         left: 0;
         width: 100%;
+
+        &::after {
+           content: ".";
+           display: block;
+           clear: both;
+           visibility: hidden;
+           line-height: 0;
+           height: 0;
+        }
+
+        .bottom-content {
+            float: left;
+            line-height: 29px;
+            * {
+              color: $white;
+            }
+        }
     }
 
     .tabs {

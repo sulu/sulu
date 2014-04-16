@@ -169,17 +169,35 @@ input, select {
   transition: opacity 0.5s;
 }
 /* line 36, ../scss/modules/header.scss */
-.sulu-header .toolbar {
+.sulu-header .bottom-row {
   position: absolute;
   bottom: 10px;
   left: 0;
   width: 100%;
 }
-/* line 43, ../scss/modules/header.scss */
+/* line 42, ../scss/modules/header.scss */
+.sulu-header .bottom-row::after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+/* line 51, ../scss/modules/header.scss */
+.sulu-header .bottom-row .bottom-content {
+  float: left;
+  line-height: 29px;
+}
+/* line 54, ../scss/modules/header.scss */
+.sulu-header .bottom-row .bottom-content * {
+  color: white;
+}
+/* line 60, ../scss/modules/header.scss */
 .sulu-header .tabs {
   height: 50px;
 }
-/* line 47, ../scss/modules/header.scss */
+/* line 64, ../scss/modules/header.scss */
 .sulu-header .info {
   position: absolute;
   top: 10px;
