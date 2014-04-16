@@ -14,7 +14,10 @@ define(function() {
     return {
         header: {
             tabs: {
-                url: '/admin/translate/navigation/content?type=package',
+                url: '/admin/translate/navigation/content?type=package'
+            },
+            toolbar: {
+                template: 'default'
             },
             title: 'translate.package.title'
         }
