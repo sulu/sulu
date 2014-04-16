@@ -1,14 +1,7 @@
-<div class="grid">
-    <div class="grid-row">
-        <div class="grid-col-12">
-            {% block options %}
-                <div id="list-toolbar-container" class="pull-right">
-
-                </div>
-            {% endblock %}
-        </div>
-    </div>
-</div>
+{% block options %}
+    {# container for the list-toolbar component #}
+    <div id="list-toolbar-container"></div>
+{% endblock %}
 
 {% block list %}{% endblock %}
 

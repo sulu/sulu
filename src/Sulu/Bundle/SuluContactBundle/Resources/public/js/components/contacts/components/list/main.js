@@ -35,9 +35,11 @@ define(function() {
 
         header: {
             title: 'contact.contacts.title',
-            toolbar: {
-                template: []
-            }
+
+            breadcrumb: [
+                {title: 'navigation.contacts'},
+                {title: 'contact.contacts.title'}
+            ]
         },
 
         templates: ['/admin/contact/template/contact/list'],
@@ -53,8 +55,9 @@ define(function() {
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'contactsFields', '/admin/api/contacts/fields',
                 {
-                    el: '#list-toolbar-container',
-                    instanceName: 'contacts'
+                    el: this.$find('#list-toolbar-container'),
+                    instanceName: 'contacts',
+                    inHeader: true
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
