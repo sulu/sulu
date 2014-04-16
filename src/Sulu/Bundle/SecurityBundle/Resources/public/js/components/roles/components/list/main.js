@@ -54,7 +54,7 @@ define(function() {
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'rolesFields', '/admin/api/roles/fields',
                 {
-                    el: '#list-toolbar-container',
+                    el: this.$find('#list-toolbar-container'),
                     instanceName: 'roles',
                     inHeader: true
                 },
