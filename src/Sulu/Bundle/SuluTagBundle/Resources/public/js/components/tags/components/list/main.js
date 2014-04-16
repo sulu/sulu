@@ -33,6 +33,17 @@ define(function() {
         view: true,
         instanceNameToolbar: 'saveToolbar',
 
+        header: function() {
+            return {
+                title: 'tag.tags.title',
+
+                breadcrumb: [
+                    {title: 'navigation.settings'},
+                    {title: 'tag.tags.title'}
+                ]
+            };
+        },
+
         templates: ['/admin/tag/template/tag/list'],
 
         initialize: function() {
@@ -49,7 +60,8 @@ define(function() {
                     el: '#list-toolbar-container',
                     template: 'default',
                     listener: 'default',
-                    instanceName: this.instanceNameToolbar
+                    instanceName: this.instanceNameToolbar,
+                    inHeader: true
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
