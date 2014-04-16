@@ -25,7 +25,8 @@ define([], function() {
             toolbarOptions: {},
             tabsOptions: {},
             tabsFullControl: false,
-            breadcrumb: null
+            breadcrumb: null,
+            toolbarDisabled: false
         },
 
         constants = {
@@ -37,7 +38,14 @@ define([], function() {
             toolbarClass: 'toolbar',
             tabsClass: 'tabs',
             innerSelector: '.inner',
-            tabsSelector: '.tabs-container'
+            tabsSelector: '.tabs-container',
+            bottomContentClass: 'bottom-content',
+            toolbarDefaults: {
+                groups: [
+                    {id: 'left', align: 'left'},
+                    {id: 'right', align: 'right'}
+                ]
+            }
         },
 
         toolbarTemplates = {
@@ -84,13 +92,16 @@ define([], function() {
                         '<span class="icon-'+ constants.backIcon +' '+ constants.backClass +'"></span>',
                         '<h1 class="bright"><%= headline %></h1>',
                     '</div>',
-                    '<div class="'+ constants.toolbarClass +'"></div>',
+                    '<div class="bottom-row">',
+                        '<div class="'+ constants.bottomContentClass +'"></div>',
+                        '<div class="'+ constants.toolbarClass +'"></div>',
+                    '</div>',
                 '</div>'
             ].join(''),
 
             breadcrumbItem: [
-                '<li>',
-                    '<a data-sulu-navigate="true" href="<%= link %>"><%= title %></a>',
+                '<li<% if(inactive === true) { %> class="inactive"<% } %>>',
+                    '<a data-sulu-navigate="true" data-sulu-event="<%= event %>" href="<%= link %>"><%= title %></a>',
                 '</li>'
             ].join('\n')
         },
@@ -214,6 +225,26 @@ define([], function() {
          GET_HEIGHT = function() {
             return createEventName.call(this, 'get-height');
          },
+
+        /**
+         * listens on and initializes a blank toolbar with given options
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-toolbar
+         * @param {object} The options to pass to the toolbar-component
+         */
+         SET_TOOLBAR = function() {
+            return createEventName.call(this, 'set-toolbar');
+         },
+
+        /**
+         * listens on and sets a given html-object into a container on the bottom of the header
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-bottom-content
+         * @param {object|string} the html-object/markup to insert
+         */
+        SET_BOTTOM_CONTENT = function() {
+            return createEventName.call(this, 'set-bottom-content');
+        },
 
         /*********************************************
          *   Abstract events
@@ -448,22 +479,32 @@ define([], function() {
          * Handles the starting of the toolbar
          */
         startToolbar: function() {
+            if (this.options.toolbarDisabled !== true) {
+            // merge passed toolbar-options with defaults
+            var options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, this.options.toolbarOptions);
+
+            // build icon-template and parent-template and merge all in this.options.toolbarTemplate
             this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
-            this.startToolbarComponent();
+
+            // add built toolbarTemplate to the toolbar-options
+            options = this.sandbox.util.extend(true, {}, options, {
+                data: this.options.toolbarTemplate
+            });
+
+            // start toolbar component with built options
+            this.startToolbarComponent(options);
+            }
         },
 
         /**
          * Starts the husky-component
+         * @param {object} options The options to pass to the toolbar component
          */
-        startToolbarComponent: function() {
+        startToolbarComponent: function(options) {
             var $container = this.sandbox.dom.createElement('<div />'),
-                options = {
+                // global default values
+                componentOptions = {
                     el: $container,
-                    groups: [
-                        {id: 'left', align: 'left'},
-                        {id: 'right', align: 'right'}
-                    ],
-                    data: this.options.toolbarTemplate,
                     skin: 'blueish',
                     instanceName: 'header' + this.options.instanceName
                 };
@@ -472,12 +513,12 @@ define([], function() {
             this.sandbox.dom.html(this.$find('.' + constants.toolbarClass), $container);
 
             // merge default tabs-options with passed ones
-            options = this.sandbox.util.extend(true, {}, options, this.options.toolbarOptions);
+            componentOptions = this.sandbox.util.extend(true, {}, componentOptions, options);
 
             this.sandbox.start([
                 {
                     name: 'toolbar@husky',
-                    options: options
+                    options: componentOptions
                 }
             ]);
         },
@@ -508,6 +549,12 @@ define([], function() {
             this.sandbox.on(GET_HEIGHT.call(this), function(callback) {
                 callback(this.sandbox.dom.outerHeight(this.$el));
             }.bind(this));
+
+            // set or reset a toolbar
+            this.sandbox.on(SET_TOOLBAR.call(this), this.startToolbarComponent.bind(this));
+
+            // set content to the bottom-content-container
+            this.sandbox.on(SET_BOTTOM_CONTENT.call(this), this.insertBottomContent.bind(this));
 
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
@@ -590,8 +637,10 @@ define([], function() {
                 this.sandbox.util.foreach(crumbs, function(crumb) {
                     if (!!crumb.title) {
                         this.sandbox.dom.append($breadcrumb, this.sandbox.util.template(templates.breadcrumbItem)({
-                            title: crumb.title,
-                            link: (!!crumb.link) ? crumb.link : '#'
+                            title: this.sandbox.translate(crumb.title),
+                            link: (!!crumb.link) ? crumb.link : '#',
+                            event: (!!crumb.event) ? crumb.event : '',
+                            inactive: (!crumb.link && !crumb.event) ? true : false
                         }));
                     }
                 }.bind(this));
@@ -647,6 +696,16 @@ define([], function() {
          */
         setTitle: function(title) {
             this.sandbox.dom.html(this.$find('h1'), title);
+        },
+
+        /**
+         * Inserts html into the content-container on the bottom
+         * @param content {object|string} html to insert
+         */
+        insertBottomContent: function(content) {
+            var $bottomContainer = this.$find('.' + constants.bottomContentClass);
+            this.sandbox.stop($bottomContainer);
+            this.sandbox.dom.html($bottomContainer, content);
         }
     };
 });

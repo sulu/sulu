@@ -181,6 +181,14 @@ define(function() {
                 // prevent the default action for the anchor tag
                 this.sandbox.dom.preventDefault(event);
 
+                var dataSuluEvent = this.sandbox.dom.attr(event.currentTarget, 'data-sulu-event');
+
+                // if data-sulu-event attribute is set emit the attribute value as an event
+                if (!!dataSuluEvent &&
+                    typeof dataSuluEvent === 'string') {
+                    this.sandbox.emit(dataSuluEvent);
+                }
+
                 // if valid href attribute is set navigate to it using the sulu.navigate method
                 if (!!event.currentTarget.attributes.href &&
                     !!event.currentTarget.attributes.href.value &&

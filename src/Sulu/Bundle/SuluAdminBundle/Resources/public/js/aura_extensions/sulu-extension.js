@@ -184,7 +184,8 @@
                                 key: key,
                                 url: url
                             },
-                            instanceName: 'content'
+                            instanceName: 'content',
+                            inHeader: false
                         },
                         toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                         gridDefaults = {
