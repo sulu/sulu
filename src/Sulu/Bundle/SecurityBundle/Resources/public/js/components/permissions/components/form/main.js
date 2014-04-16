@@ -97,12 +97,19 @@ define([], function() {
          * default title as fallback
          */
         setTitle: function() {
+            var title = this.sandbox.translate('contact.contacts.title'),
+                breadcrumb = [
+                    {title: 'navigation.contacts'},
+                    {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
+                ];
+
             if (!!this.options.data.contact && !!this.options.data.contact.id) {
-                this.sandbox.emit('sulu.header.set-title', this.options.data.contact.fullName);
-                // TODO make breadcrumb
-            } else {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('contact.contacts.title'));
+                title = this.options.data.contact.fullName;
+                breadcrumb.push({title: '#' + this.options.data.contact.id});
             }
+
+            this.sandbox.emit('sulu.header.set-title', title);
+            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         // Form
