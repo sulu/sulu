@@ -16,7 +16,9 @@ define(function() {
             tabs: {
                 url: '/admin/contact/navigation/account',
             },
-            title: ''
+            toolbar: {
+                template: 'default'
+            }
         }
     };
 });

@@ -115,9 +115,10 @@ define([
                     options: getTabsOptions.call(this)
                 },
 
-                toolbar: {
-                    template: []
-                }
+                breadcrumb: [
+                    {title: 'navigation.contacts'},
+                    {title: 'contact.accounts.title'}
+                ]
             };
         },
 
@@ -137,15 +138,16 @@ define([
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
                 {
-                    el: '#list-toolbar-container',
+                    el: this.$find('#list-toolbar-container'),
                     instanceName: 'accounts',
                     parentTemplate: 'default',
+                    inHeader: true,
                     template: function() {
                         return [
                             {
                                 id: 'add',
                                 icon: 'circle-plus',
-                                class: 'highlight',
+                                class: 'highlight-white',
                                 title: this.sandbox.translate('sulu.list-toolbar.add'),
                                 items: [
                                     {
