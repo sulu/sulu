@@ -57,7 +57,7 @@ define(function() {
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'tagsFields', '/admin/api/tags/fields',
                 {
-                    el: '#list-toolbar-container',
+                    el: this.$find('#list-toolbar-container'),
                     template: 'default',
                     listener: 'default',
                     instanceName: this.instanceNameToolbar,
