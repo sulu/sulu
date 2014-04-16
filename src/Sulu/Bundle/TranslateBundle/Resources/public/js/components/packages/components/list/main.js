@@ -64,7 +64,7 @@ define([], function() {
                     inHeader: true
                 },
                 {
-                    el: this.sandbox.dom.find('#package-list', this.$el),
+                    el: this.$find('#package-list'),
                     url: '/admin/api/packages?flat=true',
                     pagination: false,
                     sortable: true,
