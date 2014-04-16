@@ -14,7 +14,10 @@ define(function() {
     return {
         header: {
             tabs: {
-                url: '/admin/security/navigation/roles',
+                url: '/admin/security/navigation/roles'
+            },
+            toolbar: {
+                template: 'default'
             },
             title: 'security.roles.title'
         }
