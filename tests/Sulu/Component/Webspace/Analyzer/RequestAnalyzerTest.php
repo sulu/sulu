@@ -15,6 +15,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
 class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
@@ -46,6 +47,9 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyze()
     {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
         $portal = new Portal();
         $portal->setKey('sulu');
 
@@ -54,6 +58,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $portalInformation = array(
+            'webspace' => $webspace,
             'portal' => $portal,
             'localization' => $localization,
             'segment' => null,
@@ -70,6 +75,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
         $this->assertEquals('sulu.lo/test', $this->requestAnalyzer->getCurrentPortalUrl());
