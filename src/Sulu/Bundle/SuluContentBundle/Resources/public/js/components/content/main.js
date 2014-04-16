@@ -108,6 +108,7 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 
