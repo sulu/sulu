@@ -349,6 +349,13 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function getHistory($uuid, $webspaceKey, $languageCode)
     {
-        return $this->resourceLocator->getHistoryByUuid($uuid, $webspaceKey, $languageCode);
+        $result = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
+        return array(
+            '_embedded' => $result,
+            '_links' => array(
+                'self' => $this->apiBasePath . '/' . $uuid . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey
+            ),
+            'total' => sizeof($result)
+        );
     }
 }
