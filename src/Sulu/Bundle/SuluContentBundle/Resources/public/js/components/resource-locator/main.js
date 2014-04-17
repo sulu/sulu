@@ -28,7 +28,7 @@ define([], function() {
                 '<span class="icon-cogwheel pointer" id="', options.ids.edit, '"></span>',
                 (!!options.url) ? '   <span id="' + options.ids.url + '" class="url">' + options.url + '</span>' : '',
                 '   <span id="' + options.ids.tree + '" class="tree"></span>',
-                '   <input type="text" readonly="readonly" id="' + options.ids.input + '" class="form-element"/>',
+                '   <input type="text" readonly="readonly" id="' + options.ids.input + '" class="form-element preview-update trigger-save-button"/>',
                 '   <span class="icon-chevron-right pointer" id="', options.ids.toggle, '"></span>',
                 '   <div id="', options.ids.history, '" class="hidden">',
                 '   </div>',
@@ -60,6 +60,7 @@ define([], function() {
             this.sandbox.dom.on(this.$el, 'data-changed', setValue.bind(this));
             this.sandbox.dom.on(getId.call(this, 'edit'), 'click', editClicked.bind(this));
             this.sandbox.dom.on(getId.call(this, 'toggle'), 'click', toggleClicked.bind(this));
+            this.sandbox.dom.on(getId.call(this, 'input'), 'change', setDataValue.bind(this));
         },
 
         setValue = function(value) {
@@ -93,6 +94,12 @@ define([], function() {
                 this.sandbox.dom.addClass(getId.call(this, 'history'), 'hidden');
                 this.historyClosed = true;
             }
+        },
+
+        setDataValue = function() {
+            var input = this.sandbox.dom.val(getId.call(this, 'input')),
+                tree = this.sandbox.dom.html(getId.call(this, 'tree'));
+            this.sandbox.dom.data(this.$el, 'value', tree + input);
         },
 
         loadHistory = function() {
