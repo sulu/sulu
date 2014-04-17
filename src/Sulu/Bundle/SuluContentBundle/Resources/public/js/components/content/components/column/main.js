@@ -24,12 +24,26 @@ define(function() {
 
         view: true,
 
+        fullSize: {
+            width: true,
+            height: true
+        },
+
         header: function() {
             return {
                 title: this.options.webspace.replace(/_/g, '.'),
+                noBack: true,
                 breadcrumb: [
                     {title: this.options.webspace.replace(/_/g, '.')}
-                ]
+                ],
+                toolbar: {
+                    template: [],
+                    languageChanger: {
+                        url: '/admin/content/languages/' + this.options.webspace,
+                        preSelected: this.options.language,
+                        callback: this.changeLanguage.bind(this)
+                    }
+                }
             };
         },
 
@@ -72,11 +86,6 @@ define(function() {
             this.sandbox.on('husky.select.language.selected.item', function(localeId) {
                 this.changeLanguage(this.getLocalizationForId(localeId));
             }, this);
-
-            // change language
-            this.sandbox.on('sulu.dropdown.languages.item-clicked', function(item) {
-                this.changeLanguage(item.localization);
-            }, this);
         },
 
         startColumnNavigation: function() {
@@ -108,8 +117,8 @@ define(function() {
             return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
         },
 
-        changeLanguage: function(language) {
-            this.sandbox.emit('sulu.content.contents.list', this.options.webspace, language);
+        changeLanguage: function(item) {
+            this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
         },
 
         render: function() {
@@ -124,7 +133,6 @@ define(function() {
 
                 this.sandbox.dom.html(this.$el, tpl);
 
-                this.addLocaleDropdown();
                 this.addToggler();
 
                 // start column-navigation
@@ -149,42 +157,6 @@ define(function() {
                     outline: true
                 }
             }]);
-        },
-
-        /**
-         * Generates the locale-dropdown and adds it to the header
-         * //TODO: abstract in adminbundle
-         */
-        addLocaleDropdown: function() {
-            this.sandbox.on('husky.toolbar.header.items.set', function() {
-                this.sandbox.emit('sulu.header.toolbar.item.change', 'language', this.options.language);
-            }.bind(this));
-
-            var options = {
-                groups: [{
-                    id: 'right',
-                    align: 'right'
-                }],
-                data: [{
-                    id: 'language',
-                    group: 'right',
-                    position: 10,
-                    type: 'select',
-                    title: '',
-                    class: 'highlight-white',
-                    itemsOption: {
-                        url: '/admin/content/languages/' + this.options.webspace,
-                        titleAttribute: 'name',
-                        idAttribute: 'localization',
-                        translate: false,
-                        callback: function(item) {
-                            this.sandbox.emit('sulu.dropdown.languages.item-clicked', item);
-                        }.bind(this)
-                    }
-                }]
-            };
-
-            this.sandbox.emit('sulu.header.set-toolbar', options);
         }
     };
 });
