@@ -27,7 +27,6 @@ define([
                 },
 
                 validate: function() {
-                    // TODO validate
                     return true;
                 }
             };
