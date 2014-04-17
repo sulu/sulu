@@ -170,9 +170,11 @@ class PhpcrMapper extends RlpMapper
      */
     public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
+        // get content node
         $session = $this->sessionManager->getSession();
         $contentNode = $session->getNodeByIdentifier($uuid);
 
+        // get current path node
         $pathNode = $this->loadPathNodeByContent(
             $contentNode,
             function ($resourceLocator, \PHPCR\NodeInterface $node) use (&$result) {
@@ -187,14 +189,15 @@ class PhpcrMapper extends RlpMapper
             $segmentKey
         );
 
+        // iterate over history of path node
         $result = array();
         $this->loadPathNodeByContent(
             $pathNode,
             function ($resourceLocator, NodeInterface $node) use (&$result) {
                 if (false !== $resourceLocator) {
-                    $result = array_merge(
-                        $result,
-                        array(new ResourceLocatorInformation($resourceLocator, $node->getPropertyValue('sulu:created')))
+                    // add resourceLocator
+                    $result[] = new ResourceLocatorInformation(
+                        $resourceLocator, $node->getPropertyValue('sulu:created')
                     );
                 }
                 return false;
@@ -204,6 +207,7 @@ class PhpcrMapper extends RlpMapper
             $segmentKey
         );
 
+        // sort history descending
         usort(
             $result,
             function (ResourceLocatorInformation $item1, ResourceLocatorInformation $item2) {
@@ -212,19 +216,6 @@ class PhpcrMapper extends RlpMapper
         );
 
         return $result;
-    }
-
-    private function handleNextHistoryByContent(
-        NodeInterface $contentNode,
-        $array,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    )
-    {
-        /** @var NodeInterface $nextNode */
-        $nextNode = null;
-        return $array;
     }
 
     /**
