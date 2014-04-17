@@ -47,16 +47,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->mapper = $this->getMock(
             'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
-            array(
-                'unique',
-                'getUniquePath',
-                'save',
-                'move',
-                'loadByContent',
-                'loadByContentUuid',
-                'loadByResourceLocator',
-                'getParentPath'
-            ),
+            array(),
             array('test-mapper'),
             'TestMapper'
         );

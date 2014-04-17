@@ -348,4 +348,47 @@ class PhpcrMapperTest extends PhpcrTestCase
         $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'de');
         $this->assertEquals('/news/news-1', $result);
     }
+
+    public function testLoadHistoryByContentUuid()
+    {
+        // create route for content
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/products/asdf/content2-news', '/products/content2-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/products/content2-news', '/content2-news', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        sleep(1);
+
+        // move
+        $this->rlpMapper->move('/content2-news', '/best-url-ever', 'default', 'de');
+        $this->sessionManager->getSession()->save();
+
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content1->getIdentifier(), 'default', 'de');
+
+        $this->assertEquals(4, sizeof($result));
+        $this->assertEquals('/content2-news', $result[0]->getResourceLocator());
+        $this->assertEquals('/products/content2-news', $result[1]->getResourceLocator());
+        $this->assertEquals('/products/asdf/content2-news', $result[2]->getResourceLocator());
+        $this->assertEquals('/products/news/content1-news', $result[3]->getResourceLocator());
+
+        $this->assertTrue($result[0]->getCreated() > $result[1]->getCreated());
+        $this->assertTrue($result[1]->getCreated() > $result[2]->getCreated());
+        $this->assertTrue($result[2]->getCreated() > $result[3]->getCreated());
+    }
 }

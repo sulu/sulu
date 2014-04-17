@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Types\Rlp\Mapper;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 
 /**
  * InterfaceDefinition of Resource Locator Path Mapper
@@ -66,7 +67,7 @@ interface RlpMapperInterface
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
-     * @return mixed
+     * @return ResourceLocatorInformation[]
      */
     public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
