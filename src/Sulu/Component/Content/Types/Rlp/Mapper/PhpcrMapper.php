@@ -197,7 +197,8 @@ class PhpcrMapper extends RlpMapper
                 if (false !== $resourceLocator) {
                     // add resourceLocator
                     $result[] = new ResourceLocatorInformation(
-                        $resourceLocator, $node->getPropertyValue('sulu:created')
+                        //                backward compability
+                        $resourceLocator, $node->getPropertyValueWithDefault('sulu:created', new DateTime())
                     );
                 }
                 return false;
