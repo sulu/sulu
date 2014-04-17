@@ -52,7 +52,8 @@
                     locale: '{{ user.locale is defined ? user.locale : 'en' }}',
                     settings: {{ user.settings }}
                 },
-                sections: {{ config | json_encode }}
+                sections: {{ config | json_encode }},
+                locales: ['en', 'de']
             };
             {% endautoescape %}
 

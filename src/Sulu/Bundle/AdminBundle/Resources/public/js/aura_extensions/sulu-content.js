@@ -79,6 +79,16 @@ define([], function() {
         },
 
         /**
+         * Handles the components which are marked with a fullSize property
+         * @param fullSize
+         */
+        handleFullSizeMarked = function(fullSize) {
+            if (fullSize.width === true || fullSize.height === true) {
+                this.sandbox.emit('sulu.app.full-size', !!fullSize.width, !!fullSize.height);
+            }
+        },
+
+        /**
          * Handles the the components which are marked with a header property.
          * Generates defaults, handles tabs data if tabs are configured, starts the header-component
          *
@@ -86,11 +96,13 @@ define([], function() {
          * @param {String} [header.title] title in the header
          * @param {Array} [header.breadcrumb] breadcrumb object which gets passed to the header-component
          * @param {Object} [header.toolbar] object that contains configurations for the toolbar - if not set no toolbar will be displayed
+         * @param {Object} [header.tabs] object that contains configurations for the tabs - if not set no tabs will be displayed
+         * @param {Boolean} [header.noBack] If true the back icon won't be displayed
          *
          * @param {Array|String} [header.toolbar.template] array of toolbar items to pass to the header component, can also be a string representing a template (e.g. 'default')
          * @param {Array|String} [header.toolbar.parentTemplate] same as toolbar.template, gets merged with toolbar template
          * @param {Object} [header.toolbar.options] object with options for the toolbar component
-         * @param {Object} [header.tabs] object that contains configurations for the tabs - if not set no tabs will be displayed
+         * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header. If true system language changer will be rendered. Default is true
          *
          * @param {String} [header.tabs.url] Url to fetch tabs related data from
          * @param {Boolean} [header.tabs.fullControl] If true the header just displayes the tabs, but doesn't start the content-component
@@ -105,6 +117,7 @@ define([], function() {
          *          title: 'My title',
          *          breadcrumb: [{title: 'Crumb 1', link: 'contacts/contact'}, {title: 'Crumb 2', event: 'sulu.navigation.clicked}],
          *          toolbar {
+         *              languageChanger: true
          *              template: 'default'
          *          }
          *      }
@@ -113,7 +126,7 @@ define([], function() {
         handleHeaderMarked = function(header) {
             var $content, $header, startHeader,
                 breadcrumb, toolbarTemplate, toolbarParentTemplate, tabsOptions, toolbarOptions, tabsFullControl,
-                toolbarDisabled;
+                toolbarDisabled, toolbarLanguageChanger, noBack, squeezed;
 
             // if header is a function get the data from the return value of the function
             if (typeof header === 'function') {
@@ -124,13 +137,14 @@ define([], function() {
             $header = this.sandbox.dom.createElement('<div id="sulu-header-container"/>');
             this.sandbox.dom.append('body', $header);
 
-            // append the container
+            // insert the content-container
             $content = this.sandbox.dom.createElement('<div id="sulu-content-container"/>');
             this.html($content);
 
             /**
              * Function for starting the header
              * @param tabsData {array} Array of Data to pass on to the tabs component
+             * @private
              */
             startHeader = function(tabsData) {
 
@@ -142,6 +156,9 @@ define([], function() {
                 tabsOptions = (!!header.tabs && !!header.tabs.options) ? header.tabs.options : {};
                 toolbarOptions = (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
                 tabsFullControl = (!!header.tabs && typeof header.tabs.fullControl === 'boolean') ? header.tabs.fullControl : false;
+                toolbarLanguageChanger = (!!header.toolbar && !!header.toolbar.languageChanger) ? header.toolbar.languageChanger : true;
+                noBack = (typeof header.noBack !== 'undefined') ? header.noBack : false;
+                squeezed = (!!this.fullSize && this.fullSize.width === true) ? true : false;
 
                 this.sandbox.start([
                     {
@@ -158,7 +175,10 @@ define([], function() {
                             toolbarOptions: toolbarOptions,
                             tabsOptions: tabsOptions,
                             tabsFullControl: tabsFullControl,
-                            toolbarDisabled: toolbarDisabled
+                            toolbarDisabled: toolbarDisabled,
+                            toolbarLanguageChanger: toolbarLanguageChanger,
+                            noBack: noBack,
+                            squeezed: squeezed
                         }
                     }
                 ]);
@@ -191,6 +211,10 @@ define([], function() {
 
             if (!!this.view) {
                 handleViewMarked.call(this, this.view);
+            }
+
+            if (!!this.fullSize) {
+                handleFullSizeMarked.call(this, this.fullSize);
             }
         });
     };

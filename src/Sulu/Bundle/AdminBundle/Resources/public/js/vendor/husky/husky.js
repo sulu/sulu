@@ -16322,7 +16322,6 @@ define('aura/ext/components', [],function() {
   };
 });
 
-
 /*
  * This file is part of the Husky Validation.
  *
@@ -17081,7 +17080,7 @@ define('form/mapper',[
                             throw 'template has to be defined as <script>';
                         }
 
-                        $newChild = {tpl: $child.html(), id: $child.attr('id')};
+                        $newChild = {tpl: $child.html(), id: $child.attr('id'), collection: collection};
                         element.$children[i] = $newChild;
 
                         for (x = -1, len = property.length; ++x < len;) {
@@ -17090,6 +17089,7 @@ define('form/mapper',[
                             }
                         }
                         if (!!propertyName) {
+                            $newChild.propertyName = propertyName;
                             propertyCount = collection.element.getType().getMinOccurs();
                             this.templates[propertyName] = {tpl: $newChild, collection: collection};
                             // init default children
@@ -17284,8 +17284,9 @@ define('form/mapper',[
                 },
 
                 appendChildren: function($element, $child, tplOptions, data, insertAfter) {
-                    tplOptions = tplOptions || {};
-                    var template = _.template($child.tpl, tplOptions, form.options.delimiter),
+                    var index = $child.collection.element.getType().getChildren($child.id).length,
+                        options = $.extend({}, {index: index}, tplOptions || {}),
+                        template = _.template($child.tpl, options, form.options.delimiter),
                         $template = $(template),
                         $newFields = Util.getFields($template),
                         dfd = $.Deferred(),
@@ -18824,6 +18825,7 @@ define('validator/regex',[
     };
 
 });
+
 
 define("husky-validation", function(){});
 
@@ -24877,8 +24879,9 @@ define('__component__$navigation@husky',[],function() {
             }
         },
         CONSTANTS = {
-            UNCOLLAPSED_WIDTH: 250,
-            COLLAPSED_WIDTH: 50,
+            UNCOLLAPSED_WIDTH: 250, //px
+            COLLAPSED_WIDTH: 50, //px
+            ITEM_LABEL_HEIGHT: 50, //px
             TRANSITIONEND_EVENT: 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd'
         },
 
@@ -24978,6 +24981,7 @@ define('__component__$navigation@husky',[],function() {
             this.stayCollapsed = false;
             this.hidden = false;
             this.tooltipsEnabled = true;
+            this.animating = false;
 
             // binding dom events
             this.bindDOMEvents();
@@ -25050,13 +25054,13 @@ define('__component__$navigation@husky',[],function() {
             // render footer
             this.renderFooter();
 
+            // collapse if necessary
+            this.resizeListener();
+
             // preselect item based on url
             if (!!this.options.selectAction && this.options.selectAction.length > 0) {
                 this.preselectItem(this.options.selectAction);
             }
-
-            // collapse if necessary
-            this.resizeListener();
 
             // emit initialized event
             this.sandbox.emit('husky.navigation.initialized');
@@ -25352,26 +25356,79 @@ define('__component__$navigation@husky',[],function() {
             }
 
             if (isExpanded && !navWasCollapsed) {
-                this.sandbox.dom.removeClass($items, 'is-expanded');
-
-                // change toggle item
                 $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
-                this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
-                this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
-            } else {
-                this.sandbox.dom.show($childList);
-                this.sandbox.dom.addClass($items, 'is-expanded');
-                // change toggle item
+                this.animateSlideUp($items, $toggle);
+            } else if (this.collapsed !== true) {
                 $toggle = this.sandbox.dom.find('.icon-chevron-right', event.currentTarget);
-                this.sandbox.dom.removeClass($toggle, 'icon-chevron-right');
-                this.sandbox.dom.prependClass($toggle, 'icon-chevron-down');
-
-                this.sandbox.dom.one($items, CONSTANTS.TRANSITIONEND_EVENT, this.checkBottomHit.bind(this));
+                this.animateSlideDown($items, $toggle, $childList);
             }
 
             // emit event
             item = this.getItemById(this.sandbox.dom.data($items, 'id'));
             this.sandbox.emit('husky.navigation.item.toggle', !isExpanded, item);
+        },
+
+        /**
+         * Handles the slide-up animation
+         * @param $items
+         * @param $toggle
+         */
+        animateSlideUp: function($items, $toggle) {
+            if (this.animating === false) {
+                this.animating = true;
+
+                this.sandbox.dom.animate($items, {
+                    height: CONSTANTS.ITEM_LABEL_HEIGHT
+                }, {
+                    duration: 200,
+                    complete: function() {
+                        this.animating = false;
+                    }.bind(this)
+                });
+
+                this.sandbox.dom.removeClass($items, 'is-expanded');
+
+                // change toggle item
+                this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
+                this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
+            }
+        },
+
+        /**
+         * Handles the slide-down animation
+         * @param $items
+         * @param $toggle
+         * @param $childList
+         */
+        animateSlideDown: function($items, $toggle, $childList) {
+            if (this.animating === false) {
+                this.animating = true;
+                var expandedHeight = CONSTANTS.ITEM_LABEL_HEIGHT + this.sandbox.dom.outerHeight($childList);
+
+                $($items).stop();
+                this.sandbox.dom.animate($items, {
+                    height: (expandedHeight + 30)
+                }, {
+                    duration: 200
+                });
+
+                this.sandbox.dom.animate($items, {
+                    height: expandedHeight
+                }, {
+                    duration: 130,
+                    complete: function() {
+                        this.animating = false;
+                    }.bind(this)
+                });
+
+                this.sandbox.dom.addClass($items, 'is-expanded');
+
+                // change toggle item
+                this.sandbox.dom.removeClass($toggle, 'icon-chevron-right');
+                this.sandbox.dom.prependClass($toggle, 'icon-chevron-down');
+
+                this.sandbox.dom.one($items, CONSTANTS.TRANSITIONEND_EVENT, this.checkBottomHit.bind(this));
+            }
         },
 
         checkBottomHit: function(event, customTarget) {
@@ -25395,6 +25452,32 @@ define('__component__$navigation@husky',[],function() {
                 } else {
                     this.sandbox.dom.scrollAnimate(itemTop, this.$navigationContent);
                 }
+            }
+        },
+
+        /**
+         * Removes the inline-style for expanded items
+         */
+        removeHeightforExpanded: function() {
+            var $expandedItems = this.sandbox.dom.find('.is-expanded', this.$el), i, length;
+            for (i = -1, length = $expandedItems.length; ++i < length;) {
+                this.sandbox.dom.removeAttr($expandedItems[i], 'style');
+            }
+        },
+
+        /**
+         * Resets the inline-style height for expanded items
+         */
+        setHeightForExpanded: function() {
+            var $expandedItems = this.sandbox.dom.find('.is-expanded', this.$el),
+                height, i, length;
+            for (i = -1, length = $expandedItems.length; ++i < length;) {
+                height = CONSTANTS.ITEM_LABEL_HEIGHT + this.sandbox.dom.outerHeight(
+                    this.sandbox.dom.find('.navigation-items-list', $expandedItems[i]));
+
+                this.sandbox.dom.css($expandedItems[i], {
+                    'height': height
+                });
             }
         },
 
@@ -25442,6 +25525,7 @@ define('__component__$navigation@husky',[],function() {
             if (this.hidden === false) {
                 this.sandbox.dom.addClass(this.$navigation, 'collapsed');
                 this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
+                this.removeHeightforExpanded();
                 if (!this.collapsed) {
                     this.sandbox.emit(EVENT_COLLAPSED, CONSTANTS.COLLAPSED_WIDTH);
                     this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.COLLAPSED_WIDTH);
@@ -25455,6 +25539,7 @@ define('__component__$navigation@husky',[],function() {
             if ((this.stayCollapsed === false || forced === true) && this.hidden === false) {
                 this.sandbox.dom.removeClass(this.$navigation, 'collapsed');
                 this.hideToolTip();
+                this.setHeightForExpanded();
                 if (forced) {
                     this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
                 }
@@ -26758,7 +26843,11 @@ define('__component__$datagrid@husky',[],function() {
             this.elId = this.sandbox.dom.attr(this.$el, 'id');
 
             if (!!this.options.contentContainer) {
-                this.originalMaxWidth = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
+                if (this.sandbox.dom.css(this.options.contentContainer, 'max-width') === 'none') {
+                    this.originalMaxWidth = null;
+                } else {
+                    this.originalMaxWidth = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
+                }
                 this.contentMarginRight = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'margin-right')).number;
                 this.contentPaddings = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-right')).number;
                 this.contentPaddings += this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-left')).number;
@@ -28382,7 +28471,7 @@ define('__component__$datagrid@husky',[],function() {
             tableOffset.right = tableOffset.left + tableWidth;
 
 
-            if (!!this.options.contentContainer) {
+            if (!!this.options.contentContainer && !!this.originalMaxWidth) {
                 // get original max-width and right margin
                 originalMaxWidth = this.originalMaxWidth;
                 contentPaddings = this.contentPaddings;
@@ -30106,7 +30195,8 @@ define('__component__$toolbar@husky',[],function() {
          */
         triggerSelectEvent = function(item, $parent) {
 
-            var parentItem;
+            var parentItem,
+                original = item._original || item;
 
             // check if has parent and type of parent
             if (item.parentId) {
@@ -30118,7 +30208,7 @@ define('__component__$toolbar@husky',[],function() {
                 //check if itemsOption is set and pass clicked item to the callback
                 if (!!parentItem.itemsOption) {
                     if (typeof parentItem.itemsOption.callback === 'function') {
-                        parentItem.itemsOption.callback(item._original);
+                        parentItem.itemsOption.callback(original);
                     }
                 }
             }
@@ -30599,7 +30689,7 @@ define('__component__$toolbar@husky',[],function() {
                         hideItem.call(this, $listItem);
                     }
 
-                    if (!!item.itemsOption) {
+                    if (!!item.itemsOption && !!item.itemsOption.url) {
                         this.sandbox.util.load(item.itemsOption.url)
                             .then(function(result) {
                                 handleRequestedItems.call(this, result[this.options.itemsRequestKey], item.id);
@@ -32908,7 +32998,7 @@ define('__component__$column-navigation@husky',[], function() {
             publishedName: 'publishedState',
             titleName: 'title',
             typeName: 'type',
-            minVisibleRatio: 1/2
+            minVisibleRatio: 1 / 2
         },
 
         DISPLAYEDCOLUMNS = 2, // number of displayed columns with content
@@ -32964,7 +33054,6 @@ define('__component__$column-navigation@husky',[], function() {
     return {
 
         initialize: function() {
-
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.$element = this.sandbox.dom.$(this.options.el);
@@ -32999,8 +33088,8 @@ define('__component__$column-navigation@husky',[], function() {
             this.sandbox.dom.append($wrapper, this.$columnContainer);
 
             // options container - add and settings button
-            this.addId = this.options.instanceName+"-column-navigation-add";
-            this.settingsId = this.options.instanceName+"-column-navigation-settings";
+            this.addId = this.options.instanceName + "-column-navigation-add";
+            this.settingsId = this.options.instanceName + "-column-navigation-settings";
             this.$optionsContainer = this.sandbox.dom.$(this.template.optionsContainer.call(this, this.options.column.width));
             $add = this.sandbox.dom.$(this.template.options.add(this.addId));
             $settings = this.sandbox.dom.$(this.template.options.settings(this.settingsId));
@@ -33014,7 +33103,7 @@ define('__component__$column-navigation@husky',[], function() {
             this.setContainerMinWidth();
 
             //init dropdown for settings in options container
-            if(!!this.options.data) {
+            if (!!this.options.data) {
                 this.initSettingsDropdown(this.sandbox.dom.attr($settings, 'id'));
             }
 
@@ -33025,7 +33114,7 @@ define('__component__$column-navigation@husky',[], function() {
          */
         setContainerHeight: function() {
             this.sandbox.dom.height(
-                this.$columnContainer, (this.sandbox.dom.height(window) - this.sandbox.dom.offset(this.$columnContainer).top) * this.options.wrapper.height/100
+                this.$columnContainer, (this.sandbox.dom.height(window) - this.sandbox.dom.offset(this.$columnContainer).top) * this.options.wrapper.height / 100
             );
         },
 
@@ -33043,7 +33132,7 @@ define('__component__$column-navigation@husky',[], function() {
                     options: {
                         el: '#' + containerId,
                         setParentDropDown: true,
-                        instanceName: this.options.instanceName+'.settings.dropdown',
+                        instanceName: this.options.instanceName + '.settings.dropdown',
                         alignment: 'left',
                         data: this.options.data
                     }
@@ -33172,11 +33261,36 @@ define('__component__$column-navigation@husky',[], function() {
             var width, $itemText;
 
             $itemText = this.sandbox.dom.find('.item-text', $item);
-            width = this.options.column.width - this.sandbox.dom.position($itemText).left;
-            width = width - parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', '')) -1;
+            width = this.options.column.width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-left', $item));
+            width = width - parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', '')) - 2;
+            width = width - parseInt(this.sandbox.dom.css($item, 'padding-left').replace('px', ''));
             width = width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-right', $item));
 
             this.sandbox.dom.width($itemText, width);
+            this.cropItemsText($itemText);
+        },
+
+        /**
+         * Crops the item text of an item depending on its width
+         * @param $itemText {Object}
+         */
+        cropItemsText: function($itemText) {
+            var title = this.sandbox.dom.attr($itemText, 'title'),
+                croppedTitle,
+                maxLength = title.length,
+                overflow;
+
+            //set the item text to the original title
+            this.sandbox.dom.html($itemText, title);
+
+            overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
+
+            while (overflow === true) {
+                maxLength = maxLength - 1;
+                croppedTitle = this.sandbox.util.cropMiddle(title, maxLength);
+                this.sandbox.dom.html($itemText, croppedTitle);
+                overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
+            }
         },
 
         /**
@@ -33265,7 +33379,7 @@ define('__component__$column-navigation@husky',[], function() {
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), 'li');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showOptions.bind(this), '.column');
-            this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#'+this.addId);
+            this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#' + this.addId);
             this.sandbox.dom.on(this.$el, 'click', this.editNode.bind(this), '.edit');
             this.sandbox.dom.on(this.$el, 'dblclick', this.editNode.bind(this), 'li');
 
@@ -33378,7 +33492,7 @@ define('__component__$column-navigation@husky',[], function() {
          * @param $activeColumn {object} dom-object of active column
          */
         updateOptionsMargin: function($activeColumn) {
-            var marginLeft = this.sandbox.dom.position($activeColumn).left;
+            var marginLeft = this.sandbox.dom.position($activeColumn).left - 1;
             this.sandbox.dom.css(this.$optionsContainer, 'margin-left', marginLeft + 'px');
         },
 
@@ -33542,7 +33656,7 @@ define('__component__$column-navigation@husky',[], function() {
             wrapper: function() {
                 return '<div class="column-navigation-wrapper"></div>';
             },
-            
+
             columnContainer: function() {
                 return ['<div class="column-navigation"></div>'].join('');
             },
@@ -33553,10 +33667,10 @@ define('__component__$column-navigation@husky',[], function() {
 
             item: function(width, data) {
 
-                var item = ['<li data-id="', data[this.options.idName], '" class="pointer"'];
+                var item = ['<li data-id="', data[this.options.idName], '" class="pointer">'];
 
                 // icons left
-                item.push('<span class="pull-left">');
+                item.push('<span class="icons-left">');
                 // link
                 if (!!data[this.options.linkedName]) {
                     if (data[this.options.linkedName] === 'internal') {
@@ -33579,14 +33693,13 @@ define('__component__$column-navigation@husky',[], function() {
                 if (!data[this.options.publishedName]) {
                     item.push('<span class="not-published pull-left m-right-5">&bull;</span>');
                 }
-
                 item.push('</span>');
 
                 // text center
                 if (!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') {
-                    item.push('<span title="'+ data[this.options.titleName] +'" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
+                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
                 } else {
-                    item.push('<span title="'+ data[this.options.titleName] +'" class="item-text pull-left">', data[this.options.titleName], '</span>');
+                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text pull-left">', data[this.options.titleName], '</span>');
                 }
 
                 // icons right (subpage, edit)
@@ -33594,7 +33707,6 @@ define('__component__$column-navigation@husky',[], function() {
                 item.push('<span class="icon-edit-pen edit hidden pull-left"></span>');
                 !!data[this.options.hasSubName] ? item.push('<span class="icon-chevron-right arrow inactive pull-left"></span>') : '';
                 item.push('</span></li>');
-
                 return item.join('');
             },
 
@@ -33604,13 +33716,13 @@ define('__component__$column-navigation@husky',[], function() {
 
             options: {
                 add: function(id) {
-                    return ['<div id="',id,'" class="align-center add pointer">',
+                    return ['<div id="', id, '" class="align-center add pointer">',
                         '<span class="icon-add"></span>',
                         '</div>'].join('');
                 },
 
                 settings: function(id) {
-                    return ['<div id="',id,'" class="align-center settings pointer drop-down-trigger">',
+                    return ['<div id="', id, '" class="align-center settings pointer drop-down-trigger">',
                         '<span class="icon-cogwheel inline-block"></span><span class="dropdown-toggle inline-block"></span>',
                         '</div>'].join('');
                 }
@@ -33806,6 +33918,9 @@ define('__component__$ckeditor@husky',[], function() {
             delete config.require;
             delete config.element;
 
+            // allow img tags to have any class (*) and any attribute [*]
+            config.extraAllowedContent = 'img(*)[src,width,height,title,alt]; a(*)[href,target,type,rel,name,title]';
+
             return config;
         };
 
@@ -33816,10 +33931,9 @@ return {
 
         var config = getConfig.call(this);
         this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
+        this.data = this.editor.getData();
 
-        this.editor.on('change', function() {
-            this.sandbox.emit(CHANGED.call(this), this.editor.getData(), this.$el);
-        }.bind(this));
+        this.bindChangeEvents();
 
         this.editor.on('instanceReady', function() {
             // bind class to editor
@@ -33829,8 +33943,31 @@ return {
         this.editor.on('blur', function() {
             this.sandbox.emit(FOCUSOUT.call(this), this.editor.getData(), this.$el);
         }.bind(this));
-    }
+    },
 
+    /**
+     * Binds Events to emit a custom changed event
+     */
+    bindChangeEvents: function() {
+        this.editor.on('change', function() {
+            this.emitChangedEvent();
+        }.bind(this));
+
+        // check if the content of the editor has changed if the mode is switched (html/wisiwig)
+        this.editor.on('mode', function() {
+            if (this.data !== this.editor.getData()) {
+                this.emitChangedEvent();
+            }
+        }.bind(this));
+    },
+
+    /**
+     * Emits the custom changed event
+     */
+    emitChangedEvent: function() {
+        this.data = this.editor.getData();
+        this.sandbox.emit(CHANGED.call(this), this.data, this.$el);
+    }
 };
 
 })
@@ -34630,7 +34767,7 @@ define('__component__$smart-content@husky',[], function() {
             if (newURI !== this.URI.str) {
                 //emit data changed event only if old URI is not null (not at the startup)
                 if (this.URI.str !== '') {
-                    this.sandbox.emit(DATA_CHANGED.call(this));
+                    this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
                 }
                 this.URI.str = newURI;
                 this.URI.hasChanged = true;
@@ -37127,8 +37264,12 @@ define('husky_extensions/collection',[],function() {
                 return $(selector).height(value);
             };
 
-            app.core.dom.outerHeight = function(selector) {
-                return $(selector).outerHeight();
+            app.core.dom.outerHeight = function(selector, includeMargin) {
+                if (typeof includeMargin === 'undefined') {
+                    return $(selector).outerHeight();
+                } else {
+                    return $(selector).outerHeight(includeMargin);
+                }
             };
 
             app.core.dom.offset = function(selector, attributes) {
@@ -37382,12 +37523,12 @@ define('husky_extensions/collection',[],function() {
                 $(selector).unbind(eventType);
             };
 
-            app.core.dom.focus = function(selector){
-              $(selector).focus();
+            app.core.dom.focus = function(selector) {
+                $(selector).focus();
             };
 
-            app.core.dom.animate = function(selector, properties, options){
-               $(selector).animate(properties, options);
+            app.core.dom.animate = function(selector, properties, options) {
+                $(selector).animate(properties, options);
             };
 
             app.core.util.ajax = $.ajax;
@@ -37730,6 +37871,23 @@ define('husky_extensions/util',[],function() {
 
                 return deferred.promise();
             };
+
+            app.core.util.cropMiddle = function(text, maxLength, delimiter) {
+                var substrLength;
+
+                // return text if it doesn't need to be cropped
+                if (text.length <= maxLength) {
+                    return text;
+                }
+
+                // default delimiter
+                if (!delimiter) {
+                    delimiter = '...';
+                }
+
+                substrLength = Math.floor((maxLength - delimiter.length)/2);
+                return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
+            },
 
             app.core.util.contains = function(list, value) {
                 return _.contains(list, value);

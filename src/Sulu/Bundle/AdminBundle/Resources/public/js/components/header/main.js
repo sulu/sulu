@@ -23,10 +23,13 @@ define([], function() {
             tabsComponentOptions: {},
             contentEl: null,
             toolbarOptions: {},
+            toolbarLanguageChanger: true,
             tabsOptions: {},
             tabsFullControl: false,
             breadcrumb: null,
-            toolbarDisabled: false
+            toolbarDisabled: false,
+            noBack: false,
+            squeezed: false
         },
 
         constants = {
@@ -40,14 +43,29 @@ define([], function() {
             innerSelector: '.inner',
             tabsSelector: '.tabs-container',
             bottomContentClass: 'bottom-content',
+            tighterClass: 'squeezed',
             toolbarDefaults: {
                 groups: [
                     {id: 'left', align: 'left'},
                     {id: 'right', align: 'right'}
                 ]
+            },
+            languageChangerDefaults: {
+                id: 'language',
+                iconSize: 'large',
+                group: 'right',
+                position: 10,
+                type: 'select',
+                title: '',
+                class: 'highlight-white'
             }
         },
 
+        /**
+         * Predefined toolbar templates
+         * each function must return a an array with items for the toolbar
+         * @type {{default: function, languageChanger: function}}
+         */
         toolbarTemplates = {
             default: function() {
                 return[
@@ -80,6 +98,55 @@ define([], function() {
                         ]
                     }
                 ];
+            },
+
+            languageChanger: function(url, callback) {
+                var button;
+
+                // default callback for language dropdown
+                if (typeof callback !== 'function') {
+                    callback = function(item) {
+                        this.sandbox.emit('sulu.header.toolbar.language-changed', item);
+                    }.bind(this);
+                }
+
+                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
+                            hidden: true,
+                            itemsOption: {
+                                url: url,
+                                titleAttribute: 'name',
+                                idAttribute: 'localization',
+                                translate: false,
+                                callback: callback
+                            }
+                });
+
+                return [button];
+            },
+
+            systemLanguageChanger: function() {
+                var button, items = [], i, length;
+
+                // generate dropdown-items
+                for (i = -1, length = this.sandbox.sulu.locales.length; ++ i<length;) {
+                    items.push({
+                        title: this.sandbox.sulu.locales[i],
+                        locale: this.sandbox.sulu.locales[i]
+                    });
+                }
+
+                button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
+                    id: 'system-language',
+                    title: this.sandbox.sulu.user.locale,
+                    items: items,
+                    itemsOption: {
+                        callback: function(item) {
+                            this.sandbox.emit('sulu.app.change-user-locale', item.locale);
+                        }.bind(this)
+                    }
+                });
+
+                return [button];
             }
         },
 
@@ -405,18 +472,37 @@ define([], function() {
             if (this.options.breadcrumb !== null) {
                 this.setBreadcrumb(this.options.breadcrumb);
             }
+
+            // hide back if configured
+            if (this.options.noBack === true) {
+                this.hideBack(false);
+            }
+
+            // add tighter class if configured
+            if (this.options.squeezed === true) {
+                this.squeeze();
+            }
+        },
+
+        /**
+         * Squeezes the elements inner
+         */
+        squeeze: function() {
+            this.sandbox.dom.addClass(this.$el, constants.tighterClass);
         },
 
         /**
          * Builds the template of items for the Toolbar
          */
         buildToolbarTemplate: function(template, parentTemplate) {
+            var languageChanger = [];
+
             this.options.toolbarTemplate = getToolbarTemplate.call(this, template);
             if (!this.options.changeStateCallback || typeof this.options.changeStateCallback !== 'function') {
                 this.options.changeStateCallback = getChangeToolbarStateCallback.call(this, template);
             }
 
-            //if a parentTemplate is set merge it with the current template
+            // if a parentTemplate is set merge it with the current template
             if (this.options.toolbarParentTemplate !== null) {
 
                 this.options.toolbarParentTemplate = getToolbarTemplate.call(this, parentTemplate);
@@ -426,6 +512,15 @@ define([], function() {
 
                 this.options.toolbarTemplate = this.options.toolbarTemplate.concat(this.options.toolbarParentTemplate);
             }
+
+            // if language-changer is desired add it to the current template
+            if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.url) {
+                languageChanger = toolbarTemplates.languageChanger.call(this,
+                    this.options.toolbarLanguageChanger.url, this.options.toolbarLanguageChanger.callback);
+            } else if (this.options.toolbarLanguageChanger === true) {
+                languageChanger = toolbarTemplates.systemLanguageChanger.call(this);
+            }
+            this.options.toolbarTemplate = this.options.toolbarTemplate.concat(languageChanger);
         },
 
         /**
@@ -480,19 +575,19 @@ define([], function() {
          */
         startToolbar: function() {
             if (this.options.toolbarDisabled !== true) {
-            // merge passed toolbar-options with defaults
-            var options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, this.options.toolbarOptions);
+                // merge passed toolbar-options with defaults
+                var options = this.sandbox.util.extend(true, {}, constants.toolbarDefaults, this.options.toolbarOptions);
 
-            // build icon-template and parent-template and merge all in this.options.toolbarTemplate
-            this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
+                // build icon-template and parent-template and merge all in this.options.toolbarTemplate
+                this.buildToolbarTemplate(this.options.toolbarTemplate, this.options.toolbarParentTemplate);
 
-            // add built toolbarTemplate to the toolbar-options
-            options = this.sandbox.util.extend(true, {}, options, {
-                data: this.options.toolbarTemplate
-            });
+                // add built toolbarTemplate to the toolbar-options
+                options = this.sandbox.util.extend(true, {}, options, {
+                    data: this.options.toolbarTemplate
+                });
 
-            // start toolbar component with built options
-            this.startToolbarComponent(options);
+                // start toolbar component with built options
+                this.startToolbarComponent(options);
             }
         },
 
@@ -529,6 +624,13 @@ define([], function() {
         bindCustomEvents: function() {
             // change dimensions if content-dimensions change
             this.sandbox.on('sulu.app.content.dimensions-changed', this.setDimensions.bind(this));
+
+            // enable langauge-dropdown after loading the language items
+            this.sandbox.on('husky.toolbar.header'+ this.options.instanceName +'.items.set', function(id) {
+                if (id === 'language') {
+                    this.enableLanguageChanger();
+                }
+            }.bind(this));
 
             // changes the saved state of the toolbar
             this.sandbox.on(TOOLBAR_STATE_CHANGE.call(this), this.changeToolbarState.bind(this));
@@ -587,6 +689,19 @@ define([], function() {
             this.sandbox.on(TOOLBAR_ITEM_ENABLE.call(this), function(id, highlight) {
                 this.sandbox.emit('husky.toolbar.header'+ this.options.instanceName +'.item.enable', id, highlight);
             }.bind(this));
+        },
+
+        /**
+         * Gets called after the language dropdown has loaded its items.
+         * Shows the dropdown and eventually sets the default value
+         */
+        enableLanguageChanger: function() {
+            if (!!this.options.toolbarLanguageChanger.preSelected) {
+                this.sandbox.emit(
+                    TOOLBAR_ITEM_CHANGE.call(this), 'language', this.options.toolbarLanguageChanger.preSelected
+                );
+            }
+            this.sandbox.emit(TOOLBAR_ITEM_SHOW.call(this), 'language');
         },
 
         /**

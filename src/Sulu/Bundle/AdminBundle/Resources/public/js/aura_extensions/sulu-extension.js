@@ -12,6 +12,16 @@
             app.sandbox.sulu = {};
 
             /*********
+             * Locales
+             *********/
+            app.sandbox.sulu.locales = SULU.locales;
+
+            /*********
+             * user
+             *********/
+            app.sandbox.sulu.user = app.sandbox.util.extend(true, {}, SULU.user);
+
+            /*********
              * USER SETTINGS
              *********/
 

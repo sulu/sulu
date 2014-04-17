@@ -22,7 +22,9 @@ define(function() {
             contentMinMarginLeft: 10,
             contentMinPaddingLeft: 0,
 
-            suluNavigateAMark: '[data-sulu-navigate="true"]' //a tags which match this mark will use the sulu.navigate method
+            suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
+            fullWidthClass: 'fullwidth',
+            fullHeightClass: 'fullheight'
         },
 
         eventNamespace = 'sulu.app.',
@@ -95,6 +97,24 @@ define(function() {
          */
             UI_RESETED = function() {
             return createEventName('ui.reseted');
+        },
+
+        /**
+         * listens on and changes the user's locale to a passe done
+         * @event sulu.app.change-user-locale
+         * @param {String} the locale to change to
+         */
+         CHANGE_USER_LOCALE = function() {
+            return createEventName('change-user-locale');
+         },
+
+        /**
+         * sets the container in full-width mode
+         * @event sulu.app.full-width
+         * @param {Boolean} true for full height
+         */
+        SET_FULL_SIZE = function() {
+            return createEventName('full-size');
         },
 
         /**
@@ -212,12 +232,14 @@ define(function() {
         /**
          * Sets the new dimensions of the content-container and
          * emits the content.dimensions-changed event
+         * @force {Boolean} if true event will gets emited for sure
          */
-        emitContentDimensionsChangedEvent: function() {
+        emitContentDimensionsChangedEvent: function(force) {
             var newContentDimensions = this.getContentDimensions();
 
             if (this.contentDimensions.width !== newContentDimensions.width ||
-                this.contentDimensions.left !== newContentDimensions.left) {
+                this.contentDimensions.left !== newContentDimensions.left ||
+                force === true) {
 
                 this.sandbox.emit(CONTENT_DIMENSIONS_CHANGED.call(this), newContentDimensions);
                 this.contentDimensions = newContentDimensions;
@@ -269,7 +291,7 @@ define(function() {
                 // default vars
                 trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-                if (!!trigger && this.currentRoute !== route && route !== null) {
+                if (!!trigger && this.currentRoute !== route) {
                     // FIXME - header does not get removed and because of that the dom element will be removed
                     // and the stop event will be called
                     this.sandbox.stop('#sulu-content-container');
@@ -280,6 +302,9 @@ define(function() {
                     // remove eventual spacing because of header
                     this.headerVisible = false;
                     this.changeTopSpacing();
+
+                    // remove eventual full-width and full-height mode
+                    this.removeFullSize();
                 }
 
                 // reset store for cleaning environment
@@ -369,18 +394,47 @@ define(function() {
             }.bind(this));
 
             // change user locale
-            this.sandbox.on('husky.navigation.user-locale.changed', function(locale) {
-                this.changeUserLocale(locale);
-            }.bind(this));
+            this.sandbox.on('husky.navigation.user-locale.changed', this.changeUserLocale.bind(this));
 
-            this.sandbox.on(UI_RESET.call(this), function(states) {
-                this.resetUI(states);
-            }.bind(this));
+            // change user locale
+            this.sandbox.on(CHANGE_USER_LOCALE.call(this), this.changeUserLocale.bind(this));
+
+            // listen for full size mode
+            this.sandbox.on(SET_FULL_SIZE.call(this), this.setFullSize.bind(this));
+
+            this.sandbox.on(UI_RESET.call(this), this.resetUI.bind(this));
+        },
+
+        /**
+         * Sets the container in full-width mode
+         * @param fullwidth {boolean} If true set container in full-width mode
+         * @param fullheight {boolean} If true set container in full-height mode
+         */
+        setFullSize: function(fullwidth, fullheight) {
+            if (fullheight === true) {
+                this.sandbox.dom.addClass(this.$el, constants.fullHeightClass);
+            }
+            if (fullwidth === true) {
+                this.sandbox.dom.addClass(this.$el, constants.fullWidthClass);
+                //
+                this.sandbox.dom.css(this.$el, {'padding-left': ''});
+                this.emitContentDimensionsChangedEvent(true);
+                this.sandbox.dom.trigger(this.sandbox.dom.$window, 'resize');
+            }
+        },
+
+        /**
+         * Removes the full-width and full-height mode from the container
+         */
+        removeFullSize: function() {
+            this.sandbox.dom.removeClass(this.$el, constants.fullHeightClass);
+            this.sandbox.dom.removeClass(this.$el, constants.fullWidthClass);
         },
 
         /**
          * Resets the ui according to the given states
          * @param states
+         * TODO: move all resetUI handling to css - handle it with just setting CSS-classes
          */
         resetUI: function(states) {
 
@@ -422,7 +476,6 @@ define(function() {
             } else if (states.content === 'small') {
                 this.resetToSmallContent();
             } else if (states.content === 'auto') {
-
                 this.restoreContentWidthProperties();
 
             } else {
@@ -437,7 +490,7 @@ define(function() {
          * Resets the content to the large state
          */
         resetToLargeContent: function() {
-            this.sandbox.emit('sulu.app.content.dimensions-change', {
+            this.changeContentStyles({
                 width: constants.contentMaxWidth,
                 left: constants.contentMaxMarginLeft,
                 paddingLeft: constants.contentMaxPaddingLeft});
@@ -458,7 +511,7 @@ define(function() {
          * Resets the content to the small state
          */
         resetToSmallContent: function() {
-            this.sandbox.emit('sulu.app.content.dimensions-change', {
+            this.changeContentStyles({
                 width: constants.contentMinWidth,
                 left: constants.contentMinMarginLeft,
                 paddingLeft: constants.contentMinPaddingLeft});
