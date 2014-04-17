@@ -106,9 +106,14 @@ define([
 
         view: true,
 
+        fullSize: {
+            width: true
+        },
+
         header: function() {
             return {
                 title: 'contact.accounts.title',
+                noBack: true,
 
                 tabs: {
                     fullControl: true,

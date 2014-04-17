@@ -35,6 +35,7 @@ define(function() {
 
         header: {
             title: 'contact.contacts.title',
+            noBack: true,
 
             breadcrumb: [
                 {title: 'navigation.contacts'},
