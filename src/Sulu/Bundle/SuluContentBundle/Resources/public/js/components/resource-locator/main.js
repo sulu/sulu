@@ -103,13 +103,12 @@ define([], function() {
         },
 
         loadHistory = function() {
-
             this.sandbox.util.load(this.options.historyApi).then(function(data) {
                 var items = data._embedded,
                     html = ['<ul>'];
 
                 this.sandbox.util.foreach(items, function(item) {
-                    html.push('<li>' + item.resourceLocator + ' (' + item.created + ')</li>');
+                    html.push('<li>' + item.resourceLocator + ' (' + this.sandbox.date.format(item.created) + ')</li>');
                 }.bind(this));
                 html.push('</ul>');
 
