@@ -226,9 +226,9 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        return $this->mapper->getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
+        return $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**

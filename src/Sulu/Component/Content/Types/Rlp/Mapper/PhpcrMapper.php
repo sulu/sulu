@@ -127,8 +127,11 @@ class PhpcrMapper extends RlpMapper
     /**
      * {@inheritdoc}
      */
-    public function getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
+    public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
+        $session = $this->sessionManager->getSession();
+        $contentNode = $session->getNodeByIdentifier($uuid);
+
         return array();
     }
 

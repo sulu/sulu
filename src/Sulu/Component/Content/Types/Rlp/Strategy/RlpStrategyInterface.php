@@ -94,7 +94,7 @@ interface RLPStrategyInterface
      * @param string $segmentKey
      * @return mixed
      */
-    public function getHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
+    public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * returns the uuid of referenced content node
