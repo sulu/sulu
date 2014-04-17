@@ -103,24 +103,19 @@ define([], function() {
         },
 
         loadHistory = function() {
-            var data = [
-                    '/products/drill-history-1',
-                    '/products/drill-history-2',
-                    '/products/drill-history-3',
-                    '/products/drill-history-4',
-                    '/products/drill-history-5',
-                    '/my-best-url-ever'
-                ],
-                html = ['<ul>'];
 
+            this.sandbox.util.load(this.options.historyApi).then(function(data) {
+                var items = data._embedded,
+                    html = ['<ul>'];
 
-            this.sandbox.util.foreach(data, function(url) {
-                html.push('<li>' + url + '</li>');
+                this.sandbox.util.foreach(items, function(item) {
+                    html.push('<li>' + item.resourceLocator + ' (' + item.created + ')</li>');
+                }.bind(this));
+                html.push('</ul>');
+
+                this.sandbox.dom.html(getId.call(this, 'history'), html.join(''));
+                this.sandbox.dom.removeClass(getId.call(this, 'history'), 'hidden');
             }.bind(this));
-            html.push('</ul>');
-
-            this.sandbox.dom.html(getId.call(this, 'history'), html.join(''));
-            this.sandbox.dom.removeClass(getId.call(this, 'history'), 'hidden');
         };
 
     return {
