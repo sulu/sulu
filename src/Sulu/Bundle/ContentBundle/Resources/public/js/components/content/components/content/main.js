@@ -22,6 +22,12 @@ define(function() {
 
                 toolbar: {
                     parentTemplate: 'default',
+
+                    languageChanger: {
+                        url: '/admin/content/languages/' + this.options.webspace,
+                        preSelected: this.options.language
+                    },
+
                     template: [
                         {
                             'id': 'state',
@@ -46,25 +52,6 @@ define(function() {
                                 languageNamespace: 'template.',
                                 callback: function(item) {
                                     this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                }.bind(this)
-                            }
-                        },
-                        {
-                            id: 'language',
-                            iconSize: 'large',
-                            group: 'right',
-                            position: 10,
-                            type: 'select',
-                            title: '',
-                            hidden: true,
-                            class: 'highlight-white',
-                            itemsOption: {
-                                url: '/admin/content/languages/' + this.options.webspace,
-                                titleAttribute: 'name',
-                                idAttribute: 'localization',
-                                translate: false,
-                                callback: function(item) {
-                                    this.sandbox.emit('sulu.dropdown.languages.item-clicked', item);
                                 }.bind(this)
                             }
                         }

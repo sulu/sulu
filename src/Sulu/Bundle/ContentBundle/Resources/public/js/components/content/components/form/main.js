@@ -219,9 +219,6 @@ define(['app-config'], function(AppConfig) {
                     }.bind(this));
             }
 
-            this.sandbox.emit('sulu.header.toolbar.item.change', 'language', this.options.language);
-            this.sandbox.emit('sulu.header.toolbar.item.show', 'language');
-
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
@@ -307,7 +304,7 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // change language
-            this.sandbox.on('sulu.dropdown.languages.item-clicked', function(item) {
+            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
                 this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
             }, this);
 
