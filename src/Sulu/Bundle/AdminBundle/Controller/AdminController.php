@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserSettings;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -64,14 +65,16 @@ class AdminController extends Controller
      */
     public function bundlesAction()
     {
+        /** @var AdminPool $pool */
         $pool = $this->get('sulu_admin.admin_pool');
 
         $admins = array();
 
         foreach ($pool->getAdmins() as $admin) {
-            $reflection = new \ReflectionClass($admin);
-            $name = strtolower(str_replace('Admin', '', $reflection->getShortName()));
-            $admins[] = $name;
+            $name = $admin->getJsBundleName();
+            if ($name !== null) {
+                $admins[] = $name;
+            }
         }
 
         $response = json_encode($admins);
