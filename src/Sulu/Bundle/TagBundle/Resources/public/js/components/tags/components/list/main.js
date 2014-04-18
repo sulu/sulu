@@ -33,9 +33,14 @@ define(function() {
         view: true,
         instanceNameToolbar: 'saveToolbar',
 
+        fullSize: {
+            width: true
+        },
+
         header: function() {
             return {
                 title: 'tag.tags.title',
+                noBack: true,
 
                 breadcrumb: [
                     {title: 'navigation.settings'},
@@ -70,6 +75,7 @@ define(function() {
                     validation: true,
                     addRowTop: true,
                     progressRow: true,
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     },
