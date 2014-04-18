@@ -33,6 +33,10 @@ define(function() {
     return {
         view: true,
 
+        fullSize: {
+            width: true
+        },
+
         header: {
             title: 'contact.contacts.title',
             noBack: true,
@@ -63,6 +67,7 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     },
