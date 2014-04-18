@@ -34,9 +34,14 @@ define([], function() {
 
         view: true,
 
+        fullSize: {
+            width: true
+        },
+
         header: function() {
             return {
                 title: 'translate.package.title',
+                noBack: true,
 
                 breadcrumb: [
                     {title: 'navigation.settings'},
@@ -68,6 +73,7 @@ define([], function() {
                     url: '/admin/api/packages?flat=true',
                     pagination: false,
                     sortable: true,
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     }
