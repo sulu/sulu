@@ -30,9 +30,16 @@ define(function() {
     return {
         name: 'Sulu Security Role List',
 
+        view: true,
+
+        fullSize: {
+            width: true
+        },
+
         header: function() {
             return {
                 title: 'security.roles.title',
+                noBack: true,
 
                 breadcrumb: [
                     {title: 'navigation.settings'},
@@ -61,6 +68,7 @@ define(function() {
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     },

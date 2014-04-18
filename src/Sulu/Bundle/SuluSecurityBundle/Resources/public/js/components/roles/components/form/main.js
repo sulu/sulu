@@ -77,6 +77,8 @@ define([], function() {
             this.sandbox.on('sulu.role.saved', function(id) {
                 this.options.data.id = id;
                 this.setHeaderBar(true);
+                this.setTitle();
+                this.setBreadcrumb();
             }, this);
 
             // back to list
@@ -228,7 +230,7 @@ define([], function() {
                     system: this.selectedSystem,
                     permissions: permissionData
                 };
-
+                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
                 this.sandbox.emit('sulu.roles.save', data);
             }
         },
@@ -237,6 +239,33 @@ define([], function() {
             this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.options.data}));
             //starts the dropdown-component
             this.sandbox.start(this.$el);
+            this.setTitle();
+            this.setBreadcrumb();
+        },
+
+        setTitle: function() {
+            var title = 'security.roles.title';
+            if (!!this.options.data && !!this.options.data.name) {
+                title = this.options.data.name;
+            }
+            this.sandbox.emit('sulu.header.set-title', title);
+        },
+
+        setBreadcrumb: function() {
+            var breadcrumb = [
+                {title: 'navigation.settings'},
+                {title: 'security.roles.title', event: 'sulu.roles.list'}
+            ];
+            if (!!this.options.data && !!this.options.data.name) {
+                breadcrumb.push({
+                   title: this.options.data.name
+                });
+            } else {
+                breadcrumb.push({
+                    title: 'security.roles.title'
+                });
+            }
+            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         // @var Bool saved - defines if saved state should be shown

@@ -18,8 +18,7 @@ define(function() {
             },
             toolbar: {
                 template: 'default'
-            },
-            title: 'security.roles.title'
+            }
         }
     };
 });
