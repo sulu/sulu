@@ -6,11 +6,16 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
+ */
+
+/**
+ * @class Content
+ * @constructor
  *
- * options:
- *  - heading - string
- *
- *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.instanceName] The name of the instance
+ * @param {Object} [options.contentOptions] options to pass to the tabs-content-component
+ * @param {Array} [options.tabsData] array of tabs-items. Contains the tabs-content-component as a string
  */
 
 define([], function() {
@@ -95,8 +100,7 @@ define([], function() {
             // resets store to prevent duplicated models
             this.sandbox.mvc.Store.reset();
 
-            this.sandbox.stop('#content-tabs-component');
-
+            this.sandbox.stop(this.$find('#content-tabs-component'));
             this.sandbox.dom.append(this.$el, '<div id="content-tabs-component"></div>');
 
             if (!!item && !!item.contentComponent) {

@@ -170,7 +170,7 @@ define([], function() {
                             breadcrumb: breadcrumb,
                             toolbarTemplate: toolbarTemplate,
                             toolbarParentTemplate: toolbarParentTemplate,
-                            tabsComponentOptions: this.options,
+                            contentComponentOptions: this.options,
                             contentEl: $content,
                             toolbarOptions: toolbarOptions,
                             tabsOptions: tabsOptions,

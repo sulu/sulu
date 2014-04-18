@@ -25380,7 +25380,7 @@ define('__component__$navigation@husky',[],function() {
                 this.sandbox.dom.animate($items, {
                     height: CONSTANTS.ITEM_LABEL_HEIGHT
                 }, {
-                    duration: 200,
+                    duration: 180,
                     complete: function() {
                         this.animating = false;
                     }.bind(this)
@@ -25409,13 +25409,13 @@ define('__component__$navigation@husky',[],function() {
                 this.sandbox.dom.animate($items, {
                     height: (expandedHeight + 30)
                 }, {
-                    duration: 200
+                    duration: 120
                 });
 
                 this.sandbox.dom.animate($items, {
                     height: expandedHeight
                 }, {
-                    duration: 130,
+                    duration: 100,
                     complete: function() {
                         this.animating = false;
                     }.bind(this)
@@ -26579,6 +26579,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.columnMinWidth] sets the minimal width of table columns
  * @param {String|Object} [options.contentContainer] the container which holds the datagrid; this options resizes the contentContainer for responsiveness
  * @param {Array} [options.showElementsSteps] Array which contains the steps for the Show-Elements-dropdown as integers
+ * @param {String} [options.fullWidth] If true datagrid style will be full-width mode
  */
 define('__component__$datagrid@husky',[],function() {
 
@@ -26597,6 +26598,7 @@ define('__component__$datagrid@husky',[],function() {
             excludeFields: ['id'],
             instance: 'datagrid',
             pagination: false,
+            fullWidth: false,
             paginationOptions: {
                 pageSize: null,
                 showPages: null
@@ -26623,6 +26625,13 @@ define('__component__$datagrid@husky',[],function() {
             startTabIndex: 99999,
             columnMinWidth: '70px',
             showElementsSteps: [10, 20, 50, 100, 500]
+        },
+
+        constants = {
+            fullWidthClass: 'fullwidth',
+            // if datagrid is in fullwidth-mode (options.fullWidth is true)
+            // this number gets subracted from the datagrids final width in the resize listener
+            overflowIconSpacing: 30
         },
 
         namespace = 'husky.datagrid.',
@@ -28444,6 +28453,11 @@ define('__component__$datagrid@husky',[],function() {
          * Binds DOM events
          */
         render: function() {
+            // add full-width class
+            if (this.options.fullWidth === true) {
+                this.sandbox.dom.addClass(this.$element, constants.fullWidthClass);
+            }
+
             this.$originalElement.html(this.$element);
             this.bindDOMEvents();
 
@@ -28511,6 +28525,10 @@ define('__component__$datagrid@husky',[],function() {
                     // if table does not overlap border, set content to original width
                     this.sandbox.dom.css(this.options.contentContainer, 'max-width', '');
                 }
+            }
+
+            if (this.options.fullWidth === true) {
+                finalWidth = finalWidth - constants.overflowIconSpacing;
             }
 
             // now set width
@@ -29356,7 +29374,13 @@ define('__component__$search@husky',[], function() {
         defaults = {
             instanceName: null,
             placeholderText: 'public.search',
-            appearance: 'gray'
+            appearance: 'gray',
+            slide: false
+        },
+        constants = {
+            slideClass: 'slide',
+            slideCollapsedClass: 'slide-collapsed',
+            slideExpandedClass: 'slide-expanded'
         },
 
 
@@ -29402,6 +29426,12 @@ define('__component__$search@husky',[], function() {
         render: function() {
             this.sandbox.dom.addClass(this.$el, 'search-container');
             this.sandbox.dom.addClass(this.$el, this.options.appearance);
+            console.log(this.options.slide);
+            if (this.options.slide === true) {
+                this.sandbox.dom.addClass(this.$el, constants.slideClass);
+                this.collapse();
+            }
+
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {placeholderText: this.sandbox.translate(this.options.placeholderText)}));
 
         },
@@ -29409,13 +29439,24 @@ define('__component__$search@husky',[], function() {
         // bind dom elements
         bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', this.selectInput.bind(this), 'input');
-            this.sandbox.dom.on(this.$el, 'click', this.submitSearch.bind(this), '.search-icon');
-            this.sandbox.dom.on(this.$el, 'click', this.removeSearch.bind(this), '.remove-icon');
+            this.sandbox.dom.on(this.$el, 'mousedown', this.submitSearch.bind(this), '.search-icon');
+            this.sandbox.dom.on(this.$el, 'mousedown', this.removeSearch.bind(this), '.remove-icon');
             this.sandbox.dom.on(this.$el, 'keyup onchange', this.checkKeyPressed.bind(this), '#search-input');
+
+            if (this.options.slide === true) {
+                this.sandbox.dom.on(this.$find('input'), 'focus', this.expand.bind(this));
+                this.sandbox.dom.on(this.$find('input'), 'blur', this.collapse.bind(this));
+            }
         },
 
-        bindCustomEvents: function() {
+        collapse: function() {
+            this.sandbox.dom.removeClass(this.$el, constants.slideExpandedClass);
+            this.sandbox.dom.addClass(this.$el, constants.slideCollapsedClass);
+        },
 
+        expand: function() {
+            this.sandbox.dom.removeClass(this.$el, constants.slideCollapsedClass);
+            this.sandbox.dom.addClass(this.$el, constants.slideExpandedClass);
         },
 
         resetSearch : function() {
@@ -30515,7 +30556,8 @@ define('__component__$toolbar@husky',[],function() {
             searchOptions = {
                 el: '#' + this.options.instanceName + '-toolbar-search',
                 instanceName: this.options.instanceName,
-                appearance: 'white small'
+                appearance: 'white small',
+                slide: true
             };
             searchOptions = this.sandbox.util.extend(true, {}, searchOptions, this.options.searchOptions);
             // start search component
@@ -33141,21 +33183,50 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         /**
+         * Starts a loader within the whole navigation
+         */
+        startLoader: function() {
+            var $element = this.sandbox.dom.createElement('<div class="navigation-loader"/>');
+            this.sandbox.dom.html(this.$columnContainer, $element);
+
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $element,
+                        size: '100px',
+                        color: '#e4e4e4'
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Stops the big loader
+         */
+        stopLoader: function() {
+            this.sandbox.stop('.navigation-loader');
+        },
+
+        /**
          * Loads data from a specific url and triggers the parsing
          * @param {String} url
          * @param {Number} columnNumber
          */
         load: function(url, columnNumber) {
             if (!!url) {
-
                 this.columnLoadStarted = true;
+                this.startLoader();
+
                 this.sandbox.util.load(url)
                     .then(function(response) {
+                        this.stopLoader();
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
                         this.alignWithColumnsWidth();
                         this.scrollIfNeeded(this.filledColumns + 1);
                         this.setOverflowClass();
+                        this.showOptionsAtLast();
                         this.sandbox.emit(LOADED);
                     }.bind(this))
                     .fail(function(error) {
@@ -33448,6 +33519,16 @@ define('__component__$column-navigation@husky',[], function() {
             } else {
                 this.sandbox.logger.log("callback is not a function");
             }
+        },
+
+        /**
+         * Shows the options at the last available column
+         */
+        showOptionsAtLast: function() {
+            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
+            this.showOptions({
+               currentTarget: $lastColumn
+            });
         },
 
         /**
