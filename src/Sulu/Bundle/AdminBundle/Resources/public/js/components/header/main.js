@@ -8,6 +8,36 @@
  *
  */
 
+/**
+ * @class Header
+ * @constructor
+ *
+ * @param {Object} [options] Configuration object
+ * @param {String} [options.heading] The heading to display
+ * @param {String|Array} [options.toolbarTemplate] Template of items for the toolbar. Can be Object with valid structure (see husky) or a string representing an object with items (e.g. 'default')
+ * @param {String|Array} [options.toolbarParentTemplate] same as toolbarTemplate. Gets merged with toolbarTemplate
+ * @param {String} [options.instanceName] name of the instance
+ * @param {Function} [options.changeStateCallback] Function to execute if the toolbar-state changes
+ * @param {Function} [options.parentChangeStateCallback] Same as changeStateCallback
+ * @param {Object} [options.tabsData] data to pass to the tabs component. For data-structure markup see husky
+ * @param {Object} [options.contentComponentOptions] options to forward to the content-component. Are further used for the content-tabs-component
+ * @param {Object} [options.contentEl] element for the content-component
+ * @param {Object} [options.toolbarOptions] options to pass to the toolbar-component
+ * @param {Boolean|Object} [options.toolbarLanguageChanger] If true a system-language changer will be displayed. Can be an object to build a custom language changer
+ * @param {String} [options.toolbarLanguageChanger.url] url to fetch the dropdown-data from
+ * @param {Function} [options.toolbarLanguageChanger.callback] callback to pass the clicked language-item to
+ * @param {String} [options.toolbarLanguageChanger.preselected] id of the language selected at the beginning
+ * @param {Object} [options.tabsOptions] options to pass to the tabs-component. For valid data-structure see husky
+ * @param {Boolean} [options.tabsFullControl] If true the content-component won't be initialized. Allowes you to fully take over the handling of the tab events
+ * @param {Array} [options.breadcrumb] array of objects with title (mandatory), link (optional), event (optional).
+ * @param {String} [options.breadcrumb[].title] the title to display in the crumb
+ * @param {String} [options.breadcrumb[].link] Link to route to via backbone
+ * @param {String} [options.breadcrumb[].event] event to throw when crumb is clicked
+ * @param {Boolean} [options.toolbarDisabled] if true the toolbar-component won't be initialized
+ * @param {Boolean} [options.noBack] if true the back icon won't be displayed
+ * @param {Boolean} [options.squeezed] if true the inner of the component will be squeezed. Used for the full-width mode of the content
+ */
+
 define([], function() {
 
     'use strict';
@@ -20,7 +50,7 @@ define([], function() {
             changeStateCallback: null,
             parentChangeStateCallback: null,
             tabsData: null,
-            tabsComponentOptions: {},
+            contentComponentOptions: {},
             contentEl: null,
             toolbarOptions: {},
             toolbarLanguageChanger: true,
@@ -64,7 +94,7 @@ define([], function() {
         /**
          * Predefined toolbar templates
          * each function must return a an array with items for the toolbar
-         * @type {{default: function, languageChanger: function}}
+         * @type {{default: function, languageChanger: function, systemLanguageChanger: function}}
          */
         toolbarTemplates = {
             default: function() {
@@ -184,6 +214,11 @@ define([], function() {
             }
         },
 
+        /**
+         * Returns a template useable by the toolbar-component
+         * @param {Object|String} template Can be a JSON-string, String representing a function in toolbarTemplates or a valid array of objects
+         * @returns {Object} a template usable by the toolbar-component
+         */
         getToolbarTemplate = function(template) {
             var templateObj = template;
             if (typeof template === 'string') {
@@ -202,6 +237,11 @@ define([], function() {
             return templateObj;
         },
 
+        /**
+         * Looks in changeStateCallbacks for a function and returns it
+         * @param {String} template String representing a function in changeStateCallbacks
+         * @returns {Function} the matched function
+         */
         getChangeToolbarStateCallback = function(template) {
             if (!!changeStateCallbacks[template]) {
                 return changeStateCallbacks[template];
@@ -798,7 +838,7 @@ define([], function() {
                     name: 'content@suluadmin',
                     options: {
                         el: this.sandbox.dom.$(this.options.contentEl),
-                        contentOptions: this.options.tabsComponentOptions,
+                        contentOptions: this.options.contentComponentOptions,
                         tabsData: this.options.tabsData
                     }
                 }]);
@@ -810,7 +850,7 @@ define([], function() {
          * @param title {string} the new title
          */
         setTitle: function(title) {
-            this.sandbox.dom.html(this.$find('h1'), title);
+            this.sandbox.dom.html(this.$find('h1'), this.sandbox.translate(title));
         },
 
         /**
