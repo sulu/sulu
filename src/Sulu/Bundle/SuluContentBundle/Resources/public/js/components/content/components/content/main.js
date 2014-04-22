@@ -15,7 +15,6 @@ define(function() {
 
         header: function() {
             return {
-
                 tabs: {
                     url: '/admin/content/navigation/content'
                 },
