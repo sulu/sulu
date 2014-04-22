@@ -12,20 +12,13 @@ define(function() {
     'use strict';
 
     return {
-        content: {
-            url: '/admin/contact/navigation/account',
-            title: '',
-            titleAddition: ''
-        },
-
-        initialize: function() {
-
-            // TODO: set advanced headline
-            this.content.titleAddition = '';
-
-
+        header: {
+            tabs: {
+                url: '/admin/contact/navigation/account',
+            },
+            toolbar: {
+                template: 'default'
+            }
         }
-
-
     };
 });
