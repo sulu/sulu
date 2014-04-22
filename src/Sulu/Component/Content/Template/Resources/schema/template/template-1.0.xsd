@@ -8,13 +8,13 @@
     <xs:element name="template" type="templateType"/>
 
     <xs:complexType name="templateType">
-        <xs:sequence>
-            <xs:element type="xs:string" name="key"/>
-            <xs:element type="xs:string" name="view"/>
-            <xs:element type="xs:string" name="controller"/>
-            <xs:element type="xs:integer" name="cacheLifetime"/>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="xs:string" name="key" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="xs:string" name="controller" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="xs:integer" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
             <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
+        </xs:choice>
     </xs:complexType>
 
 

@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Xml;
 
+use InvalidArgumentException;
 use Sulu\Component\Content\Template\TemplateReader;
 
 class TemplateReaderTest extends \PHPUnit_Framework_TestCase
@@ -97,7 +98,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Sulu\Component\Content\Template\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testReadTypesInvalidPath()
     {

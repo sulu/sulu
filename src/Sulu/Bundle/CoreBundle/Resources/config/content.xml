@@ -63,6 +63,7 @@
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
             <argument type="service" id="sulu.content.structure_manager.loader"/>
             <argument type="service" id="sulu.content.structure_manager.dumper"/>
+            <argument type="service" id="logger"/>
             <argument type="collection">
                 <argument key="template_dir">%sulu.content.template.default_path%</argument>
                 <argument key="cache_dir">%kernel.cache_dir%</argument>

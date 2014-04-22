@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Mapper;
 
 use Jackalope\Session;
 use PHPCR\Util\NodeHelper;
+use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
@@ -35,6 +36,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
     public $dumper;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var StructureManagerInterface
      */
     private $structureManager;
@@ -54,9 +60,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         $this->loader = new TemplateReader();
         $this->dumper = new PHPTemplateDumper('../Resources/Skeleton', false);
+        $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
         $this->structureManager = new StructureManager(
             $this->loader,
             $this->dumper,
+            $this->logger,
             array(
                 'template_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
                 'cache_dir' => $cacheDir

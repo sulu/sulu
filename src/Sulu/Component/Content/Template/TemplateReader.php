@@ -16,12 +16,15 @@ use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * reads a template xml and returns a array representation
  */
 class TemplateReader implements LoaderInterface
 {
+    const SCHEME_PATH = '/Resources/schema/template/template-1.0.xsd';
+
     /**
      * @var string
      */
@@ -84,23 +87,14 @@ class TemplateReader implements LoaderInterface
      * @param $path string path to file with type definitions
      * @param $mandatoryNodes array with key of mandatory node names
      * @throws \Sulu\Component\Content\Template\Exception\InvalidXmlException
-     * @throws \Sulu\Component\Content\Template\Exception\InvalidArgumentException
      * @return array with found definitions of types
      */
     private function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
     {
         $this->tags = array();
         $template = array();
-        $this->xmlDocument = new \DOMDocument();
 
-        try {
-            $this->xmlDocument->load($path);
-        } catch (InvalidXmlException $ex) {
-            throw $ex;
-        } catch (Exception $ex) {
-            // TODO do not catch exceptions here but in the callee
-            throw new InvalidArgumentException('Path is invalid: ' . $path);
-        }
+        $this->xmlDocument = XmlUtils::loadFile($path, __DIR__ . static::SCHEME_PATH);
 
         if (!empty($mandatoryNodes)) {
             $template = $this->getMandatoryNodes($mandatoryNodes);
