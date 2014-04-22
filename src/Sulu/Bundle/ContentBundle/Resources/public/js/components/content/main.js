@@ -22,7 +22,7 @@ define([
             publish: function() {
                 return {
                     'id': 'publish',
-                    'title': this.sandbox.translate('edit-toolbar.state-publish'),
+                    'title': this.sandbox.translate('toolbar.state-publish'),
                     'icon': 'publish',
                     'callback': function() {
                         this.changeState(2);
@@ -32,7 +32,7 @@ define([
             test: function() {
                 return {
                     'id': 'test',
-                    'title': this.sandbox.translate('edit-toolbar.state-test'),
+                    'title': this.sandbox.translate('toolbar.state-test'),
                     'icon': 'test',
                     'callback': function() {
                         this.changeState(1);
@@ -108,6 +108,7 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 
@@ -164,7 +165,7 @@ define([
         del: function(id) {
             this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'options-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     if (id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
