@@ -29,18 +29,25 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $loader;
 
     /**
+     * @var Template\Dumper\PHPTemplateDumper
+     */
+    private $dumper;
+
+    /**
      * @var array
      */
     private $options;
 
     /**
      * @param LoaderInterface $loader XMLLoader to load xml templates
+     * @param PHPTemplateDumper $dumper
      * @param array $options
      * @internal param string $defaultPath array with paths to search for templates
      */
-    function __construct(LoaderInterface $loader, $options = array())
+    function __construct(LoaderInterface $loader, PHPTemplateDumper $dumper, $options = array())
     {
         $this->loader = $loader;
+        $this->dumper = $dumper;
         $this->setOptions($options);
     }
 
@@ -63,9 +70,9 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
             $resources[] = new FileResource($path);
 
-            $dumper = new PHPTemplateDumper($result);
             $cache->write(
-                $dumper->dump(
+                $this->dumper->dump(
+                    $result,
                     array(
                         'cache_class' => $class,
                         'base_class' => $this->options['base_class']

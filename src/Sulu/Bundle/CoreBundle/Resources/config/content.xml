@@ -9,6 +9,8 @@
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
         <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
+        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PHPTemplateDumper</parameter>
+        <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
@@ -54,8 +56,13 @@
 
         <!-- structure manager -->
         <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%" public="false"/>
+        <service id="sulu.content.structure_manager.dumper" class="%sulu.content.structure_manager.dumper.class%" public="false">
+            <argument>%sulu.content.structure_manager.dumper.path%</argument>
+            <argument>%kernel.debug%</argument>
+        </service>
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
             <argument type="service" id="sulu.content.structure_manager.loader"/>
+            <argument type="service" id="sulu.content.structure_manager.dumper"/>
             <argument type="collection">
                 <argument key="template_dir">%sulu.content.template.default_path%</argument>
                 <argument key="cache_dir">%kernel.cache_dir%</argument>
