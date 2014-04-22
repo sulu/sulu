@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -14709,7 +14710,7 @@ define("backbone", ["underscore","jquery"], (function (global) {
 }(this)));
 
 /**
- * @license RequireJS text 2.0.10 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS text 2.0.12 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/requirejs/text for details
  */
@@ -14733,7 +14734,7 @@ define('text',['module'], function (module) {
         masterConfig = (module.config && module.config()) || {};
 
     text = {
-        version: '2.0.10',
+        version: '2.0.12',
 
         strip: function (content) {
             //Strips <?xml ...?> declarations so that external SVG and XML
@@ -14872,12 +14873,12 @@ define('text',['module'], function (module) {
 
             // Do not bother with the work if a build and text will
             // not be inlined.
-            if (config.isBuild && !config.inlineText) {
+            if (config && config.isBuild && !config.inlineText) {
                 onLoad();
                 return;
             }
 
-            masterConfig.isBuild = config.isBuild;
+            masterConfig.isBuild = config && config.isBuild;
 
             var parsed = text.parseName(name),
                 nonStripName = parsed.moduleName +
@@ -14967,7 +14968,9 @@ define('text',['module'], function (module) {
                 }
                 callback(file);
             } catch (e) {
-                errback(e);
+                if (errback) {
+                    errback(e);
+                }
             }
         };
     } else if (masterConfig.env === 'xhr' || (!masterConfig.env &&
@@ -14995,12 +14998,14 @@ define('text',['module'], function (module) {
                 //Do not explicitly handle errors, those should be
                 //visible via console output in the browser.
                 if (xhr.readyState === 4) {
-                    status = xhr.status;
+                    status = xhr.status || 0;
                     if (status > 399 && status < 600) {
                         //An http 4xx or 5xx error. Signal an error.
                         err = new Error(url + ' HTTP status: ' + status);
                         err.xhr = xhr;
-                        errback(err);
+                        if (errback) {
+                            errback(err);
+                        }
                     } else {
                         callback(xhr.responseText);
                     }
@@ -15057,7 +15062,7 @@ define('text',['module'], function (module) {
             typeof Components !== 'undefined' && Components.classes &&
             Components.interfaces)) {
         //Avert your gaze!
-        Cc = Components.classes,
+        Cc = Components.classes;
         Ci = Components.interfaces;
         Components.utils['import']('resource://gre/modules/FileUtils.jsm');
         xpcIsWindows = ('@mozilla.org/windows-registry-key;1' in Cc);
@@ -26626,6 +26631,10 @@ define('__component__$datagrid@husky',[],function() {
             showElementsSteps: [10, 20, 50, 100, 500]
         },
 
+        types = {
+            DATE: 'date'
+        },
+
         constants = {
             fullWidthClass: 'fullwidth',
             // if datagrid is in fullwidth-mode (options.fullWidth is true)
@@ -27168,7 +27177,8 @@ define('__component__$datagrid@husky',[],function() {
                     this.rowStructure.push({
                         attribute: column.attribute,
                         editable: column.editable,
-                        validation: column.validation
+                        validation: column.validation,
+                        type: column.type
                     });
 
                     if (!!column.editable) {
@@ -27283,14 +27293,14 @@ define('__component__$datagrid@husky',[],function() {
 
                     this.rowStructure.forEach(function(key, index) {
                         key.editable = key.editable || false;
-                        this.createRowCell(key.attribute, row[key.attribute], key.editable, key.validation, triggeredByAddRow, index);
+                        this.createRowCell(key.attribute, row[key.attribute], key.type, key.editable, key.validation, triggeredByAddRow, index);
                     }.bind(this));
 
                 } else {
                     i = 0;
                     for (key in row) {
                         if (row.hasOwnProperty(key)) {
-                            this.createRowCell(key, row[key], false, null, triggeredByAddRow, i);
+                            this.createRowCell(key, row[key], null, false, null, triggeredByAddRow, i);
                             i++;
                         }
                     }
@@ -27310,13 +27320,13 @@ define('__component__$datagrid@husky',[],function() {
          * Sets the value of row cell and the data-id attribute for the row
          * @param key attribute name
          * @param value attribute value
+         * @param type {String} The type of the cell. Used to call a function to manipulate the content
          * @param editable flag whether field is editable or not
          * @param validation information for field
          * @param triggeredByAddRow triggered trough add row
          * @param index
          */
-        createRowCell: function(key, value, editable, validation, triggeredByAddRow, index) {
-
+        createRowCell: function(key, value, type, editable, validation, triggeredByAddRow, index) {
             var tblCellClasses,
                 tblCellContent,
                 tblCellStyle,
@@ -27346,6 +27356,11 @@ define('__component__$datagrid@husky',[],function() {
 
                 tblCellStyle = 'style="max-width:' + this.options.columns[index].minWidth + '"';
 
+                // call the type manipulate to manipulate the content of the cell
+                if (!!type) {
+                    tblCellContent = this.manipulateCellContent(tblCellContent, type);
+                }
+
                 if (!!editable) {
 
                     if (!!triggeredByAddRow) {
@@ -27371,6 +27386,32 @@ define('__component__$datagrid@husky',[],function() {
             } else {
                 this.tblRowAttributes += ' data-' + key + '="' + value + '"';
             }
+        },
+
+        /**
+         * Manipulates the content of a cell with a process realted to the columns type
+         * @param content {String} the content of the cell
+         * @param type {String} the columns type
+         * @returns {String} the manipualted content
+         */
+        manipulateCellContent: function(content, type) {
+            if (type === types.DATE) {
+                content = this.parseDate(content);
+            }
+            return content;
+        },
+
+        /**
+         * Brings a date into the right format
+         * @param date {String} the date to parse
+         * @returns {String}
+         */
+        parseDate: function(date) {
+            var parsedDate = this.sandbox.date.format(date);
+            if (parsedDate !== null) {
+                return parsedDate;
+            }
+            return date;
         },
 
         /**
@@ -36962,6 +37003,63 @@ define('husky_extensions/collection',[],function() {
                     return !!translation ? translation : key;
                 };
 
+                app.sandbox.date = {
+                    /**
+                     * returns formatted date string
+                     * @param {string|Date} date
+                     * @returns {string}
+                     */
+                    format: function(date) {
+                        if(typeof date === 'string'){
+                            date = this.parse(date);
+                        }
+                        return Globalize.format(date);
+                    },
+
+                    /**
+                     * parse ISO8601 string : string -> Date
+                     * Parse an ISO-8601 date, including possible timezone,
+                     * into a Javascript Date object.
+                     * (inspired by: http://stackoverflow.com/questions/439630/how-do-you-create-a-javascript-date-object-with-a-set-timezone-without-using-a-s)
+                     *
+                     * Test strings: parseISO8601String(x).toISOString()
+                     * "2013-01-31T12:34"              -> "2013-01-31T12:34:00.000Z"
+                     * "2013-01-31T12:34:56"           -> "2013-01-31T12:34:56.000Z"
+                     * "2013-01-31T12:34:56.78"        -> "2013-01-31T12:34:56.780Z"
+                     * "2013-01-31T12:34:56.78+0100"   -> "2013-01-31T11:34:56.780Z"
+                     * "2013-01-31T12:34:56.78+0530"   -> "2013-01-31T07:04:56.780Z"
+                     * "2013-01-31T12:34:56.78-0330"   -> "2013-01-31T16:04:56.780Z"
+                     * "2013-01-31T12:34:56-0330"      -> "2013-01-31T16:04:56.000Z"
+                     * "2013-01-31T12:34:56Z"          -> "2013-01-31T12:34:56.000Z"
+                     *
+                     * @param {string} dateString
+                     * @returns {Date}
+                     */
+                    parse: function(dateString) {
+                        var timebitsRegex = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})(?::([0-9]*)(\.[0-9]*)?)?(?:([+-])([0-9]{2})([0-9]{2}))?/,
+                            timebits = timebitsRegex.exec(dateString),
+                            resultDate, utcdate, offsetMinutes;
+
+                        if (timebits) {
+                            utcdate = Date.UTC(parseInt(timebits[1]),
+                                parseInt(timebits[2]) - 1, // months are zero-offset (!)
+                                parseInt(timebits[3]),
+                                parseInt(timebits[4]), parseInt(timebits[5]), // hh:mm
+                                (timebits[6] && parseInt(timebits[6]) || 0),  // optional seconds
+                                (timebits[7] && parseFloat(timebits[7]) * 1000) || 0); // optional fraction
+                            // utcdate is milliseconds since the epoch
+                            if (timebits[9] && timebits[10]) {
+                                offsetMinutes = parseInt(timebits[9]) * 60 + parseInt(timebits[10]);
+                                utcdate += (timebits[8] === '+' ? -1 : +1) * offsetMinutes * 60000;
+                            }
+                            resultDate = new Date(utcdate);
+                        } else {
+                            resultDate = null;
+                        }
+                        return resultDate;
+                    }
+                };
+
                 /**
                  * function calls this.sandbox.translate for an array of keys and returns an array of translations
                  * @param array
@@ -37946,4 +38044,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
