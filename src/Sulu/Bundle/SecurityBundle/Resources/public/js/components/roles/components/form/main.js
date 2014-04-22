@@ -25,7 +25,8 @@ define([], function() {
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         formSelector = '#role-form',
-        loadedContexts;
+        loadedContexts,
+        loadedSystems;
 
     return {
 
@@ -43,6 +44,7 @@ define([], function() {
             // wait for dropdown to initialize, then get the value and continue
             this.sandbox.on('husky.select.system.initialize', function() {
                 this.selectedSystem = this.sandbox.dom.attr('#system', 'data-selection-values');
+                loadedSystems = this.sandbox.dom.data('#system', 'aura-data');
 
                 this.initializeMatrix();
                 this.initializeValidation();
@@ -87,7 +89,7 @@ define([], function() {
             }, this);
 
             this.sandbox.on('husky.select.system.selected.item', function(value) {
-                this.selectedSystem = value;
+                this.selectedSystem = loadedSystems[value];
                 this.initializeMatrix();
             }.bind(this));
         },
