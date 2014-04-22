@@ -140,7 +140,10 @@ define([], function() {
                         instanceName: 'systemLanguage',
                         defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                         value: 'name',
-                        data: [{id:"de", name:"Deutsch"}, {id:"en", name:"English"}],
+                        data: [
+                            {id: "de", name: "Deutsch"},
+                            {id: "en", name: "English"}
+                        ],
                         preSelectedElements: [this.systemLanguage]
                     }
                 }
@@ -411,17 +414,17 @@ define([], function() {
             tableHead: function(thLabel1, thLabel2, thLabel3) {
                 return [
                     '<thead>',
-                        '<tr>',
-                            '<th width="5%">',
-                                 '<div class="custom-checkbox">',
-                                    '<input id="selectAll" type="checkbox"/>',
-                                    '<span class="icon"></span>',
-                                 '</div>',
-                            '</th>',
-                            '<th width="30%">', thLabel1, '</th>',
-                            '<th width="45%">', thLabel2, '</th>',
-                            '<th width="20%">', thLabel3, '</th>',
-                        '</tr>',
+                    '   <tr>',
+                    '       <th width="5%">',
+                    '           <div class="custom-checkbox">',
+                    '               <input id="selectAll" type="checkbox"/>',
+                    '               <span class="icon"></span>',
+                    '           </div>',
+                    '       </th>',
+                    '       <th width="30%">', thLabel1, '</th>',
+                    '       <th width="45%">', thLabel2, '</th>',
+                    '       <th width="20%">', thLabel3, '</th>',
+                    '   </tr>',
                     '</thead>'
                 ].join('');
 
@@ -433,29 +436,29 @@ define([], function() {
                 if (!!selected) {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                            '<td>',
-                                '<div class="custom-checkbox">',
-                                    '<input type="checkbox" class="is-selected" checked/>',
-                                    '<span class="icon"></span>',
-                                '</div>',
-                            '</td>',
-                            '<td>', title, '</td>',
-                            '<td class="m-top-15" id="languageSelector', id, '"></td>',
-                            '<td></td>',
+                        '   <td>',
+                        '       <div class="custom-checkbox">',
+                        '           <input type="checkbox" class="is-selected" checked/>',
+                        '           <span class="icon"></span>',
+                        '       </div>',
+                        '   </td>',
+                        '   <td>', title, '</td>',
+                        '   <td class="m-top-15" id="languageSelector', id, '"></td>',
+                        '   <td></td>',
                         '</tr>'
                     ].join('');
                 } else {
                     $row = [
                         '<tr data-id=\"', id, '\">',
-                            '<td>',
-                                '<div class="custom-checkbox">',
-                                    '<input type="checkbox"/>',
-                                    '<span class="icon"></span>',
-                                '</div>',
-                            '</td>',
-                            '<td>', title, '</td>',
-                            '<td class="m-top-15" id="languageSelector', id, '"></td>',
-                            '<td></td>',
+                        '   <td>',
+                        '       <div class="custom-checkbox">',
+                        '           <input type="checkbox"/>',
+                        '           <span class="icon"></span>',
+                        '       </div>',
+                        '   </td>',
+                        '   <td>', title, '</td>',
+                        '   <td class="m-top-15" id="languageSelector', id, '"></td>',
+                        '   <td></td>',
                         '</tr>'
                     ].join('');
                 }

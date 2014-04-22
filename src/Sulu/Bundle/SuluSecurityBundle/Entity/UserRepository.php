@@ -25,6 +25,12 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
     /**
+     * The security system
+     * @var string
+     */
+    private $system;
+
+    /**
      * {@inheritdoc}
      */
     public function findUserById($id)
@@ -109,7 +115,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      */
     public function loadUserByUsername($username)
     {
-
         $qb = $this->createQueryBuilder('user')
             ->leftJoin('user.userRoles', 'userRoles')
             ->leftJoin('userRoles.role', 'role')
@@ -123,12 +128,23 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->addSelect('grp')
             ->addSelect('settings')
             ->addSelect('permissions')
-            ->where('user.username=:username');
+            ->where('user.username=:username')
+            // TODO add groups for system recognition
+            ->andWhere(
+                'EXISTS(
+                    SELECT ur.id
+                    FROM Sulu\Bundle\SecurityBundle\Entity\Role r
+                    LEFT JOIN r.userRoles ur
+                    LEFT JOIN ur.user u
+                    WHERE u.id = user.id
+                    AND r.system = :system
+                )'
+            );
 
         $query = $qb->getQuery();
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
-
+        $query->setParameter('system', $this->getSystem());
 
         try {
             return $query->getSingleResult();
@@ -173,5 +189,23 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     public function supportsClass($class)
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
+    }
+
+    /**
+     * Sets the security system
+     * @param string $system
+     */
+    public function setSystem($system)
+    {
+        $this->system = $system;
+    }
+
+    /**
+     * Returns the security system
+     * @return string
+     */
+    public function getSystem()
+    {
+        return $this->system;
     }
 }
