@@ -249,15 +249,11 @@ class TemplateReader implements LoaderInterface
                 $value = $node->attributes->item($i)->nodeValue;
 
                 if (is_numeric($value)) {
-                    $value = $value + 0;
-                } else {
-                    if ($value === 'true') {
-                        $value = true;
-                    } else {
-                        if ($value === 'false') {
-                            $value = false;
-                        }
-                    }
+                    $value = (int) $value;
+                } elseif ($value === 'true') {
+                    $value = true;
+                } elseif ($value === 'false') {
+                    $value = false;
                 }
 
                 $attributes[$node->attributes->item($i)->nodeName] = $value;

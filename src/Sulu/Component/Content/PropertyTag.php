@@ -20,6 +20,7 @@ class PropertyTag
      * @var string
      */
     private $name;
+
     /**
      * priority of tag
      * @var int
