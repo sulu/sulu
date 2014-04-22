@@ -30,6 +30,24 @@ define(function() {
     return {
         name: 'Sulu Security Role List',
 
+        view: true,
+
+        fullSize: {
+            width: true
+        },
+
+        header: function() {
+            return {
+                title: 'security.roles.title',
+                noBack: true,
+
+                breadcrumb: [
+                    {title: 'navigation.settings'},
+                    {title: 'security.roles.title'}
+                ]
+            };
+        },
+
         templates: ['/admin/security/template/role/list'],
 
         initialize: function() {
@@ -43,12 +61,14 @@ define(function() {
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'rolesFields', '/admin/api/roles/fields',
                 {
-                    el: '#list-toolbar-container',
-                    instanceName: 'roles'
+                    el: this.$find('#list-toolbar-container'),
+                    instanceName: 'roles',
+                    inHeader: true
                 },
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     },
