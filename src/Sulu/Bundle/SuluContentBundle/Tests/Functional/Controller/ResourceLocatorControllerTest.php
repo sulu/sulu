@@ -168,22 +168,38 @@ class ResourceLocatorControllerTest extends DatabaseTestCase
 
     public function testGet()
     {
-        $this->client->request('GET', '/content/resourcelocator.json?parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
+        $this->client->request(
+            'GET',
+            '/content/resourcelocator.json?webspace=sulu_io&language=en&template=default',
+            array('parts' => array('title' => 'test'))
+        );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
+        $this->client->request(
+            'GET',
+            '/content/resourcelocator.json?parent=' . $this->data[0]['id'] . '&webspace=sulu_io&language=en&template=default',
+            array('parts' => array('title' => 'test'))
+        );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/products/test', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
+        $this->client->request(
+            'GET',
+            '/content/resourcelocator.json?parent=' . $this->data[1]['id'] . '&webspace=sulu_io&language=en&template=default',
+            array('parts' => array('title' => 'test'))
+        );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-2', $response->resourceLocator);
 
-        $this->client->request('GET', '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&parts={"title":"test"}&webspace=sulu_io&language=en&template=default');
+        $this->client->request(
+            'GET',
+            '/content/resourcelocator.json?parent=' . $this->data[3]['id'] . '&webspace=sulu_io&language=en&template=default',
+            array('parts' => array('title' => 'test'))
+        );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);
