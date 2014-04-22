@@ -5,15 +5,15 @@
     define([], {
 
         initialize: function(app) {
-            /**
-             * Userproperties
-             */
-            app.sandbox.sulu.user = app.sandbox.util.extend(false, {}, SULU.user);
-
             /*********
              * Sulu namespace
              *********/
             app.sandbox.sulu = {};
+
+            /**
+             * Userproperties
+             */
+            app.sandbox.sulu.user = app.sandbox.util.extend(false, {}, SULU.user);
 
             /*********
              * Locales
