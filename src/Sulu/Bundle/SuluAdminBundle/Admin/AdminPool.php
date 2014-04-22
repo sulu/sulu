@@ -27,7 +27,7 @@ class AdminPool
 
     /**
      * Returns all the registered admins
-     * @return array
+     * @return Admin[]
      */
     public function getAdmins()
     {

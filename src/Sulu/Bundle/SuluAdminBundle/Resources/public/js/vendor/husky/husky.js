@@ -1,4 +1,3 @@
-
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -29780,42 +29779,14 @@ define('__component__$tabs@husky',[],function() {
  * @module husky/components/toolbar
  */
 
-/*
- *
- *  toolbar
- *
- *  data structure:
- *      - title
- *      - id (optional - will be generated otherwise)
- *      - icon (optional)
- *      - disableIcon (optional): icon when item is disabled
- *      - disabled (optional): is item disabled or enabled
- *      - iconSize (optional: large/medium/small)
- *      - class (optional: highlight/highlight-gray)
- *      - group (optional): id of the a group sepcified in the options
- *      - position (optional) integer to sort the items - default 9000
- *      - type (optional: none/select) - if select, the selected item is displayed in mainitem
- *      - callback (optional) - callback function
- *      - hidden (optional) - if true button gets hidden form the beginning on
- *      - hideTitle (optional: true/false) - hide title from beginning
- *      - items (optional - if dropdown):
- *          - title
- *          - icon (optional) false will remove icon
- *          - callback
- *          - divider = true; takes item as divider element
- *
- *
- */
-
 /**
  * @class Toolbar
  * @constructor
  *
  * @param {Object} [options] Configuration object
  * @param {String} [options.url] url to fetch data from
- * @param {String} [options.data] if no url is provided
  * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
- * @param {String} [options.itemsRequestKey] key with resutlt-array for requested dropdown items
+ * @param {String} [options.itemsRequestKey] key with result-array for requested dropdown items
  * @param {String} [options.appearance]
  * @param {Object} [options.searchOptions] options to pass to search component
  * @param {Object} [options.groups] array of groups with id and align to specify groups to put items in
@@ -29824,6 +29795,24 @@ define('__component__$tabs@husky',[],function() {
  * @param {String} [options.searchAlign] "right" or "left" to align the search if it's added automatically via the hasSearch option
  * @param {String} [options.skin] custom skin-class to add to the component
  * @param {Boolean} [options.showTitleAsTooltip] shows the title of the button only as tooltip
+ * @param {Array} [options.data] if no url is provided
+ * @param {String} [options.data.title]
+ * @param {String} [options.data.id]
+ * @param {Boolean} [options.data.disabled] is item disabled or enabled
+ * @param {String} [options.data.disableIcon] icon in disable state
+ * @param {String} [options.data.iconSize] large/medium/small
+ * @param {String} [options.data.class] highlight/highlight-gray
+ * @param {String} [options.data.group] id of the a group specified in the options
+ * @param {Integer} [options.data.position] integer to sort the items - default 9000
+ * @param {String} [options.data.type] if select, the selected item is displayed in main item (none/select)
+ * @param {Function} [options.data.callback] callback function
+ * @param {Boolean} [options.data.hidden] if true button gets hidden form the beginning on
+ * @param {Boolean} [options.data.hideTitle] hide title from beginning
+ * @param {Array} [options.data.items]
+ * @param {String} [options.data.items.title]
+ * @param {String} [options.data.items.icon] false will remove icon
+ * @param {Function} [options.data.items.callback]
+ * @param {Boolean} [options.data.items.divider] if true takes item as divider element
  */
 define('__component__$toolbar@husky',[],function() {
 
@@ -30087,7 +30076,7 @@ define('__component__$toolbar@husky',[],function() {
                 }.bind(this));
             }
 
-            if (!!enabled === true) {
+            if (!!enabled) {
                 this.sandbox.dom.removeClass($item, 'disabled');
                 this.sandbox.dom.removeClass($iconItem, disabledIconClass);
                 this.sandbox.dom.prependClass($iconItem, enabledIconClass);
@@ -30378,8 +30367,7 @@ define('__component__$toolbar@husky',[],function() {
         /**
          * Handles requested items
          * @param requestedItems
-         * @param $button
-         * @param button
+         * @param buttonId
          */
         handleRequestedItems = function(requestedItems, buttonId) {
             var id, title, icon, callback, i, length;
@@ -30429,7 +30417,9 @@ define('__component__$toolbar@husky',[],function() {
          */
         collapseAll = function() {
             for (var key in this.items) {
-                collapseButton.call(this, this.items[key]);
+                if (this.items.hasOwnProperty(key)) {
+                    collapseButton.call(this, this.items[key]);
+                }
             }
             this.collapsed = true;
         },
@@ -30439,10 +30429,12 @@ define('__component__$toolbar@husky',[],function() {
          */
         expandAll = function() {
             for (var key in this.items) {
-                if (this.items[key].hideTitle === true) {
-                    expandButton.call(this, this.items[key], true);
-                } else {
-                    expandButton.call(this, this.items[key], false);
+                if (this.items.hasOwnProperty(key)) {
+                    if (this.items[key].hideTitle === true) {
+                        expandButton.call(this, this.items[key], true);
+                    } else {
+                        expandButton.call(this, this.items[key], false);
+                    }
                 }
             }
             this.collapsed = false;
@@ -30454,7 +30446,7 @@ define('__component__$toolbar@husky',[],function() {
          */
         collapseButton = function(button) {
             // collapsing is senseless for dropdown-items
-            if (!!button.parentId === false) {
+            if (!button.parentId) {
 
                 // remove set button width
                 this.sandbox.dom.css(button.$el, {'min-width': ''});
@@ -30463,7 +30455,7 @@ define('__component__$toolbar@husky',[],function() {
                 this.sandbox.dom.hide(this.sandbox.dom.find('.title', button.$el));
 
                 //set button width
-                if(!!button.items === false) {
+                if (!button.items) {
                     this.sandbox.dom.css(button.$el, {'min-width': constants.collapsedWidth + 'px'});
                 }
             }
@@ -30473,10 +30465,10 @@ define('__component__$toolbar@husky',[],function() {
         /**
          * Expands a given button
          * @param button {Object}
-         * @param hideTitle {Boolean} if true title get shidden
+         * @param hideTitle {Boolean} if true title get hidden
          */
         expandButton = function(button, hideTitle) {
-            if (!!button.parentId === false) {
+            if (!button.parentId) {
                 // show title
                 if (hideTitle === true) {
                     this.sandbox.dom.hide(this.sandbox.dom.find('.title', button.$el));
@@ -30571,7 +30563,7 @@ define('__component__$toolbar@husky',[],function() {
 
         /**
          * Add the skin-classes to the component-element
-         * @param {Object} Dom-object to add the skin-class to
+         * @param $element {Object}
          */
         addSkinClass = function($element) {
             if (this.options.skin !== 'default') {
@@ -30649,7 +30641,7 @@ define('__component__$toolbar@husky',[],function() {
 
         /**
          * renders the toolbar
-         * @param {Object} data t
+         * @param {Object} data
          */
         render: function(data) {
 
@@ -33183,32 +33175,6 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         /**
-         * Starts a loader within the whole navigation
-         */
-        startLoader: function() {
-            var $element = this.sandbox.dom.createElement('<div class="navigation-loader"/>');
-            this.sandbox.dom.html(this.$columnContainer, $element);
-
-            this.sandbox.start([
-                {
-                    name: 'loader@husky',
-                    options: {
-                        el: $element,
-                        size: '100px',
-                        color: '#e4e4e4'
-                    }
-                }
-            ]);
-        },
-
-        /**
-         * Stops the big loader
-         */
-        stopLoader: function() {
-            this.sandbox.stop('.navigation-loader');
-        },
-
-        /**
          * Loads data from a specific url and triggers the parsing
          * @param {String} url
          * @param {Number} columnNumber
@@ -33216,11 +33182,9 @@ define('__component__$column-navigation@husky',[], function() {
         load: function(url, columnNumber) {
             if (!!url) {
                 this.columnLoadStarted = true;
-                this.startLoader();
 
                 this.sandbox.util.load(url)
                     .then(function(response) {
-                        this.stopLoader();
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
                         this.alignWithColumnsWidth();
@@ -37982,3 +37946,4 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
+
