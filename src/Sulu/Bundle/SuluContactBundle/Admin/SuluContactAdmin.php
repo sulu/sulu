@@ -50,4 +50,11 @@ class SuluContactAdmin extends Admin
         return array();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName()
+    {
+        return 'sulucontact';
+    }
 }
