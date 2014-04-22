@@ -180,7 +180,6 @@ define([], function() {
             }
         },
 
-
         templates = {
             skeleton: [
                 '<div class="inner">',
@@ -202,7 +201,6 @@ define([], function() {
                 '</li>'
             ].join('\n')
         },
-
 
         changeStateCallbacks = {
             default: function(saved, type, highlight) {

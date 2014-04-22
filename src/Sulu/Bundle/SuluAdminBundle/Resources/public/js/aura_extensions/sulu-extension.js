@@ -184,7 +184,6 @@
              * initializes sulu list-toolbar with column options and datagrid
              * @param key Settings key
              * @param url Url to load fields from
-             * @param mixed Toolbar-options
              * @param listToolbarOptions
              * @param datagridOptions
              */
