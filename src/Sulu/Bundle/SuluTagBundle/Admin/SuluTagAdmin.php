@@ -42,4 +42,11 @@ class SuluTagAdmin extends Admin
         return array();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName()
+    {
+        return 'sulutag';
+    }
 }
