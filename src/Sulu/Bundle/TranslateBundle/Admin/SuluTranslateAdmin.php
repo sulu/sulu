@@ -48,4 +48,12 @@ class SuluTranslateAdmin extends Admin
             new ExportCommand()
         );
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName()
+    {
+        return 'sulutranslate';
+    }
 }
