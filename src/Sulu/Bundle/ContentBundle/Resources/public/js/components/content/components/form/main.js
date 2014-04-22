@@ -115,7 +115,7 @@ define(['app-config'], function(AppConfig) {
         setTitle: function() {
             var value = this.propertyConfiguration['sulu.node.name'].highestProperty.$el.data('element').getValue();
             if (!!this.options.id && value !== '') {
-                this.sandbox.emit('sulu.content.set-title', value);
+                this.sandbox.emit('sulu.header.set-title', value);
                 this.setBreadcrumb();
             } else {
                 this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
