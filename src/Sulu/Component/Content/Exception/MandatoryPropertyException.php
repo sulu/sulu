@@ -15,7 +15,7 @@ use Sulu\Component\Content\PropertyInterface;
 /**
  * data for mandatory exception not found
  */
-class PropertyIsMandatoryException extends \Exception
+class MandatoryPropertyException extends \Exception
 {
     /**
      * @var PropertyInterface

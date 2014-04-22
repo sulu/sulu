@@ -20,7 +20,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
-use Sulu\Component\Content\Exception\PropertyIsMandatoryException;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
@@ -284,7 +284,7 @@ class ContentMapper implements ContentMapperInterface
                     );
                 }
             } elseif ($property->getMandatory()) {
-                throw new PropertyIsMandatoryException($templateKey, $property);
+                throw new MandatoryPropertyException($templateKey, $property);
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
                 // if it is not a partial update remove property
