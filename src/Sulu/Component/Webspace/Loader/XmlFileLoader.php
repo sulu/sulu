@@ -11,8 +11,9 @@
 namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Webspace\Environment;
-use Sulu\Component\Webspace\Loader\Exception\DefaultLocalizationNotFoundException;
+use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
+use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Security;
@@ -42,7 +43,7 @@ class XmlFileLoader extends FileLoader
      * Loads a webspace from a xml file
      *
      * @param mixed $resource The resource
-     * @param string $type     The resource type
+     * @param string $type The resource type
      * @return Webspace The webspace object for the given resource
      */
     public function load($resource, $type = null)
@@ -59,7 +60,7 @@ class XmlFileLoader extends FileLoader
      * Returns true if this class supports the given resource.
      *
      * @param mixed $resource A resource
-     * @param string $type     The resource type
+     * @param string $type The resource type
      *
      * @return Boolean true if this class supports the given resource, false otherwise
      */
@@ -106,6 +107,18 @@ class XmlFileLoader extends FileLoader
 
     private function validate()
     {
+        // check if there are duplicates in the webspace localizations
+        $webspaceDefaultLocalizationFound = false;
+        foreach ($this->webspace->getLocalizations() as $webspaceLocalizations) {
+            if ($webspaceLocalizations->isDefault()) {
+                // throw an exception, if a new default localization is found, although there already is one
+                if ($webspaceDefaultLocalizationFound) {
+                    throw new WebspaceDefaultLocalizationNotFoundException($this->webspace);
+                }
+                $webspaceDefaultLocalizationFound = true;
+            }
+        }
+
         // check all portal localizations
         foreach ($this->webspace->getPortals() as $portal) {
             $portalDefaultLocalizationFound = false;
@@ -116,9 +129,31 @@ class XmlFileLoader extends FileLoader
             }
 
             if (!$portalDefaultLocalizationFound) {
-                throw new DefaultLocalizationNotFoundException($this->webspace, $portal);
+                // try to load the webspace localizations before throwing an exception
+                if (!$this->loadPortalLocalizationDefaultFromWebspace($portal)) {
+                    throw new PortalDefaultLocalizationNotFoundException($this->webspace, $portal);
+                }
             }
         }
+    }
+
+    /**
+     * @param $portal Portal
+     * @return bool True when successful, otherwise false
+     */
+    private function loadPortalLocalizationDefaultFromWebspace($portal)
+    {
+        $webspaceDefaultLocalization = $this->webspace->getDefaultLocalization();
+
+        foreach ($portal->getLocalizations() as $localization) {
+            if ($webspaceDefaultLocalization->getLocalization() == $localization->getLocalization()) {
+                $localization->setDefault(true);
+                $portal->setDefaultLocalization($localization);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

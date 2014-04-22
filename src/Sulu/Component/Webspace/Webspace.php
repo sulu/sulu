@@ -35,6 +35,12 @@ class Webspace
     private $localizations;
 
     /**
+     * The default localization defined for this webspace
+     * @var Localization
+     */
+    private $defaultLocalization;
+
+    /**
      * The segments defined for this webspace
      * @var Segment[]
      */
@@ -83,6 +89,10 @@ class Webspace
     public function addLocalization(Localization $localization)
     {
         $this->localizations[] = $localization;
+
+        if ($localization->isDefault()) {
+            $this->defaultLocalization = $localization;
+        }
     }
 
     /**
@@ -136,6 +146,24 @@ class Webspace
         }
 
         return null;
+    }
+
+    /**
+     * Sets the default localization for this webspace
+     * @param Localization $defaultLocalization
+     */
+    public function setDefaultLocalization($defaultLocalization)
+    {
+        $this->defaultLocalization = $defaultLocalization;
+    }
+
+    /**
+     * Returns the default localization for this webspace
+     * @return Localization
+     */
+    public function getDefaultLocalization()
+    {
+        return $this->defaultLocalization;
     }
 
     /**
