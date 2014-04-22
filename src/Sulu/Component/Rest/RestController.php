@@ -49,6 +49,16 @@ abstract class RestController extends FOSRestController
     protected $fieldsHidden = array();
 
     /**
+     * contains the matching between fields and their types
+     * @var array
+     */
+    protected $fieldTypes = array(
+        'created' => 'date',
+        'changed' => 'date',
+        'birthday' => 'date'
+    );
+
+    /**
      * contains all field relations
      * @var array
      */
@@ -181,6 +191,7 @@ abstract class RestController extends FOSRestController
 
     /**
      * creates the translation keys array and sets the default attribute, if set
+     * also adds the type property for
      * @param $fields
      * @param $fieldsHidden
      * @return array
@@ -210,6 +221,11 @@ abstract class RestController extends FOSRestController
                 }
             }
 
+            $type = '';
+            if (isset ($this->fieldTypes[$field])) {
+                $type = $this->fieldTypes[$field];
+            }
+
             $fieldsArray[] = array(
                 'id' => $field,
                 'translation' => $translationKey,
@@ -218,6 +234,7 @@ abstract class RestController extends FOSRestController
                 'editable' => in_array($field, $this->fieldsEditable) ? true : null,
                 'width' => ($fieldWidth != null) ? $fieldWidth : null,
                 'minWidth' => array_key_exists($field, $this->fieldsMinWidth) ? $this->fieldsMinWidth[$field] : null,
+                'type' => $type,
                 'validation' => array_key_exists($field, $this->fieldsValidation) ?
                         $this->fieldsValidation[$field] : null,
             );
