@@ -13,6 +13,8 @@ define(function() {
 
     var SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages',
 
+        CONTENT_LANGUAGE = 'contentLanguage',
+
     templates = {
         toggler: [
             '<div id="show-ghost-pages"></div>',
@@ -119,6 +121,7 @@ define(function() {
 
         changeLanguage: function(item) {
             this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
+            this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
         },
 
         render: function() {
