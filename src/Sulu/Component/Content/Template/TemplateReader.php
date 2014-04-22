@@ -129,6 +129,7 @@ class TemplateReader implements LoaderInterface
 
         // check combination of tag and priority of uniqueness
         // check required properties
+        // DEEP COPY
         $required = array_merge(array(), $this->requiredTags);
         for ($x = 0; $x < sizeof($this->tags); $x++) {
             // check required properties
