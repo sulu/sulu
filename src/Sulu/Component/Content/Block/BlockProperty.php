@@ -21,9 +21,9 @@ class BlockProperty extends Property implements BlockPropertyInterface
 {
     /**
      * properties managed by this block
-     * @var PropertyInterface
+     * @var BlockPropertyType[]
      */
-    private $childProperties = array();
+    private $types = array();
 
     function __construct(
         $name,
@@ -42,33 +42,38 @@ class BlockProperty extends Property implements BlockPropertyInterface
      * returns a list of properties managed by this block
      * @return PropertyInterface[]
      */
-    public function getChildProperties()
+    public function getTypes()
     {
-        return $this->childProperties;
+        return $this->types;
     }
 
     /**
-     * @param PropertyInterface $property
+     * adds a type
+     * @param BlockPropertyType $type
      */
-    public function addChild(PropertyInterface $property)
+    public function addType(BlockPropertyType $type)
     {
-        $this->childProperties[] = $property;
+        $this->types[$type->getName()] = $type;
     }
 
     /**
-     * returns property with given name
+     * returns type with given name
      * @param string $name of property
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     * @return PropertyInterface
+     * @return BlockPropertyType
      */
-    public function getChild($name)
+    public function getType($name)
     {
-        foreach ($this->childProperties as $child) {
-            if ($child->getName() === $name) {
-                return $child;
-            }
-        }
-        throw new NoSuchPropertyException();
+        return $this->types[$name];
+    }
+
+    /**
+     * returns child properties of given Type
+     * @param string $typeName
+     * @return PropertyInterface[]
+     */
+    public function getChildProperties($typeName)
+    {
+        return $this->getType($typeName)->getChildProperties();
     }
 
     /**
@@ -93,7 +98,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
                 $data = $value;
             }
             /** @var PropertyInterface $subProperty */
-            foreach ($this->childProperties as $subProperty) {
+            foreach ($this->types as $subProperty) {
                 if (isset($data[$subProperty->getName()])) {
                     $subProperty->setValue($data[$subProperty->getName()]);
                 }
@@ -110,7 +115,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $data = array();
         if ($this->getIsMultiple()) {
             /** @var PropertyInterface $child */
-            foreach ($this->childProperties as $child) {
+            foreach ($this->types as $child) {
                 $items = $child->getValue();
                 if ($items !== null) {
                     // check value is not associative
@@ -130,7 +135,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             }
         } else {
             /** @var PropertyInterface $child */
-            foreach ($this->childProperties as $child) {
+            foreach ($this->types as $child) {
                 $data[$child->getName()] = $child->getValue();
             }
         }

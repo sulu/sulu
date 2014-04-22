@@ -304,7 +304,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $block1->isMultilingual());
         $this->assertEquals('block', $block1->getContentTypeName());
 
-        $subproperties = $block1->getChildProperties();
+        $subproperties = $block1->getTypes();
         $this->assertEquals(3, sizeof($subproperties));
 
         $title11 = $subproperties[0];
@@ -319,7 +319,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $title11->getParams()
         );
-
 
         $article11 = $subproperties[1];
         $this->assertEquals('article1.1', $article11->getName());
@@ -433,5 +432,20 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function testBlockMultipleTypes()
     {
+        /** @var StructureInterface $structure */
+        $structure = $this->structureManager->getStructure('template_block_types');
+
+        // should implement interface
+        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+
+        // check properties
+        $this->assertEquals('complex', $structure->getKey());
+        $this->assertEquals('ClientWebsiteBundle:Website:complex.html.twig', $structure->getView());
+        $this->assertEquals('SuluWebsiteBundle:Default:index', $structure->getController());
+        $this->assertEquals(4800, $structure->getCacheLifeTime());
+
+        // check count of properties
+        $properties = $structure->getProperties();
+        $this->assertEquals(5, sizeof($properties));
     }
 }

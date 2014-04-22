@@ -76,7 +76,7 @@ class BlockContentType extends ComplexContentType
             }
 
             /** @var PropertyInterface $subProperty */
-            foreach ($blockProperty->getChildProperties() as $subProperty) {
+            foreach ($blockProperty->getTypes() as $subProperty) {
                 $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                 $contentType->read(
                     $node,
@@ -144,7 +144,7 @@ class BlockContentType extends ComplexContentType
             }
 
             /** @var PropertyInterface $subProperty */
-            foreach ($blockProperty->getChildProperties() as $subProperty) {
+            foreach ($blockProperty->getTypes() as $subProperty) {
                 $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                 $contentType->write(
                     $node,

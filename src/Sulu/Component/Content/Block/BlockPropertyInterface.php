@@ -21,12 +21,13 @@ interface BlockPropertyInterface extends PropertyInterface
      * returns a list of properties managed by this block
      * @return PropertyInterface[]
      */
-    public function getChildProperties();
+    public function getTypes();
 
     /**
-     * @param PropertyInterface $property
+     * adds a type
+     * @param BlockPropertyType $type
      */
-    public function addChild(PropertyInterface $property);
+    public function addType(BlockPropertyType $type);
 
     /**
      * returns property with given name
@@ -34,5 +35,12 @@ interface BlockPropertyInterface extends PropertyInterface
      * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      * @return PropertyInterface
      */
-    public function getChild($name);
+    public function getType($name);
+
+    /**
+     * returns child properties of given Type
+     * @param string $typeName
+     * @return PropertyInterface[]
+     */
+    public function getChildProperties($typeName);
 } 
