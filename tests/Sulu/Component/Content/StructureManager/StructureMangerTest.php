@@ -429,7 +429,9 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $article1121->getParams()
         );
+    }
 
-
+    public function testBlockMultipleTypes()
+    {
     }
 }

@@ -196,73 +196,83 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         )
                     ),
                     'properties' => array(
-                        'title1.1' => array(
-                            'name' => 'title1.1',
-                            'type' => 'text_line',
-                            'mandatory' => true
-                        ),
-                        'article1.1' => array(
-                            'name' => 'article1.1',
-                            'type' => 'text_area',
-                            'mandatory' => true,
-                            'minOccurs' => 2
-                        ),
-                        'block1.1' => array(
-                            'name' => 'block1.1',
-                            'type' => 'block',
-                            'properties' => array(
-                                'block1.1.1' => array(
-                                    'name' => 'block1.1.1',
-                                    'type' => 'block',
-                                    'properties' => array(
-                                        'article1.1.1' => array(
-                                            'name' => 'article1.1.1',
-                                            'title' => 'properties.title1',
-                                            'type' => 'text_area',
-                                            'mandatory' => true,
-                                            'minOccurs' => 2,
-                                            'tags' => array(
-                                                array(
-                                                    'name' => 'sulu.node.title',
-                                                    'priority' => 5
-                                                )
-                                            ),
-                                        ),
-                                        'article2.1.2' => array(
-                                            'name' => 'article2.1.2',
-                                            'type' => 'text_area',
-                                            'mandatory' => true,
-                                            'minOccurs' => 2
-                                        ),
-                                        'block1.1.3' => array(
-                                            'name' => 'block1.1.3',
+                        'default' => array(
+                            'title1.1' => array(
+                                'name' => 'title1.1',
+                                'type' => 'text_line',
+                                'mandatory' => true
+                            ),
+                            'article1.1' => array(
+                                'name' => 'article1.1',
+                                'type' => 'text_area',
+                                'mandatory' => true,
+                                'minOccurs' => 2
+                            ),
+                            'block1.1' => array(
+                                'name' => 'block1.1',
+                                'type' => 'block',
+                                'properties' => array(
+                                    'default' => array(
+                                        'block1.1.1' => array(
+                                            'name' => 'block1.1.1',
                                             'type' => 'block',
                                             'properties' => array(
-                                                'article1.1.3.1' => array(
-                                                    'name' => 'article1.1.3.1',
-                                                    'type' => 'text_area',
-                                                    'mandatory' => true,
-                                                    'minOccurs' => 2
+                                                'default' => array(
+                                                    'article1.1.1' => array(
+                                                        'name' => 'article1.1.1',
+                                                        'title' => 'properties.title1',
+                                                        'type' => 'text_area',
+                                                        'mandatory' => true,
+                                                        'minOccurs' => 2,
+                                                        'tags' => array(
+                                                            array(
+                                                                'name' => 'sulu.node.title',
+                                                                'priority' => 5
+                                                            )
+                                                        ),
+                                                    ),
+                                                    'article2.1.2' => array(
+                                                        'name' => 'article2.1.2',
+                                                        'type' => 'text_area',
+                                                        'mandatory' => true,
+                                                        'minOccurs' => 2
+                                                    ),
+                                                    'block1.1.3' => array(
+                                                        'name' => 'block1.1.3',
+                                                        'type' => 'block',
+                                                        'properties' => array(
+                                                            'default' => array(
+                                                                'article1.1.3.1' => array(
+                                                                    'name' => 'article1.1.3.1',
+                                                                    'type' => 'text_area',
+                                                                    'mandatory' => true,
+                                                                    'minOccurs' => 2
+                                                                )
+                                                            )
+
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        'block1.1.2' => array(
+                                            'name' => 'block1.1.2',
+                                            'type' => 'block',
+                                            'properties' => array(
+                                                'default' => array(
+                                                    'article1.1.2.1' => array(
+                                                        'name' => 'article1.1.2.1',
+                                                        'type' => 'text_area',
+                                                        'mandatory' => true,
+                                                        'minOccurs' => '2'
+                                                    )
                                                 )
                                             )
                                         )
                                     )
-                                ),
-                                'block1.1.2' => array(
-                                    'name' => 'block1.1.2',
-                                    'type' => 'block',
-                                    'properties' => array(
-                                        'article1.1.2.1' => array(
-                                            'name' => 'article1.1.2.1',
-                                            'type' => 'text_area',
-                                            'mandatory' => true,
-                                            'minOccurs' => '2'
-                                        )
                                     )
                                 )
-                            )
                         )
-
                     )
                 ),
                 'blog' => array(
@@ -280,9 +290,109 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testDuplicatedPriority()
     {
-        $this->setExpectedException('\Sulu\Component\Content\Template\Exception\InvalidXmlException','The given XML is invalid! Priority 10 of tag sulu.node.title exists duplicated');
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
+            'The given XML is invalid! Priority 10 of tag sulu.node.title exists duplicated'
+        );
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_duplicated_priority.xml');
+        $result = $templateReader->load(
+            __DIR__ . '/../../../Resources/DataFixtures/Template/template_duplicated_priority.xml'
+        );
+    }
+
+    public function testBlockMultipleTypes()
+    {
+        $template = array(
+            'key' => 'complex',
+            'view' => 'ClientWebsiteBundle:Website:complex.html.twig',
+            'controller' => 'SuluWebsiteBundle:Default:index',
+            'cacheLifetime' => '4800',
+            'properties' => array(
+                'title' => array(
+                    'name' => 'title',
+                    'title' => 'properties.title',
+                    'type' => 'text_line',
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.name'
+                        ),
+                        array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 10
+                        )
+                    )
+                ),
+                'url' => array(
+                    'name' => 'url',
+                    'title' => 'properties.url',
+                    'type' => 'resource_locator',
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp.part',
+                            'priority' => 1
+                        )
+                    )
+                ),
+                'block1' => array(
+                    'name' => 'block1',
+                    'title' => 'properties.block1',
+                    'minOccurs' => '2',
+                    'maxOccurs' => '10',
+                    'mandatory' => true,
+                    'type' => 'block',
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.block',
+                            'priority' => 20
+                        ),
+                        array(
+                            'name' => 'sulu.test.block',
+                            'priority' => 1
+                        )
+                    ),
+                    'properties' => array(
+                        'default' => array(
+                            'title' => array(
+                                'name' => 'title',
+                                'type' => 'text_line',
+                                'mandatory' => true
+                            ),
+                            'article' => array(
+                                'name' => 'article',
+                                'type' => 'text_area',
+                                'mandatory' => true,
+                                'minOccurs' => 2
+                            )
+                        ),
+                        'test' => array(
+                            'title' => array(
+                                'name' => 'title',
+                                'type' => 'text_line',
+                                'mandatory' => true
+                            ),
+                            'article' => array(
+                                'name' => 'article',
+                                'type' => 'text_editor',
+                                'mandatory' => true,
+                                'minOccurs' => 2
+                            )
+                        )
+                    )
+                ),
+                'blog' => array(
+                    'name' => 'blog',
+                    'type' => 'text_editor',
+                    'mandatory' => true
+                ),
+            )
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block_types.xml');
+
+        $this->assertEquals($template, $result);
     }
 
 }

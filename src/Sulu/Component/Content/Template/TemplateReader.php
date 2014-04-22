@@ -177,31 +177,35 @@ class TemplateReader implements LoaderInterface
      */
     private function parseSubproperties($xpath, $node)
     {
-
         $properties = array();
 
-        /** @var \DOMNodeList $children */
-        $children = $xpath->query('x:properties/*', $node);
+        $types = $xpath->query('x:types/*', $node);
 
+        /** @var \DOMNode $type */
+        foreach ($types as $type) {
+            $typeName = $type->attributes->item(0)->nodeValue;
 
-        /** @var \DOMNode $child */
-        foreach ($children as $child) {
+            /** @var \DOMNodeList $children */
+            $children = $xpath->query('x:properties/*', $type);
 
-            $attributes = $this->getAllAttributesOfNode($child);
+            /** @var \DOMNode $child */
+            foreach ($children as $child) {
+                $attributes = $this->getAllAttributesOfNode($child);
 
-            if (in_array($child->tagName, $this->complexNodeTypes)) {
-                $attributes['type'] = $child->tagName;
+                if (in_array($child->tagName, $this->complexNodeTypes)) {
+                    $attributes['type'] = $child->tagName;
+                }
+
+                $name = $attributes[$this->nameKey];
+                $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath, $this->paramsKey);
+                $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
+                $properties[$typeName][$name] = array_merge($attributes, $tags, $params);
+
+                if (in_array($child->tagName, $this->complexNodeTypes)) {
+                    $properties[$typeName][$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $child);
+                }
+
             }
-
-            $name = $attributes[$this->nameKey];
-            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath, $this->paramsKey);
-            $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
-            $properties[$name] = array_merge($attributes, $tags, $params);
-
-            if (in_array($child->tagName, $this->complexNodeTypes)) {
-                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $child);
-            }
-
         }
 
         return $properties;
