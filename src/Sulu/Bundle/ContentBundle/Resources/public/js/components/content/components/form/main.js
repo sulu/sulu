@@ -310,14 +310,14 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindDomEvents: function() {
-            var startListening = false;
+            this.startListening = false;
             this.getDomElementsForTagName('sulu.rlp.input', function(property) {
                 if (property.$el.data('element').getValue() === '') {
-                    startListening = true;
+                    this.startListening = true;
                 }
             }.bind(this));
 
-            if (startListening) {
+            if (this.startListening) {
                 this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             } else {
                 this.dfdListenForChange.resolve();
@@ -325,6 +325,10 @@ define(['app-config'], function(AppConfig) {
         },
 
         setResourceLocator: function() {
+            if (this.dfdListenForChange.state() !== 'pending') {
+                return;
+            }
+
             var parts = {},
                 complete = true;
 
@@ -332,13 +336,14 @@ define(['app-config'], function(AppConfig) {
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
                 var value = property.$el.data('element').getValue();
                 if (value !== '') {
-                    parts[property.$el.data('mapperProperty')] = value;
+                    parts[this.getSequence(property.$el)] = value;
                 } else {
                     complete = false;
                 }
             }.bind(this));
 
             if (!!complete) {
+                this.startListening = true;
                 this.sandbox.emit('sulu.content.contents.getRL', parts, this.template, function(rl) {
                     // set resource locator to empty input fields
                     this.getDomElementsForTagName('sulu.rlp.input', function(property) {

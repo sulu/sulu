@@ -100,7 +100,7 @@ define([
             }, this);
 
             // get resource locator
-            this.sandbox.on('sulu.content.contents.getRL', function(title, template, callback) {
+            this.sandbox.once('sulu.content.contents.getRL', function(title, template, callback) {
                 this.getResourceLocator(title, template, callback);
             }, this);
 
@@ -154,7 +154,7 @@ define([
 
         getResourceLocator: function(parts, template, callback) {
             var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
-            this.sandbox.util.save(url, 'POST', parts)
+            this.sandbox.util.save(url, 'POST', {parts: parts})
                 .then(function(data) {
                     callback(data.resourceLocator);
                 });
