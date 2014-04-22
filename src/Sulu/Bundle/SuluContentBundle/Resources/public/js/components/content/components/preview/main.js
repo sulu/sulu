@@ -298,7 +298,7 @@ define([], function() {
                     this.iframeExists = false;
 
                     this.sandbox.emit('husky.navigation.show');
-                    this.sandbox.emit('husky.page-functions.show');
+                    this.sandbox.emit('sulu.header.content.show-back', true);
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
                         width: '',
                         left: constants.maxMainContentMarginLeft,
@@ -360,7 +360,7 @@ define([], function() {
                     widths = this.calculateCurrentWidths(true, false);
 
                 // deactivate tabs
-                this.sandbox.emit('sulu.content.tabs.deactivate');
+                this.sandbox.emit('sulu.header.tabs.activate');
 
                 this.sandbox.dom.removeClass($target, 'collapsed');
                 this.sandbox.dom.addClass($target, 'expanded');
@@ -392,7 +392,7 @@ define([], function() {
             collapsePreview: function($target) {
 
                 // activate tabs
-                this.sandbox.emit('sulu.content.tabs.activate');
+                this.sandbox.emit('sulu.header.tabs.deactivate');
 
                 var $span = this.sandbox.dom.find('span', $target),
                     widths = this.calculateCurrentWidths(false, false),
@@ -457,7 +457,7 @@ define([], function() {
 
                 if (!!expand) {
                     this.sandbox.emit('husky.navigation.hide');
-                    this.sandbox.emit('husky.page-functions.hide');
+                    this.sandbox.emit('sulu.header.hide-back', true);
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
                         width: widths.content,
                         left: constants.minMainContentMarginLeft,
@@ -465,7 +465,7 @@ define([], function() {
                 } else {
 
                     this.sandbox.emit('husky.navigation.show');
-                    this.sandbox.emit('husky.page-functions.show');
+                    this.sandbox.emit('sulu.header.show-back', true);
                     this.sandbox.emit('sulu.app.content.dimensions-change', {
                         width: widths.content,
                         left: constants.maxMainContentMarginLeft,

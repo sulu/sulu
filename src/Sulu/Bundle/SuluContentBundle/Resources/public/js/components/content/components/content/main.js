@@ -13,18 +13,28 @@ define(function() {
 
     return {
 
-        content: function() {
+        header: function() {
             return {
-                url: '/admin/content/navigation/content',
-                parentTemplate: 'defaultHomepage',
-                template: function() {
-                    var state = {
+                tabs: {
+                    url: '/admin/content/navigation/content'
+                },
+
+                toolbar: {
+                    parentTemplate: 'default',
+
+                    languageChanger: {
+                        url: '/admin/content/languages/' + this.options.webspace,
+                        preSelected: this.options.language
+                    },
+
+                    template: [
+                        {
                             'id': 'state',
                             'group': 'left',
                             'position': 100,
                             'type': 'select'
                         },
-                        template = {
+                        {
                             id: 'template',
                             icon: 'brush',
                             iconSize: 'large',
@@ -40,34 +50,12 @@ define(function() {
                                 translate: true,
                                 languageNamespace: 'template.',
                                 callback: function(item) {
-                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.template.item-clicked', item);
+                                    this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                 }.bind(this)
                             }
-                        },
-                        languageSelector = {
-                            id: 'language',
-                            iconSize: 'large',
-                            group: 'right',
-                            position: 10,
-                            type: 'select',
-                            title: '',
-                            hidden: true,
-                            itemsOption: {
-                                url: '/admin/content/languages/' + this.options.webspace,
-                                titleAttribute: 'name',
-                                idAttribute: 'localization',
-                                translate: false,
-                                callback: function(item) {
-                                    this.sandbox.emit('sulu.edit-toolbar.dropdown.languages.item-clicked', item);
-                                }.bind(this)
-                            }
-                        };
-                    if (!this.options.id) {
-                        return [template, state, languageSelector];
-                    } else {
-                        return [template, state, languageSelector];
-                    }
-                }.bind(this)
+                        }
+                    ]
+                }
             };
         }
     };
