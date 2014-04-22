@@ -55,16 +55,16 @@ new BlockProperty(
             {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
             {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
             {{ property.minOccurs is defined ? property.minOccurs : 1 }},
-            {{ 'array(' }}
+            array(
             {% for param in property.params %}
                 '{{ param.name }}' => '{{ param.value }}',
             {% endfor %}
-            {{ ')' }},
-            {{ 'array(' }}
+            ),
+            array(
 {% for tag in property.tags %}
                 '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
-            {{ ')' }}
+            )
         ){% endmacro %}
 
 {% macro basictype(property) %}
@@ -76,14 +76,14 @@ new BlockProperty(
                 {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
                 {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
                 {{ property.minOccurs is defined ? property.minOccurs : 1 }},
-                {{ 'array(' }}
+                array(
 {% for param in property.params %}
                     '{{ param.name }}' => '{{ param.value }}',
 {% endfor %}
-                {{ ')' }},
-                {{ 'array(' }}
+                ),
+                array(
 {% for tag in property.tags %}
                     '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
 {% endfor %}
-                {{ ')' }}
+                )
             ){% endmacro %}

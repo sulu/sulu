@@ -16,6 +16,7 @@ use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
 use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Component\Content\Block\BlockProperty;
@@ -27,6 +28,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
      * @var LoaderInterface
      */
     public $loader;
+
+    /**
+     * @var PHPTemplateDumper
+     */
+    public $dumper;
 
     /**
      * @var StructureManagerInterface
@@ -47,7 +53,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->loader = new TemplateReader();
-        $this->structureManager = new StructureManager($this->loader,
+        $this->dumper = new PHPTemplateDumper('../Resources/Skeleton', false);
+        $this->structureManager = new StructureManager(
+            $this->loader,
+            $this->dumper,
             array(
                 'template_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
                 'cache_dir' => $cacheDir
