@@ -16,8 +16,6 @@ define([
     var MIN_CONTAINER_WIDTH = 980;
 
     return {
-
-
         stateDropdownItems: {
             publish: function() {
                 return {
@@ -154,8 +152,8 @@ define([
         },
 
         getResourceLocator: function(parts, template, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'parts=' + JSON.stringify(parts) + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
-            this.sandbox.util.load(url)
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
+            this.sandbox.util.save(url, 'POST', parts)
                 .then(function(data) {
                     callback(data.resourceLocator);
                 });

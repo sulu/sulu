@@ -27,11 +27,11 @@ class ResourceLocatorController extends Controller implements ClassResourceInter
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction()
+    public function postAction()
     {
         $parent = $this->getRequest()->get('parent');
         $uuid = $this->getRequest()->get('uuid');
-        $parts = json_decode($this->getRequest()->get('parts'), true);
+        $parts = $this->getRequest()->get('parts');
         $webspace = $this->getRequest()->get('webspace');
         $languageCode = $this->getRequest()->get('language');
         $templateKey = $this->getRequest()->get('template');
