@@ -5,10 +5,25 @@
     define([], {
 
         initialize: function(app) {
+            /*********
+             * Sulu namespace
+             *********/
+            app.sandbox.sulu = {};
+
             /**
              * Userproperties
              */
             app.sandbox.sulu.user = app.sandbox.util.extend(false, {}, SULU.user);
+
+            /*********
+             * Locales
+             *********/
+            app.sandbox.sulu.locales = SULU.locales;
+
+            /*********
+             * user
+             *********/
+            app.sandbox.sulu.user = app.sandbox.util.extend(true, {}, SULU.user);
 
             /*********
              * USER SETTINGS
@@ -169,7 +184,6 @@
              * initializes sulu list-toolbar with column options and datagrid
              * @param key Settings key
              * @param url Url to load fields from
-             * @param mixed Toolbar-options
              * @param listToolbarOptions
              * @param datagridOptions
              */
@@ -182,7 +196,8 @@
                                 key: key,
                                 url: url
                             },
-                            instanceName: 'content'
+                            instanceName: 'content',
+                            inHeader: false
                         },
                         toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                         gridDefaults = {

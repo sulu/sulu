@@ -15,27 +15,25 @@ require.config({
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content-tabs': 'aura_extensions/sulu-content-tabs',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
-        'aura_extensions/sulu-view': 'aura_extensions/sulu-view',
 
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$content@suluadmin': 'components/content/main',
         '__component__$dialog@suluadmin': 'components/dialog/main',
-        '__component__$edit-toolbar@suluadmin': 'components/edit-toolbar/main',
+        '__component__$header@suluadmin': 'components/header/main',
         '__component__$list-toolbar@suluadmin': 'components/list-toolbar/main',
         '__component__$labels@suluadmin': 'components/labels/main'
     },
     include: [
         'app-config',
         'aura_extensions/backbone-relational',
-        'aura_extensions/sulu-content-tabs',
+        'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension',
-        'aura_extensions/sulu-view',
 
         '__component__$app@suluadmin',
         '__component__$app@suluadmin',
         '__component__$content@suluadmin',
         '__component__$dialog@suluadmin',
-        '__component__$edit-toolbar@suluadmin',
+        '__component__$header@suluadmin',
         '__component__$list-toolbar@suluadmin',
         '__component__$labels@suluadmin'
     ],
@@ -71,9 +69,8 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         }.bind(this));
 
         app.use('aura_extensions/backbone-relational');
-        app.use('aura_extensions/sulu-content-tabs');
+        app.use('aura_extensions/sulu-content');
         app.use('aura_extensions/sulu-extension');
-        app.use('aura_extensions/sulu-view');
 
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 
