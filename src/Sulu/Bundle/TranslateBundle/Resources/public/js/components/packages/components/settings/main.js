@@ -64,7 +64,7 @@ define([], function() {
 
             bindCustomEvents: function() {
                 // delete contact
-                this.sandbox.on('sulu.edit-toolbar.delete', function() {
+                this.sandbox.on('sulu.header.toolbar.delete', function() {
                     this.sandbox.emit('sulu.translate.package.delete', this.options.data.id);
                 }, this);
 
@@ -75,11 +75,11 @@ define([], function() {
                 }, this);
 
                 // contact saved
-                this.sandbox.on('sulu.edit-toolbar.save', function() {
+                this.sandbox.on('sulu.header.toolbar.save', function() {
                     this.submit();
                 }, this);
 
-                this.sandbox.on('sulu.edit-toolbar.back', function() {
+                this.sandbox.on('sulu.header.back', function() {
                     this.sandbox.emit('sulu.translate.package.list');
                 }, this);
             },
@@ -179,7 +179,7 @@ define([], function() {
             setHeaderBar: function(saved) {
                 if (saved !== this.saved) {
                     var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                    this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved);
+                    this.sandbox.emit('sulu.header.toolbar.state.change', type, saved);
                 }
                 this.saved = saved;
             },

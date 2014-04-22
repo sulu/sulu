@@ -34,6 +34,22 @@ define([], function() {
 
         view: true,
 
+        fullSize: {
+            width: true
+        },
+
+        header: function() {
+            return {
+                title: 'translate.package.title',
+                noBack: true,
+
+                breadcrumb: [
+                    {title: 'navigation.settings'},
+                    {title: 'translate.package.title'}
+                ]
+            };
+        },
+
         templates: ['/admin/translate/template/package/list'],
 
         initialize: function() {
@@ -49,13 +65,15 @@ define([], function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'packagesFields', '/admin/api/packages/fields',
                 {
                     el: '#list-toolbar-container',
-                    instanceName: 'package'
+                    instanceName: 'package',
+                    inHeader: true
                 },
                 {
-                    el: this.sandbox.dom.find('#package-list', this.$el),
+                    el: this.$find('#package-list'),
                     url: '/admin/api/packages?flat=true',
                     pagination: false,
                     sortable: true,
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     }
