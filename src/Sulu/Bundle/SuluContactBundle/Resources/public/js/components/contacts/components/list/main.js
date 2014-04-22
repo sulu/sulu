@@ -31,8 +31,21 @@ define(function() {
     };
 
     return {
-
         view: true,
+
+        fullSize: {
+            width: true
+        },
+
+        header: {
+            title: 'contact.contacts.title',
+            noBack: true,
+
+            breadcrumb: [
+                {title: 'navigation.contacts'},
+                {title: 'contact.contacts.title'}
+            ]
+        },
 
         templates: ['/admin/contact/template/contact/list'],
 
@@ -47,12 +60,14 @@ define(function() {
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'contactsFields', '/admin/api/contacts/fields',
                 {
-                    el: '#list-toolbar-container',
-                    instanceName: 'contacts'
+                    el: this.$find('#list-toolbar-container'),
+                    instanceName: 'contacts',
+                    inHeader: true
                 },
                 {
                     el: this.sandbox.dom.find('#people-list', this.$el),
                     url: '/admin/api/contacts?flat=true',
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     },

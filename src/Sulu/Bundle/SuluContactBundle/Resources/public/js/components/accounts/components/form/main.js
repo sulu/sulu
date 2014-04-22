@@ -133,16 +133,21 @@ define(['app-config'], function(AppConfig) {
          * @param accountType
          */
         setHeadlines: function(accountType) {
-            var titleAddition = this.sandbox.translate(accountType.translation),
+            var breadcrumb = [
+                    {title: 'navigation.contacts'},
+                    {title: 'contact.accounts.title', event: 'sulu.contacts.accounts.list'}
+                ],
                 title = this.sandbox.translate(this.options.headline);
 
             if (!!this.options.data.id) {
-                titleAddition += ' #' + this.options.data.id;
+                breadcrumb.push({title: accountType.translation + ' #' + this.options.data.id});
                 title = this.options.data.name;
+            } else {
+                breadcrumb.push({title: accountType.translation});
             }
 
-            this.sandbox.emit('sulu.content.set-title-addition', titleAddition);
-            this.sandbox.emit('sulu.content.set-title', title);
+            this.sandbox.emit('sulu.header.set-title', title);
+            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
 
@@ -251,7 +256,7 @@ define(['app-config'], function(AppConfig) {
 
         // sets headline title to account name
         updateHeadline: function() {
-            this.sandbox.emit('sulu.content.set-title', this.sandbox.dom.val(this.titleField));
+            this.sandbox.emit('sulu.header.set-title', this.sandbox.dom.val(this.titleField));
         },
 
         bindDomEvents: function() {
@@ -265,7 +270,7 @@ define(['app-config'], function(AppConfig) {
 
         bindCustomEvents: function() {
             // delete account
-            this.sandbox.on('sulu.edit-toolbar.delete', function() {
+            this.sandbox.on('sulu.header.toolbar.delete', function() {
                 this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
             }, this);
 
@@ -279,12 +284,12 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // account saved
-            this.sandbox.on('sulu.edit-toolbar.save', function() {
+            this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.submit();
             }, this);
 
             // back to list
-            this.sandbox.on('sulu.edit-toolbar.back', function() {
+            this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
         },
@@ -314,7 +319,7 @@ define(['app-config'], function(AppConfig) {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, true);
+                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
             }
             this.saved = saved;
         },
