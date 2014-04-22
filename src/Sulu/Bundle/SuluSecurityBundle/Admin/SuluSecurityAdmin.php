@@ -53,4 +53,12 @@ class SuluSecurityAdmin extends Admin
             )
         );
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName()
+    {
+        return 'sulusecurity';
+    }
 }
