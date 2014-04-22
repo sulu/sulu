@@ -31,4 +31,11 @@ class SuluContentAdmin extends Admin
         return array();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName()
+    {
+        return 'sulucontent';
+    }
 }
