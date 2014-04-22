@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Loader\Exception\DefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
@@ -97,7 +98,27 @@ class XmlFileLoader extends FileLoader
         // set portals on webspaces
         $this->generatePortals();
 
+        // validate the webspace, and throw exceptions if not valid
+        $this->validate();
+
         return $this->webspace;
+    }
+
+    private function validate()
+    {
+        // check all portal localizations
+        foreach ($this->webspace->getPortals() as $portal) {
+            $portalDefaultLocalizationFound = false;
+            foreach ($portal->getLocalizations() as $portalLocalizations) {
+                if ($portalLocalizations->isDefault()) {
+                    $portalDefaultLocalizationFound = true;
+                }
+            }
+
+            if (!$portalDefaultLocalizationFound) {
+                throw new DefaultLocalizationNotFoundException($this->webspace, $portal);
+            }
+        }
     }
 
     /**
@@ -158,6 +179,13 @@ class XmlFileLoader extends FileLoader
         $shadowNode = $localizationNode->attributes->getNamedItem('shadow');
         if ($shadowNode) {
             $localization->setShadow($shadowNode->nodeValue);
+        }
+
+        $defaultNode = $localizationNode->attributes->getNamedItem('default');
+        if ($defaultNode) {
+            $localization->setDefault($defaultNode->nodeValue == 'true');
+        } else {
+            $localization->setDefault(false);
         }
 
         // set child nodes

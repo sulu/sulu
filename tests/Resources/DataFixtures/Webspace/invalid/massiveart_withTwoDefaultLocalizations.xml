@@ -10,7 +10,7 @@
         <localization language="en" country="us" shadow="auto" default="true">
             <localization language="en" country="ca"/>
         </localization>
-        <localization language="fr" country="ca"/>
+        <localization language="fr" country="ca" default="true"/>
     </localizations>
 
     <segments>

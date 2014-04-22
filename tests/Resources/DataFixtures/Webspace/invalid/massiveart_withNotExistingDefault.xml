@@ -27,30 +27,6 @@
 
     <portals>
         <portal>
-            <name>Massive Art US</name>
-            <key>massiveart_us</key>
-            <resource-locator>
-                <strategy>tree</strategy>
-            </resource-locator>
-
-            <localizations>
-                <localization language="en" country="us"/>
-            </localizations>
-
-            <environments>
-                <environment type="prod">
-                    <urls>
-                        <url>{language}.massiveart.{country}/{segment}</url>
-                    </urls>
-                </environment>
-                <environment type="dev">
-                    <urls>
-                        <url>massiveart.lo/{localization}/{segment}</url>
-                    </urls>
-                </environment>
-            </environments>
-        </portal>
-        <portal>
             <name>Massive Art CA</name>
             <key>massiveart_ca</key>
             <resource-locator>
@@ -59,7 +35,7 @@
 
             <localizations>
                 <localization language="en" country="ca"/>
-                <localization language="fr" country="ca" default="true"/>
+                <localization language="fr" country="ca"/>
             </localizations>
 
             <environments>
