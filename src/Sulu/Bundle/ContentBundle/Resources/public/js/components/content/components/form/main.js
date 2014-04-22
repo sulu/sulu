@@ -10,6 +10,7 @@
 define(['app-config'], function(AppConfig) {
 
     'use strict';
+    var CONTENT_LANGUAGE = 'contentLanguage';
 
     return {
 
@@ -71,7 +72,7 @@ define(['app-config'], function(AppConfig) {
         },
 
         showStateDropdown: function() {
-            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'state', false);
         },
 
         renderSettings: function() {
@@ -97,13 +98,13 @@ define(['app-config'], function(AppConfig) {
             // get the dropdownds
             this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
                 if (items.length > 0) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items);
+                    this.sandbox.emit('sulu.header.toolbar.items.set', 'state', items);
                 }
             }.bind(this));
 
             // set the current state
             this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
+                this.sandbox.emit('sulu.header.toolbar.button.set', 'state', item);
             }.bind(this));
         },
 
@@ -117,22 +118,39 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.content.set-title', value);
                 this.setBreadcrumb();
             } else {
-                this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('content.contents.title'));
+                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
             }
         },
 
         /**
-         * Generates the Breadcrumb-string and sets it for the title-additon
+         * Generates the Breadcrumb-string and sets it in the header
          */
         setBreadcrumb: function() {
-            var breadcrumb = this.options.webspace.replace(/_/g, '.'), i, length;
             if (!!this.options.data.breadcrumb) {
+                var breadcrumb = [{
+                    title: this.options.webspace.replace(/_/g, '.'),
+                    event: 'sulu.content.contents.list'
+                }], length, i;
+
                 // loop through breadcrumb skip home-page
                 for (i = 0, length = this.options.data.breadcrumb.length; ++i < length;) {
-                    breadcrumb += ' &#187; ' + this.options.data.breadcrumb[i].title;
+                    breadcrumb.push({
+                        title: this.options.data.breadcrumb[i].title,
+                        link: this.getBreadcrumbRoute(this.options.data.breadcrumb[i].uuid)
+                    });
                 }
+
+                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
             }
-            this.sandbox.emit('sulu.content.set-title-addition', breadcrumb);
+        },
+
+        /**
+         * Returns routes for the breadcrumbs. Replaces the current uuid with a passed one in the active URI
+         * @param uuid {string} uuid to replace the current one with
+         * @returns {string} the route for the breadcrumb
+         */
+        getBreadcrumbRoute: function(uuid) {
+            return this.sandbox.mvc.history.fragment.replace(this.options.id, uuid);
         },
 
         createForm: function(data) {
@@ -238,6 +256,7 @@ define(['app-config'], function(AppConfig) {
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
+                this.setHeaderBar(false);
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
@@ -262,9 +281,6 @@ define(['app-config'], function(AppConfig) {
                         this.sandbox.dom.attr('#title', 'placeholder', data.type.value + ': ' + data.title);
                     }.bind(this));
             }
-
-            this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'language', this.options.language);
-            this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'language');
 
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
@@ -350,7 +366,7 @@ define(['app-config'], function(AppConfig) {
             }, this);
 
             // content save
-            this.sandbox.on('sulu.edit-toolbar.save', function() {
+            this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.submit();
             }, this);
             this.sandbox.on('sulu.preview.save', function() {
@@ -361,16 +377,8 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.preview.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
             }, this);
-            this.sandbox.on('sulu.edit-toolbar.delete', function() {
+            this.sandbox.on('sulu.header.toolbar.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
-            }, this);
-
-            this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
-                this.openPreviewWindow();
-            }, this);
-
-            this.sandbox.on('sulu.edit-toolbar.preview.split-screen', function() {
-                this.openSplitScreen();
             }, this);
 
             // set preview params
@@ -382,33 +390,34 @@ define(['app-config'], function(AppConfig) {
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', name);
+                this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
                 if (this.hiddenTemplate) {
                     this.hiddenTemplate = false;
-                    this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template', name);
+                    this.sandbox.emit('sulu.header.toolbar.item.show', 'template', name);
                 }
             }, this);
 
             // change template
-            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'template');
+            this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');
                 this.templateChanged = true;
                 this.changeTemplate(item);
             }, this);
 
             // change language
-            this.sandbox.on('sulu.edit-toolbar.dropdown.languages.item-clicked', function(item) {
+            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
             }, this);
 
             // set state button in loading state
             this.sandbox.on('sulu.content.contents.state.change', function() {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'state');
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'state');
             }, this);
 
             // set save button in loading state
             this.sandbox.on('sulu.content.contents.save', function() {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             }, this);
 
             // change dropdown if state has changed
@@ -416,35 +425,37 @@ define(['app-config'], function(AppConfig) {
                 this.state = state;
                 //set new dropdown
                 this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items, null);
+                    this.sandbox.emit('sulu.header.toolbar.items.set', 'state', items, null);
                 }.bind(this));
                 // set the current state
                 this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
+                    this.sandbox.emit('sulu.header.toolbar.button.set', 'state', item);
                 }.bind(this));
                 //enable button with highlight-effect
-                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', true);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'state', true);
             }.bind(this));
 
             //set button back if state-change failed
             this.sandbox.on('sulu.content.contents.state.changeFailed', function() {
                 // set the current state
                 this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
+                    this.sandbox.emit('sulu.header.toolbar.button.set', 'state', item);
                 }.bind(this));
                 //enable button without highlight-effect
-                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'state', false);
             }.bind(this));
 
             // expand navigation if navigation item is clicked
-            this.sandbox.on('husky.navigation.item.select', function() {
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'large', content: 'auto'});
+            this.sandbox.on('husky.navigation.item.select', function(event) {
+                // when navigation item is already opended do nothing - relevant for homepage
+                if(event.id !== this.options.id) {
+                    this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+                }
             }.bind(this));
 
             // expand navigation if back gets clicked
-            this.sandbox.on('sulu.edit-toolbar.back', function() {
+            this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.content.contents.list');
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
             }.bind(this));
         },
 
@@ -474,11 +485,11 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplateDropdownHandler: function() {
-            this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
-            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', this.templateChanged);
+            this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.templateChanged);
             if (this.hiddenTemplate) {
                 this.hiddenTemplate = false;
-                this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }
         },
 
@@ -487,7 +498,7 @@ define(['app-config'], function(AppConfig) {
                 item = {template: item};
             }
             if (!!item && this.template === item.template) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', false);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', false);
                 return;
             }
 
@@ -582,7 +593,7 @@ define(['app-config'], function(AppConfig) {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, this.highlightSaveButton);
+                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, this.highlightSaveButton);
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
@@ -609,17 +620,6 @@ define(['app-config'], function(AppConfig) {
                     this.contentChanged = true;
                 }.bind(this));
             }.bind(this));
-        },
-
-        openPreviewWindow: function() {
-            if (!!this.options.data.id) {
-                this.initPreview();
-                window.open('/admin/content/preview/' + this.options.data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language);
-            }
-        },
-
-        openSplitScreen: function() {
-            window.open('/admin/content/split-screen/' + this.options.webspace + '/' + this.options.language + '/' + this.options.data.id);
         },
 
         /**
