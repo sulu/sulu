@@ -33074,7 +33074,8 @@ define('__component__$column-navigation@husky',[], function() {
             publishedName: 'publishedState',
             titleName: 'title',
             typeName: 'type',
-            minVisibleRatio: 1 / 2
+            minVisibleRatio: 1 / 2,
+            noPageDescription: 'public.no-pages'
         },
 
         DISPLAYEDCOLUMNS = 2, // number of displayed columns with content
@@ -33138,11 +33139,13 @@ define('__component__$column-navigation@husky',[], function() {
             this.filledColumns = 0;
             this.columnLoadStarted = false;
             this.$loader = null;
+            this.$bigLoader = null;
 
             this.columns = [];
             this.selected = [];
 
             this.render();
+            this.startBigLoader();
             this.load(this.options.url, 0);
             this.bindDOMEvents();
             this.bindCustomEvents();
@@ -33183,6 +33186,36 @@ define('__component__$column-navigation@husky',[], function() {
                 this.initSettingsDropdown(this.sandbox.dom.attr($settings, 'id'));
             }
 
+        },
+
+        /**
+         * Starts the big loader, before loading content during the initialization
+         */
+        startBigLoader: function() {
+            if (this.$bigLoader === null) {
+                this.$bigLoader = this.sandbox.dom.createElement('<div class="column-navigation-loader"/>');
+                this.sandbox.dom.hide(this.$bigLoader);
+                this.sandbox.dom.html(this.$columnContainer, this.$bigLoader);
+
+                this.sandbox.start([
+                    {
+                        name: 'loader@husky',
+                        options: {
+                            el: this.$bigLoader,
+                            size: '100px',
+                            color: '#e4e4e4'
+                        }
+                    }
+                ]);
+            }
+            this.sandbox.dom.show(this.$bigLoader);
+        },
+
+        /**
+         * Detatches the big loader from the column-navigation
+         */
+        removeBigLoader: function() {
+            this.sandbox.dom.hide(this.$find('.column-navigation-loader'));
         },
 
         /**
@@ -33227,8 +33260,10 @@ define('__component__$column-navigation@husky',[], function() {
 
                 this.sandbox.util.load(url)
                     .then(function(response) {
+                        this.removeBigLoader();
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
+                        this.handleLastEmptyColumn();
                         this.alignWithColumnsWidth();
                         this.scrollIfNeeded(this.filledColumns + 1);
                         this.setOverflowClass();
@@ -33409,6 +33444,7 @@ define('__component__$column-navigation@husky',[], function() {
 
             if (this.$loader === null) {
                 this.$loader = this.sandbox.dom.createElement('<div class="husky-column-navigation-loader"/>');
+                this.sandbox.dom.hide(this.$loader);
 
                 this.sandbox.start([
                     {
@@ -33421,7 +33457,9 @@ define('__component__$column-navigation@husky',[], function() {
                     }
                 ]);
             }
+            this.sandbox.dom.detach(this.$loader);
             this.sandbox.dom.html($container, this.$loader);
+            this.sandbox.dom.show(this.$loader);
         },
 
         /**
@@ -33430,7 +33468,7 @@ define('__component__$column-navigation@husky',[], function() {
         removeLoadingIconForSelected: function() {
             if (!!this.$selectedElement) {
                 var $arrow = this.sandbox.dom.find('.arrow', this.$selectedElement);
-                this.sandbox.dom.detach(this.$loader);
+                this.sandbox.dom.hide(this.$loader);
                 this.sandbox.dom.prependClass($arrow, 'icon-chevron-right');
             }
         },
@@ -33476,6 +33514,20 @@ define('__component__$column-navigation@husky',[], function() {
                 this.sandbox.dom.addClass($navigation, 'overflow');
             } else {
                 this.sandbox.dom.removeClass($navigation, 'overflow');
+            }
+        },
+
+        /**
+         * Inserts some markup into the last column if column is empty
+         */
+        handleLastEmptyColumn: function() {
+            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
+
+            this.sandbox.dom.remove(this.sandbox.dom.find('.no-page', this.$columnContainer));
+
+            // if last column is empty insert markup
+            if (this.sandbox.dom.find('li', $lastColumn).length === 0) {
+                this.sandbox.dom.append($lastColumn, this.template.noPage.call(this, this.sandbox.translate(this.options.noPageDescription)));
             }
         },
 
@@ -33635,12 +33687,12 @@ define('__component__$column-navigation@husky',[], function() {
                         this.removeColumns(column + 1);
                     }
                 }
-
                 // insert add column when clicked element
                 this.insertAddColumn(selectedItem, column);
 
                 // scroll for add column
                 if (!selectedItem.hasSub) {
+                    this.handleLastEmptyColumn();
                     this.alignWithColumnsWidth();
                     this.scrollIfNeeded(column);
                     this.setOverflowClass();
@@ -33676,7 +33728,6 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         insertAddColumn: function(selectedItem, column) {
-
             if (!this.$addColumn && !selectedItem[this.options.hasSubName]) {
                 // append empty column to add subpages
                 this.$addColumn = this.sandbox.dom.createElement(this.template.column.call(this, column + 1, this.options.column.width));
@@ -33750,6 +33801,13 @@ define('__component__$column-navigation@husky',[], function() {
 
             column: function(columnNumber, width) {
                 return ['<div data-column="', columnNumber, '" class="column" id="column-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
+            },
+
+            noPage: function(description) {
+                return ['<div class="no-page">',
+                            '<span class="icon-file"></span>',
+                            '<div class="text">', description ,'</div>',
+                        '</div>'].join('');
             },
 
             item: function(width, data) {
