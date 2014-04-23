@@ -112,8 +112,6 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('id')->defaultValue('50px')->end()
-                        ->scalarNode('created')->defaultValue('140px')->end()
-                        ->scalarNode('changed')->defaultValue('140px')->end()
                     ->end()
                 ->end()
             ->end()
