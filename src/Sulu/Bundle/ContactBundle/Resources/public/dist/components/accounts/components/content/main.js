@@ -1,1 +1,1 @@
-define(function(){"use strict";return{content:{url:"/admin/contact/navigation/account",title:"",titleAddition:""},initialize:function(){this.content.titleAddition=""}}});
+define(function(){"use strict";return{header:{tabs:{url:"/admin/contact/navigation/account"},toolbar:{template:"default"}}}});

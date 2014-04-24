@@ -34,21 +34,25 @@ class Import
     private $em;
 
     /**
+     * location of contacts import file
      * @var $contactFile
      */
     private $contactFile;
 
     /**
+     * location of accounts import file
      * @var $accountFile
      */
     private $accountFile;
 
     /**
-     * @var $headerData
+     * location of the mappings file
+     * @var $mappingsFile
      */
-    private $headerData;
+    private $mappingsFile;
 
     /**
+     * Default values for different types, as defined in config (emailType, phoneType,..)
      * @var $configDefaults
      */
     private $configDefaults;
@@ -64,76 +68,88 @@ class Import
      */
     private $defaultTypes = array();
 
+    /**
+     * import options
+     * @var array
+     * @param {Boolean=true} importIds defines if ids of import file should be imported
+     * @param {Boolean=false} streetNumberSplit defines if street is provided as street- number string and must be splitted
+     */
     protected $options = array(
-        'streetNumberSplit' => true
+        'importIds' => true,
+        'streetNumberSplit' => false,
     );
 
     // TODO: split mappings for accounts and contacts
     /**
+     * defines mappings of columns in import file
+     * @var array
+     *
+     * defaults are:
+     * 'account_name'
+     * 'account_type'
+     * 'account_division'
+     * 'account_disabled'
+     * 'account_uid'
+     * 'email1' (1..n)
+     * 'url1' (1..n)
+     * 'note1' (1..n)
+     * 'phone1' (1..n)
+     * 'phone_isdn'
+     * 'phone_mobile'
+     * 'country'
+     * 'plz'
+     * 'street'
+     * 'city'
+     * 'fax'
+     * 'uid'
+     * 'contact_parent'
+     * 'contact_title'
+     * 'contact_position'
+     * 'contact_firstname'
+     * 'contact_lastname'
+     */
+    protected $columnMappings = array();
+
+    /**
+     * defines mappings of ids in import file
      * @var array
      */
-    protected $columnMappings = array(
-//        'email1' => 'E_Mail',
-//        'account_name' => 'Firma',
-//        'account_type' => 'Klasse',
-//        'account_division' => 'Name2',
-//        'account_disabled' => 'gesperrt',
-//        'account_uid' => 'UID_Nr',
-//        'url1' => 'Internet',
-//        'country' => 'LKZ',
-//        'plz' => 'PLZ',
-//        'street' => 'Strasse',
-//        'city' => 'Ort',
-//        'phone1' => 'Telefon',
-//        'phone2' => 'Tel2_Ort',
-//        'phone_isdn' => 'ISDN',
-//        'phone_mobile' => 'Mobil',
-//        'phone_emergency' => 'Notruf',
-//        'fax' => 'Fax',
-//        'uid' => 'UID_Nr',
-//        'note1' => 'Bemerkung',
-//        'contact_parent' => 'gehört_zu',
-//        'contact_title' => 'Titel',
-//        'contact_position' => 'Hauptfunktion',
-//        'contact_firstname' => 'Vorname',
-//        'contact_lastname' => 'Vor_Nachname',
-    );
-
     protected $idMappings = array(
-        'account_id' => 'MatchCode'
+        'account_id'=> 'account_id'
     );
 
     /**
      * @var array
      */
-    protected $countryMappings = array(
-        'DE' => 'D',
-        'AT' => 'A',
-        'CH' => 'CH'
-    );
+    protected $countryMappings = array();
 
     /**
+     * defines mappings of accountTypes in import file
      * @var array
      */
     protected $accountTypeMappings = array(
         Account::TYPE_BASIC => '',
-        Account::TYPE_LEAD => '',
-        Account::TYPE_CUSTOMER => '',
-        Account::TYPE_SUPPLIER => 'Lieferant',
+        Account::TYPE_LEAD => 'lead',
+        Account::TYPE_CUSTOMER => 'customer',
+        Account::TYPE_SUPPLIER => 'supplier',
     );
 
     /**
-     * used for saving accounts
+     * used as temp storage for newly created accounts
      * @var array
      */
     private $accounts = array();
 
     /**
-     * used for saving accounts
+     * used as temp associative storage for newly created accounts
      * @var array
      */
     private $associativeAccounts = array();
 
+    /**
+     * @param EntityManager $em
+     * @param $configDefaults
+     */
     function __construct(EntityManager $em, $configDefaults)
     {
         $this->em = $em;
@@ -155,6 +171,11 @@ class Import
             // set default types
             $this->defaultTypes = $this->getDefaults();
 
+            // process mappings file
+            if ($this->mappingsFile) {
+                $this->processMappingsFile($this->mappingsFile);
+            }
+
             // process account file if exists
             if ($this->accountFile) {
                 $this->processAccountFile($this->accountFile);
@@ -167,6 +188,34 @@ class Import
 
         } catch (\Exception $e) {
             print($e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * assigns mappings as defined in mappings file
+     * @param $mappingsFile
+     */
+    protected function processMappingsFile($mappingsFile)
+    {
+        // set mappings
+        if ($mappingsFile && ($mappingsContent = file_get_contents($mappingsFile))) {
+            $mappings = json_decode($mappingsContent, true);
+            if (array_key_exists('columns', $mappings)) {
+                $this->setColumnMappings($mappings['columns']);
+            }
+            if (array_key_exists('ids', $mappings)) {
+                $this->setIdMappings($mappings['ids']);
+            }
+            if (array_key_exists('options', $mappings)) {
+                $this->setOptions($mappings['options']);
+            }
+            if (array_key_exists('countries', $mappings)) {
+                $this->setCountryMappings($mappings['countries']);
+            }
+            if (array_key_exists('accountTypes', $mappings)) {
+                $this->setAccountTypeMappings($mappings['accountTypes']);
+            }
         }
     }
 
@@ -174,7 +223,7 @@ class Import
      * processes the account file
      * @param string $filename path to fil file
      */
-    public function processAccountFile($filename)
+    protected function processAccountFile($filename)
     {
         $createParentRelations = function ($data, $row) {
             $this->createAccountParentRelation($data, $row);
@@ -196,7 +245,7 @@ class Import
      * processes the contact file
      * @param string $filename path to file
      */
-    public function processContactFile($filename)
+    protected function processContactFile($filename)
     {
         $createContact = function ($data, $row) {
             $this->createContact($data, $row);
@@ -222,10 +271,10 @@ class Import
                 try {
                     // for first row, save headers
                     if ($row === 0) {
-                        $this->setHeaderData($data);
+                        $headerData = $data;
                     } else {
                         // get associativeData
-                        $associativeData = $this->mapRowToAssociativeArray($data);
+                        $associativeData = $this->mapRowToAssociativeArray($data, $headerData);
 
                         $function($associativeData, $row);
 
@@ -256,7 +305,16 @@ class Import
         // check if account already exists
         $account = new Account();
         $this->accounts[] = $account;
-        $this->associativeAccounts[$data[$this->idMappings['account_id']]] = $account;
+
+        // check if id mapping is defined
+        if (array_key_exists('account_id', $this->idMappings)) {
+            if (!array_key_exists($this->idMappings['account_id'], $data)) {
+                throw new \Exception('no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file');
+            } else {
+                $this->associativeAccounts[$data[$this->idMappings['account_id']]] = $account;
+            }
+        }
+
         $account->setChanged(new \DateTime());
         $account->setCreated(new \DateTime());
 
@@ -302,8 +360,8 @@ class Import
             $number = isset($number) ? $number : $data['number'];
             $address->setNumber($number);
         }
-        if ($this->checkData('plz', $data)) {
-            $address->setZip($data['plz']);
+        if ($this->checkData('zip', $data)) {
+            $address->setZip($data['zip']);
             $addAddress = $addAddress && true;
         }
         if ($this->checkData('city', $data)) {
@@ -522,7 +580,7 @@ class Import
     private function createAccountParentRelation($data, $row)
     {
         // if account has parent
-        if (array_key_exists('account_parent', $data) && $data['account_parent'] !== '') {
+        if ($this->checkData('account_parent', $data)) {
             // get account
             /** @var Account $account */
             $account = $this->accounts[$row - 1];
@@ -560,17 +618,18 @@ class Import
     /**
      * returns an associative array of data mapped by configuration
      * @param array $data data of a single csv row
+     * @param array $headerData header data of csv containing column names
      * @return array
      */
-    private function mapRowToAssociativeArray($data)
+    private function mapRowToAssociativeArray($data, $headerData)
     {
         $associativeData = array();
         foreach ($data as $index => $value) {
             // search index in mapping config
-            if ($mappingIndex = array_search($this->headerData[$index], $this->columnMappings)) {
+            if ($mappingIndex = array_search($headerData[$index], $this->columnMappings)) {
                 $associativeData[$mappingIndex] = $value;
             } else {
-                $associativeData[($this->headerData[$index])] = $value;
+                $associativeData[($headerData[$index])] = $value;
             }
         }
         return $associativeData;
@@ -602,15 +661,6 @@ class Import
         } else {
             return Account::TYPE_BASIC;
         }
-    }
-
-    /**
-     * TODO
-     * @param $data
-     */
-    private function setHeaderData($data)
-    {
-        $this->headerData = $data;
     }
 
     /**
@@ -749,9 +799,16 @@ class Import
      */
     public function setOptions($options)
     {
-        $this->options = $options;
+        $this->options = array_merge($this->options, $options);
     }
 
+    /**
+     * @param mixed $mappingsFile
+     */
+    public function setMappingsFile($mappingsFile)
+    {
+        $this->mappingsFile = $mappingsFile;
+    }
 
 
     /**

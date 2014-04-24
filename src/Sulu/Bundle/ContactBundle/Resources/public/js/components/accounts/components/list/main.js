@@ -37,6 +37,55 @@ define([
             }, this);
         },
 
+        dataUrlAddition = '',
+
+        /**
+         * Generates the options for the tabs in the header
+         * @returns {object} tabs options
+         */
+        getTabsOptions = function() {
+            var returnObj = {
+                callback: selectFilter.bind(this),
+                preselect: false,
+                preselector: 'position',
+                data: null
+            },
+            items, i, len,
+            accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
+            accountType;
+
+            // generate items
+            items = [
+                {
+                    id: 'all',
+                    title: this.sandbox.translate('public.all')
+                }
+            ];
+            for (i = 0, len = accountTypes.length; ++i < len;) {
+                items.push({
+                    id: accountTypes[i].id,
+                    name: accountTypes[i].name,
+                    title: this.sandbox.translate(accountTypes[i].translation)
+                });
+            }
+
+            // get selected account-type
+            if (!!this.options.accountType) {
+                for (i = 0, len = accountTypes.length; ++i < len;) {
+                    if (accountTypes[i].name === this.options.accountType) {
+                        accountType = accountTypes[i];
+                        break;
+                    }
+                }
+                dataUrlAddition += '&searchFields=type&search=' + accountType.id;
+            }
+
+            returnObj.data = {items: items};
+            returnObj.preselect = (!!accountType) ? accountType.id + 1 : false;
+
+            return returnObj;
+        },
+
         selectFilter = function(item) {
             var type = null;
 
@@ -54,6 +103,27 @@ define([
     return {
 
         view: true,
+
+        fullSize: {
+            width: true
+        },
+
+        header: function() {
+            return {
+                title: 'contact.accounts.title',
+                noBack: true,
+
+                tabs: {
+                    fullControl: true,
+                    options: getTabsOptions.call(this)
+                },
+
+                breadcrumb: [
+                    {title: 'navigation.contacts'},
+                    {title: 'contact.accounts.title'}
+                ]
+            };
+        },
 
         templates: ['/admin/contact/template/account/list'],
 
@@ -119,15 +189,16 @@ define([
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
                 {
-                    el: '#list-toolbar-container',
+                    el: this.$find('#list-toolbar-container'),
                     instanceName: 'accounts',
                     parentTemplate: 'default',
+                    inHeader: true,
                     template: function() {
                         return [
                             {
                                 id: 'add',
                                 icon: 'circle-plus',
-                                class: 'highlight',
+                                class: 'highlight-white',
                                 title: this.sandbox.translate('sulu.list-toolbar.add'),
                                 items: [
                                     {
@@ -163,6 +234,7 @@ define([
                     el: this.sandbox.dom.find('#companies-list', this.$el),
                     url: '/admin/api/accounts?flat=true' + dataUrlAddition,
                     sortable: true,
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     }
