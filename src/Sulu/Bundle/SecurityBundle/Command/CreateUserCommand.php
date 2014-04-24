@@ -13,7 +13,9 @@ namespace Sulu\Bundle\SecurityBundle\Command;
 use DateTime;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -67,17 +69,20 @@ class CreateUserCommand extends ContainerAwareCommand
         $em->persist($email);
         $em->flush();
 
+        $now = new DateTime();
+
         $contact = new Contact();
         $contact->setTitle('');
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
         $contact->setPosition('');
         $contact->addEmail($email);
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
+        $contact->setCreated($now);
+        $contact->setChanged($now);
 
         $em->persist($contact);
         $em->flush();
+
 
         $user = new User();
         $user->setContact($contact);
@@ -85,6 +90,23 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setSalt($this->generateSalt());
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
+
+        // find default role or create a new one
+        $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array(), array('id' => 'ASC'), 1);
+        if (!$role) {
+            $role = new Role();
+            $role->setName('User');
+            $role->setSystem('Sulu');
+            $role->setCreated($now);
+            $role->setChanged($now);
+            $em->persist($role);
+        }
+
+        $userRole = new UserRole();
+        $userRole->setRole($role);
+        $userRole->setUser($user);
+        $userRole->setLocale('[]'); // set all locales
+        $em->persist($userRole);
 
         // TODO God Mode
 
