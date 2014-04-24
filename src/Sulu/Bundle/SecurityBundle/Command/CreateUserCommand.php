@@ -95,7 +95,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array(), array('id' => 'ASC'), 1);
         if (!$role) {
             $role = new Role();
-            $role->setName('Default');
+            $role->setName('User');
             $role->setSystem('Sulu');
             $role->setCreated($now);
             $role->setChanged($now);
