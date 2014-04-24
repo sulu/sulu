@@ -68,23 +68,8 @@ class ImportCommand extends ContainerAwareCommand
         }
 
         // import mappings
-        if ($mappings && ($mappingsContent = file_get_contents($mappings))) {
-            $mappings = json_decode($mappingsContent, true);
-            if (array_key_exists('columns', $mappings)) {
-                $import->setColumnMappings($mappings['columns']);
-            }
-            if (array_key_exists('ids', $mappings)) {
-                $import->setIdMappings($mappings['ids']);
-            }
-            if (array_key_exists('options', $mappings)) {
-                $import->setOptions($mappings['options']);
-            }
-            if (array_key_exists('countries', $mappings)) {
-                $import->setCountryMappings($mappings['countries']);
-            }
-            if (array_key_exists('accountTypes', $mappings)) {
-                $import->setAccountTypeMappings($mappings['accountTypes']);
-            }
+        if ($mappings) {
+            $import->setMappingsFile($mappings);
         }
 
         $import->execute();

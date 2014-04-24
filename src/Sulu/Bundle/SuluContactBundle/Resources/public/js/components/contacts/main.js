@@ -62,7 +62,7 @@ define([
         del: function() {
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'options-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     this.contact.destroy({
                         success: function() {
                             this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
@@ -73,7 +73,7 @@ define([
         },
 
         save: function(data) {
-            this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             this.contact.set(data);
             this.contact.save(null, {
                 // on success save contacts id

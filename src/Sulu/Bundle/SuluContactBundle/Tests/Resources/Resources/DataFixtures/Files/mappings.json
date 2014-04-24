@@ -1,46 +1,47 @@
 {
     "options" : {
-        "streetNumberSplit" : "true"
+        "streetNumberSplit" : "true",
+        "importIds": "false"
     },
     "accountTypes" : {
-        "0" : "Kontakt",
-        "1" : "Interessent",
-        "2" : "Kunde",
-        "3" : "Lieferant"
+        "0" : "",
+        "1" : "lea",
+        "2" : "cust",
+        "3" : "sup"
     },
     "countries":
     {
         "DE" : "D",
-        "AT" : "A",
-        "CH" : "CH"
+        "AT" : "A"
     },
     "ids": {
-       "account_id" : ""
+       "account_id" : "id"
     },
     "columns":
     {
-        "email1" : "E_Mail",
-        "account_name" : "Firma",
-        "account_type" : "Klasse",
-        "account_division" : "Name2",
+        "email1" : "e-mail",
+        "account_name" : "name",
+        "account_type" : "type",
+        "account_division" : "division",
         "account_disabled" : "gesperrt",
+        "account_parent" : "parent",
         "account_uid" : "UID_Nr",
-        "url1" : "Internet",
-        "country" : "LKZ",
-        "plz" : "PLZ",
-        "street" : "Strasse",
-        "city" : "Ort",
-        "phone1" : "Telefon",
-        "phone2" : "Tel2_Ort",
-        "phone_isdn" : "ISDN",
-        "phone_mobile" : "Mobil",
-        "phone_emergency" : "Notruf",
-        "fax" : "Fax","uid" : "UID_Nr",
-        "note1" : "Bemerkung",
-        "contact_parent" : "gehört_zu",
-        "contact_title" : "Titel",
-        "contact_position" : "Hauptfunktion",
-        "contact_firstname" : "Vorname",
-        "contact_lastname" : "Vor_Nachname"
+        "url1" : "web",
+        "country" : "country",
+        "zip" : "plz",
+        "street" : "street",
+        "city" : "city",
+        "phone1" : "phone1",
+        "phone2" : "phone2",
+        "phone_isdn" : "isdn",
+        "phone_mobile" : "mobile",
+        "fax" : "fax",
+        "uid" : "uid",
+        "note1" : "note",
+        "contact_parent" : "parent",
+        "contact_title" : "title",
+        "contact_position" : "position",
+        "contact_firstname" : "firstname",
+        "contact_lastname" : "lastname"
     }
 }

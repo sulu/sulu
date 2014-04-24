@@ -17,6 +17,7 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Import\Import;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
@@ -43,7 +44,7 @@ class ImportTest extends DatabaseTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$fixturePath = __DIR__ . '/../../Resources/DataFixtures/Files';
+        self::$fixturePath = __DIR__ . '/../../Resources/Resources/DataFixtures/Files/';
     }
 
     public function setUp()
@@ -135,6 +136,7 @@ class ImportTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
             self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
+            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
         );
 
         self::$tool->createSchema(self::$entities);
@@ -142,9 +144,36 @@ class ImportTest extends DatabaseTestCase
 
     public function testImport()
     {
-
+        // accounts file
         $this->import->setAccountFile(self::$fixturePath . 'accounts.csv');
-        $this->import->setMappings($this->mappings);
+        // TODO: contacts
+        // contacts file
+//        $this->import->setAccountFile(self::$fixturePath . 'contacts.csv');
+        // mappings
+//        $this->import->setMappingsFile(self::$fixturePath . 'mappings.json');
+
+        $this->import->execute();
+
+        /** @var Account $account */
+        $account = self::$em->getRepository('SuluContactBundle:Account')->find(1);
+        $this->assertEquals(1, $account->getId());
+
+        // FIXME needed because of strange doctrine behaviour
+        // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
+        self::$em->clear();
+
+        // TODO: test contact import
+    }
+
+    public function testWithMappingsFile()
+    {
+        // accounts file
+        $this->import->setAccountFile(self::$fixturePath . 'accounts_mapping_needed.csv');
+        // TODO: contacts
+        // contacts file
+//        $this->import->setAccountFile(self::$fixturePath . 'contacts.csv');
+        // mappings
+        $this->import->setMappingsFile(self::$fixturePath . 'mappings.json');
 
         $this->import->execute();
 
@@ -178,14 +207,4 @@ class ImportTest extends DatabaseTestCase
         $this->import->execute();
     }
 
-    /**
-     * @expectedException \Sulu\Bundle\TranslateBundle\Translate\Exception\PackageNotFoundException
-     */
-    public function testPackageNotFound()
-    {
-        $this->import->setFile(self::$fixturePath . '/import.xliff');
-        $this->import->setPackageId(10);
-        $this->import->setName('Fail');
-        $this->import->execute();
-    }
 }
