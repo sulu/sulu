@@ -224,6 +224,11 @@ define([], function() {
             };
             dataObject.attributes = {};
 
+            if (data.type === 'address') {
+                // open overlay with address form
+                createAddressOverlay.call(this, dataObject);
+            }
+
             // insert field
             this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
 
@@ -428,6 +433,26 @@ define([], function() {
             bindEditEvents.call(this);
         },
 
+        createAddressOverlay = function(data) {
+
+
+
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        title: this.sandbox.translate('public.edit-fields'),
+                        openOnStart: true,
+                        removeOnClose: true,
+                        instanceName: 'edit-fields',
+                        data: this.$editOverlayContent,
+                        okCallback: editOkClicked.bind(this),
+                        closeCallback: unbindEditEvents.bind(this)
+                    }
+                }
+            ]);
+        },
+
         createAddOverlay = function() {
             var data,
                 dropdownData = {};
@@ -456,7 +481,7 @@ define([], function() {
 
             // TODO:  REMOVE AFTER ADDRESSES CAN BE ADDED
             // change data
-            dropdownData.address.disabled = true;
+//            dropdownData.address.disabled = true;
             dropdownData.fax.collection = 'faxes';
 
             // convert object to array
