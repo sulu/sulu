@@ -11,7 +11,7 @@
         <field name="locale" type="string" column="locale" length="5"/>
         <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" inversed-by="locales">
             <join-columns>
-                <join-column name="idMedias" referenced-column-name="id" nullable="false"/>
+                <join-column name="idMedias" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
             </join-columns>
         </many-to-one>
     </entity>

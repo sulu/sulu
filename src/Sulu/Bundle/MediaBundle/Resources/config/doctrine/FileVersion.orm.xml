@@ -19,7 +19,7 @@
 
         <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\File" inversed-by="fileVersions">
             <join-columns>
-                <join-column name="idFiles" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+                <join-column name="idFiles" referenced-column-name="id" on-delete="CASCADE" nullable="true"/>
             </join-columns>
         </many-to-one>
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
