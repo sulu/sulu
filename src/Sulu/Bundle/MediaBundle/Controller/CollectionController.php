@@ -299,27 +299,13 @@ class CollectionController extends RestController implements ClassResourceInterf
             /* @var Collection $collection */
             $collection = $this->getDoctrine()
                 ->getRepository($entityName)
-                ->findCollectionByIdAndDelete($id);
+                ->findCollectionByIdForDelete($id);
 
             if (!$collection) {
                 throw new EntityNotFoundException($entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
-
-            // remove related media if removeMedias is true
-            if ($this->getRequest()->get('removeMedias') == "true") {
-                /**
-                 * @var Media $media
-                 */
-                foreach ($collection->getMedias() as $media) {
-                    $em->remove($media);
-                }
-            }
-
-            foreach ($collection->getMetas() as $meta) {
-                $em->remove($meta);
-            }
 
             $em->remove($collection);
             $em->flush();
