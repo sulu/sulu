@@ -227,11 +227,10 @@ define([], function() {
             if (data.type === 'address') {
                 // open overlay with address form
                 createAddressOverlay.call(this, dataObject);
+            } else {
+                // insert field
+                this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
             }
-
-            // insert field
-            this.sandbox.form.addToCollection(this.form, data.collection, dataObject);
-
 
             // TODO: focus on just inserted field
 
@@ -435,19 +434,21 @@ define([], function() {
 
         createAddressOverlay = function(data) {
 
+            this.sandbox.emit('husky.overlay.add-fields.remove');
+
 
 
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
-                        title: this.sandbox.translate('public.edit-fields'),
+                        title: this.sandbox.translate('public.add-address'),
                         openOnStart: true,
                         removeOnClose: true,
-                        instanceName: 'edit-fields',
-                        data: this.$editOverlayContent,
-                        okCallback: editOkClicked.bind(this),
-                        closeCallback: unbindEditEvents.bind(this)
+                        instanceName: 'add-address',
+                        data: 'test'
+//                        okCallback: editOkClicked.bind(this),
+//                        closeCallback: unbindEditEvents.bind(this)
                     }
                 }
             ]);
