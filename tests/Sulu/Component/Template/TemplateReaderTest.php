@@ -10,9 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Xml;
 
+use InvalidArgumentException;
 use Sulu\Component\Content\Template\TemplateReader;
-use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
-use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 
 class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,23 +26,51 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
+                    'title' => 'properties.title',
                     'type' => 'text_line',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.name'
+                        ),
+                        array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 10
+                        )
+                    )
                 ),
                 'url' => array(
                     'name' => 'url',
+                    'title' => 'properties.url',
                     'type' => 'resource_locator',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp.part',
+                            'priority' => 1
+                        )
+                    )
                 ),
                 'article' => array(
                     'name' => 'article',
                     'type' => 'text_area',
-                    'mandatory' => false
+                    'mandatory' => false,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 5
+                        )
+                    )
                 ),
                 'pages' => array(
                     'name' => 'pages',
                     'type' => 'smart_content_selection',
-                    'mandatory' => false
+                    'mandatory' => false,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.title'
+                        )
+                    )
                 ),
                 'images' => array(
                     'name' => 'images',
@@ -51,8 +78,14 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'minOccurs' => 0,
                     'maxOccurs' => 2,
                     'params' => array(
-                        'minLinks' => 1,
-                        'maxLinks' => 10
+                        array(
+                            'name' => 'minLinks',
+                            'value' => 1
+                        ),
+                        array(
+                            'name' => 'maxLinks',
+                            'value' => 10
+                        )
                     )
 
                 )
@@ -65,12 +98,14 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Sulu\Component\Content\Template\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testReadTypesInvalidPath()
     {
         $templateReader = new TemplateReader();
-        $templateReader->load('');
+        $templateReader->load(
+            __DIR__ . '/../../../Resources/DataFixtures/Template/template_not_exists.xml'
+        );
     }
 
     public function testReadTypesEmptyProperties()
@@ -83,6 +118,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array()
         );
 
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
+            'The given XML is invalid! Tag(s) sulu.node.name required but not found'
+        );
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
             __DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_properties.xml'
@@ -109,13 +148,30 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
+                    'title' => 'properties.title',
                     'type' => 'text_line',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.name'
+                        ),
+                        array(
+                            'name' => 'sulu.node.title',
+                            'priority' => 10
+                        )
+                    )
                 ),
                 'url' => array(
                     'name' => 'url',
+                    'title' => 'properties.url',
                     'type' => 'resource_locator',
-                    'mandatory' => true
+                    'mandatory' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp.part',
+                            'priority' => 1
+                        )
+                    )
                 ),
                 'article' => array(
                     'name' => 'article',
@@ -124,10 +180,21 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                 ),
                 'block1' => array(
                     'name' => 'block1',
+                    'title' => 'properties.block1',
                     'minOccurs' => '2',
                     'maxOccurs' => '10',
                     'mandatory' => true,
                     'type' => 'block',
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.node.block',
+                            'priority' => 20
+                        ),
+                        array(
+                            'name' => 'sulu.test.block',
+                            'priority' => 1
+                        )
+                    ),
                     'properties' => array(
                         'title1.1' => array(
                             'name' => 'title1.1',
@@ -150,9 +217,16 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                     'properties' => array(
                                         'article1.1.1' => array(
                                             'name' => 'article1.1.1',
+                                            'title' => 'properties.title1',
                                             'type' => 'text_area',
                                             'mandatory' => true,
-                                            'minOccurs' => 2
+                                            'minOccurs' => 2,
+                                            'tags' => array(
+                                                array(
+                                                    'name' => 'sulu.node.title',
+                                                    'priority' => 5
+                                                )
+                                            ),
                                         ),
                                         'article2.1.2' => array(
                                             'name' => 'article2.1.2',
@@ -191,7 +265,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
                     )
                 ),
-
                 'blog' => array(
                     'name' => 'blog',
                     'type' => 'text_editor',
@@ -203,6 +276,13 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block.xml');
         $this->assertEquals($template, $result);
+    }
+
+    public function testDuplicatedPriority()
+    {
+        $this->setExpectedException('\Sulu\Component\Content\Template\Exception\InvalidXmlException','The given XML is invalid! Priority 10 of tag sulu.node.title exists duplicated');
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_duplicated_priority.xml');
     }
 
 }
