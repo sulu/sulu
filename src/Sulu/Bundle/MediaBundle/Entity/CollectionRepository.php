@@ -89,7 +89,7 @@ class CollectionRepository extends EntityRepository
      * @param $id
      * @return mixed
      */
-    public function findCollectionByIdAndDelete($id)
+    public function findCollectionByIdForDelete($id)
     {
         try {
             $qb = $this->createQueryBuilder('collection')

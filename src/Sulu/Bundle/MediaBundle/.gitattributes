@@ -1,0 +1,11 @@
+*.php text eol=lf
+*.phtml text eol=lf
+
+*.css text eol=lf
+*.html text eol=lf
+*.twig text eol=lf
+
+*.xml text eol=lf
+*.yml text eol=lf
+*.dist text eol=lf
+*.xlf text eol=lf
