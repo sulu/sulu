@@ -6,7 +6,7 @@
     "accountTypes" : {
         "0" : "",
         "1" : "lea",
-        "2" : "cust",
+        "2" : "cus",
         "3" : "sup"
     },
     "countries":
@@ -23,9 +23,9 @@
         "account_name" : "name",
         "account_type" : "type",
         "account_division" : "division",
-        "account_disabled" : "gesperrt",
+        "account_disabled" : "disabled",
         "account_parent" : "parent",
-        "account_uid" : "UID_Nr",
+        "account_uid" : "uid",
         "url1" : "web",
         "country" : "country",
         "zip" : "plz",
@@ -35,13 +35,7 @@
         "phone2" : "phone2",
         "phone_isdn" : "isdn",
         "phone_mobile" : "mobile",
-        "fax" : "fax",
-        "uid" : "uid",
-        "note1" : "note",
-        "contact_parent" : "parent",
-        "contact_title" : "title",
-        "contact_position" : "position",
-        "contact_firstname" : "firstname",
-        "contact_lastname" : "lastname"
+        "fax1" : "fax",
+        "note1" : "note"
     }
 }

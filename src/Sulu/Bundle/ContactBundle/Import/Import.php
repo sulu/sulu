@@ -21,6 +21,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 /**
  * configures and executes an import for contact and account data from a CSV file
@@ -115,7 +116,7 @@ class Import
      * @var array
      */
     protected $idMappings = array(
-        'account_id'=> 'account_id'
+        'account_id' => 'account_id'
     );
 
     /**
@@ -162,11 +163,13 @@ class Import
     public function execute()
     {
         try {
-            if (!$this->accountFile) {
-                throw new InvalidArgumentException('no account file specified for import');
+            // check if specified files do exist
+            if (!$this->accountFile || !file_exists($this->accountFile) ||
+                ($this->mappingsFile && !file_exists($this->mappingsFile)) ||
+                ($this->contactFile && !file_exists($this->contactFile))
+            ) {
+                throw new NotFoundResourceException;
             }
-
-            // TODO clear database: $this->clearDatabase();
 
             // set default types
             $this->defaultTypes = $this->getDefaults();
@@ -175,6 +178,8 @@ class Import
             if ($this->mappingsFile) {
                 $this->processMappingsFile($this->mappingsFile);
             }
+
+            // TODO clear database: $this->clearDatabase();
 
             // process account file if exists
             if ($this->accountFile) {
@@ -339,58 +344,8 @@ class Import
             $account->setType($this->mapAccountType($data['account_type']));
         }
 
-        // set address
-        $address = new Address();
-        $addAddress = false;
-
-        if ($this->checkData('street', $data)) {
-            $street = $data['street'];
-
-            // separate street and number
-            if ($this->options['streetNumberSplit']) {
-                preg_match('/([^\d]+)\s?(.+)/i', $street, $result);
-
-                $street = trim($result[1]);
-                $number = trim($result[2]);
-            }
-            $address->setStreet($street);
-            $addAddress = true;
-        }
-        if (isset($number) || $this->checkData('number', $data)) {
-            $number = isset($number) ? $number : $data['number'];
-            $address->setNumber($number);
-        }
-        if ($this->checkData('zip', $data)) {
-            $address->setZip($data['zip']);
-            $addAddress = $addAddress && true;
-        }
-        if ($this->checkData('city', $data)) {
-            $address->setCity($data['city']);
-            $addAddress = $addAddress && true;
-        } else {
-            $addAddress = $addAddress && false;
-        }
-        if ($this->checkData('country', $data)) {
-            $country = $this->em->getRepository('SuluContactBundle:Country')->findOneByCode(
-                $this->mapCountryCode($data['country'])
-            );
-
-            if (!$country) {
-                throw new EntityNotFoundException('Country', $data['country']);
-            }
-
-            $address->setCountry($country);
-            $addAddress = $addAddress && true;
-        } else {
-            $addAddress = $addAddress && false;
-        }
-
-        // only add address if part of it is defined
-        if ($addAddress) {
-            $address->setAddressType($this->defaultTypes['addressType']);
-            $this->em->persist($address);
-            $account->addAddresse($address);
-        }
+        // add address if set
+        $this->addAddress($data, $account);
 
         // add emails
         for ($i = 0, $len = 10; ++$i < $len;) {
@@ -468,6 +423,63 @@ class Import
         $this->em->persist($account);
     }
 
+    private function addAddress($data, $entity)
+    {
+        // set address
+        $address = new Address();
+        $addAddress = false;
+
+        if ($this->checkData('street', $data)) {
+            $street = $data['street'];
+
+            // separate street and number
+            if ($this->options['streetNumberSplit']) {
+                preg_match('/([^\d]+)\s?(.+)/i', $street, $result);
+
+                $street = trim($result[1]);
+                $number = trim($result[2]);
+            }
+            $address->setStreet($street);
+            $addAddress = true;
+        }
+        if (isset($number) || $this->checkData('number', $data)) {
+            $number = isset($number) ? $number : $data['number'];
+            $address->setNumber($number);
+        }
+        if ($this->checkData('zip', $data)) {
+            $address->setZip($data['zip']);
+            $addAddress = $addAddress && true;
+        }
+        if ($this->checkData('city', $data)) {
+            $address->setCity($data['city']);
+            $addAddress = $addAddress && true;
+        } else {
+            $addAddress = $addAddress && false;
+        }
+        if ($this->checkData('country', $data)) {
+            $country = $this->em->getRepository('SuluContactBundle:Country')->findOneByCode(
+                $this->mapCountryCode($data['country'])
+            );
+
+            if (!$country) {
+                throw new EntityNotFoundException('Country', $data['country']);
+            }
+
+            $address->setCountry($country);
+            $addAddress = $addAddress && true;
+        } else {
+            $addAddress = $addAddress && false;
+        }
+
+        // only add address if part of it is defined
+        if ($addAddress) {
+            $address->setAddressType($this->defaultTypes['addressType']);
+            $this->em->persist($address);
+            $entity->addAddresse($address);
+        }
+    }
+
+
     /**
      * creates an contact for given row data
      */
@@ -494,7 +506,7 @@ class Import
             $contact->setLastName('');
         }
         if ($this->checkData('contact_title', $data)) {
-            $contact->setPosition($data['contact_title']);
+            $contact->setTitle($data['contact_title']);
         }
 
         if ($this->checkData('contact_position', $data)) {
@@ -514,6 +526,9 @@ class Import
                 $contact->setAccount($account);
             }
         }
+
+        // add address if set
+        $this->addAddress($data, $contact);
 
         // add emails
         for ($i = 0, $len = 10; ++$i < $len;) {
@@ -558,6 +573,18 @@ class Import
                 $fax->setFaxType($this->defaultTypes['faxType']);
                 $this->em->persist($fax);
                 $contact->addFax($fax);
+            } else {
+                break;
+            }
+        }
+
+        // add notes
+        for ($i = 0, $len = 10; ++$i < $len;) {
+            if ($this->checkData('note' . $i, $data)) {
+                $note = new Note();
+                $note->setValue($data['note' . $i]);
+                $this->em->persist($note);
+                $contact->addNote($note);
             } else {
                 break;
             }
