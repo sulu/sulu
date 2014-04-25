@@ -93,26 +93,8 @@ class CollectionRepository extends EntityRepository
     {
         try {
             $qb = $this->createQueryBuilder('collection')
-                ->leftJoin('collection.metas', 'collectionMeta')
-                ->leftJoin('collection.type', 'type')
-                ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.medias', 'media')
-                ->leftJoin('media.tags', 'tag')
-                ->leftJoin('media.metas', 'mediaMeta')
-                ->leftJoin('media.files', 'file')
-                ->leftJoin('file.fileVersions', 'fileVersion')
-                ->leftJoin('fileVersion.fileVersionContentLanguages', 'fileVersionContentLanguage')
-                ->leftJoin('fileVersion.fileVersionPublishLanguages', 'fileVersionPublishLanguage')
-                ->addSelect('collectionMeta')
-                ->addSelect('type')
-                ->addSelect('parent')
                 ->addSelect('media')
-                ->addSelect('tag')
-                ->addSelect('mediaMeta')
-                ->addSelect('file')
-                ->addSelect('fileVersion')
-                ->addSelect('fileVersionContentLanguage')
-                ->addSelect('fileVersionPublishLanguage')
                 ->where('collection.id = :collectionId');
 
             $query = $qb->getQuery();
