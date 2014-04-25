@@ -22,10 +22,8 @@ use Doctrine\ORM\Query;
  */
 class CollectionRepository extends EntityRepository
 {
-
-
     /**
-     * Get account by id
+     * Get Collection by id
      * @param $id
      * @return mixed
      */
@@ -66,7 +64,7 @@ class CollectionRepository extends EntityRepository
     }
 
     /**
-     * finds all accounts but only selects given fields
+     * finds all Collections but only selects given fields
      * @param array $fields
      * @return array
      */
@@ -86,10 +84,8 @@ class CollectionRepository extends EntityRepository
         return $query->getArrayResult();
     }
 
-
-
     /**
-     * Get collection by id to delete
+     * Get Collection by id to delete
      * @param $id
      * @return mixed
      */
