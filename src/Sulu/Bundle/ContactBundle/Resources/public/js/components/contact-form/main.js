@@ -410,10 +410,15 @@ define([], function() {
          */
             createEditOverlay = function() {
             this.$editOverlayContent = createEditOverlayContent.call(this);
+
+            var $element = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.sandbox.dom.parent(this.$el), $element);
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
+                        el: $element,
                         title: this.sandbox.translate('public.edit-fields'),
                         openOnStart: true,
                         removeOnClose: true,
@@ -430,7 +435,7 @@ define([], function() {
 
         createAddOverlay = function() {
             var data,
-                dropdownData = {};
+                dropdownData = {}, $element;
 
             this.dropdownDataArray = [];
 
@@ -464,11 +469,16 @@ define([], function() {
                 return dropdownData[key];
             });
 
+            $element = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.sandbox.dom.parent(this.$el), $element);
+
+
             // start overlay and dependent select
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
+                        el: $element,
                         title: this.sandbox.translate('public.add-fields'),
                         openOnStart: true,
                         removeOnClose: true,
