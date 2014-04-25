@@ -672,7 +672,7 @@ class Import
         if ($mappingIndex = array_search($countryCode, $this->countryMappings)) {
             return $mappingIndex;
         } else {
-            return mb_strtolower($countryCode);
+            return mb_strtoupper($countryCode);
         }
     }
 
