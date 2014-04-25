@@ -17,9 +17,9 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 class SuluMediaAdmin extends Admin
 {
 
-    public function __construct()
+    public function __construct($title)
     {
-        $rootNavigationItem = new NavigationItem('Media');
+        $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('navigation.tools');
 
         $media = new NavigationItem('navigation.media');
