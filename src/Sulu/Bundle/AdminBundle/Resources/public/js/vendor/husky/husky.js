@@ -26401,11 +26401,15 @@ define('__component__$column-options@husky',[],function() {
 
         startOverlay = function() {
             if (this.overlayLoaded === false) {
+                var $element = this.sandbox.dom.createElement('<div/>');
+                this.sandbox.dom.append(this.$el, $element);
+
                 this.sandbox.start([
                     {
                         name: 'overlay@husky',
                         options: {
                             triggerEl: this.options.trigger,
+                            el: $element,
                             container: this.$el,
                             data: this.$list,
                             okCallback: function() {
@@ -26472,7 +26476,7 @@ define('__component__$column-options@husky',[],function() {
         view: true,
 
         initialize: function() {
-
+            console.log(this._ref);
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.overlayLoaded = false;
 
@@ -28701,183 +28705,6 @@ define('__component__$datagrid@husky',[],function() {
 /*
  * This file is part of the Sulu CMS.
  *
- * (c) MASSIVE ART Webservices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
-define('__component__$dialog@husky',['jquery'], function($) {
-
-    
-
-    var sandbox,
-        defaults = {
-            data: {
-                footer: {
-                    buttonCancelText: 'Cancel',
-                    buttonSubmitText: 'Ok'
-                }
-            },
-            backdrop: true,
-            backdropClick: false, // if true, click on backdrop is going to hide dialogbox
-            width: '550px',
-            template: {
-                content: '<h3><%= title %></h3><p><%= content %></p>',
-                footer: '<button class="btn btn-gray" id="dialog-button-cancel"><%= buttonCancelText %></button><button class="btn btn-black" id="dialog-button-submit"><%= buttonSubmitText %></button>',
-                header: ''
-            }
-        },
-        defaultsOk = {
-            data: {
-                footer: {
-                    buttonCancelText: "Ok"
-                }
-            },
-            backdrop: true,
-            backdropClick: false,
-            width: '550px',
-            template: {
-                content: '<h3><%= title %></h3><p><%= content %></p>',
-                footer: '<button class="btn btn-black" id="dialog-button-cancel"><%= buttonCancelText %></button>',
-                header: ''
-            }
-        };
-
-    return {
-        initialize: function() {
-            sandbox = this.sandbox;
-
-            if (!!this.options.templateType && this.options.templateType.toLowerCase() === 'okdialog') {
-                this.options = this.sandbox.util.extend(true, {}, defaultsOk, this.options);
-            } else {
-                this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            }
-
-            this.$element = $('<div class="husky-dialog hidden fade"/>');
-            $(this.options.el).append(this.$element);
-
-            this.init();
-        },
-
-        init: function() {
-            sandbox.logger.log('initialize', this);
-
-            this.prepare();
-
-            this.bindDOMEvents();
-            this.bindCustomEvents();
-
-            this.show();
-        },
-
-        // prepares the dialog structure
-        prepare: function() {
-            this.$header = $('<div class="husky-dialog-header align-right"/>');
-            this.$content = $('<div class="husky-dialog-body" />');
-            this.$footer = $('<div class="husky-dialog-footer" />');
-
-            this.$element.append(this.$header);
-            this.$element.append(this.$content);
-            this.$element.append(this.$footer);
-
-            var width = this.options.width,
-                marginLeft = parseInt(this.options.width, 10) / 2;
-
-            this.$element.css({
-                'width': width,
-                'margin-left': '-' + marginLeft + 'px'
-            });
-
-        },
-
-        // bind dom elements
-        bindDOMEvents: function() {
-
-            // turn off all events
-            this.$element.off();
-
-            this.$element.on('click', '.close', this.hide.bind(this));
-            this.$element.on('click', '#dialog-button-cancel', this.cancel.bind(this));
-            this.$element.on('click', '#dialog-button-submit', this.submit.bind(this));
-        },
-
-
-        // listen for private events
-        bindCustomEvents: function() {
-
-            // listen for public events
-            sandbox.on('husky.dialog.hide', this.hide.bind(this));
-        },
-
-        // Shows the dialog and compiles the different dialog template parts
-        show: function() {
-            this.data = this.options.data;
-            this.template = this.options.template;
-
-            this.$header.append(this.sandbox.template.parse(this.template.header, this.data.header));
-            this.$content.append(this.sandbox.template.parse(this.template.content, this.data.content));
-            this.$footer.append(this.sandbox.template.parse(this.template.footer, this.data.footer));
-
-            this.$element.show();
-
-            if (this.options.backdrop) {
-                var $backdrop = $('<div id="husky-dialog-backdrop" class="husky-dialog-backdrop fade in"></div>');
-                $('body').append($backdrop);
-
-                $backdrop.click(function() {
-                    if (this.options.backdropClick && this.options.backdropClick === true) {
-                        this.trigger('dialog:backdrop:click', null);
-                        this.hide();
-                    }
-                }.bind(this));
-            }
-        },
-
-        // Hides the dialog and empties the contents of the different template parts
-        hide: function() {
-
-            this.$element.hide();
-
-            if (this.options.backdrop) {
-                $('#husky-dialog-backdrop ').remove();
-            }
-
-            this.template = null;
-            this.data = null;
-            this.$header.empty();
-            this.$content.empty();
-            this.$footer.empty();
-        },
-
-        // Handles the click event of the cancel button
-        cancel: function() {
-            if (!!this.data.callback.cancel && typeof this.data.callback.cancel === 'function') {
-                this.data.callback.cancel();
-            } else {
-                /**
-                 * @deprecated use callback functions
-                 */
-                sandbox.emit('husky.dialog.cancel');
-            }
-        },
-
-        submit: function() {
-            if (!!this.data.callback.submit && typeof this.data.callback.submit === 'function') {
-                this.data.callback.submit();
-            } else {
-                /**
-                 * @deprecated use callback functions
-                 */
-                sandbox.emit('husky.dialog.submit');
-            }
-        }
-    };
-});
-
-/*
- * This file is part of the Sulu CMS.
- *
  * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
@@ -29609,6 +29436,7 @@ define('__component__$search@husky',[], function() {
  *      - selected: the item that's selected on initialize
  *      - instanceName - enables custom events (in case of multiple tabs on one page)
  *      - preselect - either true (for url) or position / title  (see preselector for more information)
+ *      - skin - string of class to add to the components element (e.g. 'overlay')
  *      - preselector:
  *          - url: defines if actions are going to be checked against current URL and preselected (current URL mus be provided by data.url) - preselector itself is not going to be taken into account in this case
  *          - position: compares items position against whats defined in options.preselect
@@ -29641,12 +29469,13 @@ define('__component__$tabs@husky',[],function() {
             preselector: 'url',
             forceReload: false,
             callback: null,
-            forceSelect: true
+            forceSelect: true,
+            skin: ''
         },
 
         selectItem = function(event) {
             event.preventDefault();
-            if (this.active === true) {
+            if (this.active === true && this.sandbox.dom.hasClass(event.currentTarget, 'is-selected') !== true) {
                 var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')];
 
                 this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
@@ -29700,7 +29529,6 @@ define('__component__$tabs@husky',[],function() {
         view: true,
 
         initialize: function() {
-
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.$el = this.sandbox.dom.$(this.options.el);
             this.active = true;
@@ -29769,6 +29597,9 @@ define('__component__$tabs@husky',[],function() {
                 $list = this.sandbox.dom.createElement('<ul/>'),
                 selectedItem = null,
                 $item = null;
+
+            //add skin class
+            this.sandbox.dom.addClass($element, this.options.skin);
 
             this.sandbox.dom.append(this.$el, $element);
             this.sandbox.dom.append($element, $list);
@@ -32397,6 +32228,7 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {Function} [options.selectCallback] callbackfunction, when element is selected
  * @param {String} [options.valueName] name of property which should be used
  * @param {String} [options.style] "normal", "small" or "big" for different appearance
+ * @param {String} [options.skin] style class to set to the elements component (e.g 'white')
  * @param {Boolean} [options.emitValues] If true the value is emited with events instead of the id
  */
 
@@ -32417,7 +32249,8 @@ define('__component__$select@husky',[], function() {
             selectCallback: null,
             deselectCallback: null,
             style: 'normal',
-            emitValues: false,
+            skin: '',
+            emitValues: false
         },
 
         constants = {
@@ -32546,6 +32379,9 @@ define('__component__$select@husky',[], function() {
             } else if (this.options.style === 'big') {
                 this.sandbox.dom.addClass(button, 'big');
             }
+
+            // add skin style
+            this.sandbox.dom.addClass(button, this.options.skin);
 
             this.$list = this.$find('.' + constants.listClass);
             this.$dropdownContainer = this.$find('.' + constants.dropdownContainerClass);
@@ -33074,8 +32910,7 @@ define('__component__$column-navigation@husky',[], function() {
             publishedName: 'publishedState',
             titleName: 'title',
             typeName: 'type',
-            minVisibleRatio: 1 / 2,
-            noPageDescription: 'public.no-pages'
+            minVisibleRatio: 1 / 2
         },
 
         DISPLAYEDCOLUMNS = 2, // number of displayed columns with content
@@ -33139,13 +32974,11 @@ define('__component__$column-navigation@husky',[], function() {
             this.filledColumns = 0;
             this.columnLoadStarted = false;
             this.$loader = null;
-            this.$bigLoader = null;
 
             this.columns = [];
             this.selected = [];
 
             this.render();
-            this.startBigLoader();
             this.load(this.options.url, 0);
             this.bindDOMEvents();
             this.bindCustomEvents();
@@ -33186,36 +33019,6 @@ define('__component__$column-navigation@husky',[], function() {
                 this.initSettingsDropdown(this.sandbox.dom.attr($settings, 'id'));
             }
 
-        },
-
-        /**
-         * Starts the big loader, before loading content during the initialization
-         */
-        startBigLoader: function() {
-            if (this.$bigLoader === null) {
-                this.$bigLoader = this.sandbox.dom.createElement('<div class="column-navigation-loader"/>');
-                this.sandbox.dom.hide(this.$bigLoader);
-                this.sandbox.dom.html(this.$columnContainer, this.$bigLoader);
-
-                this.sandbox.start([
-                    {
-                        name: 'loader@husky',
-                        options: {
-                            el: this.$bigLoader,
-                            size: '100px',
-                            color: '#e4e4e4'
-                        }
-                    }
-                ]);
-            }
-            this.sandbox.dom.show(this.$bigLoader);
-        },
-
-        /**
-         * Detatches the big loader from the column-navigation
-         */
-        removeBigLoader: function() {
-            this.sandbox.dom.hide(this.$find('.column-navigation-loader'));
         },
 
         /**
@@ -33260,10 +33063,8 @@ define('__component__$column-navigation@husky',[], function() {
 
                 this.sandbox.util.load(url)
                     .then(function(response) {
-                        this.removeBigLoader();
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
-                        this.handleLastEmptyColumn();
                         this.alignWithColumnsWidth();
                         this.scrollIfNeeded(this.filledColumns + 1);
                         this.setOverflowClass();
@@ -33444,7 +33245,6 @@ define('__component__$column-navigation@husky',[], function() {
 
             if (this.$loader === null) {
                 this.$loader = this.sandbox.dom.createElement('<div class="husky-column-navigation-loader"/>');
-                this.sandbox.dom.hide(this.$loader);
 
                 this.sandbox.start([
                     {
@@ -33457,9 +33257,7 @@ define('__component__$column-navigation@husky',[], function() {
                     }
                 ]);
             }
-            this.sandbox.dom.detach(this.$loader);
             this.sandbox.dom.html($container, this.$loader);
-            this.sandbox.dom.show(this.$loader);
         },
 
         /**
@@ -33468,7 +33266,7 @@ define('__component__$column-navigation@husky',[], function() {
         removeLoadingIconForSelected: function() {
             if (!!this.$selectedElement) {
                 var $arrow = this.sandbox.dom.find('.arrow', this.$selectedElement);
-                this.sandbox.dom.hide(this.$loader);
+                this.sandbox.dom.detach(this.$loader);
                 this.sandbox.dom.prependClass($arrow, 'icon-chevron-right');
             }
         },
@@ -33514,20 +33312,6 @@ define('__component__$column-navigation@husky',[], function() {
                 this.sandbox.dom.addClass($navigation, 'overflow');
             } else {
                 this.sandbox.dom.removeClass($navigation, 'overflow');
-            }
-        },
-
-        /**
-         * Inserts some markup into the last column if column is empty
-         */
-        handleLastEmptyColumn: function() {
-            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
-
-            this.sandbox.dom.remove(this.sandbox.dom.find('.no-page', this.$columnContainer));
-
-            // if last column is empty insert markup
-            if (this.sandbox.dom.find('li', $lastColumn).length === 0) {
-                this.sandbox.dom.append($lastColumn, this.template.noPage.call(this, this.sandbox.translate(this.options.noPageDescription)));
             }
         },
 
@@ -33687,12 +33471,12 @@ define('__component__$column-navigation@husky',[], function() {
                         this.removeColumns(column + 1);
                     }
                 }
+
                 // insert add column when clicked element
                 this.insertAddColumn(selectedItem, column);
 
                 // scroll for add column
                 if (!selectedItem.hasSub) {
-                    this.handleLastEmptyColumn();
                     this.alignWithColumnsWidth();
                     this.scrollIfNeeded(column);
                     this.setOverflowClass();
@@ -33728,6 +33512,7 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         insertAddColumn: function(selectedItem, column) {
+
             if (!this.$addColumn && !selectedItem[this.options.hasSubName]) {
                 // append empty column to add subpages
                 this.$addColumn = this.sandbox.dom.createElement(this.template.column.call(this, column + 1, this.options.column.width));
@@ -33801,13 +33586,6 @@ define('__component__$column-navigation@husky',[], function() {
 
             column: function(columnNumber, width) {
                 return ['<div data-column="', columnNumber, '" class="column" id="column-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
-            },
-
-            noPage: function(description) {
-                return ['<div class="no-page">',
-                            '<span class="icon-file"></span>',
-                            '<div class="text">', description ,'</div>',
-                        '</div>'].join('');
             },
 
             item: function(width, data) {
@@ -34763,11 +34541,15 @@ define('__component__$smart-content@husky',[], function() {
         startOverlay: function() {
             this.initOverlayContent();
 
+            var $element = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.append(this.$el, $element);
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
                         triggerEl: this.$button,
+                        el: $element,
                         container: this.$el,
                         data: this.$overlayContent,
                         title: this.sandbox.translate(this.translations.configureSmartContent),
@@ -35025,7 +34807,7 @@ define('__component__$smart-content@husky',[], function() {
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
- * @module husky/components/smart-content
+ * @module husky/components/overlay
  */
 
 /**
@@ -35035,21 +34817,39 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Object} [options] Configuration object
  * @params {String} [options.trigger] List of events on which the overlay should be opened
  * @params {String} [options.triggerEl] Element that triggers the overlay
- * @params {String} [options.container] slector or DOM object in which the overlay gets inserted
  * @params {String} [options.title] the title of the overlay
  * @params {String} [options.closeIcon] icon class for the close button
- * @params {String} [options.okIcon] icon class for the ok button
  * @params {Function} [options.closeCallback] callback which gets executed after the overlay gets closed
  * @params {Function} [options.okCallback] callback which gets executed after the overlay gets submited
  * @params {String|Object} [options.data] HTML or DOM-object which acts as the overlay-content
+ * @params {String} [options.message] String to render as content. Used by warnings and erros
  * @params {String} [options.instanceName] instance name of the component
  * @params {Boolean} [options.draggable] if true overlay is draggable
  * @params {Boolean} [options.openOnStart] if true overlay is opened after initialization
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
  * @params {Boolean} [options.backdrop] if true backdrop will be shown
- * @params {Boolean} [options.backdropColor] Color of the backdrop
- * @params {Boolean} [options.backdropAlpha] Alpha-value of the backdrop
- * @params {Boolean} [options.okInactive] If true ok button is deactivated
+ * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
+ * @params {String} [options.backdropColor] Color of the backdrop
+ * @params {Number} [options.backdropAlpha] Alpha-value of the backdrop
+ * @params {Boolean} [options.okInactive] If true all ok-buttons start deactivated
+ * @params {String} [options.okDefaultText] The default text for ok buttons
+ * @params {String} [options.cancelDefaultText] The default text for cancel buttons
+ * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
+ * @params {Array} [options.buttonsAlign] the align of the buttons in the footer ('center', 'left' or 'right')
+ *
+ * @params {Object} [options.languageChanger] If set language-changer will be displayed in the header
+ * @params {Array} [options.languageChanger.locales] array of locale strings for the dropdown
+ * @params {String} [options.languageChanger.preSelected] locale which is selected at the beginning
+ *
+ * @params {Array} [options.tabs] array of tabs-data to use instead of options.data and options.message
+ * @params {String} [options.tabs.title] the title of the tab
+ * @params {String|Object} [options.tabs.data] HTML or DOM-Object to display when tab is active
+ *
+ * @params {Array} [options.buttons] an array of buttons to add to the footer
+ * @params {String} [options.buttons.type] type of the button ('ok', 'cancel')
+ * @params {String} [options.buttons.icon] icon of the button
+ * @params {String} [options.buttons.text] text of the button. If text and icon are not set the defaultText-options come into place
+ * @params {Boolean} [options.buttons.inactive] If true button starts inactive
  */
 define('__component__$overlay@husky',[], function() {
 
@@ -35058,30 +34858,91 @@ define('__component__$overlay@husky',[], function() {
     var defaults = {
             trigger: 'click',
             triggerEl: null,
-            container: 'body',
             title: '',
             closeIcon: 'remove2',
-            okIcon: 'half-ok save-button btn action',
             closeCallback: null,
             okCallback: null,
             data: '',
+            tabs: null,
             instanceName: 'undefined',
             draggable: true,
             openOnStart: false,
             removeOnClose: false,
             backdrop: true,
+            backdropClose: true,
             backdropColor: '#000000',
             backdropAlpha: 0.3,
-            okInactive: false
+            okInactive: false,
+            type: 'normal',
+            cssClass: '',
+            buttons: [],
+            buttonsAlign: 'center',
+            cancelDefaultText: 'Cancel',
+            okDefaultText: 'Ok',
+            languageChanger: null
         },
 
         constants = {
             closeSelector: '.close-button',
-            okSelector: '.ok-button',
+            footerSelector: '.overlay-footer',
             contentSelector: '.overlay-content',
             headerSelector: '.overlay-header',
             draggableClass: 'draggable',
-            backdropClass: 'husky-overlay-backdrop'
+            backdropClass: 'husky-overlay-backdrop',
+            overlayOkSelector: '.overlay-ok',
+            overlayCancelSelector: '.overlay-cancel',
+            tabsClass: 'tabs',
+            languageChangerClass: 'language-changer'
+        },
+
+        types = {
+            normal: {
+                buttons: [
+                    {
+                        type: 'ok',
+                        icon: 'half-ok',
+                        classes: 'tick',
+                        inactive: false
+                    }
+                ]
+            },
+            warning: {
+                cssClass: 'warning',
+                backdropClose: false,
+                buttonsAlign: 'right',
+                removeOnClose: true,
+                openOnStart: true,
+                instanceName: 'warning',
+                buttons: [
+                    {
+                        type: 'ok',
+                        inactive: false
+                    },
+                    {
+                        type: 'cancel',
+                        inactive: false
+                    }
+                ]
+            },
+            error: {
+                cssClass: 'error',
+                backdropClose: false,
+                cancelDefaultText: 'Ok',
+                removeOnClose: true,
+                openOnStart: true,
+                instanceName: 'error',
+                buttons: [
+                    {
+                        type: 'cancel',
+                        inactive: false
+                    }
+                ]
+            }
+        },
+
+        buttonTypes = {
+            OK: 'ok',
+            CANCEL: 'cancel'
         },
 
         /** templates for component */
@@ -35094,12 +34955,30 @@ define('__component__$overlay@husky',[], function() {
                 '</div>',
                 '<div class="overlay-content"></div>',
                 '<div class="overlay-footer">',
-                '<a class="icon-<%= okIcon %> ok-button" href="#"></a>',
                 '</div>',
+                '</div>'
+            ].join(''),
+            okButton: [
+                '<div class="btn action overlay-ok<%= classes %>">',
+                    '<% if (!!icon) { %>',
+                    '<span class="icon-<%= icon %>"></span>',
+                    '<% } %>',
+                    '<span class="text"><%= text %></span>',
+                '</div>'
+            ].join(''),
+            cancelButton: [
+                '<div class="btn gray-dark overlay-cancel<%= classes %>">',
+                    '<% if (!!icon) { %>',
+                    '<span class="icon-<%= icon %>"></span>',
+                    '<% } %>',
+                    '<span class="text"><%= text %></span>',
                 '</div>'
             ].join(''),
             backdrop: [
                 '<div class="husky-overlay-backdrop"></div>'
+            ].join(''),
+            message: [
+                '<div class="message"><%= message %></div>'
             ].join('')
         },
 
@@ -35134,7 +35013,7 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
-         * used to activate ok button
+         * used to activate all ok buttons
          * @event husky.overlay.<instance-name>.okbutton.activate
          */
             OKBUTTON_ACTIVATE = function() {
@@ -35142,7 +35021,7 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
-         * used to deactivate ok button
+         * used to deactivate all ok buttons
          * @event husky.overlay.<instance-name>.okbutton.deactivate
          */
             OKBUTTON_DEACTIVATE = function() {
@@ -35155,6 +35034,16 @@ define('__component__$overlay@husky',[], function() {
          */
             REMOVE = function() {
             return createEventName.call(this, 'remove');
+        },
+
+        /**
+         * emited after the language changer is changed
+         * @event husky.overlay.<instance-name>.language-changed
+         * @param {String} selected language
+         * @param {Object} currently active tab
+         */
+            LANGUAGE_CHANGED = function() {
+            return createEventName.call(this, 'language-changed');
         },
 
         /** returns normalized event names */
@@ -35170,8 +35059,13 @@ define('__component__$overlay@husky',[], function() {
         initialize: function() {
             this.sandbox.logger.log('initialize', this);
 
-            //merge options with defaults
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            var type = (!!this.options.type) ? this.options.type : defaults.type;
+            // merge defaults, type defaults and options
+            this.options = this.sandbox.util.extend(true, {}, defaults, types[type], this.options);
+
+            // make component element invisible (overlay and backdrop are fixed)
+            this.sandbox.dom.width(this.$el, 0);
+            this.sandbox.dom.height(this.$el, 0);
 
             this.setVariables();
             this.bindEvents();
@@ -35192,20 +35086,39 @@ define('__component__$overlay@husky',[], function() {
 
             this.sandbox.on(REMOVE.call(this), this.removeComponent.bind(this));
 
+            this.sandbox.on(OKBUTTON_ACTIVATE.call(this), this.activateOkButtons.bind(this));
+            this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButtons.bind(this));
 
-            // TODO: implement this functions
-            this.sandbox.on(OKBUTTON_ACTIVATE.call(this), this.activateOkButton.bind(this));
-            this.sandbox.on(OKBUTTON_DEACTIVATE.call(this), this.deactivateOkButton.bind(this));
+            // emit language-changed-event when language dropdown gets changed
+            this.sandbox.on('husky.select.'+ this.options.instanceName +'.selected.item', function(localeIndex) {
+                this.sandbox.emit(LANGUAGE_CHANGED.call(this),
+                    this.options.languageChanger.locales[localeIndex], //selected locale
+                    this.activeTab
+                );
+            }.bind(this));
         },
 
-        activateOkButton: function() {
-            this.sandbox.dom.removeClass(this.overlay.$ok, 'inactive gray');
+        /**
+         * Activates all ok buttons
+         */
+        activateOkButtons: function() {
+            var $okButtons = this.sandbox.dom.find(constants.overlayOkSelector, this.overlay.$footer),
+                i, length;
+            for (i = -1, length = $okButtons.length; ++i < length;) {
+                this.sandbox.dom.removeClass($okButtons[i], 'inactive gray');
+            }
         },
 
-        deactivateOkButton: function() {
-            this.sandbox.dom.addClass(this.overlay.$ok, 'inactive gray');
+        /**
+         * Deactivates all ok buttons
+         */
+        deactivateOkButtons: function() {
+            var $okButtons = this.sandbox.dom.find(constants.overlayOkSelector, this.overlay.$footer),
+            i, length;
+            for (i = -1, length = $okButtons.length; ++i < length;) {
+                this.sandbox.dom.addClass($okButtons[i], 'inactive gray');
+            }
         },
-
 
         /**
          * Removes the component
@@ -35214,10 +35127,16 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.dom.off(this.overlay.$el);
             this.sandbox.dom.off(this.$backdrop);
             this.sandbox.dom.off(this.$trigger, this.options.trigger + '.overlay.' + this.options.instanceName);
-            this.sandbox.stop(this.$element);
-            this.sandbox.stop(this.overlay.$content);
             this.sandbox.dom.remove(this.$backdrop);
             this.sandbox.dom.remove(this.overlay.$el);
+
+            // todo fix bug: sometimes overlay-sandbox has own sandbox or parent-sandboxes as child which
+            // couses an endless loop. The bug can be reproduced by starting the component
+            // in a clickhandler with openOnStart-option true
+            //this.sandbox.stop();
+
+            this.sandbox.stopListening();
+            this.sandbox.dom.remove(this.$el);
         },
 
         /**
@@ -35232,12 +35151,16 @@ define('__component__$overlay@husky',[], function() {
                 normalHeight: null,
                 $close: null,
                 $el: null,
-                $ok: null,
+                $footer: null,
                 $header: null,
-                $content: null
+                $content: null,
+                $languageChanger: null,
+                $tabs: null, //tabs component container
+                tabs: null //contains tabs related data
             };
             this.$backdrop = null;
             this.dragged = false;
+            this.activeTab = null;
         },
 
         /**
@@ -35253,6 +35176,7 @@ define('__component__$overlay@husky',[], function() {
         openOverlay: function() {
             //only open if closed
             if (this.overlay.opened === false) {
+                this.overlay.opened = true;
                 //init backrop element
                 if (this.$backdrop === null && this.options.backdrop === true) {
                     this.initBackdrop();
@@ -35260,18 +35184,18 @@ define('__component__$overlay@husky',[], function() {
                 //if overlay-element doesn't exist initialize it
                 if (this.overlay.$el === null) {
                     this.initSkeleton();
+                    this.initButtons();
                     this.setContent();
                     this.bindOverlayEvents();
 
                     if (this.options.okInactive === true) {
-                        this.deactivateOkButton();
+                        this.deactivateOkButtons();
                     }
 
                     this.sandbox.emit(INITIALIZED.call(this));
                 }
 
                 this.insertOverlay();
-                this.overlay.opened = true;
             }
         },
 
@@ -35311,7 +35235,7 @@ define('__component__$overlay@husky',[], function() {
          * Inserts the overlay-element into the DOM
          */
         insertOverlay: function() {
-            this.sandbox.dom.append(this.sandbox.dom.$(this.options.container), this.overlay.$el);
+            this.sandbox.dom.append(this.$el, this.overlay.$el);
 
             //ensures that the overlay box fits the window form the beginning
             this.overlay.normalHeight = this.sandbox.dom.height(this.overlay.$el);
@@ -35320,7 +35244,7 @@ define('__component__$overlay@husky',[], function() {
             this.setCoordinates();
 
             if (this.options.backdrop === true) {
-                this.sandbox.dom.append(this.sandbox.dom.$(this.options.container), this.$backdrop);
+                this.sandbox.dom.append(this.$el, this.$backdrop);
             }
 
             this.sandbox.emit(OPENED.call(this));
@@ -35331,23 +35255,150 @@ define('__component__$overlay@husky',[], function() {
          */
         initSkeleton: function() {
             this.overlay.$el = this.sandbox.dom.createElement(
-                _.template(templates.overlaySkeleton)({
+                this.sandbox.util.template(templates.overlaySkeleton)({
                     title: this.options.title,
                     okIcon: this.options.okIcon,
                     closeIcon: this.options.closeIcon
                 }));
             this.overlay.$close = this.sandbox.dom.find(constants.closeSelector, this.overlay.$el);
-            this.overlay.$ok = this.sandbox.dom.find(constants.okSelector, this.overlay.$el);
+            this.overlay.$footer = this.sandbox.dom.find(constants.footerSelector, this.overlay.$el);
             this.overlay.$content = this.sandbox.dom.find(constants.contentSelector, this.overlay.$el);
             this.overlay.$header = this.sandbox.dom.find(constants.headerSelector, this.overlay.$el);
 
+            // render a language changer into the header if configured
+            if (this.options.languageChanger !== null) {
+                this.renderLanguageChanger();
+            }
+
+            // add draggable class if overlay is draggable
             if (this.options.draggable === true) {
                 this.sandbox.dom.addClass(this.overlay.$el, constants.draggableClass);
             }
+
+            // add classes for various styling
+            this.sandbox.dom.addClass(this.overlay.$footer, this.options.buttonsAlign);
+            this.sandbox.dom.addClass(this.overlay.$el, this.options.cssClass);
         },
 
+        /**
+         * Renders a language changer and places it within the header
+         */
+        renderLanguageChanger: function() {
+            var $element = this.sandbox.dom.createElement('<div/>');
+
+            this.overlay.$languageChanger = this.sandbox.dom.createElement(
+                '<div class="'+ constants.languageChangerClass +'"/>'
+            );
+            this.sandbox.dom.append(this.overlay.$header, this.overlay.$languageChanger);
+            this.sandbox.dom.append(this.overlay.$languageChanger, $element);
+
+            this.sandbox.start([{
+                name: 'select@husky',
+                options: {
+                    el: $element,
+                    data: this.options.languageChanger.locales,
+                    preSelectedElements: [this.options.languageChanger.preSelected],
+                    skin: 'white',
+                    instanceName: this.options.instanceName
+                }
+            }]);
+        },
+
+        /**
+         * Renders all buttons and appends them to the footer
+         */
+        initButtons: function() {
+            var i, length, $button, button, template, classes, text, inactive;
+            for (i = -1, length = this.options.buttons.length; ++i < length;) {
+                button = this.options.buttons[i];
+                if (button.type === buttonTypes.OK) {
+                    template = templates.okButton;
+                    text = this.options.okDefaultText;
+                    inactive = this.options.okInactive;
+                } else if (button.type === buttonTypes.CANCEL) {
+                    template = templates.cancelButton;
+                    text = this.options.cancelDefaultText;
+                }
+
+                classes = (!!button.classes) ? ' ' + button.classes : '';
+
+                if (!!button.text) {
+                    text = button.text;
+                } else if (!!button.icon) {
+                    text = '';
+                }
+
+                if (inactive !== true) {
+                    inactive = button.inactive;
+                }
+
+                $button = this.sandbox.dom.createElement(this.sandbox.util.template(template)({
+                    icon: button.icon,
+                    text: text,
+                    classes: (inactive === true) ? classes + ' inactive gray' : classes
+                }));
+
+                this.sandbox.dom.append(this.overlay.$footer, $button);
+            }
+        },
+
+        /**
+         * Sets the content of the overlay. If the data option is set set it as raw html.
+         * If the message option is set render a template with the message
+         */
         setContent: function() {
-            this.sandbox.dom.html(this.overlay.$content, this.options.data);
+            if (!!this.options.data) {
+                this.sandbox.dom.html(this.overlay.$content, this.options.data);
+            } else if (!!this.options.message) {
+                this.sandbox.dom.html(this.overlay.$content, this.sandbox.util.template(templates.message)({
+                    message: this.options.message
+                }));
+
+            } else if (this.options.tabs !== null) {
+                this.renderTabs();
+            } else {
+                this.sandbox.logger.log('Error: either options.data, options.message or options.tabs has to be set', this);
+            }
+        },
+
+        /**
+         * Renders the tab-contents of of the overlay
+         * and initializes the tab component
+         */
+        renderTabs: function() {
+            this.overlay.tabs = [];
+            this.overlay.$tabs = this.sandbox.dom.createElement('<div class="'+ constants.tabsClass +'"/>');
+            this.sandbox.dom.append(this.overlay.$header, this.overlay.$tabs);
+
+            for (var i = -1, length = this.options.tabs.length; ++i < length;) {
+                this.overlay.tabs.push({
+                   title: this.options.tabs[i].title,
+                   $el: this.sandbox.dom.createElement(this.options.tabs[i].data)
+                });
+                this.sandbox.dom.hide(this.overlay.tabs[i].$el);
+                this.sandbox.dom.append(this.overlay.$content, this.overlay.tabs[i].$el);
+            }
+            // show first tab element at the beginning and start tab-bar
+            this.showTab(this.overlay.tabs[0]);
+            this.startTabsComponent();
+        },
+
+        /**
+         * Starts the tabs-component
+         */
+        startTabsComponent: function() {
+            var $element = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.html(this.overlay.$tabs, $element);
+
+            this.sandbox.start([{
+                name: 'tabs@husky',
+                options: {
+                    el: $element,
+                    data: {items: this.overlay.tabs},
+                    instanceName: 'overlay' + this.options.instanceName,
+                    skin: 'overlay'
+                }
+            }]);
         },
 
         /**
@@ -35360,23 +35411,17 @@ define('__component__$overlay@husky',[], function() {
                 this.sandbox.dom.css(this.overlay.$el, {'z-index': 10000});
             }.bind(this));
 
-            this.sandbox.dom.on(this.overlay.$close, 'click', function(event) {
-                this.sandbox.dom.preventDefault(event);
-                if (this.executeCallback(this.options.closeCallback) !== false) {
-                    this.closeOverlay();
-                }
-            }.bind(this));
+            // close handler for close icon
+            this.sandbox.dom.on(this.overlay.$close, 'click',
+                this.closeHandler.bind(this));
 
-            this.sandbox.dom.on(this.overlay.$ok, 'click', function(event) {
-                // do nothing, if button is inactive
-                if (this.overlay.$ok.hasClass('inactive')) {
-                    return;
-                }
-                this.sandbox.dom.preventDefault(event);
-                if (this.executeCallback(this.options.okCallback) !== false) {
-                    this.closeOverlay();
-                }
-            }.bind(this));
+            // close handler for cancel buttons
+            this.sandbox.dom.on(this.overlay.$footer, 'click',
+                this.closeHandler.bind(this), constants.overlayCancelSelector);
+
+            // binds the events for ok-buttons
+            this.sandbox.dom.on(this.overlay.$footer, 'click',
+                this.okHandler.bind(this), constants.overlayOkSelector);
 
             this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', function() {
                 if (this.dragged === false && this.overlay.opened === true) {
@@ -35384,12 +35429,8 @@ define('__component__$overlay@husky',[], function() {
                 }
             }.bind(this));
 
-            if (this.options.backdrop === true) {
-                this.sandbox.dom.on(this.$backdrop, 'click', function() {
-                    if (this.executeCallback(this.options.closeCallback) !== false) {
-                        this.closeOverlay();
-                    }
-                }.bind(this));
+            if (this.options.backdrop === true && this.options.backdropClose === true) {
+                this.sandbox.dom.on(this.$backdrop, 'click', this.closeHandler.bind(this));
             }
 
             if (this.options.draggable === true) {
@@ -35408,6 +35449,62 @@ define('__component__$overlay@husky',[], function() {
                 this.sandbox.dom.on(this.sandbox.dom.$document, 'mouseup', function() {
                     this.sandbox.dom.off(this.sandbox.dom.$document, 'mousemove.overlay' + this.options.instanceName);
                 }.bind(this));
+            }
+
+            this.bindOverlayCustomEvents();
+        },
+
+        /**
+         * Binds custom events used by the overlay
+         */
+        bindOverlayCustomEvents: function() {
+            if (this.overlay.tabs !== null) {
+                this.sandbox.on('husky.tabs.overlay'+ this.options.instanceName +'.item.select', this.showTab.bind(this));
+            }
+        },
+
+        /**
+         * Handles the click on an overlay tab
+         * @param tab {object} tab object with $el property
+         */
+        showTab: function(tab) {
+            this.activeTab = tab;
+            this.hideAllTabsElements();
+            this.sandbox.dom.show(tab.$el);
+        },
+
+        /**
+         * Hides all tab elements
+         */
+        hideAllTabsElements: function() {
+            for (var i = -1, length = this.overlay.tabs.length; ++i < length;) {
+                this.sandbox.dom.hide(this.overlay.tabs[i].$el);
+            }
+        },
+
+        /**
+         * Handles the click on ok-buttons
+         * @param event
+         */
+        okHandler: function(event) {
+            // do nothing, if button is inactive
+            if (this.sandbox.dom.hasClass(event.currentTarget, 'inactive')) {
+                return;
+            }
+            this.sandbox.dom.preventDefault(event);
+            if (this.executeCallback(this.options.okCallback) !== false) {
+                this.closeOverlay();
+            }
+        },
+
+        /**
+         * Handles the click on cancel-buttons and close-icon
+         * @param event
+         */
+        closeHandler: function(event) {
+            this.sandbox.dom.preventDefault(event);
+            if (this.executeCallback(this.options.closeCallback) !== false) {
+                this.closeOverlay();
             }
         },
 
