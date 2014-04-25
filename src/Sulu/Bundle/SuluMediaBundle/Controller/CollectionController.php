@@ -92,13 +92,14 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected $fieldsWidth = array();
 
     /**
+     *
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'media.collection.';
 
     /**
      * returns all fields that can be used by list
-     * @Get("accounts/fields")
+     * @Get("collection/fields")
      * @return mixed
      */
     public function getFieldsAction()
@@ -108,7 +109,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
     /**
      * persists a setting
-     * @Put("accounts/fields")
+     * @Put("collection/fields")
      */
     public function putFieldsAction()
     {
@@ -286,7 +287,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * Delete an account with the given id
+     * Delete a collection with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -307,9 +308,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $em = $this->getDoctrine()->getManager();
 
             // remove related media if removeMedias is true
-            if (!is_null($this->getRequest()->get('removeMedias')) &&
-                $this->getRequest()->get('removeMedias') == "true"
-            ) {
+            if ($this->getRequest()->get('removeMedias') == "true") {
                 /**
                  * @var Media $media
                  */
