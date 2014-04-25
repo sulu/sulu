@@ -96,7 +96,6 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     protected $bundlePrefix = 'media.collection.';
 
-
     /**
      * returns all fields that can be used by list
      * @Get("accounts/fields")
@@ -134,7 +133,6 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         return $this->handleView($view);
     }
-
 
     /**
      * lists all collections
@@ -214,8 +212,6 @@ class CollectionController extends RestController implements ClassResourceInterf
         return $this->handleView($view);
     }
 
-
-
     /**
      * Edits the existing collection with the given id
      * @param integer $id The id of the collection to update
@@ -288,8 +284,6 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         return $this->handleView($view);
     }
-
-
 
     /**
      * Delete an account with the given id

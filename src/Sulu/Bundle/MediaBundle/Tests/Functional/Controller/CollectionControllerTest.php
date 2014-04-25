@@ -205,7 +205,6 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertTrue(isset($response->message));
     }
 
-
     /**
      * @description Test POST to create a new Collection
      */
@@ -282,7 +281,6 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response->total);
     }
 
-
     /**
      * @description Test POST to create a new Collection
      */
@@ -329,9 +327,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertTrue(isset($response->message));
     }
 
-
     /**
-     * @description Test Put Action
+     * @description Test PUT Action
      */
     public function testPut()
     {
@@ -408,7 +405,9 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(1, $response->total);
     }
 
-
+    /**
+     * @description Test PUT action without details
+     */
     public function testPutNoDetails()
     {
         $client = $this->createTestClient();
@@ -509,12 +508,4 @@ class CollectionControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
-
-    /**
-     * @description Test GET all Collections
-     */
-    public function testcGet2() {
-
-    }
-
 }
