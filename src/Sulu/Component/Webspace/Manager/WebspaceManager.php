@@ -83,7 +83,7 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach ($this->getWebspaceCollection()->getPortals($environment) as $portalUrl => $portalInformation) {
+        foreach ($this->getWebspaceCollection()->getPortalInformations($environment) as $portalUrl => $portalInformation) {
             /** @var Portal $portal */
             $urlPart = $url;
 
@@ -117,10 +117,10 @@ class WebspaceManager implements WebspaceManagerInterface
     public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null)
     {
         $urls = array();
-        $portals = $this->getWebspaceCollection()->getPortals($environment);
-        foreach ($portals as $url => $portal) {
-            $sameLocalization = $portal['localization']->getLocalization() === $languageCode;
-            $sameWebspace = $webspaceKey === null || $portal['portal']->getWebspace()->getKey() === $webspaceKey;
+        $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
+        foreach ($portals as $url => $portalInformation) {
+            $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
+            $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             if ($sameLocalization && $sameWebspace) {
                 // TODO protocol
                 $urls[] = 'http://' . $url . $resourceLocator;

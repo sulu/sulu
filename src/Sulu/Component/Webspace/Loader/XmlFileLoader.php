@@ -280,6 +280,7 @@ class XmlFileLoader extends FileLoader
             $this->generatePortalLocalizations($portalNode, $portal);
 
             $this->webspace->addPortal($portal);
+            $portal->setWebspace($this->webspace);
 
             // set environments
             $this->generateEnvironments($portalNode, $portal);

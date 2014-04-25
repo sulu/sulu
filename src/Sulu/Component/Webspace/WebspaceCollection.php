@@ -72,18 +72,19 @@ class WebspaceCollection implements \IteratorAggregate
             foreach ($environment->getUrls() as $url) {
                 // generate urls from pattern
                 if ($url->getRedirect() == null) {
-                    $this->generatePortalInformation(
-                        $portal,
-                        $url,
-                        $environment->getType(),
-                        $webspace->getSegments()
-                    );
+                    $this->generatePortalInformation($portal, $url, $environment->getType(), $webspace->getSegments());
                 } else {
                     $environmentType = $environment->getType();
                     $urlAddress = $url->getUrl();
-                    $this->environmentPortals[$environmentType][$urlAddress]['redirect'] = $url->getRedirect();
-                    $this->environmentPortals[$environmentType][$urlAddress]['url'] = $urlAddress;
-                    $this->environmentPortals[$environmentType][$urlAddress]['webspace'] = $webspace;
+                    $this->environmentPortals[$environmentType][$urlAddress] = new PortalInformation(
+                        PortalInformation::TYPE_REDIRECT,
+                        $webspace,
+                        null,
+                        null,
+                        $urlAddress,
+                        null,
+                        $url->getRedirect()
+                    );
                 }
             }
         }
@@ -116,22 +117,31 @@ class WebspaceCollection implements \IteratorAggregate
                 foreach ($segments as $segment) {
                     $replacers['{segment}'] = $segment->getKey();
                     $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
-                    $this->environmentPortals[$environment][$urlResult] = array(
-                        'webspace' => $portal->getWebspace(),
-                        'portal' => $portal,
-                        'localization' => $localization,
-                        'segment' => $segment,
-                        'url' => $urlResult
+                    $this->environmentPortals[$environment][$urlResult] = new PortalInformation(
+                        PortalInformation::TYPE_FULL_MATCH,
+                        $portal->getWebspace(),
+                        $portal,
+                        $localization,
+                        $urlResult,
+                        $segment
                     );
                 }
             } else {
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
-                $this->environmentPortals[$environment][$urlResult] = array(
+                $this->environmentPortals[$environment][$urlResult] = new PortalInformation(
+                    PortalInformation::TYPE_FULL_MATCH,
+                    $portal->getWebspace(),
+                    $portal,
+                    $localization,
+                    $urlResult,
+                    null
+                );
+                    /*array(
                     'webspace' => $portal->getWebspace(),
                     'portal' => $portal,
                     'localization' => $localization,
                     'url' => $urlResult
-                );
+                );*/
             }
         }
     }
@@ -166,12 +176,21 @@ class WebspaceCollection implements \IteratorAggregate
 
     /**
      * Returns all the portals of this collection
-     * @param string $environment Returns the portals for the given environment
      * @return array|Portal[]
      */
-    public function getPortals($environment = null)
+    public function getPortals()
     {
-        return ($environment == null) ? $this->allPortals : $this->environmentPortals[$environment];
+        return $this->allPortals;
+    }
+
+    /**
+     * Returns the portal informations for the given environments
+     * @param $environment string The environment to deliver
+     * @return PortalInformation[]
+     */
+    public function getPortalInformations($environment)
+    {
+        return $this->environmentPortals[$environment];
     }
 
     /**
