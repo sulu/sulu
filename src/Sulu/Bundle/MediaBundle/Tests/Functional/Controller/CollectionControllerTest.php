@@ -279,6 +279,47 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(2, $response->total);
+
+
+        // check if first entity is unchanged
+        $responseFirstEntity = $response->_embedded[0];
+
+        $style = array(
+            'type' => 'circle',
+            'color' => '#ffcc00'
+        );
+
+        $this->assertEquals(json_encode($style), $responseFirstEntity->style);
+        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(2, count($responseFirstEntity->metas));
+        $this->assertNotEmpty($responseFirstEntity->created);
+        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals('Test Collection', $responseFirstEntity->metas[0]->title);
+        $this->assertEquals('This Description is only for testing', $responseFirstEntity->metas[0]->description);
+        $this->assertEquals('en-gb', $responseFirstEntity->metas[0]->locale);
+        $this->assertEquals('Test Kollektion', $responseFirstEntity->metas[1]->title);
+        $this->assertEquals('Dies ist eine Test Beschreibung', $responseFirstEntity->metas[1]->description);
+        $this->assertEquals('de', $responseFirstEntity->metas[1]->locale);
+
+        // check second entity was created right
+        $responseSecondEntity = $response->_embedded[1];
+
+        $this->assertEquals(json_encode(array(
+            'type' => 'circle',
+            'color' => $generateColor
+        )), $responseSecondEntity->style);
+        $this->assertEquals(2, $responseSecondEntity->id);
+        $this->assertEquals(1, $responseSecondEntity->type->id);
+        $this->assertEquals(2, count($responseSecondEntity->metas));
+        $this->assertNotEmpty($responseSecondEntity->created);
+        $this->assertNotEmpty($responseSecondEntity->changed);
+        $this->assertEquals('Test Collection 2', $responseSecondEntity->metas[0]->title);
+        $this->assertEquals('This Description 2 is only for testing', $responseSecondEntity->metas[0]->description);
+        $this->assertEquals('en-gb', $responseSecondEntity->metas[0]->locale);
+        $this->assertEquals('Test Kollektion 2', $responseSecondEntity->metas[1]->title);
+        $this->assertEquals('Diese Beschreibung 2 ist zum Test', $responseSecondEntity->metas[1]->description);
+        $this->assertEquals('de', $responseSecondEntity->metas[1]->locale);
     }
 
     /**
@@ -403,6 +444,24 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
+
+        $responseFirstEntity = $response->_embedded[0];
+
+        $this->assertEquals(json_encode(array(
+            'type' => 'circle',
+            'color' => '#00ccff'
+        )), $responseFirstEntity->style);
+        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals(2, count($responseFirstEntity->metas));
+        $this->assertNotEmpty($responseFirstEntity->created);
+        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals('Test Collection changed', $responseFirstEntity->metas[0]->title);
+        $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->metas[0]->description);
+        $this->assertEquals('en-au', $responseFirstEntity->metas[0]->locale);
+        $this->assertEquals('Test Kollektion geändert', $responseFirstEntity->metas[1]->title);
+        $this->assertEquals('Diese Beschreibung ist zum Test geändert', $responseFirstEntity->metas[1]->description);
+        $this->assertEquals('de-de', $responseFirstEntity->metas[1]->locale);
     }
 
     /**
@@ -492,6 +551,19 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request('DELETE', '/api/collections/1');
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/collections/1'
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->code);
+        $this->assertTrue(isset($response->message));
     }
 
     /**
