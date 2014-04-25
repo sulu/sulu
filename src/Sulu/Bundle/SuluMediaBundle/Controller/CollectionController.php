@@ -32,7 +32,7 @@ use \DateTime;
 
 /**
  * Makes collections available through a REST API
- * @package Sulu\Bundle\MediaBUndle\Controller
+ * @package Sulu\Bundle\MediaBundle\Controller
  */
 class CollectionController extends RestController implements ClassResourceInterface
 {
@@ -268,8 +268,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $collection->setChanger($user);
 
                 // process details
-                if (!($this->proccessMetas($collection))
-                ) {
+                if (!$this->processMetas($collection)) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
@@ -321,7 +320,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      * @param Collection $collection The collection on which is worked
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function proccessMetas(Collection $collection)
+    protected function processMetas(Collection $collection)
     {
         $metas = $this->getRequest()->get('metas');
 
