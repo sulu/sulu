@@ -472,11 +472,7 @@ define(['app-config'], function(AppConfig) {
                         function() {
                             // ok callback
                             doIt();
-                        }.bind(this),
-                        {
-                            okDefaultText: this.sandbox.translate('content.template.dialog.submit-button'),
-                            cancelDefaultText: this.sandbox.translate('content.template.dialog.cancel-button')
-                        }
+                        }.bind(this)
                     );
                 }.bind(this);
 

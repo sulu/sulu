@@ -198,18 +198,10 @@ define([
                 throw 'callback is not a function';
             }
 
-            var params = {
-                templateType: null,
-                title: this.sandbox.translate('content.delete.dialog.title'),
-                content: this.sandbox.translate('content.delete.dialog.content'),
-                buttonCancelText: this.sandbox.translate('content.delete.dialog.cancel'),
-                buttonSubmitText: this.sandbox.translate('content.delete.dialog.submit')
-            };
-
             // show warning dialog
             this.sandbox.emit('sulu.overlay.show-warning',
-                params.title,
-                params.content,
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
 
                 function() {
                     // cancel callback
@@ -310,8 +302,8 @@ define([
 
             // show warning dialog
             this.sandbox.emit('sulu.overlay.show-warning',
-                'Be careful!',
-                'The operation you are about to do will delete data. This is not undoable! Please think about it and accept or decline.',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
 
                 function() {
                     // cancel callback
