@@ -11,9 +11,12 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Import;
 
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
+use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
@@ -24,7 +27,7 @@ use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 class ImportTest extends DatabaseTestCase
 {
     private static $fixturePath;
-    
+
     /**
      * @var Import
      */
@@ -102,6 +105,7 @@ class ImportTest extends DatabaseTestCase
 
         self::$em->flush();
 
+        // TODO: use fixtures
         $this->import = new Import(self::$em, array(
             'emailType' => 1,
             'phoneType' => 1,
@@ -146,65 +150,249 @@ class ImportTest extends DatabaseTestCase
     {
         // accounts file
         $this->import->setAccountFile(self::$fixturePath . 'accounts.csv');
-        // TODO: contacts
         // contacts file
-//        $this->import->setAccountFile(self::$fixturePath . 'contacts.csv');
-        // mappings
-//        $this->import->setMappingsFile(self::$fixturePath . 'mappings.json');
+        $this->import->setContactFile(self::$fixturePath . 'contacts.csv');
 
         $this->import->execute();
 
-        /** @var Account $account */
-        $account = self::$em->getRepository('SuluContactBundle:Account')->find(1);
-        $this->assertEquals(1, $account->getId());
+        // check account data
+        $this->checkAccountData();
+
+        // test contact import
+        $this->checkContactData();
 
         // FIXME needed because of strange doctrine behaviour
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
         self::$em->clear();
 
-        // TODO: test contact import
     }
 
-    public function testWithMappingsFile()
+    public function testAccountImportWithMappingsFile()
     {
         // accounts file
         $this->import->setAccountFile(self::$fixturePath . 'accounts_mapping_needed.csv');
-        // TODO: contacts
-        // contacts file
-//        $this->import->setAccountFile(self::$fixturePath . 'contacts.csv');
         // mappings
         $this->import->setMappingsFile(self::$fixturePath . 'mappings.json');
 
         $this->import->execute();
 
-        /** @var Account $account */
-        $account = self::$em->getRepository('SuluContactBundle:Account')->find(1);
-        $this->assertEquals(1, $account->getId());
+        // check account data
+        $this->checkAccountData();
 
         // FIXME needed because of strange doctrine behaviour
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
         self::$em->clear();
-
-        // TODO: test contact import
-
     }
 
     /**
      * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
      */
-    public function testXliffNoFile()
+    public function testAccountFileNotFound()
     {
-        $this->import->setFile('this-file-does-not-exist.xliff');
+        $this->import->setAccountFile('this-file-does-not-exist.csv');
         $this->import->execute();
     }
 
     /**
-     * @expectedException \Symfony\Component\Translation\Exception\InvalidResourceException
+     * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
      */
-    public function testXliffFailFile()
+    public function testContactFileNotFound()
     {
-        $this->import->setFile(self::$fixturePath . '/import_fail.xlf');
+        $this->import->setAccountFile(self::$fixturePath . 'accounts_mapping_needed.csv');
+        $this->import->setContactFile('this-file-does-not-exist.csv');
         $this->import->execute();
     }
 
+    /**
+     * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
+     */
+    public function testMappingsFileNotFound()
+    {
+        $this->import->setAccountFile(self::$fixturePath . 'accounts_mapping_needed.csv');
+        $this->import->setMappingsFile('this-file-does-not-exist.json');
+        $this->import->execute();
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
+     */
+    public function testImportWithoutFiles()
+    {
+        $this->import->execute();
+    }
+
+
+    private function checkAccountData()
+    {
+        /** @var Account $account */
+        $accounts = self::$em->getRepository('SuluContactBundle:Account')->findAll();
+        $this->assertEquals(2, sizeof($accounts));
+
+        // accounts
+        $account = $accounts[0];
+
+        // first account
+        $this->assertEquals(1, $account->getId());
+        $this->assertEquals('Test Company 1', $account->getName());
+        $this->assertEquals('Office', $account->getDivision());
+        $this->assertEquals(Account::TYPE_SUPPLIER, $account->getType());
+        $this->assertEquals('ATU 1234 5678', $account->getUid());
+        $this->assertNull($account->getParent());
+        $this->assertEquals('0', $account->getDisabled());
+
+        // addresss
+        /** @var Address $address */
+        $this->assertEquals(1, sizeof($account->getAddresses()));
+        $address = $account->getAddresses()->get(0);
+        $this->assertEquals('Street', $address->getStreet());
+        $this->assertEquals('1', $address->getNumber());
+        $this->assertEquals('AT', $address->getCountry()->getCode());
+        $this->assertEquals('6850', $address->getZip());
+        $this->assertEquals('Dornbirn', $address->getCity());
+
+        // phones
+        $this->assertEquals(3, sizeof($account->getPhones()));
+        $this->assertEquals('+43 (123) 456-0', $account->getPhones()->get(0)->getPhone());
+        $this->assertEquals('Business', $account->getPhones()->get(0)->getPhoneType()->getName());
+        $this->assertEquals('+43 (123) 456-78', $account->getPhones()->get(1)->getPhone());
+        $this->assertEquals('Business', $account->getPhones()->get(1)->getPhoneType()->getName());
+        $this->assertEquals('+43 (123) 456-1', $account->getPhones()->get(2)->getPhone());
+        $this->assertEquals('ISDN', $account->getPhones()->get(2)->getPhoneType()->getName());
+        // notes
+        $this->assertEquals(1, sizeof($account->getNotes()));
+        $this->assertEquals('just a simple note', $account->getNotes()->get(0)->getValue());
+        // faxes
+        $this->assertEquals(1, sizeof($account->getFaxes()));
+        $this->assertEquals('+43 (123) 456-78', $account->getFaxes()->get(0)->getFax());
+        $this->assertEquals('Business', $account->getFaxes()->get(0)->getFaxType()->getName());
+        // emails
+        $this->assertEquals(1, sizeof($account->getEmails()));
+        $this->assertEquals('test@test.com', $account->getEmails()->get(0)->getEmail());
+        $this->assertEquals('Business', $account->getEmails()->get(0)->getEmailType()->getName());
+        // urls
+        $this->assertEquals(1, sizeof($account->getUrls()));
+        $this->assertEquals('www.test.com', $account->getUrls()->get(0)->getUrl());
+        $this->assertEquals('Business', $account->getUrls()->get(0)->getUrlType()->getName());
+
+        // accounts
+        $account = $accounts[1];
+
+        // second account
+        $this->assertEquals(2, $account->getId());
+        $this->assertEquals('Child Customer', $account->getName());
+        $this->assertEquals(null, $account->getDivision());
+        $this->assertEquals(Account::TYPE_CUSTOMER, $account->getType());
+        $this->assertEquals('DEU 5678 1234', $account->getUid());
+        $this->assertEquals(1, $account->getParent()->getId());
+        $this->assertEquals('0', $account->getDisabled());
+
+        // addresss
+        /** @var Address $address */
+        $this->assertEquals(1, sizeof($account->getAddresses()));
+        $address = $account->getAddresses()->get(0);
+        $this->assertEquals('Street', $address->getStreet());
+        $this->assertEquals('2', $address->getNumber());
+        $this->assertEquals('DE', $address->getCountry()->getCode());
+        $this->assertEquals('88131', $address->getZip());
+        $this->assertEquals('Lindau', $address->getCity());
+
+        // phones
+        $this->assertEquals(1, sizeof($account->getPhones()));
+        $this->assertEquals('+43 (123) 789', $account->getPhones()->get(0)->getPhone());
+        $this->assertEquals('Business', $account->getPhones()->get(0)->getPhoneType()->getName());
+        // notes
+        $this->assertEquals(0, sizeof($account->getNotes()));
+        // faxes
+        $this->assertEquals(1, sizeof($account->getFaxes()));
+        $this->assertEquals('+43 (123) 456-98', $account->getFaxes()->get(0)->getFax());
+        $this->assertEquals('Business', $account->getFaxes()->get(0)->getFaxType()->getName());
+        // emails
+        $this->assertEquals(1, sizeof($account->getEmails()));
+        $this->assertEquals('test@company.com', $account->getEmails()->get(0)->getEmail());
+        $this->assertEquals('Business', $account->getEmails()->get(0)->getEmailType()->getName());
+        // urls
+        $this->assertEquals(1, sizeof($account->getUrls()));
+        $this->assertEquals('www.company.com', $account->getUrls()->get(0)->getUrl());
+        $this->assertEquals('Business', $account->getUrls()->get(0)->getUrlType()->getName());
+    }
+
+    private function checkContactData()
+    {
+        /** @var Contact $contact */
+        $contacts = self::$em->getRepository('SuluContactBundle:Contact')->findAll();
+        $this->assertEquals(2, sizeof($contacts));
+
+        $contact = $contacts[0];
+
+        $this->assertEquals(1, $contact->getId());
+        $this->assertEquals('John', $contact->getFirstName());
+        $this->assertEquals('Doe', $contact->getLastName());
+        $this->assertEquals('Secretary', $contact->getPosition());
+        $this->assertEquals(1, $contact->getAccount()->getId());
+
+        // addresss
+        /** @var Address $address */
+        $this->assertEquals(1, sizeof($contact->getAddresses()));
+        $address = $contact->getAddresses()->get(0);
+        $this->assertEquals('Some Street', $address->getStreet());
+        $this->assertEquals('3', $address->getNumber());
+        $this->assertEquals('AT', $address->getCountry()->getCode());
+        $this->assertEquals('6900', $address->getZip());
+        $this->assertEquals('Bregenz', $address->getCity());
+
+        // phones
+        $this->assertEquals(2, sizeof($contact->getPhones()));
+        $this->assertEquals('+43 (123) 456', $contact->getPhones()->get(0)->getPhone());
+        $this->assertEquals('Business', $contact->getPhones()->get(0)->getPhoneType()->getName());
+        $this->assertEquals('+43 (456) 789', $contact->getPhones()->get(1)->getPhone());
+        $this->assertEquals('Mobile', $contact->getPhones()->get(1)->getPhoneType()->getName());
+        // notes
+        $this->assertEquals(1, sizeof($contact->getNotes()));
+        $this->assertEquals('Simple Note', $contact->getNotes()->get(0)->getValue());
+        // faxes
+        $this->assertEquals(1, sizeof($contact->getFaxes()));
+        $this->assertEquals('+43 (123) 456-78', $contact->getFaxes()->get(0)->getFax());
+        $this->assertEquals('Business', $contact->getFaxes()->get(0)->getFaxType()->getName());
+        // emails
+        $this->assertEquals(1, sizeof($contact->getEmails()));
+        $this->assertEquals('john@doe.com', $contact->getEmails()->get(0)->getEmail());
+        $this->assertEquals('Business', $contact->getEmails()->get(0)->getEmailType()->getName());
+
+
+        $contact = $contacts[1];
+
+        $this->assertEquals(2, $contact->getId());
+        $this->assertEquals('Nicole', $contact->getFirstName());
+        $this->assertEquals('Exemplary', $contact->getLastName());
+        $this->assertEquals('CEO', $contact->getPosition());
+        $this->assertEquals('Master', $contact->getTitle());
+        $this->assertEquals(2, $contact->getAccount()->getId());
+
+        // addresss
+        /** @var Address $address */
+        $this->assertEquals(1, sizeof($contact->getAddresses()));
+        $address = $contact->getAddresses()->get(0);
+        $this->assertEquals('New Street', $address->getStreet());
+        $this->assertEquals('5', $address->getNumber());
+        $this->assertEquals('DE', $address->getCountry()->getCode());
+        $this->assertEquals('89087', $address->getZip());
+        $this->assertEquals('Berlin', $address->getCity());
+
+        // phones
+        $this->assertEquals(2, sizeof($contact->getPhones()));
+        $this->assertEquals('+43 (123) 654', $contact->getPhones()->get(0)->getPhone());
+        $this->assertEquals('Business', $contact->getPhones()->get(0)->getPhoneType()->getName());
+        $this->assertEquals('+43 (456) 987', $contact->getPhones()->get(1)->getPhone());
+        $this->assertEquals('Mobile', $contact->getPhones()->get(1)->getPhoneType()->getName());
+        // notes
+        $this->assertEquals(0, sizeof($contact->getNotes()));
+        // faxes
+        $this->assertEquals(1, sizeof($contact->getFaxes()));
+        $this->assertEquals('+43 (123) 654-87', $contact->getFaxes()->get(0)->getFax());
+        $this->assertEquals('Business', $contact->getFaxes()->get(0)->getFaxType()->getName());
+        // emails
+        $this->assertEquals(1, sizeof($contact->getEmails()));
+        $this->assertEquals('nicole@exemplary.com', $contact->getEmails()->get(0)->getEmail());
+        $this->assertEquals('Business', $contact->getEmails()->get(0)->getEmailType()->getName());
+    }
 }

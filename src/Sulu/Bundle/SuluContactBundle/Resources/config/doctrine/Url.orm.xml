@@ -13,5 +13,6 @@
             </join-columns>
         </many-to-one>
         <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="urls"/>
+        <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="urls"/>
     </entity>
 </doctrine-mapping>
