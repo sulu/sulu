@@ -18,7 +18,7 @@
 
         <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="medias">
             <join-columns>
-                <join-column name="idMedias" referenced-column-name="id" nullable="false"/>
+                <join-column name="idMedias" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
             </join-columns>
         </many-to-one>
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
