@@ -13,13 +13,18 @@ namespace Sulu\Component\Content;
 /**
  * Property of Structure generated from Structure Manager to map a template
  */
-class Property implements PropertyInterface
+class Property implements PropertyInterface, \JsonSerializable
 {
     /**
      * name of property
      * @var string
      */
     private $name;
+
+    /**
+     * @var string title of property
+     */
+    private $title;
 
     /**
      * is property mandatory
@@ -58,6 +63,12 @@ class Property implements PropertyInterface
     private $params;
 
     /**
+     * tags defined in xml
+     * @var PropertyTag[]
+     */
+    private $tags;
+
+    /**
      * value of property
      * @var mixed
      */
@@ -65,20 +76,25 @@ class Property implements PropertyInterface
 
     function __construct(
         $name,
+        $title,
         $contentTypeName,
         $mandatory = false,
         $multilingual = false,
         $maxOccurs = 1,
         $minOccurs = 1,
-        $params = array()
-    ) {
+        $params = array(),
+        $tags = array()
+    )
+    {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
         $this->maxOccurs = $maxOccurs;
         $this->minOccurs = $minOccurs;
         $this->multilingual = $multilingual;
         $this->name = $name;
+        $this->title = $title;
         $this->params = $params;
+        $this->tags =$tags;
     }
 
     /**
@@ -124,6 +140,52 @@ class Property implements PropertyInterface
     public function getMaxOccurs()
     {
         return $this->maxOccurs;
+    }
+
+    /**
+     * returns field is mandatory
+     * @return boolean
+     */
+    public function getMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    /**
+     * returns field is multilingual
+     * @return boolean
+     */
+    public function getMultilingual()
+    {
+        return $this->multilingual;
+    }
+
+    /**
+     * returns tags defined in xml
+     * @return \Sulu\Component\Content\PropertyTag[]
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * returns tag with given name
+     * @param string $tagName
+     * @return PropertyTag
+     */
+    public function getTag($tagName)
+    {
+        return $this->tags[$tagName];
+    }
+
+    /**
+     * returns title of property
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
@@ -192,5 +254,31 @@ class Property implements PropertyInterface
         } else {
             return null;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        $result = array(
+            'name' => $this->getName(),
+            'title' => $this->getTitle(),
+            'mandatory' => $this->getMandatory(),
+            'multilingual' => $this->getMultilingual(),
+            'minOccurs' => $this->getMinOccurs(),
+            'maxOccurs' => $this->getMaxOccurs(),
+            'contentTypeName' => $this->getContentTypeName(),
+            'params' => $this->getParams(),
+            'tags' => array()
+        );
+        foreach ($this->getTags() as $tag) {
+            $result['tags'][] = array(
+                'name' => $tag->getName(),
+                'priority' => $tag->getPriority()
+            );
+        }
+
+        return $result;
     }
 }

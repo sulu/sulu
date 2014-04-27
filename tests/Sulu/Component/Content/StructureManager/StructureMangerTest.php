@@ -12,9 +12,12 @@ namespace Sulu\Component\Content\Mapper;
 
 use Jackalope\Session;
 use PHPCR\Util\NodeHelper;
+use Psr\Log\LoggerInterface;
+use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
 use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Component\Content\Block\BlockProperty;
@@ -26,6 +29,16 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
      * @var LoaderInterface
      */
     public $loader;
+
+    /**
+     * @var PHPTemplateDumper
+     */
+    public $dumper;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var StructureManagerInterface
@@ -46,7 +59,12 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->loader = new TemplateReader();
-        $this->structureManager = new StructureManager($this->loader,
+        $this->dumper = new PHPTemplateDumper('../Resources/Skeleton', false);
+        $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
+        $this->structureManager = new StructureManager(
+            $this->loader,
+            $this->dumper,
+            $this->logger,
             array(
                 'template_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
                 'cache_dir' => $cacheDir
@@ -88,7 +106,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('title', $property->getName());
         $this->assertEquals('text_line', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
@@ -96,6 +114,17 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getParams()
         );
+        $this->assertEquals(2, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.node.name', 1),
+            $property->getTags()['sulu.node.name']
+        );
+        $this->assertEquals(
+            new PropertyTag('sulu.node.title', 10),
+            $property->getTags()['sulu.node.title']
+        );
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.title', true));
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.name', true));
 
         // check url
         $this->assertArrayHasKey('url', $properties);
@@ -103,7 +132,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('url', $property->getName());
         $this->assertEquals('resource_locator', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
@@ -111,6 +140,12 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getParams()
         );
+        $this->assertEquals(1, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.rlp.part', 1),
+            $property->getTags()['sulu.rlp.part']
+        );
+        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.rlp.part', true));
 
         // check article
         $this->assertArrayHasKey('article', $properties);
@@ -118,13 +153,18 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article', $property->getName());
         $this->assertEquals('text_area', $property->getContentTypeName());
         $this->assertEquals(false, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
             array(),
             $property->getParams()
+        );
+        $this->assertEquals(1, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.node.title', 5),
+            $property->getTags()['sulu.node.title']
         );
 
         // check pages
@@ -133,13 +173,18 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('pages', $property->getName());
         $this->assertEquals('smart_content_selection', $property->getContentTypeName());
         $this->assertEquals(false, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
         $this->assertEquals(
             array(),
             $property->getParams()
+        );
+        $this->assertEquals(1, sizeof($property->getTags()));
+        $this->assertEquals(
+            new PropertyTag('sulu.node.title', 1),
+            $property->getTags()['sulu.node.title']
         );
 
         // check images
@@ -148,7 +193,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('images', $property->getName());
         $this->assertEquals('image_selection', $property->getContentTypeName());
         $this->assertEquals(false, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(2, $property->getMaxOccurs());
         $this->assertEquals(0, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
@@ -158,6 +203,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
                 'maxLinks' => '10'
             ),
             $property->getParams()
+        );
+        $this->assertEquals(
+            array(),
+            $property->getTags()
         );
     }
 
@@ -186,7 +235,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('title', $property->getName());
         $this->assertEquals('text_line', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
@@ -201,7 +250,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('url', $property->getName());
         $this->assertEquals('resource_locator', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
@@ -216,7 +265,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article', $property->getName());
         $this->assertEquals('text_editor', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
@@ -231,7 +280,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('blog', $property->getName());
         $this->assertEquals('text_editor', $property->getContentTypeName());
         $this->assertEquals(true, $property->isMandatory());
-        $this->assertEquals(false, $property->isMultilingual());
+        $this->assertEquals(true, $property->isMultilingual());
         $this->assertEquals(1, $property->getMaxOccurs());
         $this->assertEquals(1, $property->getMinOccurs());
         $this->assertEquals(null, $property->getValue());
@@ -252,7 +301,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $block1->getMinOccurs());
         $this->assertEquals(10, $block1->getMaxOccurs());
         $this->assertEquals(true, $block1->isMandatory());
-        $this->assertEquals(false, $block1->isMultilingual());
+        $this->assertEquals(true, $block1->isMultilingual());
         $this->assertEquals('block', $block1->getContentTypeName());
 
         $subproperties = $block1->getChildProperties();
@@ -262,7 +311,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('title1.1', $title11->getName());
         $this->assertEquals('text_line', $title11->getContentTypeName());
         $this->assertEquals(true, $title11->isMandatory());
-        $this->assertEquals(false, $title11->isMultilingual());
+        $this->assertEquals(true, $title11->isMultilingual());
         $this->assertEquals(1, $title11->getMaxOccurs());
         $this->assertEquals(1, $title11->getMinOccurs());
         $this->assertEquals(null, $title11->getValue());
@@ -276,7 +325,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article1.1', $article11->getName());
         $this->assertEquals('text_area', $article11->getContentTypeName());
         $this->assertEquals(true, $article11->isMandatory());
-        $this->assertEquals(false, $article11->isMultilingual());
+        $this->assertEquals(true, $article11->isMultilingual());
         $this->assertEquals(1, $article11->getMaxOccurs());
         $this->assertEquals(2, $article11->getMinOccurs());
         $this->assertEquals(null, $article11->getValue());
@@ -290,7 +339,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block11->getMinOccurs());
         $this->assertEquals(1, $block11->getMaxOccurs());
         $this->assertEquals(false, $block11->isMandatory());
-        $this->assertEquals(false, $block11->isMultilingual());
+        $this->assertEquals(true, $block11->isMultilingual());
         $this->assertEquals('block', $block11->getContentTypeName());
 
         $subproperties11 = $block11->getChildProperties();
@@ -301,7 +350,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block111->getMinOccurs());
         $this->assertEquals(1, $block111->getMaxOccurs());
         $this->assertEquals(false, $block111->isMandatory());
-        $this->assertEquals(false, $block111->isMultilingual());
+        $this->assertEquals(true, $block111->isMultilingual());
         $this->assertEquals('block', $block111->getContentTypeName());
 
         $subproperties111 = $block111->getChildProperties();
@@ -311,7 +360,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article1.1.1', $article111->getName());
         $this->assertEquals('text_area', $article111->getContentTypeName());
         $this->assertEquals(true, $article111->isMandatory());
-        $this->assertEquals(false, $article111->isMultilingual());
+        $this->assertEquals(true, $article111->isMultilingual());
         $this->assertEquals(1, $article111->getMaxOccurs());
         $this->assertEquals(2, $article111->getMinOccurs());
         $this->assertEquals(null, $article111->getValue());
@@ -324,7 +373,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article2.1.2', $article212->getName());
         $this->assertEquals('text_area', $article212->getContentTypeName());
         $this->assertEquals(true, $article212->isMandatory());
-        $this->assertEquals(false, $article212->isMultilingual());
+        $this->assertEquals(true, $article212->isMultilingual());
         $this->assertEquals(1, $article212->getMaxOccurs());
         $this->assertEquals(2, $article212->getMinOccurs());
         $this->assertEquals(null, $article212->getValue());
@@ -338,7 +387,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block113->getMinOccurs());
         $this->assertEquals(1, $block113->getMaxOccurs());
         $this->assertEquals(false, $block113->isMandatory());
-        $this->assertEquals(false, $block113->isMultilingual());
+        $this->assertEquals(true, $block113->isMultilingual());
         $this->assertEquals('block', $block113->getContentTypeName());
 
         $subproperties113 = $block113->getChildProperties();
@@ -348,7 +397,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article1.1.3.1', $article1131->getName());
         $this->assertEquals('text_area', $article1131->getContentTypeName());
         $this->assertEquals(true, $article1131->isMandatory());
-        $this->assertEquals(false, $article1131->isMultilingual());
+        $this->assertEquals(true, $article1131->isMultilingual());
         $this->assertEquals(1, $article1131->getMaxOccurs());
         $this->assertEquals(2, $article1131->getMinOccurs());
         $this->assertEquals(null, $article1131->getValue());
@@ -362,7 +411,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $block112->getMinOccurs());
         $this->assertEquals(1, $block112->getMaxOccurs());
         $this->assertEquals(false, $block112->isMandatory());
-        $this->assertEquals(false, $block112->isMultilingual());
+        $this->assertEquals(true, $block112->isMultilingual());
         $this->assertEquals('block', $block112->getContentTypeName());
 
         $subproperties112 = $block112->getChildProperties();
@@ -372,7 +421,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article1.1.2.1', $article1121->getName());
         $this->assertEquals('text_area', $article1121->getContentTypeName());
         $this->assertEquals(true, $article1121->isMandatory());
-        $this->assertEquals(false, $article1121->isMultilingual());
+        $this->assertEquals(true , $article1121->isMultilingual());
         $this->assertEquals(1, $article1121->getMaxOccurs());
         $this->assertEquals(2, $article1121->getMinOccurs());
         $this->assertEquals(null, $article1121->getValue());
