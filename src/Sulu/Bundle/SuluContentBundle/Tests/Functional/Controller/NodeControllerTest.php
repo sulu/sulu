@@ -53,6 +53,7 @@ class NodeControllerTest extends DatabaseTestCase
         $emailType = new EmailType();
         $emailType->setName('Private');
         self::$em->persist($emailType);
+        self::$em->flush();
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');

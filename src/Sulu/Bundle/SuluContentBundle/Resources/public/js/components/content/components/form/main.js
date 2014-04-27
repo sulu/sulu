@@ -31,9 +31,6 @@ define(['app-config'], function(AppConfig) {
 
         hiddenTemplate: true,
 
-        // property configuration object
-        propertyConfiguration: null,
-
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
 
