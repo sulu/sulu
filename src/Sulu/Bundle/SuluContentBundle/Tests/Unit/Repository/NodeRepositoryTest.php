@@ -17,6 +17,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
+use Sulu\Component\Content\PropertyTag;
 
 class NodeRepositoryTest extends PhpcrTestCase
 {
@@ -235,14 +236,18 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('title', 'text_line')
+                new Property('title', 'title', 'text_line', false, false, 1, 1, array(),
+                    array(
+                        new PropertyTag('sulu.node.name', 100)
+                    )
+                )
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'resource_locator')
+                new Property('url', 'url', 'resource_locator')
             )
         );
 
@@ -250,21 +255,21 @@ class NodeRepositoryTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('tags', 'text_line', false, false, 2, 10)
+                    new Property('tags', 'tags', 'text_line', false, false, 2, 10)
                 )
             );
 
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('article', 'text_area')
+                    new Property('article', 'article', 'text_area')
                 )
             );
         } elseif ($type == 2) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', 'text_area')
+                    new Property('blog', 'blog', 'text_area')
                 )
             );
         }

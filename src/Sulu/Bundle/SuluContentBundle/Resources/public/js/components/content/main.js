@@ -16,8 +16,6 @@ define([
     var MIN_CONTAINER_WIDTH = 980;
 
     return {
-
-
         stateDropdownItems: {
             publish: function() {
                 return {
@@ -102,8 +100,8 @@ define([
             }, this);
 
             // get resource locator
-            this.sandbox.on('sulu.content.contents.getRL', function(title, callback) {
-                this.getResourceLocator(title, callback);
+            this.sandbox.once('sulu.content.contents.getRL', function(title, template, callback) {
+                this.getResourceLocator(title, template, callback);
             }, this);
 
             // load list view
@@ -154,9 +152,9 @@ define([
             return this.stateDropdownItems[state].call(this);
         },
 
-        getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
-            this.sandbox.util.load(url)
+        getResourceLocator: function(parts, template, callback) {
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
+            this.sandbox.util.save(url, 'POST', {parts: parts})
                 .then(function(data) {
                     callback(data.resourceLocator);
                 });
