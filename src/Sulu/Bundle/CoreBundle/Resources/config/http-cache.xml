@@ -13,6 +13,7 @@
 
         <!-- http cache manager factory -->
         <service id="sulu.http_cache.http_cache_manager_factory" class="%sulu.http_cache.http_cache_manager_factory.class%">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="logger"/>
         </service>
 

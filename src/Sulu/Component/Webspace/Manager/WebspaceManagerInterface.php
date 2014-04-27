@@ -42,6 +42,16 @@ interface WebspaceManagerInterface
     public function findPortalInformationByUrl($url, $environment);
 
     /**
+     * Returns all possible urls for resourcelocator
+     * @param string $resourceLocator
+     * @param string $environment
+     * @param string $languageCode
+     * @param null|string $webspaceKey
+     * @return array
+     */
+    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null);
+
+    /**
      * Returns all the webspaces managed by this specific instance
      * @return WebspaceCollection
      */

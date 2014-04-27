@@ -119,11 +119,13 @@ class WebspaceManager implements WebspaceManagerInterface
         $urls = array();
         $portals = $this->getWebspaceCollection()->getPortals($environment);
         foreach ($portals as $url => $portal) {
-            $sameLocalization = $portal['localization']->getLocalization() === $languageCode;
-            $sameWebspace = $webspaceKey === null || $portal['portal']->getWebspace()->getKey() === $webspaceKey;
-            if ($sameLocalization && $sameWebspace) {
-                // TODO protocol
-                $urls[] = 'http://' . $url . $resourceLocator;
+            if (array_key_exists('localization', $portal)) {
+                $sameLocalization = $portal['localization']->getLocalization() === $languageCode;
+                $sameWebspace = $webspaceKey === null || $portal['portal']->getWebspace()->getKey() === $webspaceKey;
+                if ($sameLocalization && $sameWebspace) {
+                    // TODO protocol
+                    $urls[] = 'http://' . $url . $resourceLocator;
+                }
             }
         }
         return $urls;

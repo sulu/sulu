@@ -10,9 +10,11 @@
 
 namespace Sulu\Component\HttpCache;
 
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Component\HttpCache\Exception\NotImplementedHttpCacheManagerTypeException;
 use Sulu\Component\HttpCache\Exception\UnknownHttpCacheManagerTypeException;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Sulu cache manager factory
@@ -23,15 +25,21 @@ class HttpCacheManagerFactory
     const VARNISH_CACHE = 'VarnishCache';
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var WebspaceManagerInterface
+     */
+    protected $webspaceManager;
+
+    /**
+     * @var LoggerInterface
      */
     protected $logger;
 
     /**
      * @param $logger
      */
-    public function __construct($logger)
+    public function __construct(WebspaceManagerInterface $webspaceManager, $logger = null)
     {
+        $this->webspaceManager = $webspaceManager;
         $this->logger = $logger ? : new NullLogger();
     }
 
@@ -48,7 +56,7 @@ class HttpCacheManagerFactory
         switch ($type) {
 
             case self::SYMFONY_HTTP_CACHE:
-                $instance = new SymfonyHttpCacheManager($this->logger);
+                $instance = new SymfonyHttpCacheManager($this->webspaceManager, $this->logger);
                 break;
 
             case self::VARNISH_CACHE:
