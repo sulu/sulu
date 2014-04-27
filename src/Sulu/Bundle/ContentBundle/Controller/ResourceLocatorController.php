@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * handles resource locator api
  */
-class ResourceLocatorController extends Controller implements ClassResourceInterface
+class ResourceLocatorController extends Controller
 {
     /**
      * return resource-locator for sub-node
