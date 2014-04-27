@@ -11,18 +11,16 @@
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 
 /**
  * implements RLP Strategy "whole tree"
  */
 class TreeStrategy extends RlpStrategy
 {
-    /**
-     * @param RlpMapperInterface $mapper
-     */
-    public function __construct(RlpMapperInterface $mapper)
+    public function __construct(RlpMapperInterface $mapper, PathCleanupInterface $cleaner)
     {
-        parent::__construct('whole-tree', $mapper);
+        parent::__construct('whole-tree', $mapper, $cleaner);
     }
 
     /**

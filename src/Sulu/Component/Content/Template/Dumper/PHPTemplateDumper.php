@@ -10,30 +10,48 @@
 
 namespace Sulu\Component\Content\Template\Dumper;
 
-
-class PHPTemplateDumper extends TemplateDumper
+/**
+ * Class PHPTemplateDumper
+ * @package Sulu\Component\Content\Template\Dumper
+ */
+class PHPTemplateDumper
 {
+    /**
+     * @var
+     */
+    private $twig;
 
-    private $results;
-
-    public function __construct(array $results)
+    /**
+     * @param string $path path to twig templates
+     * @param boolean $debug
+     */
+    function __construct($path, $debug)
     {
-        $this->results = $results;
+        if (strpos($path, '/') !== 0) {
+            $path = __DIR__ . '/' . $path;
+        }
+        $this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem($path), array('debug' => $debug));
+
+        if ($debug) {
+            $this->twig->addExtension(new \Twig_Extension_Debug());
+        }
     }
+
 
     /**
      * Creates a new class with the data from the given collection
+     * @param array $results
      * @param array $options
      * @return string
      */
-    public function dump($options = array())
+    public function dump($results, $options = array())
     {
-        return $this->render(
+        return $this->twig->render(
             'StructureClass.php.twig',
             array(
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],
-                'content' => $this->results
+                'content' => $results
             )
         );
     }

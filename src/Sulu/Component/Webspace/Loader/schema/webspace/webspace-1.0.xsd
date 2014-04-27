@@ -6,10 +6,17 @@
         <xs:sequence>
             <xs:element type="xs:string" name="name"/>
             <xs:element type="xs:string" name="key"/>
+            <xs:element type="security" name="security" minOccurs="0" maxOccurs="1"/>
             <xs:element type="localizationsType" name="localizations"/>
             <xs:element type="segmentsType" name="segments" maxOccurs="1" minOccurs="0"/>
             <xs:element type="themeType" name="theme"/>
             <xs:element type="portalsType" name="portals"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="security">
+        <xs:sequence>
+            <xs:element type="xs:string" name="system" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

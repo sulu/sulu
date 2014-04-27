@@ -1,7 +1,7 @@
 <?php
-
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\PropertyTag;
 
 /**
  * {{ cache_class }}
@@ -50,36 +50,40 @@ class {{ cache_class }} extends {{ base_class }}
 {% macro complextype(property) %}
 new BlockProperty(
             '{{ property.name }}',
+            '{{ property.title }}',
             {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
+            {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
             {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
             {{ property.minOccurs is defined ? property.minOccurs : 1 }},
-{% if property.params %}
-            {{ 'array(' }}
-            {% for key,value in property.params %}
-                '{{ key }}' => '{{ value }}',
+            array(
+            {% for param in property.params %}
+                '{{ param.name }}' => '{{ param.value }}',
             {% endfor %}
-            {{ ')' }}
-{% else %}
-            array()
-{% endif %}
+            ),
+            array(
+{% for tag in property.tags %}
+                '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
+{% endfor %}
+            )
         ){% endmacro %}
 
 {% macro basictype(property) %}
             new Property(
                 '{{ property.name }}',
+                '{{ property.title }}',
                 '{{ property.type }}',
                 {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
-                {{ property.multilingual is defined and property.multilingual ? 'true' : 'false' }},
+                {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
                 {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},
                 {{ property.minOccurs is defined ? property.minOccurs : 1 }},
-{% if property.params %}
-                {{ 'array(' }}
-                {% for key,value in property.params %}
-                    '{{ key }}' => '{{ value }}',
-                {% endfor %}
-                {{ ')' }}
-{% else %}
-                array()
-{% endif %}
+                array(
+{% for param in property.params %}
+                    '{{ param.name }}' => '{{ param.value }}',
+{% endfor %}
+                ),
+                array(
+{% for tag in property.tags %}
+                    '{{ tag.name }}' => new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}),
+{% endfor %}
+                )
             ){% endmacro %}

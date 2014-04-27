@@ -31,6 +31,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
@@ -75,6 +76,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Massive Art', $webspace->getName());
         $this->assertEquals('massiveart', $webspace->getKey());
+        $this->assertEquals('massiveart', $webspace->getSecurity()->getSystem());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
@@ -175,6 +177,8 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('sulu_io_without_portal_localization', $webspace->getKey());
+
+        $this->assertNull($webspace->getSecurity());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());

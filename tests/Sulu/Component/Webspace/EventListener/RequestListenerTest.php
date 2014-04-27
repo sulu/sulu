@@ -16,6 +16,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -55,6 +56,9 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testAnalyze()
     {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
         $portal = new Portal();
         $portal->setKey('sulu');
 
@@ -63,6 +67,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $portalInformation = array(
+            'webspace' => $webspace,
             'portal' => $portal,
             'localization' => $localization,
             'segment' => null,
@@ -78,6 +83,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $this->requestListener->onKernelRequest(new GetResponseEvent($kernel, $request, ''));
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
     }
