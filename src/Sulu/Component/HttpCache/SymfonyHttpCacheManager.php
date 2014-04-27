@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\HttpCache;
 
+use FOS\HttpCache\CacheInvalidator;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Component\Content\StructureInterface;
@@ -32,12 +33,18 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
     protected $logger;
 
     /**
+     * @var CacheInvalidator
+     */
+    protected $cacheInvalidator;
+
+    /**
      * @param $logger
      */
     public function __construct(WebspaceManagerInterface $webspaceManager, $logger = null)
     {
         $this->webspaceManager = $webspaceManager;
         $this->logger = $logger ? : new NullLogger();
+
     }
 
     /**
@@ -54,18 +61,38 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
 
         if (count($urls) > 0) {
             foreach ($urls as $url) {
-                $this->purge($url);
+                $this->invalidatePath($url);
                 if (($tmpUrl = rtrim($url, '/')) !== $url) {
-                    $this->purge($tmpUrl);
+                    $this->invalidatePath($tmpUrl);
                 }
             }
+
+            $this->flush();
         }
     }
 
-    private function purge($url)
+    private function invalidatePath($url)
     {
-        $this->logger->debug('PURGE: ' . $url);
+        $this->logger->debug('Invalidate path: ' . $url);
+        $this->getCacheInvalidator()->invalidatePath($url);
+    }
 
+    private function flush()
+    {
+        $this->getCacheInvalidator()->flush();
+    }
 
+    /**
+     * @return CacheInvalidator
+     */
+    private function getCacheInvalidator()
+    {
+
+        if (null === $this->cacheInvalidator) {
+            $client = new ProxyClient\Symfony();
+            $this->cacheInvalidator = new CacheInvalidator($client);
+        }
+
+        return $this->cacheInvalidator;
     }
 }
