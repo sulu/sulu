@@ -108,8 +108,21 @@ class WebspaceCollectionBuilder
             }
         }
 
+        $environments = array_keys($this->portalInformations);
+
+        foreach ($environments as $environment){
+            // sort all portal informations by length
+            uksort(
+                $this->portalInformations[$environment],
+                function($a, $b) {
+                    return strlen($a) < strlen($b);
+                }
+            );
+        }
+
         $collection->setWebspaces($this->webspaces);
         $collection->setPortals($this->portals);
+        $collection->setPortalInformations($this->portalInformations);
 
         return $collection;
     }
@@ -120,7 +133,7 @@ class WebspaceCollectionBuilder
     private function buildPortals(Webspace $webspace)
     {
         foreach ($webspace->getPortals() as $portal) {
-            $this->portals = $portal;
+            $this->portals[] = $portal;
 
             $this->buildEnvironments($portal);
         }

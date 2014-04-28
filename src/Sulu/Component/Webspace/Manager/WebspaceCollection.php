@@ -295,4 +295,13 @@ class WebspaceCollection implements \IteratorAggregate
     {
         $this->portals = $portals;
     }
+
+    /**
+     * Sets the portal Information for this collection
+     * @param array $portalInformations
+     */
+    public function setPortalInformations($portalInformations)
+    {
+        $this->portalInformations = $portalInformations;
+    }
 }
