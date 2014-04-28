@@ -43,7 +43,7 @@ services:
         arguments: [@sulu_content.preview, @logger]
     sulu_content.node_repository:
         class: %sulu_content.node_repository.class%
-        arguments: [@sulu.content.mapper, @sulu.phpcr.session, @sulu_security.user_manager]
+        arguments: [@sulu.content.mapper, @sulu.phpcr.session, @sulu_security.user_manager, @sulu.content.type.resource_locator]
     sulu.content.type.smart_content:
         class: %sulu.content.type.smart_content.class%
         arguments: [@sulu_content.node_repository, @sulu_tag.tag_manager, %sulu.content.type.smart_content.template%]

@@ -1,5 +1,8 @@
-<input id="{{ id|raw }}" type="text" class="form-element preview-update trigger-save-button"
-       data-mapper-property="{{ property.name }}"
-       data-type="resourceLocator"
-       data-property='{{ property|json_encode }}'
-       {% if property.mandatory %}data-validation-required="true"{% endif %}/>
+<div id="{{ id|raw }}"
+     class="preview-update trigger-save-button"
+     data-mapper-property="{{ property.name }}"
+     data-type="resourceLocator"
+     data-aura-component="resource-locator@sulucontent"
+     data-type-instance-name="{{ id|raw }}"
+     data-aura-history-api="/admin/api/nodes/<%=content.id%>/history?language={{ languageCode }}&webspace={{ webspaceKey }}"
+     {% if property.mandatory %}data-validation-required="true"{% endif %} ></div>
