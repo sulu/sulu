@@ -240,7 +240,8 @@ define(['app-config'], function(AppConfig) {
                 name: 'contact-form@sulucontact',
                 options: {
                     el:'#contact-options-dropdown',
-                    fieldTypes: this.fieldTypes
+                    fieldTypes: this.fieldTypes,
+                    defaultTypes: this.defaultTypes
                 }
             }]);
         },

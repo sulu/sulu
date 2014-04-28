@@ -197,7 +197,8 @@
                         'phone': {{ phoneTypes|json_encode()|raw }},
                         'address': {{ addressTypes|json_encode()|raw }},
                         'url': {{ urlTypes|json_encode()|raw }},
-                        'fax': {{ faxTypes|json_encode()|raw }}
+                        'fax': {{ faxTypes|json_encode()|raw }},
+                        'countries': {{ countries|json_encode()|raw }}
                     };
             App.emit('sulu.contacts.set-types', types);
             App.emit('sulu.contacts.set-defaults', defaults);

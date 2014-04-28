@@ -1,5 +1,4 @@
 
-{% block addresses %}
     <h2 class="divider"><%=translate('public.address')%></h2>
 
     <div id="addresses" data-mapper-property="addresses" data-type="collection">
@@ -14,15 +13,15 @@
                          data-aura-trigger="label">
                         <input type="hidden" data-mapper-property="id" class="id-value"/>
                         <label class="pull-left">
-<span class="type-value"
-      data-form="true"
-      data-mapper-property="addressType"
-      data-type="label"
-      data-type-label="name"
-      data-type-id="id"
-      data-id="{{ defaultAddressType.id }}">
-<%=translate('{{ defaultAddressType.name }}')%>
-</span>
+                            <span class="type-value"
+                                  data-form="true"
+                                  data-mapper-property="addressType"
+                                  data-type="label"
+                                  data-type-label="name"
+                                  data-type-id="id"
+                                  data-id="{{ defaultAddressType.id }}">
+                            <%=translate('{{ defaultAddressType.name }}')%>
+                            </span>
                             <span class="dropdown-toggle inline-block pointer"></span>
                         </label>
                     </div>
@@ -80,4 +79,3 @@
             <span class="icon-add"></span><span class="control-label"><%=translate('contact.form.addAddress')%></span>
         </div>
     </div>
-{% endblock %}

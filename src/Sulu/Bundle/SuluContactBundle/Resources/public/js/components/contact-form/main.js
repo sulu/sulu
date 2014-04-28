@@ -7,13 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['text!sulucontact/components/contact-form/address.form.html'], function(AddressForm) {
 
     'use strict';
 
     var defaults = {
             fields: ['address', 'email', 'fax', 'phone', 'url'],
             fieldTypes: [],
+            defaultTypes: [],
             trigger: '.contact-options-toggle'
         },
 
@@ -23,7 +24,8 @@ define([], function() {
             editDeleteSelector: '.delete',
             editDeleteIcon: 'icon-circle-minus',
             editUndoDeleteIcon: 'icon-circle-plus',
-            fadedClass: 'faded'
+            fadedClass: 'faded',
+            addressFormId: '#address-form'
         },
 
         templates = {
@@ -434,24 +436,97 @@ define([], function() {
 
         createAddressOverlay = function(data) {
 
+            var addressTemplate, formObject, $overlay;
+
+            // remove add overlay
             this.sandbox.emit('husky.overlay.add-fields.remove');
+            // remove edit overlay
+            this.sandbox.emit('husky.overlay.edit-fields.remove');
 
+            // extend address data by additional variables
+            this.sandbox.util.extend(true, data, {
+                translate: this.sandbox.translate,
+                countries: this.options.fieldTypes['countries']
+            });
 
+            // parse template
+            addressTemplate = this.sandbox.util.template(AddressForm, data);
 
+            // create container for overlay
+            $overlay = this.sandbox.dom.createElement('<div>');
+            this.sandbox.dom.append(this.$el, $overlay);
+
+            // create overlay with data
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
+                        el: $overlay,
                         title: this.sandbox.translate('public.add-address'),
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'add-address',
-                        data: 'test'
-//                        okCallback: editOkClicked.bind(this),
-//                        closeCallback: unbindEditEvents.bind(this)
+                        data: addressTemplate,
+                        skin: 'wide',
+                        okCallback: addAddressOkClicked.bind(this),
+                        closeCallback: removeAddressFormEvents.bind(this)
                     }
                 }
             ]);
+
+            // after everything was added to dom
+            this.sandbox.on('husky.overlay.add-address.opened', function(){
+                // start form and set data
+                formObject = this.sandbox.form.create(constants.addressFormId);
+                formObject.initialized.then(function() {
+                    this.sandbox.form.setData(constants.addressFormId, data);
+                }.bind(this));
+
+                // event listener to check if all necessary form elements are set
+                // TODO: change to $container after changing to current husky version
+                this.sandbox.dom.on(this.sandbox.dom.find(constants.addressFormId), 'keyup change', checkValidAddressData.bind(this), 'input, select');
+            }.bind(this));
+
+//            // use husky select
+//            this.sandbox.start([
+//                {
+//                    name: 'select@husky',
+//                    options: {
+//                        el: '#country-select',
+//                        instanceName: 'country-select',
+//                        data: this.options.fieldTypes['countries'],
+//                        preSelectedElements: !!data.country ? [data.country.id]: [this.options.defaultTypes.country.id]
+//                    }
+//                }
+//            ]);
+
+        },
+
+        checkValidAddressData = function() {
+            // TODO: implement live check of form data
+//            this.sandbox.form.validate(constants.addressFormId);
+//            var formData = this.sandbox.form.getData(constants.addressFormId);
+        },
+
+        // removes listeners of addressform
+        removeAddressFormEvents = function() {
+            this.sandbox.dom.off(constants.addressFormId);
+        },
+
+        addAddressOkClicked = function() {
+            var formData;
+
+            // TODO: validate form and perform error-handling
+            if (!this.sandbox.form.validate(constants.addressFormId)) {
+                return false;
+            }
+            formData = this.sandbox.form.getData(constants.addressFormId);
+
+            // add to collection
+            this.sandbox.form.addToCollection(this.form, 'addresses', formData);
+
+            // remove change listener
+            removeAddressFormEvents.call(this);
         },
 
         createAddOverlay = function() {
@@ -480,9 +555,7 @@ define([], function() {
                     }
                 }.bind(this));
 
-            // TODO:  REMOVE AFTER ADDRESSES CAN BE ADDED
             // change data
-//            dropdownData.address.disabled = true;
             dropdownData.fax.collection = 'faxes';
 
             // convert object to array
@@ -546,7 +619,6 @@ define([], function() {
 
             // add new container
             this.sandbox.dom.append(this.$el, $container);
-
 
             // TODO: implement options dropdown functionality for adding and editing contact details
             // initialize dropdown
