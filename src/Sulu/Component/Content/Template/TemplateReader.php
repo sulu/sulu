@@ -16,12 +16,15 @@ use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Sulu\Component\Content\Template\Exception\InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * reads a template xml and returns a array representation
  */
 class TemplateReader implements LoaderInterface
 {
+    const SCHEME_PATH = '/Resources/schema/template/template-1.0.xsd';
+
     /**
      * @var string
      */
@@ -40,12 +43,22 @@ class TemplateReader implements LoaderInterface
     /**
      * @var string
      */
+    private $tagKey = 'tags';
+
+    /**
+     * @var string
+     */
     private $pathToProperties = '/x:template/x:properties/*';
 
     /**
      * @var string
      */
     private $pathToParams = 'x:params/x:param';
+
+    /**
+     * @var string
+     */
+    private $pathToTags = 'x:tag';
 
     /**
      * @var \DOMDocument
@@ -58,57 +71,99 @@ class TemplateReader implements LoaderInterface
     private $complexNodeTypes = array('block');
 
     /**
+     * @var array
+     */
+    private $tags = array();
+
+    /**
+     * @var array
+     */
+    private $requiredTags = array(
+        'sulu.node.name'
+    );
+
+    /**
      * Reads all types from the given path
      * @param $path string path to file with type definitions
      * @param $mandatoryNodes array with key of mandatory node names
      * @throws \Sulu\Component\Content\Template\Exception\InvalidXmlException
-     * @throws \Sulu\Component\Content\Template\Exception\InvalidArgumentException
      * @return array with found definitions of types
      */
     private function readTemplate($path, $mandatoryNodes = array('key', 'view', 'controller', 'cacheLifetime'))
     {
-
+        $this->tags = array();
         $template = array();
-        $this->xmlDocument = new \DOMDocument();
 
-        try {
-            $this->xmlDocument->load($path);
+        $this->xmlDocument = XmlUtils::loadFile($path, __DIR__ . static::SCHEME_PATH);
 
-            if (!empty($mandatoryNodes)) {
-                $template = $this->getMandatoryNodes($mandatoryNodes);
+        if (!empty($mandatoryNodes)) {
+            $template = $this->getMandatoryNodes($mandatoryNodes);
+        }
+
+        $template[$this->propertiesKey] = array();
+        $xpath = new \DOMXPath($this->xmlDocument);
+        $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
+
+        /** @var \DOMNodeList $nodes */
+        $nodes = $xpath->query($this->pathToProperties);
+
+        foreach ($nodes as $node) {
+
+            /** @var \DOMNode $node */
+            $attributes = $this->getAllAttributesOfNode($node);
+
+            if (in_array($node->tagName, $this->complexNodeTypes)) {
+                $attributes['type'] = $node->tagName;
             }
 
-            $template[$this->propertiesKey] = array();
-            $xpath = new \DOMXPath($this->xmlDocument);
-            $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
+            $name = $attributes[$this->nameKey];
+            $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath, $this->paramsKey);
+            $tags = $this->getChildrenOfNode($node, $this->pathToTags, $xpath, $this->tagKey);
+            $this->tags = array_merge($this->tags, (isset($tags['tags']) ? $tags['tags'] : array()));
+            $template[$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
 
-            /** @var \DOMNodeList $nodes */
-            $nodes = $xpath->query($this->pathToProperties);
-
-            foreach ($nodes as $node) {
-
-                /** @var \DOMNode $node */
-                $attributes = $this->getAllAttributesOfNode($node);
-
-                if(in_array($node->tagName, $this->complexNodeTypes)) {
-                    $attributes['type'] = $node->tagName;
-                }
-
-                $name = $attributes[$this->nameKey];
-                $params = $this->getChildrenOfNode($node, $this->pathToParams, $xpath);
-                $template[$this->propertiesKey][$name] = array_merge($attributes, $params);
-
-                if(in_array($node->tagName, $this->complexNodeTypes)) {
-                    $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$node);
-                }
-
+            if (in_array($node->tagName, $this->complexNodeTypes)) {
+                $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $node);
             }
+        }
 
-        } catch (InvalidXmlException $ex) {
-            throw $ex;
-        } catch (Exception $ex) {
-            // TODO do not catch exceptions here but in the callee
-            throw new InvalidArgumentException('Path is invalid: ' . $path);
+        // check combination of tag and priority of uniqueness
+        // check required properties
+        // DEEP COPY
+        $required = array_merge(array(), $this->requiredTags);
+        for ($x = 0; $x < sizeof($this->tags); $x++) {
+            // check required properties
+            for ($y = 0; $y < sizeof($required); $y++) {
+                if ($required[$y] === $this->tags[$x]['name']) {
+                    break;
+                }
+            }
+            unset($required[$y]);
+
+            // extract name and prio
+            $xName = $this->tags[$x]['name'];
+            $xPriority = isset($this->tags[$x]['priority']) ? $this->tags[$x]['priority'] : 1;
+            for ($y = 0; $y < sizeof($this->tags); $y++) {
+                // extract name and prio
+                $yName = $this->tags[$y]['name'];
+                $yPriority = isset($this->tags[$y]['priority']) ? $this->tags[$y]['priority'] : 1;
+                // check of uniqueness
+                if ($x !== $y && $xName === $yName && $xPriority === $yPriority) {
+                    throw new InvalidXmlException(sprintf(
+                        'Priority %s of tag %s exists duplicated',
+                        $xPriority,
+                        $xName
+                    ));
+                }
+            }
+        }
+
+        // throw exception if not all required tags are set
+        if (sizeof($required) > 0) {
+            throw new InvalidXmlException(sprintf(
+                'Tag(s) %s required but not found',
+                join(',', $required)
+            ));
         }
 
         return $template;
@@ -120,7 +175,8 @@ class TemplateReader implements LoaderInterface
      * @param \DOMNode $node
      * @return array with sub properties
      */
-    private function parseSubproperties($xpath, $node){
+    private function parseSubproperties($xpath, $node)
+    {
 
         $properties = array();
 
@@ -129,20 +185,21 @@ class TemplateReader implements LoaderInterface
 
 
         /** @var \DOMNode $child */
-        foreach($children as $child) {
+        foreach ($children as $child) {
 
             $attributes = $this->getAllAttributesOfNode($child);
 
-            if(in_array($child->tagName, $this->complexNodeTypes)) {
+            if (in_array($child->tagName, $this->complexNodeTypes)) {
                 $attributes['type'] = $child->tagName;
             }
 
             $name = $attributes[$this->nameKey];
-            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath);
-            $properties[$name] = array_merge($attributes, $params);
+            $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath, $this->paramsKey);
+            $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
+            $properties[$name] = array_merge($attributes, $tags, $params);
 
-            if(in_array($child->tagName, $this->complexNodeTypes)) {
-                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath,$child);
+            if (in_array($child->tagName, $this->complexNodeTypes)) {
+                $properties[$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $child);
             }
 
         }
@@ -187,15 +244,11 @@ class TemplateReader implements LoaderInterface
                 $value = $node->attributes->item($i)->nodeValue;
 
                 if (is_numeric($value)) {
-                    $value = $value + 0;
-                } else {
-                    if ($value === 'true') {
-                        $value = true;
-                    } else {
-                        if ($value === 'false') {
-                            $value = false;
-                        }
-                    }
+                    $value = (int) $value;
+                } elseif ($value === 'true') {
+                    $value = true;
+                } elseif ($value === 'false') {
+                    $value = false;
                 }
 
                 $attributes[$node->attributes->item($i)->nodeName] = $value;
@@ -210,28 +263,18 @@ class TemplateReader implements LoaderInterface
      * @param \DOMNode $node
      * @param $path
      * @param $xpath
+     * @param $name
      * @return array
-     * @internal param $paramsTag
      */
-    private function getChildrenOfNode(\DOMNode $node, $path, $xpath)
+    private function getChildrenOfNode(\DOMNode $node, $path, $xpath, $name)
     {
-
         $keyValue = array();
-        $params = $children = $xpath->query($path, $node);
+        $items = $xpath->query($path, $node);
 
-        if ($params->length > 0) {
-
-            $keyValue[$this->paramsKey] = array();
-            $xpath = new \DOMXPath($this->xmlDocument);
-            $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
-
-            $children = $xpath->query($path, $node);
-
-            foreach ($children as $child) {
-                $keyValue[$this->paramsKey] = array_merge(
-                    $keyValue[$this->paramsKey],
-                    $this->getAttributesAsKeyValuePairs($child)
-                );
+        if ($items->length > 0) {
+            $keyValue[$name] = array();
+            foreach ($items as $child) {
+                $keyValue[$name][] = $this->getAttributesAsKeyValuePairs($child);
             }
         }
 
@@ -245,15 +288,14 @@ class TemplateReader implements LoaderInterface
      */
     private function getAttributesAsKeyValuePairs(\DOMNode $node)
     {
-
-        $keyValues = array();
-
+        $values = array();
         if ($node->hasAttributes()) {
-            $keyValues[$node->attributes->item(0)->nodeValue] = $node->attributes->item(1)->nodeValue;
+            for ($i = 0; $i < $node->attributes->length; $i++) {
+                $attr = $node->attributes->item($i);
+                $values[$attr->nodeName] = $attr->nodeValue;
+            }
         }
-
-        return $keyValues;
-
+        return $values;
     }
 
     /**
@@ -272,7 +314,7 @@ class TemplateReader implements LoaderInterface
      * Returns true if this class supports the given resource.
      *
      * @param mixed $resource A resource
-     * @param string $type     The resource type
+     * @param string $type The resource type
      *
      * @throws \Sulu\Exception\FeatureNotImplementedException
      * @return Boolean true if this class supports the given resource, false otherwise

@@ -262,4 +262,19 @@ interface StructureInterface extends \JsonSerializable
      * @return array
      */
     public function toArray($complete = true);
+
+    /**
+     * returns a property instance with given tag name
+     * @param string $tagName
+     * @param $highest
+     * @return PropertyInterface
+     */
+    public function getPropertyByTagName($tagName, $highest = true);
+
+    /**
+     * returns value of property with given tag name
+     * @param string $tagName
+     * @return mixed
+     */
+    public function getPropertyValueByTagName($tagName);
 }

@@ -20,6 +20,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
@@ -29,6 +30,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -84,30 +86,9 @@ class ContentMapper implements ContentMapperInterface
     private $stopwatch;
 
     /**
-     * TODO abstract with cleanup from RLPStrategy
-     * replacers for cleanup
-     * @var array
+     * @var PathCleanupInterface
      */
-    protected $replacers = array(
-        'default' => array(
-            ' ' => '-',
-            '+' => '-',
-            'ä' => 'ae',
-            'ö' => 'oe',
-            'ü' => 'ue',
-            // because strtolower ignores Ä,Ö,Ü
-            'Ä' => 'ae',
-            'Ö' => 'oe',
-            'Ü' => 'ue'
-            // TODO should be filled
-        ),
-        'de' => array(
-            '&' => 'und'
-        ),
-        'en' => array(
-            '&' => 'and'
-        )
-    );
+    private $cleaner;
 
     /**
      * excepted states
@@ -127,6 +108,7 @@ class ContentMapper implements ContentMapperInterface
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
+        PathCleanupInterface $cleaner,
         $defaultLanguage,
         $defaultTemplate,
         $languageNamespace,
@@ -141,6 +123,7 @@ class ContentMapper implements ContentMapperInterface
         $this->defaultLanguage = $defaultLanguage;
         $this->defaultTemplate = $defaultTemplate;
         $this->languageNamespace = $languageNamespace;
+        $this->cleaner = $cleaner;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -174,6 +157,7 @@ class ContentMapper implements ContentMapperInterface
      * @param int $state state of node
      * @param string $showInNavigation
      *
+     * @throws \Exception
      * @return StructureInterface
      */
     public function save(
@@ -201,12 +185,13 @@ class ContentMapper implements ContentMapperInterface
             $root = $this->getContentNode($webspaceKey);
         }
 
-        $path = $this->cleanUp($data['title']);
+        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+        $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
 
         $dateTime = new \DateTime();
 
-        $titleProperty = new TranslatedProperty(
-            $structure->getProperty('title'),
+        $translatedNodeNameProperty = new TranslatedProperty(
+            $nodeNameProperty,
             $languageCode,
             $this->languageNamespace
         );
@@ -240,8 +225,8 @@ class ContentMapper implements ContentMapperInterface
 
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
                 $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
-                $hasDifferentTitle = !$node->hasProperty($titleProperty->getName()) ||
-                    $node->getPropertyValue($titleProperty->getName()) !== $data['title'];
+                $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
+                    $node->getPropertyValue($translatedNodeNameProperty->getName()) !== $data[$nodeNameProperty->getName()];
 
                 if ($hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->getUniquePath($path, $node->getParent());
@@ -298,6 +283,8 @@ class ContentMapper implements ContentMapperInterface
                         null
                     );
                 }
+            } elseif ($property->getMandatory()) {
+                throw new MandatoryPropertyException($templateKey, $property);
             } elseif (!$partialUpdate) {
                 $type = $this->getContentType($property->getContentTypeName());
                 // if it is not a partial update remove property
@@ -811,7 +798,8 @@ class ContentMapper implements ContentMapperInterface
                 $this->defaultTemplate
             );
             $structure = $this->getStructure($templateKey);
-            $property = $structure->getProperty('title');
+            $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+            $property = $structure->getProperty($nodeNameProperty->getName());
             $type = $this->getContentType($property->getContentTypeName());
             $type->read(
                 $node,
@@ -820,9 +808,14 @@ class ContentMapper implements ContentMapperInterface
                 $languageCode,
                 null
             );
-            $title = $property->getValue();
+            $nodeName = $property->getValue();
+            $structure->setUuid($node->getPropertyValue('jcr:uuid'));
 
-            $result[] = new BreadcrumbItem($depth, $nodeUuid, $title);
+            // throw an content.node.load event (disabled for now)
+            //$event = new ContentNodeEvent($node, $structure);
+            //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
+
+            $result[] = new BreadcrumbItem($depth, $nodeUuid, $nodeName);
         }
 
         return $result;
@@ -912,42 +905,6 @@ class ContentMapper implements ContentMapperInterface
     protected function getRouteNode($webspaceKey, $languageCode, $segment)
     {
         return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segment);
-    }
-
-    /**
-     * TODO abstract with cleanup from RLPStrategy
-     * @param string $dirty
-     * @return string
-     */
-    protected function cleanUp($dirty)
-    {
-        $clean = strtolower($dirty);
-
-        // TODO language
-        $languageCode = 'de';
-        $replacers = array_merge($this->replacers['default'], $this->replacers[$languageCode]);
-
-        if (count($replacers) > 0) {
-            foreach ($replacers as $key => $value) {
-                $clean = str_replace($key, $value, $clean);
-            }
-        }
-
-        // Inspired by ZOOLU
-        // delete problematic characters
-        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
-
-        // replace multiple minus with one
-        $clean = preg_replace('/([-]+)/', '-', $clean);
-
-        // delete minus at the beginning or end
-        $clean = preg_replace('/^([-])/', '', $clean);
-        $clean = preg_replace('/([-])$/', '', $clean);
-
-        // remove double slashes
-        $clean = str_replace('//', '/', $clean);
-
-        return $clean;
     }
 
     /**

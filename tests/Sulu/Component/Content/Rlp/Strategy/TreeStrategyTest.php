@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Rlp\Strategy;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
+use Sulu\Component\PHPCR\PathCleanup;
 
 class TreeStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,7 +41,7 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('getUniquePath')
             ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
 
-        $this->strategy = new TreeStrategy($this->mapper);
+        $this->strategy = new TreeStrategy($this->mapper, new PathCleanup());
     }
 
     public function uniqueCallback()
