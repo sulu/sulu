@@ -536,12 +536,13 @@ define(['app-config'], function(AppConfig) {
                         url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                         require([url], function(template) {
-                            var defaults = {
-                                    translate: this.sandbox.translate
+                            var data = this.initData(),
+                                defaults = {
+                                    translate: this.sandbox.translate,
+                                    content: data
                                 },
                                 context = this.sandbox.util.extend({}, defaults),
-                                tpl = this.sandbox.util.template(template, context),
-                                data = this.initData();
+                                tpl = this.sandbox.util.template(template, context);
 
                             this.sandbox.dom.remove(this.formId + ' *');
                             this.sandbox.dom.html(this.$el, tpl);
