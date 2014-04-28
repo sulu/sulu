@@ -43,16 +43,16 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Webspace/valid'
+                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
+                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid'
             )
         );
     }
 
     public function tearDown()
     {
-        if (file_exists(__DIR__ . '/../../../Resources/cache/WebspaceCollectionCache.php')) {
-            unlink(__DIR__ . '/../../../Resources/cache/WebspaceCollectionCache.php');
+        if (file_exists(__DIR__ . '/../../../../Resources/cache/WebspaceCollectionCache.php')) {
+            unlink(__DIR__ . '/../../../../Resources/cache/WebspaceCollectionCache.php');
         }
     }
 
@@ -372,8 +372,8 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../Resources/cache',
-                'config_dir' => __DIR__ . '/../../../Resources/DataFixtures/Webspace/both'
+                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
+                'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
             )
         );
 

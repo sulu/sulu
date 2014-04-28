@@ -12,10 +12,9 @@ namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
+use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Webspace\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Dumper\PhpWebspaceCollectionDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -83,7 +82,9 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach ($this->getWebspaceCollection()->getPortalInformations($environment) as $portalUrl => $portalInformation) {
+        foreach ($this->getWebspaceCollection()->getPortalInformations(
+                     $environment
+                 ) as $portalUrl => $portalInformation) {
             /** @var Portal $portal */
             $urlPart = $url;
 
@@ -143,8 +144,13 @@ class WebspaceManager implements WebspaceManagerInterface
             );
 
             if (!$cache->isFresh()) {
-                $portalCollection = $this->buildWebspaceCollection();
-                $dumper = new PhpWebspaceCollectionDumper($portalCollection);
+                $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+                    $this->loader,
+                    $this->logger,
+                    $this->options['config_dir']
+                );
+                $webspaceCollection = $webspaceCollectionBuilder->build();
+                $dumper = new PhpWebspaceCollectionDumper($webspaceCollection);
                 $cache->write(
                     $dumper->dump(
                         array(
@@ -152,7 +158,7 @@ class WebspaceManager implements WebspaceManagerInterface
                             'base_class' => $this->options['base_class']
                         )
                     ),
-                    $portalCollection->getResources()
+                    $webspaceCollection->getResources()
                 );
             }
 
@@ -180,37 +186,5 @@ class WebspaceManager implements WebspaceManagerInterface
 
         // overwrite the default values with the given options
         $this->options = array_merge($this->options, $options);
-    }
-
-    /**
-     * Builds the portal collection from the config
-     * @return WebspaceCollection
-     */
-    protected function buildWebspaceCollection()
-    {
-        // Find portal configs with symfony finder
-        $finder = new Finder();
-        $finder->in($this->options['config_dir'])->files()->name('*.xml');
-
-        // Iterate over config files, and add a portal object for each config to the collection
-        $collection = new WebspaceCollection();
-
-        foreach ($finder as $file) {
-            /** @var SplFileInfo $file */
-            try {
-                $collection->add($this->loader->load($file->getRealPath()));
-                $collection->addResource(new FileResource($file->getRealPath()));
-            } catch (\InvalidArgumentException $iae) {
-                $this->logger->warning(
-                    'The file "' . $file->getRealPath() . '" does not match the schema and was skipped'
-                );
-            } catch (InvalidUrlDefinitionException $iude) {
-                $this->logger->warning(
-                    'The file "' . $file->getRealPath() . '" defined some invalid urls and was skipped'
-                );
-            }
-        }
-
-        return $collection;
     }
 }

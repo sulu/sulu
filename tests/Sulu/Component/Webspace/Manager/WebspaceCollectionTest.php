@@ -8,7 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace;
+namespace Sulu\Component\Webspace\Manager;
+
+use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Theme;
+use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Webspace;
 
 class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,6 +26,9 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $webspaces = array();
+        $portals = array();
+
         $this->webspaceCollection = new WebspaceCollection();
 
         // first portal
@@ -31,12 +41,12 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $theme->setExcludedTemplates(array('overview', 'default'));
 
         $environment = new Environment();
-        $environment->setType('prod');
         $url = new Url();
         $url->setUrl('www.portal1.com');
         $url->setLanguage('en');
         $url->setCountry('us');
         $environment->addUrl($url);
+        $environment->setType('prod');
         $url = new Url();
         $url->setUrl('portal1.com');
         $url->setRedirect('www.portal1.com');
@@ -69,16 +79,20 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $webspace->setName('Default');
         $webspace->addPortal($portal);
 
-        $this->webspaceCollection->add($webspace);
+        $portals[] = $portal;
+        $webspaces[] = $webspace;
+
+        $this->webspaceCollection->setWebspaces($webspaces);
+        $this->webspaceCollection->setPortals($portals);
     }
 
     public function testAdd()
     {
-        $webspacesReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'webspaces');
+        $webspacesReflection = new \ReflectionProperty('\Sulu\Component\Webspace\Manager\WebspaceCollection', 'webspaces');
         $webspacesReflection->setAccessible(true);
-        $allPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'allPortals');
+        $allPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\Manager\WebspaceCollection', 'allPortals');
         $allPortalsReflection->setAccessible(true);
-        $environmentPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'environmentPortals');
+        $environmentPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\Manager\WebspaceCollection', 'environmentPortals');
         $environmentPortalsReflection->setAccessible(true);
 
         $webspaces = $webspacesReflection->getValue($this->webspaceCollection);
@@ -88,8 +102,8 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Default', $webspaces['default']->getName());
         $this->assertEquals('Portal1', $allPortals['portal1']->getName());
         // TODO make next two lines possible
-        $this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']['portal']->getName());
-        //$this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']['portal']->getName());
+        $this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']->getPortal()->getName());
+        // $this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']->getPortal()->getName());
     }
 
     public function testToArray()

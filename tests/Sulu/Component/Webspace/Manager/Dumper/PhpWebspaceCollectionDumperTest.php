@@ -13,8 +13,9 @@ namespace Sulu\Component\Webspace\Dumper;
 
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\WebspaceCollection;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
@@ -75,7 +76,8 @@ class PhpWebspaceCollectionDumperTest extends \PHPUnit_Framework_TestCase
 
         $webspace->addPortal($portal);
 
-        $this->webspaceCollection->add($webspace);
+        $this->webspaceCollection->setWebspaces(array($webspace));
+        $this->webspaceCollection->setPortals(array($portal));
     }
 
     public function testDump()

@@ -8,8 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace;
+namespace Sulu\Component\Webspace\Manager;
 
+use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
 
@@ -29,13 +34,13 @@ class WebspaceCollection implements \IteratorAggregate
      * All the portals in a specific sulu installation
      * @var Portal[]
      */
-    private $allPortals;
+    private $portals;
 
     /**
      * The portals of this specific sulu installation, prefiltered by the environment and url
      * @var array
      */
-    private $environmentPortals;
+    private $portalInformations;
 
     /**
      * Contains all the resources, which where used to build this collection.
@@ -43,108 +48,6 @@ class WebspaceCollection implements \IteratorAggregate
      * @var FileResource[]
      */
     private $resources;
-
-    /**
-     * Adds the portal with its unique key as array key to the collection for all Portal, and adds all the urls for
-     * this portal to the correct environment, with the url as key
-     * @param Webspace $webspace The portal to add
-     */
-    public function add(Webspace $webspace)
-    {
-        $this->webspaces[$webspace->getKey()] = $webspace;
-
-        foreach ($webspace->getPortals() as $portal) {
-            $this->allPortals[$portal->getKey()] = $portal;
-
-            $this->generateUrls($webspace, $portal);
-        }
-    }
-
-    /**
-     * Generates all the urls for a portal
-     * @param Webspace $webspace
-     * @param Portal $portal
-     */
-    public function generateUrls(Webspace $webspace, Portal $portal)
-    {
-        // go through every url, and add the information for the portals
-        foreach ($portal->getEnvironments() as $environment) {
-            foreach ($environment->getUrls() as $url) {
-                // generate urls from pattern
-                if ($url->getRedirect() == null) {
-                    $this->generatePortalInformation($portal, $url, $environment->getType(), $webspace->getSegments());
-                } else {
-                    $environmentType = $environment->getType();
-                    $urlAddress = $url->getUrl();
-                    $this->environmentPortals[$environmentType][$urlAddress] = new PortalInformation(
-                        PortalInformation::TYPE_REDIRECT,
-                        $webspace,
-                        null,
-                        null,
-                        $urlAddress,
-                        null,
-                        $url->getRedirect()
-                    );
-                }
-            }
-        }
-    }
-
-    /**
-     * Generates all the possible urls for the given url pattern
-     * @param \Sulu\Component\Webspace\Portal $portal
-     * @param string|\Sulu\Component\Webspace\Url $url
-     * @param string $environment
-     * @param Segment[] $segments
-     * @internal param \Sulu\Component\Webspace\Webspace $webspace
-     */
-    private function generatePortalInformation(Portal $portal, Url $url, $environment, $segments)
-    {
-        foreach ($portal->getLocalizations() as $localization) {
-            $urlAddress = $url->getUrl();
-
-            $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
-            $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
-            $locale = $language . ($country ? '-' . $country : '');
-
-            $replacers = array(
-                '{language}' => $language,
-                '{country}' => $country,
-                '{localization}' => $locale
-            );
-
-            if (!empty($segments)) {
-                foreach ($segments as $segment) {
-                    $replacers['{segment}'] = $segment->getKey();
-                    $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
-                    $this->environmentPortals[$environment][$urlResult] = new PortalInformation(
-                        PortalInformation::TYPE_FULL_MATCH,
-                        $portal->getWebspace(),
-                        $portal,
-                        $localization,
-                        $urlResult,
-                        $segment
-                    );
-                }
-            } else {
-                $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
-                $this->environmentPortals[$environment][$urlResult] = new PortalInformation(
-                    PortalInformation::TYPE_FULL_MATCH,
-                    $portal->getWebspace(),
-                    $portal,
-                    $localization,
-                    $urlResult,
-                    null
-                );
-                    /*array(
-                    'webspace' => $portal->getWebspace(),
-                    'portal' => $portal,
-                    'localization' => $localization,
-                    'url' => $urlResult
-                );*/
-            }
-        }
-    }
 
     /**
      * Adds a new FileResource, which is required to determine if the cache is fresh
@@ -171,16 +74,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getPortal($key)
     {
-        return array_key_exists($key, $this->allPortals) ? $this->allPortals[$key] : null;
-    }
-
-    /**
-     * Returns all the portals of this collection
-     * @return array|Portal[]
-     */
-    public function getPortals()
-    {
-        return $this->allPortals;
+        return array_key_exists($key, $this->portals) ? $this->portals[$key] : null;
     }
 
     /**
@@ -190,7 +84,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getPortalInformations($environment)
     {
-        return $this->environmentPortals[$environment];
+        return $this->portalInformations[$environment];
     }
 
     /**
@@ -369,17 +263,36 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * Replaces the given values in the pattern
-     * @param string $pattern
-     * @param array $replacers
-     * @return string
+     * @param \Sulu\Component\Webspace\Webspace[] $webspaces
      */
-    private function generateUrlAddress($pattern, $replacers)
+    public function setWebspaces($webspaces)
     {
-        foreach ($replacers as $replacer => $value) {
-            $pattern = str_replace($replacer, $value, $pattern);
-        }
+        $this->webspaces = $webspaces;
+    }
 
-        return $pattern;
+    /**
+     * @return \Sulu\Component\Webspace\Webspace[]
+     */
+    public function getWebspaces()
+    {
+        return $this->webspaces;
+    }
+
+    /**
+     * Returns all the portals of this collection
+     * @return array|Portal[]
+     */
+    public function getPortals()
+    {
+        return $this->portals;
+    }
+
+    /**
+     * Sets the portals for this collection
+     * @param Portal[] $portals
+     */
+    public function setPortals($portals)
+    {
+        $this->portals = $portals;
     }
 }
