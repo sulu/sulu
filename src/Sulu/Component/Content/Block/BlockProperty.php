@@ -12,7 +12,6 @@ namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
-use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
  * representation of a block node in template xml
@@ -25,6 +24,11 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     private $types = array();
 
+    /**
+     * @var array
+     */
+    private $properties = array();
+
     function __construct(
         $name,
         $title,
@@ -36,6 +40,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     )
     {
         parent::__construct($name, $title, 'block', $mandatory, $multilingual, $maxOccurs, $minOccurs, $params);
+        $this->currentTypeName = null;
     }
 
     /**
@@ -77,31 +82,59 @@ class BlockProperty extends Property implements BlockPropertyInterface
     }
 
     /**
+     * initiate new child with given type name
+     * @param integer $index
+     * @param string $typeName
+     * @return PropertyInterface[]
+     */
+    public function initProperties($index, $typeName)
+    {
+        $this->properties[$index] = array('type' => $typeName);
+
+        /** @var PropertyInterface $subProperty */
+        foreach ($this->getChildProperties($typeName) as $subProperty) {
+            $this->properties[$index][$subProperty->getName()] = clone($subProperty);
+        }
+
+        return $this->properties[$index];
+    }
+
+    /**
+     * returns properties for given index
+     * @param integer $index
+     * @return PropertyInterface[]
+     */
+    public function getProperties($index)
+    {
+        return $this->properties[$index];
+    }
+
+    /**
      * set value of child properties
      * @param mixed $value
      */
     public function setValue($value)
     {
         if ($value != null) {
-            $data = array();
-            // check value for associativeness
-            if (!(array_keys($value) !== range(0, count($value) - 1))) {
-                foreach ($value as $item) {
-                    foreach ($item as $key => $itemValue) {
-                        if (!isset($data[$key])) {
-                            $data[$key] = array();
-                        }
-                        $data[$key][] = $itemValue;
+            // check value for single value
+            if (array_keys($value) !== range(0, count($value) - 1)) {
+                $value = array($value);
+            }
+
+            $this->properties = array();
+            $len = count($value);
+            for ($i = 0; $i < $len; $i++) {
+                $item = $value[$i];
+                $result = array('type' => $item['type']);
+
+                /** @var PropertyInterface $subProperty */
+                foreach ($this->getChildProperties($item['type']) as $subProperty) {
+                    if (isset($item[$subProperty->getName()])) {
+                        $subProperty->setValue($item[$subProperty->getName()]);
+                        $result[$subProperty->getName()] = clone($subProperty);
                     }
                 }
-            } else {
-                $data = $value;
-            }
-            /** @var PropertyInterface $subProperty */
-            foreach ($this->types as $subProperty) {
-                if (isset($data[$subProperty->getName()])) {
-                    $subProperty->setValue($data[$subProperty->getName()]);
-                }
+                $this->properties[] = $result;
             }
         }
     }
@@ -113,33 +146,21 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getValue()
     {
         $data = array();
-        if ($this->getIsMultiple()) {
-            /** @var PropertyInterface $child */
-            foreach ($this->types as $child) {
-                $items = $child->getValue();
-                if ($items !== null) {
-                    // check value is not associative
-                    if (!(array_keys($items) !== range(0, count($items) - 1))) {
-                        foreach ($items as $key => $item) {
-                            $data[$key][$child->getName()] = $item;
-                        }
-                    } else {
-                        // go thrue associative array
-                        foreach ($items as $varName => $item) {
-                            foreach ($item as $key => $itemValue) {
-                                $data[$key][$child->getName()][$varName] = $itemValue;
-                            }
-                        }
-                    }
+        foreach ($this->properties as $value) {
+            $result = array('type' => $value['type']);
+            foreach ($value as $typeName => $contentType) {
+                if ($typeName !== 'type') {
+                    $result[$typeName] = $contentType->getValue();
                 }
             }
-        } else {
-            /** @var PropertyInterface $child */
-            foreach ($this->types as $child) {
-                $data[$child->getName()] = $child->getValue();
-            }
+            $data[] = $result;
         }
-        return $data;
+
+        if (!$this->getIsMultiple()) {
+            return sizeof($data) > 0 ? $data[0] : null;
+        } else {
+            return $data;
+        }
     }
 
     /**
@@ -151,5 +172,24 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return true;
     }
 
+    function __clone()
+    {
+        $clone = new BlockProperty(
+            $this->getName(),
+            $this->getTitle(),
+            $this->getMandatory(),
+            $this->getMultilingual(),
+            $this->getMaxOccurs(),
+            $this->getMinOccurs(),
+            $this->getParams()
+        );
 
+        $clone->types = array();
+        foreach ($this->types as $type) {
+            $clone->addType(clone($type));
+        }
+
+        $clone->setValue($this->getValue());
+        return $clone;
+    }
 }

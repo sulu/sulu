@@ -62,7 +62,7 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
             false
         );
 
-        $this->blockContentType = new BlockContentType($this->contentTypeManager, 'not in use');
+        $this->blockContentType = new BlockContentType($this->contentTypeManager, 'not in use', 'sulu_locale:');
 
         $this->contentTypeValueMap = array(
             array('text_line', new TextLine('not in use')),
@@ -79,27 +79,41 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
     protected function prepareSingleBlockProperty()
     {
         $this->blockProperty = new BlockProperty('block1', '', false, true);
-        $this->blockProperty->addType(new Property('title', '', 'text_line', false, true));
-        $this->blockProperty->addType(new Property('article', '', 'text_area', false, true));
+        $type1 = new BlockPropertyType('type1');
+        $type1->addChild(new Property('title', '', 'text_line', false, true));
+        $type1->addChild(new Property('article', '', 'text_area', false, true));
+        $this->blockProperty->addType($type1);
 
         $this->subBlockProperty = new BlockProperty('sub-block', '', false, true);
-        $this->subBlockProperty->addType(new Property('title', '', 'text_line', false, true));
-        $this->subBlockProperty->addType(new Property('article', '', 'text_area', false, true));
+        $subType1 = new BlockPropertyType('subType1');
+        $subType1->addChild(new Property('title', '', 'text_line', false, true));
+        $subType1->addChild(new Property('article', '', 'text_area', false, true));
+        $this->subBlockProperty->addType($subType1);
+        $type1->addChild($this->subBlockProperty);
 
-        $this->blockProperty->addType($this->subBlockProperty);
+        $type2 = new BlockPropertyType('type2');
+        $type2->addChild($this->subBlockProperty);
+
+        $this->blockProperty->addType($type2);
     }
 
     protected function prepareMultipleBlockProperty()
     {
         $this->blockProperty = new BlockProperty('block1', '', false, true, 1, 10);
-        $this->blockProperty->addType(new Property('title', '', 'text_line', false, true));
-        $this->blockProperty->addType(new Property('article', '', 'text_area'));
+        $type1 = new BlockPropertyType('type1');
+        $type1->addChild(new Property('title', '', 'text_line', false, true));
+        $type1->addChild(new Property('article', '', 'text_area'));
+        $this->blockProperty->addType($type1);
 
         $this->subBlockProperty = new BlockProperty('sub-block', '', false, true);
-        $this->subBlockProperty->addType(new Property('title', '', 'text_line', false, true));
-        $this->subBlockProperty->addType(new Property('article', '', 'text_area', false, true));
+        $subType1 = new BlockPropertyType('subType1');
+        $subType1->addChild(new Property('title', '', 'text_line', false, true));
+        $subType1->addChild(new Property('article', '', 'text_area', false, true));
+        $this->subBlockProperty->addType($subType1);
+        $type1->addChild($this->subBlockProperty);
 
-        $this->blockProperty->addType($this->subBlockProperty);
+        $type2 = new BlockPropertyType('type2');
+        $type2->addChild($this->subBlockProperty);
     }
 
     public function testRead()
@@ -108,19 +122,25 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->node = $this->getMock('\Jackalope\Node', array('getPropertyValue', 'hasProperty'), array(), '', false);
         $data = array(
+            'type' => 'type1',
             'title' => 'Test-Title',
             'article' => 'Test-Article',
             'sub-block' => array(
+                'type' => 'subType1',
                 'title' => 'Test-Sub-Title',
                 'article' => 'Test-Sub-Article'
             )
         );
 
         $valueMap = array(
-            array('sulu_locale:de-block1-title', null, $data['title']),
-            array('sulu_locale:de-block1-article', null, $data['article']),
-            array('sulu_locale:de-block1-sub-block-title', null, $data['sub-block']['title']),
-            array('sulu_locale:de-block1-sub-block-article', null, $data['sub-block']['article'])
+            array('sulu_locale:de-block1-length', null, 1),
+            array('sulu_locale:de-block1-type#0', null, 'type1'),
+            array('sulu_locale:de-block1-title#0', null, $data['title']),
+            array('sulu_locale:de-block1-article#0', null, $data['article']),
+            array('sulu_locale:de-block1-sub-block#0-length', null, 1),
+            array('sulu_locale:de-block1-sub-block#0-type#0', null, 'subType1'),
+            array('sulu_locale:de-block1-sub-block#0-title#0', null, $data['sub-block']['title']),
+            array('sulu_locale:de-block1-sub-block#0-article#0', null, $data['sub-block']['article'])
         );
         $this->node
             ->expects($this->any())
@@ -162,9 +182,11 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
             );
 
         $data = array(
+            'type' => 'type1',
             'title' => 'Test-Title',
             'article' => 'Test-Article',
             'sub-block' => array(
+                'type' => 'subType1',
                 'title' => 'Test-Title',
                 'article' => 'Test-Article'
             )
@@ -183,10 +205,14 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         // check repository node
         $this->assertEquals(
             array(
-                'sulu_locale:de-block1-title' => $data['title'],
-                'sulu_locale:de-block1-article' => $data['article'],
-                'sulu_locale:de-block1-sub-block-title' => $data['sub-block']['title'],
-                'sulu_locale:de-block1-sub-block-article' => $data['sub-block']['article']
+                'sulu_locale:de-block1-length' => 1,
+                'sulu_locale:de-block1-type#0' => $data['type'],
+                'sulu_locale:de-block1-title#0' => $data['title'],
+                'sulu_locale:de-block1-article#0' => $data['article'],
+                'sulu_locale:de-block1-sub-block#0-length' => 1,
+                'sulu_locale:de-block1-sub-block#0-type#0' => $data['sub-block']['type'],
+                'sulu_locale:de-block1-sub-block#0-title#0' => $data['sub-block']['title'],
+                'sulu_locale:de-block1-sub-block#0-article#0' => $data['sub-block']['article']
             ),
             $result
         );
@@ -202,20 +228,24 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->node = $this->getMock('\Jackalope\Node', array('getPropertyValue', 'hasProperty'), array(), '', false);
         $data = array(
             array(
+                'type' => 'type1',
                 'title' => 'Test-Title-1',
                 'article' => array(
                     'Test-Article-1-1',
                     'Test-Article-1-2'
                 ),
                 'sub-block' => array(
+                    'type' => 'subType1',
                     'title' => 'Test-Title-Sub-1',
                     'article' => 'Test-Article-Sub-1'
                 )
             ),
             array(
+                'type' => 'type1',
                 'title' => 'Test-Title-2',
                 'article' => 'Test-Article-2',
                 'sub-block' => array(
+                    'type' => 'subType1',
                     'title' => 'Test-Title-Sub-2',
                     'article' => 'Test-Article-Sub-2'
                 )
@@ -223,39 +253,25 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         );
 
         $valueMap = array(
-            array(
-                'sulu_locale:de-block1-title',
-                null,
-                array(
-                    $data[0]['title'],
-                    $data[1]['title']
-                )
-            ),
-            array(
-                'sulu_locale:de-block1-article',
-                null,
-                array(
-                    $data[0]['article'],
-                    $data[1]['article']
-                )
-            ),
-            array(
-                'sulu_locale:de-block1-sub-block-title',
-                null,
-                array(
-                    $data[0]['sub-block']['title'],
-                    $data[1]['sub-block']['title']
-                )
-            ),
-            array(
-                'sulu_locale:de-block1-sub-block-article',
-                null,
-                array(
-                    $data[0]['sub-block']['article'],
-                    $data[1]['sub-block']['article']
-                )
-            )
+            array('sulu_locale:de-block1-length', null, 2),
+
+            array('sulu_locale:de-block1-type#0', null, 'type1'),
+            array('sulu_locale:de-block1-title#0', null, $data[0]['title']),
+            array('sulu_locale:de-block1-article#0', null, $data[0]['article']),
+            array('sulu_locale:de-block1-sub-block#0-length', null, 1),
+            array('sulu_locale:de-block1-sub-block#0-type#0', null, 'subType1'),
+            array('sulu_locale:de-block1-sub-block#0-title#0', null, $data[0]['sub-block']['title']),
+            array('sulu_locale:de-block1-sub-block#0-article#0', null, $data[0]['sub-block']['article']),
+
+            array('sulu_locale:de-block1-type#1', null, 'type1'),
+            array('sulu_locale:de-block1-title#1', null, $data[1]['title']),
+            array('sulu_locale:de-block1-article#1', null, $data[1]['article']),
+            array('sulu_locale:de-block1-sub-block#1-length', null, 1),
+            array('sulu_locale:de-block1-sub-block#1-type#0', null, 'subType1'),
+            array('sulu_locale:de-block1-sub-block#1-title#0', null, $data[1]['sub-block']['title']),
+            array('sulu_locale:de-block1-sub-block#1-article#0', null, $data[1]['sub-block']['article'])
         );
+
         $this->node
             ->expects($this->any())
             ->method('getPropertyValue')
@@ -297,20 +313,24 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $data = array(
             array(
+                'type' => 'type1',
                 'title' => 'Test-Title-1',
                 'article' => array(
                     'Test-Article-1-1',
                     'Test-Article-1-2'
                 ),
                 'sub-block' => array(
+                    'type' => 'subType1',
                     'title' => 'Test-Title-Sub-1',
                     'article' => 'Test-Article-Sub-1'
                 )
             ),
             array(
+                'type' => 'type1',
                 'title' => 'Test-Title-2',
                 'article' => 'Test-Article-2',
                 'sub-block' => array(
+                    'type' => 'subType1',
                     'title' => 'Test-Title-Sub-2',
                     'article' => 'Test-Article-Sub-2'
                 )
@@ -330,22 +350,21 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
         // check repository node
         $this->assertEquals(
             array(
-                'sulu_locale:de-block1-title' => array(
-                    $data[0]['title'],
-                    $data[1]['title']
-                ),
-                'sulu_locale:de-block1-article' => array(
-                    $data[0]['article'],
-                    $data[1]['article']
-                ),
-                'sulu_locale:de-block1-sub-block-title' => array(
-                    $data[0]['sub-block']['title'],
-                    $data[1]['sub-block']['title']
-                ),
-                'sulu_locale:de-block1-sub-block-article' => array(
-                    $data[0]['sub-block']['article'],
-                    $data[1]['sub-block']['article']
-                )
+                'sulu_locale:de-block1-length' => 2,
+                'sulu_locale:de-block1-type#0' => 'type1',
+                'sulu_locale:de-block1-title#0' => $data[0]['title'],
+                'sulu_locale:de-block1-article#0' => $data[0]['article'],
+                'sulu_locale:de-block1-sub-block#0-length' => 1,
+                'sulu_locale:de-block1-sub-block#0-type#0' => 'subType1',
+                'sulu_locale:de-block1-sub-block#0-title#0' => $data[0]['sub-block']['title'],
+                'sulu_locale:de-block1-sub-block#0-article#0' => $data[0]['sub-block']['article'],
+                'sulu_locale:de-block1-type#1' => 'type1',
+                'sulu_locale:de-block1-title#1' => $data[1]['title'],
+                'sulu_locale:de-block1-article#1' => $data[1]['article'],
+                'sulu_locale:de-block1-sub-block#1-length' => 1,
+                'sulu_locale:de-block1-sub-block#1-type#0' => 'subType1',
+                'sulu_locale:de-block1-sub-block#1-title#0' => $data[1]['sub-block']['title'],
+                'sulu_locale:de-block1-sub-block#1-article#0' => $data[1]['sub-block']['article']
             ),
             $result
         );

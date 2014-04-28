@@ -33,14 +33,22 @@ interface BlockPropertyInterface extends PropertyInterface
      * returns property with given name
      * @param string $name of property
      * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     * @return PropertyInterface
+     * @return BlockPropertyType
      */
     public function getType($name);
 
     /**
-     * returns child properties of given Type
+     * returns properties for given index
+     * @param integer $index
+     * @return PropertyInterface[]
+     */
+    public function getProperties($index);
+
+    /**
+     * initiate new child with given type name
+     * @param integer $index
      * @param string $typeName
      * @return PropertyInterface[]
      */
-    public function getChildProperties($typeName);
+    public function initProperties($index, $typeName);
 } 

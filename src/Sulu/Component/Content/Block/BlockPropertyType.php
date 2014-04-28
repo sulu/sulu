@@ -74,4 +74,14 @@ class BlockPropertyType
     {
         return $this->name;
     }
+
+    function __clone()
+    {
+        $result = new BlockPropertyType($this->getName());
+        $result->childProperties = array();
+        foreach ($this->getChildProperties() as $childProperties) {
+            $result->addChild(clone($childProperties));
+        }
+        return $result;
+    }
 } 

@@ -15,6 +15,8 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 
 /**
@@ -33,10 +35,16 @@ class BlockContentType extends ComplexContentType
      */
     private $template;
 
-    function __construct(ContentTypeManagerInterface $contentTypeManager, $template)
+    /**
+     * @var string
+     */
+    private $languageNamespace;
+
+    function __construct(ContentTypeManagerInterface $contentTypeManager, $template, $languageNamespace)
     {
         $this->contentTypeManager = $contentTypeManager;
         $this->template = $template;
+        $this->languageNamespace = $languageNamespace;
     }
 
     /**
@@ -75,16 +83,45 @@ class BlockContentType extends ComplexContentType
                 $blockProperty = $blockProperty->getProperty();
             }
 
-            /** @var PropertyInterface $subProperty */
-            foreach ($blockProperty->getTypes() as $subProperty) {
-                $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
+            // init properties
+            $typeProperty = new Property('type', '', 'text_line');
+            $lengthProperty = new Property('length', '', 'text_line');
+
+            // load length
+            $contentType = $this->contentTypeManager->get($lengthProperty->getContentTypeName());
+            $contentType->read(
+                $node,
+                new BlockPropertyWrapper($lengthProperty, $property),
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+            $len = $lengthProperty->getValue();
+
+            for ($i = 0; $i < $len; $i++) {
+                // load type
+                $contentType = $this->contentTypeManager->get($typeProperty->getContentTypeName());
                 $contentType->read(
                     $node,
-                    new BlockPropertyWrapper($subProperty, $property),
+                    new BlockPropertyWrapper($typeProperty, $property, $i),
                     $webspaceKey,
                     $languageCode,
                     $segmentKey
                 );
+
+                /** @var PropertyInterface $subProperty */
+                foreach ($blockProperty->initProperties($i, $typeProperty->getValue()) as $key => $subProperty) {
+                    if ($key !== 'type') {
+                        $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
+                        $contentType->read(
+                            $node,
+                            new BlockPropertyWrapper($subProperty, $property, $i),
+                            $webspaceKey,
+                            $languageCode,
+                            $segmentKey
+                        );
+                    }
+                }
             }
         } else {
             throw new UnexpectedPropertyType($property, $this);
@@ -143,17 +180,57 @@ class BlockContentType extends ComplexContentType
                 $blockProperty = $blockProperty->getProperty();
             }
 
-            /** @var PropertyInterface $subProperty */
-            foreach ($blockProperty->getTypes() as $subProperty) {
-                $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
-                $contentType->write(
-                    $node,
-                    new BlockPropertyWrapper($subProperty, $property),
-                    $userId,
-                    $webspaceKey,
-                    $languageCode,
-                    $segmentKey
-                );
+            $data = $blockProperty->getValue();
+            if (!$blockProperty->getIsMultiple()) {
+                $data = array($data);
+            }
+
+            $len = count($data);
+
+            // init properties
+            $typeProperty = new Property('type', '', 'text_line');
+            $lengthProperty = new Property('length', '', 'text_line');
+
+            //save length
+            $lengthProperty->setValue($len);
+            $contentType = $this->contentTypeManager->get($lengthProperty->getContentTypeName());
+            $contentType->write(
+                $node,
+                new BlockPropertyWrapper($lengthProperty, $property),
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+
+            for ($i = 0; $i < $len; $i++) {
+                /** @var PropertyInterface $subProperty */
+                foreach ($blockProperty->getProperties($i) as $key => $subProperty) {
+                    if ($key !== 'type') {
+                        // save sub property
+                        $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
+                        $contentType->write(
+                            $node,
+                            new BlockPropertyWrapper($subProperty, $property, $i),
+                            $userId,
+                            $webspaceKey,
+                            $languageCode,
+                            $segmentKey
+                        );
+                    } else {
+                        // save type property
+                        $typeProperty->setValue($subProperty);
+                        $contentType = $this->contentTypeManager->get($typeProperty->getContentTypeName());
+                        $contentType->write(
+                            $node,
+                            new BlockPropertyWrapper($typeProperty, $property, $i),
+                            $userId,
+                            $webspaceKey,
+                            $languageCode,
+                            $segmentKey
+                        );
+                    }
+                }
             }
         } else {
             throw new UnexpectedPropertyType($property, $this);
