@@ -23,7 +23,7 @@ class SuluTranslateAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem($title);
 
-        $section = new NavigationItem('navigation.tools');
+        $section = new NavigationItem('');
 
         $settings = new NavigationItem('navigation.settings');
         $settings->setIcon('cogwheels');
