@@ -20,7 +20,7 @@
 
     <segments>
         <segment key="w">winter</segment>
-        <segment key="s">summer</segment>
+        <segment key="s" default="true">summer</segment>
     </segments>
 
     <theme>

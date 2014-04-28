@@ -14,6 +14,7 @@ use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultLocalizationNotFoundException;
+use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Security;
@@ -107,10 +108,10 @@ class XmlFileLoader extends FileLoader
 
     private function validate()
     {
-        // check if there are duplicates in the webspace localizations
+        // check if there are duplicate defaults in the webspace localizations
         $webspaceDefaultLocalizationFound = false;
-        foreach ($this->webspace->getLocalizations() as $webspaceLocalizations) {
-            if ($webspaceLocalizations->isDefault()) {
+        foreach ($this->webspace->getLocalizations() as $webspaceLocalization) {
+            if ($webspaceLocalization->isDefault()) {
                 // throw an exception, if a new default localization is found, although there already is one
                 if ($webspaceDefaultLocalizationFound) {
                     throw new WebspaceDefaultLocalizationNotFoundException($this->webspace);
@@ -135,6 +136,25 @@ class XmlFileLoader extends FileLoader
                 }
             }
         }
+
+        // check if there are duplicate defaults in the webspaces segments
+        $segments = $this->webspace->getSegments();
+        if ($segments) {
+            $webspaceDefaultSegmentFound = false;
+            foreach ($segments as $webspaceSegment) {
+                if ($webspaceSegment->isDefault()) {
+                    // throw an exception, if a new default segment is found, although there already is one
+                    if ($webspaceDefaultSegmentFound) {
+                        throw new WebspaceDefaultSegmentNotFoundException($this->webspace);
+                    }
+                    $webspaceDefaultSegmentFound = true;
+                }
+            }
+
+            if (!$webspaceDefaultSegmentFound) {
+                throw new WebspaceDefaultSegmentNotFoundException($this->webspace);
+            }
+        }
     }
 
     /**
@@ -146,7 +166,9 @@ class XmlFileLoader extends FileLoader
         $webspaceDefaultLocalization = $this->webspace->getDefaultLocalization();
 
         foreach ($portal->getLocalizations() as $localization) {
-            if ($webspaceDefaultLocalization->getLocalization() == $localization->getLocalization()) {
+            if ($webspaceDefaultLocalization
+                && $webspaceDefaultLocalization->getLocalization() == $localization->getLocalization()
+            ) {
                 $localization->setDefault(true);
                 $portal->setDefaultLocalization($localization);
                 return true;
@@ -259,6 +281,13 @@ class XmlFileLoader extends FileLoader
             $segment = new Segment();
             $segment->setName($segmentNode->nodeValue);
             $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
+
+            $defaultNode = $segmentNode->attributes->getNamedItem('default');
+            if ($defaultNode) {
+                $segment->setDefault($defaultNode->nodeValue == 'true');
+            } else {
+                $segment->setDefault(false);
+            }
 
             $this->webspace->addSegment($segment);
         }

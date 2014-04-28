@@ -7,7 +7,7 @@
     <key>massiveart</key>
 
     <localizations>
-        <localization language="en" country="us" shadow="auto">
+        <localization language="en" country="us" shadow="auto" default="true">
             <localization language="en" country="ca"/>
         </localization>
         <localization language="fr" country="ca"/>
@@ -15,7 +15,7 @@
 
     <segments>
         <segment key="w">winter</segment>
-        <segment key="s" default="true">summer</segment>
+        <segment key="s">summer</segment>
     </segments>
 
     <theme>
@@ -34,7 +34,7 @@
             </resource-locator>
 
             <localizations>
-                <localization language="en" country="ca"/>
+                <localization language="en" country="ca" default="true"/>
                 <localization language="fr" country="ca"/>
             </localizations>
 

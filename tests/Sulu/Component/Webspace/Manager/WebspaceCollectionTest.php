@@ -86,26 +86,6 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->webspaceCollection->setPortals($portals);
     }
 
-    public function testAdd()
-    {
-        $webspacesReflection = new \ReflectionProperty('\Sulu\Component\Webspace\Manager\WebspaceCollection', 'webspaces');
-        $webspacesReflection->setAccessible(true);
-        $allPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\Manager\WebspaceCollection', 'allPortals');
-        $allPortalsReflection->setAccessible(true);
-        $environmentPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\Manager\WebspaceCollection', 'environmentPortals');
-        $environmentPortalsReflection->setAccessible(true);
-
-        $webspaces = $webspacesReflection->getValue($this->webspaceCollection);
-        $allPortals = $allPortalsReflection->getValue($this->webspaceCollection);
-        $environmentPortals = $environmentPortalsReflection->getValue($this->webspaceCollection);
-
-        $this->assertEquals('Default', $webspaces['default']->getName());
-        $this->assertEquals('Portal1', $allPortals['portal1']->getName());
-        // TODO make next two lines possible
-        $this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']->getPortal()->getName());
-        // $this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']->getPortal()->getName());
-    }
-
     public function testToArray()
     {
         $webspace = $this->webspaceCollection->toArray()[0];

@@ -25,6 +25,18 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class WebspaceCollectionBuilder
 {
+    const REPLACER_LANGUAGE = '{language}';
+    const REPLACER_COUNTRY = '{country}';
+    const REPLACER_LOCALIZATION = '{localization}';
+    const REPLACER_SEGMENT = '{segment}';
+
+    private $replacers = array(
+        self::REPLACER_LANGUAGE,
+        self::REPLACER_COUNTRY,
+        self::REPLACER_LOCALIZATION,
+        self::REPLACER_SEGMENT
+    );
+
     /**
      * The loader for the xml config files
      * @var LoaderInterface
@@ -110,11 +122,11 @@ class WebspaceCollectionBuilder
 
         $environments = array_keys($this->portalInformations);
 
-        foreach ($environments as $environment){
+        foreach ($environments as $environment) {
             // sort all portal informations by length
             uksort(
                 $this->portalInformations[$environment],
-                function($a, $b) {
+                function ($a, $b) {
                     return strlen($a) < strlen($b);
                 }
             );
@@ -161,12 +173,13 @@ class WebspaceCollectionBuilder
                     $locale = $language . ($country ? '-' . $country : '');
 
                     $replacers = array(
-                        '{language}' => $language,
-                        '{country}' => $country,
-                        '{localization}' => $locale
+                        self::REPLACER_LANGUAGE => $language,
+                        self::REPLACER_COUNTRY => $country,
+                        self::REPLACER_LOCALIZATION => $locale
                     );
 
                     $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization);
+                    $this->buildUrlPartialMatch($portal, $environment, $urlAddress);
                 }
             } else {
                 // create the redirect
@@ -213,7 +226,7 @@ class WebspaceCollectionBuilder
     {
         if (!empty($segments)) {
             foreach ($segments as $segment) {
-                $replacers['{segment}'] = $segment->getKey();
+                $replacers[self::REPLACER_SEGMENT] = $segment->getKey();
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                 $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
                     PortalInformation::TYPE_FULL_MATCH,
@@ -231,10 +244,39 @@ class WebspaceCollectionBuilder
                 $portal->getWebspace(),
                 $portal,
                 $localization,
-                $urlResult,
-                null
+                $urlResult
             );
         }
+    }
+
+    private function buildUrlPartialMatch(Portal $portal, Environment $environment, $urlAddress)
+    {
+        $urlResult = $this->removeUrlPlaceHolders($urlAddress);
+
+        if ($this->validateUrlPartialMatch($urlResult, $environment)) {
+            $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
+                PortalInformation::TYPE_PARTIAL_MATCH,
+                $portal->getWebspace(),
+                $portal,
+                $portal->getDefaultLocalization(),
+                $urlResult,
+                $portal->getWebspace()->getDefaultSegment()
+            );
+        }
+    }
+
+    /**
+     * @param $urlResult
+     * @param Environment $environment
+     * @return bool
+     */
+    private function validateUrlPartialMatch($urlResult, Environment $environment)
+    {
+        return
+            // only valid if there is no full match already
+            !array_key_exists($urlResult, $this->portalInformations[$environment->getType()])
+            // check if last character is no dot
+            && substr($urlResult, -1) != '.';
     }
 
     /**
@@ -251,4 +293,21 @@ class WebspaceCollectionBuilder
 
         return $pattern;
     }
-} 
+
+    /**
+     * Removes the placesholders from the url address
+     * @param $pattern
+     * @return mixed|string
+     */
+    private function removeUrlPlaceHolders($pattern)
+    {
+        foreach ($this->replacers as $replacer) {
+            $pattern = str_replace($replacer, '', $pattern);
+        }
+
+        $pattern = ltrim($pattern, '.');
+        $pattern = rtrim($pattern, '/');
+
+        return $pattern;
+    }
+}

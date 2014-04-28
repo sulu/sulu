@@ -85,6 +85,8 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('massiveart', $webspace->getKey());
         $this->assertEquals('massiveart', $webspace->getSecurity()->getSystem());
 
+        $this->assertEquals('s', $webspace->getDefaultSegment()->getKey());
+
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
         $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
@@ -109,8 +111,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('w', $webspace->getSegments()[0]->getKey());
         $this->assertEquals('winter', $webspace->getSegments()[0]->getName());
+        $this->assertEquals(false, $webspace->getSegments()[0]->isDefault());
         $this->assertEquals('s', $webspace->getSegments()[1]->getKey());
         $this->assertEquals('summer', $webspace->getSegments()[1]->getName());
+        $this->assertEquals(true, $webspace->getSegments()[1]->isDefault());
 
         $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
         $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
@@ -292,6 +296,15 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(false);
     }
 
+    public function testLoadWithoutDefaultSegment()
+    {
+        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException');
+
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefaultSegment.xml'
+        );
+    }
+
     public function testLoadWithTwoDefaultLocalization()
     {
         $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException');
@@ -299,8 +312,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefault.xml'
         );
-
-        $this->assertTrue(false);
     }
 
     public function testLocalizations()

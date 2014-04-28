@@ -29,6 +29,12 @@ class Segment
     private $name;
 
     /**
+     * Defines if this segment is the default one
+     * @var boolean
+     */
+    private $default;
+
+    /**
      * Sets the key of the segment
      * @param string $key
      */
@@ -62,5 +68,23 @@ class Segment
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Sets if this segment is the default one
+     * @param boolean $default
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
+    }
+
+    /**
+     * Returns whether this segment is the default one
+     * @return boolean
+     */
+    public function isDefault()
+    {
+        return $this->default;
     }
 }

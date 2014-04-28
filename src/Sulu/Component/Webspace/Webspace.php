@@ -47,6 +47,12 @@ class Webspace
     private $segments;
 
     /**
+     * The default segment defined for this webspace
+     * @var Segment
+     */
+    private $defaultSegment;
+
+    /**
      * The theme of the webspace
      * @var Theme
      */
@@ -218,6 +224,10 @@ class Webspace
     public function addSegment(Segment $segment)
     {
         $this->segments[] = $segment;
+
+        if ($segment->isDefault()) {
+            $this->setDefaultSegment($segment);
+        }
     }
 
     /**
@@ -236,6 +246,24 @@ class Webspace
     public function getSegments()
     {
         return $this->segments;
+    }
+
+    /**
+     * Sets the default segment of this webspace
+     * @param \Sulu\Component\Webspace\Segment $defaultSegment
+     */
+    public function setDefaultSegment($defaultSegment)
+    {
+        $this->defaultSegment = $defaultSegment;
+    }
+
+    /**
+     * Returns the default segment for this webspace
+     * @return \Sulu\Component\Webspace\Segment
+     */
+    public function getDefaultSegment()
+    {
+        return $this->defaultSegment;
     }
 
     /**
