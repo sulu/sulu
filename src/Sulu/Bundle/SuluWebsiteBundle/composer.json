@@ -23,8 +23,8 @@
         "symfony-cmf/routing": "1.2.*@dev"
     },
     "require-dev": {
-        "symfony/symfony": "2.3.*",
-        "symfony/monolog-bundle": "2.3.*",
+        "symfony/symfony": "2.4.*",
+        "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
         "sulu/test-bundle": "dev-develop"
     },
