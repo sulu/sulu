@@ -43,7 +43,7 @@ interface RequestAnalyzerInterface
      * A redirect is when the given URL is just defined to be a redirect
      */
     const TYPE_REDIRECT = 3;
-    
+
     /**
      * Analyzes the current request, and saves the values for portal, language, country and segment for further usage
      * @param Request $request The request to analyze

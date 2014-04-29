@@ -11,6 +11,9 @@
 namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Loader\Exception\InvalidPortalDefaultLocalizationException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentException;
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultLocalizationNotFoundException;
@@ -114,7 +117,7 @@ class XmlFileLoader extends FileLoader
             if ($webspaceLocalization->isDefault()) {
                 // throw an exception, if a new default localization is found, although there already is one
                 if ($webspaceDefaultLocalizationFound) {
-                    throw new WebspaceDefaultLocalizationNotFoundException($this->webspace);
+                    throw new InvalidWebspaceDefaultLocalizationException($this->webspace);
                 }
                 $webspaceDefaultLocalizationFound = true;
             }
@@ -125,6 +128,9 @@ class XmlFileLoader extends FileLoader
             $portalDefaultLocalizationFound = false;
             foreach ($portal->getLocalizations() as $portalLocalizations) {
                 if ($portalLocalizations->isDefault()) {
+                    if ($portalDefaultLocalizationFound) {
+                        throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal);
+                    }
                     $portalDefaultLocalizationFound = true;
                 }
             }
@@ -145,7 +151,7 @@ class XmlFileLoader extends FileLoader
                 if ($webspaceSegment->isDefault()) {
                     // throw an exception, if a new default segment is found, although there already is one
                     if ($webspaceDefaultSegmentFound) {
-                        throw new WebspaceDefaultSegmentNotFoundException($this->webspace);
+                        throw new InvalidWebspaceDefaultSegmentException($this->webspace);
                     }
                     $webspaceDefaultSegmentFound = true;
                 }

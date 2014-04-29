@@ -7,7 +7,7 @@
     <key>massiveart</key>
 
     <localizations>
-        <localization language="en" country="us" shadow="auto" default="true">
+        <localization language="en" country="us" shadow="auto">
             <localization language="en" country="ca"/>
         </localization>
         <localization language="fr" country="ca"/>

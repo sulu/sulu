@@ -290,10 +290,8 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException');
 
         $this->loader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefault.xml'
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withoutDefaultLocalization.xml'
         );
-
-        $this->assertTrue(false);
     }
 
     public function testLoadWithoutDefaultSegment()
@@ -307,10 +305,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadWithTwoDefaultLocalization()
     {
-        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException');
+        $this->setExpectedException('\Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException');
 
         $this->loader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefault.xml'
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withTwoDefaultLocalizations.xml'
         );
     }
 

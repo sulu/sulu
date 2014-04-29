@@ -14,17 +14,16 @@ namespace Sulu\Component\Webspace\Loader\Exception;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
-class PortalDefaultLocalizationNotFoundException extends WebspaceException
+class InvalidPortalDefaultLocalizationException extends WebspaceException
 {
     /**
-     * The portal which has no default localization
-     * @var string
+     * The webspace in which the error occured
+     * @var Webspace
      */
     private $portal;
 
     /**
-     * @param Webspace $webspace
-     * @param Portal $portal
+     * @param Webspace $portal
      * @internal param string $urlPattern
      */
     public function __construct(Webspace $webspace, Portal $portal)
@@ -32,7 +31,7 @@ class PortalDefaultLocalizationNotFoundException extends WebspaceException
         $this->webspace = $webspace;
         $this->portal = $portal;
         $message = 'The portal "' . $portal->getKey() . '" in the webspace definition "' . $webspace->getKey() . '" ' .
-            'has not specified the required attributes (a default localization)';
+            'has multiple default localizations';
         parent::__construct($message, 0);
     }
 
@@ -40,8 +39,8 @@ class PortalDefaultLocalizationNotFoundException extends WebspaceException
      * Returns the webspace in which the error occured
      * @return Webspace
      */
-    public function getWebspace()
+    public function getPortal()
     {
-        return $this->webspace;
+        return $this->portal;
     }
 }
