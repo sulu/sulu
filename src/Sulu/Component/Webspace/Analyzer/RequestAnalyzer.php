@@ -22,6 +22,12 @@ use Symfony\Component\HttpFoundation\Request;
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
     /**
+     * Describes the match
+     * @var int
+     */
+    private $matchType;
+
+    /**
      * The WebspaceManager, responsible for loading the required webspaces
      * @var WebspaceManagerInterface
      */
@@ -101,6 +107,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         );
 
         if ($portalInformation != null) {
+            $this->setCurrentMatchType($portalInformation->getType());
             if ($portalInformation->getType() == PortalInformation::TYPE_REDIRECT) {
                 $this->setCurrentPortalUrl($portalInformation->getUrl());
                 $this->setCurrentRedirect($portalInformation->getRedirect());
@@ -132,6 +139,11 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         } else {
             throw new UrlMatchNotFoundException($request->getUri());
         }
+    }
+
+    public function getCurrentMatchType()
+    {
+        return $this->matchType;
     }
 
     /**
@@ -207,6 +219,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * Sets the current match type
+     * @param int $matchType
+     */
+    public function setCurrentMatchType($matchType)
+    {
+        $this->matchType = $matchType;
+    }
+
+    /**
      * Sets the current localization
      * @param \Sulu\Component\Webspace\Localization $localization
      */
@@ -246,7 +267,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the redirect
      * @param string $redirect
      */
-    public function setCurrentRedirect($redirect)
+    protected function setCurrentRedirect($redirect)
     {
         $this->redirect = $redirect;
     }
@@ -255,7 +276,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the url of the current portal
      * @param string $portalUrl
      */
-    public function setCurrentPortalUrl($portalUrl)
+    protected function setCurrentPortalUrl($portalUrl)
     {
         $this->portalUrl = $portalUrl;
     }
@@ -264,7 +285,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the path of the current request
      * @param $path
      */
-    public function setCurrentResourceLocator($path)
+    protected function setCurrentResourceLocator($path)
     {
         $this->resourceLocator = $path;
     }
@@ -273,7 +294,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the prefix require before the resource locator
      * @param string $resourceLocatorPrefix
      */
-    public function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
+    protected function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
     {
         $this->resourceLocatorPrefix = $resourceLocatorPrefix;
     }
