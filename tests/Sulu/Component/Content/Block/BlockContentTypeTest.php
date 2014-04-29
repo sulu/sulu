@@ -78,20 +78,20 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function prepareSingleBlockProperty()
     {
-        $this->blockProperty = new BlockProperty('block1', '', false, true);
-        $type1 = new BlockPropertyType('type1');
+        $this->blockProperty = new BlockProperty('block1', '', 'default', false, true);
+        $type1 = new BlockPropertyType('type1', '');
         $type1->addChild(new Property('title', '', 'text_line', false, true));
         $type1->addChild(new Property('article', '', 'text_area', false, true));
         $this->blockProperty->addType($type1);
 
-        $this->subBlockProperty = new BlockProperty('sub-block', '', false, true);
-        $subType1 = new BlockPropertyType('subType1');
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'default', false, true);
+        $subType1 = new BlockPropertyType('subType1', '');
         $subType1->addChild(new Property('title', '', 'text_line', false, true));
         $subType1->addChild(new Property('article', '', 'text_area', false, true));
         $this->subBlockProperty->addType($subType1);
         $type1->addChild($this->subBlockProperty);
 
-        $type2 = new BlockPropertyType('type2');
+        $type2 = new BlockPropertyType('type2', '');
         $type2->addChild(new Property('name', '', 'text_line', false, true));
 
         $this->blockProperty->addType($type2);
@@ -99,20 +99,20 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function prepareMultipleBlockProperty()
     {
-        $this->blockProperty = new BlockProperty('block1', '', false, true, 1, 10);
-        $type1 = new BlockPropertyType('type1');
+        $this->blockProperty = new BlockProperty('block1', '', 'default', false, true, 1, 10);
+        $type1 = new BlockPropertyType('type1', '');
         $type1->addChild(new Property('title', '', 'text_line', false, true));
         $type1->addChild(new Property('article', '', 'text_area'));
         $this->blockProperty->addType($type1);
 
-        $this->subBlockProperty = new BlockProperty('sub-block', '', false, true);
-        $subType1 = new BlockPropertyType('subType1');
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'default', false, true);
+        $subType1 = new BlockPropertyType('subType1', '');
         $subType1->addChild(new Property('title', '', 'text_line', false, true));
         $subType1->addChild(new Property('article', '', 'text_area', false, true));
         $this->subBlockProperty->addType($subType1);
         $type1->addChild($this->subBlockProperty);
 
-        $type2 = new BlockPropertyType('type2');
+        $type2 = new BlockPropertyType('type2', '');
         $type2->addChild(new Property('name', '', 'text_line', false, true));
 
         $this->blockProperty->addType($type2);

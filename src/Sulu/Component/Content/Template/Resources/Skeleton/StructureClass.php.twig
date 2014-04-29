@@ -27,8 +27,8 @@ class {{ cache_class }} extends {{ base_class }}
 {% if property.type == 'block' %}
         {{ child }} = {{ _self.blockPropertyConstructor(property) }}
         {{ parent }}->addChild({{ child }});
-{% for key, properties in property.properties %}
-{{ _self.buildTypes(key, properties, child, layer, loop.index) }}
+{% for type in property.types %}
+{{ _self.buildTypes(type, child, layer, loop.index) }}
 {% endfor %}
 {% else %}
         {{ child }} = {{ _self.propertyConstructor(property) }}
@@ -36,11 +36,11 @@ class {{ cache_class }} extends {{ base_class }}
 {% endif %}
 {% endmacro %}
 
-{% macro buildTypes(name, properties, parent, layer, type) %}
-{% set typeVar = '$type'~layer~type %}
-        {{ typeVar }} = new BlockPropertyType('{{ name }}');
+{% macro buildTypes(type, parent, layer, typeIndex) %}
+{% set typeVar = '$type'~layer~typeIndex %}
+        {{ typeVar }} = new BlockPropertyType('{{ type.name }}', '{{ type.title }}');
         {{ parent }}->addType({{ typeVar }});
-{% for childProperty in properties %}
+{% for childProperty in type.properties %}
 {{ _self.buildProperty(childProperty, typeVar, layer+1) }}
 {% endfor %}
 {% endmacro %}
@@ -70,6 +70,7 @@ new Property(
 new BlockProperty(
             '{{ property.name }}',
             '{{ property.title }}',
+            '{{ property['default-type'] }}',
             {{ property.mandatory is defined and property.mandatory ? 'true' : 'false' }},
             {{ property.multilingual is defined ? (property.multilingual? 'true':'false') : 'true' }},
             {{ property.maxOccurs is defined ? property.maxOccurs : 1 }},

@@ -52,6 +52,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $cacheDir = __DIR__ . '/../../../../Resources/cache';
 
         $this->cacheFiles = array(
+            $cacheDir . '/TemplateStructureCache.php',
             $cacheDir . '/Template_Structure_template.php',
             $cacheDir . '/Template_blockStructureCache.php',
             $cacheDir . '/Template_block_typesStructureCache.php'
@@ -475,6 +476,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text_line', $properties['title']->getContentTypeName());
         $this->assertEquals('resource_locator', $properties['url']->getContentTypeName());
         $this->assertEquals('block', $properties['block1']->getContentTypeName());
+        $this->assertEquals('default', $properties['block1']->getDefaultTypeName());
         $this->assertEquals('text_editor', $properties['blog']->getContentTypeName());
 
         // check count of types
@@ -484,6 +486,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         // test properties of block types
         $type1 = $block->getType('default');
         $this->assertEquals('default', $type1->getName());
+        $this->assertEquals('type.default', $type1->getTitle());
         $this->assertEquals(2, sizeof($type1->getChildProperties()));
 
         $properties = $type1->getChildProperties();
@@ -494,6 +497,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         $type2 = $block->getType('test');
         $this->assertEquals('test', $type2->getName());
+        $this->assertEquals('type.test', $type2->getTitle());
         $this->assertEquals(3, sizeof($type2->getChildProperties()));
 
         $properties = $type2->getChildProperties();

@@ -24,14 +24,20 @@ class BlockPropertyType
     private $name;
 
     /**
+     * @var string
+     */
+    private $title;
+
+    /**
      * properties managed by this block
      * @var PropertyInterface[]
      */
     private $childProperties = array();
 
-    function __construct($name)
+    function __construct($name, $title)
     {
         $this->name = $name;
+        $this->title = $title;
     }
 
     /**
@@ -75,9 +81,17 @@ class BlockPropertyType
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
     function __clone()
     {
-        $result = new BlockPropertyType($this->getName());
+        $result = new BlockPropertyType($this->getName(), $this->getTitle());
         $result->childProperties = array();
         foreach ($this->getChildProperties() as $childProperties) {
             $result->addChild(clone($childProperties));

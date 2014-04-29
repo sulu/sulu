@@ -51,4 +51,10 @@ interface BlockPropertyInterface extends PropertyInterface
      * @return PropertyInterface[]
      */
     public function initProperties($index, $typeName);
+
+    /**
+     * return default type name
+     * @return string
+     */
+    public function getDefaultTypeName();
 } 

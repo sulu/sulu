@@ -38,6 +38,11 @@ class TemplateReader implements LoaderInterface
     /**
      * @var string
      */
+    private $typesKey = 'types';
+
+    /**
+     * @var string
+     */
     private $paramsKey = 'params';
 
     /**
@@ -123,7 +128,7 @@ class TemplateReader implements LoaderInterface
             $template[$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
 
             if (in_array($node->tagName, $this->complexNodeTypes)) {
-                $template[$this->propertiesKey][$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $node);
+                $template[$this->propertiesKey][$name][$this->typesKey] = $this->parseSubproperties($xpath, $node);
             }
         }
 
@@ -177,13 +182,16 @@ class TemplateReader implements LoaderInterface
      */
     private function parseSubproperties($xpath, $node)
     {
-        $properties = array();
+        $types = array();
 
-        $types = $xpath->query('x:types/*', $node);
+        $typeNodes = $xpath->query('x:types/*', $node);
 
         /** @var \DOMNode $type */
-        foreach ($types as $type) {
+        foreach ($typeNodes as $type) {
+            $attributes = $this->getAllAttributesOfNode($type);
+
             $typeName = $type->attributes->item(0)->nodeValue;
+            $types[$typeName] = $attributes;
 
             /** @var \DOMNodeList $children */
             $children = $xpath->query('x:properties/*', $type);
@@ -199,16 +207,16 @@ class TemplateReader implements LoaderInterface
                 $name = $attributes[$this->nameKey];
                 $params = $this->getChildrenOfNode($child, $this->pathToParams, $xpath, $this->paramsKey);
                 $tags = $this->getChildrenOfNode($child, $this->pathToTags, $xpath, $this->tagKey);
-                $properties[$typeName][$name] = array_merge($attributes, $tags, $params);
+                $types[$typeName][$this->propertiesKey][$name] = array_merge($attributes, $tags, $params);
 
                 if (in_array($child->tagName, $this->complexNodeTypes)) {
-                    $properties[$typeName][$name][$this->propertiesKey] = $this->parseSubproperties($xpath, $child);
+                    $types[$typeName][$this->propertiesKey][$name][$this->typesKey] = $this->parseSubproperties($xpath, $child);
                 }
 
             }
         }
 
-        return $properties;
+        return $types;
     }
 
     /**
