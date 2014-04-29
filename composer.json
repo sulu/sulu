@@ -14,7 +14,7 @@
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "symfony/framework-bundle": "2.3.*",
+        "symfony/framework-bundle": "~2.4",
         "sensio/distribution-bundle": "2.3.*",
         "friendsofsymfony/rest-bundle": "1.0.*",
         "jackalope/jackalope-jackrabbit": "1.0.*",
@@ -22,7 +22,7 @@
         "doctrine/phpcr-odm": "1.0.*"
     },
     "require-dev": {
-        "symfony/symfony": "2.3.*",
+        "symfony/symfony": "2.4.*",
         "phpunit/phpunit": "4.0.*",
         "sulu/test-bundle": "dev-develop",
         "jackalope/jackalope-doctrine-dbal": "@dev"
