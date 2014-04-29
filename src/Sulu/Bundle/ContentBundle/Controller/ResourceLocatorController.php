@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,29 +20,39 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * handles resource locator api
  */
-class ResourceLocatorController extends Controller implements ClassResourceInterface
+class ResourceLocatorController extends Controller
 {
     /**
      * return resource-locator for sub-node
      * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction()
+    public function postAction()
     {
         $parent = $this->getRequest()->get('parent');
         $uuid = $this->getRequest()->get('uuid');
-        $title = $this->getRequest()->get('title');
+        $parts = $this->getRequest()->get('parts');
         $webspace = $this->getRequest()->get('webspace');
         $languageCode = $this->getRequest()->get('language');
+        $templateKey = $this->getRequest()->get('template');
         if ($languageCode == null) {
             throw new MissingArgumentException('ResourceLocator', 'languageCode');
         }
-        if ($title == null) {
+        if ($parts == null) {
             throw new MissingArgumentException('ResourceLocator', 'title');
         }
         if ($webspace == null) {
             throw new MissingArgumentException('ResourceLocator', 'webspace');
         }
+
+        /** @var StructureInterface $structure */
+        $structure = $this->get('sulu.content.structure_manager')->getStructure($templateKey);
+        $title = '';
+        // concat rlp parts in sort of priority
+        foreach ($structure->getPropertiesByTagName('sulu.rlp.part') as $property) {
+            $title = $parts[$property->getName()] . '-' . $title;
+        }
+        $title = substr($title, 0, -1);
 
         $result = array(
             'resourceLocator' => $this->getResourceLocator($title, $parent, $uuid, $webspace, $languageCode, null)
