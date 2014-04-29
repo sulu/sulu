@@ -1,6 +1,7 @@
 SuluAdminBundle
 =================
 [![](https://travis-ci.org/sulu-cmf/SuluAdminBundle.png)](https://travis-ci.org/sulu-cmf/SuluAdminBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-cmf/SuluAdminBundle/badges/quality-score.png?s=c37fee3b601e56aa5f15d82f0dfbc706271643b0)](https://scrutinizer-ci.com/g/sulu-cmf/SuluAdminBundle/)
 
 This bundle is part of the [Sulu Content Management Framework](https://github.com/sulu-cmf/sulu-standard) (CMF) and licensed under the [MIT License](https://github.com/sulu-cmf/SuluAdminBundle/blob/develop/LICENSE).
 
