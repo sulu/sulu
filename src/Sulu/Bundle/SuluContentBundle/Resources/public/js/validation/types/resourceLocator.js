@@ -9,9 +9,8 @@
  */
 
 define([
-    'type/default',
-    'form/util'
-], function(Default, Util) {
+    'type/default'
+], function(Default) {
 
     'use strict';
 
@@ -19,8 +18,15 @@ define([
         var defaults = {},
 
             subType = {
+                setValue: function(value) {
+                    App.dom.data($el, 'value', value).trigger('data-changed');
+                },
+
+                getValue: function() {
+                    return App.dom.data($el, 'value');
+                },
+
                 validate: function() {
-                    // TODO validate
                     return true;
                 }
             };
