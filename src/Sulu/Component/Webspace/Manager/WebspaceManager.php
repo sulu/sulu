@@ -82,25 +82,11 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach ($this->getWebspaceCollection()->getPortalInformations(
-                     $environment
-                 ) as $portalUrl => $portalInformation) {
-            /** @var Portal $portal */
-            $urlPart = $url;
-
-            // search until every slash has been cut
-            while (true) {
-                if ($portalUrl == $urlPart) {
-                    return $portalInformation;
-                }
-
-                if (strpos($urlPart, '/') === false) {
-                    // no slash left to cut
-                    break;
-                }
-
-                // cut the string at the last slash
-                $urlPart = preg_replace('/(.*)\\/(.*)/', '$1', $urlPart);
+        foreach (
+            $this->getWebspaceCollection()->getPortalInformations($environment) as $portalUrl => $portalInformation
+        ) {
+            if (strpos($url, $portalUrl) === 0) {
+                return $portalInformation;
             }
         }
 

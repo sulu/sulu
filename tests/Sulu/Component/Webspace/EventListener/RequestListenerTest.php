@@ -16,6 +16,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -66,12 +67,14 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $localization->setCountry('at');
         $localization->setLanguage('de');
 
-        $portalInformation = array(
-            'webspace' => $webspace,
-            'portal' => $portal,
-            'localization' => $localization,
-            'segment' => null,
-            'url' => 'sulu.lo'
+        $portalInformation = new PortalInformation(
+            PortalInformation::TYPE_FULL_MATCH,
+            $webspace,
+            $portal,
+            $localization,
+            'sulu.lo/test',
+            null,
+            null
         );
 
         $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(

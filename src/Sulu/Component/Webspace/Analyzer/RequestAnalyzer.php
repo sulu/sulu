@@ -14,6 +14,7 @@ use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,32 +101,30 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         );
 
         if ($portalInformation != null) {
-            if (array_key_exists('redirect', $portalInformation)) {
-                $this->setCurrentPortalUrl($portalInformation['url']);
-                $this->setCurrentRedirect($portalInformation['redirect']);
-                $this->setCurrentWebspace($portalInformation['webspace']);
+            if ($portalInformation->getType() == PortalInformation::TYPE_REDIRECT) {
+                $this->setCurrentPortalUrl($portalInformation->getUrl());
+                $this->setCurrentRedirect($portalInformation->getRedirect());
+                $this->setCurrentWebspace($portalInformation->getWebspace());
             } else {
-                $this->setCurrentPortalUrl($portalInformation['url']);
-                $this->setCurrentLocalization($portalInformation['localization']);
-                $this->setCurrentPortal($portalInformation['portal']);
-                $this->setCurrentWebspace($portalInformation['webspace']);
+                $this->setCurrentPortalUrl($portalInformation->getUrl());
+                $this->setCurrentLocalization($portalInformation->getLocalization());
+                $this->setCurrentPortal($portalInformation->getPortal());
+                $this->setCurrentWebspace($portalInformation->getWebspace());
 
-                if (array_key_exists('segment', $portalInformation)) {
-                    $this->setCurrentSegment($portalInformation['segment']);
-                }
+                $this->setCurrentSegment($portalInformation->getSegment());
 
                 // get the path and set it on the request
                 $this->setCurrentResourceLocator(
                     substr(
                         $request->getHost() . $request->getRequestUri(),
-                        strlen($portalInformation['url'])
+                        strlen($portalInformation->getUrl())
                     )
                 );
 
                 // get the resource locator prefix and set it
                 $this->setCurrentResourceLocatorPrefix(
                     substr(
-                        $portalInformation['url'],
+                        $portalInformation->getUrl(),
                         strlen($request->getHost())
                     )
                 );
