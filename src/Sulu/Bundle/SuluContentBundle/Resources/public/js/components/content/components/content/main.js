@@ -14,7 +14,10 @@ define(function() {
     return {
 
         header: function() {
+            var noBack = (this.options.id === 'index') ? true : false;
+
             return {
+                noBack: noBack,
                 tabs: {
                     url: '/admin/content/navigation/content'
                 },

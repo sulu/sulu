@@ -53,6 +53,7 @@ class NodeControllerTest extends DatabaseTestCase
         $emailType = new EmailType();
         $emailType->setName('Private');
         self::$em->persist($emailType);
+        self::$em->flush();
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
@@ -103,7 +104,7 @@ class NodeControllerTest extends DatabaseTestCase
         $nodes->addNode('de');
         $nodes->addNode('en');
         $content = $webspace->addNode('contents');
-        $content->setProperty('sulu_locale:en-template', 'overview');
+        $content->setProperty('sulu_locale:en-template', 'default');
         $content->setProperty('sulu_locale:en-creator', 1);
         $content->setProperty('sulu_locale:en-created', new \DateTime());
         $content->setProperty('sulu_locale:en-changer', 1);
@@ -197,7 +198,7 @@ class NodeControllerTest extends DatabaseTestCase
             )
         );
 
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -250,14 +251,14 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data1);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data1);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $uuid = $response->id;
 
         $client->request(
             'POST',
-            '/api/nodes?template=overview&parent=' . $uuid . '&webspace=sulu_io&language=en',
+            '/api/nodes?template=default&parent=' . $uuid . '&webspace=sulu_io&language=en',
             $data2
         );
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -312,7 +313,7 @@ class NodeControllerTest extends DatabaseTestCase
         /** @var ContentMapperInterface $mapper */
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
 
-        $mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
+        $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'de', 1);
 
         $client = $this->createClient(
             array(),
@@ -323,7 +324,7 @@ class NodeControllerTest extends DatabaseTestCase
         );
 
         for ($i = 0; $i < count($data); $i++) {
-            $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data[$i]);
+            $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[$i]);
             $data[$i] = (array) json_decode($client->getResponse()->getContent());
         }
 
@@ -386,7 +387,7 @@ class NodeControllerTest extends DatabaseTestCase
         $data[0]['tags'] = array('new tag');
         $data[0]['article'] = 'thats a new article';
 
-        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?template=overview&webspace=sulu_io&language=en', $data[0]);
+        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?template=default&webspace=sulu_io&language=en', $data[0]);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -464,15 +465,15 @@ class NodeControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data[0]);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data[1]);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
         $data[1] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en&parent='.$data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent());
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en&parent='.$data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en&parent='.$data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent());
 
         return $data;
@@ -759,7 +760,7 @@ class NodeControllerTest extends DatabaseTestCase
         );
         $data = $this->buildTree();
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
-        $mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'en', 1);
+        $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'en', 1);
 
         $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true&webspace=sulu_io&language=en');
 

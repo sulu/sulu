@@ -1,4 +1,4 @@
-<div class="block block-{{ property.name }}">
+<div class="block block-{{ property.name }}" data-property='{{ property|json_encode }}'>
     {% for child in property.childProperties %}
 
         {# set defaults for property#}
