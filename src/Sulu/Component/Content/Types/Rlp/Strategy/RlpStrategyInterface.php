@@ -115,6 +115,4 @@ interface RLPStrategyInterface
      * @return bool
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null);
-
-
 }

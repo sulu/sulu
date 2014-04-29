@@ -10,10 +10,13 @@
 
 namespace Sulu\Component\Content\Types;
 
-
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
+/**
+ * interface for resource locator information
+ * @package Sulu\Component\Content\Types
+ */
 interface ResourceLocatorInterface extends ContentTypeInterface
 {
 

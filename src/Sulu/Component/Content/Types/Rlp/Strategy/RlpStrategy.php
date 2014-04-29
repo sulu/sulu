@@ -18,7 +18,6 @@ use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
  */
 abstract class RlpStrategy implements RlpStrategyInterface
 {
-
     /**
      * @var string name of strategy
      */

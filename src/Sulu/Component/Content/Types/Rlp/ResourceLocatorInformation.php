@@ -21,6 +21,7 @@ class ResourceLocatorInformation
      * @var string
      */
     private $resourceLocator;
+
     /**
      * @var DateTime
      */
