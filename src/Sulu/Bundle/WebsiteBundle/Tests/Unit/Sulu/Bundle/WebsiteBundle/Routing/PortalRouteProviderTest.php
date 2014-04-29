@@ -16,7 +16,6 @@ use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\HttpFoundation\Request;
 
 class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -227,7 +226,7 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             $this->returnValue('sulu-redirect.lo')
         );
         $portalManager->expects($this->any())->method('getCurrentMatchType')->will(
-            $this->returnValue(RequestAnalyzerInterface::TYPE_REDIRECT)
+            $this->returnValue(RequestAnalyzerInterface::MATCH_TYPE_REDIRECT)
         );
 
         return $portalManager;
