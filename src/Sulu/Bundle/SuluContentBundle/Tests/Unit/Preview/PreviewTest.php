@@ -129,29 +129,29 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('title', 'text_line')
+                new Property('title', 'title', 'text_line')
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'resource_locator')
+                new Property('url', 'url', 'resource_locator')
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('article', 'text_area')
+                new Property('article', 'article', 'text_area')
             )
         );
 
-        $block = new BlockProperty('block', false, false, 4, 2);
-        $prop = new Property('title', 'text_line');
+        $block = new BlockProperty('block', 'block', false, false, 4, 2);
+        $prop = new Property('title', 'title', 'text_line');
         $prop->setValue(array('Block-Title-1', 'Block-Title-2'));
         $block->addChild($prop);
-        $prop = new Property('article', 'text_area', false, false, 4, 2);
+        $prop = new Property('article', 'article', 'text_area', false, false, 4, 2);
         $prop->setValue(
             array(
                 array('Block-Article-1-1', 'Block-Article-1-2'),

@@ -10,23 +10,25 @@
 
 namespace Sulu\Bundle\ContentBundle\Twig;
 
-
-use Sulu\Bundle\ContentBundle\Mapper\ContentMapper;
 use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\PropertyInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Extension for content form generation
  * @package Sulu\Bundle\ContentBundle\Twig
  */
-class ContentExtension extends \Twig_Extension implements ContainerAwareInterface
+class ContentExtension extends \Twig_Extension
 {
     /**
-     * @var ContainerInterface
+     * @var ContentTypeManagerInterface
      */
-    private $container;
+    private $contentTypeManager;
+
+    function __construct($contentTypeManager)
+    {
+        $this->contentTypeManager = $contentTypeManager;
+    }
 
     /**
      * Returns an array of possible function in this extension
@@ -58,7 +60,7 @@ class ContentExtension extends \Twig_Extension implements ContainerAwareInterfac
      */
     public function getTypeFunction($name)
     {
-        return $this->container->get('sulu.content.type.' . $name);
+        return $this->contentTypeManager->get($name);
     }
 
     /**
@@ -88,15 +90,5 @@ class ContentExtension extends \Twig_Extension implements ContainerAwareInterfac
     public function getName()
     {
         return 'content';
-    }
-
-    /**
-     * Sets the Container.
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 }

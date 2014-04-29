@@ -13,15 +13,14 @@ parameters:
 services:
     sulu_content.admin:
         class: %sulu_content.admin.class%
-        arguments: [%sulu_admin.name%]
+        arguments: [ "@sulu_core.webspace.webspace_manager", %sulu_admin.name%, "@service_container"]
         tags:
         - { name: sulu.admin }
     sulu_content.admin.content_navigation:
         class: %sulu_content.admin.content_navigation.class%
     sulu_content.twig_extension:
         class: %sulu_content.twig_extension.class%
-        calls:
-            - [ setContainer,[ @service_container ] ]
+        arguments: [@sulu.content.type_manager]
         tags:
             - { name: twig.extension }
     sulu_content.preview.cache:

@@ -36,7 +36,7 @@ class TemplateControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $crawler = $client->request('GET', '/content/template/form/overview.html');
+        $crawler = $client->request('GET', '/content/template/form/default.html');
 
         $this->assertTrue(200 === $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->filter('form#content-form')->count());
