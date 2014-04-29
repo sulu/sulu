@@ -18,6 +18,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Types\ResourceLocator;
 
 class NodeRepositoryTest extends PhpcrTestCase
 {
@@ -176,7 +177,7 @@ class NodeRepositoryTest extends PhpcrTestCase
     private function prepareNodeRepository()
     {
         $this->prepareUserManager();
-        $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionManager, $this->userManager);
+        $this->nodeRepository = new NodeRepository($this->mapper, $this->sessionManager, $this->userManager, $this->containerValueMap['sulu.content.type.resource_locator']);
     }
 
     private function prepareUserManager()

@@ -43,7 +43,7 @@ class TemplateControllerTest extends DatabaseTestCase
 
         // foreach property one textfield
         $this->assertEquals(1, $crawler->filter('input#title')->count());
-        $this->assertEquals(1, $crawler->filter('input#url')->count());
+        $this->assertEquals(1, $crawler->filter('div#url')->count());
         $this->assertEquals(1, $crawler->filter('textarea#article')->count());
         // for tags 2
         $this->assertEquals(1, $crawler->filter('div#tags')->count());
