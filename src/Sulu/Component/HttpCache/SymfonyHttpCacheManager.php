@@ -44,17 +44,16 @@ class SymfonyHttpCacheManager implements HttpCacheManagerInterface
     {
         $this->webspaceManager = $webspaceManager;
         $this->logger = $logger ? : new NullLogger();
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function expire(StructureInterface $structure)
+    public function expire(StructureInterface $structure, $environment = 'prod')
     {
         $urls = $this->webspaceManager->findUrlsByResourceLocator(
             $structure->getPropertyValue('url'),
-            'dev', // TODO get enviorment
+            $environment,
             $structure->getLanguageCode(),
             $structure->getWebspaceKey()
         );

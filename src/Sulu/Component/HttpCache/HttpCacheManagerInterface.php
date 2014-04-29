@@ -19,6 +19,7 @@ interface HttpCacheManagerInterface
 {
     /**
      * @param StructureInterface $structure
+     * @param string $environment
      */
-    public function expire(StructureInterface $structure);
+    public function expire(StructureInterface $structure, $environment = 'prod');
 }

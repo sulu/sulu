@@ -25,11 +25,18 @@ class ContentNodeListener
     protected $cacheManager;
 
     /**
-     * @param HttpCacheManagerInterface $cacheManager
+     * string Current environment
      */
-    public function __construct(HttpCacheManagerInterface $cacheManager)
+    protected $environment;
+
+    /**
+     * @param HttpCacheManagerInterface $cacheManager
+     * @param $environment
+     */
+    public function __construct(HttpCacheManagerInterface $cacheManager, $environment)
     {
         $this->cacheManager = $cacheManager;
+        $this->environment = $environment;
     }
 
     /**
@@ -37,6 +44,6 @@ class ContentNodeListener
      */
     public function onContentNodeSave(ContentNodeEvent $event)
     {
-        $this->cacheManager->expire($event->getStructure());
+        $this->cacheManager->expire($event->getStructure(), $this->environment);
     }
 }
