@@ -16,9 +16,9 @@
         "sulu/sulu": "dev-develop"
     },
     "require-dev": {
-        "symfony/symfony": "2.3.*",
+        "symfony/symfony": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
-        "symfony/monolog-bundle": "2.3.*",
+        "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
