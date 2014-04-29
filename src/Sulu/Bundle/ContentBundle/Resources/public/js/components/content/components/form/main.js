@@ -309,7 +309,8 @@ define(['app-config'], function(AppConfig) {
         bindDomEvents: function() {
             this.startListening = false;
             this.getDomElementsForTagName('sulu.rlp.input', function(property) {
-                if (property.$el.data('element').getValue() === '') {
+                var element = property.$el.data('element');
+                if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
                     this.startListening = true;
                 }
             }.bind(this));
@@ -344,8 +345,9 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.content.contents.getRL', parts, this.template, function(rl) {
                     // set resource locator to empty input fields
                     this.getDomElementsForTagName('sulu.rlp.input', function(property) {
-                        if (property.$el.data('element').getValue() === '') {
-                            property.$el.data('element').setValue(rl);
+                        var element = property.$el.data('element');
+                        if (element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
+                            element.setValue(rl);
                         }
                     }.bind(this));
 
@@ -536,12 +538,13 @@ define(['app-config'], function(AppConfig) {
                         url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                         require([url], function(template) {
-                            var defaults = {
-                                    translate: this.sandbox.translate
+                            var data = this.initData(),
+                                defaults = {
+                                    translate: this.sandbox.translate,
+                                    content: data
                                 },
                                 context = this.sandbox.util.extend({}, defaults),
-                                tpl = this.sandbox.util.template(template, context),
-                                data = this.initData();
+                                tpl = this.sandbox.util.template(template, context);
 
                             this.sandbox.dom.remove(this.formId + ' *');
                             this.sandbox.dom.html(this.$el, tpl);
@@ -616,11 +619,11 @@ define(['app-config'], function(AppConfig) {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
+            }.bind(this));
 
-                this.sandbox.on('sulu.content.changed', function() {
-                    this.setHeaderBar(false);
-                    this.contentChanged = true;
-                }.bind(this));
+            this.sandbox.on('sulu.content.changed', function() {
+                this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this));
         },
 
