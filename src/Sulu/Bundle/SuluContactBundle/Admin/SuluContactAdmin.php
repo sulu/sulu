@@ -21,7 +21,7 @@ class SuluContactAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem($title);
 
-        $section = new NavigationItem('navigation.tools');
+        $section = new NavigationItem('');
 
         $contacts = new NavigationItem('navigation.contacts');
         $contacts->setIcon('contact-book');
