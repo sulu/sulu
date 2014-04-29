@@ -1,6 +1,7 @@
 SuluSecurityBundle
 =================
 [![](https://travis-ci.org/sulu-cmf/SuluSecurityBundle.png)](https://travis-ci.org/sulu-cmf/SuluSecurityBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-cmf/SuluSecurityBundle/badges/quality-score.png?s=ac25ffe49e2a961abc6e4c978f5f8e52e55410ff)](https://scrutinizer-ci.com/g/sulu-cmf/SuluSecurityBundle/)
 
 This bundle is part of the [Sulu Content Management Framework](https://github.com/sulu-cmf/sulu-standard) (CMF) and licensed under the [MIT License](https://github.com/sulu-cmf/SuluSecurityBundle/blob/develop/LICENSE).
 
