@@ -91,5 +91,53 @@
 
 /* line 2, ../scss/modules/resource-locator.scss */
 .resource-locator input {
-  width: auto;
+  width: 200px;
+}
+/* line 5, ../scss/modules/resource-locator.scss */
+.resource-locator .show {
+  padding-left: 5px;
+}
+/* line 8, ../scss/modules/resource-locator.scss */
+.resource-locator .show .icon {
+  font-size: 14px;
+  position: relative;
+  top: 2px;
+  padding-right: 2px;
+}
+/* line 15, ../scss/modules/resource-locator.scss */
+.resource-locator .loader {
+  display: inline-block;
+  margin-bottom: -3px;
+  margin-left: 5px;
+}
+
+/* line 22, ../scss/modules/resource-locator.scss */
+.resource-locator-history {
+  list-style-type: none;
+  padding: 0 40px 0 30px;
+}
+/* line 26, ../scss/modules/resource-locator.scss */
+.resource-locator-history::after {
+  display: table;
+  content: "";
+  clear: both;
+}
+/* line 33, ../scss/modules/resource-locator.scss */
+.resource-locator-history .url,
+.resource-locator-history .date {
+  display: block;
+  width: 50%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+/* line 41, ../scss/modules/resource-locator.scss */
+.resource-locator-history .url {
+  float: left;
+  text-align: left;
+}
+/* line 45, ../scss/modules/resource-locator.scss */
+.resource-locator-history .date {
+  float: right;
+  text-align: right;
 }

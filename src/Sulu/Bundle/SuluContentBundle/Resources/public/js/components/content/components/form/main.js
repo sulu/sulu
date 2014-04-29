@@ -309,7 +309,8 @@ define(['app-config'], function(AppConfig) {
         bindDomEvents: function() {
             this.startListening = false;
             this.getDomElementsForTagName('sulu.rlp.input', function(property) {
-                if (property.$el.data('element').getValue() === '') {
+                var element = property.$el.data('element');
+                if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
                     this.startListening = true;
                 }
             }.bind(this));
@@ -344,8 +345,9 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.content.contents.getRL', parts, this.template, function(rl) {
                     // set resource locator to empty input fields
                     this.getDomElementsForTagName('sulu.rlp.input', function(property) {
-                        if (property.$el.data('element').getValue() === '') {
-                            property.$el.data('element').setValue(rl);
+                        var element = property.$el.data('element');
+                        if (element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
+                            element.setValue(rl);
                         }
                     }.bind(this));
 
