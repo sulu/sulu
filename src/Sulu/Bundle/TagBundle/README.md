@@ -1,6 +1,7 @@
 SuluTagBundle
 =================
 [![](https://travis-ci.org/sulu-cmf/SuluTagBundle.png)](https://travis-ci.org/sulu-cmf/SuluTagBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-cmf/SuluTagBundle/badges/quality-score.png?s=a70adae28f01d86e90c1b0fd60e0af0ebf73fb09)](https://scrutinizer-ci.com/g/sulu-cmf/SuluTagBundle/)
 
 This bundle is part of the [Sulu Content Management Framework](https://github.com/sulu-cmf/sulu-standard) (CMF) and licensed under the [MIT License](https://github.com/sulu-cmf/SuluTagBundle/blob/develop/LICENSE).
 
