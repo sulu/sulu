@@ -260,7 +260,7 @@ class Preview implements PreviewInterface
     {
         if (false !== ($sequence = $this->getSequence($content, $property))) {
             $tmp = $data;
-            $data = $sequence['property']->getValue();;
+            $data = $sequence['property']->getValue();
             $value = & $data;
             $len = sizeof($sequence['index']);
             for ($i = 0; $i < $len; $i++) {

@@ -1,4 +1,5 @@
 <input id="{{ id|raw }}" type="text" class="form-element preview-update trigger-save-button"
        data-mapper-property="{{ property.name }}"
        data-type="resourceLocator"
+       data-property='{{ property|json_encode }}'
        {% if property.mandatory %}data-validation-required="true"{% endif %}/>
