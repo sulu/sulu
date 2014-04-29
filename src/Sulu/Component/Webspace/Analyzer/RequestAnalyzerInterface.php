@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,6 +29,12 @@ interface RequestAnalyzerInterface
      * @return
      */
     public function analyze(Request $request);
+
+    /**
+     * Returns the current webspace for this request
+     * @return Webspace
+     */
+    public function getCurrentWebspace();
 
     /**
      * Returns the current portal for this request

@@ -53,6 +53,12 @@ class Webspace
     private $portals;
 
     /**
+     * The security system for this webspace
+     * @var Security
+     */
+    private $security;
+
+    /**
      * Sets the key of the webspace
      * @param string $key
      */
@@ -220,5 +226,23 @@ class Webspace
     public function getTheme()
     {
         return $this->theme;
+    }
+
+    /**
+     * Sets the security system
+     * @param Security $security
+     */
+    public function setSecurity($security)
+    {
+        $this->security = $security;
+    }
+
+    /**
+     * Returns the security system
+     * @return Security
+     */
+    public function getSecurity()
+    {
+        return $this->security;
     }
 }

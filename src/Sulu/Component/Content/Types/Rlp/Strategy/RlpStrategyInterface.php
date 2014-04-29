@@ -15,9 +15,8 @@ use PHPCR\NodeInterface;
 /**
  * InterfaceDefinition of Resource Locator Path Strategy
  */
-interface RLPStrategyInterface
+interface RlpStrategyInterface
 {
-
     /**
      * returns name of RLP Strategy (e.g. whole-tree)
      * @return string

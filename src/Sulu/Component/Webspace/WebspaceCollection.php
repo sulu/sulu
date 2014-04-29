@@ -83,6 +83,7 @@ class WebspaceCollection implements \IteratorAggregate
                     $urlAddress = $url->getUrl();
                     $this->environmentPortals[$environmentType][$urlAddress]['redirect'] = $url->getRedirect();
                     $this->environmentPortals[$environmentType][$urlAddress]['url'] = $urlAddress;
+                    $this->environmentPortals[$environmentType][$urlAddress]['webspace'] = $webspace;
                 }
             }
         }
@@ -116,6 +117,7 @@ class WebspaceCollection implements \IteratorAggregate
                     $replacers['{segment}'] = $segment->getKey();
                     $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                     $this->environmentPortals[$environment][$urlResult] = array(
+                        'webspace' => $portal->getWebspace(),
                         'portal' => $portal,
                         'localization' => $localization,
                         'segment' => $segment,
@@ -125,6 +127,7 @@ class WebspaceCollection implements \IteratorAggregate
             } else {
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                 $this->environmentPortals[$environment][$urlResult] = array(
+                    'webspace' => $portal->getWebspace(),
                     'portal' => $portal,
                     'localization' => $localization,
                     'url' => $urlResult
@@ -214,6 +217,11 @@ class WebspaceCollection implements \IteratorAggregate
             $webspaceData['key'] = $webspace->getKey();
             $webspaceData['name'] = $webspace->getName();
             $webspaceData['localizations'] = $this->toArrayLocalizations($webspace->getLocalizations());
+
+            $webspaceSecurity = $webspace->getSecurity();
+            if ($webspaceSecurity != null) {
+                $webspaceData['security']['system'] = $webspaceSecurity->getSystem();
+            }
 
             $webspaceData = $this->toArraySegments($webspace, $webspaceData);
 

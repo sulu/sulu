@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
@@ -37,6 +38,12 @@ class {{ cache_class }} extends {{ base_class }}
         $webspace = new Webspace();
         $webspace->setKey('{{ webspace.key }}');
         $webspace->setName('{{ webspace.name }}');
+
+{% if webspace.security != null %}
+        $security = new Security();
+        $security->setSystem('{{ webspace.security.system }}');
+        $webspace->setSecurity($security);
+{% endif %}
 
 {% for localization in webspace.localizations %}
         // add localization to webspace
