@@ -124,6 +124,8 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function toArray()
     {
+        $collection = array();
+
         $webspaces = array();
         foreach ($this->webspaces as $webspace) {
             $webspaceData = array();
@@ -147,7 +149,15 @@ class WebspaceCollection implements \IteratorAggregate
             $webspaces[] = $webspaceData;
         }
 
-        return $webspaces;
+        $portalInformations = array();
+        foreach ($this->portalInformations as $environment => $portalInformations) {
+            $portalInformations[$environment] = $this->toArrayPortalInformations($portalInformations);
+        }
+
+        $collection['webspaces'] = $webspaces;
+        $collection['portalInformations'] = $portalInformations;
+
+        return $collection;
     }
 
     /**
@@ -164,6 +174,7 @@ class WebspaceCollection implements \IteratorAggregate
                 $localizationData = array();
                 $localizationData['country'] = $localization->getCountry();
                 $localizationData['language'] = $localization->getLanguage();
+                $localizationData['default'] = $localization->isDefault();
 
                 if (!$withAdditionalOptions) {
                     $localizationData['children'] = $this->toArrayLocalizations($localization->getChildren(), true);
@@ -190,6 +201,7 @@ class WebspaceCollection implements \IteratorAggregate
                 $segmentData = array();
                 $segmentData['key'] = $segment->getKey();
                 $segmentData['name'] = $segment->getName();
+                $segmentData['default'] = $segment->isDefault();
 
                 $webspaceData['segments'][] = $segmentData;
             }
@@ -260,6 +272,34 @@ class WebspaceCollection implements \IteratorAggregate
         }
 
         return $environmentData;
+    }
+
+    /**
+     * @param PortalInformation[] $portalInformations
+     * @param array $portalInformationsData
+     */
+    private function toArrayPortalInformations($portalInformations)
+    {
+        $portalInformationArray = array();
+
+        foreach ($portalInformations as $portalInformation) {
+            $portalInformationData = array();
+            $portalInformationData['type'] = $portalInformation->getType();
+            $portalInformationData['webspace'] = $portalInformation->getWebspace()->getKey();
+            $portalInformationData['portal'] = $portalInformation->getPortal()->getKey();
+            $portalInformationData['localization'] = $portalInformation->getLocalization()->getLocalization();
+            $portalInformationData['url'] = $portalInformation->getUrl();
+            $portalInformationData['redirect'] = $portalInformation->getRedirect();
+
+            $segment = $portalInformation->getSegment();
+            if ($segment) {
+                $portalInformationData['segment'] = $segment->getKey();
+            }
+
+            $portalInformationArray[$portalInformationData['url']] = $portalInformationData;
+        }
+
+        return $portalInformationArray;
     }
 
     /**
