@@ -619,11 +619,11 @@ define(['app-config'], function(AppConfig) {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
+            }.bind(this));
 
-                this.sandbox.on('sulu.content.changed', function() {
-                    this.setHeaderBar(false);
-                    this.contentChanged = true;
-                }.bind(this));
+            this.sandbox.on('sulu.content.changed', function() {
+                this.setHeaderBar(false);
+                this.contentChanged = true;
             }.bind(this));
         },
 
