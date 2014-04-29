@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
@@ -107,7 +108,9 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
         $activeTheme = $this->getActiveThemeMock();
 
         $contentMapper = $this->getContentMapperMock($structure);
-        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->throwException(new ResourceLocatorNotFoundException()));
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will(
+            $this->throwException(new ResourceLocatorNotFoundException())
+        );
 
         $portalRouteProvider = new PortalRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
 
@@ -216,11 +219,16 @@ class PortalRouteProviderTest extends \PHPUnit_Framework_TestCase
             false,
             true,
             true,
-            array('getCurrentRedirect', 'getCurrentPortalUrl')
+            array('getCurrentRedirect', 'getCurrentPortalUrl', 'getCurrentMatchType')
         );
 
         $portalManager->expects($this->any())->method('getCurrentRedirect')->will($this->returnValue('sulu.lo'));
-        $portalManager->expects($this->any())->method('getCurrentPortalUrl')->will($this->returnValue('sulu-redirect.lo'));
+        $portalManager->expects($this->any())->method('getCurrentPortalUrl')->will(
+            $this->returnValue('sulu-redirect.lo')
+        );
+        $portalManager->expects($this->any())->method('getCurrentMatchType')->will(
+            $this->returnValue(RequestAnalyzerInterface::TYPE_REDIRECT)
+        );
 
         return $portalManager;
     }
