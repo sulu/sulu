@@ -83,7 +83,7 @@ define([], function() {
             this.sandbox.dom.on(getId.call(this, 'toggle'), 'click', loadHistory.bind(this));
             this.sandbox.dom.on(getId.call(this, 'input'), 'change', setDataValue.bind(this));
             this.sandbox.dom.on(getId.call(this, 'input'), 'change', function() {
-                this.$el.trigger('change');
+                this.sandbox.emit('sulu.content.changed');
             }.bind(this));
             this.sandbox.dom.on(getId.call(this, 'input'), 'focusout', function() {
                 this.$el.trigger('focusout');
