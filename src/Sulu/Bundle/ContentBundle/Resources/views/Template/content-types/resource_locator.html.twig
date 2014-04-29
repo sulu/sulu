@@ -1,6 +1,8 @@
 <div id="{{ id|raw }}"
      class="preview-update trigger-save-button"
+     data-property='{{ property|json_encode }}'
      data-mapper-property="{{ property.name }}"
+     data-form="true"
      data-type="resourceLocator"
      data-aura-component="resource-locator@sulucontent"
      data-type-instance-name="{{ id|raw }}"
