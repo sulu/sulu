@@ -42,11 +42,16 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
      */
     private $structureManager;
 
+    /**
+     * @var array
+     */
+    private $cacheFiles;
+
     public function setUp()
     {
         $cacheDir = __DIR__ . '/../../../../Resources/cache';
 
-        $cacheFiles = array(
+        $this->cacheFiles = array(
             $cacheDir . '/Template_Structure_template.php',
             $cacheDir . '/Template_blockStructureCache.php',
             $cacheDir . '/Template_block_typesStructureCache.php'
@@ -55,7 +60,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         if (!is_dir($cacheDir)) {
             mkdir($cacheDir);
         } else {
-            foreach ($cacheFiles as $cacheFile) {
+            foreach ($this->cacheFiles as $cacheFile) {
                 if (is_file($cacheFile)) {
                     unlink($cacheFile);
                 }
@@ -76,13 +81,11 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-//        if (file_exists(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php')) {
-//            unlink(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php');
-//        }
-//
-//        if (file_exists(__DIR__ . '/../../../../Resources/cache/Template_blockStructureCache.php')) {
-//            unlink(__DIR__ . '/../../../../Resources/cache/Template_blockStructureCache.php');
-//        }
+        foreach ($this->cacheFiles as $cacheFile) {
+            if (is_file($cacheFile)) {
+                unlink($cacheFile);
+            }
+        }
     }
 
     public function testGetStructure()
