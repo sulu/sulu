@@ -838,7 +838,7 @@ class NodeControllerTest extends DatabaseTestCase
             'url' => '/a1',
             'article' => 'Test'
         );
-        $client->request('POST', '/api/nodes?template=overview&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent(), true);
         $uuid = $response['id'];
         $data = array(
@@ -850,7 +850,7 @@ class NodeControllerTest extends DatabaseTestCase
             'url' => '/a2',
             'article' => 'Test'
         );
-        $client->request('PUT', '/api/nodes/' . $uuid . '?template=overview&webspace=sulu_io&language=en', $data);
+        $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
         $data = array(
             'title' => 'news',
             'tags' => array(
@@ -860,9 +860,9 @@ class NodeControllerTest extends DatabaseTestCase
             'url' => '/a3',
             'article' => 'Test'
         );
-        $client->request('PUT', '/api/nodes/' . $uuid . '?template=overview&webspace=sulu_io&language=en', $data);
+        $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
 
-        $client->request('GET', '/api/nodes/' . $uuid . '/history?template=overview&webspace=sulu_io&language=en');
+        $client->request('GET', '/api/nodes/' . $uuid . '/history?template=default&webspace=sulu_io&language=en');
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('/a2', $response['_embedded'][0]['resource_locator']);
