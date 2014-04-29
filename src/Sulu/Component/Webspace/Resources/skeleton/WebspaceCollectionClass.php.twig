@@ -1,10 +1,12 @@
-{% macro create_localizations(localization, count, parent) %}
+{% macro create_localizations(localization, count, parent, webspace) %}
         // parent id {{ parent }}
         $localization{{ count }} = new Localization();
         $localization{{ count }}->setLanguage('{{ localization.language }}');
         $localization{{ count }}->setCountry('{{ localization.country }}');
         $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
         $localization{{ count }}->setParent($localization{{ parent }});
+
+        $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization{{ count }};
 
 {% for childLocalization in localization.children %}
     {{ _self.create_localizations(childLocalization, count + 1, count) }}
@@ -13,9 +15,10 @@
 {% endmacro %}
 
 <?php
-use Sulu\Component\Webspace\WebspaceCollection;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Security;
@@ -33,18 +36,22 @@ class {{ cache_class }} extends {{ base_class }}
 {
     public function __construct()
     {
-{% for webspace in webspaces %}
+        $webspaceRefs = array();
+        $portalRefs = array();
+        $localizationRefs = array();
+        $segmentRefs = array();
+        $portalInformationRefs = array();
+
+{% for webspace in collection.webspaces %}
         // new webspace
         $webspace = new Webspace();
         $webspace->setKey('{{ webspace.key }}');
         $webspace->setName('{{ webspace.name }}');
-
 {% if webspace.security != null %}
         $security = new Security();
         $security->setSystem('{{ webspace.security.system }}');
         $webspace->setSecurity($security);
 {% endif %}
-
 {% for localization in webspace.localizations %}
         // add localization to webspace
         $localization0 = new Localization();
@@ -52,21 +59,20 @@ class {{ cache_class }} extends {{ base_class }}
         $localization0->setCountry('{{ localization.country }}');
         $localization0->setShadow('{{ (localization.shadow) }}');
 {% for childLocalization in localization.children %}
-{{ _self.create_localizations(childLocalization, 1, 0) }}
+{{ _self.create_localizations(childLocalization, 1, 0, webspace) }}
 {% endfor %}
+        $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization0;
         $webspace->addLocalization($localization0);
-
 {% endfor %}
-
 {% for segment in webspace.segments %}
         // add segment to webspace
         $segment = new Segment();
         $segment->setName('{{ segment.name }}');
         $segment->setKey('{{ segment.key }}');
         $webspace->addSegment($segment);
+        $segmentRefs['{{ webspace.key }}_{{ segment.key }}'] = $segment;
 
 {% endfor %}
-
         // add theme
         $theme = new Theme();
         $theme->setKey('{{ webspace.theme.key }}');
@@ -109,11 +115,48 @@ class {{ cache_class }} extends {{ base_class }}
 
         $portal->addEnvironment($environment);
 {% endfor %}
-
+        $portalRefs['{{ portal.key }}'] = $portal;
         $webspace->addPortal($portal);
 
 {% endfor %}
-        $this->add($webspace);
+        $webspaceRefs['{{ webspace.key }}'] = $webspace;
+
+
 {% endfor %}
+
+{% for environmentKey, environment in collection.portalInformations %}
+{% for portalInformation in environment %}
+        $portalInformationRefs['{{ environmentKey }}']['{{ portalInformation.url }}'] = new PortalInformation(
+            {{ portalInformation.type }},
+            $webspaceRefs['{{ portalInformation.webspace }}'],
+{% if portalInformation.portal %}
+            $portalRefs['{{ portalInformation.portal }}'],
+{% else %}
+            null,
+{% endif %}
+{% if portalInformation.localization %}
+            $localizationRefs['{{ portalInformation.webspace }}_{{ portalInformation.localization }}'],
+{% else %}
+            null,
+{% endif %}
+            '{{ portalInformation.url }}',
+{% if portalInformation.segment %}
+            $segmentRefs['{{ portalInformation.webspace }}_{{ portalInformation.segment }}'],
+{% else %}
+            null,
+{% endif %}
+{% if portalInformation.redirect %}
+            '{{ portalInformation.redirect }}'
+{% else %}
+            null
+{% endif %}
+        );
+
+{% endfor %}
+{% endfor %}
+
+        $this->setWebspaces($webspaceRefs);
+        $this->setPortals($portalRefs);
+        $this->setPortalInformations($portalInformationRefs);
     }
 }

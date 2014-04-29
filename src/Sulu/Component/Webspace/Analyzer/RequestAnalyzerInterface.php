@@ -24,11 +24,38 @@ use Symfony\Component\HttpFoundation\Request;
 interface RequestAnalyzerInterface
 {
     /**
+     * Type for a full match
+     *
+     * A full match is when the URL completely starts with the given URL
+     */
+    const MATCH_TYPE_FULL = 1;
+
+    /**
+     * Type for a partial match
+     *
+     * A partial match is when only the partial URL matches the given URL
+     */
+    const MATCH_TYPE_PARTIAL = 2;
+
+    /**
+     * Type for a redirect
+     *
+     * A redirect is when the given URL is just defined to be a redirect
+     */
+    const MATCH_TYPE_REDIRECT = 3;
+
+    /**
      * Analyzes the current request, and saves the values for portal, language, country and segment for further usage
      * @param Request $request The request to analyze
      * @return
      */
     public function analyze(Request $request);
+
+    /**
+     * Returns the current match type for this request
+     * @return int
+     */
+    public function getCurrentMatchType();
 
     /**
      * Returns the current webspace for this request

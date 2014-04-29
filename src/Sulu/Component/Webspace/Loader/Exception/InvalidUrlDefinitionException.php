@@ -10,17 +10,10 @@
 
 namespace Sulu\Component\Webspace\Loader\Exception;
 
-
 use Sulu\Component\Webspace\Webspace;
 
-class InvalidUrlDefinitionException extends \Exception
+class InvalidUrlDefinitionException extends WebspaceException
 {
-    /**
-     * The webspace in which the error occured
-     * @var Webspace
-     */
-    private $webspace;
-
     /**
      * The pattern which was invalid
      * @var string
@@ -28,25 +21,16 @@ class InvalidUrlDefinitionException extends \Exception
     private $urlPattern;
 
     /**
-     * @param Webspace $webspace
+     * @param Webspace $portal
      * @param string $urlPattern
      */
-    public function __construct(Webspace $webspace, $urlPattern)
+    public function __construct(Webspace $portal, $urlPattern)
     {
-        $this->webspace = $webspace;
+        $this->webspace = $portal;
         $this->urlPattern = $urlPattern;
-        $message = 'The url pattern "' . $urlPattern . '" in the webspace definition "' . $webspace->getKey() . '" ' .
+        $message = 'The url pattern "' . $urlPattern . '" in the webspace definition "' . $portal->getKey() . '" ' .
             'has not specified the required attributes (either with xml attributes or as placeholders in the pattern)';
         parent::__construct($message, 0);
-    }
-
-    /**
-     * Returns the webspace in which the error occured
-     * @return Webspace
-     */
-    public function getWebspace()
-    {
-        return $this->webspace;
     }
 
     /**

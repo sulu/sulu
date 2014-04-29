@@ -15,6 +15,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -57,12 +58,14 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $localization->setCountry('at');
         $localization->setLanguage('de');
 
-        $portalInformation = array(
-            'webspace' => $webspace,
-            'portal' => $portal,
-            'localization' => $localization,
-            'segment' => null,
-            'url' => 'sulu.lo/test'
+        $portalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localization,
+            'sulu.lo/test',
+            null,
+            null
         );
 
         $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(

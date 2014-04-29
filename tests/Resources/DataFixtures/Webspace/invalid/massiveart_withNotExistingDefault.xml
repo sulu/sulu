@@ -3,16 +3,23 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
 
-    <name>Sulu CMF</name>
-    <key>sulu_io</key>
+    <name>Massive Art</name>
+    <key>massiveart</key>
 
     <localizations>
-        <localization language="en" country="us" shadow="auto"/>
-        <localization language="de" country="at" default="true"/>
+        <localization language="en" country="us" shadow="auto">
+            <localization language="en" country="ca"/>
+        </localization>
+        <localization language="fr" country="ca"/>
     </localizations>
 
+    <segments>
+        <segment key="w">winter</segment>
+        <segment key="s" default="true">summer</segment>
+    </segments>
+
     <theme>
-        <key>sulu</key>
+        <key>massiveart</key>
         <excluded>
             <template>overview</template>
         </excluded>
@@ -20,26 +27,26 @@
 
     <portals>
         <portal>
-            <name>Sulu CMF AT</name>
-            <key>sulucmf_at</key>
+            <name>Massive Art CA</name>
+            <key>massiveart_ca</key>
             <resource-locator>
-                <strategy>short</strategy>
+                <strategy>tree</strategy>
             </resource-locator>
 
             <localizations>
-                <localization language="de" country="at"/>
+                <localization language="en" country="ca"/>
+                <localization language="fr" country="ca"/>
             </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url language="de" country="at">sulu.at</url>
-                        <url redirect="sulu.at">www.sulu.at</url>
+                        <url>{language}.massiveart.{country}/{segment}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url language="de" country="at">sulu.lo</url>
+                        <url>massiveart.lo/{localization}/{segment}</url>
                     </urls>
                 </environment>
             </environments>

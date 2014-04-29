@@ -47,6 +47,12 @@ class Localization implements \JsonSerializable
     private $parent;
 
     /**
+     * Defines whether this localization is the default one or not
+     * @var boolean
+     */
+    private $default;
+
+    /**
      * Sets the country of this localization
      * @param string $country
      */
@@ -158,6 +164,24 @@ class Localization implements \JsonSerializable
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Sets if this localization is the default one
+     * @param boolean $default
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
+    }
+
+    /**
+     * Returns if this localization is the default one
+     * @return boolean True if this is the default localization, otherwise false
+     */
+    public function isDefault()
+    {
+        return $this->default;
     }
 
     /**
