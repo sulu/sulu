@@ -13,7 +13,7 @@ parameters:
 services:
     sulu_content.admin:
         class: %sulu_content.admin.class%
-        arguments: [%sulu_admin.name%]
+        arguments: [ "@sulu_core.webspace.webspace_manager", %sulu_admin.name%, "@service_container"]
         tags:
         - { name: sulu.admin }
     sulu_content.admin.content_navigation:
