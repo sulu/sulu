@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Localization;
@@ -197,7 +198,7 @@ class WebspaceCollectionBuilder
     private function buildUrlRedirect(Webspace $webspace, Environment $environment, $urlAddress, $urlRedirect)
     {
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
-            PortalInformation::TYPE_REDIRECT,
+            RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             $webspace,
             null,
             null,
@@ -229,7 +230,7 @@ class WebspaceCollectionBuilder
                 $replacers[self::REPLACER_SEGMENT] = $segment->getKey();
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                 $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
-                    PortalInformation::TYPE_FULL_MATCH,
+                    RequestAnalyzerInterface::MATCH_TYPE_FULL,
                     $portal->getWebspace(),
                     $portal,
                     $localization,
@@ -240,7 +241,7 @@ class WebspaceCollectionBuilder
         } else {
             $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
             $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
-                PortalInformation::TYPE_FULL_MATCH,
+                RequestAnalyzerInterface::MATCH_TYPE_FULL,
                 $portal->getWebspace(),
                 $portal,
                 $localization,
@@ -249,13 +250,18 @@ class WebspaceCollectionBuilder
         }
     }
 
+    /**
+     * @param Portal $portal
+     * @param Environment $environment
+     * @param string $urlAddress
+     */
     private function buildUrlPartialMatch(Portal $portal, Environment $environment, $urlAddress)
     {
         $urlResult = $this->removeUrlPlaceHolders($urlAddress);
 
         if ($this->validateUrlPartialMatch($urlResult, $environment)) {
             $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
-                PortalInformation::TYPE_PARTIAL_MATCH,
+                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
                 $portal->getWebspace(),
                 $portal,
                 $portal->getDefaultLocalization(),

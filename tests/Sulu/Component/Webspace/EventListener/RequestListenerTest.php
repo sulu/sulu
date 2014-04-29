@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\EventListener;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
@@ -68,7 +69,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $portalInformation = new PortalInformation(
-            PortalInformation::TYPE_FULL_MATCH,
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
             $webspace,
             $portal,
             $localization,

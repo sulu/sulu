@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
@@ -100,7 +101,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $webspaces[] = $webspace;
 
         $portalInformations['prod']['www.portal1.com'] = new PortalInformation(
-            PortalInformation::TYPE_FULL_MATCH,
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
             $webspace,
             $portal,
             $localizationEnUs,
@@ -109,7 +110,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         );
 
         $portalInformations['dev']['portal1.lo'] = new PortalInformation(
-            PortalInformation::TYPE_FULL_MATCH,
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
             $webspace,
             $portal,
             $localizationEnUs,
@@ -173,7 +174,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
         $portalInformation = $collectionArray['portalInformations']['prod']['www.portal1.com'];
 
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $portalInformation['type']);
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformation['type']);
         $this->assertEquals('default', $portalInformation['webspace']);
         $this->assertEquals('portal1', $portalInformation['portal']);
         $this->assertEquals('en_us', $portalInformation['localization']);
@@ -182,7 +183,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
         $portalInformation = $collectionArray['portalInformations']['dev']['portal1.lo'];
 
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $portalInformation['type']);
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformation['type']);
         $this->assertEquals('default', $portalInformation['webspace']);
         $this->assertEquals('portal1', $portalInformation['portal']);
         $this->assertEquals('en_us', $portalInformation['localization']);

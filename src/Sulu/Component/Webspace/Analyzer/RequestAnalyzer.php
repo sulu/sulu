@@ -14,7 +14,6 @@ use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -108,7 +107,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
         if ($portalInformation != null) {
             $this->setCurrentMatchType($portalInformation->getType());
-            if ($portalInformation->getType() == PortalInformation::TYPE_REDIRECT) {
+            if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
                 $this->setCurrentPortalUrl($portalInformation->getUrl());
                 $this->setCurrentRedirect($portalInformation->getRedirect());
                 $this->setCurrentWebspace($portalInformation->getWebspace());

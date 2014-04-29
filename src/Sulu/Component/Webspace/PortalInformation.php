@@ -17,27 +17,6 @@ namespace Sulu\Component\Webspace;
 class PortalInformation
 {
     /**
-     * Type for a full match
-     *
-     * A full match is when the URL completely starts with the given URL
-     */
-    const TYPE_FULL_MATCH = 1;
-
-    /**
-     * Type for a partial match
-     *
-     * A partial match is when only the partial URL matches the given URL
-     */
-    const TYPE_PARTIAL_MATCH = 2;
-
-    /**
-     * Type for a redirect
-     *
-     * A redirect is when the given URL is just defined to be a redirect
-     */
-    const TYPE_REDIRECT = 3;
-
-    /**
      * The type of the match
      * @var int
      */
@@ -208,6 +187,4 @@ class PortalInformation
     {
         return $this->webspace;
     }
-
-
-} 
+}

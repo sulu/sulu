@@ -59,7 +59,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
 
         $portalInformation = new PortalInformation(
-            PortalInformation::TYPE_FULL_MATCH,
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
             $webspace,
             $portal,
             $localization,

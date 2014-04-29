@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace;
 
 
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
 
@@ -75,16 +76,16 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
         $prodPortalInformationValues = array_values($prodPortalInformations);
 
         // the values before have the same size, therefore the order cannot be determined
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $prodPortalInformationValues[0]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $prodPortalInformationValues[1]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $prodPortalInformationValues[2]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $prodPortalInformationValues[3]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $prodPortalInformationValues[4]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $prodPortalInformationValues[5]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[0]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[1]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[2]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[3]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[4]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[5]->getType());
         $this->assertEquals('www.sulu.at', $prodPortalInformationKeys[6]);
-        $this->assertEquals(PortalInformation::TYPE_REDIRECT, $prodPortalInformationValues[6]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_REDIRECT, $prodPortalInformationValues[6]->getType());
         $this->assertEquals('sulu.at', $prodPortalInformationKeys[7]);
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $prodPortalInformationValues[7]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[7]->getType());
 
         $devPortalInformations = $webspaceCollection->getPortalInformations('dev');
 
@@ -94,18 +95,18 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
         $devPortalInformationValues = array_values($devPortalInformations);
 
         // the values before have the same size, therefore the order cannot be determined
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $devPortalInformationValues[0]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $devPortalInformationValues[1]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $devPortalInformationValues[2]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $devPortalInformationValues[3]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $devPortalInformationValues[4]->getType());
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $devPortalInformationValues[5]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[0]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[1]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[2]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[3]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[4]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[5]->getType());
         $this->assertEquals('massiveart-us.lo', $devPortalInformationKeys[6]);
-        $this->assertEquals(PortalInformation::TYPE_PARTIAL_MATCH, $devPortalInformationValues[6]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[6]->getType());
         $this->assertEquals('massiveart-ca.lo', $devPortalInformationKeys[7]);
-        $this->assertEquals(PortalInformation::TYPE_PARTIAL_MATCH, $devPortalInformationValues[7]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[7]->getType());
         $this->assertEquals('sulu.lo', $devPortalInformationKeys[8]);
-        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $devPortalInformationValues[8]->getType());
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[8]->getType());
 
         $this->assertEquals('en_us', $devPortalInformationValues[6]->getLocalization()->getLocalization());
         $this->assertEquals('s', $devPortalInformationValues[6]->getSegment()->getKey());
