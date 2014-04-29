@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use Jackalope\Session;
-use PHPCR\Util\NodeHelper;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
@@ -20,7 +18,6 @@ use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
 use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 
 class StructureMangerTest extends \PHPUnit_Framework_TestCase
@@ -48,16 +45,22 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $cacheDir = __DIR__ . '/../../../../Resources/cache';
-        $cacheFile = $cacheDir . '/Template_Structure_template.php';
+
+        $cacheFiles = array(
+            $cacheDir . '/Template_Structure_template.php',
+            $cacheDir . '/Template_blockStructureCache.php',
+            $cacheDir . '/Template_block_typesStructureCache.php'
+        );
 
         if (!is_dir($cacheDir)) {
             mkdir($cacheDir);
         } else {
-            if (is_file($cacheFile)) {
-                unlink($cacheFile);
+            foreach ($cacheFiles as $cacheFile) {
+                if (is_file($cacheFile)) {
+                    unlink($cacheFile);
+                }
             }
         }
-
         $this->loader = new TemplateReader();
         $this->dumper = new PHPTemplateDumper('../Resources/Skeleton', false);
         $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
@@ -73,13 +76,13 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if (file_exists(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php')) {
-            unlink(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php');
-        }
-
-        if (file_exists(__DIR__ . '/../../../../Resources/cache/Template_blockStructureCache.php')) {
-            unlink(__DIR__ . '/../../../../Resources/cache/Template_blockStructureCache.php');
-        }
+//        if (file_exists(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php')) {
+//            unlink(__DIR__ . '/../../../../Resources/cache/TemplateStructureCache.php');
+//        }
+//
+//        if (file_exists(__DIR__ . '/../../../../Resources/cache/Template_blockStructureCache.php')) {
+//            unlink(__DIR__ . '/../../../../Resources/cache/Template_blockStructureCache.php');
+//        }
     }
 
     public function testGetStructure()
@@ -304,10 +307,15 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $block1->isMultilingual());
         $this->assertEquals('block', $block1->getContentTypeName());
 
-        $subproperties = $block1->getTypes();
-        $this->assertEquals(3, sizeof($subproperties));
+        $types = $block1->getTypes();
+        $this->assertEquals(1, sizeof($types));
 
-        $title11 = $subproperties[0];
+        $type = $types['default'];
+        $this->assertEquals('default', $type->getName());
+        $this->assertEquals(3, sizeof($type->getChildProperties()));
+
+        $properties = $type->getChildProperties();
+        $title11 = $properties[0];
         $this->assertEquals('title1.1', $title11->getName());
         $this->assertEquals('text_line', $title11->getContentTypeName());
         $this->assertEquals(true, $title11->isMandatory());
@@ -320,7 +328,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $title11->getParams()
         );
 
-        $article11 = $subproperties[1];
+        $article11 = $properties[1];
         $this->assertEquals('article1.1', $article11->getName());
         $this->assertEquals('text_area', $article11->getContentTypeName());
         $this->assertEquals(true, $article11->isMandatory());
@@ -333,7 +341,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $article11->getParams()
         );
 
-        $block11 = $subproperties[2];
+        $block11 = $properties[2];
         $this->assertEquals('block1.1', $block11->getName());
         $this->assertEquals(1, $block11->getMinOccurs());
         $this->assertEquals(1, $block11->getMaxOccurs());
@@ -341,10 +349,13 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $block11->isMultilingual());
         $this->assertEquals('block', $block11->getContentTypeName());
 
-        $subproperties11 = $block11->getChildProperties();
-        $this->assertEquals(2, sizeof($subproperties11));
+        $types = $block11->getTypes();
+        $this->assertEquals(1, sizeof($types));
 
-        $block111 = $subproperties11[0];
+        $properties = $block11->getType('default')->getChildProperties();
+        $this->assertEquals(2, sizeof($properties));
+
+        $block111 = $properties[0];
         $this->assertEquals('block1.1.1', $block111->getName());
         $this->assertEquals(1, $block111->getMinOccurs());
         $this->assertEquals(1, $block111->getMaxOccurs());
@@ -352,7 +363,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $block111->isMultilingual());
         $this->assertEquals('block', $block111->getContentTypeName());
 
-        $subproperties111 = $block111->getChildProperties();
+        $types = $block111->getTypes();
+        $this->assertEquals(1, sizeof($types));
+
+        $subproperties111 = $block111->getType('default')->getChildProperties();
         $this->assertEquals(3, sizeof($subproperties111));
 
         $article111 = $subproperties111[0];
@@ -389,7 +403,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $block113->isMultilingual());
         $this->assertEquals('block', $block113->getContentTypeName());
 
-        $subproperties113 = $block113->getChildProperties();
+        $types = $block113->getTypes();
+        $this->assertEquals(1, sizeof($types));
+
+        $subproperties113 = $block113->getType('default')->getChildProperties();
         $this->assertEquals(1, sizeof($subproperties113));
 
         $article1131 = $subproperties113[0];
@@ -405,7 +422,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $article212->getParams()
         );
 
-        $block112 = $subproperties11[1];
+        $block112 = $properties[1];
         $this->assertEquals('block1.1.2', $block112->getName());
         $this->assertEquals(1, $block112->getMinOccurs());
         $this->assertEquals(1, $block112->getMaxOccurs());
@@ -413,7 +430,10 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $block112->isMultilingual());
         $this->assertEquals('block', $block112->getContentTypeName());
 
-        $subproperties112 = $block112->getChildProperties();
+        $types = $block112->getTypes();
+        $this->assertEquals(1, sizeof($types));
+
+        $subproperties112 = $block112->getType('default')->getChildProperties();
         $this->assertEquals(1, sizeof($subproperties112));
 
         $article1121 = $subproperties112[0];
@@ -446,6 +466,39 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
 
         // check count of properties
         $properties = $structure->getProperties();
-        $this->assertEquals(5, sizeof($properties));
+        $this->assertEquals(4, sizeof($properties));
+
+        // check properties
+        $this->assertEquals('text_line', $properties['title']->getContentTypeName());
+        $this->assertEquals('resource_locator', $properties['url']->getContentTypeName());
+        $this->assertEquals('block', $properties['block1']->getContentTypeName());
+        $this->assertEquals('text_editor', $properties['blog']->getContentTypeName());
+
+        // check count of types
+        $block = $properties['block1'];
+        $this->assertEquals(2, sizeof($block->getTypes()));
+
+        // test properties of block types
+        $type1 = $block->getType('default');
+        $this->assertEquals('default', $type1->getName());
+        $this->assertEquals(2, sizeof($type1->getChildProperties()));
+
+        $properties = $type1->getChildProperties();
+        $this->assertEquals('title', $properties[0]->getName());
+        $this->assertEquals('text_line', $properties[0]->getContentTypeName());
+        $this->assertEquals('article', $properties[1]->getName());
+        $this->assertEquals('text_area', $properties[1]->getContentTypeName());
+
+        $type2 = $block->getType('test');
+        $this->assertEquals('test', $type2->getName());
+        $this->assertEquals(3, sizeof($type2->getChildProperties()));
+
+        $properties = $type2->getChildProperties();
+        $this->assertEquals('title', $properties[0]->getName());
+        $this->assertEquals('text_line', $properties[0]->getContentTypeName());
+        $this->assertEquals('name', $properties[1]->getName());
+        $this->assertEquals('text_line', $properties[1]->getContentTypeName());
+        $this->assertEquals('article', $properties[2]->getName());
+        $this->assertEquals('text_editor', $properties[2]->getContentTypeName());
     }
 }

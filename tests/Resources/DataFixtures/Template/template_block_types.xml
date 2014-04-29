@@ -31,6 +31,7 @@
                 <type name="test">
                     <properties>
                         <property name="title" type="text_line" mandatory="true"/>
+                        <property name="name" type="text_line" mandatory="true" minOccurs="2"/>
                         <property name="article" type="text_editor" mandatory="true" minOccurs="2"/>
                     </properties>
                 </type>

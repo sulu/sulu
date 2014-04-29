@@ -45,7 +45,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     /**
      * returns a list of properties managed by this block
-     * @return PropertyInterface[]
+     * @return BlockPropertyType[]
      */
     public function getTypes()
     {

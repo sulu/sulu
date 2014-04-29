@@ -63,7 +63,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         $method = new ReflectionMethod(
-            get_class($structureMock), 'add'
+            get_class($structureMock), 'addChild'
         );
 
         $method->setAccessible(true);
