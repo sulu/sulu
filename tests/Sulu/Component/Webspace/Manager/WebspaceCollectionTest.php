@@ -30,7 +30,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
     {
         $webspaces = array();
         $portals = array();
-        $portalInformations = array('prod' => array());
+        $portalInformations = array('prod' => array(), 'dev' => array());
 
         $this->webspaceCollection = new WebspaceCollection();
 
@@ -99,7 +99,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $portals[] = $portal;
         $webspaces[] = $webspace;
 
-        $portalInformation = new PortalInformation(
+        $portalInformations['prod']['www.portal1.com'] = new PortalInformation(
             PortalInformation::TYPE_FULL_MATCH,
             $webspace,
             $portal,
@@ -108,7 +108,14 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
             $segmentSummer
         );
 
-        $portalInformations['prod']['www.portal1.com'] = $portalInformation;
+        $portalInformations['dev']['portal1.lo'] = new PortalInformation(
+            PortalInformation::TYPE_FULL_MATCH,
+            $webspace,
+            $portal,
+            $localizationEnUs,
+            'portal1.lo',
+            $segmentSummer
+        );
 
         $this->webspaceCollection->setWebspaces($webspaces);
         $this->webspaceCollection->setPortals($portals);
@@ -172,5 +179,14 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en_us', $portalInformation['localization']);
         $this->assertEquals('s', $portalInformation['segment']);
         $this->assertEquals('www.portal1.com', $portalInformation['url']);
+
+        $portalInformation = $collectionArray['portalInformations']['dev']['portal1.lo'];
+
+        $this->assertEquals(PortalInformation::TYPE_FULL_MATCH, $portalInformation['type']);
+        $this->assertEquals('default', $portalInformation['webspace']);
+        $this->assertEquals('portal1', $portalInformation['portal']);
+        $this->assertEquals('en_us', $portalInformation['localization']);
+        $this->assertEquals('s', $portalInformation['segment']);
+        $this->assertEquals('portal1.lo', $portalInformation['url']);
     }
 }

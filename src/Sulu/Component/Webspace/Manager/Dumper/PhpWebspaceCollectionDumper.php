@@ -36,7 +36,7 @@ class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
             array(
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],
-                'webspaces' => $this->webspaceCollection->toArray()
+                'collection' => $this->webspaceCollection->toArray(),
             )
         );
     }

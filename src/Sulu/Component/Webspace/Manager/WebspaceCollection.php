@@ -150,8 +150,8 @@ class WebspaceCollection implements \IteratorAggregate
         }
 
         $portalInformations = array();
-        foreach ($this->portalInformations as $environment => $portalInformations) {
-            $portalInformations[$environment] = $this->toArrayPortalInformations($portalInformations);
+        foreach ($this->portalInformations as $environment => $environmentPortalInformations) {
+            $portalInformations[$environment] = $this->toArrayPortalInformations($environmentPortalInformations);
         }
 
         $collection['webspaces'] = $webspaces;
@@ -174,6 +174,7 @@ class WebspaceCollection implements \IteratorAggregate
                 $localizationData = array();
                 $localizationData['country'] = $localization->getCountry();
                 $localizationData['language'] = $localization->getLanguage();
+                $localizationData['localization'] = $localization->getLocalization();
                 $localizationData['default'] = $localization->isDefault();
 
                 if (!$withAdditionalOptions) {
@@ -286,9 +287,18 @@ class WebspaceCollection implements \IteratorAggregate
             $portalInformationData = array();
             $portalInformationData['type'] = $portalInformation->getType();
             $portalInformationData['webspace'] = $portalInformation->getWebspace()->getKey();
-            $portalInformationData['portal'] = $portalInformation->getPortal()->getKey();
-            $portalInformationData['localization'] = $portalInformation->getLocalization()->getLocalization();
             $portalInformationData['url'] = $portalInformation->getUrl();
+
+            $portal = $portalInformation->getPortal();
+            if ($portal) {
+                $portalInformationData['portal'] = $portal->getKey();
+            }
+
+            $localization = $portalInformation->getLocalization();
+            if ($localization) {
+                $portalInformationData['localization'] = $localization->getLocalization();
+            }
+
             $portalInformationData['redirect'] = $portalInformation->getRedirect();
 
             $segment = $portalInformation->getSegment();
