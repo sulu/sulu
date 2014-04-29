@@ -192,7 +192,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'sulu.content.type.text_line' => new TextLine('not in use'),
                     'sulu.content.type.text_area' => new TextArea('not in use'),
                     'sulu.content.type.resource_locator' => $resourceLocator,
-                    'sulu.content.type.block' => new BlockContentType($this->contentTypeManager, 'not in use'),
+                    'sulu.content.type.block' => new BlockContentType($this->contentTypeManager, 'not in use', $this->languageNamespace),
                     'security.context' => $this->securityContext
                 )
             );
