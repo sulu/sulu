@@ -372,6 +372,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                 'type' => 'text_line',
                                 'mandatory' => true
                             ),
+                            'name' => array(
+                                'name' => 'name',
+                                'type' => 'text_line',
+                                'mandatory' => true,
+                                'minOccurs' => 2
+                            ),
                             'article' => array(
                                 'name' => 'article',
                                 'type' => 'text_editor',
