@@ -48,9 +48,11 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
         if ($this->requestAnalyzer == null) {
             // if there is no request analyzer we are in the admin, and need the sulu system to login
             $repository->setSystem($this->suluSystem);
-        } elseif ($webspaceSecurity = $this->requestAnalyzer->getCurrentWebspace()->getSecurity()) {
+        } else {
+            //if ($webspaceSecurity = $this->requestAnalyzer->getCurrentWebspace()->getSecurity()) {
             // if there is a request analyzer we are on the website and we get the security system from the webspace
-            $repository->setSystem($webspaceSecurity->getSystem());
+            $repository->setSystem('Client'); // FIXME !!!
+
         }
 
         return $repository;
