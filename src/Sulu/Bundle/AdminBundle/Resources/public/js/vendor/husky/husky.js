@@ -25079,7 +25079,10 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.util.foreach(data.items, function(section) {
                 $sectionDiv = this.sandbox.dom.createElement('<div class="section">');
                 $sectionList = this.sandbox.dom.createElement('<ul class="section-items">');
-                this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.sandbox.translate(this.options.labels.hide) + '</a></span></div>');
+
+                if (!!section.title) {
+                    this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.sandbox.translate(this.options.labels.hide) + '</a></span></div>');
+                }
 
                 this.sandbox.dom.append($sectionDiv, $sectionList);
                 this.sandbox.dom.append('#navigation-item-container', $sectionDiv);
@@ -26765,12 +26768,19 @@ define('__component__$datagrid@husky',[],function() {
             UPDATE = namespace + 'update',
 
         /**
-         * used to filter data of
+         * used to filter data by search
          * @event husky.datagrid.data.filter
          * @param {String} searchField
          * @param {String} searchString
          */
             DATA_SEARCH = namespace + 'data.search',
+
+        /**
+         * used to filter data by updating an url parameter
+         * @event husky.datagrid.url.update
+         * @param {Object} url parameter : key
+         */
+            URL_UPDATE = namespace + 'url.update',
 
         /**
          * used to update the table width and its containers due to responsiveness
@@ -26859,6 +26869,7 @@ define('__component__$datagrid@husky',[],function() {
             this.selectedItemIds = [];
             this.rowStructure = [];
             this.elId = this.sandbox.dom.attr(this.$el, 'id');
+            this.currentUrl = '';
 
             if (!!this.options.contentContainer) {
                 if (this.sandbox.dom.css(this.options.contentContainer, 'max-width') === 'none') {
@@ -26977,7 +26988,7 @@ define('__component__$datagrid@husky',[],function() {
          * @param params url
          */
         load: function(params) {
-
+            this.currentUrl = params.url;
             this.sandbox.util.load(this.getUrl(params), params.data)
                 .then(function(response) {
                     this.initRender(response, params);
@@ -28067,6 +28078,9 @@ define('__component__$datagrid@husky',[],function() {
             // filter data
             this.sandbox.on(DATA_SEARCH, this.triggerSearch.bind(this));
 
+            // filter data
+            this.sandbox.on(URL_UPDATE, this.updateUrl.bind(this));
+
             // pagination dropdown item clicked
             this.sandbox.on('husky.dropdown.' + this.dropdownInstanceName + '.item.click', this.changePage.bind(this, null));
 
@@ -28437,13 +28451,13 @@ define('__component__$datagrid@husky',[],function() {
         },
 
         /**
-         * this will trigger a api search
+         * triggers an api search
+         * @param {String} searchString The String that will be searched
+         * @param {String|Array} searchFields Fields that will be included into the search
          */
         triggerSearch: function(searchString, searchFields) {
 
-            var template, url,
-            // TODO: get searchFields
-                searchFields;
+            var template, url;
 
             this.addLoader();
             template = this.sandbox.uritemplate.parse(this.data.links.find);
@@ -28456,6 +28470,65 @@ define('__component__$datagrid@husky',[],function() {
                     this.sandbox.emit(UPDATED, 'updated after search');
                 }.bind(this)
             });
+        },
+
+        /**
+         * updates the current url by given parameter object
+         * @param {Object} parameters Object key is used as parameter name, value as parameter value
+         */
+        updateUrl: function(parameters) {
+
+            var url, key;
+
+            this.addLoader();
+            url = this.currentUrl;
+
+            for (key in parameters) {
+                url = this.setGetParameter(url, key, parameters[key]);
+            }
+
+            this.load({
+                url: url,
+                success: function() {
+                    this.removeLoader();
+                    this.sandbox.emit(UPDATED);
+                }.bind(this)
+            });
+        },
+
+        /**
+         * function updates an url by a given parameter name and value and returns it. The parameter is either added or updated.
+         * If value is not set, the parameter will be removed from url
+         * @param {String} url Url string to be updated
+         * @param {String} paramName Parameter which should be added / updated / removed
+         * @param {String|Null} paramValue Value of the parameter. If not set, parameter will be removed from url
+         * @returns {String} updated url
+         */
+        setGetParameter: function(url, paramName, paramValue){
+            if (url.indexOf(paramName + "=") >= 0)
+            {
+                var prefix = url.substring(0, url.indexOf(paramName)),
+                    suffix = url.substring(url.indexOf(paramName));
+                suffix = suffix.substring(suffix.indexOf('=') + 1);
+                suffix = (suffix.indexOf('&') >= 0) ? suffix.substring(suffix.indexOf('&')) : '';
+                if (!!paramValue) {
+                    url = prefix + paramName + '=' + paramValue + suffix;
+                } else {
+                    if (url.substr(url.indexOf(paramName)-1,1) === '&' ) {
+                        url = url.substring(0,prefix.length-1) + suffix;
+                    } else {
+                        url = prefix + suffix.substring(1, suffix.length);
+                    }
+                }
+            }
+            else if (!!paramValue)
+            {
+                if (url.indexOf("?") < 0)
+                    url += "?" + paramName + "=" + paramValue;
+                else
+                    url += "&" + paramName + "=" + paramValue;
+            }
+            return url;
         },
 
 
@@ -35053,6 +35126,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Boolean} [options.backdropColor] Color of the backdrop
  * @params {Boolean} [options.backdropAlpha] Alpha-value of the backdrop
  * @params {Boolean} [options.okInactive] If true ok button is deactivated
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '' or 'wide'
  */
 define('__component__$overlay@husky',[], function() {
 
@@ -35075,7 +35149,8 @@ define('__component__$overlay@husky',[], function() {
             backdrop: true,
             backdropColor: '#000000',
             backdropAlpha: 0.3,
-            okInactive: false
+            okInactive: false,
+            skin: ''
         },
 
         constants = {
@@ -35090,7 +35165,7 @@ define('__component__$overlay@husky',[], function() {
         /** templates for component */
             templates = {
             overlaySkeleton: [
-                '<div class="husky-overlay-container smart-content-overlay">',
+                '<div class="husky-overlay-container<%= skin %> smart-content-overlay">',
                 '<div class="overlay-header">',
                 '<span class="title"><%= title %></span>',
                 '<a class="icon-<%= closeIcon %> close-button" href="#"></a>',
@@ -35337,7 +35412,8 @@ define('__component__$overlay@husky',[], function() {
                 _.template(templates.overlaySkeleton)({
                     title: this.options.title,
                     okIcon: this.options.okIcon,
-                    closeIcon: this.options.closeIcon
+                    closeIcon: this.options.closeIcon,
+                    skin: !!this.options.skin ? ' ' + this.options.skin : ''
                 }));
             this.overlay.$close = this.sandbox.dom.find(constants.closeSelector, this.overlay.$el);
             this.overlay.$ok = this.sandbox.dom.find(constants.okSelector, this.overlay.$el);
