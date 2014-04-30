@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class UserRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    private function getUserRepositoryFactoryMock($system, $withRequestAnalyzer)
+    private function getUserRepositoryFactoryMock($system)
     {
         $userRepositoryMock = $this->getMockBuilder('Sulu\Component\Security\UserRepositoryInterface')->getMock();
         $userRepositoryMock->expects($this->once())->method('setSystem')->with($system);
@@ -33,37 +33,14 @@ class UserRepositoryFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $requestAnalyzerMock = null;
-        if ($withRequestAnalyzer) {
-            $requestAnalyzerMock = $this->getMockBuilder(
-                'Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface'
-            )->getMock();
-
-            $security = new Security();
-            $security->setSystem($system);
-
-            $webspace = new Webspace();
-            $webspace->setSecurity($security);
-
-            $requestAnalyzerMock->expects($this->once())->method('getCurrentWebspace')->will(
-                $this->returnValue($webspace)
-            );
-        }
-
-        return new UserRepositoryFactory($entityManagerMock, 'Sulu', $requestAnalyzerMock);
+        return new UserRepositoryFactory($entityManagerMock, 'Sulu');
     }
 
-    public function testGetRepositoryWithoutRequestAnalyzer()
+    public function testGetRepository()
     {
-        $userRepositoryFactory = $this->getUserRepositoryFactoryMock('Sulu', false);
+        $userRepositoryFactory = $this->getUserRepositoryFactoryMock('Sulu');
 
         $userRepositoryFactory->getRepository();
     }
 
-    public function testGetRepositoryWithRequestAnalyzer()
-    {
-        $userRepositoryFactory = $this->getUserRepositoryFactoryMock('massiveart', true);
-
-        $userRepositoryFactory->getRepository();
-    }
 }
