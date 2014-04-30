@@ -398,7 +398,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('sulu.at', $portalInformation->getRedirect());
         $this->assertEquals('www.sulu.at', $portalInformation->getUrl());
-        
+
         /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
@@ -420,7 +420,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testLocalizations()
     {
         $localizations = $this->webspaceManager->findWebspaceByKey('massiveart')->getLocalizations();
-        
+
         $this->assertEquals('en', $localizations[0]->getLanguage());
         $this->assertEquals('us', $localizations[0]->getCountry());
         $this->assertEquals('auto', $localizations[0]->getShadow());
@@ -454,8 +454,8 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
         $this->assertEquals(
             array(
+                'http://massiveart.lo/en-us/s/test',
                 'http://massiveart.lo/en-us/w/test',
-                'http://massiveart.lo/en-us/s/test'
             ),
             $result
         );
