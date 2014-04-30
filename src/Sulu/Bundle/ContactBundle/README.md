@@ -1,6 +1,7 @@
 SuluContactBundle
 =================
 [![](https://travis-ci.org/sulu-cmf/SuluContactBundle.png)](https://travis-ci.org/sulu-cmf/SuluContactBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-cmf/SuluContactBundle/badges/quality-score.png?s=dacbd7e1ce2fab6f24f63e87402c32de2ffd21b2)](https://scrutinizer-ci.com/g/sulu-cmf/SuluContactBundle/)
 
 This bundle is part of the [Sulu Content Management Framework](https://github.com/sulu-cmf/sulu-standard) (CMF) and licensed under the [MIT License](https://github.com/sulu-cmf/SuluContactBundle/blob/develop/LICENSE).
 
