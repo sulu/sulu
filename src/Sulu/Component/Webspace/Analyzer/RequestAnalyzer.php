@@ -92,7 +92,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $resourceLocatorPrefix;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $userRepository, $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager, UserRepositoryInterface $userRepository, $environment)
     {
         $this->webspaceManager = $webspaceManager;
         $this->userRepository = $userRepository;
