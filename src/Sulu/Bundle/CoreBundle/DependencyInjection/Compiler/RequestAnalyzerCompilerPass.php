@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
-use JMS\Serializer\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
