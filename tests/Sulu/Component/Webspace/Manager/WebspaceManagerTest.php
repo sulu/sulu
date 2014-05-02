@@ -454,8 +454,8 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
         $this->assertEquals(
             array(
-                'http://massiveart.lo/en-us/s/test',
                 'http://massiveart.lo/en-us/w/test',
+                'http://massiveart.lo/en-us/s/test',
             ),
             $result
         );
