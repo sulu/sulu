@@ -17,6 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaMeta;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 class MediaControllerTest extends DatabaseTestCase
@@ -92,6 +93,13 @@ class MediaControllerTest extends DatabaseTestCase
 
         $media->addMeta($mediaMeta2);
 
+        // Create Media Type
+        $mediaType = new MediaType();
+        $mediaType->setName('Default Media Type');
+        $mediaType->setDescription('Default Media Type');
+
+        $media->setType($media);
+
         // Setup Collection
         $collection = new Collection();
 
@@ -138,6 +146,7 @@ class MediaControllerTest extends DatabaseTestCase
         self::$em->persist($collectionMeta2);
 
         self::$em->persist($media);
+        self::$em->persist($mediaType);
         self::$em->persist($mediaMeta);
         self::$em->persist($mediaMeta2);
 
