@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SecurityBundle\Factory;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Component\Security\UserRepositoryInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class UserRepositoryFactory implements UserRepositoryFactoryInterface
 {
