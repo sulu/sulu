@@ -85,7 +85,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('massiveart', $webspace->getKey());
         $this->assertEquals('massiveart', $webspace->getSecurity()->getSystem());
 
-        $this->assertEquals('s', $webspace->getDefaultSegment()->getKey());
+        $this->assertEquals('w', $webspace->getDefaultSegment()->getKey());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());

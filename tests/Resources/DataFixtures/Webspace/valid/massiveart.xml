@@ -19,8 +19,8 @@
     </localizations>
 
     <segments>
-        <segment key="w">winter</segment>
-        <segment key="s" default="true">summer</segment>
+        <segment key="w" default="true">winter</segment>
+        <segment key="s">summer</segment>
     </segments>
 
     <theme>
