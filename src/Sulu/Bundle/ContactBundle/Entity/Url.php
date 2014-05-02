@@ -40,6 +40,12 @@ class Url
     private $accounts;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
+     */
+    private $contacts;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -134,5 +140,38 @@ class Url
     public function getAccounts()
     {
         return $this->accounts;
+    }
+
+    /**
+     * Add contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @return Url
+     */
+    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts[] = $contacts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     */
+    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts->removeElement($contacts);
+    }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
     }
 }

@@ -21,7 +21,5 @@ services:
         class: %sulu_contact.js_config.class%
         arguments:
           - 'contact-bundle'
-          - type : 'basic'
-            test : bla
         tags:
         - { name: sulu.js_config }

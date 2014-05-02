@@ -33,6 +33,12 @@ class ImportCommand extends ContainerAwareCommand
                 'l',
                 InputOption::VALUE_REQUIRED,
                 'limit import by a number of rows'
+            )
+            ->addOption(
+                'mappings',
+                'm',
+                InputOption::VALUE_REQUIRED,
+                'json file containing mappings'
             );
     }
 
@@ -42,6 +48,7 @@ class ImportCommand extends ContainerAwareCommand
         $contactFile = $input->getArgument('contactFile');
 
         $limit = $input->getOption('limit');
+        $mappings = $input->getOption('mappings');
 
 
         /** @var Import $import */
@@ -55,8 +62,14 @@ class ImportCommand extends ContainerAwareCommand
             $import->setContactFile($contactFile);
         }
 
+        // set limit number of columns to import
         if ($limit) {
             $import->setLimit($limit);
+        }
+
+        // import mappings
+        if ($mappings) {
+            $import->setMappingsFile($mappings);
         }
 
         $import->execute();

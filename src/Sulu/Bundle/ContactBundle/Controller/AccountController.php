@@ -140,8 +140,13 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function cgetAction()
     {
+        $where = array();
+        $type = $this->getRequest()->get('type');
+        if($type) {
+            $where['type'] = $type;
+        }
         if ($this->getRequest()->get('flat') == 'true') {
-            $view = $this->responseList();
+            $view = $this->responseList($where);
         } else {
             $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
             $view = $this->view($this->createHalResponse($contacts), 200);
@@ -313,10 +318,6 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
 
                 $em->flush();
-
-                // FIXME: this is just a hack to avoid relations that start with index != 0
-                // FIXME: otherwise deserialization process will parse relations as object instead of an array
-                $em->refresh($account);
 
                 $view = $this->view($account, 200);
             }
