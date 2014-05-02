@@ -55,6 +55,7 @@ class MediaControllerTest extends DatabaseTestCase
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
+            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaMeta'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
             self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
@@ -98,11 +99,26 @@ class MediaControllerTest extends DatabaseTestCase
         $mediaType->setName('Default Media Type');
         $mediaType->setDescription('Default Media Type');
 
-        $media->setType($media);
+        $media->setType($mediaType);
+
 
         // Setup Collection
         $collection = new Collection();
 
+        $this->setUpCollection($collection);
+
+        $media->setCollection($collection);
+
+        self::$em->persist($media);
+        self::$em->persist($mediaType);
+        self::$em->persist($mediaMeta);
+        self::$em->persist($mediaMeta2);
+
+        self::$em->flush();
+    }
+
+    protected function setUpCollection(&$collection)
+    {
         $style = array(
             'type' => 'circle',
             'color' => '#ffcc00'
@@ -138,19 +154,10 @@ class MediaControllerTest extends DatabaseTestCase
 
         $collection->addMeta($collectionMeta2);
 
-        $media->setCollection($collection);
-
         self::$em->persist($collection);
         self::$em->persist($collectionType);
         self::$em->persist($collectionMeta);
         self::$em->persist($collectionMeta2);
-
-        self::$em->persist($media);
-        self::$em->persist($mediaType);
-        self::$em->persist($mediaMeta);
-        self::$em->persist($mediaMeta2);
-
-        self::$em->flush();
     }
 
     private function createTestClient() {
@@ -169,6 +176,8 @@ class MediaControllerTest extends DatabaseTestCase
 
     public function testTest() {
         $client = $this->createTestClient();
-        $this->assertTrue($client);
+        $this->assertTrue((bool)$client);
     }
+
+
 }
