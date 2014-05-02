@@ -43,7 +43,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
+                'cache_dir'  => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid'
             )
         );
@@ -108,7 +108,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
         $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
 
-
         $portal = $webspace->getPortals()[1];
 
         $this->assertEquals('Massive Art CA', $portal->getName());
@@ -142,7 +141,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
         $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
         $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
-
     }
 
     public function testFindWebspaceByKey()
@@ -372,7 +370,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
+                'cache_dir'  => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
             )
         );
