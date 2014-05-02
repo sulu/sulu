@@ -8,8 +8,6 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="name" type="string" column="name" length="60"/>
-        <field name="type" type="string" column="type" length="60"/>
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
@@ -19,6 +17,11 @@
         <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="medias">
             <join-columns>
                 <join-column name="idMedias" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaType" inversed-by="medias">
+            <join-columns>
+                <join-column name="idMediaTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
