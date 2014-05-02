@@ -2,12 +2,11 @@
     <input type="hidden" data-mapper-property="id"/>
 
     <div class="grid">
-
         {% block static %}
-
         {% endblock %}
 
         {% block contact %}
+            <% var phonePattern = '^[0-9 \\(\\)/+-]*$' %>
             <div id="contact-edit-form">
                 <div class="pos-rel">
                     <h2 class="divider"><%=translate('contact.contacts.title')%></h2>
@@ -85,7 +84,7 @@
                                 <div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" pattern="^[0-9 /+-]*$" type="text" class="form-element" data-mapper-property="fax">
+                                    <input id="<~= uid ~>" pattern="<%= phonePattern %>" type="text" class="form-element" data-mapper-property="fax">
                                 </div>
                             </div>
                         </div>
@@ -106,7 +105,7 @@
                                 <div>
                                     <span class="hidden" data-mapper-property="attributes" data-form="true" data-type="attributes"></span>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
-                                    <input id="<~= uid ~>" pattern="^[0-9 /+-]*$" type="text" class="form-element phone-value" data-mapper-property="phone">
+                                    <input id="<~= uid ~>" pattern="<%= phonePattern %>" type="text" class="form-element phone-value" data-mapper-property="phone">
                                 </div>
                             </div>
                         </div>
@@ -140,7 +139,6 @@
                             <~ var uid = _.uniqueId('note_') ~>
                             <div class="form-group">
                                 <label class="top" for="<~= uid ~>"><%= translate('public.note') %></label>
-
                                 <div>
                                     <input type="hidden" data-mapper-property="id" class="id-value"/>
                                     <textarea id="<~= uid ~>" data-form="true" class="form-element" data-mapper-property="value"> </textarea>
@@ -152,8 +150,6 @@
             </div>
         {% endblock %}
     </div>
-
-
 </form>
 
 {% block dialog %}

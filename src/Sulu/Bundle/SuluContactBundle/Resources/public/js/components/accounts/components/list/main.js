@@ -87,14 +87,12 @@ define([
         },
 
         selectFilter = function(item) {
-            var searchString = '',
-                searchFields = '';
+            var type = null;
 
             if (item.id !== 'all') {
-                searchFields = 'type';
-                searchString = item.id;
+                type = item.id;
             }
-            this.sandbox.emit('husky.datagrid.data.search', searchString, searchFields);
+            this.sandbox.emit('husky.datagrid.url.update', {'type': type});
             this.sandbox.emit('sulu.contacts.accounts.list', item.name, true); // change url, but do not reload
         },
 
@@ -139,6 +137,54 @@ define([
             RelationalStore.reset(); //FIXME really necessary?
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/list'));
+
+            var items, i, len,
+                dataUrlAddition = '',
+                accountType,
+            // get account types
+                accountTypes = AppConfig.getSection('sulu-contact').accountTypes;
+
+
+            // define string urlAddition if accountType is set
+            if (!!this.options.accountType) {
+                for (i = 0, len = accountTypes.length; ++i < len;) {
+                    if (accountTypes[i].name === this.options.accountType) {
+                        accountType = accountTypes[i];
+                        break;
+                    }
+                }
+                dataUrlAddition += '&type=' + accountType.id;
+            }
+
+            // -- initialize filter tabs --
+            // define items array
+            items = [
+                {
+                    id: 'all',
+                    title: this.sandbox.translate('public.all')
+                }
+            ];
+            for (i = 0, len = accountTypes.length; ++i < len;) {
+                items.push({
+                    id: accountTypes[i].id,
+                    name: accountTypes[i].name,
+                    title: this.sandbox.translate(accountTypes[i].translation)
+                });
+            }
+            // start tabs component
+            this.sandbox.start([
+                {
+                    name: 'tabs@husky',
+                    options: {
+                        el: '#filter-tabs',
+                        callback: selectFilter.bind(this),
+                        preselect: accountType ? accountType.id + 1 : false,
+                        preselector: 'position',
+                        data: { items: items }
+
+                    }
+                }
+            ]);
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
