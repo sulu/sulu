@@ -19,11 +19,6 @@ class Media
 {
 
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @var \DateTime
      */
     private $created;
@@ -76,29 +71,6 @@ class Media
         $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return Media
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -323,5 +295,33 @@ class Media
     public function getCreator()
     {
         return $this->creator;
+    }
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\MediaType
+     */
+    private $type;
+
+
+    /**
+     * Set type
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\MediaType $type
+     * @return Media
+     */
+    public function setType(\Sulu\Bundle\MediaBundle\Entity\MediaType $type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\MediaType 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
