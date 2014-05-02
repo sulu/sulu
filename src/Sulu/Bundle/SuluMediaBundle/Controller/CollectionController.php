@@ -354,7 +354,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         $em = $this->getDoctrine()->getManager();
         $metaEntity = 'SuluMediaBundle:CollectionMeta';
 
-        if (isset($urlData['id'])) {
+        if (isset($metaData['id'])) {
             throw new EntityIdAlreadySetException($metaEntity, $metaData['id']);
         } else {
             $meta = new CollectionMeta();
