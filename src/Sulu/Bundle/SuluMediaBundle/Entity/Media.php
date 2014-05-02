@@ -17,10 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Media
 {
-    /**
-     * @var string
-     */
-    private $name;
 
     /**
      * @var string
@@ -80,29 +76,6 @@ class Media
         $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Media
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
