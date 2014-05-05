@@ -21,7 +21,6 @@ define([
                 initializeSub: function() {
                     var i, len, item, selectData = [];
                     this.templates = {};
-                    this.index = 0;
                     for (i = 0, len = this.options.config.length; i < len; i++) {
                         item = this.options.config[i];
                         this.templates[item.data] = App.dom.find('#' + item.tpl, this.$el).html();
@@ -104,16 +103,23 @@ define([
                     return true;
                 },
 
-                addChild: function(type, data, fireEvent) {
+                addChild: function(type, data, fireEvent, index) {
                     var options, template, $template,
                         dfd = App.data.deferred();
 
+                    if (typeof index === 'undefined' || index === null) {
+                        index = this.getChildren().length;
+                    }
+
                     if (this.canAdd()) {
-                        options = $.extend({}, {index: this.index++, translate: App.translate, type: type}, data);
+                        // remove index
+                        App.dom.remove(App.dom.find('> *:nth-child(' + (index + 1) + ')', this.$el));
+
+                        options = $.extend({}, {index: index, translate: App.translate, type: type}, data);
                         template = _.template(this.templates[type], options, form.options.delimiter);
                         $template = $(template);
 
-                        App.dom.append(this.$el, $template);
+                        App.dom.insertAt(index, '> *', this.$el, $template);
 
                         App.start([
                             {
@@ -128,7 +134,10 @@ define([
                                     translateLabels: true,
                                     clickCallback: function(item) {
                                         // TODO change type
-                                    },
+                                        var data = form.mapper.getData($template);
+
+                                        this.addChild(item.data, data, true, index);
+                                    }.bind(this),
                                     data: this.types
                                 }
                             }
@@ -137,10 +146,10 @@ define([
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
                                 dfd.resolve();
+                                if (!!fireEvent) {
+                                    $(form.$el).trigger('form-add', [this.propertyName, data]);
+                                }
                             });
-                            if (!!fireEvent) {
-                                $(form.$el).trigger('form-add', [this.propertyName, data]);
-                            }
                         }.bind(this));
 
                         this.checkFullAndEmpty();
