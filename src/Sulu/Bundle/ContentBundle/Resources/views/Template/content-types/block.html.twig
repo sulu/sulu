@@ -13,7 +13,7 @@
     {% for type in property.types %}
         <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
             <div class="text-block {{ type.name }}-element {{ property.name }}-element" data-mapper-property-tpl="{{ type.name }}">
-                <input type="hidden" data-mapper-property="type" value="<~=type~>"/>
+                <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
 
                 <div class="head">
                     <label class="move"><%=translate('{{ property.title is defined ? property.title:property.name|capitalize }}')%>
