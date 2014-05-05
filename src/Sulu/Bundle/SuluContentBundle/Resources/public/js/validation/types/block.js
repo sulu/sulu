@@ -76,7 +76,7 @@ define([
                                 small: false,
                                 data: selectData,
                                 selectCallback: function(item) {
-                                    this.addChild(item, {});
+                                    this.addChild(item, {}, true);
                                 }.bind(this)
                             }
                         }
@@ -104,21 +104,31 @@ define([
                     return true;
                 },
 
-                addChild: function(type, data) {
+                addChild: function(type, data, fireEvent) {
+                    var options, template, $template,
+                        dfd = App.data.deferred();
+
                     if (this.canAdd()) {
-                        var options = $.extend({}, {index: this.index++, translate: App.translate}, data),
-                            template = _.template(this.templates[type], options, form.options.delimiter),
-                            $template = $(template);
+                        options = $.extend({}, {index: this.index++, translate: App.translate}, data);
+                        template = _.template(this.templates[type], options, form.options.delimiter);
+                        $template = $(template);
 
                         App.dom.append(this.$el, $template);
 
                         form.initFields($template).then(function() {
-                            form.mapper.setData(data, $template);
-                            $(form.$el).trigger('form-add', [this.propertyName, data]);
+                            form.mapper.setData(data, $template).then(function() {
+                                dfd.resolve();
+                            });
+                            if (!!fireEvent) {
+                                $(form.$el).trigger('form-add', [this.propertyName, data]);
+                            }
                         }.bind(this));
 
                         this.checkFullAndEmpty();
+                    } else {
+                        dfd.resolve();
                     }
+                    return dfd.promise();
                 },
 
                 checkFullAndEmpty: function() {
@@ -137,18 +147,33 @@ define([
                 },
 
                 internalSetValue: function(value) {
-                    var i, len, item;
+                    var i, len, count, item,
+                        dfd = App.data.deferred(),
+                        resolve = function() {
+                            count--;
+                            if (count === 0) {
+                                dfd.resolve();
+                            }
+                        };
                     App.dom.children(this.$el).remove();
                     len = value.length < this.getMinOccurs() ? this.getMinOccurs() : value.length;
+                    count = len;
 
                     for (i = 0; i < len; i++) {
                         item = value[i] || {};
-                        this.addChild(item.type || this.options.default, item);
+                        this.addChild(item.type || this.options.default, item).then(function() {
+                            resolve();
+                        });
                     }
+                    return dfd.promise();
                 },
 
                 setValue: function(value) {
-                    this.internalSetValue(value);
+                    var resolve = this.internalSetValue(value);
+                    resolve.then(function() {
+                        App.logger.log('resolved!!!!!!!!!!!')
+                    });
+                    return resolve;
                 },
 
                 getValue: function() {
