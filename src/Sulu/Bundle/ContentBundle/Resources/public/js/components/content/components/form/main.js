@@ -76,9 +76,10 @@ define(['app-config'], function(AppConfig) {
             this.setHeaderBar(false);
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/settings'));
-            this.createForm(this.initData());
-            this.bindDomEvents();
-            this.listenForChange();
+            this.createForm(this.initData()).then(function() {
+                this.bindDomEvents();
+                this.listenForChange();
+            }.bind(this));
 
             // enable state button
             this.setStateDropdown(this.options.data);
@@ -156,10 +157,10 @@ define(['app-config'], function(AppConfig) {
 
             formObject.initialized.then(function() {
                 this.createConfiguration(this.formId);
-                dfd.resolve();
 
                 this.setFormData(data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
+
                     this.initSortableBlock();
                     this.bindFormEvents();
 
@@ -167,6 +168,8 @@ define(['app-config'], function(AppConfig) {
                         this.initPreview();
                         this.options.preview = false;
                     }
+
+                    dfd.resolve();
                 }.bind(this));
             }.bind(this));
 
