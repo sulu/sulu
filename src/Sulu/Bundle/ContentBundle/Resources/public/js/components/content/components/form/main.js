@@ -670,14 +670,15 @@ define(['app-config'], function(AppConfig) {
             $element = $($element);
             var sequence = this.sandbox.dom.data($element, 'mapperProperty'),
                 $parents = $element.parents('*[data-mapper-property]'),
-                item = $element.parents('*[data-mapper-property-tpl]')[0];
+                item = $element.parents('*[data-mapper-property-tpl]')[0],
+                parentProperty;
 
             while (!$element.data('element')) {
                 $element = $element.parent();
             }
 
             if ($parents.length > 0) {
-                var parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty');
+                parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty');
                 if (typeof parentProperty !== 'string') {
                     parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
                 }
