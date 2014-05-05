@@ -13,10 +13,10 @@
  * @constructor
  *
  * @param {String} [options.overlay] object which will accept same arguments as husky overlay
+ * @param {String} [options.overlay.instanceName] instancename
+ * @param {String} [options.overlay.container] selector for overlay container
  * @param {String} [options.overlay.triggerEl] id/class of trigger element(s)
  * @param {String} [options.overlay.title] title of the overlay
- * @param {Function} [options.overlay.okCallback]
- * @param {Function} [options.overlay.closeCallback]
  *
  * @param {String} [options.url] url to fetch data from
  * @param {Array} [options.data] data to display in the template
@@ -31,17 +31,33 @@ define([], function() {
 
             overlay: {
                 instanceName: 'overlay',
-                overlayContainer: null,
+                container: null,
                 triggerEl: null,
-                title: ""
+                title: ''
             },
+
             url: null,
-            template: "",
+
+            template:   '<div class="grid-row" data-id="<%= id%>">'+
+                        '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= value&>"/></div>'+
+                        '   <div class="grid-col-2 pull-right"><div class="removeRow btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>'+
+                        '</div>',
+
+            templateRow:   ['<div class="content-inner">',
+                            '   <% _.each(, function(id, value) { %>',
+                            '       <div class="grid-row" data-id="<%= id%>">',
+                            '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= value&>"/></div>',
+                            '           <div class="grid-col-2 pull-right"><div class="delete btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
+                            '       </div>',
+                            ' <% }); %>',
+                            '</div>'].join(''),
             data: null
         },
 
         constants = {
-
+            overlayContentSelector: '.overlay-content',
+            templateRemoveSelector: '.removeRow',
+            templateAddSelector: '.addRow'
         },
 
         eventNamespace = 'sulu.types.',
@@ -73,57 +89,80 @@ define([], function() {
             // TODO loader?
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            if(!!this.options.url) {
+            if (!!this.options.url) {
                 this.options.data = this.loadData();
             }
 
-            this.options.overlay.data = this.getConfigForOverlay(this.sandbox.util.template(this.options.template, this.options.data));
-
+            this.options.overlay.data = this.sandbox.util.template(this.options.template, this.options.data);
             this.startOverlayComponent(this.options.overlay);
+
+            // TODO timing issue?
+            this.$overlay = this.sandbox.dom.find(this.options.overlay.container);
+            this.$overlayContent = this.sandbox.dom.find(constants.overlayContentSelector);
+
             this.bindCustomEvents();
             this.bindDomEvents();
             this.sandbox.emit(INITIALZED.call(this));
         },
 
         /**
-         * Returns configuration object for overlay
-         */
-        getConfigForOverlay: function(content){
-            return {
-              triggerEl: this.options.triggerEl,
-                title: this.options.title,
-                container: this.options.overlayContainer,
-                data: content,
-                closeCallback: this.options.closeCallback,
-                okCallBack: this.options.okCallback
-            };
-        },
-
-        /**
-         * Bind custom related events
-         */
-        bindCustomEvents: function() {
-            this.sandbox.on('husky.'+this.options.overlayInstanceName+'.undefined.closed', function(data){
-                if(!!data) {
-                    this.saveNewData(data);
-                }
-            }.bind(this));
-        },
-
-        /**
          * Loads data from URL
          * @returns {Object} data object
          */
-        loadData: function(){
-            return {};
+        loadData: function() {
+
+            this.sandbox.util.load(this.options.url)
+                .then(function(response){
+                    return response;
+                    // TODO loaded event
+
+                }.bind(this)).fail(function(status,error){
+                    this.sandbox.logger.error(status,error);
+                    return null;
+                }.bind(this));
         },
 
         /**
          * Saves data
          * @param data
          */
-        saveNewData: function(data){
+        saveNewData: function(domData,method) {
 
+            var data = this.parseDataFromDom(domData);
+
+            this.sandbox.util.save(this.options.url,method, data)
+                .then(function(response){
+                    return response;
+                    // TODO saved event
+
+                }.bind(this)).fail(function(status,error){
+                    this.sandbox.logger.error(status,error);
+                    return null;
+                }.bind(this));
+        },
+
+        /**
+         * Extracts data from dom structure
+         */
+        parseDataFromDom: function(domData){
+            // TODO
+            return {};
+        },
+
+        /**
+         * Removes data item with specific id
+         * @param id
+         */
+        removeData: function(id) {
+//            this.sandbox.util.save(this.options.url,'DELETE', data)
+//                .then(function(response){
+//                    return response;
+//                    // TODO removed event
+//
+//                }.bind(this)).fail(function(status,error){
+//                    this.sandbox.logger.error(status,error);
+//                    return null;
+//                }.bind(this));
         },
 
         /**
@@ -131,6 +170,31 @@ define([], function() {
          */
         bindDomEvents: function() {
 
+            // bind click on remove icon
+            this.sandbox.dom.on(constants.templateRemoveSelector, 'click', function(event) {
+                var $row = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget)),
+                    id = this.sandbox.dom.data('id',$row);
+                this.removeData(id);
+            }.bind(this), this.$overlay);
+
+            // bind click on add icon
+            this.sandbox.dom.on(constants.templateAddSelector, 'click', function() {
+                this.sandbox.dom.append(this.options.templateRow, this.$overlayContent);
+            }.bind(this), this.$overlay);
+
+        },
+
+        /**
+         * Bind custom related events
+         */
+        bindCustomEvents: function() {
+            this.sandbox.on('husky.' + this.options.overlayInstanceName + '.closed', function(data) {
+                if (!!data) {
+                    this.saveNewData(data);
+                }
+
+                // TODO event for finish?
+            }.bind(this));
         },
 
         /**
