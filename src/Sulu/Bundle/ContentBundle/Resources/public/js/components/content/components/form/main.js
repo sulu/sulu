@@ -196,7 +196,7 @@ define(['app-config'], function(AppConfig) {
                             highestProperty: property,
                             highestPriority: tag.priority,
                             lowestProperty: property,
-                            lowestPriority: tag.priority,
+                            lowestPriority: tag.priority
                         };
                         this.propertyConfiguration[tag.name].properties[tag.priority] = [property];
                     } else {

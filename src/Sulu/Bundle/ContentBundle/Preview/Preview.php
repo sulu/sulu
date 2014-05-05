@@ -122,7 +122,11 @@ class Preview implements PreviewInterface
             $this->addStructure($userId, $contentUuid, $content, $templateKey, $languageCode);
 
             if (false !== ($sequence = $this->getSequence($content, $property))) {
-                $property = implode(',', array_slice($sequence['sequence'], 0, -1));
+                // length of property path is important to render
+                $property = implode(
+                    ',',
+                    array_slice($sequence['sequence'], 0, sizeof($sequence['propertyPath']) - sizeof($sequence['sequence']))
+                );
             }
             $changes = $this->render($userId, $contentUuid, $templateKey, $languageCode, true, $property);
             if ($changes !== false) {
