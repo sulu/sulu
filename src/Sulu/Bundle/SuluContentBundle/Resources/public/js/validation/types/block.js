@@ -115,6 +115,10 @@ define([
                         // remove index
                         App.dom.remove(App.dom.find('> *:nth-child(' + (index + 1) + ')', this.$el));
 
+                        //remove type -> default from template
+                        delete data.type;
+
+                        // render block
                         options = $.extend({}, {index: index, translate: App.translate, type: type}, data);
                         template = _.template(this.templates[type], options, form.options.delimiter);
                         $template = $(template);
