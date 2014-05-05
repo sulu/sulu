@@ -34,10 +34,10 @@ define([
                     this.$addButton = $('#' + this.id + '-add');
                     this.propertyName = App.dom.data(this.$el, "mapperProperty");
 
+                    this.types = selectData;
+
                     this.initSelectComponent(selectData);
                     this.bindDomEvents();
-
-                    this.setValue([]);
 
                     $(form.$el).trigger('form-collection-init', [this.propertyName]);
                 },
@@ -94,7 +94,7 @@ define([
                     if (this.canRemove()) {
                         $element.remove();
 
-                        $(form.$el).trigger('form-remove', [this.propertyName, data]);
+                        $(form.$el).trigger('form-remove', [this.propertyName]);
                         this.checkFullAndEmpty();
                     }
                 },
@@ -109,11 +109,30 @@ define([
                         dfd = App.data.deferred();
 
                     if (this.canAdd()) {
-                        options = $.extend({}, {index: this.index++, translate: App.translate}, data);
+                        options = $.extend({}, {index: this.index++, translate: App.translate, type: type}, data);
                         template = _.template(this.templates[type], options, form.options.delimiter);
                         $template = $(template);
 
                         App.dom.append(this.$el, $template);
+
+                        App.start([
+                            {
+                                name: 'dropdown@husky',
+                                options: {
+                                    el: '#change' + options.index,
+                                    trigger: '.drop-down-trigger',
+                                    setParentDropDown: true,
+                                    instanceName: 'change' + options.index,
+                                    alignment: 'right',
+                                    valueName: 'title',
+                                    translateLabels: true,
+                                    clickCallback: function(item) {
+                                        // TODO change type
+                                    },
+                                    data: this.types
+                                }
+                            }
+                        ]);
 
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
@@ -171,7 +190,7 @@ define([
                 setValue: function(value) {
                     var resolve = this.internalSetValue(value);
                     resolve.then(function() {
-                        App.logger.log('resolved!!!!!!!!!!!')
+                        App.logger.log('resolved block set value');
                     });
                     return resolve;
                 },
