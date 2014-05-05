@@ -677,8 +677,12 @@ define(['app-config'], function(AppConfig) {
             }
 
             if ($parents.length > 0) {
+                var parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty');
+                if (typeof parentProperty !== 'string') {
+                    parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
+                }
                 sequence = [
-                    this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data,
+                    parentProperty,
                     $(item).index(),
                     this.sandbox.dom.data($element, 'mapperProperty')
                 ];

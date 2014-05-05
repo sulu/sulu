@@ -12,7 +12,7 @@
 
     {% for type in property.types %}
         <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
-            <div class="text-block {{ type.name }}-element {{ property.name }}-element">
+            <div class="text-block {{ type.name }}-element {{ property.name }}-element" data-mapper-property-tpl="{{ type.name }}">
                 <input type="hidden" data-mapper-property="type"/>
 
                 <div class="head">
