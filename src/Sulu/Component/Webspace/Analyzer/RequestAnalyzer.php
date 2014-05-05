@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Webspace\Analyzer;
 
+use Sulu\Component\Security\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -21,10 +22,21 @@ use Symfony\Component\HttpFoundation\Request;
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
     /**
+     * Describes the match
+     * @var int
+     */
+    private $matchType;
+
+    /**
      * The WebspaceManager, responsible for loading the required webspaces
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
 
     /**
      * The environment valid to analyze the request
@@ -80,9 +92,10 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $resourceLocatorPrefix;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager, UserRepositoryInterface $userRepository, $environment)
     {
         $this->webspaceManager = $webspaceManager;
+        $this->userRepository = $userRepository;
         $this->environment = $environment;
     }
 
@@ -100,32 +113,31 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         );
 
         if ($portalInformation != null) {
-            if (array_key_exists('redirect', $portalInformation)) {
-                $this->setCurrentPortalUrl($portalInformation['url']);
-                $this->setCurrentRedirect($portalInformation['redirect']);
-                $this->setCurrentWebspace($portalInformation['webspace']);
+            $this->setCurrentMatchType($portalInformation->getType());
+            if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
+                $this->setCurrentPortalUrl($portalInformation->getUrl());
+                $this->setCurrentRedirect($portalInformation->getRedirect());
+                $this->setCurrentWebspace($portalInformation->getWebspace());
             } else {
-                $this->setCurrentPortalUrl($portalInformation['url']);
-                $this->setCurrentLocalization($portalInformation['localization']);
-                $this->setCurrentPortal($portalInformation['portal']);
-                $this->setCurrentWebspace($portalInformation['webspace']);
+                $this->setCurrentPortalUrl($portalInformation->getUrl());
+                $this->setCurrentLocalization($portalInformation->getLocalization());
+                $this->setCurrentPortal($portalInformation->getPortal());
+                $this->setCurrentWebspace($portalInformation->getWebspace());
 
-                if (array_key_exists('segment', $portalInformation)) {
-                    $this->setCurrentSegment($portalInformation['segment']);
-                }
+                $this->setCurrentSegment($portalInformation->getSegment());
 
                 // get the path and set it on the request
                 $this->setCurrentResourceLocator(
                     substr(
                         $request->getHost() . $request->getRequestUri(),
-                        strlen($portalInformation['url'])
+                        strlen($portalInformation->getUrl())
                     )
                 );
 
                 // get the resource locator prefix and set it
                 $this->setCurrentResourceLocatorPrefix(
                     substr(
-                        $portalInformation['url'],
+                        $portalInformation->getUrl(),
                         strlen($request->getHost())
                     )
                 );
@@ -133,6 +145,11 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         } else {
             throw new UrlMatchNotFoundException($request->getUri());
         }
+    }
+
+    public function getCurrentMatchType()
+    {
+        return $this->matchType;
     }
 
     /**
@@ -208,6 +225,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * Sets the current match type
+     * @param int $matchType
+     */
+    public function setCurrentMatchType($matchType)
+    {
+        $this->matchType = $matchType;
+    }
+
+    /**
      * Sets the current localization
      * @param \Sulu\Component\Webspace\Localization $localization
      */
@@ -223,6 +249,11 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     protected function setCurrentWebspace($webspace)
     {
         $this->webspace = $webspace;
+
+        // If security is enabled, the security user repository system will get overwritten.
+        if ($webspaceSecurity = $webspace->getSecurity()) {
+            $this->userRepository->setSystem($webspaceSecurity->getSystem());
+        }
     }
 
     /**
@@ -247,7 +278,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the redirect
      * @param string $redirect
      */
-    public function setCurrentRedirect($redirect)
+    protected function setCurrentRedirect($redirect)
     {
         $this->redirect = $redirect;
     }
@@ -256,7 +287,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the url of the current portal
      * @param string $portalUrl
      */
-    public function setCurrentPortalUrl($portalUrl)
+    protected function setCurrentPortalUrl($portalUrl)
     {
         $this->portalUrl = $portalUrl;
     }
@@ -265,7 +296,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the path of the current request
      * @param $path
      */
-    public function setCurrentResourceLocator($path)
+    protected function setCurrentResourceLocator($path)
     {
         $this->resourceLocator = $path;
     }
@@ -274,7 +305,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * Sets the prefix require before the resource locator
      * @param string $resourceLocatorPrefix
      */
-    public function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
+    protected function setCurrentResourceLocatorPrefix($resourceLocatorPrefix)
     {
         $this->resourceLocatorPrefix = $resourceLocatorPrefix;
     }

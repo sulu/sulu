@@ -10,10 +10,13 @@
 
 namespace Sulu\Component\Content\Types;
 
-
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
+/**
+ * interface for resource locator information
+ * @package Sulu\Component\Content\Types
+ */
 interface ResourceLocatorInterface extends ContentTypeInterface
 {
 
@@ -46,4 +49,14 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @return string
      */
     public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey = null);
+
+    /**
+     * returns a list of history resource locators
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return mixed
+     */
+    public function loadHistoryByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 }

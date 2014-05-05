@@ -8,7 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace;
+namespace Sulu\Component\Webspace\Manager;
+
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Theme;
+use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Webspace;
 
 class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,6 +29,10 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $webspaces = array();
+        $portals = array();
+        $portalInformations = array('prod' => array(), 'dev' => array());
+
         $this->webspaceCollection = new WebspaceCollection();
 
         // first portal
@@ -31,12 +45,12 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $theme->setExcludedTemplates(array('overview', 'default'));
 
         $environment = new Environment();
-        $environment->setType('prod');
         $url = new Url();
         $url->setUrl('www.portal1.com');
         $url->setLanguage('en');
         $url->setCountry('us');
         $environment->addUrl($url);
+        $environment->setType('prod');
         $url = new Url();
         $url->setUrl('portal1.com');
         $url->setRedirect('www.portal1.com');
@@ -47,69 +61,98 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $localizationEnUs->setCountry('us');
         $localizationEnUs->setLanguage('en');
         $localizationEnUs->setShadow('auto');
+        $localizationEnUs->setDefault(true);
         $localizationEnCa = new Localization();
         $localizationEnCa->setCountry('ca');
         $localizationEnCa->setLanguage('en');
+        $localizationEnCa->setDefault(false);
         $localizationEnUs->addChild($localizationEnCa);
         $localizationFrCa = new Localization();
         $localizationFrCa->setCountry('ca');
         $localizationFrCa->setLanguage('fr');
+        $localizationFrCa->setDefault(false);
         $portal->addLocalization($localizationEnUs);
         $portal->addLocalization($localizationEnCa);
         $portal->addLocalization($localizationFrCa);
+        $portal->setDefaultLocalization($localizationEnUs);
 
         $portal->setResourceLocatorStrategy('tree');
 
         $webspace = new Webspace();
         $webspace->addLocalization($localizationEnUs);
         $webspace->addLocalization($localizationFrCa);
+        $segmentSummer = new Segment();
+        $segmentSummer->setName('Summer');
+        $segmentSummer->setKey('s');
+        $segmentSummer->setDefault(true);
+        $segmentWinter = new Segment();
+        $segmentWinter->setName('Winter');
+        $segmentWinter->setKey('w');
+        $segmentWinter->setDefault(false);
+        $webspace->addSegment($segmentSummer);
+        $webspace->addSegment($segmentWinter);
         $webspace->setTheme($theme);
         $webspace->addPortal($portal);
         $webspace->setKey('default');
         $webspace->setName('Default');
         $webspace->addPortal($portal);
 
-        $this->webspaceCollection->add($webspace);
-    }
+        $portals[] = $portal;
+        $webspaces[] = $webspace;
 
-    public function testAdd()
-    {
-        $webspacesReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'webspaces');
-        $webspacesReflection->setAccessible(true);
-        $allPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'allPortals');
-        $allPortalsReflection->setAccessible(true);
-        $environmentPortalsReflection = new \ReflectionProperty('\Sulu\Component\Webspace\WebspaceCollection', 'environmentPortals');
-        $environmentPortalsReflection->setAccessible(true);
+        $portalInformations['prod']['www.portal1.com'] = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localizationEnUs,
+            'www.portal1.com',
+            $segmentSummer
+        );
 
-        $webspaces = $webspacesReflection->getValue($this->webspaceCollection);
-        $allPortals = $allPortalsReflection->getValue($this->webspaceCollection);
-        $environmentPortals = $environmentPortalsReflection->getValue($this->webspaceCollection);
+        $portalInformations['dev']['portal1.lo'] = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localizationEnUs,
+            'portal1.lo',
+            $segmentSummer
+        );
 
-        $this->assertEquals('Default', $webspaces['default']->getName());
-        $this->assertEquals('Portal1', $allPortals['portal1']->getName());
-        // TODO make next two lines possible
-        $this->assertEquals('Portal1', $environmentPortals['prod']['www.portal1.com']['portal']->getName());
-        //$this->assertEquals('Portal1', $environmentPortals['prod']['portal1.com']['portal']->getName());
+        $this->webspaceCollection->setWebspaces($webspaces);
+        $this->webspaceCollection->setPortals($portals);
+        $this->webspaceCollection->setPortalInformations($portalInformations);
     }
 
     public function testToArray()
     {
-        $webspace = $this->webspaceCollection->toArray()[0];
+        $collectionArray = $this->webspaceCollection->toArray();
+
+        $webspace = $collectionArray['webspaces'][0];
 
         $this->assertEquals('Default', $webspace['name']);
         $this->assertEquals('default', $webspace['key']);
         $this->assertEquals('us', $webspace['localizations'][0]['country']);
         $this->assertEquals('en', $webspace['localizations'][0]['language']);
+        $this->assertEquals(true, $webspace['localizations'][0]['default']);
         $this->assertEquals('ca', $webspace['localizations'][0]['children'][0]['country']);
         $this->assertEquals('en', $webspace['localizations'][0]['children'][0]['language']);
+        $this->assertEquals(false, $webspace['localizations'][0]['children'][0]['default']);
         $this->assertEquals('ca', $webspace['localizations'][1]['country']);
         $this->assertEquals('fr', $webspace['localizations'][1]['language']);
+        $this->assertEquals(false, $webspace['localizations'][1]['default']);
+        $this->assertEquals('Summer', $webspace['segments'][0]['name']);
+        $this->assertEquals('s', $webspace['segments'][0]['key']);
+        $this->assertEquals(true, $webspace['segments'][0]['default']);
+        $this->assertEquals('Winter', $webspace['segments'][1]['name']);
+        $this->assertEquals('w', $webspace['segments'][1]['key']);
+        $this->assertEquals(false, $webspace['segments'][1]['default']);
         $this->assertEquals('portal1theme', $webspace['theme']['key']);
         $this->assertEquals(array('overview', 'default'), $webspace['theme']['excludedTemplates']);
 
         $portal = $webspace['portals'][0];
 
         $this->assertEquals('Portal1', $portal['name']);
+        $this->assertEquals('portal1', $portal['key']);
         $this->assertEquals('prod', $portal['environments'][0]['type']);
         $this->assertEquals('www.portal1.com', $portal['environments'][0]['urls'][0]['url']);
         $this->assertEquals('en', $portal['environments'][0]['urls'][0]['language']);
@@ -120,10 +163,31 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('www.portal1.com', $portal['environments'][0]['urls'][1]['redirect']);
         $this->assertEquals('us', $portal['localizations'][0]['country']);
         $this->assertEquals('en', $portal['localizations'][0]['language']);
+        $this->assertEquals(true, $portal['localizations'][0]['default']);
         $this->assertEquals('ca', $portal['localizations'][1]['country']);
         $this->assertEquals('en', $portal['localizations'][1]['language']);
+        $this->assertEquals(false, $portal['localizations'][1]['default']);
         $this->assertEquals('ca', $portal['localizations'][2]['country']);
         $this->assertEquals('fr', $portal['localizations'][2]['language']);
+        $this->assertEquals(false, $portal['localizations'][2]['default']);
         $this->assertEquals('tree', $portal['resourceLocator']['strategy']);
+
+        $portalInformation = $collectionArray['portalInformations']['prod']['www.portal1.com'];
+
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformation['type']);
+        $this->assertEquals('default', $portalInformation['webspace']);
+        $this->assertEquals('portal1', $portalInformation['portal']);
+        $this->assertEquals('en_us', $portalInformation['localization']);
+        $this->assertEquals('s', $portalInformation['segment']);
+        $this->assertEquals('www.portal1.com', $portalInformation['url']);
+
+        $portalInformation = $collectionArray['portalInformations']['dev']['portal1.lo'];
+
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $portalInformation['type']);
+        $this->assertEquals('default', $portalInformation['webspace']);
+        $this->assertEquals('portal1', $portalInformation['portal']);
+        $this->assertEquals('en_us', $portalInformation['localization']);
+        $this->assertEquals('s', $portalInformation['segment']);
+        $this->assertEquals('portal1.lo', $portalInformation['url']);
     }
 }

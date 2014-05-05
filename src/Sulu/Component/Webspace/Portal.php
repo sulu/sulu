@@ -41,6 +41,12 @@ class Portal
     private $localizations;
 
     /**
+     * The default localization for this portal
+     * @var Localization
+     */
+    private $defaultLocalization;
+
+    /**
      * @var Environment[]
      */
     private $environments;
@@ -107,6 +113,10 @@ class Portal
     public function addLocalization(Localization $localization)
     {
         $this->localizations[] = $localization;
+
+        if ($localization->isDefault()) {
+            $this->setDefaultLocalization($localization);
+        }
     }
 
     /**
@@ -125,6 +135,22 @@ class Portal
     public function getLocalizations()
     {
         return $this->localizations;
+    }
+
+    /**
+     * @param \Sulu\Component\Webspace\Localization $defaultLocalization
+     */
+    public function setDefaultLocalization($defaultLocalization)
+    {
+        $this->defaultLocalization = $defaultLocalization;
+    }
+
+    /**
+     * @return \Sulu\Component\Webspace\Localization
+     */
+    public function getDefaultLocalization()
+    {
+        return $this->defaultLocalization;
     }
 
     /**

@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Dumper;
+namespace Sulu\Component\Webspace\Manager\Dumper;
 
-use Sulu\Component\Webspace\WebspaceCollection;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 
 class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
 {
@@ -36,7 +36,7 @@ class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
             array(
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],
-                'webspaces' => $this->webspaceCollection->toArray()
+                'collection' => $this->webspaceCollection->toArray(),
             )
         );
     }

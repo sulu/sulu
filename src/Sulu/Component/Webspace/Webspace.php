@@ -35,10 +35,22 @@ class Webspace
     private $localizations;
 
     /**
+     * The default localization defined for this webspace
+     * @var Localization
+     */
+    private $defaultLocalization;
+
+    /**
      * The segments defined for this webspace
      * @var Segment[]
      */
     private $segments;
+
+    /**
+     * The default segment defined for this webspace
+     * @var Segment
+     */
+    private $defaultSegment;
 
     /**
      * The theme of the webspace
@@ -83,6 +95,10 @@ class Webspace
     public function addLocalization(Localization $localization)
     {
         $this->localizations[] = $localization;
+
+        if ($localization->isDefault()) {
+            $this->defaultLocalization = $localization;
+        }
     }
 
     /**
@@ -139,6 +155,24 @@ class Webspace
     }
 
     /**
+     * Sets the default localization for this webspace
+     * @param Localization $defaultLocalization
+     */
+    public function setDefaultLocalization($defaultLocalization)
+    {
+        $this->defaultLocalization = $defaultLocalization;
+    }
+
+    /**
+     * Returns the default localization for this webspace
+     * @return Localization
+     */
+    public function getDefaultLocalization()
+    {
+        return $this->defaultLocalization;
+    }
+
+    /**
      * Sets the name of the webspace
      * @param string $name
      */
@@ -190,6 +224,10 @@ class Webspace
     public function addSegment(Segment $segment)
     {
         $this->segments[] = $segment;
+
+        if ($segment->isDefault()) {
+            $this->setDefaultSegment($segment);
+        }
     }
 
     /**
@@ -208,6 +246,24 @@ class Webspace
     public function getSegments()
     {
         return $this->segments;
+    }
+
+    /**
+     * Sets the default segment of this webspace
+     * @param \Sulu\Component\Webspace\Segment $defaultSegment
+     */
+    public function setDefaultSegment($defaultSegment)
+    {
+        $this->defaultSegment = $defaultSegment;
+    }
+
+    /**
+     * Returns the default segment for this webspace
+     * @return \Sulu\Component\Webspace\Segment
+     */
+    public function getDefaultSegment()
+    {
+        return $this->defaultSegment;
     }
 
     /**
