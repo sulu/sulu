@@ -6,7 +6,7 @@
     <div class="content">
         {% for widget in widgets %}
             <div class="widget widget-{{ widget.name }} widget-priority-{{ widget.priority}}">
-                {% include widget.template with widget.data only %}
+                {% include widget.template with widget only %}
             </div>
         {% endfor %}
     </div>
