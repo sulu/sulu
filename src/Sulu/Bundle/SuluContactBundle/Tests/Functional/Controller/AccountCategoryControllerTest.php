@@ -10,55 +10,30 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-
-use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
-use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\Country;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
-class AccountControllerTest extends DatabaseTestCase
+class AccountCategoryControllerTest extends DatabaseTestCase
 {
     /**
      * @var array
      */
     protected static $entities;
 
-    /**
-     * @var AccountCategory
-     */
-    protected static $category;
-
-    /**
-     * @var AccountCategory
-     */
-    protected static $category2;
 
     public function setUp()
     {
         $this->setUpSchema();
+  
+        $category = new AccountCategory();
+        $category->setCategory('Hauptsitz');
 
-        self::$category = new AccountCategory();
-        self::$category->setCategory('Hauptsitz');
+        $category2 = new AccountCategory();
+        $category2->setCategory('Nebensitz');
 
-        self::$category2 = new AccountCategory();
-        self::$category2->setCategory('Nebensitz');
-
-        self::$em->persist(self::$category);
-        self::$em->persist(self::$category2);
+        self::$em->persist($category);
+        self::$em->persist($category2);
 
         self::$em->flush();
     }
@@ -92,6 +67,21 @@ class AccountControllerTest extends DatabaseTestCase
         );
     }
 
+    public function testGet(){
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            'api/account/categories/1'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('Hauptsitz', $response->category);
+        $this->assertEquals(1, $response->id);
+    }
+
     public function testGetAll()
     {
         $client = $this->createTestClient();
@@ -104,6 +94,8 @@ class AccountControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
+        $this->assertEquals(2, $response->total);
+
         $this->assertEquals('Hauptsitz', $response->_embedded[0]->category);
         $this->assertEquals(1, $response->_embedded[0]->id);
 
@@ -113,11 +105,12 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
+
         $client = $this->createTestClient();
 
         $client->request(
             'POST',
-            'api/accounts/categories',
+            'api/account/categories',
             array(
                 'category' => 'Nebensitz 2',
             )
@@ -149,19 +142,138 @@ class AccountControllerTest extends DatabaseTestCase
 
     }
 
-    public function testPostInvalid()
+//    public function testPostNonUniqueName()
+//    {
+//
+//        $client = $this->createTestClient();
+//
+//        $client->request(
+//            'POST',
+//            'api/account/categories',
+//            array(
+//                'category' => 'Hauptwohnsitz',
+//            )
+//        );
+//        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+//
+//        $client2 = $this->createTestClient();
+//        $client2->request(
+//            'GET',
+//            'api/account/categories'
+//        );
+//
+//        $response2 = json_decode($client2->getResponse()->getContent());
+//        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
+//
+//        $this->assertEquals('Hauptsitz', $response2->_embedded[0]->category);
+//        $this->assertEquals(1, $response2->_embedded[0]->id);
+//
+//        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
+//        $this->assertEquals(2, $response2->_embedded[1]->id);
+//
+//    }
+
+    public function testPostInvalidCategoryName()
     {
         $client = $this->createTestClient();
 
         $client->request(
             'POST',
-            'api/accounts/categories',
+            'api/account/categories',
             array(
                 'category' => '',
             )
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPut()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            'api/account/categories/1',
+            array(
+                'category' => 'Nebensitz 3'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('Nebensitz 3', $response->category);
+        $this->assertEquals(1, $response->id);
+
+        $client2 = $this->createTestClient();
+        $client2->request(
+            'GET',
+            'api/account/categories'
+        );
+
+        $response2 = json_decode($client2->getResponse()->getContent());
+        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
+
+        $this->assertEquals('Nebensitz', $response2->_embedded[0]->category);
+        $this->assertEquals(2, $response2->_embedded[0]->id);
+
+        $this->assertEquals('Nebensitz 3', $response2->_embedded[1]->category);
+        $this->assertEquals(1, $response2->_embedded[1]->id);
+
+    }
+
+    public function testPutInvalidId()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            'api/account/categories/100',
+            array(
+                'category' => 'Nebensitz 3'
+            )
+        );
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testDelete()
+    {
+        $client = $this->createTestClient();
+        $client->request('DELETE', 'api/account/categories/1');
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client2 = $this->createTestClient();
+
+        $client2->request(
+            'GET',
+            'api/account/categories'
+        );
+
+        $response2 = json_decode($client2->getResponse()->getContent());
+        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
+
+        $this->assertEquals(1, $response2->total);
+    }
+
+    public function testDeleteInvalidId()
+    {
+        $client = $this->createTestClient();
+        $client->request('DELETE', 'api/account/categories/1000');
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+        $client2 = $this->createTestClient();
+
+        $client2->request(
+            'GET',
+            'api/account/categories'
+        );
+
+        $response2 = json_decode($client2->getResponse()->getContent());
+        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
+
+        $this->assertEquals(2, $response2->total);
     }
 
 }

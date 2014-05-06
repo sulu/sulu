@@ -19,12 +19,13 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Controller\Annotations\Route;
 
 /**
  * Makes account categories available through a REST API
  * Used RouteResource annotation to prevent automatic parenting of rest controllers
  * @package Sulu\Bundle\ContactBundle\Controller
- * @RouteResource("AccountCategory")
+
  */
 class AccountCategoryController extends RestController implements ClassResourceInterface
 {
@@ -37,6 +38,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
      * Shows a single account category with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("account/categories/{id}")
      */
     public function getAction($id)
     {
@@ -57,6 +59,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
      * lists all account categories
      * optional parameter 'flat' calls listAction
      * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("account/categories")
      */
     public function cgetAction()
     {
@@ -69,6 +72,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
     /**
      * Creates a new account category
      * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("account/categories")
      */
     public function postAction()
     {
@@ -101,6 +105,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
      * @param integer $id The id of the contact to update
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @Route("account/categories/{id}")
      */
     public function putAction($id)
     {
@@ -109,7 +114,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
             /** @var AccountCategory $category */
             $category = $this->getDoctrine()
                 ->getRepository($this->entityName)
-                ->findAccountById($id);
+                ->find($id);
 
             if (!$category) {
                 throw new EntityNotFoundException($this->entityName, $id);
@@ -142,6 +147,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
      * Delete a account category with the given id
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("account/categories/{id}")
      */
     public function deleteAction($id)
     {
@@ -153,7 +159,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
                 ->find($id);
 
             if (!$category) {
-                throw new EntityNotFoundException($this->$entityName, $id);
+                throw new EntityNotFoundException($this->entityName, $id);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -168,6 +174,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
     /**
      * Add or update a bunch of account categories
      * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("account/categories")
      */
     public function patchAction()
     {
