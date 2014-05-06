@@ -214,6 +214,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
         } else {
             $category = new AccountCategory();
             $category->setCategory($item['category']);
+            $this->getDoctrine()->getManager()->persist($category);
         }
     }
 
