@@ -28,7 +28,7 @@
             </resource-locator>
 
             <localizations>
-                <localization language="de" country="at"/>
+                <localization language="de" country="at" default="true"/>
             </localizations>
 
             <environments>
