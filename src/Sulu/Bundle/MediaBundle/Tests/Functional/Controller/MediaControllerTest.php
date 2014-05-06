@@ -269,6 +269,7 @@ class MediaControllerTest extends DatabaseTestCase
                 'type' => array(
                     'id' => 1
                 ),
+                /*
                 'metas' => array(
                     array(
                         'title' => 'Test Media 2',
@@ -281,6 +282,7 @@ class MediaControllerTest extends DatabaseTestCase
                         'locale' => 'de'
                     )
                 )
+                */
             )
         );
 
