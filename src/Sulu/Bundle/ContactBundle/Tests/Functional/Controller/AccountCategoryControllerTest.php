@@ -25,7 +25,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
     public function setUp()
     {
         $this->setUpSchema();
-  
+
         $category = new AccountCategory();
         $category->setCategory('Hauptsitz');
 
@@ -57,7 +57,8 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         self::$tool->createSchema(self::$entities);
     }
 
-    private function createTestClient() {
+    private function createTestClient()
+    {
         return $this->createClient(
             array(),
             array(
@@ -67,7 +68,8 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         );
     }
 
-    public function testGet(){
+    public function testGet()
+    {
         $client = $this->createTestClient();
 
         $client->request(
@@ -97,7 +99,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
             'api/account/categories',
             array(
                 'category' => 'Nebensitz 2',
-            )   
+            )
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -128,9 +130,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
 
     public function testPostNonUniqueName()
     {
-
         $client = $this->createTestClient();
-
         $client->request(
             'POST',
             'api/account/categories',
@@ -138,8 +138,8 @@ class AccountCategoryControllerTest extends DatabaseTestCase
                 'category' => 'Hauptsitz',
             )
         );
-        $this->assertEquals(500, $client->getResponse()->getStatusCode());
 
+        $this->assertEquals(500, $client->getResponse()->getStatusCode());
         $this->checkAssertionsForOriginalState();
 
     }
@@ -147,22 +147,21 @@ class AccountCategoryControllerTest extends DatabaseTestCase
     public function testPostInvalidCategoryName()
     {
         $client = $this->createTestClient();
-
         $client->request(
             'POST',
             'api/account/categories',
             array(
-                'category' => '',
+                'category',
             )
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->checkAssertionsForOriginalState();
     }
 
     public function testPut()
     {
         $client = $this->createTestClient();
-
         $client->request(
             'PUT',
             'api/account/categories/1',
@@ -197,7 +196,6 @@ class AccountCategoryControllerTest extends DatabaseTestCase
     public function testPutInvalidId()
     {
         $client = $this->createTestClient();
-
         $client->request(
             'PUT',
             'api/account/categories/100',
@@ -207,16 +205,16 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->checkAssertionsForOriginalState();
     }
 
     public function testDelete()
     {
         $client = $this->createTestClient();
         $client->request('DELETE', 'api/account/categories/1');
+
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
-
         $client2 = $this->createTestClient();
-
         $client2->request(
             'GET',
             'api/account/categories'
@@ -247,7 +245,8 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response2->total);
     }
 
-    public function testPatch(){
+    public function testPatch()
+    {
 
         $client = $this->createTestClient();
         $client->request(
@@ -263,10 +262,10 @@ class AccountCategoryControllerTest extends DatabaseTestCase
                 )
             )
         );
+
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
         $client2 = $this->createTestClient();
-
         $client2->request(
             'GET',
             'api/account/categories'
@@ -287,8 +286,8 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(3, $response2->_embedded[2]->id);
     }
 
-    public function testPatchInvalidId(){
-
+    public function testPatchInvalidId()
+    {
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
@@ -304,13 +303,13 @@ class AccountCategoryControllerTest extends DatabaseTestCase
                 )
             )
         );
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
         $this->checkAssertionsForOriginalState();
     }
 
-    public function testPatchInvalidCategoryName(){
-
+    public function testPatchInvalidCategoryName()
+    {
         $client = $this->createTestClient();
         $client->request(
             'PATCH',
@@ -325,12 +324,13 @@ class AccountCategoryControllerTest extends DatabaseTestCase
                 )
             )
         );
-        $this->assertEquals('400', $client->getResponse()->getStatusCode());
 
+        $this->assertEquals('400', $client->getResponse()->getStatusCode());
         $this->checkAssertionsForOriginalState();
     }
 
-    public function checkAssertionsForOriginalState(){
+    public function checkAssertionsForOriginalState()
+    {
         $client2 = $this->createTestClient();
 
         $client2->request(
