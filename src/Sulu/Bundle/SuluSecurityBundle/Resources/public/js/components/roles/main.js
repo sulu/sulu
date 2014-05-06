@@ -86,7 +86,7 @@ define([
 
                 }.bind(this),
                 error: function() {
-                    this.sandbox.emit('sulu.dialog.error.show', 'An error occured during saving the role!');
+                    this.sandbox.logger.log('An error occured while saving a role');
                 }.bind(this)
             });
         },
@@ -184,31 +184,21 @@ define([
                 throw 'callback is not a function';
             }
 
-            // show dialog
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: "Be careful!",
-                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
-                },
-                footer: {
-                    buttonCancelText: "Don't do it",
-                    buttonSubmitText: "Do it, I understand"
-                },
-                callback: {
-                    submit: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(true);
-                        }
-                    }.bind(this),
-                    cancel: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(false);
-                        }
-                    }.bind(this)
-                }
-            });
+            // show warning dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
+
+                function() {
+                    // cancel callback
+                    callbackFunction(false);
+                }.bind(this),
+
+                function() {
+                    // ok callback
+                    callbackFunction(true);
+                }.bind(this)
+            );
         }
 
     };
