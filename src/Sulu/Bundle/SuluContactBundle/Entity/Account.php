@@ -767,4 +767,32 @@ class Account extends ApiEntity
     {
         $this->faxes->removeElement($faxes);
     }
+    /**
+     * @var \Sulu\Bundle\ContactBundle\Entity\AccountCategory
+     */
+    private $accountCategory;
+
+
+    /**
+     * Set accountCategory
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountCategory $accountCategory
+     * @return Account
+     */
+    public function setAccountCategory(\Sulu\Bundle\ContactBundle\Entity\AccountCategory $accountCategory = null)
+    {
+        $this->accountCategory = $accountCategory;
+    
+        return $this;
+    }
+
+    /**
+     * Get accountCategory
+     *
+     * @return \Sulu\Bundle\ContactBundle\Entity\AccountCategory 
+     */
+    public function getAccountCategory()
+    {
+        return $this->accountCategory;
+    }
 }
