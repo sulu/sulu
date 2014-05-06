@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class File
 {
+
     /**
      * @var \DateTime
      */
@@ -38,6 +39,11 @@ class File
     private $id;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fileVersions;
+
+    /**
      * @var \Sulu\Bundle\MediaBundle\Entity\Media
      */
     private $media;
@@ -52,7 +58,14 @@ class File
      */
     private $creator;
 
-
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->fileVersions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
     /**
      * Set created
      *
@@ -133,6 +146,39 @@ class File
     }
 
     /**
+     * Add fileVersions
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions
+     * @return File
+     */
+    public function addFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions)
+    {
+        $this->fileVersions[] = $fileVersions;
+    
+        return $this;
+    }
+
+    /**
+     * Remove fileVersions
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions
+     */
+    public function removeFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions)
+    {
+        $this->fileVersions->removeElement($fileVersions);
+    }
+
+    /**
+     * Get fileVersions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFileVersions()
+    {
+        return $this->fileVersions;
+    }
+
+    /**
      * Set media
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
@@ -158,10 +204,10 @@ class File
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param \Sulu\Component\Security\UserInterface $changer
      * @return File
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
     
@@ -171,7 +217,7 @@ class File
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
@@ -181,10 +227,10 @@ class File
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param \Sulu\Component\Security\UserInterface $creator
      * @return File
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
     
@@ -194,55 +240,10 @@ class File
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getCreator()
     {
         return $this->creator;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $fileVersions;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->fileVersions = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Add fileVersions
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $fileVersions
-     * @return File
-     */
-    public function addFileVersion(\Sulu\Bundle\MediaBundle\Entity\Media $fileVersions)
-    {
-        $this->fileVersions[] = $fileVersions;
-    
-        return $this;
-    }
-
-    /**
-     * Remove fileVersions
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $fileVersions
-     */
-    public function removeFileVersion(\Sulu\Bundle\MediaBundle\Entity\Media $fileVersions)
-    {
-        $this->fileVersions->removeElement($fileVersions);
-    }
-
-    /**
-     * Get fileVersions
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFileVersions()
-    {
-        return $this->fileVersions;
     }
 }

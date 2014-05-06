@@ -25,11 +25,6 @@ class Collection
     private $style;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionType
-     */
-    private $type;
-
-    /**
      * @var integer
      */
     private $lft;
@@ -70,6 +65,21 @@ class Collection
     private $medias;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $children;
+
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\Collection
+     */
+    private $parent;
+
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionType
+     */
+    private $type;
+
+    /**
      * @var \Sulu\Component\Security\UserInterface
      */
     private $changer;
@@ -86,8 +96,9 @@ class Collection
     {
         $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->medias = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Set style
      *
@@ -109,29 +120,6 @@ class Collection
     public function getStyle()
     {
         return $this->style;
-    }
-
-    /**
-     * Set type
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $type
-     * @return Collection
-     */
-    public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -326,62 +314,6 @@ class Collection
     }
 
     /**
-     * Set changer
-     *
-     * @param \Sulu\Component\Security\UserInterface $changer
-     * @return Collection
-     */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-    
-        return $this;
-    }
-
-    /**
-     * Get changer
-     *
-     * @return \Sulu\Component\Security\UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param \Sulu\Component\Security\UserInterface $creator
-     * @return Collection
-     */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-    
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $children;
-
-    /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\Collection
-     */
-    private $parent;
-
-
-    /**
      * Add children
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Collection $children
@@ -435,6 +367,75 @@ class Collection
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $type
+     * @return Collection
+     */
+    public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set changer
+     *
+     * @param \Sulu\Component\Security\UserInterface $changer
+     * @return Collection
+     */
+    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    {
+        $this->changer = $changer;
+    
+        return $this;
+    }
+
+    /**
+     * Get changer
+     *
+     * @return \Sulu\Component\Security\UserInterface
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \Sulu\Component\Security\UserInterface $creator
+     * @return Collection
+     */
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    {
+        $this->creator = $creator;
+    
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \Sulu\Component\Security\UserInterface
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 
     /**
