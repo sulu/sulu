@@ -540,6 +540,11 @@ class MediaController extends RestController implements ClassResourceInterface
         return array($uploadedFolder, $fileName);
     }
 
+    /**
+     * get upload folder
+     * @param null $fileId
+     * @return string
+     */
     private function getUploadFolder($fileId = null)
     {
         $segmenting = 10; // TODO get from config
@@ -585,7 +590,7 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Adds FileVersion to a file
+     * add FileVersion to a file
      * @param File $file
      * @param $fileData
      * @param $versionCounter
@@ -644,6 +649,7 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * add content languages to fileversion
      * @param FileVersion $fileVersion
      * @param $fileVersionContentLanguageData
      */
@@ -660,6 +666,7 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * add publish languages to fileversion
      * @param FileVersion $fileVersion
      * @param $fileVersionPublishLanguageData
      */
