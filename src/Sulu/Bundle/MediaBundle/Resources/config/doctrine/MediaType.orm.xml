@@ -6,7 +6,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="name" type="string" column="name" length="60"/>
+        <field name="name" type="string" column="name" length="255"/>
         <field name="description" type="text" column="description" nullable="true"/>
         <one-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media"
                      mapped-by="type"/>
