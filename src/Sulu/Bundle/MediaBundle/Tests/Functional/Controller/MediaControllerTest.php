@@ -19,6 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class MediaControllerTest extends DatabaseTestCase
 {
@@ -160,7 +161,8 @@ class MediaControllerTest extends DatabaseTestCase
         self::$em->persist($collectionMeta2);
     }
 
-    private function createTestClient() {
+    private function createTestClient()
+    {
         return $this->createClient(
             array(),
             array(
@@ -174,10 +176,113 @@ class MediaControllerTest extends DatabaseTestCase
      * Tests
      */
 
-    public function testTest() {
+    public function testTest()
+    {
         $client = $this->createTestClient();
         $this->assertTrue((bool)$client);
     }
 
+    /**
+     * @description Test Media GET by ID
+     */
+    public function testGetById()
+    {
+        $client = $this->createTestClient();
 
+        $client->request(
+            'GET',
+            '/api/media/1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->id);
+
+        $this->assertEquals('Test Media', $response->metas[0]->title);
+        $this->assertEquals('This Description is only for testing', $response->metas[0]->description);
+        $this->assertEquals('en-gb', $response->metas[0]->locale);
+
+        $this->assertEquals('Test Media', $response->metas[1]->title);
+        $this->assertEquals('Dies ist eine Test Beschreibung', $response->metas[1]->description);
+        $this->assertEquals('de', $response->metas[1]->locale);
+
+        $this->assertEquals(1, $response->type->id);
+    }
+
+    /**
+     * @description Test GET all Medias
+     */
+    public function testcGet()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+    }
+
+    /**
+     * @description Test GET for non existing Resource (404)
+     */
+    public function testGetByIdNotExisting()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media/10'
+        );
+
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, $response->code);
+        $this->assertTrue(isset($response->message));
+    }
+
+    /**
+     * @description Test POST to create a new Collection
+     */
+    public function testPost()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/media',
+            array(
+                'type' => array(
+                    'id' => 1
+                ),
+                'metas' => array(
+                    array(
+                        'title' => 'Test Media 2',
+                        'description' => 'This Description 2 is only for testing',
+                        'locale' => 'en-gb'
+                    ),
+                    array(
+                        'title' => 'Test Media 2',
+                        'description' => 'Diese Beschreibung 2 ist zum Test',
+                        'locale' => 'de'
+                    )
+                )
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
 }

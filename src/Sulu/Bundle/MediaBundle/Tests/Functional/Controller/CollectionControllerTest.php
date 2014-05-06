@@ -126,15 +126,16 @@ class CollectionControllerTest extends DatabaseTestCase
      * Tests
      */
 
-    public function testTest() {
+    public function testTest()
+    {
         $this->assertTrue(true);
     }
 
     /**
      * @description Test Collection GET by ID
      */
-    public function testGetById() {
-
+    public function testGetById()
+    {
         $client = $this->createTestClient();
 
         $client->request(
@@ -168,7 +169,8 @@ class CollectionControllerTest extends DatabaseTestCase
     /**
      * @description Test GET all Collections
      */
-    public function testcGet() {
+    public function testcGet()
+    {
         $client = $this->createTestClient();
 
         $client->request(

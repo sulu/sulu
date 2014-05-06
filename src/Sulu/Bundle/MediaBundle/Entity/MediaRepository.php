@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 
 /**
  * MediaRepository
@@ -20,4 +22,82 @@ use Doctrine\ORM\EntityRepository;
  */
 class MediaRepository extends EntityRepository
 {
+    /**
+     * Get Media by id
+     * @param $id
+     * @return mixed
+     */
+    public function findMediaById($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('media')
+                ->leftJoin('media.type', 'type')
+                ->leftJoin('media.collection', 'collection')
+                ->leftJoin('media.tags', 'tag')
+                ->leftJoin('media.metas', 'mediaMeta')
+                ->leftJoin('media.files', 'file')
+                ->leftJoin('file.fileVersions', 'fileVersion')
+                ->leftJoin('fileVersion.fileVersionContentLanguages', 'fileVersionContentLanguage')
+                ->leftJoin('fileVersion.fileVersionPublishLanguages', 'fileVersionPublishLanguage')
+                ->addSelect('type')
+                ->addSelect('collection')
+                ->addSelect('tag')
+                ->addSelect('mediaMeta')
+                ->addSelect('file')
+                ->addSelect('fileVersion')
+                ->addSelect('fileVersionContentLanguage')
+                ->addSelect('fileVersionPublishLanguage')
+                ->where('media.id = :mediaId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('mediaId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
+     * finds all Media but only selects given fields
+     * @param array $fields
+     * @return array
+     */
+    public function findAllSelect($fields = array())
+    {
+        $qb = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->from($this->getEntityName(), 'media');
+
+        foreach ($fields as $field) {
+            $qb->addSelect('media.' . $field . ' AS ' . $field);
+        }
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+        return $query->getArrayResult();
+    }
+
+    /**
+     * Get Media by id to delete
+     * @param $id
+     * @return mixed
+     */
+    public function findMediaByIdForDelete($id)
+    {
+        try {
+            $qb = $this->createQueryBuilder('media')
+                ->where('media.id = :mediaId');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('mediaId', $id);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 }

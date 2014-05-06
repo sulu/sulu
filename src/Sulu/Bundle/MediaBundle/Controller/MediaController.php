@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
@@ -77,7 +78,7 @@ class MediaController extends RestController implements ClassResourceInterface
      *
      * {@inheritdoc}
      */
-    protected $bundlePrefix = 'media.medias.';
+    protected $bundlePrefix = 'media.media.';
 
     /**
      * @var int
@@ -114,7 +115,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * returns all fields that can be used by list
-     * @Get("medias/fields")
+     * @Get("media/fields")
      * @return mixed
      */
     public function getFieldsAction()
@@ -124,7 +125,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * persists a setting
-     * @Put("medias/fields")
+     * @Put("media/fields")
      */
     public function putFieldsAction()
     {
@@ -132,7 +133,21 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * lists all medias
+     * @Get("media", name="get_all_media")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAction()
+    {
+        $medias = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+        $view = $this->view($this->createHalResponse($medias), 200);
+
+        return $this->handleView($view);
+    }
+
+    /**
      * Shows a single media with the given id
+     * @Get("media/{id}", name="get_single_media")
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -146,18 +161,6 @@ class MediaController extends RestController implements ClassResourceInterface
                     ->findMediaById($id);
             }
         );
-
-        return $this->handleView($view);
-    }
-
-    /**
-     * lists all medias
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function cgetAction()
-    {
-        $medias = $this->getDoctrine()->getRepository($this->entityName)->findAll();
-        $view = $this->view($this->createHalResponse($medias), 200);
 
         return $this->handleView($view);
     }
