@@ -45,10 +45,10 @@ class CollectionRepository extends EntityRepository
                 ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('media')
-                ->addSelect('tag')
-                ->addSelect('fileVersionMeta')
                 ->addSelect('file')
                 ->addSelect('fileVersion')
+                ->addSelect('tag')
+                ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionContentLanguage')
                 ->addSelect('fileVersionPublishLanguage')
                 ->where('collection.id = :collectionId');
