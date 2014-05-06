@@ -208,7 +208,7 @@ class NavigationTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('rl', '', 'resource_locator', false, false, 1, 1, array(), array(new PropertyTag('sulu.rlp.input', 1)))
+                new Property('rl', '', 'resource_locator', false, false, 1, 1, array(), array(new PropertyTag('sulu.rlp', 1)))
             )
         );
 
