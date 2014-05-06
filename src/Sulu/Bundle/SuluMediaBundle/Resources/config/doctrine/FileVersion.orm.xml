@@ -16,6 +16,7 @@
 
         <one-to-many field="fileVersionContentLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion"/>
         <one-to-many field="fileVersionPublishLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage" mapped-by="fileVersion"/>
+        <one-to-many field="metas" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta" mapped-by="fileVersion"/>
 
         <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\File" inversed-by="fileVersions">
             <join-columns>
@@ -32,6 +33,16 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
+        <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag" inversed-by="fileVersions">
+            <join-table name="me_file_version_tags">
+                <join-columns>
+                    <join-column name="idFileVersions" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idTags" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
     </entity>
 </doctrine-mapping>
