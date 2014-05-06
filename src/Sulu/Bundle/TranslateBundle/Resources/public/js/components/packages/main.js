@@ -283,10 +283,6 @@ define([
         },
 
         delPackages: function(ids) {
-            if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show', 'No package selected for Deletion');
-                return;
-            }
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     // TODO: show loading icon
@@ -314,34 +310,21 @@ define([
                 throw 'callback is not a function';
             }
 
-            // show dialog
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: "Be careful!",
-                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
-                },
-                footer: {
-                    buttonCancelText: "Don't do it",
-                    buttonSubmitText: "Do it, I understand"
-                }
-            });
+            // show warning dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
 
-            // submit -> delete
-            this.sandbox.once('husky.dialog.submit', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
-                    callbackFunction.call(this, true);
-                }
-            }.bind(this));
-
-            // cancel
-            this.sandbox.once('husky.dialog.cancel', function() {
-                this.sandbox.emit('husky.dialog.hide');
-                if (!!callbackFunction) {
+                function() {
+                    // cancel callback
                     callbackFunction.call(this, false);
-                }
-            }.bind(this));
-        }
+                }.bind(this),
 
+                function() {
+                    // ok callback
+                    callbackFunction.call(this, true);
+                }.bind(this)
+            );
+        }
     };
 });
