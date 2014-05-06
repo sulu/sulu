@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MediaType
 {
-
+    
     /**
      * @var string
      */
