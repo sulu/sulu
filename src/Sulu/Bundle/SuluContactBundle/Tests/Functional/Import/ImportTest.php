@@ -221,7 +221,6 @@ class ImportTest extends DatabaseTestCase
         $this->import->execute();
     }
 
-
     private function checkAccountData()
     {
         /** @var Account $account */
@@ -357,7 +356,6 @@ class ImportTest extends DatabaseTestCase
         $this->assertEquals(1, sizeof($contact->getEmails()));
         $this->assertEquals('john@doe.com', $contact->getEmails()->get(0)->getEmail());
         $this->assertEquals('Business', $contact->getEmails()->get(0)->getEmailType()->getName());
-
 
         $contact = $contacts[1];
 
