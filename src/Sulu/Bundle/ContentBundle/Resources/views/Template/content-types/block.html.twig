@@ -32,13 +32,15 @@
                     <div class="block block-{{ property.name }}">
                     {% for child in type.childProperties %}
 
-                        {# set defaults for property#}
-                        {% set contentType = getType(child.contentTypeName) %}
+                        {# get Type for property #}
+                        {% set type = getType(child.contentTypeName) %}
+                        {# get params for property #}
+                        {% set params = getParams(child) %}
 
                         {% if child is multiple %}
-                            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'type': contentType, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
                         {% else %}
-                            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'type': contentType, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
                         {% endif %}
                     {% endfor %}
                 </div>

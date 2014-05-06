@@ -38,7 +38,7 @@ define([
                     this.initSelectComponent(selectData);
                     this.bindDomEvents();
 
-                    $(form.$el).trigger('form-collection-init', [this.propertyName]);
+                    this.setValue([]);
                 },
 
                 getChildren: function() {
@@ -153,7 +153,7 @@ define([
                                 if (!!fireEvent) {
                                     $(form.$el).trigger('form-add', [this.propertyName, data]);
                                 }
-                            });
+                            }.bind(this));
                         }.bind(this));
 
                         this.checkFullAndEmpty();
@@ -187,6 +187,8 @@ define([
                                 dfd.resolve();
                             }
                         };
+
+                    this.form.removeFields(this.$el);
                     App.dom.children(this.$el).remove();
                     len = value.length < this.getMinOccurs() ? this.getMinOccurs() : value.length;
                     count = len;
