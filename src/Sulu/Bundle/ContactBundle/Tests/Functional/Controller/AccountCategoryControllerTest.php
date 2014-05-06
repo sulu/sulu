@@ -84,23 +84,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
 
     public function testGetAll()
     {
-        $client = $this->createTestClient();
-
-        $client->request(
-            'GET',
-            'api/account/categories'
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-        $this->assertEquals(2, $response->total);
-
-        $this->assertEquals('Hauptsitz', $response->_embedded[0]->category);
-        $this->assertEquals(1, $response->_embedded[0]->id);
-
-        $this->assertEquals('Nebensitz', $response->_embedded[1]->category);
-        $this->assertEquals(2, $response->_embedded[1]->id);
+        $this->checkAssertionsForOriginalState();
     }
 
     public function testPost()
@@ -113,7 +97,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
             'api/account/categories',
             array(
                 'category' => 'Nebensitz 2',
-            )
+            )   
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -156,20 +140,7 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         );
         $this->assertEquals(500, $client->getResponse()->getStatusCode());
 
-        $client2 = $this->createTestClient();
-        $client2->request(
-            'GET',
-            'api/account/categories'
-        );
-
-        $response2 = json_decode($client2->getResponse()->getContent());
-        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
-
-        $this->assertEquals('Hauptsitz', $response2->_embedded[0]->category);
-        $this->assertEquals(1, $response2->_embedded[0]->id);
-
-        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
-        $this->assertEquals(2, $response2->_embedded[1]->id);
+        $this->checkAssertionsForOriginalState();
 
     }
 
@@ -314,6 +285,69 @@ class AccountCategoryControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Neuer Nebensitz', $response2->_embedded[2]->category);
         $this->assertEquals(3, $response2->_embedded[2]->id);
+    }
+
+    public function testPatchInvalidId(){
+
+        $client = $this->createTestClient();
+        $client->request(
+            'PATCH',
+            'api/account/categories',
+            array(
+                array(
+                    'id' => 1,
+                    'category' => 'Changed Hauptsitz',
+                ),
+                array(
+                    'id' => 1000,
+                    'category' => 'Neuer Nebensitz',
+                )
+            )
+        );
+        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+
+        $this->checkAssertionsForOriginalState();
+    }
+
+    public function testPatchInvalidCategoryName(){
+
+        $client = $this->createTestClient();
+        $client->request(
+            'PATCH',
+            'api/account/categories',
+            array(
+                array(
+                    'id' => 1,
+                    'category' => 'Changed Hauptsitz',
+                ),
+                array(
+                    'category',
+                )
+            )
+        );
+        $this->assertEquals('400', $client->getResponse()->getStatusCode());
+
+        $this->checkAssertionsForOriginalState();
+    }
+
+    public function checkAssertionsForOriginalState(){
+        $client2 = $this->createTestClient();
+
+        $client2->request(
+            'GET',
+            'api/account/categories'
+        );
+
+        $response2 = json_decode($client2->getResponse()->getContent());
+        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
+
+        $this->assertEquals(2, $response2->total);
+
+        $this->assertEquals('Hauptsitz', $response2->_embedded[0]->category);
+        $this->assertEquals(1, $response2->_embedded[0]->id);
+
+        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
+        $this->assertEquals(2, $response2->_embedded[1]->id);
     }
 
 }
