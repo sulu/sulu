@@ -142,36 +142,36 @@ class AccountCategoryControllerTest extends DatabaseTestCase
 
     }
 
-//    public function testPostNonUniqueName()
-//    {
-//
-//        $client = $this->createTestClient();
-//
-//        $client->request(
-//            'POST',
-//            'api/account/categories',
-//            array(
-//                'category' => 'Hauptwohnsitz',
-//            )
-//        );
-//        $this->assertEquals(404, $client->getResponse()->getStatusCode());
-//
-//        $client2 = $this->createTestClient();
-//        $client2->request(
-//            'GET',
-//            'api/account/categories'
-//        );
-//
-//        $response2 = json_decode($client2->getResponse()->getContent());
-//        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
-//
-//        $this->assertEquals('Hauptsitz', $response2->_embedded[0]->category);
-//        $this->assertEquals(1, $response2->_embedded[0]->id);
-//
-//        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
-//        $this->assertEquals(2, $response2->_embedded[1]->id);
-//
-//    }
+    public function testPostNonUniqueName()
+    {
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            'api/account/categories',
+            array(
+                'category' => 'Hauptsitz',
+            )
+        );
+        $this->assertEquals(500, $client->getResponse()->getStatusCode());
+
+        $client2 = $this->createTestClient();
+        $client2->request(
+            'GET',
+            'api/account/categories'
+        );
+
+        $response2 = json_decode($client2->getResponse()->getContent());
+        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
+
+        $this->assertEquals('Hauptsitz', $response2->_embedded[0]->category);
+        $this->assertEquals(1, $response2->_embedded[0]->id);
+
+        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
+        $this->assertEquals(2, $response2->_embedded[1]->id);
+
+    }
 
     public function testPostInvalidCategoryName()
     {
