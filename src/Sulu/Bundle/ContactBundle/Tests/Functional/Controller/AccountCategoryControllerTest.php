@@ -276,4 +276,44 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $this->assertEquals(2, $response2->total);
     }
 
+    public function testPatch(){
+
+        $client = $this->createTestClient();
+        $client->request(
+            'PATCH',
+            'api/account/categories',
+            array(
+                array(
+                    'id' => 1,
+                    'category' => 'Changed Hauptsitz',
+                ),
+                array(
+                    'category' => 'Neuer Nebensitz',
+                )
+            )
+        );
+        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+
+        $client2 = $this->createTestClient();
+
+        $client2->request(
+            'GET',
+            'api/account/categories'
+        );
+
+        $response2 = json_decode($client2->getResponse()->getContent());
+        $this->assertEquals(200, $client2->getResponse()->getStatusCode());
+
+        $this->assertEquals(3, $response2->total);
+
+        $this->assertEquals('Changed Hauptsitz', $response2->_embedded[0]->category);
+        $this->assertEquals(1, $response2->_embedded[0]->id);
+
+        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
+        $this->assertEquals(2, $response2->_embedded[1]->id);
+
+        $this->assertEquals('Neuer Nebensitz', $response2->_embedded[2]->category);
+        $this->assertEquals(3, $response2->_embedded[2]->id);
+    }
+
 }
