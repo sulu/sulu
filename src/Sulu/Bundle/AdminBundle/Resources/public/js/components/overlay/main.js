@@ -19,62 +19,62 @@ define(function() {
     'use strict';
 
     var createEventName = function(postfix) {
-        return 'sulu.overlay.' + postfix;
-    },
+            return 'sulu.overlay.' + postfix;
+        },
 
-    /**
-     * trigger after initialization has finished
-     *
-     * @event sulu.overlay.initialized
-     */
-    INITIALIZED = function() {
-        return createEventName.call(this, 'initialized');
-    },
+        /**
+         * trigger after initialization has finished
+         *
+         * @event sulu.overlay.initialized
+         */
+            INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
 
-    /**
-     * triggered in the cancel-default-callback
-     *
-     * @event sulu.overlay.canceled
-     */
-     CANCELED = function() {
-        return createEventName.call(this, 'canceled');
-     },
+        /**
+         * triggered in the cancel-default-callback
+         *
+         * @event sulu.overlay.canceled
+         */
+            CANCELED = function() {
+            return createEventName.call(this, 'canceled');
+        },
 
-    /**
-     * triggered in the ok-default-callback
-     *
-     * @event sulu.overlay.canceled
-     */
-    CONFIRMED = function() {
-        return createEventName.call(this, 'confirmed');
-    },
+        /**
+         * triggered in the ok-default-callback
+         *
+         * @event sulu.overlay.canceled
+         */
+            CONFIRMED = function() {
+            return createEventName.call(this, 'confirmed');
+        },
 
-    /**
-     * listens on and shows an error overlay
-     *
-     * @event sulu.header.show-error
-     * @param {String} title of the the overlay
-     * @param {String} message of the overlay
-     * @param {String} callback for cancel-button
-     * @param {Object} overlay-options object - optional
-     */
-    SHOW_ERROR = function() {
-        return createEventName.call(this, 'show-error');
-    },
+        /**
+         * listens on and shows an error overlay
+         *
+         * @event sulu.header.show-error
+         * @param {String} title of the the overlay
+         * @param {String} message of the overlay
+         * @param {String} callback for cancel-button
+         * @param {Object} overlay-options object - optional
+         */
+            SHOW_ERROR = function() {
+            return createEventName.call(this, 'show-error');
+        },
 
-    /**
-     * listens on and shows an error overlay
-     *
-     * @event sulu.header.show-error
-     * @param {String} title of the the overlay
-     * @param {String} message of the overlay
-     * @param {String} callback for cancel-button
-     * @param {String} callback for ok-button
-     * @param {Object} overlay-options object - optional
-     */
-     SHOW_WARNING = function() {
-        return createEventName.call(this, 'show-warning');
-     };
+        /**
+         * listens on and shows an error overlay
+         *
+         * @event sulu.header.show-error
+         * @param {String} title of the the overlay
+         * @param {String} message of the overlay
+         * @param {String} callback for cancel-button
+         * @param {String} callback for ok-button
+         * @param {Object} overlay-options object - optional
+         */
+            SHOW_WARNING = function() {
+            return createEventName.call(this, 'show-warning');
+        };
 
     return {
 
@@ -142,10 +142,12 @@ define(function() {
             // extend the default-options with the passed ones
             options = this.sandbox.util.extend(true, {}, defaultOptions, options);
 
-            this.sandbox.start([{
-                name: 'overlay@husky',
-                options: options
-            }]);
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: options
+                }
+            ]);
         }
     };
 });
