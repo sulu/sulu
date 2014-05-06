@@ -347,6 +347,9 @@ class PhpcrMapperTest extends PhpcrTestCase
 
         $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'de');
         $this->assertEquals('/news/news-1', $result);
+
+        $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'en');
+        $this->assertNull($result);
     }
 
     public function testLoadHistoryByContentUuid()

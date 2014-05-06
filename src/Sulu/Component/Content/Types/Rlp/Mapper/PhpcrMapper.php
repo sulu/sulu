@@ -398,7 +398,11 @@ class PhpcrMapper extends RlpMapper
         $contentNode = $session->getNodeByIdentifier($uuid);
         $parentNode = $contentNode->getParent();
 
-        return $this->loadByContent($parentNode, $webspaceKey, $languageCode, $segmentKey);
+        try {
+            return $this->loadByContent($parentNode, $webspaceKey, $languageCode, $segmentKey);
+        } catch (ResourceLocatorNotFoundException $ex) {
+            return null;
+        }
     }
 
     /**
