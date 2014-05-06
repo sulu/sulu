@@ -70,13 +70,18 @@ define([
                             options: {
                                 el: this.$addButton,
                                 instanceName: this.id,
-                                multipleSelect: false,
+                                defaultLabel: App.translate('sulu.content.add-type'),
+                                fixedLabel: true,
+                                style: 'action',
+                                icon: 'circle-plus',
                                 valueName: 'title',
-                                small: false,
-                                data: selectData,
+                                data: (selectData.length > 1 ? selectData : []),
                                 selectCallback: function(item) {
                                     this.addChild(item, {}, true);
-                                }.bind(this)
+                                }.bind(this),
+                                noItemsCallback: function() {
+                                    this.addChild(this.types[0].data, {}, true);
+                                }
                             }
                         }
                     ]);
@@ -125,27 +130,29 @@ define([
 
                         App.dom.insertAt(index, '> *', this.$el, $template);
 
-                        App.start([
-                            {
-                                name: 'dropdown@husky',
-                                options: {
-                                    el: '#change' + options.index,
-                                    trigger: '.drop-down-trigger',
-                                    setParentDropDown: true,
-                                    instanceName: 'change' + options.index,
-                                    alignment: 'right',
-                                    valueName: 'title',
-                                    translateLabels: true,
-                                    clickCallback: function(item) {
-                                        // TODO change type
-                                        var data = form.mapper.getData($template);
+                        if (this.types.length > 1) {
+                            App.start([
+                                {
+                                    name: 'dropdown@husky',
+                                    options: {
+                                        el: '#change' + options.index,
+                                        trigger: '.drop-down-trigger',
+                                        setParentDropDown: true,
+                                        instanceName: 'change' + options.index,
+                                        alignment: 'right',
+                                        valueName: 'title',
+                                        translateLabels: true,
+                                        clickCallback: function(item) {
+                                            // TODO change type
+                                            var data = form.mapper.getData($template);
 
-                                        this.addChild(item.data, data, true, index);
-                                    }.bind(this),
-                                    data: this.types
+                                            this.addChild(item.data, data, true, index);
+                                        }.bind(this),
+                                        data: this.types
+                                    }
                                 }
-                            }
-                        ]);
+                            ]);
+                        }
 
                         form.initFields($template).then(function() {
                             form.mapper.setData(data, $template).then(function() {
