@@ -49,6 +49,11 @@ class Media
     private $collection;
 
     /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\MediaType
+     */
+    private $type;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $tags;
@@ -72,7 +77,7 @@ class Media
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Set created
      *
@@ -165,10 +170,10 @@ class Media
     /**
      * Add files
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Files $files
+     * @param \Sulu\Bundle\MediaBundle\Entity\File $files
      * @return Media
      */
-    public function addFile(\Sulu\Bundle\MediaBundle\Entity\Files $files)
+    public function addFile(\Sulu\Bundle\MediaBundle\Entity\File $files)
     {
         $this->files[] = $files;
     
@@ -178,9 +183,9 @@ class Media
     /**
      * Remove files
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Files $files
+     * @param \Sulu\Bundle\MediaBundle\Entity\File $files
      */
-    public function removeFile(\Sulu\Bundle\MediaBundle\Entity\Files $files)
+    public function removeFile(\Sulu\Bundle\MediaBundle\Entity\File $files)
     {
         $this->files->removeElement($files);
     }
@@ -219,90 +224,6 @@ class Media
     }
 
     /**
-     * Add tags
-     *
-     * @param \Sulu\Bundle\Tags\Entity\Tags $tags
-     * @return Media
-     */
-    public function addTag(\Sulu\Bundle\Tags\Entity\Tags $tags)
-    {
-        $this->tags[] = $tags;
-    
-        return $this;
-    }
-
-    /**
-     * Remove tags
-     *
-     * @param \Sulu\Bundle\Tags\Entity\Tags $tags
-     */
-    public function removeTag(\Sulu\Bundle\Tags\Entity\Tags $tags)
-    {
-        $this->tags->removeElement($tags);
-    }
-
-    /**
-     * Get tags
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * Set changer
-     *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
-     * @return Media
-     */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
-    {
-        $this->changer = $changer;
-    
-        return $this;
-    }
-
-    /**
-     * Get changer
-     *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
-     * @return Media
-     */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
-    {
-        $this->creator = $creator;
-    
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-    /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\MediaType
-     */
-    private $type;
-
-
-    /**
      * Set type
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\MediaType $type
@@ -323,5 +244,84 @@ class Media
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Add tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @return Media
+     */
+    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+    
+        return $this;
+    }
+
+    /**
+     * Remove tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     */
+    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags->removeElement($tags);
+    }
+
+    /**
+     * Get tags
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Set changer
+     *
+     * @param \Sulu\Component\Security\UserInterface $changer
+     * @return Media
+     */
+    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    {
+        $this->changer = $changer;
+    
+        return $this;
+    }
+
+    /**
+     * Get changer
+     *
+     * @return \Sulu\Component\Security\UserInterface
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \Sulu\Component\Security\UserInterface $creator
+     * @return Media
+     */
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    {
+        $this->creator = $creator;
+    
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \Sulu\Component\Security\UserInterface
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 }
