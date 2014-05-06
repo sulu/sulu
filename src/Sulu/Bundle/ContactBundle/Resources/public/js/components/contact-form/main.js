@@ -132,6 +132,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 
         removeCollectionFilters = function() {
             // add collection filters
+            this.sandbox.form.removeCollectionFilter(this.form, 'addresses');
             this.sandbox.form.removeCollectionFilter(this.form, 'emails');
             this.sandbox.form.removeCollectionFilter(this.form, 'phones');
             this.sandbox.form.removeCollectionFilter(this.form, 'urls');
@@ -144,6 +145,12 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.form = form;
 
             // add collection filters
+            this.sandbox.form.addCollectionFilter(this.form, 'addresses', function(address) {
+                if (address.id === "") {
+                    delete address.id;
+                }
+                return address.city !== "";
+            });
             this.sandbox.form.addCollectionFilter(this.form, 'emails', function(email) {
                 if (email.id === "") {
                     delete email.id;
@@ -309,7 +316,7 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             createEditOverlayContent = function() {
             this.editFieldsData = [];
             removeCollectionFilters.call(this);
-            var data = this.sandbox.form.getData(this.form),
+            var data = this.sandbox.form.getData(this.form, true),
                 dataArray,
                 i, length, key,
                 $content = this.sandbox.dom.createElement('<div class="edit-fields"/>'),
@@ -516,21 +523,23 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
         addAddressOkClicked = function() {
             var formData;
 
-            // TODO: validate form and perform error-handling
             if (!this.sandbox.form.validate(constants.addressFormId)) {
                 return false;
             }
-            formData = this.sandbox.form.getData(constants.addressFormId);
+            formData = this.sandbox.form.getData(constants.addressFormId, true);
 
             // add to collection
             this.sandbox.form.addToCollection(this.form, 'addresses', formData);
+
+            // set changed to be able to save
+            this.sandbox.emit(EVENT_CHANGED.call(this));
 
             // remove change listener
             removeAddressFormEvents.call(this);
         },
 
         createAddOverlay = function() {
-            var data,
+            var data,$overlay,
                 dropdownData = {};
 
             this.dropdownDataArray = [];
@@ -563,11 +572,16 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 return dropdownData[key];
             });
 
+            // create container for overlay
+            $overlay = this.sandbox.dom.createElement('<div>');
+            this.sandbox.dom.append(this.$el, $overlay);
+
             // start overlay and dependent select
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
+                        el: $overlay,
                         title: this.sandbox.translate('public.add-fields'),
                         openOnStart: true,
                         removeOnClose: true,
