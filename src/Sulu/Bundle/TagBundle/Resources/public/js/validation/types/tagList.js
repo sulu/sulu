@@ -33,7 +33,7 @@ define([
                 },
 
                 setValue: function(value) {
-                    return App.dom.data($el, 'auraItems', value);
+                    App.dom.data($el, 'auraItems', value);
                 },
 
                 getValue: function() {
