@@ -19,9 +19,9 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaMeta;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 
@@ -194,14 +194,6 @@ class MediaController extends RestController implements ClassResourceInterface
             $media->setCreator($this->getUser());
             $media->setChanger($this->getUser());
 
-            // set metas
-            $metas = $this->getRequest()->get('metas');
-            if (!empty($metas)) {
-                foreach ($metas as $metaData) {
-                    $this->addMetas($media, $metaData);
-                }
-            }
-
             // set file
             $file = new File();
             $file->setCreated(new DateTime());
@@ -299,11 +291,6 @@ class MediaController extends RestController implements ClassResourceInterface
                 $user = $this->getUser();
                 $media->setChanger($user);
 
-                // set metas
-                if (!$this->processMetas($media)) {
-                    throw new RestException('Updating dependencies is not possible', 0);
-                }
-
                 // TODO set files?
 
                 $em->flush();
@@ -350,15 +337,15 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * Process all metas from request
-     * @param Media $media The media on which is worked
+     * @param FileVersion $fileVersion The media on which is worked
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processMetas(Media $media)
+    protected function processMetas(FileVersion $fileVersion)
     {
         $metas = $this->getRequest()->get('metas');
 
-        $delete = function ($meta) use ($media) {
-            $media->removeMeta($meta);
+        $delete = function ($meta) use ($fileVersion) {
+            $fileVersion->removeMeta($meta);
 
             return true;
         };
@@ -367,48 +354,48 @@ class MediaController extends RestController implements ClassResourceInterface
             return $this->updateMeta($meta, $matchedEntry);
         };
 
-        $add = function ($meta) use ($media) {
-            $this->addMetas($media, $meta);
+        $add = function ($meta) use ($fileVersion) {
+            $this->addMetas($fileVersion, $meta);
 
             return true;
         };
 
-        return $this->processPut($media->getMetas(), $metas, $delete, $update, $add);
+        return $this->processPut($fileVersion->getMetas(), $metas, $delete, $update, $add);
     }
 
     /**
      * Adds META to a media
-     * @param Media $media
+     * @param FileVersion $fileVersion
      * @param $metaData
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      */
-    private function addMetas(Media $media, $metaData)
+    private function addMetas(FileVersion $fileVersion, $metaData)
     {
         $em = $this->getDoctrine()->getManager();
-        $metaEntity = 'SuluMediaBundle:MediaMeta';
+        $metaEntity = 'SuluMediaBundle:FileVersionMeta';
 
         if (isset($metaData['id'])) {
             throw new EntityIdAlreadySetException($metaEntity, $metaData['id']);
         } else {
-            $meta = new MediaMeta();
-            $meta->setMedia($media);
+            $meta = new FileVersionMeta();
+            $meta->setMedia($fileVersion);
             $meta->setTitle($metaData['title']);
             $meta->setDescription($metaData['description']);
             $meta->setLocale($metaData['locale']);
 
             $em->persist($meta);
-            $media->addMeta($meta);
+            $fileVersion->addMeta($meta);
         }
     }
 
     /**
      * Updates the given meta
-     * @param MediaMeta $meta The media meta object to update
+     * @param FileVersionMeta $meta The fileversion meta object to update
      * @param string $entry The entry with the new data
      * @return bool True if successful, otherwise false
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    protected function updateMeta(MediaMeta $meta, $entry)
+    protected function updateMeta(FileVersionMeta $meta, $entry)
     {
         $success = true;
 
@@ -593,10 +580,10 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * add FileVersion to a file
      * @param File $file
      * @param $fileData
      * @param $versionCounter
+     * @throws \Sulu\Component\Rest\Exception\RestException
      */
     private function addFileVersions(File $file, $fileData, &$versionCounter)
     {
@@ -635,6 +622,11 @@ class MediaController extends RestController implements ClassResourceInterface
             foreach ($fileVersionPublishLanguageDatas as $fileVersionPublishLanguageData) {
                 $this->addFileVersionPublishLanguages($fileVersion, $fileVersionPublishLanguageData);
             }
+        }
+
+        // set metas
+        if (!$this->processMetas($fileVersion)) {
+            throw new RestException('Updating dependencies is not possible', 0);
         }
 
         $em->persist($fileVersion);
