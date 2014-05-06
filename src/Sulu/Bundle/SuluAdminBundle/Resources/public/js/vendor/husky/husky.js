@@ -14709,7 +14709,7 @@ define("backbone", ["underscore","jquery"], (function (global) {
 }(this)));
 
 /**
- * @license RequireJS text 2.0.10 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS text 2.0.12 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/requirejs/text for details
  */
@@ -14733,7 +14733,7 @@ define('text',['module'], function (module) {
         masterConfig = (module.config && module.config()) || {};
 
     text = {
-        version: '2.0.10',
+        version: '2.0.12',
 
         strip: function (content) {
             //Strips <?xml ...?> declarations so that external SVG and XML
@@ -14872,12 +14872,12 @@ define('text',['module'], function (module) {
 
             // Do not bother with the work if a build and text will
             // not be inlined.
-            if (config.isBuild && !config.inlineText) {
+            if (config && config.isBuild && !config.inlineText) {
                 onLoad();
                 return;
             }
 
-            masterConfig.isBuild = config.isBuild;
+            masterConfig.isBuild = config && config.isBuild;
 
             var parsed = text.parseName(name),
                 nonStripName = parsed.moduleName +
@@ -14967,7 +14967,9 @@ define('text',['module'], function (module) {
                 }
                 callback(file);
             } catch (e) {
-                errback(e);
+                if (errback) {
+                    errback(e);
+                }
             }
         };
     } else if (masterConfig.env === 'xhr' || (!masterConfig.env &&
@@ -14995,12 +14997,14 @@ define('text',['module'], function (module) {
                 //Do not explicitly handle errors, those should be
                 //visible via console output in the browser.
                 if (xhr.readyState === 4) {
-                    status = xhr.status;
+                    status = xhr.status || 0;
                     if (status > 399 && status < 600) {
                         //An http 4xx or 5xx error. Signal an error.
                         err = new Error(url + ' HTTP status: ' + status);
                         err.xhr = xhr;
-                        errback(err);
+                        if (errback) {
+                            errback(err);
+                        }
                     } else {
                         callback(xhr.responseText);
                     }
@@ -15057,7 +15061,7 @@ define('text',['module'], function (module) {
             typeof Components !== 'undefined' && Components.classes &&
             Components.interfaces)) {
         //Avert your gaze!
-        Cc = Components.classes,
+        Cc = Components.classes;
         Ci = Components.interfaces;
         Components.utils['import']('resource://gre/modules/FileUtils.jsm');
         xpcIsWindows = ('@mozilla.org/windows-registry-key;1' in Cc);
@@ -16663,7 +16667,7 @@ define('form/element',['form/util'], function(Util) {
                     var addFunction = function(typeName, options) {
                             this.requireCounter++;
                             require(['type/' + typeName], function(Type) {
-                                type = new Type(this.$el, options);
+                                type = new Type(this.$el, options, form);
 
                                 type.initialized.then(function() {
                                     Util.debug('Element Type', typeName, options);
@@ -16864,7 +16868,23 @@ define('form/element',['form/util'], function(Util) {
                 },
 
                 setValue: function(value) {
-                    type.setValue(value);
+                    var dfd = $.Deferred(),
+                        result;
+
+                    this.initialized.then(function() {
+                        result = type.setValue(value);
+
+                        // if setvalue returns a deferred wait for that
+                        if (!!result) {
+                            result.then(function() {
+                                dfd.resolve();
+                            });
+                        } else {
+                            dfd.resolve();
+                        }
+                    }.bind(this));
+
+                    return dfd.promise();
                 },
 
                 getValue: function(data) {
@@ -17226,7 +17246,9 @@ define('form/mapper',[
                         $.each($el.children(), function(key, value) {
                             if (!collection || collection.tpl === value.dataset.mapperPropertyTpl) {
                                 item = form.mapper.getData($(value));
-                                item.mapperId = value.dataset.mapperId;
+                                if (element.$el.data('mapperProperty').length > 1) {
+                                    item.mapperId = value.dataset.mapperId;
+                                }
 
                                 var keys = Object.keys(item);
                                 if (keys.length === 1) { // for value only collection
@@ -17390,14 +17412,16 @@ define('form/mapper',[
                         if (!element) {
                             element = form.addField($element);
                             element.initialized.then(function() {
-                                element.setValue(data);
-                                // resolve this set data
-                                resolve();
+                                element.setValue(data).then(function() {
+                                    // resolve this set data
+                                    resolve();
+                                });
                             }.bind(this));
                         } else {
-                            element.setValue(data);
-                            // resolve this set data
-                            resolve();
+                            element.setValue(data).then(function() {
+                                // resolve this set data
+                                resolve();
+                            });
                         }
                     } else if (data !== null && !$.isEmptyObject(data)) {
                         count = Object.keys(data).length;
@@ -17432,12 +17456,14 @@ define('form/mapper',[
                                     if (!element) {
                                         element = form.addField($element);
                                         element.initialized.then(function() {
-                                            element.setValue(value);
-                                            resolve();
+                                            element.setValue(value).then(function() {
+                                                resolve();
+                                            });
                                         }.bind(this));
                                     } else {
-                                        element.setValue(value);
-                                        resolve();
+                                        element.setValue(value).then(function() {
+                                            resolve();
+                                        });
                                     }
                                 } else {
                                     resolve();
@@ -17455,9 +17481,10 @@ define('form/mapper',[
 
         // define mapper interface
             result = {
-                setData: function(data) {
+                setData: function(data, $el) {
                     this.collectionsSet = {};
-                    return that.setData.call(this, data);
+
+                    return that.setData.call(this, data, $el);
                 },
 
                 getData: function($el) {
@@ -17618,23 +17645,17 @@ define('form',[
                 validationSubmitEvent: true,      // avoid submit if not valid
                 mapper: true                      // mapper on/off
             },
-            dfd = null,
 
         // private functions
             that = {
                 initialize: function() {
-                    // init initialized
-                    dfd = $.Deferred();
-                    this.requireCounter = 0;
-                    this.initialized = dfd.promise();
-
                     this.$el = $(el);
                     this.options = $.extend(defaults, this.$el.data(), options);
 
                     // enable / disable debug
                     Util.debugEnabled = this.options.debug;
 
-                    that.initFields.call(this);
+                    this.initialized = that.initFields.call(this);
 
                     if (!!this.options.validation) {
                         this.validation = new Validation(this);
@@ -17650,20 +17671,22 @@ define('form',[
                 },
 
                 // initialize field objects
-                initFields: function() {
-                    $.each(Util.getFields(this.$el), function(key, value) {
-                        this.requireCounter++;
-                        that.addField.call(this, value, false).initialized.then(function() {
-                            that.resolveInitialization.call(this);
-                        }.bind(this));
-                    }.bind(this));
-                },
+                initFields: function($el) {
+                    var dfd = $.Deferred(),
+                        requireCounter = 0,
+                        resolve = function() {
+                            requireCounter--;
+                            if (requireCounter === 0) {
+                                dfd.resolve();
+                            }
+                        };
 
-                resolveInitialization: function() {
-                    this.requireCounter--;
-                    if (this.requireCounter === 0) {
-                        dfd.resolve();
-                    }
+                    $.each(Util.getFields($el || this.$el), function(key, value) {
+                        requireCounter++;
+                        that.addField.call(this, value, false).initialized.then(resolve.bind(this));
+                    }.bind(this));
+
+                    return dfd.promise();
                 },
 
                 bindValidationDomEvents: function() {
@@ -17706,6 +17729,16 @@ define('form',[
                     return element;
                 },
 
+                initFields: function($el) {
+                    return that.initFields.call(this, $el);
+                },
+
+                removeFields: function($el) {
+                    Util.getFields($el).each(function(i, item) {
+                        this.removeField(item);
+                    }.bind(this));
+                },
+
                 removeField: function(selector) {
                     var $element = $(selector),
                         el = $element.data('element');
@@ -17742,7 +17775,7 @@ define('type/default',[
 
     
 
-    return function($el, defaults, options, name, typeInterface) {
+    return function($el, defaults, options, name, typeInterface, form) {
 
         var that = {
                 initialize: function() {
@@ -17762,6 +17795,8 @@ define('type/default',[
 
             defaultInterface = {
                 name: name,
+
+                form: form,
 
                 needsValidation: function() {
                     return true;
@@ -18182,7 +18217,7 @@ define('type/readonly-select',[
                     // find value in data
                     if (data.length > 0) {
                         for (i = -1, len = data.length; ++i < len;) {
-                            if (data[i].hasOwnProperty(idProperty) && data[i][idProperty] === value) {
+                            if (data[i].hasOwnProperty(idProperty) && data[i][idProperty].toString() === value.toString()) {
                                 this.$el.html(data[i][this.options.outputProperty]);
                                 break;
                             }
@@ -18194,8 +18229,8 @@ define('type/readonly-select',[
                     var id = this.$el.data('id'),
                         i, len;
 
-                    for (i = -1, len = this.options.data.length; i++ < len;) {
-                        if (this.options.data[i][this.options.idProperty] === id) {
+                    for (i = -1, len = this.options.data.length; ++i < len;) {
+                        if (this.options.data[i][this.options.idProperty].toString() === id.toString()) {
                             return this.options.data[i];
                         }
                     }
@@ -24878,8 +24913,9 @@ define('__component__$navigation@husky',[],function() {
             }
         },
         CONSTANTS = {
-            UNCOLLAPSED_WIDTH: 250,
-            COLLAPSED_WIDTH: 50,
+            UNCOLLAPSED_WIDTH: 250, //px
+            COLLAPSED_WIDTH: 50, //px
+            ITEM_LABEL_HEIGHT: 50, //px
             TRANSITIONEND_EVENT: 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd'
         },
 
@@ -24979,6 +25015,7 @@ define('__component__$navigation@husky',[],function() {
             this.stayCollapsed = false;
             this.hidden = false;
             this.tooltipsEnabled = true;
+            this.animating = false;
 
             // binding dom events
             this.bindDOMEvents();
@@ -25051,13 +25088,13 @@ define('__component__$navigation@husky',[],function() {
             // render footer
             this.renderFooter();
 
+            // collapse if necessary
+            this.resizeListener();
+
             // preselect item based on url
             if (!!this.options.selectAction && this.options.selectAction.length > 0) {
                 this.preselectItem(this.options.selectAction);
             }
-
-            // collapse if necessary
-            this.resizeListener();
 
             // emit initialized event
             this.sandbox.emit('husky.navigation.initialized');
@@ -25072,7 +25109,10 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.util.foreach(data.items, function(section) {
                 $sectionDiv = this.sandbox.dom.createElement('<div class="section">');
                 $sectionList = this.sandbox.dom.createElement('<ul class="section-items">');
-                this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.sandbox.translate(this.options.labels.hide) + '</a></span></div>');
+
+                if (!!section.title) {
+                    this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span><span class="section-toggle"><a href="#">' + this.sandbox.translate(this.options.labels.hide) + '</a></span></div>');
+                }
 
                 this.sandbox.dom.append($sectionDiv, $sectionList);
                 this.sandbox.dom.append('#navigation-item-container', $sectionDiv);
@@ -25353,26 +25393,79 @@ define('__component__$navigation@husky',[],function() {
             }
 
             if (isExpanded && !navWasCollapsed) {
-                this.sandbox.dom.removeClass($items, 'is-expanded');
-
-                // change toggle item
                 $toggle = this.sandbox.dom.find('.icon-chevron-down', event.currentTarget);
-                this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
-                this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
-            } else {
-                this.sandbox.dom.show($childList);
-                this.sandbox.dom.addClass($items, 'is-expanded');
-                // change toggle item
+                this.animateSlideUp($items, $toggle);
+            } else if (this.collapsed !== true) {
                 $toggle = this.sandbox.dom.find('.icon-chevron-right', event.currentTarget);
-                this.sandbox.dom.removeClass($toggle, 'icon-chevron-right');
-                this.sandbox.dom.prependClass($toggle, 'icon-chevron-down');
-
-                this.sandbox.dom.one($items, CONSTANTS.TRANSITIONEND_EVENT, this.checkBottomHit.bind(this));
+                this.animateSlideDown($items, $toggle, $childList);
             }
 
             // emit event
             item = this.getItemById(this.sandbox.dom.data($items, 'id'));
             this.sandbox.emit('husky.navigation.item.toggle', !isExpanded, item);
+        },
+
+        /**
+         * Handles the slide-up animation
+         * @param $items
+         * @param $toggle
+         */
+        animateSlideUp: function($items, $toggle) {
+            if (this.animating === false) {
+                this.animating = true;
+
+                this.sandbox.dom.animate($items, {
+                    height: CONSTANTS.ITEM_LABEL_HEIGHT
+                }, {
+                    duration: 180,
+                    complete: function() {
+                        this.animating = false;
+                    }.bind(this)
+                });
+
+                this.sandbox.dom.removeClass($items, 'is-expanded');
+
+                // change toggle item
+                this.sandbox.dom.removeClass($toggle, 'icon-chevron-down');
+                this.sandbox.dom.prependClass($toggle, 'icon-chevron-right');
+            }
+        },
+
+        /**
+         * Handles the slide-down animation
+         * @param $items
+         * @param $toggle
+         * @param $childList
+         */
+        animateSlideDown: function($items, $toggle, $childList) {
+            if (this.animating === false) {
+                this.animating = true;
+                var expandedHeight = CONSTANTS.ITEM_LABEL_HEIGHT + this.sandbox.dom.outerHeight($childList);
+
+                $($items).stop();
+                this.sandbox.dom.animate($items, {
+                    height: (expandedHeight + 30)
+                }, {
+                    duration: 120
+                });
+
+                this.sandbox.dom.animate($items, {
+                    height: expandedHeight
+                }, {
+                    duration: 100,
+                    complete: function() {
+                        this.animating = false;
+                    }.bind(this)
+                });
+
+                this.sandbox.dom.addClass($items, 'is-expanded');
+
+                // change toggle item
+                this.sandbox.dom.removeClass($toggle, 'icon-chevron-right');
+                this.sandbox.dom.prependClass($toggle, 'icon-chevron-down');
+
+                this.sandbox.dom.one($items, CONSTANTS.TRANSITIONEND_EVENT, this.checkBottomHit.bind(this));
+            }
         },
 
         checkBottomHit: function(event, customTarget) {
@@ -25396,6 +25489,32 @@ define('__component__$navigation@husky',[],function() {
                 } else {
                     this.sandbox.dom.scrollAnimate(itemTop, this.$navigationContent);
                 }
+            }
+        },
+
+        /**
+         * Removes the inline-style for expanded items
+         */
+        removeHeightforExpanded: function() {
+            var $expandedItems = this.sandbox.dom.find('.is-expanded', this.$el), i, length;
+            for (i = -1, length = $expandedItems.length; ++i < length;) {
+                this.sandbox.dom.removeAttr($expandedItems[i], 'style');
+            }
+        },
+
+        /**
+         * Resets the inline-style height for expanded items
+         */
+        setHeightForExpanded: function() {
+            var $expandedItems = this.sandbox.dom.find('.is-expanded', this.$el),
+                height, i, length;
+            for (i = -1, length = $expandedItems.length; ++i < length;) {
+                height = CONSTANTS.ITEM_LABEL_HEIGHT + this.sandbox.dom.outerHeight(
+                    this.sandbox.dom.find('.navigation-items-list', $expandedItems[i]));
+
+                this.sandbox.dom.css($expandedItems[i], {
+                    'height': height
+                });
             }
         },
 
@@ -25443,6 +25562,7 @@ define('__component__$navigation@husky',[],function() {
             if (this.hidden === false) {
                 this.sandbox.dom.addClass(this.$navigation, 'collapsed');
                 this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
+                this.removeHeightforExpanded();
                 if (!this.collapsed) {
                     this.sandbox.emit(EVENT_COLLAPSED, CONSTANTS.COLLAPSED_WIDTH);
                     this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.COLLAPSED_WIDTH);
@@ -25456,6 +25576,7 @@ define('__component__$navigation@husky',[],function() {
             if ((this.stayCollapsed === false || forced === true) && this.hidden === false) {
                 this.sandbox.dom.removeClass(this.$navigation, 'collapsed');
                 this.hideToolTip();
+                this.setHeightForExpanded();
                 if (forced) {
                     this.sandbox.dom.addClass(this.$navigation, 'collapseIcon');
                 }
@@ -26482,6 +26603,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.columns.content] column title
  * @param {String} [options.columns.width] width of column
  * @param {String} [options.columns.class] css class of th
+ * @param {String} [options.columns.type] type of the column. Used to manipulate its content (e.g. 'date')
  * @param {String} [options.columns.attribute] mapping information to data (if not set it will just iterate of attributes)
  * @param {Boolean} [options.appendTBody] add TBODY to table
  * @param {String} [options.searchInstanceName=null] if set, a listener will be set for the corresponding search event
@@ -26495,6 +26617,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.columnMinWidth] sets the minimal width of table columns
  * @param {String|Object} [options.contentContainer] the container which holds the datagrid; this options resizes the contentContainer for responsiveness
  * @param {Array} [options.showElementsSteps] Array which contains the steps for the Show-Elements-dropdown as integers
+ * @param {String} [options.fullWidth] If true datagrid style will be full-width mode
  */
 define('__component__$datagrid@husky',[],function() {
 
@@ -26513,6 +26636,7 @@ define('__component__$datagrid@husky',[],function() {
             excludeFields: ['id'],
             instance: 'datagrid',
             pagination: false,
+            //fullWidth: false,
             paginationOptions: {
                 pageSize: null,
                 showPages: null
@@ -26539,6 +26663,17 @@ define('__component__$datagrid@husky',[],function() {
             startTabIndex: 99999,
             columnMinWidth: '70px',
             showElementsSteps: [10, 20, 50, 100, 500]
+        },
+
+        types = {
+            DATE: 'date'
+        },
+
+        constants = {
+            fullWidthClass: 'fullwidth',
+            // if datagrid is in fullwidth-mode (options.fullWidth is true)
+            // this number gets subracted from the datagrids final width in the resize listener
+            overflowIconSpacing: 30
         },
 
         namespace = 'husky.datagrid.',
@@ -26663,12 +26798,19 @@ define('__component__$datagrid@husky',[],function() {
             UPDATE = namespace + 'update',
 
         /**
-         * used to filter data of
+         * used to filter data by search
          * @event husky.datagrid.data.filter
          * @param {String} searchField
          * @param {String} searchString
          */
             DATA_SEARCH = namespace + 'data.search',
+
+        /**
+         * used to filter data by updating an url parameter
+         * @event husky.datagrid.url.update
+         * @param {Object} url parameter : key
+         */
+            URL_UPDATE = namespace + 'url.update',
 
         /**
          * used to update the table width and its containers due to responsiveness
@@ -26757,9 +26899,14 @@ define('__component__$datagrid@husky',[],function() {
             this.selectedItemIds = [];
             this.rowStructure = [];
             this.elId = this.sandbox.dom.attr(this.$el, 'id');
+            this.currentUrl = '';
 
             if (!!this.options.contentContainer) {
-                this.originalMaxWidth = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
+                if (this.sandbox.dom.css(this.options.contentContainer, 'max-width') === 'none') {
+                    this.originalMaxWidth = null;
+                } else {
+                    this.originalMaxWidth = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'max-width')).number;
+                }
                 this.contentMarginRight = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'margin-right')).number;
                 this.contentPaddings = this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-right')).number;
                 this.contentPaddings += this.getNumberAndUnit(this.sandbox.dom.css(this.options.contentContainer, 'padding-left')).number;
@@ -26871,7 +27018,7 @@ define('__component__$datagrid@husky',[],function() {
          * @param params url
          */
         load: function(params) {
-
+            this.currentUrl = params.url;
             this.sandbox.util.load(this.getUrl(params), params.data)
                 .then(function(response) {
                     this.initRender(response, params);
@@ -27072,7 +27219,8 @@ define('__component__$datagrid@husky',[],function() {
                     this.rowStructure.push({
                         attribute: column.attribute,
                         editable: column.editable,
-                        validation: column.validation
+                        validation: column.validation,
+                        type: column.type
                     });
 
                     if (!!column.editable) {
@@ -27187,14 +27335,14 @@ define('__component__$datagrid@husky',[],function() {
 
                     this.rowStructure.forEach(function(key, index) {
                         key.editable = key.editable || false;
-                        this.createRowCell(key.attribute, row[key.attribute], key.editable, key.validation, triggeredByAddRow, index);
+                        this.createRowCell(key.attribute, row[key.attribute], key.type, key.editable, key.validation, triggeredByAddRow, index);
                     }.bind(this));
 
                 } else {
                     i = 0;
                     for (key in row) {
                         if (row.hasOwnProperty(key)) {
-                            this.createRowCell(key, row[key], false, null, triggeredByAddRow, i);
+                            this.createRowCell(key, row[key], null, false, null, triggeredByAddRow, i);
                             i++;
                         }
                     }
@@ -27214,13 +27362,13 @@ define('__component__$datagrid@husky',[],function() {
          * Sets the value of row cell and the data-id attribute for the row
          * @param key attribute name
          * @param value attribute value
+         * @param type {String} The type of the cell. Used to call a function to manipulate the content
          * @param editable flag whether field is editable or not
          * @param validation information for field
          * @param triggeredByAddRow triggered trough add row
          * @param index
          */
-        createRowCell: function(key, value, editable, validation, triggeredByAddRow, index) {
-
+        createRowCell: function(key, value, type, editable, validation, triggeredByAddRow, index) {
             var tblCellClasses,
                 tblCellContent,
                 tblCellStyle,
@@ -27250,6 +27398,11 @@ define('__component__$datagrid@husky',[],function() {
 
                 tblCellStyle = 'style="max-width:' + this.options.columns[index].minWidth + '"';
 
+                // call the type manipulate to manipulate the content of the cell
+                if (!!type) {
+                    tblCellContent = this.manipulateCellContent(tblCellContent, type);
+                }
+
                 if (!!editable) {
 
                     if (!!triggeredByAddRow) {
@@ -27275,6 +27428,32 @@ define('__component__$datagrid@husky',[],function() {
             } else {
                 this.tblRowAttributes += ' data-' + key + '="' + value + '"';
             }
+        },
+
+        /**
+         * Manipulates the content of a cell with a process realted to the columns type
+         * @param content {String} the content of the cell
+         * @param type {String} the columns type
+         * @returns {String} the manipualted content
+         */
+        manipulateCellContent: function(content, type) {
+            if (type === types.DATE) {
+                content = this.parseDate(content);
+            }
+            return content;
+        },
+
+        /**
+         * Brings a date into the right format
+         * @param date {String} the date to parse
+         * @returns {String}
+         */
+        parseDate: function(date) {
+            var parsedDate = this.sandbox.date.format(date);
+            if (parsedDate !== null) {
+                return parsedDate;
+            }
+            return date;
         },
 
         /**
@@ -27929,6 +28108,9 @@ define('__component__$datagrid@husky',[],function() {
             // filter data
             this.sandbox.on(DATA_SEARCH, this.triggerSearch.bind(this));
 
+            // filter data
+            this.sandbox.on(URL_UPDATE, this.updateUrl.bind(this));
+
             // pagination dropdown item clicked
             this.sandbox.on('husky.dropdown.' + this.dropdownInstanceName + '.item.click', this.changePage.bind(this, null));
 
@@ -28299,13 +28481,13 @@ define('__component__$datagrid@husky',[],function() {
         },
 
         /**
-         * this will trigger a api search
+         * triggers an api search
+         * @param {String} searchString The String that will be searched
+         * @param {String|Array} searchFields Fields that will be included into the search
          */
         triggerSearch: function(searchString, searchFields) {
 
-            var template, url,
-            // TODO: get searchFields
-                searchFields;
+            var template, url;
 
             this.addLoader();
             template = this.sandbox.uritemplate.parse(this.data.links.find);
@@ -28318,6 +28500,65 @@ define('__component__$datagrid@husky',[],function() {
                     this.sandbox.emit(UPDATED, 'updated after search');
                 }.bind(this)
             });
+        },
+
+        /**
+         * updates the current url by given parameter object
+         * @param {Object} parameters Object key is used as parameter name, value as parameter value
+         */
+        updateUrl: function(parameters) {
+
+            var url, key;
+
+            this.addLoader();
+            url = this.currentUrl;
+
+            for (key in parameters) {
+                url = this.setGetParameter(url, key, parameters[key]);
+            }
+
+            this.load({
+                url: url,
+                success: function() {
+                    this.removeLoader();
+                    this.sandbox.emit(UPDATED);
+                }.bind(this)
+            });
+        },
+
+        /**
+         * function updates an url by a given parameter name and value and returns it. The parameter is either added or updated.
+         * If value is not set, the parameter will be removed from url
+         * @param {String} url Url string to be updated
+         * @param {String} paramName Parameter which should be added / updated / removed
+         * @param {String|Null} paramValue Value of the parameter. If not set, parameter will be removed from url
+         * @returns {String} updated url
+         */
+        setGetParameter: function(url, paramName, paramValue){
+            if (url.indexOf(paramName + "=") >= 0)
+            {
+                var prefix = url.substring(0, url.indexOf(paramName)),
+                    suffix = url.substring(url.indexOf(paramName));
+                suffix = suffix.substring(suffix.indexOf('=') + 1);
+                suffix = (suffix.indexOf('&') >= 0) ? suffix.substring(suffix.indexOf('&')) : '';
+                if (!!paramValue) {
+                    url = prefix + paramName + '=' + paramValue + suffix;
+                } else {
+                    if (url.substr(url.indexOf(paramName)-1,1) === '&' ) {
+                        url = url.substring(0,prefix.length-1) + suffix;
+                    } else {
+                        url = prefix + suffix.substring(1, suffix.length);
+                    }
+                }
+            }
+            else if (!!paramValue)
+            {
+                if (url.indexOf("?") < 0)
+                    url += "?" + paramName + "=" + paramValue;
+                else
+                    url += "&" + paramName + "=" + paramValue;
+            }
+            return url;
         },
 
 
@@ -28356,6 +28597,11 @@ define('__component__$datagrid@husky',[],function() {
          * Binds DOM events
          */
         render: function() {
+            // add full-width class
+            if (this.options.fullWidth === true) {
+                this.sandbox.dom.addClass(this.$element, constants.fullWidthClass);
+            }
+
             this.$originalElement.html(this.$element);
             this.bindDOMEvents();
 
@@ -28383,7 +28629,7 @@ define('__component__$datagrid@husky',[],function() {
             tableOffset.right = tableOffset.left + tableWidth;
 
 
-            if (!!this.options.contentContainer) {
+            if (!!this.options.contentContainer && !!this.originalMaxWidth) {
                 // get original max-width and right margin
                 originalMaxWidth = this.originalMaxWidth;
                 contentPaddings = this.contentPaddings;
@@ -28431,6 +28677,13 @@ define('__component__$datagrid@husky',[],function() {
             // check scrollwidth and add class
             if (this.sandbox.dom.get(this.$tableContainer, 0).scrollWidth > finalWidth) {
                 this.sandbox.dom.addClass(this.$tableContainer, 'overflow');
+
+                // if overflown and in full width mode reduce list-width
+                if (this.options.fullWidth === true) {
+                    finalWidth = finalWidth - constants.overflowIconSpacing;
+                    this.sandbox.dom.width(this.$element, finalWidth);
+                }
+
             } else {
                 this.sandbox.dom.removeClass(this.$tableContainer, 'overflow');
             }
@@ -29268,7 +29521,13 @@ define('__component__$search@husky',[], function() {
         defaults = {
             instanceName: null,
             placeholderText: 'public.search',
-            appearance: 'gray'
+            appearance: 'gray',
+            slide: false
+        },
+        constants = {
+            slideClass: 'slide',
+            slideCollapsedClass: 'slide-collapsed',
+            slideExpandedClass: 'slide-expanded'
         },
 
 
@@ -29314,6 +29573,12 @@ define('__component__$search@husky',[], function() {
         render: function() {
             this.sandbox.dom.addClass(this.$el, 'search-container');
             this.sandbox.dom.addClass(this.$el, this.options.appearance);
+            console.log(this.options.slide);
+            if (this.options.slide === true) {
+                this.sandbox.dom.addClass(this.$el, constants.slideClass);
+                this.collapse();
+            }
+
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {placeholderText: this.sandbox.translate(this.options.placeholderText)}));
 
         },
@@ -29321,13 +29586,24 @@ define('__component__$search@husky',[], function() {
         // bind dom elements
         bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', this.selectInput.bind(this), 'input');
-            this.sandbox.dom.on(this.$el, 'click', this.submitSearch.bind(this), '.search-icon');
-            this.sandbox.dom.on(this.$el, 'click', this.removeSearch.bind(this), '.remove-icon');
+            this.sandbox.dom.on(this.$el, 'mousedown', this.submitSearch.bind(this), '.search-icon');
+            this.sandbox.dom.on(this.$el, 'mousedown', this.removeSearch.bind(this), '.remove-icon');
             this.sandbox.dom.on(this.$el, 'keyup onchange', this.checkKeyPressed.bind(this), '#search-input');
+
+            if (this.options.slide === true) {
+                this.sandbox.dom.on(this.$find('input'), 'focus', this.expand.bind(this));
+                this.sandbox.dom.on(this.$find('input'), 'blur', this.collapse.bind(this));
+            }
         },
 
-        bindCustomEvents: function() {
+        collapse: function() {
+            this.sandbox.dom.removeClass(this.$el, constants.slideExpandedClass);
+            this.sandbox.dom.addClass(this.$el, constants.slideCollapsedClass);
+        },
 
+        expand: function() {
+            this.sandbox.dom.removeClass(this.$el, constants.slideCollapsedClass);
+            this.sandbox.dom.addClass(this.$el, constants.slideExpandedClass);
         },
 
         resetSearch : function() {
@@ -29553,6 +29829,19 @@ define('__component__$tabs@husky',[],function() {
             bindCustomEvents.call(this);
         },
 
+        /**
+         * Sets the min-width of an item to its width in selected state
+         * (to avoid bumping)
+         * @param $item
+         */
+        setMinWidth: function($item) {
+            this.sandbox.dom.addClass($item, 'is-selected');
+            this.sandbox.dom.css($item, {
+                'min-width': this.sandbox.dom.outerWidth($item) + 'px'
+            });
+            this.sandbox.dom.removeClass($item, 'is-selected');
+        },
+
         deactivate: function() {
             this.active = false;
             this.sandbox.dom.addClass(this.sandbox.dom.find('.tabs-container', this.$el), 'deactivated');
@@ -29584,7 +29873,8 @@ define('__component__$tabs@husky',[],function() {
 
             var $element = this.sandbox.dom.createElement('<div class="tabs-container"></div>'),
                 $list = this.sandbox.dom.createElement('<ul/>'),
-                selected = '', selectedItem = null;
+                selectedItem = null,
+                $item = null;
 
             this.sandbox.dom.append(this.$el, $element);
             this.sandbox.dom.append($element, $list);
@@ -29592,20 +29882,25 @@ define('__component__$tabs@husky',[],function() {
             this.items = [];
 
             this.sandbox.util.foreach(data.items, function(item, index) {
+                this.items[item.id] = item;
+                $item = this.sandbox.dom.createElement(
+                    '<li data-id="' + item.id + '"><a href="#">' + this.sandbox.translate(item.title) + '</a></li>'
+                );
+                this.sandbox.dom.append($list, $item);
+
+                // set min-width of element
+                this.setMinWidth($item);
+
                 // check if item got selected
-                selected = '';
                 if (!!this.options.preselect) {
                     if ((this.options.preselector === 'url' && !!data.url && data.url === item.action) ||
                         (this.options.preselector === 'position' && (index+1).toString() === this.options.preselect.toString()) ||
                         (this.options.preselector === 'title' && item.title === this.options.preselect))
                     {
-                        selected = ' class="is-selected"';
+                        this.sandbox.dom.addClass($item, 'is-selected');
                         selectedItem = item;
                     }
                 }
-
-                this.items[item.id] = item;
-                this.sandbox.dom.append($list, '<li ' + selected + ' data-id="' + item.id + '"><a href="#">' + this.sandbox.translate(item.title) + '</a></li>');
             }.bind(this));
 
             // force selection of first element
@@ -29632,35 +29927,40 @@ define('__component__$tabs@husky',[],function() {
  * @module husky/components/toolbar
  */
 
-/*
- *
- *  Tabs
- *
- *  Options (defaults)
- *      - url: url to fetch data from
- *      - data: if no url is provided
- *      - selected: the item that's selected on initialize
- *      - instanceName - enables custom events (in case of multiple tabs on one page)
- *      - hasSearch - adds a search element at the end
- *  Provides Events
- *      -
- *  Triggers Events
- *      - husky.toolbar.<<instanceName>>.item.select - triggered when item was clicked
- *
- *
- */
-
 /**
  * @class Toolbar
  * @constructor
  *
  * @param {Object} [options] Configuration object
  * @param {String} [options.url] url to fetch data from
- * @param {String} [options.data] if no url is provided
- * @param {String} [options.selected] the item that's selected on initialize
  * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
- * @param {String} [options.hasSearch] adds a search element at the end
- * @param {Object} [options.dropdownComponent=null] adds a dropdowncomponent as dropdown menu
+ * @param {String} [options.itemsRequestKey] key with result-array for requested dropdown items
+ * @param {String} [options.appearance]
+ * @param {Object} [options.searchOptions] options to pass to search component
+ * @param {Object} [options.groups] array of groups with id and align to specify groups to put items in
+ * @param {Object} [options.small] if true the toolbar is displayed smaller
+ * @param {boolean} [options.hasSearch] if true a search item gets inserted in its own group at the end. A search item can also be added manually through the data
+ * @param {String} [options.searchAlign] "right" or "left" to align the search if it's added automatically via the hasSearch option
+ * @param {String} [options.skin] custom skin-class to add to the component
+ * @param {Boolean} [options.showTitleAsTooltip] shows the title of the button only as tooltip
+ * @param {Array} [options.data] if no url is provided
+ * @param {String} [options.data.title]
+ * @param {String} [options.data.id]
+ * @param {Boolean} [options.data.disabled] is item disabled or enabled
+ * @param {String} [options.data.disableIcon] icon in disable state
+ * @param {String} [options.data.iconSize] large/medium/small
+ * @param {String} [options.data.class] highlight/highlight-gray
+ * @param {String} [options.data.group] id of the a group specified in the options
+ * @param {Integer} [options.data.position] integer to sort the items - default 9000
+ * @param {String} [options.data.type] if select, the selected item is displayed in main item (none/select)
+ * @param {Function} [options.data.callback] callback function
+ * @param {Boolean} [options.data.hidden] if true button gets hidden form the beginning on
+ * @param {Boolean} [options.data.hideTitle] hide title from beginning
+ * @param {Array} [options.data.items]
+ * @param {String} [options.data.items.title]
+ * @param {String} [options.data.items.icon] false will remove icon
+ * @param {Function} [options.data.items.callback]
+ * @param {Boolean} [options.data.items.divider] if true takes item as divider element
  */
 define('__component__$toolbar@husky',[],function() {
 
@@ -29670,435 +29970,58 @@ define('__component__$toolbar@husky',[],function() {
             url: null,
             data: [],
             instanceName: '',
-            hasSearch: false,
-            appearance: 'large',
+            itemsRequestKey: '_embedded',
             searchOptions: null,
-            dropdownComponent: null
-        },
-
-
-        /**
-         * triggered when component is completely initialized
-         * @event husky.toolbar[.INSTANCE_NAME].initialized
-         */
-            INITIALIZED = function() {
-            return getEventName.call(this, 'initialized');
-
-        },
-
-        /**
-         * triggered when item got clicked
-         * @event husky.toolbar[.INSTANCE_NAME].item.selected
-         * @param {Object} item
-         */
-            ITEM_SELECTED = function() {
-            return getEventName.call(this, 'item.selected');
-
-        },
-
-        /**
-         * used to enable an item
-         * @event husky.toolbar[.INSTANCE_NAME].item.enable
-         * @param {String} itemId Id of item to enable
-         */
-            ITEM_ENABLE = function() {
-            return getEventName.call(this, 'item.enable');
-
-        },
-
-        /**
-         * used to disable an item
-         * @event husky.toolbar[.INSTANCE_NAME].initialized
-         * @param {String} itemId Id of item to disable
-         */
-            ITEM_DISABLE = function() {
-            return getEventName.call(this, 'item.disable');
-
-        },
-
-
-        selectItem = function(event) {
-            event.preventDefault();
-
-            var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')],
-                $parent;
-
-            if (item.disabled) {
-                return;
-            }
-
-            // if toggle item do not trigger event
-            if (!item.items) {
-                $parent = this.sandbox.dom.find('button', this.sandbox.dom.closest(event.currentTarget, '.group'));
-                triggerSelectEvent.call(this, item, $parent);
-            }
-        },
-
-        getEventName = function(postFix) {
-            return 'husky.toolbar.' + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-        },
-
-        triggerSelectEvent = function(item, $parent) {
-            var parentId, icon;
-            parentId = this.sandbox.dom.data($parent, 'id');
-
-            if (this.items[parentId].type === "select") {
-                icon = this.sandbox.dom.find('span', $parent);
-                this.sandbox.dom.removeClass(icon);
-                this.sandbox.dom.addClass(icon, item.icon);
-            }
-
-            // if callback is set call it, else trigger event
-            if (item.callback) {
-                item.callback();
-            } else {
-                this.sandbox.emit(ITEM_SELECTED.call(this), item);
-            }
-        },
-
-        bindDOMEvents = function() {
-            this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'button:not(:disabled), li');
-            this.sandbox.dom.on(this.$el, 'click', toggleItem.bind(this), '.dropdown-toggle');
-        },
-
-        bindCustomEvents = function() {
-            this.sandbox.on(ITEM_ENABLE.call(this), enableItem.bind(this));
-            this.sandbox.on(ITEM_DISABLE.call(this), disableItem.bind(this));
-        },
-
-        /**
-         * created dropdown menu
-         * @param listItem
-         * @param parent
-         */
-            createDropdownMenu = function(listItem, parent) {
-            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
-                classString = '';
-            this.sandbox.dom.after(listItem, $list);
-            this.sandbox.util.foreach(parent.items, function(item) {
-                if (item.divider) {
-                    this.sandbox.dom.append($list, '<li class="divider"></li>');
-                    return;
+            hasSearch: false,
+            searchAlign: 'right',
+            groups: [
+                {
+                    id: 1,
+                    align: 'left'
                 }
-
-                item.parentId = parent.id;
-                // check id for uniqueness
-                checkItemId.call(this, item);
-                this.items[item.id] = item;
-
-                classString = '';
-                if (item.disabled) {
-                    classString = ' class="disabled"';
-                }
-
-                this.sandbox.dom.append($list, '<li data-id="' + item.id + '"' + classString + '><a href="#">' + item.title + '</a></li>');
-            }.bind(this));
-        },
-
-        /**
-         * function checks if id is set and unique among all items
-         * otherwise a new id is generated for the element
-         * @param item
-         */
-            checkItemId = function(item) {
-            // if item has no id, generate random id
-            if (!item.id || !!this.items[item.id]) {
-                do {
-                    item.id = this.sandbox.util._.uniqueId();
-                } while (!!this.items[item.id]);
-            }
-        },
-
-        /**
-         * gets called when toggle item is clicked
-         * opens dropdown submenu
-         * @param event
-         */
-            toggleItem = function(event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            var $list = this.sandbox.dom.parent(event.currentTarget),
-                visible;
-
-            if (this.sandbox.dom.hasClass($list, 'is-expanded')) {
-                visible = true;
-            }
-            hideDropdowns.call(this);
-
-            if (!visible) {
-                this.sandbox.dom.addClass($list, 'is-expanded');
-
-                // TODO: check if dropdown overlaps screen: set ul to .right-aligned
-
-                // on every click remove submenu
-                this.sandbox.dom.one('body', 'click', hideDropdowns.bind(this));
-            }
-        },
-
-        hideDropdowns = function() {
-            this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
-        },
-
-        enableItem = function(id) {
-            var $domItem,
-                item = this.items[id];
-            if (item.disabled) {
-                item.disabled = false;
-                $domItem = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el);
-
-                if (this.sandbox.dom.is($domItem, 'button')) {
-                    this.sandbox.dom.removeAttr($domItem, 'disabled');
-                } else {
-                    this.sandbox.dom.removeClass($domItem, 'disabled');
-                }
-            }
-        },
-
-        disableItem = function(id) {
-            var $domItem,
-                item = this.items[id];
-            if (!item.disabled) {
-                item.disabled = true;
-                $domItem = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el);
-
-                if (this.sandbox.dom.is($domItem, 'button')) {
-                    this.sandbox.dom.attr($domItem, 'disabled', 'disabled');
-                } else {
-                    this.sandbox.dom.addClass($domItem, 'disabled');
-                }
-            }
-        };
-
-    return {
-
-        view: true,
-
-        initialize: function() {
-
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.$el = this.sandbox.dom.$(this.options.el);
-
-            bindCustomEvents.call(this);
-
-            // load data and call render
-            if (!!this.options.url) {
-                this.sandbox.util.load(this.options.url)
-                    .then(this.render.bind(this))
-                    .fail(function(data) {
-                        this.sandbox.logger.log('data could not be loaded:', data);
-                    }.bind(this));
-            } else if (!!this.options.data) {
-                this.render((this.options.data));
-            } else {
-                this.sandbox.logger.log('no data provided for tabs!');
-            }
-
-            bindDOMEvents.call(this);
-
-        },
-
-        render: function(data) {
-
-            // TODO: add appearance class
-
-            var $container = this.sandbox.dom.createElement('<div class="toolbar-container" />'),
-                classArray, addTo, disabledString, button, $group, searchOptions;
-
-            this.sandbox.dom.append(this.options.el, $container);
-
-            // create items array
-            this.items = [];
-            // save item groups in array
-            this.itemGroup = [];
-
-
-            // create all elements
-            this.sandbox.util.foreach(data, function(item) {
-
-                checkItemId.call(this, item);
-                // save to items array
-                this.items[item.id] = item;
-                // create classes array
-                classArray = [];
-
-                // check if item is in a group
-                if (!!item.group) {
-                    // create group if not created yet
-                    if (!this.itemGroup[item.group]) {
-                        this.itemGroup[item.group] = this.sandbox.dom.createElement('<div id="' + item.group + '" class="btn-group" />');
-                        this.sandbox.dom.append($container, this.itemGroup[item.group]);
-                        this.sandbox.dom.addClass(this.itemGroup[item.group], this.options.appearance);
-                    }
-                    addTo = this.itemGroup[item.group];
-                } else {
-                    addTo = $container;
-                }
-
-
-                if (!!item['class']) {
-                    classArray.push(item['class']);
-                }
-
-                disabledString = '';
-                if (item.disabled) {
-                    disabledString = 'disabled';
-                }
-                // create button
-                $group = this.sandbox.dom.createElement('<div class="group ' + this.options.appearance + '" />');
-                this.sandbox.dom.append(addTo, $group);
-                button = this.sandbox.dom.createElement('<button data-id="' + item.id + '" class="' + classArray.join(' ') + '" title="' + item.title + '" ' + disabledString + '><span class="icon-' + item.icon + '"/></button>');
-                this.sandbox.dom.append($group, button);
-
-                // now create subitems
-                if (item.dropdownComponent) {
-                    this.sandbox.dom.addClass(button, 'dropdown-toggle');
-                    // define element
-                    item.dropdownComponent.options.el = $group;
-                    item.dropdownComponent.options.trigger = button;
-                    this.sandbox.start([
-                        item.dropdownComponent
-                    ]);
-                } else if (!!item.items) {
-                    this.sandbox.dom.addClass(button, 'dropdown-toggle');
-                    createDropdownMenu.call(this, button, item);
-                }
-
-            }.bind(this));
-
-            // add search
-            if (this.options.hasSearch) {
-                this.sandbox.dom.append($container, '<div id="' + this.options.instanceName + '-toolbar-search" class="toolbar-search" />');
-
-                searchOptions = {
-                    el: '#' + this.options.instanceName + '-toolbar-search',
-                    instanceName: this.options.instanceName,
-                    appearance: 'white small'
-                };
-                searchOptions = this.sandbox.util.extend(true, {}, searchOptions, this.options.searchOptions);
-                // start search component
-                this.sandbox.start([
-                    {
-                        name: 'search@husky',
-                        options: searchOptions
-                    }
-                ]);
-            }
-
-            // initialization finished
-            this.sandbox.emit(INITIALIZED.call(this));
-        }
-    };
-
-});
-
-/**
- * This file is part of Husky frontend development framework.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- * @module husky/components/edit-toolbar
- */
-
-/*
- *
- *  edit-toolbar
- *
- *  Options (defaults)
- *      - url: url to fetch data from
- *      - data: if no url is provided
- *      - instanceName - enables custom events (in case of multiple tabs on one page)
- *      - appearance -
- *  Provides Events
- *      - husky.edit-toolbar.<<instanceName>>.item.disable [id] - disable item with given id
- *      - husky.edit-toolbar.<<instanceName>>.item.loading [id]- shows loading icon
- *      - husky.edit-toolbar.<<instanceName>>.item.enable [id]- enable item with given id
- *
- *  Triggers Events
- *      - husky.edit-toolbar.<<instanceName>>.item.select - triggered when item was clicked
- *
- *  data structure:
- *      - title
- *      - id (optional - will be generated otherwise)
- *      - icon (optional)
- *      - disableIcon (optional): icon when item is disabled
- *      - disabled (optional): is item disabled or enabled
- *      - iconSize (optional: large/medium/small)
- *      - class (optional: highlight/highlight-gray)
- *      - group (optional: left/right)
- *      - position (optional) integer to sort the items - default 9000
- *      - type (optional: none/select) - if select, the selected item is displayed in mainitem
- *      - callback (optional) - callback function
- *      - hidden (optional) - if true button gets hidden form the beginning on
- *      - expandedWhenCollapse (optional: true/false): if true button gets expanded if whole toolbar collapses
- *      - hideTitle (optional: true/false) - hide title from beginning
- *      - items (optional - if dropdown):
- *          - title
- *          - icon (optional) false will remove icon
- *          - callback
- *          - divider = true; takes item as divider element
- *
- *
- */
-
-/**
- * @class EditToolbar
- * @constructor
- *
- * @param {Object} [options] Configuration object
- * @param {String} [options.url] url to fetch data from
- * @param {String} [options.data] if no url is provided
- * @param {String} [options.instanceName] enables custom events (in case of multiple tabs on one page)
- * @param {String} [options.itemsRequestKey] key with resutlt-array for requested dropdown items
- * @param {String} [options.appearance]
- */
-define('__component__$edit-toolbar@husky',[],function() {
-
-    
-
-    var defaults = {
-            url: null,
-            data: [],
-            instanceName: '',
-            appearance: null, // TODO: implement small version
-            itemsRequestKey: '_embedded'
+            ],
+            skin: 'default',
+            small: false,
+            showTitleAsTooltip: false
         },
 
         constants = {
             collapsedWidth: 50,
-            collapsedDropdownWidth: 70
+            dropdownToggleWidth: 5 //px
         },
 
         /** templates container */
             templates = {
             skeleton: [
-                '<div class="edit-toolbar-container">',
-                '   <nav class="edit-toolbar-nav">',
-                '       <ul class="edit-toolbar-left" />',
-                '       <ul class="edit-toolbar-right" />',
-                '   </nav>',
+                '<div class="husky-toolbar">',
                 '</div>'
             ].join('')
         },
 
 
         /**
-         * triggered when edit-toolbar is initialized and ready to use
+         * triggered when toolbar is initialized and ready to use
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]initialized
+         * @event husky.toolbar.[INSTANCE_NAME.]initialized
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
         /**
+         * raised when an item with no specified callback is clicked
+         *
+         * @event husky.toolbar.[INSTANCE_NAME].item.select
+         * @param {Object} item Clicked item
+         */
+        ITEM_SELECT = function() {
+            return createEventName.call(this, 'item.select');
+        },
+
+        /**
          * enable a button
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]item.enable
+         * @event husky.toolbar.[INSTANCE_NAME.]item.enable
          * @param {string} id The id of the button which should be enabled
          */
         ITEM_ENABLE = function() {
@@ -30108,7 +30031,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * disable a button
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]item.disable
+         * @event husky.toolbar.[INSTANCE_NAME.]item.disable
          * @param {string} id The id of the button which should be disabled
          */
         ITEM_DISABLE = function() {
@@ -30116,18 +30039,9 @@ define('__component__$edit-toolbar@husky',[],function() {
         },
 
         /**
-         * raised when a button is hidden or unhidden
-         *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]buttons.width-changed
-         */
-        BUTTONS_WIDTH_CHANGED = function() {
-            return createEventName.call(this, 'buttons.width-changed');
-        },
-
-        /**
          * event to set button into loading state
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]item.loading
+         * @event husky.toolbar.[INSTANCE_NAME.]item.loading
          * @param {string} id The id of the button
          */
         ITEM_LOADING = function() {
@@ -30137,7 +30051,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * event to change a buttons selected dropdown-item
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]item.change
+         * @event husky.toolbar.[INSTANCE_NAME.]item.change
          * @param {string} button The id of the button
          * @param {string} item the id or the index of the dropdown-item
          * @param {boolean} executeCallback if true callback of dropdown item gets executed
@@ -30149,7 +30063,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * event to hide a button
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]item.hide
+         * @event husky.toolbar.[INSTANCE_NAME.]item.hide
          * @param {string} button The id of the button
          */
          ITEM_HIDE = function() {
@@ -30159,7 +30073,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * event to show a button
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]item.show
+         * @event husky.toolbar.[INSTANCE_NAME.]item.show
          * @param {string} button The id of the button
          */
          ITEM_SHOW = function() {
@@ -30169,7 +30083,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * event to change a buttons default title and default icon
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]button.set
+         * @event husky.toolbar.[INSTANCE_NAME.]button.set
          * @param {string} button The id of the button
          * @param {object} object with a icon and title
          */
@@ -30180,7 +30094,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * event to set new dropdown-items for a button
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.]items.set
+         * @event husky.toolbar.[INSTANCE_NAME.]items.set
          * @param {string} button The id of the button
          * @param {array} items The items to set
          * @param {integer} itemId The id or the index of the item to set selected - optional
@@ -30190,41 +30104,21 @@ define('__component__$edit-toolbar@husky',[],function() {
         },
 
         /**
-         * event to collapse the edit-toolbar
+         * event to collapse the toolbar
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.].collapse
+         * @event husky.toolbar.[INSTANCE_NAME.].collapse
          */
         COLLAPSE = function() {
             return createEventName.call(this, 'collapse');
         },
 
         /**
-         * event to expand the edit-toolbar
+         * event to expand the toolbar
          *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.].expand
+         * @event husky.toolbar.[INSTANCE_NAME.].expand
          */
         EXPAND = function() {
             return createEventName.call(this, 'expand');
-        },
-
-        /**
-         * event to get to sum of the width of all buttons
-         *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.].get-buttons-width
-         * @param {Function} callback to pass the width to
-          */
-        GET_BUTTONS_WIDTH = function() {
-            return createEventName.call(this, 'get-buttons-width');
-        },
-
-        /**
-         * event to get to sum of the width of all buttons in collapsed state
-         *
-         * @event husky.edit-toolbar.[INSTANCE_NAME.].get-buttons-collapsed-width
-         * @param {Function} callback to pass the width to
-         */
-        GET_BUTTONS_COLLAPSED_WIDTH = function() {
-            return createEventName.call(this, 'get-buttons-collapsed-width');
         },
 
         /** events bound to dom */
@@ -30263,28 +30157,6 @@ define('__component__$edit-toolbar@husky',[],function() {
                 expandAll.call(this);
             }.bind(this));
 
-            this.sandbox.on(GET_BUTTONS_WIDTH.call(this), function(callback) {
-                var collapsed = this.collapsed;
-                if (collapsed === true) {
-                    expandAll.call(this);
-                }
-                callback(this.sandbox.dom.outerWidth(this.sandbox.dom.find('.edit-toolbar-left', this.$el)) + this.sandbox.dom.outerWidth(this.sandbox.dom.find('.edit-toolbar-right', this.$el)));
-                if (collapsed === true) {
-                    collapseAll.call(this);
-                }
-            }.bind(this));
-
-            this.sandbox.on(GET_BUTTONS_COLLAPSED_WIDTH.call(this), function(callback) {
-                var collapsed = this.collapsed;
-                if (collapsed === false) {
-                    collapseAll.call(this);
-                }
-                callback(this.sandbox.dom.outerWidth(this.sandbox.dom.find('.edit-toolbar-left', this.$el)) + this.sandbox.dom.outerWidth(this.sandbox.dom.find('.edit-toolbar-right', this.$el)));
-                if (collapsed === false) {
-                    expandAll.call(this);
-                }
-            }.bind(this));
-
             this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
                 this.items[button].initialized.then(function() {
                     var index = getItemIndexById.call(this, id, this.items[button]);
@@ -30318,7 +30190,12 @@ define('__component__$edit-toolbar@husky',[],function() {
             }.bind(this));
         },
 
-        /** set item enable or disable */
+        /**
+         * Sets an item enabled or disabled
+         * @param enabled {boolean} If true button gets enabled if false button gets disabled
+         * @param id {Number|String} id The id of the button
+         * @param highlight {boolean} if true a highlight effect is played
+         */
         toggleEnabled = function(enabled, id, highlight) {
             var item = this.items[id],
                 $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
@@ -30333,7 +30210,7 @@ define('__component__$edit-toolbar@husky',[],function() {
             if (item.loading) {
                 item.loading = false;
                 $itemLink = this.sandbox.dom.find('a', $item);
-                this.sandbox.dom.remove(this.sandbox.dom.find('.item-loader', $item));
+                this.sandbox.stop(this.sandbox.dom.find('.item-loader', $item));
                 this.sandbox.dom.show($itemLink);
             }
 
@@ -30364,7 +30241,6 @@ define('__component__$edit-toolbar@husky',[],function() {
          */
         hideItem = function($button) {
             this.sandbox.dom.addClass($button, 'hidden');
-            this.sandbox.emit(BUTTONS_WIDTH_CHANGED.call(this));
         },
 
         /**
@@ -30373,18 +30249,26 @@ define('__component__$edit-toolbar@husky',[],function() {
          */
          showItem = function($button) {
             this.sandbox.dom.removeClass($button, 'hidden');
-            this.sandbox.emit(BUTTONS_WIDTH_CHANGED.call(this));
          },
 
-        /** shows loader at some icon */
+        /**
+         * Sets a button into loading state
+         * @param id {Number|String} id The id of the button
+         */
         itemLoading = function(id) {
             var item = this.items[id],
                 $item = this.sandbox.dom.find('[data-id="' + id + '"]', this.$el),
                 $itemLink = this.sandbox.dom.find('a', $item),
-                $loader;
+                $loader, size;
 
             if (item.loading) {
                 return;
+            }
+
+            if (this.options.small !== true) {
+                size = '20px';
+            } else {
+                size = '14px';
             }
 
             item.loading = true;
@@ -30397,7 +30281,7 @@ define('__component__$edit-toolbar@husky',[],function() {
                 name: 'loader@husky',
                 options: {
                     el: $loader,
-                    size: '30px',
+                    size: size,
                     color: 'white'
                 }
             }]);
@@ -30477,6 +30361,8 @@ define('__component__$edit-toolbar@husky',[],function() {
 
             if (!item.disabled) {
                 triggerSelectEvent.call(this, item, $parent);
+            } else {
+                return false;
             }
         },
 
@@ -30487,7 +30373,8 @@ define('__component__$edit-toolbar@husky',[],function() {
          */
         triggerSelectEvent = function(item, $parent) {
 
-            var parentItem;
+            var parentItem,
+                original = item._original || item;
 
             // check if has parent and type of parent
             if (item.parentId) {
@@ -30499,7 +30386,7 @@ define('__component__$edit-toolbar@husky',[],function() {
                 //check if itemsOption is set and pass clicked item to the callback
                 if (!!parentItem.itemsOption) {
                     if (typeof parentItem.itemsOption.callback === 'function') {
-                        parentItem.itemsOption.callback(item._original);
+                        parentItem.itemsOption.callback(original);
                     }
                 }
             }
@@ -30508,7 +30395,7 @@ define('__component__$edit-toolbar@husky',[],function() {
             if (item.callback) {
                 item.callback();
             } else {
-                emitEvent.call(this, 'item.select', item);
+                this.sandbox.emit(ITEM_SELECT.call(this), item);
             }
         },
 
@@ -30576,8 +30463,9 @@ define('__component__$edit-toolbar@husky',[],function() {
          * @param parent
          */
         createDropdownMenu = function(listItem, parent) {
-            var $list = this.sandbox.dom.createElement('<ul class="edit-toolbar-dropdown-menu" />'),
-                classString = '';
+            var $list = this.sandbox.dom.createElement('<ul class="toolbar-dropdown-menu" />'),
+                $item;
+
             this.sandbox.dom.append(listItem, $list);
             this.sandbox.util.foreach(parent.items, function(item) {
 
@@ -30591,11 +30479,15 @@ define('__component__$edit-toolbar@husky',[],function() {
                 checkItemId.call(this, item);
                 this.items[item.id] = item;
 
-                if (item.disabled) {
-                    classString = ' class="disabled"';
+                $item = this.sandbox.dom.createElement(
+                    '<li data-id="' + item.id + '"><a href="#">' + item.title + '</a></li>'
+                );
+
+                if (item.disabled === true) {
+                    this.sandbox.dom.addClass($item, 'disabled');
                 }
 
-                this.sandbox.dom.append($list, '<li data-id="' + item.id + '"' + classString + '><a href="#">' + item.title + '</a></li>');
+                this.sandbox.dom.append($list, $item);
             }.bind(this));
         },
 
@@ -30613,8 +30505,8 @@ define('__component__$edit-toolbar@husky',[],function() {
                         maxwidth = this.sandbox.dom.width(listItem);
                     }
                 }
-
-                this.sandbox.dom.css(listItem, {'min-width': maxwidth + 'px'});
+                maxwidth = maxwidth + constants.dropdownToggleWidth;
+                this.sandbox.dom.css(listItem, {'min-width': Math.ceil(maxwidth) + 'px'});
                 //set button back to default
                 changeMainListItem.call(this, listItem, parent);
             }
@@ -30623,8 +30515,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * Handles requested items
          * @param requestedItems
-         * @param $button
-         * @param button
+         * @param buttonId
          */
         handleRequestedItems = function(requestedItems, buttonId) {
             var id, title, icon, callback, i, length;
@@ -30674,10 +30565,8 @@ define('__component__$edit-toolbar@husky',[],function() {
          */
         collapseAll = function() {
             for (var key in this.items) {
-                if (this.items[key].expandedWhenCollapse !== true) {
+                if (this.items.hasOwnProperty(key)) {
                     collapseButton.call(this, this.items[key]);
-                } else {
-                    expandButton.call(this, this.items[key], false);
                 }
             }
             this.collapsed = true;
@@ -30688,10 +30577,12 @@ define('__component__$edit-toolbar@husky',[],function() {
          */
         expandAll = function() {
             for (var key in this.items) {
-                if (this.items[key].expandedWhenCollapse === true && this.items[key].hideTitle === true) {
-                    expandButton.call(this, this.items[key], true);
-                } else {
-                    expandButton.call(this, this.items[key], false);
+                if (this.items.hasOwnProperty(key)) {
+                    if (this.items[key].hideTitle === true) {
+                        expandButton.call(this, this.items[key], true);
+                    } else {
+                        expandButton.call(this, this.items[key], false);
+                    }
                 }
             }
             this.collapsed = false;
@@ -30702,16 +30593,18 @@ define('__component__$edit-toolbar@husky',[],function() {
          * @param button {Object}
          */
         collapseButton = function(button) {
-            // collapsing is senseless for dropdown-items and only collapse if configured
-            if (button.expandedWhenCollapse === false && !!button.parentId === false) {
+            // collapsing is senseless for dropdown-items
+            if (!button.parentId) {
+
+                // remove set button width
+                this.sandbox.dom.css(button.$el, {'min-width': ''});
+
                 //hide title
                 this.sandbox.dom.hide(this.sandbox.dom.find('.title', button.$el));
 
                 //set button width
-                if(!!button.items === false) {
+                if (!button.items) {
                     this.sandbox.dom.css(button.$el, {'min-width': constants.collapsedWidth + 'px'});
-                } else {
-                    this.sandbox.dom.css(button.$el, {'min-width': constants.collapsedDropdownWidth + 'px'});
                 }
             }
         },
@@ -30720,10 +30613,10 @@ define('__component__$edit-toolbar@husky',[],function() {
         /**
          * Expands a given button
          * @param button {Object}
-         * @param hideTitle {Boolean} if true title get shidden
+         * @param hideTitle {Boolean} if true title get hidden
          */
         expandButton = function(button, hideTitle) {
-            if (!!button.parentId === false) {
+            if (!button.parentId) {
                 // show title
                 if (hideTitle === true) {
                     this.sandbox.dom.hide(this.sandbox.dom.find('.title', button.$el));
@@ -30731,8 +30624,7 @@ define('__component__$edit-toolbar@husky',[],function() {
                     this.sandbox.dom.show(this.sandbox.dom.find('.title', button.$el));
                 }
 
-                // remove set button width
-                this.sandbox.dom.css(button.$el, {'min-width': ''});
+                setButtonWidth.call(this, button.$el, button);
             }
         },
 
@@ -30779,7 +30671,7 @@ define('__component__$edit-toolbar@husky',[],function() {
         deleteDropdown = function(button) {
             if (!!button.items) {
                 // remove the related stuff
-                this.sandbox.dom.remove(this.sandbox.dom.find('.edit-toolbar-dropdown-menu', button.$el));
+                this.sandbox.dom.remove(this.sandbox.dom.find('.toolbar-dropdown-menu', button.$el));
                 this.sandbox.dom.removeClass(this.sandbox.dom.children(button.$el, 'a'), 'dropdown-toggle');
 
                 // delete JS related stuff
@@ -30790,25 +30682,78 @@ define('__component__$edit-toolbar@husky',[],function() {
             }
         },
 
-        /** emits event */
-        emitEvent = function(postFix, data) {
-            var eventName = createEventName.call(this, postFix);
-            if (!!data) {
-                this.sandbox.emit(eventName, data);
-            } else {
-                this.sandbox.emit(eventName);
+        /**
+         * Inserts a search into an item
+         * @param $item
+         */
+        insertSearch = function($item) {
+            var searchOptions;
+
+            this.sandbox.dom.removeClass($item);
+            this.sandbox.dom.addClass($item, 'toolbar-search');
+            this.sandbox.dom.append($item, '<div id="' + this.options.instanceName + '-toolbar-search"/>');
+
+            searchOptions = {
+                el: '#' + this.options.instanceName + '-toolbar-search',
+                instanceName: this.options.instanceName,
+                appearance: 'white small',
+                slide: true
+            };
+            searchOptions = this.sandbox.util.extend(true, {}, searchOptions, this.options.searchOptions);
+            // start search component
+            this.sandbox.start([
+                {
+                    name: 'search@husky',
+                    options: searchOptions
+                }
+            ]);
+        },
+
+        /**
+         * Add the skin-classes to the component-element
+         * @param $element {Object}
+         */
+        addSkinClass = function($element) {
+            if (this.options.skin !== 'default') {
+                this.sandbox.dom.addClass($element, this.options.skin);
             }
+        },
+
+        /**
+         * Pushes a search item to a passed data array and creates a group where the new search item gets inserted to
+         * @param data {Object} data Array of data to push the item to
+         * @returns {Object} the data array
+         */
+        pushSearch = function(data) {
+            // add own group for search item
+            var searchGroup = {
+                id: 'search',
+                align: this.options.searchAlign
+            };
+
+            // this statement ensures that the the automatically added search always floats on the right of the rest
+            if (this.options.searchAlign === 'left') {
+                this.options.groups.push(searchGroup);
+            } else {
+                this.options.groups.unshift(searchGroup);
+            }
+
+            // push search item
+            data.push({
+                id: 'search',
+                hasSearch: true,
+                group: 'search'
+            });
+
+            return data;
         },
 
         /** returns normalized event names */
         createEventName = function(postFix) {
-            return 'husky.edit-toolbar.' + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+            return 'husky.toolbar.' + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
     return {
-
-        view: true,
-
 
         /**
          * initialize component
@@ -30816,6 +30761,11 @@ define('__component__$edit-toolbar@husky',[],function() {
         initialize: function() {
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            this.collapsed = false;
+            this.itemGroups = {};
+            this.items = {};
+
 
             // load data and call render
             if (!!this.options.url) {
@@ -30830,8 +30780,6 @@ define('__component__$edit-toolbar@husky',[],function() {
                 this.sandbox.logger.log('no data provided for tabs!');
             }
 
-            this.collapsed = false;
-
             bindDOMEvents.call(this);
             bindCustomEvents.call(this);
 
@@ -30841,24 +30789,21 @@ define('__component__$edit-toolbar@husky',[],function() {
 
         /**
          * renders the toolbar
-         * @param {Object} data t
+         * @param {Object} data
          */
         render: function(data) {
 
-            var classArray, addTo, $left, $right,
+            var classArray, addTo,
                 $listItem, $listLink,
                 title;
 
-            // create navbar skeleton
-            this.sandbox.dom.append(this.options.el, templates.skeleton);
+            // if has search is set in options push a search item and it's own group
+            if (this.options.hasSearch === true) {
+                data = pushSearch.call(this, data);
+            }
 
-            $left = this.sandbox.dom.find('.edit-toolbar-left', this.options.el);
-            $right = this.sandbox.dom.find('.edit-toolbar-right', this.options.el);
-
-            // create items array
-            this.items = [];
-            // save item groups in array
-            this.itemGroup = [];
+            //render container and groups
+            this.renderSkeleton();
 
             data = sortData.call(this, data);
 
@@ -30875,7 +30820,7 @@ define('__component__$edit-toolbar@husky',[],function() {
                 this.items[item.id].initialized = dfd.promise();
 
                 // create class array
-                classArray = ['edit-toolbar-item'];
+                classArray = ['toolbar-item'];
                 if (!!item['class']) {
                     classArray.push(item['class']);
                 }
@@ -30883,57 +30828,66 @@ define('__component__$edit-toolbar@husky',[],function() {
                     classArray.push('disabled');
                 }
 
-                // set item defaults
-                if (typeof item.expandedWhenCollapse === 'undefined') {
-                    item.expandedWhenCollapse = false;
-                }
                 if (typeof item.hideTitle === 'undefined') {
                     item.hideTitle = false;
                 }
 
-                // if group is set to right, add to right list, otherwise always add to left list
-                if (!!item.group && item.group === 'right') {
-                    addTo = $right;
+                // if group is set to and exists add it to that group else take the first group
+                if (!!item.group && !!this.itemGroups[item.group]) {
+                    addTo = this.itemGroups[item.group];
                 } else {
-                    addTo = $left;
+                    addTo = this.itemGroups[Object.keys(this.itemGroups)[0]];
                 }
 
                 $listItem = this.sandbox.dom.createElement('<li class="' + classArray.join(' ') + '" data-id="' + item.id + '"/>');
-                $listLink = this.sandbox.dom.createElement('<a href="#" />');
-                this.sandbox.dom.append($listItem, $listLink);
 
-                // create icon span
-                this.sandbox.dom.append($listLink, '<span class="' + createIconSupportClass.call(this, item, !item.disabled) + '" />');
+                // if has-search is true render a search bar, else render the item normally
+                if (item.hasSearch === true) {
 
-                // create title span
-                title = item.title ? item.title : '';
-                if (item.hideTitle === true) {
-                    this.sandbox.dom.append($listLink, '<span style="display:none" class="title">' + title + '</span>');
+                    insertSearch.call(this, $listItem);
                 } else {
-                    this.sandbox.dom.append($listLink, '<span class="title">' + title + '</span>');
-                }
 
-                //hide the item if hidden true
-                if (item.hidden === true) {
-                    hideItem.call(this, $listItem);
-                }
+                    $listLink = this.sandbox.dom.createElement('<a href="#" />');
+                    this.sandbox.dom.append($listItem, $listLink);
 
-                if (!!item.itemsOption) {
-                    this.sandbox.util.load(item.itemsOption.url)
-                        .then(function(result) {
-                            handleRequestedItems.call(this, result[this.options.itemsRequestKey], item.id);
-                            dfd.resolve();
-                        }.bind(this))
-                        .fail(function(result) {
-                            this.sandbox.logger.log('dorpdown-items could not be loaded', result);
-                        }.bind(this));
-                } else {
-                    // now create subitems
-                    if (!!item.items) {
-                        this.sandbox.dom.addClass($listLink, 'dropdown-toggle');
-                        createDropdownMenu.call(this, $listItem, item);
+                    // create icon span
+                    this.sandbox.dom.append($listLink, '<span class="' + createIconSupportClass.call(this, item, !item.disabled) + '" />');
+
+                    // create title span
+                    title = item.title ? item.title : '';
+                    if (item.hideTitle === true || this.options.showTitleAsTooltip === true) {
+                        this.sandbox.dom.append($listLink, '<span style="display:none" class="title">' + title + '</span>');
+                    } else {
+                        this.sandbox.dom.append($listLink, '<span class="title">' + title + '</span>');
                     }
-                    dfd.resolve();
+
+                    //add tooltip to item
+                    if (this.options.showTitleAsTooltip === true) {
+                        this.sandbox.dom.attr($listItem, {'title': title});
+                    }
+
+                    //hide the item if hidden true
+                    if (item.hidden === true) {
+                        hideItem.call(this, $listItem);
+                    }
+
+                    if (!!item.itemsOption && !!item.itemsOption.url) {
+                        this.sandbox.util.load(item.itemsOption.url)
+                            .then(function(result) {
+                                handleRequestedItems.call(this, result[this.options.itemsRequestKey], item.id);
+                                dfd.resolve();
+                            }.bind(this))
+                            .fail(function(result) {
+                                this.sandbox.logger.log('dorpdown-items could not be loaded', result);
+                            }.bind(this));
+                    } else {
+                        // now create subitems
+                        if (!!item.items) {
+                            this.sandbox.dom.addClass($listLink, 'dropdown-toggle');
+                            createDropdownMenu.call(this, $listItem, item);
+                        }
+                        dfd.resolve();
+                    }
                 }
 
                 // create button
@@ -30946,6 +30900,46 @@ define('__component__$edit-toolbar@husky',[],function() {
                 this.items[item.id].$el = $listItem;
 
             }.bind(this));
+        },
+
+        /**
+         * Renders the main container and the groups
+         */
+        renderSkeleton: function() {
+            var i, length, $group, $skeleton;
+
+            $skeleton = this.sandbox.dom.createElement(templates.skeleton);
+
+            // add small class to skeleton
+            if (this.options.small === true) {
+                this.sandbox.dom.addClass($skeleton, 'small');
+            }
+
+            // add skin class
+            addSkinClass.call(this, $skeleton);
+
+            // render groups
+            for (i = -1, length = this.options.groups.length; ++i < length;) {
+                $group = this.sandbox.dom.createElement('<ul class="group"/>');
+
+                if (!!this.options.groups[i].align) {
+                    this.sandbox.dom.addClass($group, this.options.groups[i].align);
+                } else {
+                    this.sandbox.dom.addClass($group, 'left');
+                }
+
+                this.sandbox.dom.append($skeleton, $group);
+                this.itemGroups[this.options.groups[i].id] = $group;
+            }
+
+            // append skeleton to component element
+            this.sandbox.dom.append(this.$el, $skeleton);
+
+            //add last class
+            this.sandbox.dom.addClass(
+                this.sandbox.dom.last(this.sandbox.dom.find('.group.left', this.$el)),
+                'last'
+            );
         }
     };
 
@@ -32974,7 +32968,7 @@ define('__component__$select@husky',[], function() {
                     '       </div>',
                     '       <span class="dropdown-toggle inline-block"></span>',
                     '   </div>',
-                    '   <div class="grid-row dropdown-list hidden ' + constants.dropdownContainerClass + '">',
+                    '   <div class="grid-row dropdown-list dropdown-shadow hidden ' + constants.dropdownContainerClass + '">',
                     '       <ul class="' + constants.listClass + '"></ul>',
                     '   </div>',
                     '</div>'
@@ -33186,7 +33180,8 @@ define('__component__$column-navigation@husky',[], function() {
             publishedName: 'publishedState',
             titleName: 'title',
             typeName: 'type',
-            minVisibleRatio: 1/2
+            minVisibleRatio: 1 / 2,
+            noPageDescription: 'public.no-pages'
         },
 
         DISPLAYEDCOLUMNS = 2, // number of displayed columns with content
@@ -33242,7 +33237,6 @@ define('__component__$column-navigation@husky',[], function() {
     return {
 
         initialize: function() {
-
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.$element = this.sandbox.dom.$(this.options.el);
@@ -33251,11 +33245,13 @@ define('__component__$column-navigation@husky',[], function() {
             this.filledColumns = 0;
             this.columnLoadStarted = false;
             this.$loader = null;
+            this.$bigLoader = null;
 
             this.columns = [];
             this.selected = [];
 
             this.render();
+            this.startBigLoader();
             this.load(this.options.url, 0);
             this.bindDOMEvents();
             this.bindCustomEvents();
@@ -33277,8 +33273,8 @@ define('__component__$column-navigation@husky',[], function() {
             this.sandbox.dom.append($wrapper, this.$columnContainer);
 
             // options container - add and settings button
-            this.addId = this.options.instanceName+"-column-navigation-add";
-            this.settingsId = this.options.instanceName+"-column-navigation-settings";
+            this.addId = this.options.instanceName + "-column-navigation-add";
+            this.settingsId = this.options.instanceName + "-column-navigation-settings";
             this.$optionsContainer = this.sandbox.dom.$(this.template.optionsContainer.call(this, this.options.column.width));
             $add = this.sandbox.dom.$(this.template.options.add(this.addId));
             $settings = this.sandbox.dom.$(this.template.options.settings(this.settingsId));
@@ -33292,10 +33288,40 @@ define('__component__$column-navigation@husky',[], function() {
             this.setContainerMinWidth();
 
             //init dropdown for settings in options container
-            if(!!this.options.data) {
+            if (!!this.options.data) {
                 this.initSettingsDropdown(this.sandbox.dom.attr($settings, 'id'));
             }
 
+        },
+
+        /**
+         * Starts the big loader, before loading content during the initialization
+         */
+        startBigLoader: function() {
+            if (this.$bigLoader === null) {
+                this.$bigLoader = this.sandbox.dom.createElement('<div class="column-navigation-loader"/>');
+                this.sandbox.dom.hide(this.$bigLoader);
+                this.sandbox.dom.html(this.$columnContainer, this.$bigLoader);
+
+                this.sandbox.start([
+                    {
+                        name: 'loader@husky',
+                        options: {
+                            el: this.$bigLoader,
+                            size: '100px',
+                            color: '#e4e4e4'
+                        }
+                    }
+                ]);
+            }
+            this.sandbox.dom.show(this.$bigLoader);
+        },
+
+        /**
+         * Detatches the big loader from the column-navigation
+         */
+        removeBigLoader: function() {
+            this.sandbox.dom.hide(this.$find('.column-navigation-loader'));
         },
 
         /**
@@ -33303,7 +33329,7 @@ define('__component__$column-navigation@husky',[], function() {
          */
         setContainerHeight: function() {
             this.sandbox.dom.height(
-                this.$columnContainer, (this.sandbox.dom.height(window) - this.sandbox.dom.offset(this.$columnContainer).top) * this.options.wrapper.height/100
+                this.$columnContainer, (this.sandbox.dom.height(window) - this.sandbox.dom.offset(this.$columnContainer).top) * this.options.wrapper.height / 100
             );
         },
 
@@ -33321,7 +33347,7 @@ define('__component__$column-navigation@husky',[], function() {
                     options: {
                         el: '#' + containerId,
                         setParentDropDown: true,
-                        instanceName: this.options.instanceName+'.settings.dropdown',
+                        instanceName: this.options.instanceName + '.settings.dropdown',
                         alignment: 'left',
                         data: this.options.data
                     }
@@ -33336,15 +33362,18 @@ define('__component__$column-navigation@husky',[], function() {
          */
         load: function(url, columnNumber) {
             if (!!url) {
-
                 this.columnLoadStarted = true;
+
                 this.sandbox.util.load(url)
                     .then(function(response) {
+                        this.removeBigLoader();
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
+                        this.handleLastEmptyColumn();
                         this.alignWithColumnsWidth();
                         this.scrollIfNeeded(this.filledColumns + 1);
                         this.setOverflowClass();
+                        this.showOptionsAtLast();
                         this.sandbox.emit(LOADED);
                     }.bind(this))
                     .fail(function(error) {
@@ -33450,11 +33479,36 @@ define('__component__$column-navigation@husky',[], function() {
             var width, $itemText;
 
             $itemText = this.sandbox.dom.find('.item-text', $item);
-            width = this.options.column.width - this.sandbox.dom.position($itemText).left;
-            width = width - parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', '')) -1;
+            width = this.options.column.width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-left', $item));
+            width = width - parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', '')) - 2;
+            width = width - parseInt(this.sandbox.dom.css($item, 'padding-left').replace('px', ''));
             width = width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-right', $item));
 
             this.sandbox.dom.width($itemText, width);
+            this.cropItemsText($itemText);
+        },
+
+        /**
+         * Crops the item text of an item depending on its width
+         * @param $itemText {Object}
+         */
+        cropItemsText: function($itemText) {
+            var title = this.sandbox.dom.attr($itemText, 'title'),
+                croppedTitle,
+                maxLength = title.length,
+                overflow;
+
+            //set the item text to the original title
+            this.sandbox.dom.html($itemText, title);
+
+            overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
+
+            while (overflow === true) {
+                maxLength = maxLength - 1;
+                croppedTitle = this.sandbox.util.cropMiddle(title, maxLength);
+                this.sandbox.dom.html($itemText, croppedTitle);
+                overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
+            }
         },
 
         /**
@@ -33496,6 +33550,7 @@ define('__component__$column-navigation@husky',[], function() {
 
             if (this.$loader === null) {
                 this.$loader = this.sandbox.dom.createElement('<div class="husky-column-navigation-loader"/>');
+                this.sandbox.dom.hide(this.$loader);
 
                 this.sandbox.start([
                     {
@@ -33508,7 +33563,9 @@ define('__component__$column-navigation@husky',[], function() {
                     }
                 ]);
             }
+            this.sandbox.dom.detach(this.$loader);
             this.sandbox.dom.html($container, this.$loader);
+            this.sandbox.dom.show(this.$loader);
         },
 
         /**
@@ -33517,7 +33574,7 @@ define('__component__$column-navigation@husky',[], function() {
         removeLoadingIconForSelected: function() {
             if (!!this.$selectedElement) {
                 var $arrow = this.sandbox.dom.find('.arrow', this.$selectedElement);
-                this.sandbox.dom.detach(this.$loader);
+                this.sandbox.dom.hide(this.$loader);
                 this.sandbox.dom.prependClass($arrow, 'icon-chevron-right');
             }
         },
@@ -33543,7 +33600,7 @@ define('__component__$column-navigation@husky',[], function() {
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), 'li');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showOptions.bind(this), '.column');
-            this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#'+this.addId);
+            this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#' + this.addId);
             this.sandbox.dom.on(this.$el, 'click', this.editNode.bind(this), '.edit');
             this.sandbox.dom.on(this.$el, 'dblclick', this.editNode.bind(this), 'li');
 
@@ -33563,6 +33620,20 @@ define('__component__$column-navigation@husky',[], function() {
                 this.sandbox.dom.addClass($navigation, 'overflow');
             } else {
                 this.sandbox.dom.removeClass($navigation, 'overflow');
+            }
+        },
+
+        /**
+         * Inserts some markup into the last column if column is empty
+         */
+        handleLastEmptyColumn: function() {
+            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
+
+            this.sandbox.dom.remove(this.sandbox.dom.find('.no-page', this.$columnContainer));
+
+            // if last column is empty insert markup
+            if (this.sandbox.dom.find('li', $lastColumn).length === 0) {
+                this.sandbox.dom.append($lastColumn, this.template.noPage.call(this, this.sandbox.translate(this.options.noPageDescription)));
             }
         },
 
@@ -33615,6 +33686,16 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         /**
+         * Shows the options at the last available column
+         */
+        showOptionsAtLast: function() {
+            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
+            this.showOptions({
+               currentTarget: $lastColumn
+            });
+        },
+
+        /**
          * Shows the options below the last hovered column
          * @param {Object} event
          */
@@ -33656,7 +33737,7 @@ define('__component__$column-navigation@husky',[], function() {
          * @param $activeColumn {object} dom-object of active column
          */
         updateOptionsMargin: function($activeColumn) {
-            var marginLeft = this.sandbox.dom.position($activeColumn).left;
+            var marginLeft = this.sandbox.dom.position($activeColumn).left - 1;
             this.sandbox.dom.css(this.$optionsContainer, 'margin-left', marginLeft + 'px');
         },
 
@@ -33712,12 +33793,12 @@ define('__component__$column-navigation@husky',[], function() {
                         this.removeColumns(column + 1);
                     }
                 }
-
                 // insert add column when clicked element
                 this.insertAddColumn(selectedItem, column);
 
                 // scroll for add column
                 if (!selectedItem.hasSub) {
+                    this.handleLastEmptyColumn();
                     this.alignWithColumnsWidth();
                     this.scrollIfNeeded(column);
                     this.setOverflowClass();
@@ -33753,7 +33834,6 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         insertAddColumn: function(selectedItem, column) {
-
             if (!this.$addColumn && !selectedItem[this.options.hasSubName]) {
                 // append empty column to add subpages
                 this.$addColumn = this.sandbox.dom.createElement(this.template.column.call(this, column + 1, this.options.column.width));
@@ -33820,7 +33900,7 @@ define('__component__$column-navigation@husky',[], function() {
             wrapper: function() {
                 return '<div class="column-navigation-wrapper"></div>';
             },
-            
+
             columnContainer: function() {
                 return ['<div class="column-navigation"></div>'].join('');
             },
@@ -33829,12 +33909,19 @@ define('__component__$column-navigation@husky',[], function() {
                 return ['<div data-column="', columnNumber, '" class="column" id="column-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
             },
 
+            noPage: function(description) {
+                return ['<div class="no-page">',
+                            '<span class="icon-file"></span>',
+                            '<div class="text">', description ,'</div>',
+                        '</div>'].join('');
+            },
+
             item: function(width, data) {
 
-                var item = ['<li data-id="', data[this.options.idName], '" class="pointer"'];
+                var item = ['<li data-id="', data[this.options.idName], '" class="pointer">'];
 
                 // icons left
-                item.push('<span class="pull-left">');
+                item.push('<span class="icons-left">');
                 // link
                 if (!!data[this.options.linkedName]) {
                     if (data[this.options.linkedName] === 'internal') {
@@ -33857,14 +33944,13 @@ define('__component__$column-navigation@husky',[], function() {
                 if (!data[this.options.publishedName]) {
                     item.push('<span class="not-published pull-left m-right-5">&bull;</span>');
                 }
-
                 item.push('</span>');
 
                 // text center
                 if (!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') {
-                    item.push('<span title="'+ data[this.options.titleName] +'" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
+                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
                 } else {
-                    item.push('<span title="'+ data[this.options.titleName] +'" class="item-text pull-left">', data[this.options.titleName], '</span>');
+                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text pull-left">', data[this.options.titleName], '</span>');
                 }
 
                 // icons right (subpage, edit)
@@ -33872,7 +33958,6 @@ define('__component__$column-navigation@husky',[], function() {
                 item.push('<span class="icon-edit-pen edit hidden pull-left"></span>');
                 !!data[this.options.hasSubName] ? item.push('<span class="icon-chevron-right arrow inactive pull-left"></span>') : '';
                 item.push('</span></li>');
-
                 return item.join('');
             },
 
@@ -33882,13 +33967,13 @@ define('__component__$column-navigation@husky',[], function() {
 
             options: {
                 add: function(id) {
-                    return ['<div id="',id,'" class="align-center add pointer">',
+                    return ['<div id="', id, '" class="align-center add pointer">',
                         '<span class="icon-add"></span>',
                         '</div>'].join('');
                 },
 
                 settings: function(id) {
-                    return ['<div id="',id,'" class="align-center settings pointer drop-down-trigger">',
+                    return ['<div id="', id, '" class="align-center settings pointer drop-down-trigger">',
                         '<span class="icon-cogwheel inline-block"></span><span class="dropdown-toggle inline-block"></span>',
                         '</div>'].join('');
                 }
@@ -34025,123 +34110,6 @@ define('__component__$loader@husky',[],function() {
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
- * @module husky/components/page-functions
- */
-
-/**
- * @class PageFunctions
- * @constructor
- *
- * @param {Object} [options] Configuration object
- * @param {String} [options.url] url to load data
- * @param {Object} [options.data] data to view
- */
-define('__component__$page-functions@husky',[], function() {
-
-        
-
-        var defaults = {
-                url: '', // url to load data
-                data: {}
-            },
-
-            template = function() {
-                return [
-                    '<div class="page-function"> ',
-                    '   <a href="#" id="<%= id %>"><span class="icon-<%= icon %>"></span></a>',
-                    '</div>'
-                ].join('');
-            },
-
-            /**
-             * Namespace of events
-             * @type {string}
-             */
-            eventNamespace = 'husky.page-functions.',
-
-            /**
-             * @event husky.page-functions.rendered
-             * @description the component has been rendered
-             */
-            RENDERED = eventNamespace + 'rendered',
-
-            /**
-             * @event husky.page-functions.clicked
-             * @description link was clicked
-             */
-            CLICK = eventNamespace + 'clicked',
-
-            /**
-             * @event husky.page-functions.show
-             * @description displays page functions
-             */
-            SHOW = eventNamespace+'show',
-
-            /**
-             * @event husky.page-functions.hide
-             * @description hides page functions
-             */
-            HIDE = eventNamespace+'hide';
-
-        return {
-
-            view: true,
-
-            initialize: function() {
-                this.sandbox.logger.log('initialize', this);
-                this.sandbox.logger.log(arguments);
-
-                // extend default options
-                this.options = this.sandbox.util.extend({}, defaults, this.options);
-
-                this.render();
-            },
-
-            render: function() {
-                if (!this.options.data.id) {
-                    this.options.data.id = this.sandbox.util.uniqueId();
-                }
-
-                this.sandbox.dom.append(this.options.el, this.sandbox.template.parse(template(), this.options.data));
-
-                this.$pageFunction = this.sandbox.dom.find('.page-function', this.$el);
-
-                this.bindDomEvents();
-                this.bindCustomEvents();
-
-                this.sandbox.emit(RENDERED);
-            },
-
-            bindDomEvents: function() {
-                this.sandbox.dom.on(this.options.el, 'click', function(e) {
-                    e.preventDefault();
-                    this.sandbox.emit(CLICK);
-
-                    return false;
-                }.bind(this), '#' + this.options.data.id);
-            },
-
-            bindCustomEvents: function(){
-                this.sandbox.on(HIDE, function(){
-                    this.sandbox.dom.fadeOut(this.$el, 300);
-                }.bind(this));
-
-                this.sandbox.on(SHOW, function(){
-                    this.sandbox.dom.fadeIn(this.$el, 300);
-                }.bind(this));
-            }
-        };
-    }
-);
-
-/**
- * This file is part of Husky frontend development framework.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
  * @module husky/components/column-navigation
  */
 
@@ -34160,7 +34128,8 @@ define('__component__$ckeditor@husky',[], function() {
 
     var defaults = {
             initializedCallback: null,
-            instanceName: null
+            instanceName: null,
+            godMode: false
         },
 
         /**
@@ -34200,9 +34169,14 @@ define('__component__$ckeditor@husky',[], function() {
             delete config._ref;
             delete config.require;
             delete config.element;
+            delete config.godMode;
 
             // allow img tags to have any class (*) and any attribute [*]
             config.extraAllowedContent = 'img(*)[src,width,height,title,alt]; a(*)[href,target,type,rel,name,title]';
+            // enable all content
+            if (!!this.options.godMode) {
+                config.allowedContent = true;
+            }
 
             return config;
         };
@@ -34255,618 +34229,6 @@ return {
 
 })
 ;
-
-/**
- * This file is part of Husky frontend development framework.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- *
- * @module husky/components/auto-complete
- */
-
-/**
- * @class TopToolbar
- * @constructor
- *
- * @param {Object} [options] Configuration object
- *
- * @param {Array} [options.data] Array with data for the component
- * @param {Integer|String} [options.data*.id] unique identifier for the button
- * @param {String} [options.data*.icon] icon for the button
- * @param {String} [options.data*.disabledIcon] icon for the button if it's disabled
- * @param {String} [options.data*.container] container in which the button gets inserted (left, middle, right)
- * @param {String} [options.data*.align] which side the button is aligned in its container (left, right)
- * @param {String} [options.data*.title] title of the button
- * @param {String} [options.data*.customClass] class that gets added to the button
- * @param {Boolean} [options.data*.disabled] if true button starts in disabled-state
- * @param {Function} [options.data*.callback] callback which gets executed if the button is clicked on
- * @param {Boolean} [options.data*.highlight] if true the higlight-class gets added to the button
- * @param {Boolean} [options.data*.dynamicTitle] if true the button title always matches the selected dropdown-item
- * @param {Boolean} [options.data*.dynamicIcon] if true the button icon always matches the selected dropdown-icon
- * @param {Boolean} [options.data*.closeComponent] if true component closes if button is clicked on
- * @param {Array} [options.data*.items] array with dropdown-options for the button
- * @param {String} [options.data*.items*.title] title of the item
- * @param {Function} [options.data*.items*.callback] callback which gets executed if the item is clicked on
- * @param {selectedIcon} [options.data*.items*.title] icon to which the button-icon gets changed if the item is selected (data*.dynamicIcon must be true)
- * @param {Boolean} [options.data*.disabled] if true button starts in disabled-state
- *
- * @param {String} [options.iconClassPrefix] string that gets prepended to the button.icon string
- * @param {String} [options.iconExtraClass] class that gets added to the icon element
- * @param {String} [options.loadingClass] class that gets added to the loading container
- * @param {String} [options.disabledClass] class that gets added to the button if it's disabled
- * @param {String} [options.animationClass] class which handles a transition effect
- * @param {String} [options.highlightClass] class that gets added if button.highlight is true
- * @param {String} [options.buttonExtraClass] class that gets added to each button
- * @param {String} [options.iconTitleClass] class that gets added to the title container
- */
-
-define('__component__$top-toolbar@husky',[], function () {
-
-    
-
-    /**
-     * Default values for options
-     */
-    var defaults = {
-            data: [],
-            iconClassPrefix: 'icon-',
-            iconExtraClass: 'icon',
-            loadingClass: 'loading',
-            disabledClass: 'disabled',
-            animationClass: 'highlight-animation',
-            highlightClass: 'highlight',
-            buttonExtraClass: 'button',
-            iconTitleClass: 'title'
-        },
-
-        constants = {
-            containerClass: 'husky-top-toolbar',
-            leftContainerClass: 'top-toolbar-left',
-            middleContainerClass: 'top-toolbar-middle',
-            rightContainerClass: 'top-toolbar-right',
-            rightListClass: 'right-list',
-            leftListClass: 'left-list',
-            dropdownClass: 'top-toolbar-dropdown-menu',
-            dropdownExpandedClass: 'is-expanded',
-            dropdownTogglerClass: 'dropdown-toggle'
-        },
-
-        templates = {
-            skeleton: [
-                '<div class="',constants.containerClass,'">',
-                    '<div class="',constants.leftContainerClass,'">',
-                        '<ul class="',constants.leftListClass,'"></ul>',
-                        '<ul class="',constants.rightListClass,'"></ul>',
-                    '</div>',
-                    '<div class="',constants.middleContainerClass,'">',
-                        '<ul class="',constants.leftListClass,'"></ul>',
-                        '<ul class="',constants.rightListClass,'"></ul>',
-                    '</div>',
-                    '<div class="',constants.rightContainerClass,'">',
-                        '<ul class="',constants.leftListClass,'"></ul>',
-                        '<ul class="',constants.rightListClass,'"></ul>',
-                    '</div>',
-                '</div>'
-            ].join('')
-        },
-
-        eventNamespace = 'husky.top-toolbar.',
-
-        /**
-         * raised after initialization
-         * @event husky.top-toolbar.initialized
-         */
-        INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
-
-        /**
-         * Components listens on and changes matched button state
-         * @event husky.top-toolbar.<button-id>.disable
-         * @param buttonId {Integer|String} id of a button
-         */
-        DISABLE = function(buttonId) {
-            return createEventName.call(this, buttonId+'.disable');
-        },
-
-        /**
-         * Components listens on and changes matched button state
-         * @event husky.top-toolbar.<button-id>.enable
-         * @param buttonId {Integer|String} id of a button
-         */
-        ENABLE = function(buttonId) {
-            return createEventName.call(this, buttonId+'.enable');
-        },
-
-        /**
-         * Components listens on and changes matched button state
-         * @event husky.top-toolbar.<button-id>.enable
-         * @param buttonId {Integer|String} id of a button
-         */
-        LOADING = function(buttonId) {
-            return createEventName.call(this, buttonId+'.loading');
-        },
-
-        /** returns normalized event names */
-        createEventName = function(postFix) {
-            return eventNamespace + postFix;
-        };
-
-    return {
-
-        /**
-         * Initalize
-         */
-        initialize: function () {
-            this.sandbox.logger.log('initialize', this);
-
-            // extend default options
-            this.options = this.sandbox.util.extend({}, defaults, this.options);
-
-            this.setProperties();
-
-            this.render();
-
-            this.sandbox.emit(INITIALIZED.call(this));
-        },
-
-        /**
-         * Sets the default values for the object's properties
-         */
-        setProperties: function() {
-            this.containers = {
-                left: {
-                    $el: null,
-                    $leftList: null,
-                    $rightList: null
-                },
-                middle: {
-                    $el: null,
-                    $leftList: null,
-                    $rightList: null
-                },
-                right: {
-                    $el: null,
-                    $leftList: null,
-                    $rightList: null
-                }
-            };
-            this.buttons = null;
-
-            this.buttonStates = {
-                enabled: 'enabled',
-                disabled: 'disabled',
-                loading: 'loading'
-            };
-        },
-
-        /**
-         * Renders the component
-         */
-        render: function() {
-            this.renderSkeleton();
-            this.renderButtons();
-            this.appendButtons();
-        },
-
-        /**
-         * Renders the skeleton (main structure) of the component
-         */
-        renderSkeleton: function() {
-            this.sandbox.dom.html(this.$el, templates.skeleton);
-            this.initContainers();
-
-            // set the middle container width the remaining width of the container
-            // (container.width - left.width - right.width)
-            this.sandbox.dom.css(this.sandbox.dom.find('.' + constants.middleContainerClass, this.$el), {
-                width: (this.sandbox.dom.outerWidth(this.$el) - this.sandbox.dom.outerWidth(this.containers.left.$el) - this.sandbox.dom.outerWidth(this.containers.right.$el)) + 'px'
-            });
-        },
-
-        /**
-         * Binds the toolbar button-containers to object properties
-         */
-        initContainers: function() {
-            this.containers.left.$el = this.sandbox.dom.find('.'+constants.leftContainerClass, this.$el);
-            this.containers.left.$leftList = this.sandbox.dom.find('.'+constants.leftListClass, this.containers.left.$el);
-            this.containers.left.$rightList = this.sandbox.dom.find('.'+constants.rightListClass, this.containers.left.$el);
-
-            this.containers.middle.$el = this.sandbox.dom.find('.'+constants.middleContainerClass, this.$el);
-            this.containers.middle.$leftList = this.sandbox.dom.find('.'+constants.leftListClass, this.containers.middle.$el);
-            this.containers.middle.$rightList = this.sandbox.dom.find('.'+constants.rightListClass, this.containers.middle.$el);
-
-            this.containers.right.$el = this.sandbox.dom.find('.'+constants.rightContainerClass, this.$el);
-            this.containers.right.$leftList = this.sandbox.dom.find('.'+constants.leftListClass, this.containers.right.$el);
-            this.containers.right.$rightList = this.sandbox.dom.find('.'+constants.rightListClass, this.containers.right.$el);
-        },
-
-        /**
-         * Renders the buttons (creats the button-DOM-object, but not yet displays it)
-         */
-        renderButtons: function() {
-            this.initButtons();
-
-            var i = -1, length = this.buttons.length, button = null, ddClass = '', html;
-            for (; ++i < length;) {
-                button = this.sandbox.dom.createElement('<li data-id="'+ this.buttons[i].id +'"/>');
-
-                //if dropdown items exist add dropdown class
-                ddClass = (typeof this.buttons[i].items === 'undefined') ? '' : constants.dropdownTogglerClass;
-
-                this.sandbox.dom.addClass(button, this.buttons[i].customClass);
-                this.sandbox.dom.addClass(button, this.options.buttonExtraClass);
-
-                //set the highlight class
-                if (this.buttons[i].highlight === true) {
-                    this.sandbox.dom.addClass(button, this.options.highlightClass);
-                }
-
-                //construct the dom object
-                html = '<a class="'+ ddClass +'" href="#">';
-                if (typeof this.buttons[i].icon !== 'undefined') {
-                    html += '<span class="'+ this.options.iconClassPrefix + this.buttons[i].icon +' '+ this.options.iconExtraClass +'"></span>';
-                }
-                if (typeof this.buttons[i].title !== 'undefined') {
-                    html += '<span class="'+ this.options.iconTitleClass +'">'+ this.buttons[i].title +'</span>';
-                }
-                html += '</a>';
-                this.sandbox.dom.html(button, html);
-
-                //render dropdown-menu
-                this.sandbox.dom.append(button, this.renderDropdown(this.buttons[i]));
-
-                //set the button properties and bind the events
-                this.buttons[i].$el = button;
-                this.buttons[i].executeCallback = true;
-                this.buttons[i].loading = false;
-                this.buttons[i].previousItem = null;
-                this.buttons[i].currentItem = null;
-
-                //disable button if configured
-                if (typeof this.buttons[i].disabled !== 'undefined') {
-                    if (this.buttons[i].disabled === true) {
-                        this.disableButton(this.buttons[i]);
-                    }
-                }
-
-                this.bindButtonEvents(this.buttons[i]);
-            }
-        },
-
-        /**
-         * Binds events concerning buttons
-         * @param button {object} the button to bind events on
-         */
-        bindButtonEvents: function(button) {
-
-            //enable dropdown toggling
-            if(typeof button.items !== 'undefined') {
-                this.sandbox.dom.on(button.$el, 'click', function(event) {
-                    this.sandbox.dom.stopPropagation(event);
-                    this.sandbox.dom.preventDefault(event);
-                    if (button.executeCallback === true) {
-                        this.toggleDropdown(button);
-                    }
-                }.bind(this));
-            }
-
-            //enable callback execution
-            if (typeof button.callback !== 'undefined') {
-                this.sandbox.dom.on(button.$el, 'click', function(event) {
-                    this.sandbox.dom.preventDefault(event);
-                    if (button.executeCallback === true) {
-                        this.executeCallback(button.callback);
-                    }
-                    if (typeof button.closeComponent !== 'undefined') {
-                        if (button.closeComponent === true) {
-                            this.closeComponent();
-                        }
-                    }
-                }.bind(this));
-            }
-
-            //listen if the button state needs to be changed
-            this.sandbox.on(DISABLE.call(this, button.id), function(highlight, setBack) {
-                this.changeButtonState(button, this.buttonStates.disabled, highlight, setBack);
-            }.bind(this));
-            this.sandbox.on(ENABLE.call(this, button.id), function(highlight, setBack) {
-                this.changeButtonState(button, this.buttonStates.enabled, highlight, setBack);
-            }.bind(this));
-            this.sandbox.on(LOADING.call(this, button.id), function(highlight, setBack) {
-                this.changeButtonState(button, this.buttonStates.loading, highlight, setBack);
-            }.bind(this));
-
-            // remove class after effect has finished
-            this.sandbox.dom.on(button.$el, 'animationend webkitAnimationEnd oanimationend MSAnimationEnd', function() {
-                this.sandbox.dom.removeClass(button.$el, this.options.animationClass);
-            }.bind(this));
-        },
-
-        /**
-         * Closes the component
-         */
-        closeComponent: function() {
-            this.sandbox.dom.remove(this.$el);
-        },
-
-        /**
-         * Changes the state of the button
-         * @param button {object} the button which state needs to be changed
-         * @param state {String} (enabled, disabled, loading) state to change to
-         * @param highlight {Boolean} if true the button will play an animation
-         * @param setBack {Boolean} if true the last state will be reseted
-         */
-        changeButtonState: function(button, state, highlight, setBack) {
-            if (highlight === true) {
-                this.sandbox.dom.addClass(button.$el, this.options.animationClass);
-            }
-            if (setBack === true) {
-                this.setBackButton(button);
-            }
-
-            if (state === this.buttonStates.enabled) {
-                this.resetButtonLoading(button);
-                this.enableButton(button, setBack);
-            } else if (state === this.buttonStates.disabled) {
-                this.resetButtonLoading(button);
-                this.disableButton(button);
-            } else if (state === this.buttonStates.loading) {
-                this.setButtonLoading(button);
-            }
-        },
-
-        /**
-         * Resets the loading state
-         * @param button {object} button context
-         */
-        resetButtonLoading: function(button) {
-            this.sandbox.dom.remove(this.sandbox.dom.find('.' + this.options.loadingClass, button.$el));
-            this.sandbox.dom.show(this.sandbox.dom.children(button.$el, 'a'));
-            button.loading = false;
-        },
-
-        /**
-         * Disables the button
-         * @param button {object} button context
-         */
-        disableButton: function(button) {
-            if (typeof button.disabledIcon !== 'undefined') {
-                this.removeIcon(button);
-                this.setIcon(button, button.disabledIcon);
-            }
-            this.sandbox.dom.addClass(button.$el, this.options.disabledClass);
-            button.executeCallback = false;
-        },
-
-        /**
-         * Enables the button
-         * @param button {object} button context
-         */
-        enableButton: function(button, setBack) {
-            this.sandbox.dom.removeClass(button.$el, this.options.disabledClass);
-            if (button.currentItem === null) {
-                this.removeIcon(button);
-                this.setIcon(button, button.icon);
-                this.setTitle(button, button.title);
-            } else if(setBack !== true) {
-                this.removeIcon(button);
-                this.setIcon(button, button.items[button.currentItem].selectedIcon);
-                this.setTitle(button, button.items[button.currentItem].title);
-            }
-            button.executeCallback = true;
-        },
-
-        /**
-         * Sets the loading state for a button
-         * @param button {object} button context
-         */
-        setButtonLoading: function(button) {
-            if (button.loading === false) {
-                var $loadingCont = this.sandbox.dom.createElement('<span class="'+ this.options.loadingClass +'"></span>');
-                this.sandbox.dom.hide(this.sandbox.dom.children(button.$el, 'a'));
-                this.sandbox.dom.append(button.$el, $loadingCont);
-                button.executeCallback = false;
-                button.loading = true;
-
-                this.sandbox.start([{
-                    name: 'loader@husky',
-                    options: {
-                        el: $loadingCont,
-                        size: '20px',
-                        color: 'white'
-                    }
-                }]);
-            }
-        },
-
-        /**
-         * toggles the dropdown-menu of a button
-         * @param button {object} button context
-         */
-        toggleDropdown: function(button) {
-            if (this.sandbox.dom.hasClass(button.$el, constants.dropdownExpandedClass) === true) {
-                this.closeDropdown(button);
-            } else {
-                this.openDropdown(button);
-                this.sandbox.dom.one(this.sandbox.dom.$window, 'click', this.closeDropdown.bind(this, button));
-            }
-        },
-
-        /**
-         * opens the dropdown-menu of a button
-         * @param button {object} button context
-         */
-        openDropdown: function(button) {
-            this.sandbox.dom.addClass(button.$el, constants.dropdownExpandedClass);
-        },
-
-        /**
-         * closes the dropdown-menu of a button
-         * @param button {object} button context
-         */
-        closeDropdown: function(button) {
-            this.sandbox.dom.removeClass(button.$el, constants.dropdownExpandedClass);
-        },
-
-        /**
-         * renders a dropdown-menu for a button
-         * @param button {object} button to render the dropdown for
-         * @returns {Object|String} DOM-object or empty string
-         */
-        renderDropdown: function(button) {
-            if (typeof button.items !== 'undefined') {
-                if (!!button.items.length) {
-                    var dropdown = this.sandbox.dom.createElement('<ul class="'+ constants.dropdownClass +'"/>'),
-                        i = -1, length = button.items.length, item = null;
-                    for (;++i < length;) {
-                        item = this.sandbox.dom.createElement('<li/>');
-                        this.sandbox.dom.html(item, ['<a href="#">',button.items[i].title,'</a>'].join(''));
-                        this.bindDropdownItemEvents(item, button, i);
-                        this.sandbox.dom.append(dropdown, item);
-                    }
-                    return dropdown;
-                }
-            }
-            return '';
-        },
-
-        /**
-         * Binds events concerning the dropdown-menu items
-         * @param $el {object} DOM-object to bind events on
-         * @param button {object} button context
-         * @param itemIndex {Integer} index of the concerning item in button.items
-         */
-        bindDropdownItemEvents: function($el, button, itemIndex) {
-            if(typeof button.items[itemIndex].callback !== 'undefined') {
-                this.sandbox.dom.on($el, 'click', function(event) {
-                    this.sandbox.dom.stopPropagation(event);
-                    this.sandbox.dom.preventDefault(event);
-                    button.previousItem = button.currentItem;
-                    button.currentItem = itemIndex;
-                    this.refreshTitle(button, itemIndex);
-                    this.refreshIcon(button, itemIndex);
-                    this.executeCallback(button.items[itemIndex].callback);
-                    this.closeDropdown(button);
-                }.bind(this));
-            }
-        },
-
-        /**
-         * Sets the title and the icon of a button one step back
-         */
-        setBackButton: function(button) {
-            if (button.previousItem !== null) {
-                this.refreshIcon(button, button.previousItem, true);
-                this.refreshTitle(button, button.previousItem, true);
-            } else {
-                this.removeIcon(button);
-                this.setIcon(button, button.icon);
-                this.setTitle(button, button.title);
-                button.currentItem = null;
-            }
-        },
-
-        /**
-         * Changes the button title to a title of a dropdown-item
-         * @param button {object} button context
-         * @param itemIndex {Integer} index of the concerning item in button.items
-         */
-        refreshTitle: function(button, itemIndex, force) {
-            if (button.dynamicTitle === true || force === true) {
-                this.setTitle(button, button.items[itemIndex].title);
-            }
-        },
-
-        setTitle: function(button, title) {
-            if (!!this.sandbox.dom.find('.'+this.options.iconTitleClass, button.$el).length) {
-                this.sandbox.dom.html(this.sandbox.dom.find('.'+this.options.iconTitleClass, button.$el), title);
-            }
-        },
-
-        /**
-         * Changes the button icon to an icon of a dropdown-item
-         * @param button {object} button context
-         * @param itemIndex {Integer} index of the concerning item in button.items
-         */
-        refreshIcon: function(button, itemIndex, force) {
-            if (button.dynamicIcon === true || force === true) {
-                this.removeIcon(button);
-                this.setIcon(button, button.items[itemIndex].selectedIcon);
-            }
-        },
-
-        /**
-         * Removes the icon class of a button
-         * @param button {object} button context
-         */
-        removeIcon: function(button) {
-            if (typeof button.icon !== 'undefined') {
-                var iconContainer = this.sandbox.dom.find('.' + this.options.iconExtraClass, button.$el),
-                    iconClass = this.sandbox.dom.attr(iconContainer, 'class').match(this.options.iconClassPrefix+'[\\w|-]+')[0];
-                this.sandbox.dom.removeClass(iconContainer, iconClass);
-                return iconClass;
-            }
-        },
-
-        /**
-         * Sets an icon class on a button
-         * @param button {object} button context
-         * @param icon {String} icon-class suffix
-         */
-        setIcon: function(button, icon) {
-            this.sandbox.dom.prependClass( this.sandbox.dom.find('.' + this.options.iconExtraClass, button.$el), this.options.iconClassPrefix + icon);
-        },
-
-        /**
-         * Initializes the buttons
-         */
-        initButtons: function() {
-            this.buttons = this.options.data;
-        },
-
-        /**
-         * Appends the buttons to their specified containers
-         */
-        appendButtons: function() {
-            var i = -1, length = this.buttons.length, container = null;
-            for (; ++i < length;) {
-                switch (this.buttons[i].container) {
-                    case 'left':
-                        container = this.containers.left;
-                        break;
-                    case 'middle':
-                        container = this.containers.middle;
-                        break;
-                    case 'right':
-                        container = this.containers.right;
-                        break;
-                    default:
-                        this.sandbox.logger.log('ERROR: invalid container on button', this.buttons[i]);
-                }
-                if (this.buttons[i].align === 'left') {
-                    this.sandbox.dom.append(container.$leftList, this.buttons[i].$el);
-                } else {
-                    this.sandbox.dom.append(container.$rightList, this.buttons[i].$el);
-                }
-            }
-        },
-
-        /**
-         * Executes a callback
-         * @param callback {Function} callback to execute
-         */
-        executeCallback: function(callback) {
-            if(typeof callback === 'function') {
-                callback();
-            } else {
-                this.sandbox.logger.log('ERROR: Callback is not a function');
-            }
-        }
-    };
-});
 
 /**
  * This file is part of Husky frontend development framework.
@@ -35800,6 +35162,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {Boolean} [options.backdropColor] Color of the backdrop
  * @params {Boolean} [options.backdropAlpha] Alpha-value of the backdrop
  * @params {Boolean} [options.okInactive] If true ok button is deactivated
+ * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '' or 'wide'
  */
 define('__component__$overlay@husky',[], function() {
 
@@ -35822,7 +35185,8 @@ define('__component__$overlay@husky',[], function() {
             backdrop: true,
             backdropColor: '#000000',
             backdropAlpha: 0.3,
-            okInactive: false
+            okInactive: false,
+            skin: ''
         },
 
         constants = {
@@ -35837,7 +35201,7 @@ define('__component__$overlay@husky',[], function() {
         /** templates for component */
             templates = {
             overlaySkeleton: [
-                '<div class="husky-overlay-container smart-content-overlay">',
+                '<div class="husky-overlay-container<%= skin %> smart-content-overlay">',
                 '<div class="overlay-header">',
                 '<span class="title"><%= title %></span>',
                 '<a class="icon-<%= closeIcon %> close-button" href="#"></a>',
@@ -36084,7 +35448,8 @@ define('__component__$overlay@husky',[], function() {
                 _.template(templates.overlaySkeleton)({
                     title: this.options.title,
                     okIcon: this.options.okIcon,
-                    closeIcon: this.options.closeIcon
+                    closeIcon: this.options.closeIcon,
+                    skin: !!this.options.skin ? ' ' + this.options.skin : ''
                 }));
             this.overlay.$close = this.sandbox.dom.find(constants.closeSelector, this.overlay.$el);
             this.overlay.$ok = this.sandbox.dom.find(constants.okSelector, this.overlay.$el);
@@ -36891,7 +36256,7 @@ define('__component__$matcher@husky',[], function() {
          */
         getDropdownValue: function(column, callback) {
             this.sandbox.emit(
-                'husky.select.' + this.options.instanceName + column.id + '.getChecked',
+                'husky.select.' + this.options.instanceName + column.id + '.get-checked',
                 callback
             );
         },
@@ -37812,6 +37177,70 @@ define('husky_extensions/collection',[],function() {
                     return !!translation ? translation : key;
                 };
 
+                app.sandbox.date = {
+                    /**
+                     * returns formatted date string
+                     * @param {string|Date} date
+                     * @returns {string}
+                     */
+                    format: function(date) {
+                        var returnDate, returnTime;
+                        if(typeof date === 'string'){
+                            date = this.parse(date);
+                        }
+
+                        returnDate = Globalize.format(date, Globalize.culture().calendar.patterns.d);
+                        returnTime = Globalize.format(date, Globalize.culture().calendar.patterns.t);
+
+                        return ( (!!returnDate) ? returnDate : '' ) +
+                               ( (!!returnDate && !!returnTime) ? ' ': '' ) +
+                               ( (!!returnTime) ? returnTime : '' );
+                    },
+
+                    /**
+                     * parse ISO8601 string : string -> Date
+                     * Parse an ISO-8601 date, including possible timezone,
+                     * into a Javascript Date object.
+                     * (inspired by: http://stackoverflow.com/questions/439630/how-do-you-create-a-javascript-date-object-with-a-set-timezone-without-using-a-s)
+                     *
+                     * Test strings: parseISO8601String(x).toISOString()
+                     * "2013-01-31T12:34"              -> "2013-01-31T12:34:00.000Z"
+                     * "2013-01-31T12:34:56"           -> "2013-01-31T12:34:56.000Z"
+                     * "2013-01-31T12:34:56.78"        -> "2013-01-31T12:34:56.780Z"
+                     * "2013-01-31T12:34:56.78+0100"   -> "2013-01-31T11:34:56.780Z"
+                     * "2013-01-31T12:34:56.78+0530"   -> "2013-01-31T07:04:56.780Z"
+                     * "2013-01-31T12:34:56.78-0330"   -> "2013-01-31T16:04:56.780Z"
+                     * "2013-01-31T12:34:56-0330"      -> "2013-01-31T16:04:56.000Z"
+                     * "2013-01-31T12:34:56Z"          -> "2013-01-31T12:34:56.000Z"
+                     *
+                     * @param {string} dateString
+                     * @returns {Date}
+                     */
+                    parse: function(dateString) {
+                        var timebitsRegex = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})(?::([0-9]*)(\.[0-9]*)?)?(?:([+-])([0-9]{2})([0-9]{2}))?/,
+                            timebits = timebitsRegex.exec(dateString),
+                            resultDate, utcdate, offsetMinutes;
+
+                        if (timebits) {
+                            utcdate = Date.UTC(parseInt(timebits[1]),
+                                parseInt(timebits[2]) - 1, // months are zero-offset (!)
+                                parseInt(timebits[3]),
+                                parseInt(timebits[4]), parseInt(timebits[5]), // hh:mm
+                                (timebits[6] && parseInt(timebits[6]) || 0),  // optional seconds
+                                (timebits[7] && parseFloat(timebits[7]) * 1000) || 0); // optional fraction
+                            // utcdate is milliseconds since the epoch
+                            if (timebits[9] && timebits[10]) {
+                                offsetMinutes = parseInt(timebits[9]) * 60 + parseInt(timebits[10]);
+                                utcdate += (timebits[8] === '+' ? -1 : +1) * offsetMinutes * 60000;
+                            }
+                            resultDate = new Date(utcdate);
+                        } else {
+                            resultDate = null;
+                        }
+                        return resultDate;
+                    }
+                };
+
                 /**
                  * function calls this.sandbox.translate for an array of keys and returns an array of translations
                  * @param array
@@ -38159,8 +37588,12 @@ define('husky_extensions/collection',[],function() {
                 return $(selector).height(value);
             };
 
-            app.core.dom.outerHeight = function(selector) {
-                return $(selector).outerHeight();
+            app.core.dom.outerHeight = function(selector, includeMargin) {
+                if (typeof includeMargin === 'undefined') {
+                    return $(selector).outerHeight();
+                } else {
+                    return $(selector).outerHeight(includeMargin);
+                }
             };
 
             app.core.dom.offset = function(selector, attributes) {
@@ -38414,12 +37847,12 @@ define('husky_extensions/collection',[],function() {
                 $(selector).unbind(eventType);
             };
 
-            app.core.dom.focus = function(selector){
-              $(selector).focus();
+            app.core.dom.focus = function(selector) {
+                $(selector).focus();
             };
 
-            app.core.dom.animate = function(selector, properties, options){
-               $(selector).animate(properties, options);
+            app.core.dom.animate = function(selector, properties, options) {
+                $(selector).animate(properties, options);
             };
 
             app.core.util.ajax = $.ajax;
@@ -38762,6 +38195,23 @@ define('husky_extensions/util',[],function() {
 
                 return deferred.promise();
             };
+
+            app.core.util.cropMiddle = function(text, maxLength, delimiter) {
+                var substrLength;
+
+                // return text if it doesn't need to be cropped
+                if (text.length <= maxLength) {
+                    return text;
+                }
+
+                // default delimiter
+                if (!delimiter) {
+                    delimiter = '...';
+                }
+
+                substrLength = Math.floor((maxLength - delimiter.length)/2);
+                return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
+            },
 
             app.core.util.contains = function(list, value) {
                 return _.contains(list, value);
