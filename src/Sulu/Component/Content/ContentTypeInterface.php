@@ -101,4 +101,10 @@ interface ContentTypeInterface
      * @return string
      */
     public function getTemplate();
+
+    /**
+     * returns default parameters
+     * @return array
+     */
+    public function getDefaultParams();
 }
