@@ -30,6 +30,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
@@ -114,6 +115,11 @@ class MediaController extends RestController implements ClassResourceInterface
     const TB = 1099511627776;
 
     /**
+     * @var string
+     */
+    protected $entityNameCollection = 'SuluMediaBundle:Collection';
+
+    /**
      * returns all fields that can be used by list
      * @Get("media/fields")
      * @return mixed
@@ -180,8 +186,8 @@ class MediaController extends RestController implements ClassResourceInterface
             $collectionData = $this->getRequest()->get('collection');
             if ($collectionData != null && isset($collectionData['id']) && $collectionData['id'] != 'null' && $collectionData['id'] != '') {
                 $collection = $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->findCollectionById($collectionData['id']);
+                    ->getRepository($this->entityNameCollection)
+                    ->find($collectionData['id']);
                 if (!$collection) {
                     throw new EntityNotFoundException('SuluMediaBundle:Collection', $collectionData['id']);
                 }
@@ -203,10 +209,14 @@ class MediaController extends RestController implements ClassResourceInterface
 
             // set fileVersions
             $versionCounter = 0;
-            if (!empty($_FILES['fileVersion'])) {
-                foreach ($this->getUploadedFiles('fileVersion') as $fileVersionData) {
-                    $this->addFileVersions($file, $fileVersionData, $versionCounter);
+
+            $uploadFiles = $this->getUploadedFiles('fileVersion');
+            if (count($uploadFiles)) {
+                foreach ($uploadFiles as $uploadFile) {
+                    $this->addFileVersions($file, $uploadFile, $versionCounter);
                 }
+            } else {
+                throw new RestException('Uploaded file not found', self::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
             }
 
             $file->setVersion($versionCounter);
@@ -290,8 +300,6 @@ class MediaController extends RestController implements ClassResourceInterface
                 $media->setChanged(new DateTime());
                 $user = $this->getUser();
                 $media->setChanger($user);
-
-                // TODO set files?
 
                 $em->flush();
                 $view = $this->view($media, 200);
@@ -413,28 +421,17 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     private function getUploadedFiles($name)
     {
-        $files = array();
-
-        if (!is_array($_FILES[$name]['tmp_name'])) {
-            // Is single file
-            array_push($files, $_FILES[$name]);
-        } else {
-            // are multiple files
-            $fileCount = count($_FILES[$name]['tmp_name']);
-
-            for ($i = 1; $i <= $fileCount; $i++) {
-                $file = array(
-                    'name' => $_FILES[$name]['name'][$i],
-                    'type' => $_FILES[$name]['type'][$i],
-                    'tmp_name' => $_FILES[$name]['tmp_name'][$i],
-                    'error' => $_FILES[$name]['error'][$i],
-                    'size' => $_FILES[$name]['size'][$i],
-                );
-                array_push($files, $file);
-            }
+        if (!$this->getRequest()->files->get($name)) {
+            return array();
         }
 
-        return $files;
+        if (is_array($this->getRequest()->files->get($name))) {
+            return $this->getRequest()->files->get($name);
+        }
+
+        return array(
+            $this->getRequest()->files->get($name)
+        );
     }
 
     /**
@@ -443,10 +440,15 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     private function getMaxFileSize()
     {
-        $configMaxFileSize = '16MB'; // TODO get from config
-        $maxFileSizeParts = preg_split('/\D/', $configMaxFileSize);
+        $configMaxFileSize = $this->container->getParameter('sulu_media.media.max_file_size');
+        $value = intval($configMaxFileSize);
+        $maxFileSizeParts = preg_split('/\d+/', $configMaxFileSize);
         $digitalUnit = isset($maxFileSizeParts[1]) ? $maxFileSizeParts[1] : 'B';
-        $maxFileSize = intval($maxFileSizeParts[0]) * (defined('self::' . $digitalUnit)) ? constant('self::' . $digitalUnit) : self::B;
+
+        $unitInBytes = (defined('self::' . $digitalUnit)) ? constant('self::' . $digitalUnit) : self::B;
+
+        $maxFileSize = intval($value) * $unitInBytes;
+
 
         return intval($maxFileSize);
     }
@@ -457,18 +459,18 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     private function getBlockedFileTypes()
     {
-        $blockedFileTypes = array(); // TODO get from config
+        $blockedFileTypes = $this->container->getParameter('sulu_media.media.blocked_file_types');
         return $blockedFileTypes;
     }
 
     /**
      * Validate uploaded File
-     * @param $fileData
+     * @param UploadedFile $uploadFile
      * @param bool $bool
      * @return bool
      * @throws \Sulu\Component\Rest\Exception\RestException
      */
-    protected function validateFile($fileData, $bool = false)
+    protected function validateFile(UploadedFile $uploadFile, $bool = false)
     {
         $valid = true;
         $maxFileSize = $this->getMaxFileSize();
@@ -476,7 +478,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $blockedFileTypes = $this->getBlockedFileTypes();
 
         // validate if file was sent
-        if (!isset($fileData['tmp_name'])) {
+        if (!$uploadFile instanceof UploadedFile) {
             if ($bool) {
                 $valid = false;
             } else {
@@ -485,7 +487,7 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         // validate if file upload has an error
-        if ($fileData['error'] > 0) {
+        if ($uploadFile->getError() > 0) {
             if ($bool) {
                 $valid = false;
             } else {
@@ -494,7 +496,7 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         // validate the file size
-        if ($fileData['size'] >= $maxFileSize) {
+        if ($uploadFile->getSize() >= $maxFileSize) {
             if ($bool) {
                 $valid = false;
             } else {
@@ -503,11 +505,11 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         // validate file type
-        if (in_array($fileData['type'], $blockedFileTypes)) {
+        if (in_array($uploadFile->getMimeType(), $blockedFileTypes)) {
             if ($bool) {
                 $valid = false;
             } else {
-                throw new RestException('File type "' . $fileData['type'] . '" is blocked', self::EXCEPTION_CODE_BLOCKED_FILE_TYPE);
+                throw new RestException('File type "' . $uploadFile->getMimeType() . '" is blocked', self::EXCEPTION_CODE_BLOCKED_FILE_TYPE);
             }
         }
 
@@ -516,16 +518,15 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * move uploaded file in sulu media folder
-     * @param $fileData
+     * @param UploadedFile $uploadFile
      * @param $fileId
      * @return array
      */
-    private function moveUploadedFile($fileData, $fileId = null)
+    private function moveUploadedFile(UploadedFile $uploadFile, $fileId = null)
     {
         $uploadedFolder = $this->getUploadFolder($fileId);
-        $fileName = $this->getUniqueFileName($uploadedFolder, $fileData['name']);
-        $filePath = $uploadedFolder . $fileName;
-        move_uploaded_file($fileData['tmp_name'], $filePath);
+        $fileName = $this->getUniqueFileName($uploadedFolder, $uploadFile->getFilename());
+        $uploadFile->move($uploadedFolder, $fileName);
 
         return array($uploadedFolder, $fileName);
     }
@@ -537,8 +538,8 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     private function getUploadFolder($fileId = null)
     {
-        $segmenting = 10; // TODO get from config
-        $folder = '/uploads/sulumedia/'; // TODO get from config
+        $segmenting = $this->container->getParameter('sulu_media.media.folder.segments');
+        $folder = $this->container->getParameter('sulu_media.media.folder.path');
         $segmentId = $fileId;
         if ($segmentId == null) {
             $segmentId = rand(0, $segmenting);
@@ -581,15 +582,15 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * @param File $file
-     * @param $fileData
+     * @param UploadedFile $uploadFile
      * @param $versionCounter
      * @throws \Sulu\Component\Rest\Exception\RestException
      */
-    private function addFileVersions(File $file, $fileData, &$versionCounter)
+    private function addFileVersions(File $file, UploadedFile $uploadFile, &$versionCounter)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $this->validateFile($fileData);
+        $this->validateFile($uploadFile);
 
         // set fileVersion
         $fileVersion = new FileVersion();
@@ -599,11 +600,11 @@ class MediaController extends RestController implements ClassResourceInterface
         $fileVersion->setChanger($this->getUser());
         $fileVersion->setVersion(1);
 
-        $fileVersion->setSize($fileData['size']);
+        $fileVersion->setSize($uploadFile->getSize());
 
         // set Tempory Name Temporary
-        $fileVersion->setName($fileData['tmp_name']);
-        $fileVersion->setPath(sys_get_temp_dir());
+        $fileVersion->setName($uploadFile->getFilename());
+        $fileVersion->setPath($uploadFile->getPath());
 
         $fileVersion->setFile($file);
         $versionCounter++;
@@ -632,7 +633,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $em->persist($fileVersion);
         $em->flush();
 
-        list($path, $name) = $this->moveUploadedFile($fileData, $fileVersion->getId());
+        list($path, $name) = $this->moveUploadedFile($uploadFile, $fileVersion->getId());
 
         $fileVersion->setName($name);
         $fileVersion->setPath($path);

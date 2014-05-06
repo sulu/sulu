@@ -30,6 +30,11 @@ class SuluMediaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_media.media.max_file_size', '16MB');
+        $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
+        $container->setParameter('sulu_media.media.folder.path', '/uploads/sulumedia/');
+        $container->setParameter('sulu_media.media.folder.segment', '10');
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
