@@ -38,38 +38,64 @@ define([], function() {
 
             url: null,
 
-            template:   '<div class="grid-row" data-id="<%= id%>">'+
+            template:   '<div class="grid-row type-row" data-id="<%= id%>">'+
                         '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= value&>"/></div>'+
-                        '   <div class="grid-col-2 pull-right"><div class="removeRow btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>'+
+                        '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>'+
                         '</div>',
 
             templateRow:   ['<div class="content-inner">',
                             '   <% _.each(, function(id, value) { %>',
-                            '       <div class="grid-row" data-id="<%= id%>">',
+                            '       <div class="grid-row type-row" data-id="<%= id%>">',
                             '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= value&>"/></div>',
-                            '           <div class="grid-col-2 pull-right"><div class="delete btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
+                            '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
                             '       </div>',
                             ' <% }); %>',
+                            '<div class="grid-row"><div id="addRow" class="addButton"></div></div>',
                             '</div>'].join(''),
             data: null
         },
 
         constants = {
             overlayContentSelector: '.overlay-content',
-            templateRemoveSelector: '.removeRow',
-            templateAddSelector: '.addRow'
+            templateRemoveSelector: '.remove-row',
+            templateAddSelector: '#addRow',
+            typeRowSelector: '.type-row'
         },
 
         eventNamespace = 'sulu.types.',
 
         /**
-         * error label event
-         *
-         * @event sulu.labels.error.show
+         * Initialized event
+         * @event sulu.types.initialzed
          */
             INITIALZED = function() {
             return createEventName.call(this, 'initialzed');
         },
+
+        /**
+         * Loaded event
+         * @event sulu.types.loaded
+         */
+        LOADED = function(){
+          return createEventName.call(this, 'loaded');
+        },
+
+        /**
+         * Saved event
+         * @event sulu.types.saved
+         */
+            SAVED = function(){
+            return createEventName.call(this, 'saved');
+        },
+
+        /**
+         * Removed event
+         * @event sulu.types.removed
+         */
+            REMOVED = function(){
+            return createEventName.call(this, 'removed');
+        },
+
 
         createEventName = function(postFix) {
             return eventNamespace + postFix;
@@ -113,9 +139,8 @@ define([], function() {
 
             this.sandbox.util.load(this.options.url)
                 .then(function(response){
+                    this.sandbox.emit(LOADED);
                     return response;
-                    // TODO loaded event
-
                 }.bind(this)).fail(function(status,error){
                     this.sandbox.logger.error(status,error);
                     return null;
@@ -132,9 +157,8 @@ define([], function() {
 
             this.sandbox.util.save(this.options.url,method, data)
                 .then(function(response){
+                    this.sandbox.emit(SAVED, response);
                     return response;
-                    // TODO saved event
-
                 }.bind(this)).fail(function(status,error){
                     this.sandbox.logger.error(status,error);
                     return null;
@@ -145,7 +169,16 @@ define([], function() {
          * Extracts data from dom structure
          */
         parseDataFromDom: function(domData){
-            // TODO
+            var $rows = this.sandbox.dom.find(constants.typeRowSelector,domData),
+                data = [],
+                id, value;
+
+            this.sandbox.dom.each($rows, function(index, $el){
+                id = this.sandbox.dom.data($el, 'id');
+                value = this.sandbox.dom.val(this.sandbox.dom.find($el, 'input'));
+                data.push({id: id, value: value});
+            }.bind(this));
+
             return {};
         },
 
@@ -154,15 +187,15 @@ define([], function() {
          * @param id
          */
         removeData: function(id) {
-//            this.sandbox.util.save(this.options.url,'DELETE', data)
-//                .then(function(response){
-//                    return response;
-//                    // TODO removed event
-//
-//                }.bind(this)).fail(function(status,error){
-//                    this.sandbox.logger.error(status,error);
-//                    return null;
-//                }.bind(this));
+
+            this.sandbox.util.save(this.options.url,'DELETE', id)
+                .then(function(response){
+                    this.sandbox.emit(REMOVED, id);
+                    return response;
+                }.bind(this)).fail(function(status,error){
+                    this.sandbox.logger.error(status,error);
+                    return null;
+                }.bind(this));
         },
 
         /**
@@ -172,9 +205,14 @@ define([], function() {
 
             // bind click on remove icon
             this.sandbox.dom.on(constants.templateRemoveSelector, 'click', function(event) {
+
                 var $row = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget)),
-                    id = this.sandbox.dom.data('id',$row);
-                this.removeData(id);
+                    id = this.sandbox.dom.data($row,'id');
+                if(!!id){
+                    this.removeData(id);
+                }
+                this.sandbox.dom.remove($row);
+
             }.bind(this), this.$overlay);
 
             // bind click on add icon
@@ -188,12 +226,10 @@ define([], function() {
          * Bind custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on('husky.' + this.options.overlayInstanceName + '.closed', function(data) {
+            this.sandbox.on('husky.' + this.options.overlay.instanceName + '.closed', function(data) {
                 if (!!data) {
                     this.saveNewData(data);
                 }
-
-                // TODO event for finish?
             }.bind(this));
         },
 
