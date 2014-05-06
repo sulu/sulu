@@ -565,26 +565,21 @@ define(['app-config'], function(AppConfig) {
                     }
                 }.bind(this),
                 showDialog = function() {
-                    this.sandbox.emit('sulu.dialog.confirmation.show', {
-                        content: {
-                            title: this.sandbox.translate('content.template.dialog.title'),
-                            content: this.sandbox.translate('content.template.dialog.content')
-                        },
-                        footer: {
-                            buttonCancelText: this.sandbox.translate('content.template.dialog.cancel-button'),
-                            buttonSubmitText: this.sandbox.translate('content.template.dialog.submit-button')
-                        },
-                        callback: {
-                            submit: function() {
-                                this.sandbox.emit('husky.dialog.hide');
+                    // show warning dialog
+                    this.sandbox.emit('sulu.overlay.show-warning',
+                        this.sandbox.translate('content.template.dialog.title'),
+                        this.sandbox.translate('content.template.dialog.content'),
 
-                                doIt();
-                            }.bind(this),
-                            cancel: function() {
-                                this.sandbox.emit('husky.dialog.hide');
-                            }.bind(this)
-                        }
-                    }, null);
+                        function() {
+                            // cancel callback
+                            return false;
+                        }.bind(this),
+
+                        function() {
+                            // ok callback
+                            doIt();
+                        }.bind(this)
+                    );
                 }.bind(this);
 
             if (this.template !== '' && this.contentChanged) {
