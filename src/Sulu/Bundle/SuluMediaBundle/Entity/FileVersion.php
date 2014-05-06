@@ -29,6 +29,11 @@ class FileVersion
     private $version;
 
     /**
+     * @var integer
+     */
+    private $size;
+
+    /**
      * @var \DateTime
      */
     private $created;
@@ -391,19 +396,14 @@ class FileVersion
     {
         return $this->creator;
     }
-    /**
-     * @var int
-     */
-    private $size;
-
 
     /**
      * Set size
      *
-     * @param \int $size
+     * @param integer $size
      * @return FileVersion
      */
-    public function setSize(\int $size)
+    public function setSize($size)
     {
         $this->size = $size;
     
@@ -413,7 +413,7 @@ class FileVersion
     /**
      * Get size
      *
-     * @return \int 
+     * @return integer 
      */
     public function getSize()
     {
