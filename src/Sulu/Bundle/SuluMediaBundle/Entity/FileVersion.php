@@ -391,4 +391,32 @@ class FileVersion
     {
         return $this->creator;
     }
+    /**
+     * @var int
+     */
+    private $size;
+
+
+    /**
+     * Set size
+     *
+     * @param \int $size
+     * @return FileVersion
+     */
+    public function setSize(\int $size)
+    {
+        $this->size = $size;
+    
+        return $this;
+    }
+
+    /**
+     * Get size
+     *
+     * @return \int 
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
 }
