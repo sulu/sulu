@@ -1,0 +1,13 @@
+<div id="split-view">
+    <div class="header">
+        <h1>{{ header }}</h1>
+    </div>
+
+    <div class="content">
+        {% for widget in widgets %}
+            <div class="widget widget-{{ widget.name }} widget-priority-{{ widget.priority}}">
+                {% include widget.template with widget.data only %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
