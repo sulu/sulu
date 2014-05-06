@@ -25,7 +25,6 @@ use FOS\RestBundle\Controller\Annotations\Route;
  * Makes account categories available through a REST API
  * Used RouteResource annotation to prevent automatic parenting of rest controllers
  * @package Sulu\Bundle\ContactBundle\Controller
-
  */
 class AccountCategoryController extends RestController implements ClassResourceInterface
 {
@@ -151,23 +150,29 @@ class AccountCategoryController extends RestController implements ClassResourceI
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        try {
+            $delete = function ($id) {
 
-            /* @var AccountCategory $category */
-            $category = $this->getDoctrine()
-                ->getRepository($this->entityName)
-                ->find($id);
+                /* @var AccountCategory $category */
+                $category = $this->getDoctrine()
+                    ->getRepository($this->entityName)
+                    ->find($id);
 
-            if (!$category) {
-                throw new EntityNotFoundException($this->entityName, $id);
-            }
+                if (!$category) {
+                    throw new EntityNotFoundException($this->entityName, $id);
+                }
 
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($category);
-            $em->flush();
-        };
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($category);
+                $em->flush();
+            };
 
-        $view = $this->responseDelete($id, $delete);
+            $view = $this->responseDelete($id, $delete);
+
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        }
+
         return $this->handleView($view);
     }
 
@@ -179,17 +184,27 @@ class AccountCategoryController extends RestController implements ClassResourceI
     public function patchAction()
     {
 
-        /** @var Request $request */
-        $request = $this->getRequest();
-        $i = 0;
-        while ($item = $request->get($i)) {
-            $this->addAndUpdateCategories($item);
-            $i++;
+        try {
+            /** @var Request $request */
+            $request = $this->getRequest();
+            $i = 0;
+            while ($item = $request->get($i)) {
+
+                if (!isset($item['category'])) {
+                    throw new RestException('There is no category-name for the account-category given');
+                }
+
+                $this->addAndUpdateCategories($item);
+                $i++;
+            }
+
+            $this->getDoctrine()->getManager()->flush();
+            $view = $this->view(null, 204);
+        } catch (EntityNotFoundException $enfe) {
+            $view = $this->view($enfe->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
         }
-
-        $this->getDoctrine()->getManager()->flush();
-        $view = $this->view(null, 204);
-
         return $this->handleView($view);
     }
 
@@ -198,15 +213,16 @@ class AccountCategoryController extends RestController implements ClassResourceI
      * @param $item
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    private function addAndUpdateCategories($item){
-        if(isset($item['id'])) {
+    private function addAndUpdateCategories($item)
+    {
+        if (isset($item['id'])) {
             /* @var AccountCategory $category */
             $category = $this->getDoctrine()
                 ->getRepository($this->entityName)
                 ->find($item['id']);
 
-            if($category == null){
-                throw new EntityNotFoundException($this->$entityName, $item['id']);
+            if ($category == null) {
+                throw new EntityNotFoundException($this->entityName, $item['id']);
             } else {
                 $category->setCategory($item['category']);
             }
