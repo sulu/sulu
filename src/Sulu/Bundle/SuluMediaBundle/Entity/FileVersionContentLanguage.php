@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileVersionContentLanguage
 {
+
     /**
      * @var string
      */
@@ -28,7 +29,7 @@ class FileVersionContentLanguage
     private $id;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\File
+     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersion
      */
     private $fileVersion;
 
@@ -69,10 +70,10 @@ class FileVersionContentLanguage
     /**
      * Set fileVersion
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\File $fileVersion
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion
      * @return FileVersionContentLanguage
      */
-    public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\File $fileVersion = null)
+    public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion = null)
     {
         $this->fileVersion = $fileVersion;
     
@@ -82,7 +83,7 @@ class FileVersionContentLanguage
     /**
      * Get fileVersion
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\File 
+     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion 
      */
     public function getFileVersion()
     {
