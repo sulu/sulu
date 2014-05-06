@@ -49,8 +49,8 @@ class AccountCategoryController extends RestController implements ClassResourceI
      */
     public function cgetAction()
     {
-        $contacts = $this->getDoctrine()->getRepository($this->entityName)->findAll();
-        $view = $this->view($this->createHalResponse($contacts), 200);
+        $categories = $this->getDoctrine()->getRepository($this->entityName)->findAll();
+        $view = $this->view($this->createHalResponse($categories), 200);
 
         return $this->handleView($view);
     }
