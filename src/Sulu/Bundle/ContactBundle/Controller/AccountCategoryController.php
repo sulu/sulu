@@ -14,25 +14,17 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
-use \DateTime;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 
 /**
  * Makes account categories available through a REST API
+ * Used RouteResource annotation to prevent automatic parenting of rest controllers
  * @package Sulu\Bundle\ContactBundle\Controller
+ * @RouteResource("AccountCategory")
  */
 class AccountCategoryController extends RestController implements ClassResourceInterface
 {
@@ -41,9 +33,28 @@ class AccountCategoryController extends RestController implements ClassResourceI
      */
     protected $entityName = 'SuluContactBundle:AccountCategory';
 
+    /**
+     * Shows a single account category with the given id
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAction($id)
+    {
+
+        $view = $this->responseGetById(
+            $id,
+            function ($id) {
+                return $this->getDoctrine()
+                    ->getRepository($this->entityName)
+                    ->find($id);
+            }
+        );
+
+        return $this->handleView($view);
+    }
 
     /**
-     * lists all accounts
+     * lists all account categories
      * optional parameter 'flat' calls listAction
      * @return \Symfony\Component\HttpFoundation\Response
      */
