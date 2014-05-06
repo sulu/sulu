@@ -1030,31 +1030,31 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   text-align: left;
 }
 
-/* line 1, ../scss/modules/overlay.scss */
+/* line 7, ../scss/modules/overlay.scss */
 .husky-overlay-container {
   width: 402px;
   position: fixed;
   top: 0;
   left: 50%;
   background-color: white;
-  border: 1px solid #cccccc;
+  border: 1px solid #999999;
   z-index: 1000;
+  border-radius: 3px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
 }
-/* line 11, ../scss/modules/overlay.scss */
+/* line 18, ../scss/modules/overlay.scss */
 .husky-overlay-container.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 16, ../scss/modules/overlay.scss */
+/* line 23, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide {
   width: 602px;
 }
-
-/* line 21, ../scss/modules/overlay.scss */
-.draggable .overlay-header {
+/* line 28, ../scss/modules/overlay.scss */
+.husky-overlay-container.draggable .overlay-header {
   cursor: move;
   user-select: none;
   -moz-user-select: none;
@@ -1062,52 +1062,116 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   -ms-user-select: none;
   -o-user-select: none;
 }
-
-/* line 26, ../scss/modules/overlay.scss */
-.overlay-header {
-  padding: 15px 40px 15px 20px;
-  min-height: 50px;
-  border-bottom: 1px solid #dddddd;
-  position: relative;
+/* line 35, ../scss/modules/overlay.scss */
+.husky-overlay-container.error .overlay-header {
+  background: #ea524e;
+  color: white;
 }
-/* line 32, ../scss/modules/overlay.scss */
+/* line 38, ../scss/modules/overlay.scss */
+.husky-overlay-container.error .overlay-header .title {
+  color: white;
+}
+/* line 45, ../scss/modules/overlay.scss */
+.husky-overlay-container.warning .overlay-header {
+  background: #f2d212;
+}
+/* line 47, ../scss/modules/overlay.scss */
+.husky-overlay-container.warning .overlay-header .title {
+  color: white;
+}
+
+/* line 54, ../scss/modules/overlay.scss */
+.overlay-header {
+  min-height: 50px;
+  background: #efefef;
+  position: relative;
+  border-radius: 3px 3px 0 0;
+}
+/* line 60, ../scss/modules/overlay.scss */
 .overlay-header .title {
   color: #999999;
   font-size: 23px;
   padding-right: 10px;
   vertical-align: text-top;
+  display: block;
+  padding: 15px 40px 10px 20px;
 }
-/* line 39, ../scss/modules/overlay.scss */
+/* line 69, ../scss/modules/overlay.scss */
 .overlay-header .close-button {
   position: absolute;
-  top: 17px;
-  right: 20px;
-  font-size: 20px;
-  float: right;
+  top: 0px;
+  right: 0px;
+  font-size: 12px;
   text-decoration: none;
   color: black;
+  line-height: 12px;
+  padding: 8px;
+}
+/* line 80, ../scss/modules/overlay.scss */
+.overlay-header .tabs {
+  display: inline-block;
+}
+/* line 84, ../scss/modules/overlay.scss */
+.overlay-header .language-changer {
+  width: 80px;
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
 }
 
-/* line 51, ../scss/modules/overlay.scss */
+/* line 92, ../scss/modules/overlay.scss */
 .overlay-footer {
-  padding: 10px 0;
+  padding: 10px;
   border-top: 1px solid #cccccc;
   text-align: center;
+  border-radius: 0 0 3px 3px;
 }
-/* line 56, ../scss/modules/overlay.scss */
-.overlay-footer .save-button {
-  display: inline-block;
-  font-size: 20px;
-  line-height: 26px;
+/* line 36, ../scss/mixins.scss */
+.overlay-footer:after {
+  clear: both;
+  content: ' ';
+  display: block;
+}
+/* line 99, ../scss/modules/overlay.scss */
+.overlay-footer .btn {
+  width: 100px;
+  margin: 0 auto;
+  padding: 0;
+}
+/* line 104, ../scss/modules/overlay.scss */
+.overlay-footer .btn.tick {
+  width: 70px;
+  line-height: 28px;
+}
+/* line 110, ../scss/modules/overlay.scss */
+.overlay-footer.center .btn {
+  margin: 0 auto;
+}
+/* line 114, ../scss/modules/overlay.scss */
+.overlay-footer.left .btn {
+  float: left;
+  margin-right: 20px;
+}
+/* line 119, ../scss/modules/overlay.scss */
+.overlay-footer.right .btn {
+  float: right;
+  margin-left: 20px;
 }
 
-/* line 63, ../scss/modules/overlay.scss */
+/* line 125, ../scss/modules/overlay.scss */
 .overlay-content {
   padding-left: 0;
-  margin: 10px 20px;
+  margin: 0 20px 10px 20px;
+}
+/* line 129, ../scss/modules/overlay.scss */
+.overlay-content .message {
+  padding: 20px 0 30px 0;
+  font-size: 24px;
+  color: black;
+  line-height: 30px;
 }
 
-/* line 68, ../scss/modules/overlay.scss */
+/* line 137, ../scss/modules/overlay.scss */
 .husky-overlay-backdrop {
   width: 100%;
   height: 100%;
@@ -5887,6 +5951,9 @@ a.btn-black, a.btn-highlight {
   background-color: white;
   border-bottom: 1px solid #f1f1f1;
   padding: 20px 50px 0 50px;
+  /**
+  *** Overlay Skin
+  **/
 }
 /* line 13, ../scss/modules/tabs.scss */
 .tabs-container ul {
@@ -5927,6 +5994,16 @@ a.btn-black, a.btn-highlight {
 /* line 50, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li.is-selected a {
   color: #52b6ca;
+}
+/* line 59, ../scss/modules/tabs.scss */
+.tabs-container.overlay {
+  background-color: transparent;
+  border-bottom: none;
+  padding: 10px 0 0 20px;
+}
+/* line 65, ../scss/modules/tabs.scss */
+.tabs-container.overlay ul li.is-selected {
+  background-color: white;
 }
 
 /*styles related to the whole container*/
@@ -6267,145 +6344,6 @@ a.btn-black, a.btn-highlight {
 /* line 339, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled a.dropdown-toggle::after, .blueish .toolbar-item.disabled:hover a.dropdown-toggle::after {
   border-top-color: white;
-}
-
-/* line 17, ../scss/modules/dialog.scss */
-.husky-dialog-backdrop {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1040;
-  background-color: black;
-}
-
-/* line 27, ../scss/modules/dialog.scss */
-.husky-dialog-backdrop.fade {
-  opacity: 0;
-}
-
-/* line 32, ../scss/modules/dialog.scss */
-.husky-dialog-backdrop,
-.husky-dialog-backdrop.fade.in {
-  opacity: 0.06;
-  filter: alpha(opacity=6);
-}
-
-/* line 38, ../scss/modules/dialog.scss */
-.husky-dialog {
-  position: fixed;
-  top: 10%;
-  left: 50%;
-  z-index: 1050;
-  background-color: white;
-  font-size: 18px;
-  outline: none;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.1) 3px 3px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0.1) 3px 3px 0px;
-  box-shadow: rgba(0, 0, 0, 0.1) 3px 3px 0px;
-  -webkit-background-clip: padding;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
-
-/* line 56, ../scss/modules/dialog.scss */
-.husky-dialog label {
-  font-family: inherit;
-  font-weight: inherit;
-  font-size: inherit;
-  display: inline;
-  padding-left: 10px;
-}
-
-/* line 66, ../scss/modules/dialog.scss */
-.husky-dialog.fade {
-  -webkit-transition-property: opacity, top;
-  -moz-transition-property: opacity, top;
-  -o-transition-property: opacity, top;
-  transition-property: opacity, top;
-  -webkit-transition-duration: 0.3s, 0.3s;
-  -moz-transition-duration: 0.3s, 0.3s;
-  -o-transition-duration: 0.3s, 0.3s;
-  transition-duration: 0.3s, 0.3s;
-  -webkit-transition-timing-function: linear, ease-in;
-  -moz-transition-timing-function: linear, ease-in;
-  -o-transition-timing-function: linear, ease-in;
-  transition-timing-function: linear, ease-in;
-}
-
-/* line 73, ../scss/modules/dialog.scss */
-.husky-dialog.fade.in {
-  top: 10%;
-}
-
-/* line 77, ../scss/modules/dialog.scss */
-.husky-dialog-header {
-  z-index: 1000;
-}
-/* line 79, ../scss/modules/dialog.scss */
-.husky-dialog-header p, .husky-dialog-header div, .husky-dialog-header span, .husky-dialog-header button {
-  padding: 10px 15px;
-}
-
-/* line 84, ../scss/modules/dialog.scss */
-.husky-dialog-header .close {
-  z-index: 1000;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  cursor: pointer;
-}
-
-/* line 93, ../scss/modules/dialog.scss */
-.husky-dialog-body h3 {
-  font-size: 24px;
-  padding-bottom: 15px;
-  margin: 0;
-  color: #000000;
-  border-bottom: 2px solid #E3E3E3;
-}
-
-/* line 102, ../scss/modules/dialog.scss */
-.husky-dialog-body {
-  position: relative;
-  max-height: 400px;
-  padding: 20px;
-  overflow-y: auto;
-  min-height: 150px;
-}
-
-/* line 110, ../scss/modules/dialog.scss */
-.husky-dialog-footer {
-  padding: 14px 15px 15px;
-  margin-bottom: 0;
-  text-align: right;
-  background-color: white;
-  border-top: 1px solid #cccccc;
-  border-radius: 0 0 6px 6px;
-  *zoom: 1;
-  -webkit-box-shadow: white 0 1px 0 inset;
-  -moz-box-shadow: white 0 1px 0 inset;
-  box-shadow: white 0 1px 0 inset;
-}
-
-/* line 122, ../scss/modules/dialog.scss */
-.husky-dialog-footer:before,
-.husky-dialog-footer:after {
-  display: table;
-  line-height: 0;
-  content: "";
-}
-
-/* line 128, ../scss/modules/dialog.scss */
-.husky-dialog-footer:after {
-  clear: both;
-}
-
-/* line 132, ../scss/modules/dialog.scss */
-.husky-dialog-footer .btn + .btn {
-  margin-bottom: 0;
-  margin-left: 20px;
 }
 
 /* line 5, ../scss/modules/matrix.scss */
@@ -6868,27 +6806,33 @@ a.btn-black, a.btn-highlight {
   padding-right: 20px;
 }
 /* line 27, ../scss/modules/select.scss */
+.husky-select-container .dropdown-label .icon {
+  float: left;
+  font-size: 15px;
+  padding-right: 4px;
+}
+/* line 32, ../scss/modules/select.scss */
 .husky-select-container .dropdown-label .dropdown-toggle {
   position: absolute;
   top: 0px;
   right: 10px;
 }
-/* line 35, ../scss/modules/select.scss */
+/* line 40, ../scss/modules/select.scss */
 .husky-select-container.disabled .dropdown-label {
   background: #dddddd;
   color: #666666;
   cursor: default;
 }
-/* line 40, ../scss/modules/select.scss */
+/* line 45, ../scss/modules/select.scss */
 .husky-select-container.disabled .dropdown-toggle {
   cursor: default;
 }
-/* line 43, ../scss/modules/select.scss */
+/* line 48, ../scss/modules/select.scss */
 .husky-select-container.disabled .dropdown-toggle:after {
   border-top-color: #666666;
   cursor: default;
 }
-/* line 49, ../scss/modules/select.scss */
+/* line 54, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list {
   width: 100%;
   /*display: inline-block;*/
@@ -6901,79 +6845,92 @@ a.btn-black, a.btn-highlight {
   z-index: 2000;
   border-radius: 3px;
 }
-/* line 61, ../scss/modules/select.scss */
+/* line 66, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list.top {
   top: inherit;
   bottom: 5px;
 }
-/* line 67, ../scss/modules/select.scss */
+/* line 72, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled,
 .husky-select-container .dropdown-list .disabled:hover {
   background: none;
   cursor: default;
 }
-/* line 70, ../scss/modules/select.scss */
+/* line 75, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled .item-value,
 .husky-select-container .dropdown-list .disabled:hover .item-value {
   color: #999999;
 }
-/* line 74, ../scss/modules/select.scss */
+/* line 79, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .check {
   float: left;
   width: 20px;
   margin-right: 10px;
   padding-top: 7px;
 }
-/* line 80, ../scss/modules/select.scss */
+/* line 85, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .item-value {
   float: left;
   line-height: 30px;
 }
-/* line 85, ../scss/modules/select.scss */
+/* line 90, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 90, ../scss/modules/select.scss */
+/* line 95, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul input {
   margin: 0;
 }
-/* line 94, ../scss/modules/select.scss */
+/* line 99, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li {
   padding: 0px 10px 0px 20px;
   clear: both;
   height: 30px;
 }
-/* line 100, ../scss/modules/select.scss */
+/* line 105, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected, .column-navigation-wrapper .column-navigation .column .husky-select-container .dropdown-list > ul > li.selected, .husky-select-container .dropdown-list > ul > li.hover {
   background-color: #52b6ca;
   cursor: pointer;
 }
-/* line 104, ../scss/modules/select.scss */
+/* line 109, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover .item-value, .husky-select-container .column-navigation-wrapper .column-navigation .column .dropdown-list > ul > li.selected .item-value, .column-navigation-wrapper .column-navigation .column .husky-select-container .dropdown-list > ul > li.selected .item-value {
   color: white;
 }
-/* line 112, ../scss/modules/select.scss */
+/* line 117, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
   font-size: 10px;
   line-height: 20px;
 }
-/* line 116, ../scss/modules/select.scss */
+/* line 121, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-toggle::after {
   top: 0;
 }
-/* line 119, ../scss/modules/select.scss */
+/* line 124, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list {
   top: 12px;
   min-width: 200px;
   max-width: 100%;
   border-radius: 2px;
 }
-/* line 125, ../scss/modules/select.scss */
+/* line 130, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list.top {
   top: auto;
   bottom: -3px;
+}
+/* line 138, ../scss/modules/select.scss */
+.husky-select-container.white .dropdown-label {
+  background: white;
+}
+/* line 144, ../scss/modules/select.scss */
+.husky-select-container.action .dropdown-label {
+  background: #52b6ca;
+  color: white;
+}
+/* line 148, ../scss/modules/select.scss */
+.husky-select-container.action .dropdown-toggle::after {
+  border-top-color: white;
 }
 
 /* line 5, ../scss/modules/smart-content.scss */
