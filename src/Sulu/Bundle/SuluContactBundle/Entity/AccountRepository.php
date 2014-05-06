@@ -57,6 +57,7 @@ class AccountRepository extends EntityRepository
                 ->leftJoin('account.notes', 'notes')
                 ->leftJoin('account.faxes', 'faxes')
                 ->leftJoin('faxes.faxType', 'faxType')
+                ->leftJoin('account.accountCategory', 'accountCategory')
                 ->addSelect('addresses')
                 ->addSelect('country')
                 ->addSelect('addressType')
@@ -70,6 +71,7 @@ class AccountRepository extends EntityRepository
                 ->addSelect('faxes')
                 ->addSelect('faxType')
                 ->addSelect('notes')
+                ->addSelect('accountCategory')
                 ->where('account.id = :accountId');
 
             $query = $qb->getQuery();
