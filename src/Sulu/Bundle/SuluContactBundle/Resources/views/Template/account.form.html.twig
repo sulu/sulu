@@ -18,8 +18,19 @@
                     <label for="companyInput"><%=translate('contact.accounts.company')%></label>
                     <div id="company"></div>
                 </div>
-                <input type="hidden" id="accountType" data-mapper-property="type" />
+
+                <input class="form-element" type="hidden" id="accountType"/>
+
             </div>
+            <div class="grid-col-6">
+                <div class="form-group">
+                    <label for="accountCategory"><%=translate('contact.accounts.cateogory')%></label>
+                    <input class="form-element" type="text" id="accountCategory" data-mapper-property="category" />
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-row">
             <div class="grid-col-6">
                 <div class="form-group">
                     <label for="deactivated"><%=translate('public.deactivate')%></label>
@@ -32,5 +43,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 {% endblock %}
