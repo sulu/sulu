@@ -36,11 +36,6 @@ class Media
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $metas;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
     private $files;
 
     /**
@@ -54,17 +49,12 @@ class Media
     private $type;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $tags;
-
-    /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $creator;
 
@@ -73,9 +63,7 @@ class Media
      */
     public function __construct()
     {
-        $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -132,39 +120,6 @@ class Media
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Add metas
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\MediaMeta $metas
-     * @return Media
-     */
-    public function addMeta(\Sulu\Bundle\MediaBundle\Entity\MediaMeta $metas)
-    {
-        $this->metas[] = $metas;
-    
-        return $this;
-    }
-
-    /**
-     * Remove metas
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\MediaMeta $metas
-     */
-    public function removeMeta(\Sulu\Bundle\MediaBundle\Entity\MediaMeta $metas)
-    {
-        $this->metas->removeElement($metas);
-    }
-
-    /**
-     * Get metas
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getMetas()
-    {
-        return $this->metas;
     }
 
     /**
@@ -244,39 +199,6 @@ class Media
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Add tags
-     *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
-     * @return Media
-     */
-    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
-    {
-        $this->tags[] = $tags;
-    
-        return $this;
-    }
-
-    /**
-     * Remove tags
-     *
-     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
-     */
-    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
-    {
-        $this->tags->removeElement($tags);
-    }
-
-    /**
-     * Get tags
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getTags()
-    {
-        return $this->tags;
     }
 
     /**

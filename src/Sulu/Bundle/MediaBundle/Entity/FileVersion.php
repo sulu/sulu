@@ -54,17 +54,27 @@ class FileVersion
     private $fileVersionPublishLanguages;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $metas;
+
+    /**
      * @var \Sulu\Bundle\MediaBundle\Entity\File
      */
     private $file;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $tags;
+
+    /**
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $creator;
 
@@ -75,6 +85,8 @@ class FileVersion
     {
         $this->fileVersionContentLanguages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fileVersionPublishLanguages = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -246,6 +258,39 @@ class FileVersion
     }
 
     /**
+     * Add metas
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $metas
+     * @return FileVersion
+     */
+    public function addMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $metas)
+    {
+        $this->metas[] = $metas;
+    
+        return $this;
+    }
+
+    /**
+     * Remove metas
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $metas
+     */
+    public function removeMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $metas)
+    {
+        $this->metas->removeElement($metas);
+    }
+
+    /**
+     * Get metas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMetas()
+    {
+        return $this->metas;
+    }
+
+    /**
      * Set file
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\File $file
@@ -266,6 +311,39 @@ class FileVersion
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * Add tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     * @return FileVersion
+     */
+    public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+    
+        return $this;
+    }
+
+    /**
+     * Remove tags
+     *
+     * @param \Sulu\Bundle\TagBundle\Entity\Tag $tags
+     */
+    public function removeTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
+    {
+        $this->tags->removeElement($tags);
+    }
+
+    /**
+     * Get tags
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**
