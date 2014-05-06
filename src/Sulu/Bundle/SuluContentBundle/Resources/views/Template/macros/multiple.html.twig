@@ -3,7 +3,7 @@
      data-type="collection"
      data-type-min="{{ property.minOccurs }}"
      data-type-max="{{ property.maxOccurs }}"
-     data-mapper-property='{"data": "{{ property.name }}", "tpl": "{{ id|raw }}-tpl"}'
+     data-mapper-property='[{"data": "{{ property.name }}", "tpl": "{{ id|raw }}-tpl"}]'
      data-mapper-full-class="full"
      data-mapper-empty-class="empty">
 
@@ -18,7 +18,7 @@
             </div>
 
             <div class="container">
-            {% include type.template with {'property': property, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+            {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
             </div>
         </div>
     </script>

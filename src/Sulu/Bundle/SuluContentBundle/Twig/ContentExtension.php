@@ -38,8 +38,20 @@ class ContentExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('getType', array($this, 'getTypeFunction')),
-            new \Twig_SimpleFunction('needsAddButton', array($this, 'needsAddButtonFunction'))
+            new \Twig_SimpleFunction('needsAddButton', array($this, 'needsAddButtonFunction')),
+            new \Twig_SimpleFunction('getParams', array($this, 'getParamsFunction'))
         );
+    }
+
+    /**
+     * @param PropertyInterface $property
+     * @return array
+     */
+    public function getParamsFunction($property)
+    {
+        $type = $this->getTypeFunction($property->getContentTypeName());
+
+        return array_merge($type->getDefaultParams(), $property->getParams());
     }
 
     /**
