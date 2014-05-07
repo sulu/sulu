@@ -33,6 +33,22 @@ define(function() {
         view: true,
         instanceNameToolbar: 'saveToolbar',
 
+        fullSize: {
+            width: true
+        },
+
+        header: function() {
+            return {
+                title: 'tag.tags.title',
+                noBack: true,
+
+                breadcrumb: [
+                    {title: 'navigation.settings'},
+                    {title: 'tag.tags.title'}
+                ]
+            };
+        },
+
         templates: ['/admin/tag/template/tag/list'],
 
         initialize: function() {
@@ -46,10 +62,11 @@ define(function() {
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'tagsFields', '/admin/api/tags/fields',
                 {
-                    el: '#list-toolbar-container',
+                    el: this.$find('#list-toolbar-container'),
                     template: 'default',
                     listener: 'default',
-                    instanceName: this.instanceNameToolbar
+                    instanceName: this.instanceNameToolbar,
+                    inHeader: true
                 },
                 {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
@@ -58,6 +75,7 @@ define(function() {
                     validation: true,
                     addRowTop: true,
                     progressRow: true,
+                    fullWidth: true,
                     selectItem: {
                         type: 'checkbox'
                     },
