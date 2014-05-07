@@ -25,13 +25,14 @@ define([], function() {
         skeleton = function(options) {
             return [
                 '<div class="resource-locator">',
-                '<span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '/</span>',
+                '   <span id="' + options.ids.url + '" class="grey-font">', (!!options.url) ? options.url : '', '</span>',
+                '   <span id="' + options.ids.tree + '" class="grey-font"></span>',
                 '   <input type="text" id="' + options.ids.input + '" class="form-element"/>',
-                '<span class="show pointer small-font" id="', options.ids.toggle, '">',
-                '   <span class="icon-history icon"></span>',
-                '   <span>', options.showHistoryText, '</span>',
-                '</span>',
-                '<div class="loader" id="', options.ids.loader, '"></div>',
+                '   <span class="show pointer small-font" id="', options.ids.toggle, '">',
+                '       <span class="icon-history icon"></span>',
+                '       <span>', options.showHistoryText, '</span>',
+                '   </span>',
+                '   <div class="loader" id="', options.ids.loader, '"></div>',
                 '</div>'
             ].join('');
         },
@@ -44,6 +45,7 @@ define([], function() {
             this.options.ids = {
                 url: 'resource-locator-' + this.options.instanceName + '-url',
                 input: 'resource-locator-' + this.options.instanceName + '-input',
+                tree: 'resource-locator-' + this.options.instanceName + '-tree',
                 toggle: 'resource-locator-' + this.options.instanceName + '-toggle',
                 loader: 'resource-locator-' + this.options.instanceName + '-loader'
             };
@@ -107,8 +109,10 @@ define([], function() {
         },
 
         setDataValue = function() {
-            var input = this.sandbox.dom.val(getId.call(this, 'input'));
-            this.sandbox.dom.data(this.$el, 'value', '/' + input);
+            var input = this.sandbox.dom.val(getId.call(this, 'input')),
+                tree = this.sandbox.dom.html(getId.call(this, 'tree'));
+
+            this.sandbox.dom.data(this.$el, 'value', tree + input);
         },
 
         /**
@@ -118,10 +122,12 @@ define([], function() {
             var html = ['<ul class="resource-locator-history">'];
 
             this.sandbox.util.foreach(histories, function(history) {
-                html.push('<li>' +
-                            '<span class="url">' + history.resourceLocator + '</span>' +
-                            '<span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
-                          '</li>');
+                html.push(
+                    '<li>' +
+                    '   <span class="url">' + this.sandbox.util.cropMiddle(history.resourceLocator, 35) +'</span>' +
+                    '   <span class="date">' + this.sandbox.date.format(history.created) + '</span>' +
+                    '</li>'
+                );
             }.bind(this));
             html.push('</ul>');
 
@@ -145,6 +151,7 @@ define([], function() {
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'url-history',
+                        skin: 'wide',
                         data: content
                     }
                 }
