@@ -430,28 +430,28 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
         );
 
         $method = new ReflectionMethod(
-            get_class($structureMock), 'add'
+            get_class($structureMock), 'addChild'
         );
 
         $method->setAccessible(true);
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('title', 'text_line')
+                new Property('title', 'title', 'text_line')
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'resource_locator')
+                new Property('url', 'url', 'resource_locator')
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('article', 'text_area')
+                new Property('article', 'article', 'text_area')
             )
         );
 

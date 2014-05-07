@@ -4,7 +4,7 @@
     "description": "TODO",
     "license": "MIT",
     "keywords": ["content", "cmf"],
-    "version": "0.2.0",
+    "version": "0.3.0",
     "authors": [
         {
             "name": "Sulu Community",
@@ -14,12 +14,12 @@
     "require": {
         "php": ">=5.4",
 
-        "sulu/sulu": "0.2.0",
-        "sulu/admin-bundle": "0.2.0",
-        "sulu/contact-bundle": "0.2.0",
-        "sulu/security-bundle": "0.2.0",
-        "sulu/website-bundle": "0.2.0",
-        "sulu/tag-bundle": "0.2.0",
+        "sulu/sulu": "0.3.*",
+        "sulu/admin-bundle": "0.3.*",
+        "sulu/contact-bundle": "0.3.*",
+        "sulu/security-bundle": "0.3.*",
+        "sulu/website-bundle": "0.3.*",
+        "sulu/tag-bundle": "0.3.*",
         "liip/theme-bundle": "@dev",
 
         "jackalope/jackalope-jackrabbit": "1.0.*",
@@ -38,11 +38,11 @@
         "symfony-cmf/routing": "1.2.*@dev"
     },
     "require-dev": {
-        "symfony/symfony": "2.3.*",
+        "symfony/symfony": "2.4.*",
         "doctrine/doctrine-bundle": "1.2.*",
-        "symfony/monolog-bundle": "2.3.*",
+        "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "sulu/test-bundle": "0.2.0"
+        "sulu/test-bundle": "0.3.*"
     },
     "autoload": {
         "psr-0": {

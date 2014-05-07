@@ -36,14 +36,14 @@ class TemplateControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-        $crawler = $client->request('GET', '/content/template/form/overview.html');
+        $crawler = $client->request('GET', '/content/template/form/default.html');
 
         $this->assertTrue(200 === $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->filter('form#content-form')->count());
 
         // foreach property one textfield
         $this->assertEquals(1, $crawler->filter('input#title')->count());
-        $this->assertEquals(1, $crawler->filter('input#url')->count());
+        $this->assertEquals(1, $crawler->filter('div#url')->count());
         $this->assertEquals(1, $crawler->filter('textarea#article')->count());
         // for tags 2
         $this->assertEquals(1, $crawler->filter('div#tags')->count());
