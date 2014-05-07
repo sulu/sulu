@@ -120,7 +120,7 @@ define([], function() {
                 this.sandbox.start([{
                     name: 'contact-form@sulucontact',
                     options: {
-                        el:'#contact-options-dropdown',
+                        el:'#contact-edit-form',
                         fieldTypes: this.fieldTypes,
                         defaultTypes: this.defaultTypes
                     }
@@ -280,7 +280,7 @@ define([], function() {
                 }.bind(this), "select, input, textarea");
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
-                }.bind(this), "input");
+                }.bind(this), "input, textarea");
                 this.sandbox.on('sulu.contact-form.changed', function() {
                     this.setHeaderBar(false);
                 }.bind(this));
