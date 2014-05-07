@@ -81,6 +81,14 @@ define([], function() {
         },
 
         /**
+         * Remove event
+         * @event sulu.types.remove
+         */
+            REMOVE = function() {
+            return createEventName.call(this, 'remove');
+        },
+
+        /**
          * Removed event
          * @event sulu.types.removed
          */
@@ -111,6 +119,7 @@ define([], function() {
          */
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.elementsToRemove = [];
             this.bindCustomEvents();
         },
 
@@ -134,10 +143,9 @@ define([], function() {
          * Saves data
          * @param data
          */
-        saveNewData: function(domData, method) {
+        saveNewEditedItems: function(domData, method) {
 
             // TODO new and edited
-            // TODO delete old
 
             var data = this.parseDataFromDom(domData);
 
@@ -152,6 +160,34 @@ define([], function() {
         },
 
         /**
+         * delete elements
+         * @param data
+         */
+        deleteItem: function(id) {
+
+            this.sandbox.util.save(this.options.url+'/'+id, 'DELETE')
+                .then(function() {
+                    this.sandbox.emit(REMOVED.call(this));
+                    return ;
+                }.bind(this)).fail(function(status, error) {
+                    this.sandbox.logger.error(status, error);
+                    return null;
+                }.bind(this));
+        },
+
+        /**
+         * Deletes removed category items
+         */
+        removeDeletedItems: function(){
+
+            if(!!this.elementsToRemove && this.elementsToRemove.length > 0) {
+                this.sandbox.util.each(this.elementsToRemove, function(index, el){
+                    this.deleteItem(el);
+                }.bind(this));
+            }
+        },
+
+        /**
          * Extracts data from dom structure
          */
         parseDataFromDom: function(domData) {
@@ -161,29 +197,19 @@ define([], function() {
 
             this.sandbox.dom.each($rows, function(index, $el) {
                 id = this.sandbox.dom.data($el, 'id');
-                value = this.sandbox.dom.val(this.sandbox.dom.find($el, 'input'));
+                value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
                 data.push({id: id, value: value});
             }.bind(this));
 
-            return {};
+            return data;
         },
 
         /**
-         * Removes data item with specific id
-         * @param id
+         * Marks a row as removed
+         * @param $row
          */
-        removeData: function(id) {
-
-            // TODO set data-delted + faded class
-
-            this.sandbox.util.save(this.options.url, 'DELETE', id)
-                .then(function(response) {
-                    this.sandbox.emit(REMOVED, id);
-                    return response;
-                }.bind(this)).fail(function(status, error) {
-                    this.sandbox.logger.error(status, error);
-                    return null;
-                }.bind(this));
+        toggleStateOfRow: function($row) {
+            this.sandbox.dom.toggleClass($row, 'faded');
         },
 
         /**
@@ -199,34 +225,39 @@ define([], function() {
 
                 var $row = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget)),
                     id = this.sandbox.dom.data($row, 'id');
+
                 if (!!id) {
-
-                    // TODO remove on ok
-                    // on click just fade and mark
-                    this.removeData(id);
+                    this.sandbox.emit(REMOVE.call(this),id);
                 }
-                this.sandbox.dom.remove($row);
 
-            }.bind(this), this.$overlay);
+                this.toggleStateOfRow($row);
+
+            }.bind(this), this.$overlayInnerContent);
 
             // bind click on add icon
             this.sandbox.dom.on(constants.templateAddSelector, 'click', function() {
                 this.sandbox.dom.append(this.$overlayInnerContent,this.options.templateRow);
+
+                // TODO no eventlistener on newly added rows
+
             }.bind(this), this.$overlay);
 
+        },
+
+        /**
+         * Callback for close of overlay with ok button
+         */
+        onCloseWithOk: function(domData){
+            if (!!domData) {
+                this.saveNewEditedItems(domData);
+            }
+            this.removeDeletedItems();
         },
 
         /**
          * Bind custom related events
          */
         bindCustomEvents: function() {
-
-            this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.closed', function(data) {
-
-                if (!!data) {
-                    this.saveNewData(data);
-                }
-            }.bind(this));
 
             // use open event because initialzed is to early
             this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.opened', function(){
@@ -241,6 +272,21 @@ define([], function() {
             this.sandbox.on(OPEN.call(this), function(config){
                 this.startOverlayComponent(config);
             }.bind(this));
+
+            this.sandbox.on(REMOVE.call(this), function(id){
+                this.updateRemoveList(id);
+            }.bind(this));
+        },
+
+        /**
+         * Adds new item to the list or removes existing
+         */
+        updateRemoveList: function(id){
+            if(this.elementsToRemove.indexOf(id) === -1) {
+                this.elementsToRemove.push(id);
+            } else {
+                this.elementsToRemove.splice(this.elementsToRemove.indexOf(id) , 1);
+            }
         },
 
         /**
@@ -256,6 +302,11 @@ define([], function() {
             }
 
             config.data = this.sandbox.util.template(this.options.template, {data: this.options.data});
+
+            config.okCallback = function(data) {
+                this.onCloseWithOk(data);
+            }.bind(this);
+
 
             this.sandbox.start([
                 {
