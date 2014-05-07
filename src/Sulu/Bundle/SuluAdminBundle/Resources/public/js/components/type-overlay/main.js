@@ -38,20 +38,20 @@ define([], function() {
 
             url: null,
 
-            template:   '<div class="grid-row type-row" data-id="<%= id%>">'+
-                        '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= value&>"/></div>'+
-                        '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>'+
-                        '</div>',
+            template: '<div class="grid-row type-row" data-id="<%= data.id %>">' +
+                '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= data.value %>"/></div>' +
+                '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>' +
+                '</div>',
 
-            templateRow:   ['<div class="content-inner">',
-                            '   <% _.each(, function(id, value) { %>',
-                            '       <div class="grid-row type-row" data-id="<%= id%>">',
-                            '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= value&>"/></div>',
-                            '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
-                            '       </div>',
-                            ' <% }); %>',
-                            '<div class="grid-row"><div id="addRow" class="addButton"></div></div>',
-                            '</div>'].join(''),
+            templateRow: ['<div class="content-inner">',
+                '   <% _.each(data, function(id, value) { %>',
+                '       <div class="grid-row type-row" data-id="<%= data.id%>">',
+                '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= data.value %>"/></div>',
+                '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
+                '       </div>',
+                ' <% }); %>',
+                '<div class="grid-row"><div id="addRow" class="addButton"></div></div>',
+                '</div>'].join(''),
             data: null
         },
 
@@ -76,15 +76,15 @@ define([], function() {
          * Loaded event
          * @event sulu.types.loaded
          */
-        LOADED = function(){
-          return createEventName.call(this, 'loaded');
+            LOADED = function() {
+            return createEventName.call(this, 'loaded');
         },
 
         /**
          * Saved event
          * @event sulu.types.saved
          */
-            SAVED = function(){
+            SAVED = function() {
             return createEventName.call(this, 'saved');
         },
 
@@ -92,7 +92,7 @@ define([], function() {
          * Removed event
          * @event sulu.types.removed
          */
-            REMOVED = function(){
+            REMOVED = function() {
             return createEventName.call(this, 'removed');
         },
 
@@ -115,14 +115,13 @@ define([], function() {
             // TODO loader?
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            if (!!this.options.url) {
+            if (!!this.options.url && !this.options.data) {
                 this.options.data = this.loadData();
             }
 
-            this.options.overlay.data = this.sandbox.util.template(this.options.template, this.options.data);
+            this.options.overlay.data = this.sandbox.util.template(this.options.template, {data:this.options.data});
             this.startOverlayComponent(this.options.overlay);
 
-            // TODO timing issue?
             this.$overlay = this.sandbox.dom.find(this.options.overlay.container);
             this.$overlayContent = this.sandbox.dom.find(constants.overlayContentSelector);
 
@@ -138,11 +137,11 @@ define([], function() {
         loadData: function() {
 
             this.sandbox.util.load(this.options.url)
-                .then(function(response){
+                .then(function(response) {
                     this.sandbox.emit(LOADED);
                     return response;
-                }.bind(this)).fail(function(status,error){
-                    this.sandbox.logger.error(status,error);
+                }.bind(this)).fail(function(status, error) {
+                    this.sandbox.logger.error(status, error);
                     return null;
                 }.bind(this));
         },
@@ -151,16 +150,19 @@ define([], function() {
          * Saves data
          * @param data
          */
-        saveNewData: function(domData,method) {
+        saveNewData: function(domData, method) {
+
+            // TODO new and edited
+            // TODO delete old
 
             var data = this.parseDataFromDom(domData);
 
-            this.sandbox.util.save(this.options.url,method, data)
-                .then(function(response){
+            this.sandbox.util.save(this.options.url, method, data)
+                .then(function(response) {
                     this.sandbox.emit(SAVED, response);
                     return response;
-                }.bind(this)).fail(function(status,error){
-                    this.sandbox.logger.error(status,error);
+                }.bind(this)).fail(function(status, error) {
+                    this.sandbox.logger.error(status, error);
                     return null;
                 }.bind(this));
         },
@@ -168,12 +170,12 @@ define([], function() {
         /**
          * Extracts data from dom structure
          */
-        parseDataFromDom: function(domData){
-            var $rows = this.sandbox.dom.find(constants.typeRowSelector,domData),
+        parseDataFromDom: function(domData) {
+            var $rows = this.sandbox.dom.find(constants.typeRowSelector, domData),
                 data = [],
                 id, value;
 
-            this.sandbox.dom.each($rows, function(index, $el){
+            this.sandbox.dom.each($rows, function(index, $el) {
                 id = this.sandbox.dom.data($el, 'id');
                 value = this.sandbox.dom.val(this.sandbox.dom.find($el, 'input'));
                 data.push({id: id, value: value});
@@ -188,12 +190,14 @@ define([], function() {
          */
         removeData: function(id) {
 
-            this.sandbox.util.save(this.options.url,'DELETE', id)
-                .then(function(response){
+            // TODO set data-delted + faded class
+
+            this.sandbox.util.save(this.options.url, 'DELETE', id)
+                .then(function(response) {
                     this.sandbox.emit(REMOVED, id);
                     return response;
-                }.bind(this)).fail(function(status,error){
-                    this.sandbox.logger.error(status,error);
+                }.bind(this)).fail(function(status, error) {
+                    this.sandbox.logger.error(status, error);
                     return null;
                 }.bind(this));
         },
@@ -207,8 +211,11 @@ define([], function() {
             this.sandbox.dom.on(constants.templateRemoveSelector, 'click', function(event) {
 
                 var $row = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget)),
-                    id = this.sandbox.dom.data($row,'id');
-                if(!!id){
+                    id = this.sandbox.dom.data($row, 'id');
+                if (!!id) {
+
+                    // TODO remove on ok
+                    // on click just fade and mark
                     this.removeData(id);
                 }
                 this.sandbox.dom.remove($row);
