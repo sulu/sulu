@@ -276,14 +276,25 @@ class AccountCategoryControllerTest extends DatabaseTestCase
 
         $this->assertEquals(3, $response2->total);
 
-        $this->assertEquals('Changed Hauptsitz', $response2->_embedded[0]->category);
-        $this->assertEquals(1, $response2->_embedded[0]->id);
+        if($response2->_embedded[0]->category == 'Changed Hauptsitz') {
+            $this->assertEquals('Changed Hauptsitz', $response2->_embedded[0]->category);
+            $this->assertEquals(1, $response2->_embedded[0]->id);
 
-        $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
-        $this->assertEquals(2, $response2->_embedded[1]->id);
+            $this->assertEquals('Nebensitz', $response2->_embedded[1]->category);
+            $this->assertEquals(2, $response2->_embedded[1]->id);
 
-        $this->assertEquals('Neuer Nebensitz', $response2->_embedded[2]->category);
-        $this->assertEquals(3, $response2->_embedded[2]->id);
+            $this->assertEquals('Neuer Nebensitz', $response2->_embedded[2]->category);
+            $this->assertEquals(3, $response2->_embedded[2]->id);
+        } else {
+            $this->assertEquals('Changed Hauptsitz', $response2->_embedded[1]->category);
+            $this->assertEquals(1, $response2->_embedded[1]->id);
+
+            $this->assertEquals('Nebensitz', $response2->_embedded[0]->category);
+            $this->assertEquals(2, $response2->_embedded[0]->id);
+
+            $this->assertEquals('Neuer Nebensitz', $response2->_embedded[2]->category);
+            $this->assertEquals(3, $response2->_embedded[2]->id);
+        }
     }
 
     public function testPatchInvalidId()
