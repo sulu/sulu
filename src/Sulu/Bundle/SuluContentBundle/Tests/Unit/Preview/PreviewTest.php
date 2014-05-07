@@ -16,6 +16,7 @@ use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Types\TextArea;
@@ -122,7 +123,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
 
         $method = new ReflectionMethod(
-            get_class($structureMock), 'add'
+            get_class($structureMock), 'addChild'
         );
 
         $method->setAccessible(true);
@@ -148,17 +149,32 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         );
 
         $block = new BlockProperty('block', 'block', false, false, 4, 2);
+        $type1 = new BlockPropertyType('type1', '');
+
         $prop = new Property('title', 'title', 'text_line');
-        $prop->setValue(array('Block-Title-1', 'Block-Title-2'));
-        $block->addChild($prop);
+        $type1->addChild($prop);
+
         $prop = new Property('article', 'article', 'text_area', false, false, 4, 2);
-        $prop->setValue(
+        $type1->addChild($prop);
+
+        $block->addType($type1);
+        $block->setValue(
             array(
-                array('Block-Article-1-1', 'Block-Article-1-2'),
-                array('Block-Article-2-1', 'Block-Article-2-2')
+                array(
+                    'type' => 'type1',
+                    'title'=>'Block-Title-1',
+                    'article' => array('Block-Article-1-1', 'Block-Article-1-2')
+                ),
+                array(
+                    'type' => 'type1',
+                    'title'=>'Block-Title-2',
+                    'article' => array('Block-Article-2-1', 'Block-Article-2-2')
+                )
             )
         );
-        $block->addChild($prop);
+
+
+
 
         $method->invokeArgs(
             $structureMock,
@@ -316,6 +332,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(
                 array(
+                    'type' => 'type1',
                     'title' => 'New-Block-Title-1',
                     'article' => array(
                         'New-Block-Article-1-1',
@@ -323,6 +340,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
                     )
                 ),
                 array(
+                    'type' => 'type1',
                     'title' => 'New-Block-Title-2',
                     'article' => array(
                         'Block-Article-2-1',

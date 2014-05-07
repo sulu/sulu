@@ -125,7 +125,7 @@ class Preview implements PreviewInterface
                 // length of property path is important to render
                 $property = implode(
                     ',',
-                    array_slice($sequence['sequence'], 0, sizeof($sequence['propertyPath']) - sizeof($sequence['sequence']))
+                    array_slice($sequence['sequence'], 0, (-1) * sizeof($sequence['propertyPath']))
                 );
             }
             $changes = $this->render($userId, $contentUuid, $templateKey, $languageCode, true, $property);
@@ -309,7 +309,10 @@ class Preview implements PreviewInterface
                     $propertyPath[] = $sequence[$i];
                     if ($propertyInstance instanceof BlockPropertyInterface) {
                         $lastIndex = $indexSequence[sizeof($indexSequence)-1];
+
                         unset($indexSequence[sizeof($indexSequence)-1]);
+                        $indexSequence = array_values($indexSequence);
+
                         $propertyInstance = $propertyInstance->getProperties($lastIndex)[$sequence[$i]];
                     }
                 } else {
