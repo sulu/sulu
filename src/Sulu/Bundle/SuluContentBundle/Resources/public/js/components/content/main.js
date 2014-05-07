@@ -196,43 +196,21 @@ define([
                 throw 'callback is not a function';
             }
 
-            var params = {
-                templateType: null,
-                title: this.sandbox.translate('content.delete.dialog.title'),
-                content: this.sandbox.translate('content.delete.dialog.content'),
-                buttonCancelText: this.sandbox.translate('content.delete.dialog.cancel'),
-                buttonSubmitText: this.sandbox.translate('content.delete.dialog.submit')
-            };
+            // show warning dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
 
-            // show dialog
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: params.title,
-                    content: params.content
-                },
-                footer: {
-                    buttonCancelText: params.buttonCancelText,
-                    buttonSubmitText: params.buttonSubmitText
-                },
-                callback: {
-                    submit: function() {
-                        this.sandbox.emit('husky.dialog.hide');
+                function() {
+                    // cancel callback
+                    callbackFunction(false);
+                }.bind(this),
 
-                        // call callback function
-                        if (!!callbackFunction) {
-                            callbackFunction(true);
-                        }
-                    }.bind(this),
-                    cancel: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-
-                        // call callback function
-                        if (!!callbackFunction) {
-                            callbackFunction(false);
-                        }
-                    }.bind(this)
-                }
-            }, params.templateType);
+                function() {
+                    // ok callback
+                    callbackFunction(true);
+                }.bind(this)
+            );
         },
 
         changeState: function(state) {
@@ -291,11 +269,6 @@ define([
 
         delContents: function(ids) {
 
-            if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show', 'No contents selected for deletion!');
-                return;
-            }
-
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     // TODO: show loading icon
@@ -325,31 +298,21 @@ define([
                 throw 'callback is not a function';
             }
 
-            // show dialog
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: "Be careful!",
-                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
-                },
-                footer: {
-                    buttonCancelText: "Don't do it",
-                    buttonSubmitText: "Do it, I understand"
-                },
-                callback: {
-                    submit: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(true);
-                        }
-                    }.bind(this),
-                    cancel: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(false);
-                        }
-                    }.bind(this)
-                }
-            });
+            // show warning dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
+
+                function() {
+                    // cancel callback
+                    callbackFunction(false);
+                }.bind(this),
+
+                function() {
+                    // ok callback
+                    callbackFunction(true);
+                }.bind(this)
+            );
         },
 
         renderList: function() {
