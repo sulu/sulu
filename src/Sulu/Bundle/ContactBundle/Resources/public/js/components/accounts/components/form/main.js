@@ -35,6 +35,7 @@ define(['app-config'], function(AppConfig) {
             this.render();
             this.setHeaderBar(true);
             this.listenForChange();
+            this.initCategorySelect();
         },
 
         render: function() {
@@ -77,6 +78,40 @@ define(['app-config'], function(AppConfig) {
 
             this.bindDomEvents();
             this.bindCustomEvents();
+        },
+
+        /**
+         * Inits the select for the account category
+         */
+        initCategorySelect: function(){
+
+            this.sandbox.util.load('api/account/categories')
+                .then(function(response){
+
+                    var data = response['_embedded'];
+
+                    data.push('divider');
+                    data.push({id: 'add', category: this.sandbox.translate('contacts.accounts.addCategory')});
+
+                    this.sandbox.start([
+                        {
+                            name: 'select@husky',
+                            options: {
+                                el: '#accountCategory',
+                                instanceName: 'account-category',
+                                multipleSelect: false,
+                                defaultLabel: this.sandbox.translate('contacts.accounts.category.select'),
+                                valueName: 'category',
+                                data: data
+                            }
+                        }
+                    ]);
+                }.bind(this))
+                .fail(function(textStatus, error){
+                    this.sandbox.logger.error(textStatus, error);
+                }.bind(this));
+
+
         },
 
         /**
