@@ -401,6 +401,7 @@ class PhpcrMapper extends RlpMapper
         try {
             return $this->loadByContent($parentNode, $webspaceKey, $languageCode, $segmentKey);
         } catch (ResourceLocatorNotFoundException $ex) {
+            // parent node don´t have a resource locator
             return null;
         }
     }
@@ -424,6 +425,13 @@ class PhpcrMapper extends RlpMapper
         }
     }
 
+    /**
+     * changes path node to history node
+     * @param NodeInterface $node
+     * @param SessionInterface $session
+     * @param $absSrcPath
+     * @param $absDestPath
+     */
     private function changePathToHistory(NodeInterface $node, SessionInterface $session, $absSrcPath, $absDestPath)
     {
         // get new path node
@@ -442,6 +450,14 @@ class PhpcrMapper extends RlpMapper
         }
     }
 
+    /**
+     * check resourcelocator is unique and points to given content node
+     * @param NodeInterface $routes
+     * @param $resourceLocator
+     * @param $contentNode
+     * @return bool
+     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     */
     private function checkResourceLocator(NodeInterface $routes, $resourceLocator, $contentNode)
     {
         if (!$this->isUnique($routes, $resourceLocator)) {
