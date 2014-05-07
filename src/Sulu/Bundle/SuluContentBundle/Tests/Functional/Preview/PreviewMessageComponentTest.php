@@ -430,7 +430,7 @@ class PreviewMessageComponentTest extends \PHPUnit_Framework_TestCase
         );
 
         $method = new ReflectionMethod(
-            get_class($structureMock), 'add'
+            get_class($structureMock), 'addChild'
         );
 
         $method->setAccessible(true);
