@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
+use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
@@ -83,28 +84,28 @@ class NavigationTest extends PhpcrTestCase
     {
         $data = array(
             'news' => array(
-                'title' => 'News',
-                'url' => '/news'
+                'name' => 'News',
+                'rl' => '/news'
             ),
             'products' => array(
-                'title' => 'Products',
-                'url' => '/products'
+                'name' => 'Products',
+                'rl' => '/products'
             ),
             'news/news-1' => array(
-                'title' => 'News-1',
-                'url' => '/news/news-1'
+                'name' => 'News-1',
+                'rl' => '/news/news-1'
             ),
             'news/news-2' => array(
-                'title' => 'News-2',
-                'url' => '/news/news-2'
+                'name' => 'News-2',
+                'rl' => '/news/news-2'
             ),
             'products/products-1' => array(
-                'title' => 'Products-1',
-                'url' => '/products/products-1'
+                'name' => 'Products-1',
+                'rl' => '/products/products-1'
             ),
             'products/products-2' => array(
-                'title' => 'Products-2',
-                'url' => '/products/products-2'
+                'name' => 'Products-2',
+                'rl' => '/products/products-2'
             )
         );
 
@@ -200,14 +201,14 @@ class NavigationTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('title', 'text_line')
+                new Property('name', '', 'text_line', false, false, 1, 1, array(), array(new PropertyTag('sulu.node.name', 1)))
             )
         );
 
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'resource_locator')
+                new Property('rl', '', 'resource_locator', false, false, 1, 1, array(), array(new PropertyTag('sulu.rlp', 1)))
             )
         );
 

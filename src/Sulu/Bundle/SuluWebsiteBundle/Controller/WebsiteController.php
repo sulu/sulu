@@ -43,10 +43,13 @@ abstract class WebsiteController extends Controller
 
         // if not preview enable cache handling
         if (!$preview) {
+            // mark the response as either public or private
             $response->setPublic();
-            $response->setPrivate();
+            //$response->setPrivate();
+
+            // set the private or shared max age
+            //$response->setMaxAge($structure->getCacheLifeTime());
             $response->setSharedMaxAge($structure->getCacheLifeTime());
-            $response->setMaxAge($structure->getCacheLifeTime());
         }
 
         return $response;
@@ -71,6 +74,7 @@ abstract class WebsiteController extends Controller
     {
         $twig = $this->get('twig');
         $template = $twig->loadTemplate($template);
+
         return $template->renderBlock($block, $attributes);
     }
 
