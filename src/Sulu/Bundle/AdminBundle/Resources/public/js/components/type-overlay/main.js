@@ -9,14 +9,8 @@
  */
 
 /**
- * @class Labels
+ * @class Type Overlay
  * @constructor
- *
- * @param {String} [options.overlay] object which will accept same arguments as husky overlay
- * @param {String} [options.overlay.instanceName] instancename
- * @param {String} [options.overlay.container] selector for overlay container
- * @param {String} [options.overlay.triggerEl] id/class of trigger element(s)
- * @param {String} [options.overlay.title] title of the overlay
  *
  * @param {String} [options.url] url to fetch data from
  * @param {Array} [options.data] data to display in the template
@@ -29,17 +23,14 @@ define([], function() {
 
     var defaults = {
 
+            url: null,
+            data: null,
             overlay: {
-                instanceName: 'overlay',
-                el: null,
-                triggerEl: null,
-                title: ''
+                instanceName: null
             },
 
-            url: null,
-
-            templateRow: '<div class="grid-row type-row" data-id="<%= data.id %>">' +
-                '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= data.category %>"/></div>' +
+            templateRow: '<div class="grid-row type-row" data-id="">' +
+                '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value=""/></div>' +
                 '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>' +
                 '</div>',
 
@@ -50,16 +41,17 @@ define([], function() {
                 '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
                 '       </div>',
                 ' <% }); %>',
-                '<div class="grid-row"><div id="addRow" class="addButton"></div></div>',
-                '</div>'].join(''),
-            data: null
+                '</div>',
+                '<div class="grid-row"><div id="addRow" class="addButton"></div></div>'].join('')
+
         },
 
         constants = {
             overlayContentSelector: '.overlay-content',
             templateRemoveSelector: '.remove-row',
             templateAddSelector: '#addRow',
-            typeRowSelector: '.type-row'
+            typeRowSelector: '.type-row',
+            contentInnerSelector: '.content-inner'
         },
 
         eventNamespace = 'sulu.types.',
@@ -96,6 +88,14 @@ define([], function() {
             return createEventName.call(this, 'removed');
         },
 
+        /**
+         * open event
+         * @event sulu.types.open
+         */
+            OPEN = function() {
+            return createEventName.call(this, 'open');
+        },
+
 
         createEventName = function(postFix) {
             return eventNamespace + postFix;
@@ -110,16 +110,7 @@ define([], function() {
          * then continues with the initialization
          */
         initialize: function() {
-
-            // TODO loader?
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            if (!!this.options.url && !this.options.data) {
-                this.options.data = this.loadData();
-            }
-
-            this.options.overlay.data = this.sandbox.util.template(this.options.template, {data:this.options.data});
-            this.startOverlayComponent(this.options.overlay);
             this.bindCustomEvents();
         },
 
@@ -200,6 +191,9 @@ define([], function() {
          */
         bindDomEvents: function() {
 
+            this.sandbox.dom.off(constants.templateAddSelector);
+            this.sandbox.dom.off(constants.templateRemoveSelector);
+
             // bind click on remove icon
             this.sandbox.dom.on(constants.templateRemoveSelector, 'click', function(event) {
 
@@ -217,7 +211,7 @@ define([], function() {
 
             // bind click on add icon
             this.sandbox.dom.on(constants.templateAddSelector, 'click', function() {
-                this.sandbox.dom.append(this.options.templateRow, this.$overlayContent);
+                this.sandbox.dom.append(this.$overlayInnerContent,this.options.templateRow);
             }.bind(this), this.$overlay);
 
         },
@@ -226,7 +220,9 @@ define([], function() {
          * Bind custom related events
          */
         bindCustomEvents: function() {
-            this.sandbox.on('husky.' + this.options.overlay.instanceName + '.closed', function(data) {
+
+            this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.closed', function(data) {
+
                 if (!!data) {
                     this.saveNewData(data);
                 }
@@ -236,9 +232,14 @@ define([], function() {
             this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.opened', function(){
                 this.$overlay = this.sandbox.dom.find(this.options.overlay.el);
                 this.$overlayContent = this.sandbox.dom.find(constants.overlayContentSelector, this.$overlay);
+                this.$overlayInnerContent = this.sandbox.dom.find(constants.contentInnerSelector, this.$overlayContent);
 
                 this.bindDomEvents();
                 this.sandbox.emit(INITIALZED.call(this));
+            }.bind(this));
+
+            this.sandbox.on(OPEN.call(this), function(config){
+                this.startOverlayComponent(config);
             }.bind(this));
         },
 
@@ -246,11 +247,20 @@ define([], function() {
          * Starts the husky component
          * @param configs
          */
-        startOverlayComponent: function(configs) {
+        startOverlayComponent: function(config) {
+
+            if (!!this.options.url && !config.data) {
+                this.options.data = this.loadData();
+            } else {
+                this.options.data = config.data;
+            }
+
+            config.data = this.sandbox.util.template(this.options.template, {data: this.options.data});
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
-                    options: configs
+                    options: config
                 }
             ]);
         }
