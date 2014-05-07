@@ -73,7 +73,7 @@ class NavigationMapper implements NavigationMapperInterface
                 $children = $this->generateNavigation($content->getChildren(), $preview);
             }
             if (($preview || ($content->getPublishedState() && $content->getNavigation() !== false))) {
-                $url = $content->getPropertyByTagName('sulu.rlp.input')->getValue();
+                $url = $content->getPropertyByTagName('sulu.rlp')->getValue();
                 $title = $content->getPropertyByTagName('sulu.node.name')->getValue();
                 $result[] = new NavigationItem(
                     $content, $title, $url, $children, $content->getUuid()
