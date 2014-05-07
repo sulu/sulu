@@ -51,6 +51,8 @@ define(function() {
 
         initialize: function() {
             this.render();
+            // shows a delete success label. If a node just got deleted
+            this.sandbox.sulu.triggerDeleteSuccessLabel();
 
             this.showGhostPages = true;
             this.setShowGhostPages();
