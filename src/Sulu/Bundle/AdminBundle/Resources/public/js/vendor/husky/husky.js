@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -16325,6 +16326,7 @@ define('aura/ext/components', [],function() {
   };
 });
 
+
 /*
  * This file is part of the Husky Validation.
  *
@@ -17218,7 +17220,7 @@ define('form/mapper',[
                     $(form.$el).trigger('form-remove', [propertyName, data]);
                 },
 
-                processData: function(el, collection) {
+                processData: function(el, collection, returnMapperId) {
                     // get attributes
                     var $el = $(el),
                         type = $el.data('type'),
@@ -17245,8 +17247,9 @@ define('form/mapper',[
                         result = [];
                         $.each($el.children(), function(key, value) {
                             if (!collection || collection.tpl === value.dataset.mapperPropertyTpl) {
-                                item = form.mapper.getData($(value));
-                                if (element.$el.data('mapperProperty').length > 1) {
+                                item = that.getData($(value));
+                                    // only set mapper-id if explicitly set
+                                if (!!returnMapperId) {
                                     item.mapperId = value.dataset.mapperId;
                                 }
 
@@ -17259,7 +17262,7 @@ define('form/mapper',[
                                     result.push(item);
                                 }
                             }
-                        });
+                        }.bind(this));
                         return result;
                     }
                 },
@@ -17387,6 +17390,46 @@ define('form/mapper',[
                     $element.remove();
                 },
 
+                getData: function($el, returnMapperId) {
+                    if (!$el) {
+                        $el = form.$el;
+                    }
+
+                    var data = { }, $childElement, property, parts,
+
+                    // search field with mapper property
+                        selector = '*[data-mapper-property]',
+                        $elements = $el.find(selector);
+
+                    // do it while elements exists
+                    while ($elements.length > 0) {
+                        // get first
+                        $childElement = $($elements.get(0));
+                        property = $childElement.data('mapper-property');
+
+                        if ($.isArray(property)) {
+                            $.each(property, function(i, prop) {
+                                data[prop.data] = that.processData.call(this, $childElement, prop, returnMapperId);
+                            }.bind(this));
+                        } else if (property.match(/.*\..*/)) {
+                            parts = property.split('.');
+                            data[parts[0]] = {};
+                            data[parts[0]][parts[1]] = that.processData.call(this, $childElement);
+                        } else {
+                            // process it
+                            data[property] = that.processData.call(this, $childElement);
+                        }
+
+                        // remove element itself
+                        $elements = $elements.not($childElement);
+
+                        // remove child elements
+                        $elements = $elements.not($childElement.find(selector));
+                    }
+
+                    return data;
+                },
+
                 setData: function(data, $el) {
                     if (!$el) {
                         $el = form.$el;
@@ -17475,56 +17518,26 @@ define('form/mapper',[
                     }
 
                     return dfd.promise();
-                },
+                }
 
             },
 
         // define mapper interface
             result = {
+
                 setData: function(data, $el) {
                     this.collectionsSet = {};
 
                     return that.setData.call(this, data, $el);
                 },
 
-                getData: function($el) {
-                    if (!$el) {
-                        $el = form.$el;
-                    }
-
-                    var data = { }, $childElement, property, parts,
-
-                    // search field with mapper property
-                        selector = '*[data-mapper-property]',
-                        $elements = $el.find(selector);
-
-                    // do it while elements exists
-                    while ($elements.length > 0) {
-                        // get first
-                        $childElement = $($elements.get(0));
-                        property = $childElement.data('mapper-property');
-
-                        if ($.isArray(property)) {
-                            $.each(property, function(i, prop) {
-                                data[prop.data] = that.processData.call(this, $childElement, prop);
-                            });
-                        } else if (property.match(/.*\..*/)) {
-                            parts = property.split('.');
-                            data[parts[0]] = {};
-                            data[parts[0]][parts[1]] = that.processData.call(this, $childElement);
-                        } else {
-                            // process it
-                            data[property] = that.processData.call(this, $childElement);
-                        }
-
-                        // remove element itself
-                        $elements = $elements.not($childElement);
-
-                        // remove child elements
-                        $elements = $elements.not($childElement.find(selector));
-                    }
-
-                    return data;
+                /**
+                 *
+                 *  @param {Object} $el Element to
+                 *  @param {Boolean} returnMapperId
+                 */
+                getData: function(returnMapperId) {
+                    return that.getData.call(this, undefined, returnMapperId);
                 },
 
                 addCollectionFilter: function(name, callback) {
@@ -18859,7 +18872,6 @@ define('validator/regex',[
     };
 
 });
-
 
 define("husky-validation", function(){});
 
@@ -24831,6 +24843,7 @@ define('__component__$navigation@husky',[],function() {
                 '   <div class="navigation-content">',
                 '       <div class="wrapper">',
                 '           <header class="navigation-header">',
+                '               <div class="logo"></div>',
                 '               <div class="navigation-header-title"><% if (data.title) { %> <%= translate(data.title) %><% } %></div>',
                 '           </header>',
                 '           <div id="navigation-search" class="navigation-search"></div>',
@@ -24841,14 +24854,6 @@ define('__component__$navigation@husky',[],function() {
                 '   </div>',
                 '   <div class="icon-remove2 navigation-close-icon">',
                 '</nav>'].join(''),
-            headerImage: [
-                '<div class="navigation-header-image">',
-                '   <img alt="#" src="<%= icon %>"/>',
-                '</div>'
-            ].join(''),
-            headerText: [
-                '<div class="navigation-header-text"><span><%= text %></span></div>'
-            ].join(''),
             /** main navigation items (with icons)*/
             mainItem: [
                 '<li class="js-navigation-items navigation-items" id="<%= item.id %>" data-id="<%= item.id %>">',
@@ -25052,21 +25057,6 @@ define('__component__$navigation@husky',[],function() {
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton,
                 this.sandbox.util.extend(true, {}, this.options, {translate: this.sandbox.translate}))
             );
-
-            // render header image
-            if (typeof this.options.data.icon === 'string') {
-                this.sandbox.dom.prepend(this.sandbox.dom.find('header.navigation-header', this.$el),
-                    this.sandbox.template.parse(templates.headerImage, {
-                        icon: this.options.data.icon
-                    })
-                );
-            } else {
-                this.sandbox.dom.prepend(this.sandbox.dom.find('header.navigation-header', this.$el),
-                    this.sandbox.template.parse(templates.headerText, {
-                        text: this.options.data.title.substr(0, 1)
-                    })
-                );
-            }
 
             this.$navigation = this.$find('.navigation', this.$el);
             this.$navigationContent = this.$find('.navigation-content', this.$navigation);
@@ -32339,6 +32329,7 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {Boolean} [options.fixedLabel] If true the label never gets changed
  * @param {String} [options.icon] icon to set into the label
  * @param {Function} [options.noItemsCallback] callback function which gets executed at click on label if no dropdown-items exist
+ * @param {Boolean} [options.repeatSelect] If true dropdown item can be selected n-times in succession
  */
 
 define('__component__$select@husky',[], function() {
@@ -32362,7 +32353,8 @@ define('__component__$select@husky',[], function() {
             emitValues: false,
             fixedLabel: false,
             icon: null,
-            noItemsCallback: null
+            noItemsCallback: null,
+            repeatSelect: false
         },
 
         constants = {
@@ -32663,7 +32655,7 @@ define('__component__$select@husky',[], function() {
                 } else if (index === -1) {
                     this.uncheckAll(key);
                     // same element was selected
-                } else {
+                } else if (this.options.repeatSelect !== true) {
                     this.hideDropDown();
                     return;
                 }
@@ -35033,7 +35025,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {String} [options.trigger] List of events on which the overlay should be opened
  * @params {String} [options.triggerEl] Element that triggers the overlay
  * @params {String} [options.title] the title of the overlay
- * @params {String} [options.closeIcon] icon class for the close button
+ * @params {String|Boolean} [options.closeIcon] icon class for the close button. If false no close icon will be displayed
  * @params {Function} [options.closeCallback] callback which gets executed after the overlay gets closed
  * @params {Function} [options.okCallback] callback which gets executed after the overlay gets submited
  * @params {String|Object} [options.data] HTML or DOM-object which acts as the overlay-content
@@ -35051,7 +35043,7 @@ define('__component__$smart-content@husky',[], function() {
  * @params {String} [options.okDefaultText] The default text for ok buttons
  * @params {String} [options.cancelDefaultText] The default text for cancel buttons
  * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
- * @params {Array} [options.buttonsAlign] the align of the buttons in the footer ('center', 'left' or 'right')
+ * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
  *
  * @params {Object} [options.languageChanger] If set language-changer will be displayed in the header
  * @params {Array} [options.languageChanger.locales] array of locale strings for the dropdown
@@ -35093,7 +35085,7 @@ define('__component__$overlay@husky',[], function() {
             type: 'normal',
             cssClass: '',
             buttons: [],
-            buttonsAlign: 'center',
+            buttonsDefaultAlign: 'center',
             cancelDefaultText: 'Cancel',
             okDefaultText: 'Ok',
             languageChanger: null
@@ -35126,18 +35118,20 @@ define('__component__$overlay@husky',[], function() {
             warning: {
                 cssClass: 'warning',
                 backdropClose: false,
-                buttonsAlign: 'right',
                 removeOnClose: true,
                 openOnStart: true,
                 instanceName: 'warning',
+                closeIcon: false,
                 buttons: [
                     {
                         type: 'ok',
-                        inactive: false
+                        inactive: false,
+                        align: 'right'
                     },
                     {
                         type: 'cancel',
-                        inactive: false
+                        inactive: false,
+                        align: 'left'
                     }
                 ]
             },
@@ -35148,6 +35142,7 @@ define('__component__$overlay@husky',[], function() {
                 removeOnClose: true,
                 openOnStart: true,
                 instanceName: 'error',
+                closeIcon: false,
                 buttons: [
                     {
                         type: 'cancel',
@@ -35168,7 +35163,7 @@ define('__component__$overlay@husky',[], function() {
                 '<div class="husky-overlay-container<%= skin %> smart-content-overlay">',
                 '<div class="overlay-header">',
                 '<span class="title"><%= title %></span>',
-                '<a class="icon-<%= closeIcon %> close-button" href="#"></a>',
+                '<% if (!!closeIcon) { %><a class="icon-<%= closeIcon %> close-button" href="#"></a><% } %>',
                 '</div>',
                 '<div class="overlay-content"></div>',
                 '<div class="overlay-footer">',
@@ -35184,7 +35179,7 @@ define('__component__$overlay@husky',[], function() {
                 '</div>'
             ].join(''),
             cancelButton: [
-                '<div class="btn gray-dark overlay-cancel<%= classes %>">',
+                '<div class="btn gray black-text overlay-cancel<%= classes %>">',
                     '<% if (!!icon) { %>',
                     '<span class="icon-<%= icon %>"></span>',
                     '<% } %>',
@@ -35499,7 +35494,7 @@ define('__component__$overlay@husky',[], function() {
             }
 
             // add classes for various styling
-            this.sandbox.dom.addClass(this.overlay.$footer, this.options.buttonsAlign);
+            this.sandbox.dom.addClass(this.overlay.$footer, this.options.buttonsDefaultAlign);
             this.sandbox.dom.addClass(this.overlay.$el, this.options.cssClass);
         },
 
@@ -35560,6 +35555,11 @@ define('__component__$overlay@husky',[], function() {
                     text: text,
                     classes: (inactive === true) ? classes + ' inactive gray' : classes
                 }));
+
+                // add individual button align (if configured)
+                if (!!button.align) {
+                    this.sandbox.dom.addClass($button, button.align);
+                }
 
                 this.sandbox.dom.append(this.overlay.$footer, $button);
             }
@@ -35635,8 +35635,10 @@ define('__component__$overlay@husky',[], function() {
             }.bind(this));
 
             // close handler for close icon
-            this.sandbox.dom.on(this.overlay.$close, 'click',
-                this.closeHandler.bind(this));
+            if (!!this.options.closeIcon) {
+                this.sandbox.dom.on(this.overlay.$close, 'click',
+                    this.closeHandler.bind(this));
+            }
 
             // close handler for cancel buttons
             this.sandbox.dom.on(this.overlay.$footer, 'click',
@@ -37587,8 +37589,8 @@ define('husky_extensions/collection',[],function() {
                         return app.sandbox.form.getObject(selector).mapper.setData(data);
                     },
 
-                    getData: function(selector) {
-                        return  app.sandbox.form.getObject(selector).mapper.getData();
+                    getData: function(selector, returnMapperId) {
+                        return  app.sandbox.form.getObject(selector).mapper.getData(returnMapperId);
                     },
 
                     addToCollection: function(selector, propertyName, data, append) {
@@ -38430,4 +38432,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
