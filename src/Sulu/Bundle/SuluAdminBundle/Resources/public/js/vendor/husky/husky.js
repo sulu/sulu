@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -37588,8 +37589,8 @@ define('husky_extensions/collection',[],function() {
                         return app.sandbox.form.getObject(selector).mapper.setData(data);
                     },
 
-                    getData: function(selector, returnMapperId) {
-                        return  app.sandbox.form.getObject(selector).mapper.getData(returnMapperId);
+                    getData: function(selector, returnMapperId, $el) {
+                        return  app.sandbox.form.getObject(selector).mapper.getData(returnMapperId, $el);
                     },
 
                     addToCollection: function(selector, propertyName, data, append) {
@@ -38431,4 +38432,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
