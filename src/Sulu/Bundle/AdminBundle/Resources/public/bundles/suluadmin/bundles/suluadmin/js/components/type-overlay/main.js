@@ -1,0 +1,277 @@
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+/**
+ * @class Type Overlay
+ * @constructor
+ *
+ * @param {String} [options.url] url to fetch data from
+ * @param {Array} [options.data] data to display in the template
+ * @param {String} [options.template] underscore template
+ */
+
+define([], function() {
+
+    'use strict';
+
+    var defaults = {
+
+            url: null,
+            data: null,
+            overlay: {
+                instanceName: null
+            },
+
+            templateRow: '<div class="grid-row type-row" data-id="">' +
+                '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value=""/></div>' +
+                '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>' +
+                '</div>',
+
+            template: ['<div class="content-inner">',
+                '   <% _.each(data, function(item) { %>',
+                '       <div class="grid-row type-row" data-id="<%= item.id %>">',
+                '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.category %>"/></div>',
+                '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
+                '       </div>',
+                ' <% }); %>',
+                '</div>',
+                '<div class="grid-row"><div id="addRow" class="addButton"></div></div>'].join('')
+
+        },
+
+        constants = {
+            overlayContentSelector: '.overlay-content',
+            templateRemoveSelector: '.remove-row',
+            templateAddSelector: '#addRow',
+            typeRowSelector: '.type-row',
+            contentInnerSelector: '.content-inner'
+        },
+
+        eventNamespace = 'sulu.types.',
+
+        /**
+         * Initialized event
+         * @event sulu.types.initialzed
+         */
+            INITIALZED = function() {
+            return createEventName.call(this, 'initialzed');
+        },
+
+        /**
+         * Loaded event
+         * @event sulu.types.loaded
+         */
+            LOADED = function() {
+            return createEventName.call(this, 'loaded');
+        },
+
+        /**
+         * Saved event
+         * @event sulu.types.saved
+         */
+            SAVED = function() {
+            return createEventName.call(this, 'saved');
+        },
+
+        /**
+         * Remove event
+         * @event sulu.types.remove
+         */
+            REMOVE = function() {
+            return createEventName.call(this, 'remove');
+        },
+
+        /**
+         * open event
+         * @event sulu.types.open
+         */
+            OPEN = function() {
+            return createEventName.call(this, 'open');
+        },
+
+
+        createEventName = function(postFix) {
+            return eventNamespace + postFix;
+        };
+
+    return {
+
+        view: true,
+
+        /**
+         * Waits for the App-Component to start,
+         * then continues with the initialization
+         */
+        initialize: function() {
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.bindCustomEvents();
+        },
+
+        /**
+         * Loads data from URL
+         * @returns {Object} data object
+         */
+        loadData: function() {
+
+            this.sandbox.util.load(this.options.url)
+                .then(function(response) {
+                    this.sandbox.emit(LOADED);
+                    return response;
+                }.bind(this)).fail(function(status, error) {
+                    this.sandbox.logger.error(status, error);
+                    return null;
+                }.bind(this));
+        },
+
+        /**
+         * Saves data
+         * @param data
+         */
+        saveNewEditedItems: function(domData, method) {
+
+            // TODO new and edited
+            // TODO delete old
+
+            var data = this.parseDataFromDom(domData);
+
+            this.sandbox.util.save(this.options.url, method, data)
+                .then(function(response) {
+                    this.sandbox.emit(SAVED, response);
+                    return response;
+                }.bind(this)).fail(function(status, error) {
+                    this.sandbox.logger.error(status, error);
+                    return null;
+                }.bind(this));
+        },
+
+        /**
+         * Deletes removed category items
+         */
+        removeDeletedItems: function(){
+
+        },
+
+        /**
+         * Extracts data from dom structure
+         */
+        parseDataFromDom: function(domData) {
+            var $rows = this.sandbox.dom.find(constants.typeRowSelector, domData),
+                data = [],
+                id, value;
+
+            this.sandbox.dom.each($rows, function(index, $el) {
+                id = this.sandbox.dom.data($el, 'id');
+                value = this.sandbox.dom.val(this.sandbox.dom.find($el, 'input'));
+                data.push({id: id, value: value});
+            }.bind(this));
+
+            return {};
+        },
+
+        /**
+         * Marks a row as removed
+         * @param $row
+         */
+        toggleStateOfRow: function($row) {
+
+            // TODO set data-delted + faded class
+            this.sandbox.dom.toggleClass($row, 'faded');
+//            this.sandbox.util.save(this.options.url, 'DELETE', id)
+//                .then(function(response) {
+//                    this.sandbox.emit(REMOVED, id);
+//                    return response;
+//                }.bind(this)).fail(function(status, error) {
+//                    this.sandbox.logger.error(status, error);
+//                    return null;
+//                }.bind(this));
+        },
+
+        /**
+         * Bind dom events
+         */
+        bindDomEvents: function() {
+
+            this.sandbox.dom.off(constants.templateAddSelector);
+            this.sandbox.dom.off(constants.templateRemoveSelector);
+
+            // bind click on remove icon
+            this.sandbox.dom.on(constants.templateRemoveSelector, 'click', function(event) {
+
+                var $row = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget)),
+                    id = this.sandbox.dom.data($row, 'id');
+
+                if (!!id) {
+                    this.sandbox.emit(REMOVE.call(this),id);
+                }
+
+                this.toggleStateOfRow($row);
+
+            }.bind(this), this.$overlayInnerContent);
+
+            // bind click on add icon
+            this.sandbox.dom.on(constants.templateAddSelector, 'click', function() {
+                this.sandbox.dom.append(this.$overlayInnerContent,this.options.templateRow);
+
+                // TODO no eventlistener on newly added rows
+
+            }.bind(this), this.$overlay);
+
+        },
+
+        /**
+         * Bind custom related events
+         */
+        bindCustomEvents: function() {
+            husky.overlay.accountCategories.closed
+            this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.closed', function(data) {
+                if (!!data) {
+                    this.saveNewEditedItems(data);
+                    this.removeDeletedItems();
+                }
+            }.bind(this));
+
+            // use open event because initialzed is to early
+            this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.opened', function(){
+                this.$overlay = this.sandbox.dom.find(this.options.overlay.el);
+                this.$overlayContent = this.sandbox.dom.find(constants.overlayContentSelector, this.$overlay);
+                this.$overlayInnerContent = this.sandbox.dom.find(constants.contentInnerSelector, this.$overlayContent);
+
+                this.bindDomEvents();
+                this.sandbox.emit(INITIALZED.call(this));
+            }.bind(this));
+
+            this.sandbox.on(OPEN.call(this), function(config){
+                this.startOverlayComponent(config);
+            }.bind(this));
+        },
+
+        /**
+         * Starts the husky component
+         * @param configs
+         */
+        startOverlayComponent: function(config) {
+
+            if (!!this.options.url && !config.data) {
+                this.options.data = this.loadData();
+            } else {
+                this.options.data = config.data;
+            }
+
+            config.data = this.sandbox.util.template(this.options.template, {data: this.options.data});
+
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: config
+                }
+            ]);
+        }
+    };
+});
