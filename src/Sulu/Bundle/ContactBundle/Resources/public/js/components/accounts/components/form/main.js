@@ -93,7 +93,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.util.load(this.accountCategoryURL)
                 .then(function(response) {
 
-                    var data = response['_embedded'],$overlayContainer;
+                    var data = response['_embedded'];
                     this.accountCategoryData = data.slice(0,data.length);
 
                     data.push({divider: true});
@@ -385,8 +385,17 @@ define(['app-config'], function(AppConfig) {
             if (this.sandbox.form.validate(this.form)) {
                 var data = this.sandbox.form.getData(this.form);
 
+
                 if (data.id === '') {
                     delete data.id;
+                }
+
+                if(!!this.selectedAccountCategory) {
+                    if(!data.accountCategory) {
+                        data.accountCategory = {};
+                    }
+
+                    data.accountCategory.id = this.selectedAccountCategory;
                 }
 
                 this.updateHeadline();
@@ -422,6 +431,13 @@ define(['app-config'], function(AppConfig) {
             // if a field-type gets changed or a field gets deleted
             this.sandbox.on('sulu.contact-form.changed', function() {
                 this.setHeaderBar(false);
+            }.bind(this));
+
+            this.sandbox.on('husky.select.account-category.selected.item', function(id){
+                if(id > 0) {
+                    this.selectedAccountCategory = id;
+                    this.setHeaderBar(false);
+                }
             }.bind(this));
         }
 
