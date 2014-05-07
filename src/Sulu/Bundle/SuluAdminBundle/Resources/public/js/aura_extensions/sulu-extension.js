@@ -57,6 +57,25 @@
             app.sandbox.sulu.viewStates = {};
 
             /**
+             * Stores the info that a node got deleted, so other views are
+             * able to display a success label
+             */
+            app.sandbox.sulu.unlockDeleteSuccessLabel = function() {
+                app.sandbox.sulu.viewStates.nodeDeleted = true;
+            },
+
+            /**
+             * Actually shows a success label if delete description and title. But only
+             * if a node actually got deleted beforehand
+             */
+            app.sandbox.sulu.triggerDeleteSuccessLabel = function() {
+                if (app.sandbox.sulu.viewStates.nodeDeleted === true) {
+                    app.sandbox.emit('sulu.labels.success.show', 'labels.success.content-deleted-desc', 'labels.success');
+                    delete app.sandbox.sulu.viewStates.nodeDeleted;
+                }
+            },
+
+            /**
              * load user settings
              * @param key
              * @param url Where to get data from, if not already available
