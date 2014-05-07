@@ -38,10 +38,14 @@ class SplitView implements SplitViewInterface
      */
     protected $header;
 
-    function __construct(EngineInterface $templateEngine, $header)
+    function __construct(EngineInterface $templateEngine, $header, $template = null)
     {
         $this->templateEngine = $templateEngine;
         $this->header = $header;
+
+        if ($template !== null) {
+            $this->template = $template;
+        }
     }
 
     public function addWidget(SplitViewWidgetInterface $widget, $priority)
