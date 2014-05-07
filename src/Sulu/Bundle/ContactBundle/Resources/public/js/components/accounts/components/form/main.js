@@ -75,6 +75,7 @@ define(['app-config'], function(AppConfig) {
 
             this.initForm(data);
             this.initCategorySelect(data);
+            this.startCategoryOverlay();
 
             this.bindDomEvents();
             this.bindCustomEvents();
@@ -96,7 +97,7 @@ define(['app-config'], function(AppConfig) {
                     this.accountCategoryData = data.slice(0,data.length);
 
                     data.push({divider: true});
-                    data.push({id: -1, category: this.sandbox.translate('contacts.accounts.addCategory'), callback: this.showCategoryOverlay.bind(this)});
+                    data.push({id: -1, category: this.sandbox.translate('contacts.accounts.manage.categories'), callback: this.showCategoryOverlay.bind(this)});
 
                     this.sandbox.start([
                         {
@@ -114,9 +115,6 @@ define(['app-config'], function(AppConfig) {
                         }
                     ]);
 
-                    $overlayContainer = this.sandbox.dom.$('<div id="overlayContainer"></div>');
-                    this.sandbox.dom.append('body',$overlayContainer);
-
                 }.bind(this))
                 .fail(function(textStatus, error) {
                     this.sandbox.logger.error(textStatus, error);
@@ -126,22 +124,37 @@ define(['app-config'], function(AppConfig) {
         },
 
         /**
-         * Shows the overlay to manage account categories
+         * Triggers event to show overlay
          */
         showCategoryOverlay: function() {
+
+            var $overlayContainer = this.sandbox.dom.$('<div id="overlayContainer"></div>'),
+                config = {
+                    instanceName: 'accountCategories',
+                    el: '#overlayContainer',
+                    openOnStart: true,
+                    removeOnClose: true,
+                    triggerEl: null,
+                    title: this.sandbox.translate('contacts.accounts.manage.categories.title'),
+                    data: this.accountCategoryData
+                };
+
+            this.sandbox.dom.append('body', $overlayContainer);
+            this.sandbox.emit('sulu.types.open', config);
+        },
+
+        /**
+         * Shows the overlay to manage account categories
+         */
+        startCategoryOverlay: function() {
 
             this.sandbox.start([
                 {
                     name: 'type-overlay@suluadmin',
                     options: {
                         overlay: {
-                            instanceName: 'overlay',
-                            el: '#overlayContainer',
-                            openOnStart: true,
-                            triggerEl: null,
-                            title: this.sandbox.translate('contacts.accounts.manage.category.title')
+                            instanceName: 'accountCategory'
                         },
-
                         url: this.accountCategoryURL,
                         data: this.accountCategoryData
                     }
