@@ -215,7 +215,7 @@ class AccountCategoryController extends RestController implements ClassResourceI
      */
     private function addAndUpdateCategories($item)
     {
-        if (isset($item['id'])) {
+        if (isset($item['id']) && !empty($item['id'])) {
             /* @var AccountCategory $category */
             $category = $this->getDoctrine()
                 ->getRepository($this->entityName)

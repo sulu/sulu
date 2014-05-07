@@ -153,7 +153,8 @@ define(['app-config'], function(AppConfig) {
                     name: 'type-overlay@suluadmin',
                     options: {
                         overlay: {
-                            instanceName: 'accountCategory'
+                            el: '#overlayContainer',
+                            instanceName: 'accountCategories'
                         },
                         url: this.accountCategoryURL,
                         data: this.accountCategoryData
