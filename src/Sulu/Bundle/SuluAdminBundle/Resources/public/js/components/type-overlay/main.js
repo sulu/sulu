@@ -141,34 +141,55 @@ define([], function() {
 
         /**
          * Saves data
-         * @param data
+         * @param domData
+         * @param method
          */
         saveNewEditedItems: function(domData, method) {
 
-            // TODO new and edited
+            var data = this.parseDataFromDom(domData),
+                changedData = this.getChangedData(data);
 
-            var data = this.parseDataFromDom(domData);
+            if(changedData.length > 0) {
+                this.sandbox.util.save(this.options.url, method, changedData)
+                    .then(function(response) {
+                        this.sandbox.emit(SAVED, response);
+                        return response;
+                    }.bind(this)).fail(function(status, error) {
+                        this.sandbox.logger.error(status, error);
+                        return null;
+                    }.bind(this));
+            }
+        },
 
-            this.sandbox.util.save(this.options.url, method, data)
-                .then(function(response) {
-                    this.sandbox.emit(SAVED, response);
-                    return response;
-                }.bind(this)).fail(function(status, error) {
-                    this.sandbox.logger.error(status, error);
-                    return null;
-                }.bind(this));
+        /**
+         * Compares original and new data
+         */
+        getChangedData: function(newData){
+            var changedData = [];
+            this.sandbox.util.each(newData,function(idx, el){
+                if(!el.id) {
+                    changedData.push(el);
+                } else {
+                    this.sandbox.util.each(this.options.data,function(idx, origEl){
+                        if(el.id === origEl.id && el.category !== origEl.category && el.category !== '') {
+                            changedData.push(el);
+                        }
+                    }.bind(this));
+                }
+            }.bind(this));
+
+            return changedData;
         },
 
         /**
          * delete elements
-         * @param data
+         * @param id
          */
         deleteItem: function(id) {
 
             this.sandbox.util.save(this.options.url+'/'+id, 'DELETE')
                 .then(function() {
                     this.sandbox.emit(REMOVED.call(this));
-                    return ;
                 }.bind(this)).fail(function(status, error) {
                     this.sandbox.logger.error(status, error);
                     return null;
@@ -198,7 +219,7 @@ define([], function() {
             this.sandbox.dom.each($rows, function(index, $el) {
                 id = this.sandbox.dom.data($el, 'id');
                 value = this.sandbox.dom.val(this.sandbox.dom.find('input', $el));
-                data.push({id: id, value: value});
+                data.push({id: id, category: value});
             }.bind(this));
 
             return data;
@@ -249,7 +270,7 @@ define([], function() {
          */
         onCloseWithOk: function(domData){
             if (!!domData) {
-                this.saveNewEditedItems(domData);
+                this.saveNewEditedItems(domData, 'PATCH');
             }
             this.removeDeletedItems();
         },
@@ -291,7 +312,7 @@ define([], function() {
 
         /**
          * Starts the husky component
-         * @param configs
+         * @param config
          */
         startOverlayComponent: function(config) {
 
