@@ -31,22 +31,22 @@ define([], function() {
 
             overlay: {
                 instanceName: 'overlay',
-                container: null,
+                el: null,
                 triggerEl: null,
                 title: ''
             },
 
             url: null,
 
-            template: '<div class="grid-row type-row" data-id="<%= data.id %>">' +
-                '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= data.value %>"/></div>' +
+            templateRow: '<div class="grid-row type-row" data-id="<%= data.id %>">' +
+                '   <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= data.category %>"/></div>' +
                 '   <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>' +
                 '</div>',
 
-            templateRow: ['<div class="content-inner">',
-                '   <% _.each(data, function(id, value) { %>',
-                '       <div class="grid-row type-row" data-id="<%= data.id%>">',
-                '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= data.value %>"/></div>',
+            template: ['<div class="content-inner">',
+                '   <% _.each(data, function(item) { %>',
+                '       <div class="grid-row type-row" data-id="<%= item.id %>">',
+                '           <div class="grid-col-8 pull-left"><input class="form-element" type="text" value="<%= item.category %>"/></div>',
                 '           <div class="grid-col-2 pull-right"><div class="remove-row btn gray-dark fit only-icon pull-right"><div class="icon-circle-minus"></div></div></div>',
                 '       </div>',
                 ' <% }); %>',
@@ -111,7 +111,6 @@ define([], function() {
          */
         initialize: function() {
 
-            // TODO update husky
             // TODO loader?
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
