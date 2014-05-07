@@ -4270,44 +4270,50 @@ input ::-moz-placeholder {
   /* Firefox 19+ */
 }
 
-/* line 71, ../scss/modules/form.scss */
-.form-group {
+/* line 73, ../scss/modules/form.scss */
+.form-group,
+.form-group-vertical,
+.form-vertical .form-group {
   min-height: 30px;
 }
-/* line 74, ../scss/modules/form.scss */
-.form-group > :first-child {
+/* line 76, ../scss/modules/form.scss */
+.form-group > :first-child,
+.form-group-vertical > :first-child,
+.form-vertical .form-group > :first-child {
   height: 20px;
   margin-bottom: 10px;
 }
-/* line 79, ../scss/modules/form.scss */
-.form-group > :nth-child(2) {
+/* line 81, ../scss/modules/form.scss */
+.form-group > :nth-child(2),
+.form-group-vertical > :nth-child(2),
+.form-vertical .form-group > :nth-child(2) {
   margin: 0;
   vertical-align: middle;
 }
 
-/* line 87, ../scss/modules/form.scss */
+/* line 89, ../scss/modules/form.scss */
 .form-horizontal .form-group {
   display: table;
   table-layout: fixed;
   width: 100%;
 }
-/* line 93, ../scss/modules/form.scss */
+/* line 95, ../scss/modules/form.scss */
 .form-horizontal .form-group > * {
   display: table-cell;
 }
-/* line 97, ../scss/modules/form.scss */
+/* line 99, ../scss/modules/form.scss */
 .form-horizontal .form-group > :first-child {
   text-align: right;
   vertical-align: middle;
   padding-right: 20px;
   width: 140px;
 }
-/* line 104, ../scss/modules/form.scss */
+/* line 106, ../scss/modules/form.scss */
 .form-horizontal .form-group label.top {
   vertical-align: top;
   padding-top: 5px;
 }
-/* line 109, ../scss/modules/form.scss */
+/* line 111, ../scss/modules/form.scss */
 .form-horizontal .form-group > :nth-child(2) {
   width: 100%;
 }
