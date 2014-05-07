@@ -152,7 +152,7 @@ define([], function() {
             if(changedData.length > 0) {
                 this.sandbox.util.save(this.options.url, method, changedData)
                     .then(function(response) {
-                        this.sandbox.emit(SAVED, response);
+                        this.sandbox.emit(SAVED.call(this), response);
                         return response;
                     }.bind(this)).fail(function(status, error) {
                         this.sandbox.logger.error(status, error);
