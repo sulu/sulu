@@ -281,4 +281,21 @@ class Property implements PropertyInterface, \JsonSerializable
 
         return $result;
     }
+
+    function __clone()
+    {
+        $clone = new Property(
+            $this->getName(),
+            $this->getTitle(),
+            $this->getMandatory(),
+            $this->getMultilingual(),
+            $this->getMaxOccurs(),
+            $this->getMinOccurs(),
+            $this->getParams()
+        );
+
+        $clone->setValue($this->getValue());
+
+        return $clone;
+    }
 }

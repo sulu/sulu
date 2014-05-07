@@ -126,4 +126,13 @@ abstract class SimpleContentType implements ContentTypeInterface
             return null;
         }
     }
+
+    /**
+     * returns default parameters
+     * @return array
+     */
+    public function getDefaultParams()
+    {
+        return array();
+    }
 }

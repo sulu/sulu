@@ -111,10 +111,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('w', $webspace->getSegments()[0]->getKey());
         $this->assertEquals('winter', $webspace->getSegments()[0]->getName());
-        $this->assertEquals(false, $webspace->getSegments()[0]->isDefault());
+        $this->assertEquals(true, $webspace->getSegments()[0]->isDefault());
         $this->assertEquals('s', $webspace->getSegments()[1]->getKey());
         $this->assertEquals('summer', $webspace->getSegments()[1]->getName());
-        $this->assertEquals(true, $webspace->getSegments()[1]->isDefault());
+        $this->assertEquals(false, $webspace->getSegments()[1]->isDefault());
 
         $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
         $this->assertEquals(1, count($webspace->getTheme()->getExcludedTemplates()));
