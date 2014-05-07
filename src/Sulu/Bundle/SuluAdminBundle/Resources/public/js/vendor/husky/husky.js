@@ -16325,7 +16325,6 @@ define('aura/ext/components', [],function() {
   };
 });
 
-
 /*
  * This file is part of the Husky Validation.
  *
@@ -17531,12 +17530,12 @@ define('form/mapper',[
                 },
 
                 /**
-                 *
-                 *  @param {Object} $el Element to
-                 *  @param {Boolean} returnMapperId
+                 * extracts data from $element or default form element
+                 *  @param {Object} [$el=undefined] element to select data from
+                 *  @param {Boolean} [returnMapperId=false] returnMapperId
                  */
-                getData: function(returnMapperId) {
-                    return that.getData.call(this, undefined, returnMapperId);
+                getData: function($el, returnMapperId) {
+                    return that.getData.call(this, $el, returnMapperId);
                 },
 
                 addCollectionFilter: function(name, callback) {
@@ -18871,6 +18870,7 @@ define('validator/regex',[
     };
 
 });
+
 
 define("husky-validation", function(){});
 
