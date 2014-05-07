@@ -20,6 +20,7 @@ use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * handles content nodes
@@ -113,6 +114,22 @@ class NodeController extends RestController implements ClassResourceInterface
 
         // TODO pagination
         $result = $this->getRepository()->getNodes($parentUuid, $webspace, $language, $depth, $flat, false, $excludeGhosts);
+
+        return $this->handleView(
+            $this->view($result)
+        );
+    }
+
+    /**
+     * returns history of resourcelocator of given node
+     * @param string $uuid
+     * @return JsonResponse
+     */
+    public function cgetHistoryAction($uuid)
+    {
+        $languageCode = $this->getLanguage();
+        $webspaceKey = $this->getWebspace();
+        $result = $this->getRepository()->getHistory($uuid, $webspaceKey, $languageCode);
 
         return $this->handleView(
             $this->view($result)

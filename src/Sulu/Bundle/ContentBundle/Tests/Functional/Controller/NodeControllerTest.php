@@ -819,4 +819,53 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals(0, sizeof($items[1]['_embedded']));
         $this->assertArrayHasKey('_links', $items[1]);
     }
+
+    public function testHistory()
+    {
+        $client = $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+        $data = array(
+            'title' => 'news',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/a1',
+            'article' => 'Test'
+        );
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $uuid = $response['id'];
+        $data = array(
+            'title' => 'news',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/a2',
+            'article' => 'Test'
+        );
+        $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
+        $data = array(
+            'title' => 'news',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/a3',
+            'article' => 'Test'
+        );
+        $client->request('PUT', '/api/nodes/' . $uuid . '?template=default&webspace=sulu_io&language=en', $data);
+
+        $client->request('GET', '/api/nodes/' . $uuid . '/history?template=default&webspace=sulu_io&language=en');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('/a2', $response['_embedded'][0]['resource_locator']);
+        $this->assertEquals('/a1', $response['_embedded'][1]['resource_locator']);
+    }
 }
