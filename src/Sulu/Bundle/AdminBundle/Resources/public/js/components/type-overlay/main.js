@@ -120,13 +120,7 @@ define([], function() {
 
             this.options.overlay.data = this.sandbox.util.template(this.options.template, {data:this.options.data});
             this.startOverlayComponent(this.options.overlay);
-
-            this.$overlay = this.sandbox.dom.find(this.options.overlay.container);
-            this.$overlayContent = this.sandbox.dom.find(constants.overlayContentSelector);
-
             this.bindCustomEvents();
-            this.bindDomEvents();
-            this.sandbox.emit(INITIALZED.call(this));
         },
 
         /**
@@ -236,6 +230,15 @@ define([], function() {
                 if (!!data) {
                     this.saveNewData(data);
                 }
+            }.bind(this));
+
+            // use open event because initialzed is to early
+            this.sandbox.on('husky.overlay.'+this.options.overlay.instanceName+'.opened', function(){
+                this.$overlay = this.sandbox.dom.find(this.options.overlay.el);
+                this.$overlayContent = this.sandbox.dom.find(constants.overlayContentSelector, this.$overlay);
+
+                this.bindDomEvents();
+                this.sandbox.emit(INITIALZED.call(this));
             }.bind(this));
         },
 
