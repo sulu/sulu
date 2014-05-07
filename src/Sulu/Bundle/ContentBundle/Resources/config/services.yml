@@ -13,15 +13,14 @@ parameters:
 services:
     sulu_content.admin:
         class: %sulu_content.admin.class%
-        arguments: [%sulu_admin.name%]
+        arguments: [ "@sulu_core.webspace.webspace_manager", %sulu_admin.name%, "@service_container"]
         tags:
         - { name: sulu.admin }
     sulu_content.admin.content_navigation:
         class: %sulu_content.admin.content_navigation.class%
     sulu_content.twig_extension:
         class: %sulu_content.twig_extension.class%
-        calls:
-            - [ setContainer,[ @service_container ] ]
+        arguments: [@sulu.content.type_manager]
         tags:
             - { name: twig.extension }
     sulu_content.preview.cache:
@@ -44,7 +43,7 @@ services:
         arguments: [@sulu_content.preview, @logger]
     sulu_content.node_repository:
         class: %sulu_content.node_repository.class%
-        arguments: [@sulu.content.mapper, @sulu.phpcr.session, @sulu_security.user_manager]
+        arguments: [@sulu.content.mapper, @sulu.phpcr.session, @sulu_security.user_manager, @sulu.content.type.resource_locator]
     sulu.content.type.smart_content:
         class: %sulu.content.type.smart_content.class%
         arguments: [@sulu_content.node_repository, @sulu_tag.tag_manager, %sulu.content.type.smart_content.template%]

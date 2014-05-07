@@ -16,13 +16,11 @@ define([
     var MIN_CONTAINER_WIDTH = 980;
 
     return {
-
-
         stateDropdownItems: {
             publish: function() {
                 return {
                     'id': 'publish',
-                    'title': this.sandbox.translate('edit-toolbar.state-publish'),
+                    'title': this.sandbox.translate('toolbar.state-publish'),
                     'icon': 'publish',
                     'callback': function() {
                         this.changeState(2);
@@ -32,7 +30,7 @@ define([
             test: function() {
                 return {
                     'id': 'test',
-                    'title': this.sandbox.translate('edit-toolbar.state-test'),
+                    'title': this.sandbox.translate('toolbar.state-test'),
                     'icon': 'test',
                     'callback': function() {
                         this.changeState(1);
@@ -102,12 +100,13 @@ define([
             }, this);
 
             // get resource locator
-            this.sandbox.on('sulu.content.contents.getRL', function(title, callback) {
-                this.getResourceLocator(title, callback);
+            this.sandbox.once('sulu.content.contents.getRL', function(title, template, callback) {
+                this.getResourceLocator(title, template, callback);
             }, this);
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
             }, this);
 
@@ -153,9 +152,9 @@ define([
             return this.stateDropdownItems[state].call(this);
         },
 
-        getResourceLocator: function(title, callback) {
-            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + 'title=' + title + '&webspace=' + this.options.webspace + '&language=' + this.options.language;
-            this.sandbox.util.load(url)
+        getResourceLocator: function(parts, template, callback) {
+            var url = '/admin/content/resourcelocator.json?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
+            this.sandbox.util.save(url, 'POST', {parts: parts})
                 .then(function(data) {
                     callback(data.resourceLocator);
                 });
@@ -164,7 +163,7 @@ define([
         del: function(id) {
             this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'options-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     if (id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
@@ -182,6 +181,7 @@ define([
                             success: function() {
                                 this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
 
+                                this.sandbox.sulu.unlockDeleteSuccessLabel();
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
@@ -197,43 +197,21 @@ define([
                 throw 'callback is not a function';
             }
 
-            var params = {
-                templateType: null,
-                title: this.sandbox.translate('content.delete.dialog.title'),
-                content: this.sandbox.translate('content.delete.dialog.content'),
-                buttonCancelText: this.sandbox.translate('content.delete.dialog.cancel'),
-                buttonSubmitText: this.sandbox.translate('content.delete.dialog.submit')
-            };
+            // show warning dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
 
-            // show dialog
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: params.title,
-                    content: params.content
-                },
-                footer: {
-                    buttonCancelText: params.buttonCancelText,
-                    buttonSubmitText: params.buttonSubmitText
-                },
-                callback: {
-                    submit: function() {
-                        this.sandbox.emit('husky.dialog.hide');
+                function() {
+                    // cancel callback
+                    callbackFunction(false);
+                }.bind(this),
 
-                        // call callback function
-                        if (!!callbackFunction) {
-                            callbackFunction(true);
-                        }
-                    }.bind(this),
-                    cancel: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-
-                        // call callback function
-                        if (!!callbackFunction) {
-                            callbackFunction(false);
-                        }
-                    }.bind(this)
-                }
-            }, params.templateType);
+                function() {
+                    // ok callback
+                    callbackFunction(true);
+                }.bind(this)
+            );
         },
 
         changeState: function(state) {
@@ -244,14 +222,14 @@ define([
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                     this.sandbox.emit('sulu.labels.success.show',
                         'labels.state-changed.success-desc',
-                        'labels.state-changed.success',
+                        'labels.success',
                         'sulu.content.contents.state.label');
                 }.bind(this),
                 error: function() {
                     this.sandbox.emit('sulu.content.contents.state.changeFailed');
                     this.sandbox.emit('sulu.labels.error.show',
                         'labels.state-changed.error-desc',
-                        'labels.state-changed.error',
+                        'labels.error',
                         'sulu.content.contents.state.label');
                     this.sandbox.logger.log("error while saving profile");
                 }.bind(this)
@@ -274,6 +252,7 @@ define([
                 }.bind(this),
                 error: function() {
                     this.sandbox.logger.log("error while saving profile");
+                    this.sandbox.emit('sulu.content.contents.save-error');
                 }.bind(this)
             });
         },
@@ -291,11 +270,6 @@ define([
         },
 
         delContents: function(ids) {
-
-            if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show', 'No contents selected for deletion!');
-                return;
-            }
 
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
@@ -326,31 +300,21 @@ define([
                 throw 'callback is not a function';
             }
 
-            // show dialog
-            this.sandbox.emit('sulu.dialog.confirmation.show', {
-                content: {
-                    title: "Be careful!",
-                    content: "<p>The operation you are about to do will delete data.<br/>This is not undoable!</p><p>Please think about it and accept or decline.</p>"
-                },
-                footer: {
-                    buttonCancelText: "Don't do it",
-                    buttonSubmitText: "Do it, I understand"
-                },
-                callback: {
-                    submit: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(true);
-                        }
-                    }.bind(this),
-                    cancel: function() {
-                        this.sandbox.emit('husky.dialog.hide');
-                        if (!!callbackFunction) {
-                            callbackFunction(false);
-                        }
-                    }.bind(this)
-                }
-            });
+            // show warning dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
+
+                function() {
+                    // cancel callback
+                    callbackFunction(false);
+                }.bind(this),
+
+                function() {
+                    // ok callback
+                    callbackFunction(true);
+                }.bind(this)
+            );
         },
 
         renderList: function() {

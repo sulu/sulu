@@ -1,5 +1,7 @@
 <div class="grid-row form-group">
-    <label for="{{ id|raw }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}">{{ property.name|capitalize }}</label>
+    <label for="{{ id|raw }}" class="pointer {{ (property.mandatory) ? 'required' : '' }}">
+        <%=translate('{{ property.title is defined and property.title != '' ? property.title : property.name|capitalize }}')%>
+    </label>
 
     {% include type.template %}
 </div>

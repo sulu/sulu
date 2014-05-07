@@ -20,9 +20,6 @@ before_script:
 
 script: phpunit -c $DB.phpunit.xml --coverage-text
 
-notifications:
-  irc: "irc.freenode.org#sulu-cmf"
-
 matrix:
   allow_failures:
     - php: hhvm

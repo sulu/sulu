@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
@@ -121,7 +122,11 @@ class Preview implements PreviewInterface
             $this->addStructure($userId, $contentUuid, $content, $templateKey, $languageCode);
 
             if (false !== ($sequence = $this->getSequence($content, $property))) {
-                $property = implode(',', array_slice($sequence['sequence'], 0, -1));
+                // length of property path is important to render
+                $property = implode(
+                    ',',
+                    array_slice($sequence['sequence'], 0, (-1) * sizeof($sequence['propertyPath']))
+                );
             }
             $changes = $this->render($userId, $contentUuid, $templateKey, $languageCode, true, $property);
             if ($changes !== false) {
@@ -260,7 +265,7 @@ class Preview implements PreviewInterface
     {
         if (false !== ($sequence = $this->getSequence($content, $property))) {
             $tmp = $data;
-            $data = $sequence['property']->getValue();;
+            $data = $sequence['property']->getValue();
             $value = & $data;
             $len = sizeof($sequence['index']);
             for ($i = 0; $i < $len; $i++) {
@@ -302,7 +307,14 @@ class Preview implements PreviewInterface
                 // is not integer
                 if (!ctype_digit(strval($sequence[$i]))) {
                     $propertyPath[] = $sequence[$i];
-                    $propertyInstance = $propertyInstance->getChild($sequence[$i]);
+                    if ($propertyInstance instanceof BlockPropertyInterface) {
+                        $lastIndex = $indexSequence[sizeof($indexSequence)-1];
+
+                        unset($indexSequence[sizeof($indexSequence)-1]);
+                        $indexSequence = array_values($indexSequence);
+
+                        $propertyInstance = $propertyInstance->getProperties($lastIndex)[$sequence[$i]];
+                    }
                 } else {
                     $indexSequence[] = intval($sequence[$i]);
                 }

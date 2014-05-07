@@ -1,21 +1,3 @@
-<div class="grid-row m-bottom-0">
-    <div class="grid-col-10">
-        <h1>
-            {% block title %}{{ webspace.name }}{% endblock %}
-        </h1>
-    </div>
-    <div id="language-selector" class="pull-right grid-col-2"></div>
-</div>
-<div class="form-horizontal grid-row small">
-    <div class="grid-col-12" id="show-ghost-pages-container">
-        <div class="pull-right">
-            <label class="inline clickable spacing-right" for="show-ghost-pages"><%=translate('content.contents.show-ghost-pages')%></label>
-            <div id="show-ghost-pages"></div>
-        </div>
-    </div>
-</div>
-<div id="content-column"></div>
-
 <script type="text/javascript">
     (function() {
         {% autoescape false %}

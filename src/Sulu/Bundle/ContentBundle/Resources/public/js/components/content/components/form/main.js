@@ -10,6 +10,7 @@
 define(['app-config'], function(AppConfig) {
 
     'use strict';
+    var CONTENT_LANGUAGE = 'contentLanguage';
 
     return {
 
@@ -33,6 +34,8 @@ define(['app-config'], function(AppConfig) {
         initialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
 
+            this.propertyConfiguration = {};
+
             this.saved = true;
             this.highlightSaveButton = this.sandbox.sulu.viewStates.justSaved;
 
@@ -44,7 +47,6 @@ define(['app-config'], function(AppConfig) {
             this.formId = '#contacts-form-container';
             this.render();
 
-            this.setTitle();
             this.setHeaderBar(true);
         },
 
@@ -67,16 +69,17 @@ define(['app-config'], function(AppConfig) {
         },
 
         showStateDropdown: function() {
-            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'state', false);
         },
 
         renderSettings: function() {
             this.setHeaderBar(false);
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/settings'));
-            this.createForm(this.initData());
-            this.bindDomEvents();
-            this.listenForChange();
+            this.createForm(this.initData()).then(function() {
+                this.bindDomEvents();
+                this.listenForChange();
+            }.bind(this));
 
             // enable state button
             this.setStateDropdown(this.options.data);
@@ -93,13 +96,13 @@ define(['app-config'], function(AppConfig) {
             // get the dropdownds
             this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
                 if (items.length > 0) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items);
+                    this.sandbox.emit('sulu.header.toolbar.items.set', 'state', items);
                 }
             }.bind(this));
 
             // set the current state
             this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
+                this.sandbox.emit('sulu.header.toolbar.button.set', 'state', item);
             }.bind(this));
         },
 
@@ -108,40 +111,112 @@ define(['app-config'], function(AppConfig) {
          * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
          */
         setTitle: function() {
-            if (!!this.options.id && !!this.options.data.title) {
-                this.sandbox.emit('sulu.content.set-title', this.options.data.title);
+            var value = this.propertyConfiguration['sulu.node.name'].highestProperty.$el.data('element').getValue();
+            if (!!this.options.id && value !== '') {
+                this.sandbox.emit('sulu.header.set-title', value);
                 this.setBreadcrumb();
             } else {
-                this.sandbox.emit('sulu.content.set-title', this.sandbox.translate('content.contents.title'));
+                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
             }
         },
 
         /**
-         * Generates the Breadcrumb-string and sets it for the title-additon
+         * Generates the Breadcrumb-string and sets it in the header
          */
         setBreadcrumb: function() {
-            var breadcrumb = this.options.webspace.replace(/_/g, '.'), i, length;
             if (!!this.options.data.breadcrumb) {
+                var breadcrumb = [{
+                    title: this.options.webspace.replace(/_/g, '.'),
+                    event: 'sulu.content.contents.list'
+                }], length, i;
+
                 // loop through breadcrumb skip home-page
                 for (i = 0, length = this.options.data.breadcrumb.length; ++i < length;) {
-                    breadcrumb += ' &#187; ' + this.options.data.breadcrumb[i].title;
+                    breadcrumb.push({
+                        title: this.options.data.breadcrumb[i].title,
+                        link: this.getBreadcrumbRoute(this.options.data.breadcrumb[i].uuid)
+                    });
                 }
+
+                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
             }
-            this.sandbox.emit('sulu.content.set-title-addition', breadcrumb);
+        },
+
+        /**
+         * Returns routes for the breadcrumbs. Replaces the current uuid with a passed one in the active URI
+         * @param uuid {string} uuid to replace the current one with
+         * @returns {string} the route for the breadcrumb
+         */
+        getBreadcrumbRoute: function(uuid) {
+            return this.sandbox.mvc.history.fragment.replace(this.options.id, uuid);
         },
 
         createForm: function(data) {
-            var formObject = this.sandbox.form.create(this.formId);
-            formObject.initialized.then(function() {
-                this.setFormData(data).then(function() {
+            var formObject = this.sandbox.form.create(this.formId),
+                dfd = this.sandbox.data.deferred();
 
+            formObject.initialized.then(function() {
+                this.createConfiguration(this.formId);
+
+                this.setFormData(data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
+
                     this.initSortableBlock();
                     this.bindFormEvents();
 
                     if (!!this.options.preview) {
                         this.initPreview();
                         this.options.preview = false;
+                    }
+
+                    dfd.resolve();
+                }.bind(this));
+            }.bind(this));
+
+            return dfd.promise();
+        },
+
+        createConfiguration: function($el) {
+            var $items = this.sandbox.dom.find('*[data-property]', $el);
+            // foreach property
+            this.sandbox.dom.each($items, function(key, item) {
+                var property = this.sandbox.dom.data(item, 'property');
+                property.$el = this.sandbox.dom.$(item);
+
+                // remove property from data
+                // FIXME move to sandbox data remove
+                $(item).data('property', null);
+                $(item).removeAttr('data-property', null);
+
+                // foreach tag
+                this.sandbox.util.foreach(property.tags, function(tag) {
+                    if (!this.propertyConfiguration[tag.name]) {
+                        this.propertyConfiguration[tag.name] = {
+                            properties: {},
+                            highestProperty: property,
+                            highestPriority: tag.priority,
+                            lowestProperty: property,
+                            lowestPriority: tag.priority
+                        };
+                        this.propertyConfiguration[tag.name].properties[tag.priority] = [property];
+                    } else {
+                        if (!this.propertyConfiguration[tag.name].properties[tag.priority]) {
+                            this.propertyConfiguration[tag.name].properties[tag.priority] = [property];
+                        } else {
+                            this.propertyConfiguration[tag.name].properties[tag.priority].push(property);
+                        }
+
+                        // replace highest if priority is higher
+                        if (this.propertyConfiguration[tag.name].highestPriority < tag.priority) {
+                            this.propertyConfiguration[tag.name].highestProperty = property;
+                            this.propertyConfiguration[tag.name].highestPriority = tag.priority;
+                        }
+
+                        // replace lowest if priority is lower
+                        if (this.propertyConfiguration[tag.name].lowestPriority > tag.priority) {
+                            this.propertyConfiguration[tag.name].lowestProperty = property;
+                            this.propertyConfiguration[tag.name].lowestPriority = tag.priority;
+                        }
                     }
                 }.bind(this));
             }.bind(this));
@@ -171,17 +246,18 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindFormEvents: function() {
-            this.sandbox.dom.on(this.formId, 'form-collection-init', function() {
-                this.updatePreview();
-            }.bind(this));
-
             this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
+                // TODO removed elements remove from config
+
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
                 this.updatePreview(propertyName, changes[propertyName]);
+                this.setHeaderBar(false);
             }.bind(this));
 
             this.sandbox.dom.on(this.formId, 'form-add', function(e, propertyName) {
+                this.createConfiguration(e.currentTarget);
+
                 // start new subcomponents
                 this.sandbox.start($(e.currentTarget));
 
@@ -202,35 +278,77 @@ define(['app-config'], function(AppConfig) {
                     }.bind(this));
             }
 
-            this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'language', this.options.language);
-            this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'language');
-
             if (this.options.id === 'index') {
                 this.sandbox.dom.remove('#show-in-navigation-container');
             }
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
+
+            this.setTitle();
+
             return initialize;
         },
 
+        getDomElementsForTagName: function(tagName, callback) {
+            var result = $(), key;
+            if (this.propertyConfiguration.hasOwnProperty(tagName)) {
+                for (key in this.propertyConfiguration[tagName].properties) {
+                    if (this.propertyConfiguration[tagName].properties.hasOwnProperty(key)) {
+                        this.sandbox.util.foreach(this.propertyConfiguration[tagName].properties[key], function(property) {
+                            $.merge(result, property.$el);
+                            if (!!callback) {
+                                callback(property);
+                            }
+                        });
+                    }
+                }
+            }
+            return result;
+        },
+
         bindDomEvents: function() {
-            if (!this.options.data.id || !this.options.data.url) {
-                this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+            this.startListening = false;
+                    this.getDomElementsForTagName('sulu.rlp', function(property) {
+                var element = property.$el.data('element');
+                if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
+                    this.startListening = true;
+                }
+            }.bind(this));
+
+            if (this.startListening) {
+                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             } else {
                 this.dfdListenForChange.resolve();
             }
         },
 
         setResourceLocator: function() {
-            var title = this.sandbox.dom.val('#title'),
-                url = '#url';
+            if (this.dfdListenForChange.state() !== 'pending') {
+                return;
+            }
 
-            if (title !== '') {
-                this.sandbox.dom.addClass(url, 'is-loading');
-                this.sandbox.dom.css(url, 'background-position', '99%');
+            var parts = {},
+                complete = true;
 
-                this.sandbox.emit('sulu.content.contents.getRL', title, function(rl) {
-                    this.sandbox.dom.removeClass(url, 'is-loading');
-                    this.sandbox.dom.val(url, rl);
+            // check if each part has a value
+            this.getDomElementsForTagName('sulu.rlp.part', function(property) {
+                var value = property.$el.data('element').getValue();
+                if (value !== '') {
+                    parts[this.getSequence(property.$el)] = value;
+                } else {
+                    complete = false;
+                }
+            }.bind(this));
+
+            if (!!complete) {
+                this.startListening = true;
+                this.sandbox.emit('sulu.content.contents.getRL', parts, this.template, function(rl) {
+                    // set resource locator to empty input fields
+                    this.getDomElementsForTagName('sulu.rlp', function(property) {
+                        var element = property.$el.data('element');
+                        if (element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
+                            element.setValue(rl);
+                        }
+                    }.bind(this));
 
                     this.dfdListenForChange.resolve();
 
@@ -238,7 +356,7 @@ define(['app-config'], function(AppConfig) {
                     this.contentChanged = true;
                 }.bind(this));
             } else {
-                this.sandbox.dom.one('#title', 'focusout', this.setResourceLocator.bind(this));
+                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             }
         },
 
@@ -248,10 +366,18 @@ define(['app-config'], function(AppConfig) {
                 this.highlightSaveButton = true;
                 this.setHeaderBar(true);
                 this.setTitle();
+
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+            }, this);
+
+            // content save-error
+            this.sandbox.on('sulu.content.contents.save-error', function() {
+                this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                this.setHeaderBar(true);
             }, this);
 
             // content save
-            this.sandbox.on('sulu.edit-toolbar.save', function() {
+            this.sandbox.on('sulu.header.toolbar.save', function() {
                 this.submit();
             }, this);
             this.sandbox.on('sulu.preview.save', function() {
@@ -262,16 +388,8 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.on('sulu.preview.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
             }, this);
-            this.sandbox.on('sulu.edit-toolbar.delete', function() {
+            this.sandbox.on('sulu.header.toolbar.delete', function() {
                 this.sandbox.emit('sulu.content.content.delete', this.options.data.id);
-            }, this);
-
-            this.sandbox.on('sulu.edit-toolbar.preview.new-window', function() {
-                this.openPreviewWindow();
-            }, this);
-
-            this.sandbox.on('sulu.edit-toolbar.preview.split-screen', function() {
-                this.openSplitScreen();
             }, this);
 
             // set preview params
@@ -283,33 +401,33 @@ define(['app-config'], function(AppConfig) {
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', name);
+                this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
                 if (this.hiddenTemplate) {
                     this.hiddenTemplate = false;
-                    this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template', name);
+                    this.sandbox.emit('sulu.header.toolbar.item.show', 'template', name);
                 }
             }, this);
 
             // change template
-            this.sandbox.on('sulu.edit-toolbar.dropdown.template.item-clicked', function(item) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'template');
+            this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
                 this.templateChanged = true;
                 this.changeTemplate(item);
             }, this);
 
             // change language
-            this.sandbox.on('sulu.edit-toolbar.dropdown.languages.item-clicked', function(item) {
+            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
                 this.sandbox.emit('sulu.content.contents.load', this.options.id, this.options.webspace, item.localization);
             }, this);
 
             // set state button in loading state
             this.sandbox.on('sulu.content.contents.state.change', function() {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'state');
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'state');
             }, this);
 
             // set save button in loading state
             this.sandbox.on('sulu.content.contents.save', function() {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.loading', 'save-button');
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             }, this);
 
             // change dropdown if state has changed
@@ -317,35 +435,37 @@ define(['app-config'], function(AppConfig) {
                 this.state = state;
                 //set new dropdown
                 this.sandbox.emit('sulu.content.contents.getDropdownForState', this.state, function(items) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.items.set', 'state', items, null);
+                    this.sandbox.emit('sulu.header.toolbar.items.set', 'state', items, null);
                 }.bind(this));
                 // set the current state
                 this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
+                    this.sandbox.emit('sulu.header.toolbar.button.set', 'state', item);
                 }.bind(this));
                 //enable button with highlight-effect
-                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', true);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'state', true);
             }.bind(this));
 
             //set button back if state-change failed
             this.sandbox.on('sulu.content.contents.state.changeFailed', function() {
                 // set the current state
                 this.sandbox.emit('sulu.content.contents.getStateDropdownItem', this.state, function(item) {
-                    this.sandbox.emit('sulu.edit-toolbar.content.button.set', 'state', item);
+                    this.sandbox.emit('sulu.header.toolbar.button.set', 'state', item);
                 }.bind(this));
                 //enable button without highlight-effect
-                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'state', false);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'state', false);
             }.bind(this));
 
             // expand navigation if navigation item is clicked
-            this.sandbox.on('husky.navigation.item.select', function() {
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'large', content: 'auto'});
+            this.sandbox.on('husky.navigation.item.select', function(event) {
+                // when navigation item is already opended do nothing - relevant for homepage
+                if(event.id !== this.options.id) {
+                    this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+                }
             }.bind(this));
 
             // expand navigation if back gets clicked
-            this.sandbox.on('sulu.edit-toolbar.back', function() {
+            this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.content.contents.list');
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
             }.bind(this));
         },
 
@@ -375,11 +495,12 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplateDropdownHandler: function() {
-            this.sandbox.emit('sulu.edit-toolbar.content.item.change', 'template', this.template);
-            this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', this.templateChanged);
+            this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.templateChanged);
+
             if (this.hiddenTemplate) {
                 this.hiddenTemplate = false;
-                this.sandbox.emit('sulu.edit-toolbar.content.item.show', 'template');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }
         },
 
@@ -388,9 +509,11 @@ define(['app-config'], function(AppConfig) {
                 item = {template: item};
             }
             if (!!item && this.template === item.template) {
-                this.sandbox.emit('sulu.edit-toolbar.content.item.enable', 'template', false);
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', false);
                 return;
             }
+            
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');
 
             var doIt = function() {
                     if (!!item) {
@@ -424,50 +547,48 @@ define(['app-config'], function(AppConfig) {
                         url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
                         require([url], function(template) {
-                            var defaults = {
-                                    translate: this.sandbox.translate
+                            var data = this.initData(),
+                                defaults = {
+                                    translate: this.sandbox.translate,
+                                    content: data
                                 },
                                 context = this.sandbox.util.extend({}, defaults),
-                                tpl = this.sandbox.util.template(template, context),
-                                data = this.initData();
+                                tpl = this.sandbox.util.template(template, context);
 
                             this.sandbox.dom.remove(this.formId + ' *');
                             this.sandbox.dom.html(this.$el, tpl);
                             this.setStateDropdown(data);
-                            this.createForm(data);
 
-                            this.bindDomEvents();
-                            this.listenForChange();
+                            this.propertyConfiguration = {};
+                            this.createForm(data).then(function() {
+                                this.bindDomEvents();
+                                this.listenForChange();
 
-                            this.updatePreviewOnly();
+                                this.updatePreviewOnly();
 
-                            this.changeTemplateDropdownHandler();
+                                this.changeTemplateDropdownHandler();
+                            }.bind(this));
                         }.bind(this));
                     } else {
                         this.changeTemplateDropdownHandler();
                     }
                 }.bind(this),
                 showDialog = function() {
-                    this.sandbox.emit('sulu.dialog.confirmation.show', {
-                        content: {
-                            title: this.sandbox.translate('content.template.dialog.title'),
-                            content: this.sandbox.translate('content.template.dialog.content')
-                        },
-                        footer: {
-                            buttonCancelText: this.sandbox.translate('content.template.dialog.cancel-button'),
-                            buttonSubmitText: this.sandbox.translate('content.template.dialog.submit-button')
-                        },
-                        callback: {
-                            submit: function() {
-                                this.sandbox.emit('husky.dialog.hide');
+                    // show warning dialog
+                    this.sandbox.emit('sulu.overlay.show-warning',
+                        this.sandbox.translate('content.template.dialog.title'),
+                        this.sandbox.translate('content.template.dialog.content'),
 
-                                doIt();
-                            }.bind(this),
-                            cancel: function() {
-                                this.sandbox.emit('husky.dialog.hide');
-                            }.bind(this)
-                        }
-                    }, null);
+                        function() {
+                            // cancel callback
+                            return false;
+                        }.bind(this),
+
+                        function() {
+                            // ok callback
+                            doIt();
+                        }.bind(this)
+                    );
                 }.bind(this);
 
             if (this.template !== '' && this.contentChanged) {
@@ -481,7 +602,7 @@ define(['app-config'], function(AppConfig) {
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.edit-toolbar.content.state.change', type, saved, this.highlightSaveButton);
+                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, this.highlightSaveButton);
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
@@ -502,23 +623,12 @@ define(['app-config'], function(AppConfig) {
                     this.setHeaderBar(false);
                     this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
-
-                this.sandbox.on('sulu.content.changed', function() {
-                    this.setHeaderBar(false);
-                    this.contentChanged = true;
-                }.bind(this));
             }.bind(this));
-        },
 
-        openPreviewWindow: function() {
-            if (!!this.options.data.id) {
-                this.initPreview();
-                window.open('/admin/content/preview/' + this.options.data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language);
-            }
-        },
-
-        openSplitScreen: function() {
-            window.open('/admin/content/split-screen/' + this.options.webspace + '/' + this.options.language + '/' + this.options.data.id);
+            this.sandbox.on('sulu.content.changed', function() {
+                this.setHeaderBar(false);
+                this.contentChanged = true;
+            }.bind(this));
         },
 
         /**
@@ -564,15 +674,20 @@ define(['app-config'], function(AppConfig) {
             $element = $($element);
             var sequence = this.sandbox.dom.data($element, 'mapperProperty'),
                 $parents = $element.parents('*[data-mapper-property]'),
-                item = $element.parents('*[data-mapper-property-tpl]')[0];
+                item = $element.parents('*[data-mapper-property-tpl]')[0],
+                parentProperty;
 
             while (!$element.data('element')) {
                 $element = $element.parent();
             }
 
             if ($parents.length > 0) {
+                parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty');
+                if (typeof parentProperty !== 'string') {
+                    parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
+                }
                 sequence = [
-                    this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data,
+                    parentProperty,
                     $(item).index(),
                     this.sandbox.dom.data($element, 'mapperProperty')
                 ];

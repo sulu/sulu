@@ -29,21 +29,20 @@
 
     .right {
         float: right;
-        background: #3e3e3e;
+        background: #21272E;
         height: 100%;
+        border-radius: 0 0 0 3px;
 
         .new-window {
             width: 30px;
             overflow: hidden;
             text-align: center;
             padding-top: 5px;
-            border-left: 1px solid #4d4d4d;
-            height:30px;
+            border-left: 1px solid #fff;
+            height: 30px;
         }
 
         .resolutions {
-
-
             .drop-down-trigger {
                 color: #fff;
                 padding: 5px 10px;
@@ -53,14 +52,14 @@
                 display: inline-block;
                 &::after {
                     top: -1px;
-                    margin-left: 0px;
-                    margin-right: 5px;
+                    margin-left: 5px;
+                    margint-right: 0;
                     border-top: 6px solid #fff;
                 }
             }
 
             .dropdown-menu {
-                background: #3e3e3e;
+                background: #21272E;
                 color: #fff;
                 z-index: 105;
                 top: 35px;
@@ -76,8 +75,9 @@
         width: 30px;
         height: 30px;
         overflow: hidden;
-        background: #3e3e3e;
+        background: #21272E;
         text-align: center;
-        padding-top: 5px;
+        line-height: 28px;
+        border-radius: 2px 0 0 2px;
     }
 }
