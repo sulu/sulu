@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -38,26 +39,27 @@ class DefaultController extends WebsiteController
             $preview,
             $partial
         );
+
         return $response;
     }
 
-    public function error404Action()
+    public function error404Action(Request $request)
     {
         return $this->renderError(
             'ClientWebsiteBundle:Website:error404.html.twig',
             array(
-                'path' => $this->getRequest()->get('path'),
+                'path'       => $request->get('path'),
                 'navigation' => array()
             )
         );
     }
 
-    public function redirectAction()
+    public function redirectAction(Request $request)
     {
         $url = str_replace(
-            $this->getRequest()->get('url'),
-            $this->getRequest()->get('redirect'),
-            $this->getRequest()->getUri()
+            $request->get('url'),
+            $request->get('redirect'),
+            $request->getUri()
         );
 
         return new RedirectResponse($url, 301);
