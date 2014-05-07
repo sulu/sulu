@@ -66,9 +66,25 @@ define([], function() {
                         ]
                     }
                 ];
+            },
+
+            defaultHomepage: function() {
+                return[
+                    {
+                        id: 'save-button',
+                        icon: 'floppy',
+                        disabledIcon: 'floppy-saved',
+                        iconSize: 'large',
+                        class: 'highlight',
+                        'position': 1,
+                        disabled: true,
+                        callback: function() {
+                            this.sandbox.emit('sulu.edit-toolbar.save');
+                        }.bind(this)
+                    }
+                ];
             }
         },
-
 
         changeStateCallbacks = {
             default: function(saved, type, highlight) {
@@ -89,7 +105,7 @@ define([], function() {
                     if (!!templates[template]) {
                         templateObj = templates[template].call(this);
                     } else {
-                        this.sandbox.logger.log('no template found!');
+                        this.sandbox.logger.error('no template found!');
                     }
                 }
             } else if (typeof templateObj === 'function') {
@@ -102,7 +118,8 @@ define([], function() {
             if (!!changeStateCallbacks[template]) {
                 return changeStateCallbacks[template];
             } else {
-                this.sandbox.logger.log('no template found!');
+                this.sandbox.logger.warn('no template found! - using default');
+                return changeStateCallbacks['default'];
             }
         };
 

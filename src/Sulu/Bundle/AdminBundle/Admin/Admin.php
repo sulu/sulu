@@ -43,6 +43,15 @@ abstract class Admin
     }
 
     /**
+     * Returns the bundle name for the javascript main file
+     * @return string
+     */
+    public function getJsBundleName()
+    {
+        return null;
+    }
+
+    /**
      * Returns all the commands available in a concrete admin.
      * An empty array is the default value (no commands available), and the concrete class
      * can override this method, to add all the available commands.
