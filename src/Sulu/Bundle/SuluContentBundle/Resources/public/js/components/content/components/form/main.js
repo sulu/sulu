@@ -373,6 +373,7 @@ define(['app-config'], function(AppConfig) {
             // content save-error
             this.sandbox.on('sulu.content.contents.save-error', function() {
                 this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                this.setHeaderBar(true);
             }, this);
 
             // content save
@@ -409,7 +410,6 @@ define(['app-config'], function(AppConfig) {
 
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
-                this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');
                 this.templateChanged = true;
                 this.changeTemplate(item);
             }, this);
@@ -512,6 +512,8 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', false);
                 return;
             }
+            
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');
 
             var doIt = function() {
                     if (!!item) {
