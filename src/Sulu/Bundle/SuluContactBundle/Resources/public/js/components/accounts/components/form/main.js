@@ -12,8 +12,8 @@ define(['app-config'], function(AppConfig) {
     'use strict';
 
     var defaults = {
-        headline: 'contact.accounts.title'
-    },
+            headline: 'contact.accounts.title'
+        },
         fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
 
     return {
@@ -28,7 +28,7 @@ define(['app-config'], function(AppConfig) {
 
             this.form = '#contact-form';
             this.saved = true;
-
+            this.accountCategoryURL = 'api/account/categories';
 
             this.accountType = this.getAccountType();
             this.setHeadlines(this.accountType);
@@ -80,15 +80,20 @@ define(['app-config'], function(AppConfig) {
             this.bindCustomEvents();
         },
 
+
         /**
          * Inits the select for the account category
          */
-        initCategorySelect: function(formData){
+        initCategorySelect: function(formData) {
 
-            this.sandbox.util.load('api/account/categories')
-                .then(function(response){
+            var preselectedElemendId = !!formData.accountCategory ? formData.accountCategory.id : null;
+            this.accountCategoryData = null;
 
-                    var data = response['_embedded'];
+            this.sandbox.util.load(this.accountCategoryURL)
+                .then(function(response) {
+
+                    var data = response['_embedded'],$overlayContainer;
+                    this.accountCategoryData = data.slice(0,data.length);
 
                     data.push({divider: true});
                     data.push({id: -1, category: this.sandbox.translate('contacts.accounts.addCategory'), callback: this.showCategoryOverlay.bind(this)});
@@ -103,13 +108,17 @@ define(['app-config'], function(AppConfig) {
                                 defaultLabel: this.sandbox.translate('contacts.accounts.category.select'),
                                 valueName: 'category',
                                 repeatSelect: true,
-                                preSelectedElements: [formData.accountCategory.id],
+                                preSelectedElements: [preselectedElemendId],
                                 data: data
                             }
                         }
                     ]);
+
+                    $overlayContainer = this.sandbox.dom.$('<div id="overlayContainer"></div>');
+                    this.sandbox.dom.append('body',$overlayContainer);
+
                 }.bind(this))
-                .fail(function(textStatus, error){
+                .fail(function(textStatus, error) {
                     this.sandbox.logger.error(textStatus, error);
                 }.bind(this));
 
@@ -119,8 +128,25 @@ define(['app-config'], function(AppConfig) {
         /**
          * Shows the overlay to manage account categories
          */
-        showCategoryOverlay: function(){
-            this.sandbox.logger.warn("show overlay");
+        showCategoryOverlay: function() {
+
+            this.sandbox.start([
+                {
+                    name: 'type-overlay@suluadmin',
+                    options: {
+                        overlay: {
+                            instanceName: 'overlay',
+                            el: '#overlayContainer',
+                            openOnStart: true,
+                            triggerEl: null,
+                            title: this.sandbox.translate('contacts.accounts.manage.category.title')
+                        },
+
+                        url: this.accountCategoryURL,
+                        data: this.accountCategoryData
+                    }
+                }
+            ]);
         },
 
         /**
@@ -210,10 +236,10 @@ define(['app-config'], function(AppConfig) {
                 length = minAmount;
             }
 
-            for (;++i < length;) {
+            for (; ++i < length;) {
 
                 // construct the attributes object for fields under and equal the minimum amount
-                if ((i+1) > minAmount) {
+                if ((i + 1) > minAmount) {
                     attributes = {};
                 } else {
                     attributes = {
@@ -280,13 +306,15 @@ define(['app-config'], function(AppConfig) {
             }.bind(this));
 
             // initialize contact form
-            this.sandbox.start([{
-                name: 'contact-form@sulucontact',
-                options: {
-                    el:'#contact-options-dropdown',
-                    fieldTypes: this.fieldTypes
+            this.sandbox.start([
+                {
+                    name: 'contact-form@sulucontact',
+                    options: {
+                        el: '#contact-options-dropdown',
+                        fieldTypes: this.fieldTypes
+                    }
                 }
-            }]);
+            ]);
         },
 
         setFormData: function(data) {
@@ -294,7 +322,7 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
             this.sandbox.form.setData(this.form, data).then(function() {
                 this.sandbox.start(this.form);
-                this.sandbox.emit('sulu.contact-form.add-required',['email']);
+                this.sandbox.emit('sulu.contact-form.add-required', ['email']);
             }.bind(this));
         },
 
