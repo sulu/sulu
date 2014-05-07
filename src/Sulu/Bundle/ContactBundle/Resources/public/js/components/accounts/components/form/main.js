@@ -35,7 +35,6 @@ define(['app-config'], function(AppConfig) {
             this.render();
             this.setHeaderBar(true);
             this.listenForChange();
-            this.initCategorySelect();
         },
 
         render: function() {
@@ -75,6 +74,7 @@ define(['app-config'], function(AppConfig) {
             ]);
 
             this.initForm(data);
+            this.initCategorySelect(data);
 
             this.bindDomEvents();
             this.bindCustomEvents();
@@ -83,15 +83,15 @@ define(['app-config'], function(AppConfig) {
         /**
          * Inits the select for the account category
          */
-        initCategorySelect: function(){
+        initCategorySelect: function(formData){
 
             this.sandbox.util.load('api/account/categories')
                 .then(function(response){
 
                     var data = response['_embedded'];
 
-                    data.push('divider');
-                    data.push({id: 'add', category: this.sandbox.translate('contacts.accounts.addCategory')});
+                    data.push({divider: true});
+                    data.push({id: -1, category: this.sandbox.translate('contacts.accounts.addCategory'), callback: this.showCategoryOverlay.bind(this)});
 
                     this.sandbox.start([
                         {
@@ -102,6 +102,8 @@ define(['app-config'], function(AppConfig) {
                                 multipleSelect: false,
                                 defaultLabel: this.sandbox.translate('contacts.accounts.category.select'),
                                 valueName: 'category',
+                                repeatSelect: true,
+                                preSelectedElements: [formData.accountCategory.id],
                                 data: data
                             }
                         }
@@ -112,6 +114,13 @@ define(['app-config'], function(AppConfig) {
                 }.bind(this));
 
 
+        },
+
+        /**
+         * Shows the overlay to manage account categories
+         */
+        showCategoryOverlay: function(){
+            this.sandbox.logger.warn("show overlay");
         },
 
         /**
