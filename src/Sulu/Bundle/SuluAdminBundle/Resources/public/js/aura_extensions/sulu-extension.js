@@ -5,6 +5,25 @@
     define([], {
 
         initialize: function(app) {
+            /*********
+             * Sulu namespace
+             *********/
+            app.sandbox.sulu = {};
+
+            /**
+             * Userproperties
+             */
+            app.sandbox.sulu.user = app.sandbox.util.extend(false, {}, SULU.user);
+
+            /*********
+             * Locales
+             *********/
+            app.sandbox.sulu.locales = SULU.locales;
+
+            /*********
+             * user
+             *********/
+            app.sandbox.sulu.user = app.sandbox.util.extend(true, {}, SULU.user);
 
             /*********
              * USER SETTINGS
@@ -36,6 +55,25 @@
              * @type {Object}
              */
             app.sandbox.sulu.viewStates = {};
+
+            /**
+             * Stores the info that a node got deleted, so other views are
+             * able to display a success label
+             */
+            app.sandbox.sulu.unlockDeleteSuccessLabel = function() {
+                app.sandbox.sulu.viewStates.nodeDeleted = true;
+            },
+
+            /**
+             * Actually shows a success label if delete description and title. But only
+             * if a node actually got deleted beforehand
+             */
+            app.sandbox.sulu.triggerDeleteSuccessLabel = function() {
+                if (app.sandbox.sulu.viewStates.nodeDeleted === true) {
+                    app.sandbox.emit('sulu.labels.success.show', 'labels.success.content-deleted-desc', 'labels.success');
+                    delete app.sandbox.sulu.viewStates.nodeDeleted;
+                }
+            },
 
             /**
              * load user settings
@@ -116,7 +154,6 @@
                     }.bind(this));
             };
 
-
             /**
              * returns settings for a specified key
              * @param key
@@ -166,7 +203,6 @@
              * initializes sulu list-toolbar with column options and datagrid
              * @param key Settings key
              * @param url Url to load fields from
-             * @param mixed Toolbar-options
              * @param listToolbarOptions
              * @param datagridOptions
              */
@@ -179,7 +215,8 @@
                                 key: key,
                                 url: url
                             },
-                            instanceName: 'content'
+                            instanceName: 'content',
+                            inHeader: false
                         },
                         toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                         gridDefaults = {

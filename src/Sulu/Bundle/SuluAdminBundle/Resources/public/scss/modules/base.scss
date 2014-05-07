@@ -22,7 +22,7 @@ body {
     margin-top: $contentMarginTop;
     padding-right: $contentPaddingRight;
     padding-bottom: $contentMarginBottom;
-    @include single-transition(margin,  $transitionDuration);
+    @include single-transition(margin-left,  $transitionDuration);
 
     h2.mainheadline {
         margin-top: 35px;
@@ -35,32 +35,17 @@ body {
     .content-tabs-content {
         padding-top: 80px;
     }
-}
 
-// tabs content
-#edit-toolbar-container {
-    z-index: 99;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-left: $contentPaddingLeft;
-    width: 100%;
-    background-color: $backgroundColor;
-    padding-top: $contentMarginTop;
-}
+    &.fullwidth {
+        max-width: none;
+        min-width: 0;
+        padding-left: $contentPaddingLeftFullWidth;
+        padding-right: $contentPaddingRightFullWidth;
+    }
 
-#page-functions {
-    position: relative;
-    top: 0px;
-    left: 0px;
-}
-
-#edit-toolbar {
-    max-width: $contentMaxWidth;
-}
-
-#list-toolbar-container {
-    padding-bottom: 20px;
+    &.fullheight {
+        margin-top: 0;
+    }
 }
 
 // Control elements

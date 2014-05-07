@@ -34,7 +34,7 @@ define([], function() {
                     {
                         id: 'add',
                         icon: 'user-add',
-                        class: 'highlight',
+                        class: 'highlight-white',
                         title: 'add',
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.add');
@@ -44,7 +44,6 @@ define([], function() {
                         id: 'delete',
                         icon: 'bin',
                         title: 'delete',
-                        group: '1',
                         disabled: true,
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.delete');
@@ -53,7 +52,6 @@ define([], function() {
                     {
                         id: 'settings',
                         icon: 'cogwheel',
-                        group: '1',
                         items: [
                             {
                                 title: this.sandbox.translate('sulu.list-toolbar.import'),
@@ -97,7 +95,6 @@ define([], function() {
                 defaults.splice(1, 0, {
                     icon: 'floppy-saved',
                     iconSize: 'large',
-                    group: '1',
                     disabled: true,
                     id: 'save',
                     title: this.sandbox.translate('sulu.list-toolbar.save'),
@@ -114,7 +111,7 @@ define([], function() {
                     postfix;
                 this.sandbox.on('husky.datagrid.number.selections', function(number) {
                     postfix = number > 0 ? 'enable' : 'disable';
-                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete');
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
                 }.bind(this));
             },
             defaultEditableList: function() {
@@ -178,11 +175,31 @@ define([], function() {
                 template = template.call(this);
             }
             return template;
+        },
+
+        /**
+         * Delegates the start of the toolbar to the header
+         */
+        startToolbarInHeader = function(options) {
+            // remove configured el (let header decide which container to use)
+            this.sandbox.emit('sulu.header.set-toolbar', options);
+        },
+
+        /**
+         * Starts the husky-toolbar with given options
+         * @param options {object} options The options to pass to the toolbar-component
+         */
+        startToolbarComponent = function(options) {
+            this.sandbox.start([
+                {
+                    name: 'toolbar@husky',
+                    options: options
+                }
+            ]);
         };
 
     return {
         view: true,
-
 
         initialize: function() {
 
@@ -201,8 +218,16 @@ define([], function() {
                 this.options.template = mergeTemplates.call(this, this.options.parentTemplate, this.options.template);
             }
 
-            var $container = this.sandbox.dom.createElement('<div />');
-            this.html($container);
+            var $container,
+                options = {
+                        hasSearch: true,
+                        data: this.options.template,
+                        instanceName: this.options.instanceName,
+                        showTitleAsTooltip: true,
+                        searchOptions: {
+                            placeholderText: 'public.search'
+                        }
+                    };
 
             // see if template has listener set
             if (this.options.listener) {
@@ -213,28 +238,17 @@ define([], function() {
                 this.options.parentListener.call(this);
             }
 
-            this.sandbox.start([
-                {
-                    name: 'toolbar@husky',
-                    options: {
-                        hasSearch: true,
-                        el: $container,
-                        data: this.options.template,
-                        instanceName: this.options.instanceName,
-                        searchOptions: {
-                            placeholderText: 'public.search'
-                        }
-                    }
-                }
-            ]);
-        },
-
-
-        /**
-         * listens to tab events
-         */
-        bindCustomEvents: function() {
-
+            // start the toolbar right ahead or delegate the initialization to the header
+            if (this.options.inHeader !== true) {
+                $container = this.sandbox.dom.createElement('<div />');
+                this.html($container);
+                options.el = $container;
+                startToolbarComponent.call(this, options);
+            } else {
+                // hide element-container, because toolbar gets rendered in header
+                this.sandbox.dom.hide(this.$el);
+                startToolbarInHeader.call(this, options);
+            }
         }
     };
 });
