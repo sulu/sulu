@@ -181,7 +181,7 @@ define([
                             success: function() {
                                 this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
 
-                                this.sandbox.sulu.viewStates.nodeDeleted = true;
+                                this.sandbox.sulu.unlockDeleteSuccessLabel();
                                 this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
