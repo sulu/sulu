@@ -10,25 +10,18 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use DateTime;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
-
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\File;
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
-
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
-use \DateTime;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes collections available through a REST API
@@ -149,9 +142,10 @@ class CollectionController extends RestController implements ClassResourceInterf
 
     /**
      * Creates a new collection
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
         try {
             $em = $this->getDoctrine()->getManager();
@@ -159,22 +153,27 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collection = new Collection();
 
             // set style
-            $collection->setStyle($this->getRequest()->get('style'));
+            $collection->setStyle($request->get('style'));
 
             // set type
-            $typeData = $this->getRequest()->get('type');
+            $typeData = $request->get('type');
 
+            // ??? is this check really necessary ???
             if ($typeData != null && isset($typeData['id']) && $typeData['id'] != 'null' && $typeData['id'] != '') {
+                /** @var CollectionType $type */
                 $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
+
                 if (!$type) {
                     throw new EntityNotFoundException($this->entityName, $typeData['id']);
                 }
+
                 $collection->setType($type);
             }
 
             // set parent
-            $parentData = $this->getRequest()->get('parent');
+            $parentData = $request->get('parent');
             if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
+                /** @var Collection $parent */
                 $parent = $this->getDoctrine()
                     ->getRepository($this->entityName)
                     ->findCollectionById($parentData['id']);
@@ -182,6 +181,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 if (!$parent) {
                     throw new EntityNotFoundException($this->entityName, $parentData['id']);
                 }
+
                 $collection->setParent($parent);
             }
 
@@ -192,7 +192,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collection->setChanger($this->getUser());
 
             // set metas
-            $metas = $this->getRequest()->get('metas');
+            $metas = $request->get('metas');
             if (!empty($metas)) {
                 foreach ($metas as $metaData) {
                     $this->addMetas($collection, $metaData);
@@ -216,10 +216,11 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Edits the existing collection with the given id
      * @param integer $id The id of the collection to update
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    public function putAction($id)
+    public function putAction($id, Request $request)
     {
         $collectionEntity = 'SuluMediaBundle:Collection';
 
@@ -235,28 +236,41 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $em = $this->getDoctrine()->getManager();
 
                 // set style
-                $collection->setStyle($this->getRequest()->get('style'));
+                $collection->setStyle($request->get('style'));
 
                 // set type
-                $typeData = $this->getRequest()->get('type');
+                $typeData = $request->get('type');
 
+                //
+                // @alexander-schranz
+                // please remove code duplication!
+                // same code used in postAction
+                //
+
+                // ??? is this check really necessary ???
                 if ($typeData != null && isset($typeData['id']) && $typeData['id'] != 'null' && $typeData['id'] != '') {
+                    /** @var CollectionType $type */
                     $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
+
                     if (!$type) {
                         throw new EntityNotFoundException($this->entityName, $typeData['id']);
                     }
+
                     $collection->setType($type);
                 }
 
                 // set parent
-                $parentData = $this->getRequest()->get('parent');
+                $parentData = $request->get('parent');
                 if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
+                    /** @var Collection $parent */
                     $parent = $this->getDoctrine()
                         ->getRepository($this->entityName)
                         ->findCollectionById($parentData['id']);
+
                     if (!$parent) {
                         throw new EntityNotFoundException($this->entityName, $parentData['id']);
                     }
+
                     $collection->setParent($parent);
                 } else {
                     $collection->setParent(null);
@@ -268,16 +282,15 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $collection->setChanger($user);
 
                 // process details
-                if (!$this->processMetas($collection)) {
+                if (!$this->processMetas($collection, $request->get('metas'))) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }
 
                 $em->flush();
                 $view = $this->view($collection, 200);
             }
-
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (EntityNotFoundException $exc) {
+            $view = $this->view($exc->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -318,12 +331,11 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Process all metas from request
      * @param Collection $collection The collection on which is worked
-     * @return bool True if the processing was sucessful, otherwise false
+     * @param mixed $metas Request meta data to process
+     * @return bool True if the processing was successful, otherwise false
      */
-    protected function processMetas(Collection $collection)
+    protected function processMetas(Collection $collection, $metas)
     {
-        $metas = $this->getRequest()->get('metas');
-
         $delete = function ($meta) use ($collection) {
             $collection->removeMeta($meta);
 

@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class File
 {
-
     /**
      * @var \DateTime
      */
