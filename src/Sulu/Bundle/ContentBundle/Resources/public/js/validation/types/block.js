@@ -26,6 +26,7 @@ define([
                         this.templates[item.data] = App.dom.find('#' + item.tpl, this.$el).html();
 
                         item.id = item.data;
+                        item.name = App.translate(item.title);
                         selectData.push(item);
                     }
 
@@ -74,7 +75,6 @@ define([
                                 fixedLabel: true,
                                 style: 'action',
                                 icon: 'circle-plus',
-                                valueName: 'title',
                                 data: (selectData.length > 1 ? selectData : []),
                                 selectCallback: function(item) {
                                     this.addChild(item, {}, true);
