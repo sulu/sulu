@@ -20,7 +20,7 @@ class SuluTagAdmin extends Admin
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('navigation.tools');
+        $section = new NavigationItem('');
 
         $settings = new NavigationItem('navigation.settings');
         $settings->setIcon('settings');
@@ -42,4 +42,11 @@ class SuluTagAdmin extends Admin
         return array();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getJsBundleName()
+    {
+        return 'sulutag';
+    }
 }
