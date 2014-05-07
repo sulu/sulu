@@ -370,6 +370,13 @@ define(['app-config'], function(AppConfig) {
                 this.highlightSaveButton = true;
                 this.setHeaderBar(true);
                 this.setTitle();
+
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+            }, this);
+
+            // content save-error
+            this.sandbox.on('sulu.content.contents.save-error', function() {
+                this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
             }, this);
 
             // content save
@@ -494,6 +501,7 @@ define(['app-config'], function(AppConfig) {
         changeTemplateDropdownHandler: function() {
             this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.templateChanged);
+
             if (this.hiddenTemplate) {
                 this.hiddenTemplate = false;
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
