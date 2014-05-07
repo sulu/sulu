@@ -246,10 +246,6 @@ define(['app-config'], function(AppConfig) {
         },
 
         bindFormEvents: function() {
-            this.sandbox.dom.on(this.formId, 'form-collection-init', function() {
-                this.updatePreview();
-            }.bind(this));
-
             this.sandbox.dom.on(this.formId, 'form-remove', function(e, propertyName) {
                 // TODO removed elements remove from config
 
