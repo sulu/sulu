@@ -12,7 +12,8 @@ require.config({
         sulucontent: '../../sulucontent/js',
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
-        "type/smartContent": '../../sulucontent/js/validation/types/smartContent'
+        "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
+        "type/block": '../../sulucontent/js/validation/types/block'
     }
 });
 

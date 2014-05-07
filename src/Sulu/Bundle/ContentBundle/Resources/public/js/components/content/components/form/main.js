@@ -76,9 +76,10 @@ define(['app-config'], function(AppConfig) {
             this.setHeaderBar(false);
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/settings'));
-            this.createForm(this.initData());
-            this.bindDomEvents();
-            this.listenForChange();
+            this.createForm(this.initData()).then(function() {
+                this.bindDomEvents();
+                this.listenForChange();
+            }.bind(this));
 
             // enable state button
             this.setStateDropdown(this.options.data);
@@ -156,10 +157,10 @@ define(['app-config'], function(AppConfig) {
 
             formObject.initialized.then(function() {
                 this.createConfiguration(this.formId);
-                dfd.resolve();
 
                 this.setFormData(data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
+
                     this.initSortableBlock();
                     this.bindFormEvents();
 
@@ -167,6 +168,8 @@ define(['app-config'], function(AppConfig) {
                         this.initPreview();
                         this.options.preview = false;
                     }
+
+                    dfd.resolve();
                 }.bind(this));
             }.bind(this));
 
@@ -193,7 +196,7 @@ define(['app-config'], function(AppConfig) {
                             highestProperty: property,
                             highestPriority: tag.priority,
                             lowestProperty: property,
-                            lowestPriority: tag.priority,
+                            lowestPriority: tag.priority
                         };
                         this.propertyConfiguration[tag.name].properties[tag.priority] = [property];
                     } else {
@@ -308,7 +311,7 @@ define(['app-config'], function(AppConfig) {
 
         bindDomEvents: function() {
             this.startListening = false;
-            this.getDomElementsForTagName('sulu.rlp.input', function(property) {
+                    this.getDomElementsForTagName('sulu.rlp', function(property) {
                 var element = property.$el.data('element');
                 if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
                     this.startListening = true;
@@ -344,7 +347,7 @@ define(['app-config'], function(AppConfig) {
                 this.startListening = true;
                 this.sandbox.emit('sulu.content.contents.getRL', parts, this.template, function(rl) {
                     // set resource locator to empty input fields
-                    this.getDomElementsForTagName('sulu.rlp.input', function(property) {
+                    this.getDomElementsForTagName('sulu.rlp', function(property) {
                         var element = property.$el.data('element');
                         if (element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
                             element.setValue(rl);
@@ -665,15 +668,20 @@ define(['app-config'], function(AppConfig) {
             $element = $($element);
             var sequence = this.sandbox.dom.data($element, 'mapperProperty'),
                 $parents = $element.parents('*[data-mapper-property]'),
-                item = $element.parents('*[data-mapper-property-tpl]')[0];
+                item = $element.parents('*[data-mapper-property-tpl]')[0],
+                parentProperty;
 
             while (!$element.data('element')) {
                 $element = $element.parent();
             }
 
             if ($parents.length > 0) {
+                parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty');
+                if (typeof parentProperty !== 'string') {
+                    parentProperty = this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data;
+                }
                 sequence = [
-                    this.sandbox.dom.data($parents[0], 'mapperProperty')[0].data,
+                    parentProperty,
                     $(item).index(),
                     this.sandbox.dom.data($element, 'mapperProperty')
                 ];

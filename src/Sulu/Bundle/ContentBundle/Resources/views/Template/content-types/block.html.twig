@@ -1,13 +1,55 @@
-<div class="block block-{{ property.name }}" data-property='{{ property|json_encode }}'>
-    {% for child in property.childProperties %}
+<div class="sortable"
+     id="{{ id|raw }}"
+     data-form="true"
+     data-type="block"
+     data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.title is defined ? type.title:type.name|capitalize }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
+     data-type-min="{{ property.minOccurs }}"
+     data-type-max="{{ property.maxOccurs }}"
+     data-type-default="{{ property.defaultTypeName }}"
+     data-mapper-property="{{ property.name }}"
+     data-mapper-full-class="full"
+     data-mapper-empty-class="empty">
 
-        {# set defaults for property#}
-        {% set type = getType(child.contentTypeName) %}
+    {% for type in property.types %}
+        <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
+            <div class="text-block {{ type.name }}-element {{ property.name }}-element" data-mapper-property-tpl="{{ type.name }}">
+                <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
 
-        {% if child is multiple %}
-            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'type': type, 'id': id ~ '-' ~ child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
-        {% else %}
-            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'type': type, 'id': id ~ '-' ~ child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
-        {% endif %}
+                <div class="head">
+                    <label class="move"><%=translate('{{ property.title is defined ? property.title:property.name|capitalize }}')%>
+                        (<%=translate('{{ type.title is defined ? type.title:type.name|capitalize }}')%>)</label>
+
+                    <div data-mapper-remove="{{ property.name }}"
+                         class="icon-remove2 options-remove mapper-remove-{{ type.name }}"></div>
+
+                    <div class="options-change" id="change<~=index~>">
+                        <div data-mapper-change-type="{{ property.name }}"
+                             class="icon-cogwheel drop-down-trigger"></div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="block block-{{ property.name }}">
+                    {% for child in type.childProperties %}
+
+                        {# get Type for property #}
+                        {% set type = getType(child.contentTypeName) %}
+                        {# get params for property #}
+                        {% set params = getParams(child) %}
+
+                        {% if child is multiple %}
+                            {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                        {% else %}
+                            {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode} only %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                </div>
+            </div>
+        </script>
     {% endfor %}
+</div>
+
+<div class="text-block-footer" id="{{ id|raw }}-add" style="width: 200px">
+
 </div>
