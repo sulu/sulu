@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Symfony bundle that provides administration functionality",
     "license": "MIT",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "keywords": ["admin", "cmf", "symfony"],
     "authors": [
         {
@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "sulu/sulu": "dev-develop"
+        "sulu/sulu": "0.3.*"
     },
     "require-dev": {
         "symfony/symfony": "2.4.*",
