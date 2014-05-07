@@ -69,7 +69,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $collection = new Collection();
 
         $style = array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => '#ffcc00'
         );
 
@@ -103,7 +103,6 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $collection->addMeta($collectionMeta2);
 
-
         self::$em->persist($collection);
         self::$em->persist($collectionType);
         self::$em->persist($collectionMeta);
@@ -112,23 +111,15 @@ class CollectionControllerTest extends DatabaseTestCase
         self::$em->flush();
     }
 
-    private function createTestClient() {
+    private function createTestClient()
+    {
         return $this->createClient(
             array(),
             array(
                 'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
+                'PHP_AUTH_PW'   => 'test',
             )
         );
-    }
-
-    /*
-     * Tests
-     */
-
-    public function testTest()
-    {
-        $this->assertTrue(true);
     }
 
     /**
@@ -148,7 +139,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $style = array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => '#ffcc00'
         );
 
@@ -199,7 +190,6 @@ class CollectionControllerTest extends DatabaseTestCase
             '/api/collections/10'
         );
 
-
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
@@ -224,24 +214,24 @@ class CollectionControllerTest extends DatabaseTestCase
             '/api/collections',
             array(
                 'style' => json_encode(
-                   array(
-                       'type' => 'circle',
-                       'color' => $generateColor
-                   )
+                    array(
+                        'type'  => 'circle',
+                        'color' => $generateColor
+                    )
                 ),
-                'type' => array(
+                'type'  => array(
                     'id' => 1
                 ),
                 'metas' => array(
                     array(
-                        'title' => 'Test Collection 2',
+                        'title'       => 'Test Collection 2',
                         'description' => 'This Description 2 is only for testing',
-                        'locale' => 'en-gb'
+                        'locale'      => 'en-gb'
                     ),
                     array(
-                        'title' => 'Test Kollektion 2',
+                        'title'       => 'Test Kollektion 2',
                         'description' => 'Diese Beschreibung 2 ist zum Test',
-                        'locale' => 'de'
+                        'locale'      => 'de'
                     )
                 )
             )
@@ -252,7 +242,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(json_encode(array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => $generateColor
         )), $response->style);
         $this->assertEquals(2, $response->id);
@@ -282,12 +272,11 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, $response->total);
 
-
         // check if first entity is unchanged
         $responseFirstEntity = $response->_embedded[0];
 
         $style = array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => '#ffcc00'
         );
 
@@ -308,7 +297,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $responseSecondEntity = $response->_embedded[1];
 
         $this->assertEquals(json_encode(array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => $generateColor
         )), $responseSecondEntity->style);
         $this->assertEquals(2, $responseSecondEntity->id);
@@ -342,23 +331,23 @@ class CollectionControllerTest extends DatabaseTestCase
             array(
                 'style' => json_encode(
                     array(
-                        'type' => 'circle',
+                        'type'  => 'circle',
                         'color' => $generateColor
                     )
                 ),
-                'type' => array(
+                'type'  => array(
                     'id' => 2
                 ),
                 'metas' => array(
                     array(
-                        'title' => 'Test Collection 2',
+                        'title'       => 'Test Collection 2',
                         'description' => 'This Description 2 is only for testing',
-                        'locale' => 'en-gb'
+                        'locale'      => 'en-gb'
                     ),
                     array(
-                        'title' => 'Test Kollektion 2',
+                        'title'       => 'Test Kollektion 2',
                         'description' => 'Diese Beschreibung 2 ist zum Test',
-                        'locale' => 'de'
+                        'locale'      => 'de'
                     )
                 )
             )
@@ -383,25 +372,25 @@ class CollectionControllerTest extends DatabaseTestCase
             array(
                 'style' => json_encode(
                     array(
-                        'type' => 'circle',
+                        'type'  => 'circle',
                         'color' => '#00ccff'
                     )
                 ),
-                'type' => array(
+                'type'  => array(
                     'id' => 1
                 ),
                 'metas' => array(
                     array(
-                        'id' => 1,
-                        'title' => 'Test Collection changed',
+                        'id'          => 1,
+                        'title'       => 'Test Collection changed',
                         'description' => 'This Description is only for testing changed',
-                        'locale' => 'en-au'
+                        'locale'      => 'en-au'
                     ),
                     array(
-                        'id' => 2,
-                        'title' => 'Test Kollektion geändert',
+                        'id'          => 2,
+                        'title'       => 'Test Kollektion geändert',
                         'description' => 'Diese Beschreibung ist zum Test geändert',
-                        'locale' => 'de-de'
+                        'locale'      => 'de-de'
                     )
                 )
             )
@@ -417,7 +406,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(json_encode(array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => '#00ccff'
         )), $response->style);
         $this->assertEquals(1, $response->id);
@@ -450,7 +439,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $responseFirstEntity = $response->_embedded[0];
 
         $this->assertEquals(json_encode(array(
-            'type' => 'circle',
+            'type'  => 'circle',
             'color' => '#00ccff'
         )), $responseFirstEntity->style);
         $this->assertEquals(1, $responseFirstEntity->id);
@@ -488,11 +477,11 @@ class CollectionControllerTest extends DatabaseTestCase
             array(
                 'style' => json_encode(
                     array(
-                        'type' => 'quader',
+                        'type'  => 'quader',
                         'color' => '#00ccff'
                     )
                 ),
-                'type' => array(
+                'type'  => array(
                     'id' => 2
                 )
             )
@@ -509,7 +498,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals(json_encode(
             array(
-                'type' => 'quader',
+                'type'  => 'quader',
                 'color' => '#00ccff'
             )
         ), $response->style);
@@ -531,11 +520,11 @@ class CollectionControllerTest extends DatabaseTestCase
             array(
                 'style' => json_encode(
                     array(
-                        'type' => 'quader',
+                        'type'  => 'quader',
                         'color' => '#00ccff'
                     )
                 ),
-                'type' => array(
+                'type'  => array(
                     'id' => 1
                 )
             )
