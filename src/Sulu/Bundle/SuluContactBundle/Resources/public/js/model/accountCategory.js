@@ -7,10 +7,9 @@
  * with this source code in the file LICENSE.
  */
 
-define([
-    'mvc/relationalmodel'
-], function(RelationalModel) {
+define(['mvc/relationalmodel'], function(RelationalModel) {
     return RelationalModel({
+        urlRoot: '/admin/api/account/categories',
         defaults: {
             id: null,
             category: ''
