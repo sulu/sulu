@@ -51,6 +51,7 @@ define(function() {
 
         initialize: function() {
             this.render();
+            this.showLabels();
 
             this.showGhostPages = true;
             this.setShowGhostPages();
@@ -63,6 +64,16 @@ define(function() {
             var showGhostPages = this.sandbox.sulu.getUserSetting(SHOW_GHOST_PAGES_KEY);
             if (showGhostPages !== null) {
                 this.showGhostPages = JSON.parse(showGhostPages);
+            }
+        },
+
+        /**
+         * Shows desired labels
+         */
+        showLabels: function() {
+            if (this.sandbox.sulu.viewStates.nodeDeleted === true) {
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-deleted-desc', 'labels.success');
+                delete this.sandbox.sulu.viewStates.nodeDeleted;
             }
         },
 
