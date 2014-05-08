@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace\Analyzer;
 
-use Sulu\Component\Security\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -32,11 +31,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
 
     /**
      * The environment valid to analyze the request
@@ -92,10 +86,9 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $resourceLocatorPrefix;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, UserRepositoryInterface $userRepository, $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->webspaceManager = $webspaceManager;
-        $this->userRepository = $userRepository;
         $this->environment = $environment;
     }
 
@@ -249,11 +242,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     protected function setCurrentWebspace($webspace)
     {
         $this->webspace = $webspace;
-
-        // If security is enabled, the security user repository system will get overwritten.
-        if ($webspaceSecurity = $webspace->getSecurity()) {
-            $this->userRepository->setSystem($webspaceSecurity->getSystem());
-        }
     }
 
     /**

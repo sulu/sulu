@@ -37,7 +37,6 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
                     'Sulu\Component\Webspace\Analyzer\RequestAnalyzer',
                     array(
                         new Reference('sulu_core.webspace.webspace_manager'),
-                        new Reference('sulu_security.user_repository'),
                         $container->getParameter('kernel.environment')
                     )
                 )
