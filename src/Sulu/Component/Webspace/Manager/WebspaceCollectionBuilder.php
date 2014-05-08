@@ -89,7 +89,7 @@ class WebspaceCollectionBuilder
     public function build()
     {
         $finder = new Finder();
-        $finder->in($this->path)->files()->name('*.xml');
+        $finder->in($this->path)->files()->name('*.xml')->sortByName();
 
         // Iterate over config files, and add a portal object for each config to the collection
         $collection = new WebspaceCollection();
