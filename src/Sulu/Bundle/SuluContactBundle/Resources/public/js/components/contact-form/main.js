@@ -288,7 +288,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             this.sandbox.stop(this.$editOverlayContent);
         },
 
-
         editAddressClicked = function(event) {
             var $template = this.sandbox.dom.$(event.currentTarget),
                 data = this.sandbox.form.getData(this.form, true, $template);
