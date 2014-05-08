@@ -58,7 +58,6 @@ define([], function() {
                     }
                 ]);
 
-
                 this.initForm(data);
 
                 this.bindDomEvents();
@@ -285,7 +284,6 @@ define([], function() {
                     this.setHeaderBar(false);
                 }.bind(this));
             }
-
         };
     })();
 });
