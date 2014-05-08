@@ -14,7 +14,14 @@ define(['app-config'], function(AppConfig) {
     var defaults = {
         headline: 'contact.accounts.title'
     },
-        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'];
+        fields = ['urls', 'emails', 'faxes', 'phones', 'notes', 'addresses'],
+
+        // sets toolbar
+        setHeaderToolbar = function() {
+            this.sandbox.emit('sulu.header.set-toolbar', {
+                template: 'default'
+            });
+        };
 
     return {
 
@@ -54,6 +61,7 @@ define(['app-config'], function(AppConfig) {
                 excludeItem.push({id: this.options.data.id});
             }
 
+            setHeaderToolbar.call(this);
 
             this.sandbox.start([
                 {
@@ -73,7 +81,9 @@ define(['app-config'], function(AppConfig) {
                 }
             ]);
 
+
             this.initForm(data);
+
 
             this.bindDomEvents();
             this.bindCustomEvents();
