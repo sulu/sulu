@@ -247,15 +247,20 @@ abstract class RestController extends FOSRestController
      * Special function for lists
      * route /contacts/list
      * @param array $where
+     * @param String $entityName
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function responseList($where = array())
+    protected function responseList($where = array(), $entityName = null)
     {
         /** @var ListRestHelper $listHelper */
         $listHelper = $this->get('sulu_core.list_rest_helper');
 
-        $entities = $listHelper->find($this->entityName, $where);
-        $numberOfAll = $listHelper->getTotalNumberOfElements($this->entityName, $where);
+        if (is_null($entityName)) {
+            $entityName = $this->entityName;
+        }
+
+        $entities = $listHelper->find($entityName, $where);
+        $numberOfAll = $listHelper->getTotalNumberOfElements($entityName, $where);
         $pages = $listHelper->getTotalPages($numberOfAll);
 
         $response = array(
