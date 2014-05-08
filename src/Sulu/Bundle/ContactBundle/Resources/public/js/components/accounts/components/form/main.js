@@ -307,7 +307,7 @@ define(['app-config'], function(AppConfig) {
 
                 // FIXME auto complete in mapper
                 data.parent = {
-                    id: this.sandbox.dom.data('#company input', 'id')
+                    id: this.sandbox.dom.attr('#company input', 'data-id')
                 };
 
                 this.sandbox.emit('sulu.contacts.accounts.save', data);
