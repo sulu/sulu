@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -16325,6 +16326,7 @@ define('aura/ext/components', [],function() {
   };
 });
 
+
 /*
  * This file is part of the Husky Validation.
  *
@@ -16411,13 +16413,26 @@ define('form/util',[], function() {
         },
 
         /**
+         * returns true if element is checkbox
+         * @param el {String|Object} valid selector or dom-object
+         * @returns {Boolean}
+         */
+        isCheckbox: function(el) {
+            var $el = $(el);
+
+            return $el.is(':checkbox');
+        },
+
+        /**
          * Returns input values for elements
          * @param el {String|Object} valid selector or dom-object
          * @returns {String} value or empty string
          */
         getValue: function(el) {
             var $el = $(el);
-            if (this.isValueField($el)) {
+            if (this.isCheckbox($el)) {
+                return $el.prop('checked');
+            } else if (this.isValueField($el)) {
                 return $el.val();
             } else {
                 return $el.html();
@@ -16431,7 +16446,9 @@ define('form/util',[], function() {
          */
         setValue: function(el, value) {
             var $el = $(el);
-            if (this.isValueField($el)) {
+            if (this.isCheckbox($el)) {
+                $el.prop('checked', value);
+            } else if (this.isValueField($el)) {
                 $el.val(value);
             } else {
                 $el.html(value);
@@ -18870,7 +18887,6 @@ define('validator/regex',[
     };
 
 });
-
 
 define("husky-validation", function(){});
 
@@ -38431,4 +38447,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
