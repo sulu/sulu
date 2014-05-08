@@ -40,16 +40,16 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
             ].join(''),
             editField: [
                 '<div class="grid-row divider" data-deleted="false">',
-                '<div class="grid-col-7 pull-left">',
-                '<div id="<%= dropdownId %>"></div>',
-                '</div>',
-                '<div class="grid-col-2 pull-right">',
+                '   <div class="grid-col-7 pull-left">',
+                '       <div id="<%= dropdownId %>"></div>',
+                '   </div>',
+                '   <div class="grid-col-2 pull-right">',
                 '<% if (showDeleteButton == true) { %>',
-                '<div class="delete btn gray-dark fit only-icon pull-right">',
-                '<div class="icon-circle-minus"></div>',
-                '</div>',
-                '</div>',
+                '       <div class="delete btn gray-dark fit only-icon pull-right">',
+                '           <div class="icon-circle-minus"></div>',
+                '       </div>',
                 '<% } %>',
+                '   </div>',
                 '</div>'
             ].join('')
         },
@@ -490,7 +490,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 title = this.sandbox.translate('contacts.edit-address');
             }
 
-
             // create overlay with data
             this.sandbox.start([
                 {
@@ -535,12 +534,6 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
 //                }
 //            ]);
 
-        },
-
-        checkValidAddressData = function() {
-            // TODO: implement live check of form data
-//            this.sandbox.form.validate(constants.addressFormId);
-//            var formData = this.sandbox.form.getData(constants.addressFormId);
         },
 
     // removes listeners of addressform
@@ -697,6 +690,5 @@ define(['text!sulucontact/components/contact-form/address.form.html'], function(
                 }
             ]);
         }
-
     };
 });
