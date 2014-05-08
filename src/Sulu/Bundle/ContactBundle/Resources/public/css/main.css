@@ -41,22 +41,28 @@
 #contact-edit-form:hover #contact-options-dropdown {
   display: block;
 }
-/* line 47, ../scss/modules/utility.scss */
+/* line 48, ../scss/modules/utility.scss */
+#contact-edit-form .comma-before:before {
+  content: ',';
+  margin-left: -4px;
+  margin-right: 4px;
+}
+/* line 55, ../scss/modules/utility.scss */
 #contact-edit-form label {
   line-height: 14px;
   text-overflow: hidden;
 }
-/* line 52, ../scss/modules/utility.scss */
+/* line 60, ../scss/modules/utility.scss */
 #contact-edit-form .label-container {
   display: block;
   font-size: 11px;
 }
 
-/* line 59, ../scss/modules/utility.scss */
+/* line 67, ../scss/modules/utility.scss */
 .type-value:before {
   content: '(';
 }
-/* line 62, ../scss/modules/utility.scss */
+/* line 70, ../scss/modules/utility.scss */
 .type-value:after {
   content: ')';
 }

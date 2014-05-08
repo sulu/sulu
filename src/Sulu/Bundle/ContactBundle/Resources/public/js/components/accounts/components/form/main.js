@@ -239,8 +239,9 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.start([{
                 name: 'contact-form@sulucontact',
                 options: {
-                    el:'#contact-options-dropdown',
-                    fieldTypes: this.fieldTypes
+                    el:'#contact-edit-form',
+                    fieldTypes: this.fieldTypes,
+                    defaultTypes: this.defaultTypes
                 }
             }]);
         },
