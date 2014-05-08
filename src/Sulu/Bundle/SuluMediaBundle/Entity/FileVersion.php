@@ -17,6 +17,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileVersion
 {
+    /**
+     * @var integer
+     */
+    private $id;
 
     /**
      * @var string
@@ -47,11 +51,6 @@ class FileVersion
      * @var \DateTime
      */
     private $changed;
-
-    /**
-     * @var integer
-     */
-    private $id;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -98,7 +97,7 @@ class FileVersion
         $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -108,14 +107,14 @@ class FileVersion
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -131,14 +130,14 @@ class FileVersion
     public function setVersion($version)
     {
         $this->version = $version;
-    
+
         return $this;
     }
 
     /**
      * Get version
      *
-     * @return integer 
+     * @return integer
      */
     public function getVersion()
     {
@@ -154,14 +153,14 @@ class FileVersion
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -177,14 +176,14 @@ class FileVersion
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -194,7 +193,7 @@ class FileVersion
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -210,7 +209,7 @@ class FileVersion
     public function addFileVersionContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $fileVersionContentLanguages)
     {
         $this->fileVersionContentLanguages[] = $fileVersionContentLanguages;
-    
+
         return $this;
     }
 
@@ -227,7 +226,7 @@ class FileVersion
     /**
      * Get fileVersionContentLanguages
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFileVersionContentLanguages()
     {
@@ -243,7 +242,7 @@ class FileVersion
     public function addFileVersionPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $fileVersionPublishLanguages)
     {
         $this->fileVersionPublishLanguages[] = $fileVersionPublishLanguages;
-    
+
         return $this;
     }
 
@@ -260,7 +259,7 @@ class FileVersion
     /**
      * Get fileVersionPublishLanguages
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFileVersionPublishLanguages()
     {
@@ -276,7 +275,7 @@ class FileVersion
     public function addMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $metas)
     {
         $this->metas[] = $metas;
-    
+
         return $this;
     }
 
@@ -293,7 +292,7 @@ class FileVersion
     /**
      * Get metas
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMetas()
     {
@@ -309,14 +308,14 @@ class FileVersion
     public function setFile(\Sulu\Bundle\MediaBundle\Entity\File $file = null)
     {
         $this->file = $file;
-    
+
         return $this;
     }
 
     /**
      * Get file
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\File 
+     * @return \Sulu\Bundle\MediaBundle\Entity\File
      */
     public function getFile()
     {
@@ -332,7 +331,7 @@ class FileVersion
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
     {
         $this->tags[] = $tags;
-    
+
         return $this;
     }
 
@@ -349,7 +348,7 @@ class FileVersion
     /**
      * Get tags
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTags()
     {
@@ -365,7 +364,7 @@ class FileVersion
     public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
@@ -388,7 +387,7 @@ class FileVersion
     public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
@@ -411,14 +410,14 @@ class FileVersion
     public function setSize($size)
     {
         $this->size = $size;
-    
+
         return $this;
     }
 
     /**
      * Get size
      *
-     * @return integer 
+     * @return integer
      */
     public function getSize()
     {
