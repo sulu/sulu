@@ -22,6 +22,8 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
+            } else if (this.options.display === 'contacts') {
+                this.renderContacts();
             } else {
                 throw 'display type wrong';
             }
@@ -59,7 +61,7 @@ define([
                 if (!!type) {
                     typeString = '/type:' + type;
                 }
-                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false , true);
+                this.sandbox.emit('sulu.router.navigate', 'contacts/accounts' + typeString, !noReload ? true : false, true);
             }, this);
         },
 
@@ -171,6 +173,28 @@ define([
                 this.sandbox.start([
                     {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON(), accountTypeName: this.options.accountType}}
                 ]);
+            }
+        },
+
+        renderContacts: function() {
+
+            var $form = this.sandbox.dom.createElement('<div id="accounts-contacts-container"/>');
+            this.html($form);
+
+            if (!!this.options.id) {
+                this.account = new Account({id: this.options.id});
+                this.account.fetch({
+                    // pass include parameter when fetching
+//                    data: {'include': 'contacts'},
+                    success: function(model) {
+                        this.sandbox.start([
+                            {name: 'accounts/components/contacts@sulucontact', options: { el: $form, data: model.toJSON()}}
+                        ]);
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log("error while fetching contact");
+                    }.bind(this)
+                });
             }
         },
 

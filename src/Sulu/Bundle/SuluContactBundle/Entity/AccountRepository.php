@@ -38,9 +38,10 @@ class AccountRepository extends EntityRepository
     /**
      * Get account by id
      * @param $id
+     * @param $contacts
      * @return mixed
      */
-    public function findAccountById($id)
+    public function findAccountById($id, $contacts = false)
     {
         try {
             $qb = $this->createQueryBuilder('account')
@@ -71,6 +72,12 @@ class AccountRepository extends EntityRepository
                 ->addSelect('faxType')
                 ->addSelect('notes')
                 ->where('account.id = :accountId');
+
+
+            if ($contacts === true) {
+                $qb->leftJoin('account.contacts', 'contacts')
+                ->addSelect('contacts');
+            }
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
