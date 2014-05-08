@@ -39,6 +39,11 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $webspaceManager;
 
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    private $userRepository;
+
     public function setUp()
     {
         $this->webspaceManager = $this->getMockForAbstractClass(
@@ -51,7 +56,17 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
             array('findPortalInformationByUrl')
         );
 
-        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, 'prod');
+        $this->userRepository = $this->getMockForAbstractClass(
+            '\Sulu\Component\Security\UserRepositoryInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('setSystem')
+        );
+
+        $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
 
         $this->requestListener = new RequestListener($this->requestAnalyzer);
     }

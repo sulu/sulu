@@ -78,7 +78,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
             $this->returnValue('testvalue')
         );
 
-        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Structure', 'add');
+        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Structure', 'addChild');
         $addMethod->setAccessible(true);
 
         $addMethod->invoke($this->structure, $this->titleProperty);
@@ -186,7 +186,7 @@ class StructureTest extends \PHPUnit_Framework_TestCase
             $this->returnCallback(array($this, 'returnCallbackTestTag'))
         );
 
-        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Structure', 'add');
+        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Structure', 'addChild');
         $addMethod->setAccessible(true);
 
         $addMethod->invoke($this->structure, $this->titleProperty);

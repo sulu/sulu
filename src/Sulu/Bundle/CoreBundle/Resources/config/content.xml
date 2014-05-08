@@ -105,6 +105,7 @@
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.type.block.template%</argument>
+            <argument>%sulu.content.language.namespace%</argument>
         </service>
 
     </services>

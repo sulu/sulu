@@ -168,7 +168,7 @@ abstract class Structure implements StructureInterface
      * adds a property to structure
      * @param PropertyInterface $property
      */
-    protected function add(PropertyInterface $property)
+    protected function addChild(PropertyInterface $property)
     {
         foreach ($property->getTags() as $tag) {
             if (!array_key_exists($tag->getName(), $this->tags)) {

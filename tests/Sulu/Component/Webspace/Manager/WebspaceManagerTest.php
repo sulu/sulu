@@ -43,7 +43,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
+                'cache_dir'  => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid'
             )
         );
@@ -108,7 +108,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
         $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
 
-
         $portal = $webspace->getPortals()[1];
 
         $this->assertEquals('Massive Art CA', $portal->getName());
@@ -142,7 +141,6 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('dev', $portal->getEnvironments()[1]->getType());
         $this->assertEquals(1, count($portal->getEnvironments()[1]->getUrls()));
         $this->assertEquals('massiveart.lo/{localization}/{segment}', $portal->getEnvironments()[1]->getUrls()[0]->getUrl());
-
     }
 
     public function testFindWebspaceByKey()
@@ -372,7 +370,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
+                'cache_dir'  => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
             )
         );
@@ -398,7 +396,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('sulu.at', $portalInformation->getRedirect());
         $this->assertEquals('www.sulu.at', $portalInformation->getUrl());
-        
+
         /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
@@ -420,7 +418,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testLocalizations()
     {
         $localizations = $this->webspaceManager->findWebspaceByKey('massiveart')->getLocalizations();
-        
+
         $this->assertEquals('en', $localizations[0]->getLanguage());
         $this->assertEquals('us', $localizations[0]->getCountry());
         $this->assertEquals('auto', $localizations[0]->getShadow());
@@ -455,7 +453,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(
                 'http://massiveart.lo/en-us/w/test',
-                'http://massiveart.lo/en-us/s/test'
+                'http://massiveart.lo/en-us/s/test',
             ),
             $result
         );
