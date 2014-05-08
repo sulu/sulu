@@ -286,8 +286,6 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
 
-        var_dump($client->getRequest()->files->all());
-
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
