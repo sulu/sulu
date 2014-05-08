@@ -642,6 +642,14 @@ define([], function() {
                     instanceName: 'header' + this.options.instanceName
                 };
 
+            // if passed template is a string get the corresponding default template
+            if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
+                options.template = toolbarTemplates[options.template];
+                if (typeof options.template === 'function') {
+                    options.template = options.template.call(this);
+                }
+            }
+
             this.sandbox.stop(this.$find('.' + constants.toolbarClass));
             this.sandbox.dom.html(this.$find('.' + constants.toolbarClass), $container);
 
