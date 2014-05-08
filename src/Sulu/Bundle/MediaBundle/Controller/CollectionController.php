@@ -157,22 +157,18 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             // set type
             $typeData = $request->get('type');
+            /** @var CollectionType $type */
+            $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
 
-            // ??? is this check really necessary ???
-            if ($typeData != null && isset($typeData['id']) && $typeData['id'] != 'null' && $typeData['id'] != '') {
-                /** @var CollectionType $type */
-                $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
-
-                if (!$type) {
-                    throw new EntityNotFoundException($this->entityName, $typeData['id']);
-                }
-
-                $collection->setType($type);
+            if (!$type) {
+                throw new EntityNotFoundException($this->entityName, $typeData['id']);
             }
+
+            $collection->setType($type);
 
             // set parent
             $parentData = $request->get('parent');
-            if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
+            if ($this->checkDataForId($parentData)) {
                 /** @var Collection $parent */
                 $parent = $this->getDoctrine()
                     ->getRepository($this->entityName)
@@ -183,6 +179,8 @@ class CollectionController extends RestController implements ClassResourceInterf
                 }
 
                 $collection->setParent($parent);
+            } else {
+                $collection->setParent(null);
             }
 
             // set creator / changer
@@ -240,28 +238,18 @@ class CollectionController extends RestController implements ClassResourceInterf
 
                 // set type
                 $typeData = $request->get('type');
+                /** @var CollectionType $type */
+                $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
 
-                //
-                // @alexander-schranz
-                // please remove code duplication!
-                // same code used in postAction
-                //
-
-                // ??? is this check really necessary ???
-                if ($typeData != null && isset($typeData['id']) && $typeData['id'] != 'null' && $typeData['id'] != '') {
-                    /** @var CollectionType $type */
-                    $type = $this->getDoctrine()->getRepository('SuluMediaBundle:CollectionType')->find($typeData['id']);
-
-                    if (!$type) {
-                        throw new EntityNotFoundException($this->entityName, $typeData['id']);
-                    }
-
-                    $collection->setType($type);
+                if (!$type) {
+                    throw new EntityNotFoundException($this->entityName, $typeData['id']);
                 }
+
+                $collection->setType($type);
 
                 // set parent
                 $parentData = $request->get('parent');
-                if ($parentData != null && isset($parentData['id']) && $parentData['id'] != 'null' && $parentData['id'] != '') {
+                if ($this->checkDataForId($parentData)) {
                     /** @var Collection $parent */
                     $parent = $this->getDoctrine()
                         ->getRepository($this->entityName)
@@ -326,6 +314,19 @@ class CollectionController extends RestController implements ClassResourceInterf
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Check given data for a not empty id
+     * @param $data
+     * @return bool
+     */
+    protected function checkDataForId($data)
+    {
+        if ($data != null && isset($data['id']) && $data['id'] != 'null' && $data['id'] != '') {
+            return true;
+        }
+        return false;
     }
 
     /**

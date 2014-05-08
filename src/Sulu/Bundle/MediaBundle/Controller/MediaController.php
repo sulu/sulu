@@ -34,6 +34,7 @@ use \DateTime;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes medias available through a REST API
@@ -146,7 +147,6 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * lists all medias
-     * @Get("media", name="get_all_media")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction()
@@ -159,7 +159,6 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * Shows a single media with the given id
-     * @Get("media/{id}", name="get_single_media")
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -179,9 +178,10 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * Creates a new media
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
         try {
             $em = $this->getDoctrine()->getManager();
@@ -189,8 +189,8 @@ class MediaController extends RestController implements ClassResourceInterface
             $media = new Media();
 
             // set collection
-            $collectionData = $this->getRequest()->get('collection');
-            if ($collectionData != null && isset($collectionData['id']) && $collectionData['id'] != 'null' && $collectionData['id'] != '') {
+            $collectionData = $request->get('collection');
+            if ($this->checkDataForId($collectionData)) {
                 $collection = $this->getDoctrine()
                     ->getRepository($this->entityNameCollection)
                     ->find($collectionData['id']);
@@ -206,7 +206,7 @@ class MediaController extends RestController implements ClassResourceInterface
             $media->setCreator($this->getUser());
             $media->setChanger($this->getUser());
 
-            $mediaTypeId = $this->getMediaType('fileVersion');
+            $mediaTypeId = $this->getMediaType($request, 'fileVersion', $request->get('type'));
             $mediaType = $this->getDoctrine()
                 ->getRepository($this->entityNameMediaType)
                 ->find($mediaTypeId);
@@ -231,10 +231,10 @@ class MediaController extends RestController implements ClassResourceInterface
             // set fileVersions
             $versionCounter = 0;
 
-            $uploadFiles = $this->getUploadedFiles('fileVersion');
+            $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 foreach ($uploadFiles as $uploadFile) {
-                    $this->addFileVersions($file, $uploadFile, $versionCounter);
+                    $this->addFileVersions($file, $uploadFile, $versionCounter, $request->get('metas'));
                 }
             } else {
                 throw new RestException('Uploaded file not found', self::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
@@ -258,12 +258,14 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * get media type from post or set it from file mimetype
+     * @param Request $request
      * @param $fileName
-     * @return mixed
+     * @param string $defaultType
+     * @return int
      */
-    protected function getMediaType($fileName)
+    protected function getMediaType(Request $request, $fileName, $defaultType = '')
     {
-        $mediaTypeData = $this->getRequest()->get('type');
+        $mediaTypeData = $defaultType;
         if (!is_null($mediaTypeData) && isset($mediaTypeData['id'])) {
             return $mediaTypeData['id'];
         }
@@ -276,7 +278,7 @@ class MediaController extends RestController implements ClassResourceInterface
         /**
          * @var UploadedFile $uploadFile
          */
-        foreach ($this->getUploadedFiles($fileName) as $uploadFile)
+        foreach ($this->getUploadedFiles($request, $fileName) as $uploadFile)
         {
             if (in_array($uploadFile->getMimeType(), $imageFileTypes)) {
                 $mediaTypeId = MediaType::TYPE_IMAGE;
@@ -293,10 +295,11 @@ class MediaController extends RestController implements ClassResourceInterface
     /**
      * Edits the existing media with the given id
      * @param integer $id The id of the media to update
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
-    public function putAction($id)
+    public function putAction($id, Request $request)
     {
         $mediaEntity = 'SuluMediaBundle:Media';
 
@@ -312,8 +315,8 @@ class MediaController extends RestController implements ClassResourceInterface
                 $em = $this->getDoctrine()->getManager();
 
                 // set collection
-                $collectionData = $this->getRequest()->get('collection');
-                if ($collectionData != null && isset($collectionData['id']) && $collectionData['id'] != 'null' && $collectionData['id'] != '') {
+                $collectionData = $request->get('collection');
+                if ($this->checkDataForId($collectionData)) {
                     $collection = $this->getDoctrine()
                         ->getRepository($this->entityName)
                         ->findCollectionById($collectionData['id']);
@@ -327,7 +330,7 @@ class MediaController extends RestController implements ClassResourceInterface
                 /**
                  * @var FileVersion $file
                  */
-                $file = $this->getRequest()->get('file');
+                $file = $request->get('file');
                 if (isset($file['id'])) {
                     $fileId = $file['id'];
                     $file = $media->getFiles()[$fileId];
@@ -342,8 +345,8 @@ class MediaController extends RestController implements ClassResourceInterface
                 }
 
                 if (!empty($_FILES['fileVersion'])) {
-                    foreach ($this->getUploadedFiles('fileVersion') as $fileVersionData) {
-                        $this->addFileVersions($file, $fileVersionData, $versionCounter);
+                    foreach ($this->getUploadedFiles($request, 'fileVersion') as $fileVersionData) {
+                        $this->addFileVersions($file, $fileVersionData, $versionCounter, $request->get('metas'));
                     }
                 }
 
@@ -397,14 +400,26 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Check given data for a not empty id
+     * @param $data
+     * @return bool
+     */
+    protected function checkDataForId($data)
+    {
+        if ($data != null && isset($data['id']) && $data['id'] != 'null' && $data['id'] != '') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Process all metas from request
      * @param FileVersion $fileVersion The media on which is worked
+     * @param $metas
      * @return bool True if the processing was sucessful, otherwise false
      */
-    protected function processMetas(FileVersion $fileVersion)
+    protected function processMetas(FileVersion $fileVersion, $metas)
     {
-        $metas = $this->getRequest()->get('metas');
-
         $delete = function ($meta) use ($fileVersion) {
             $fileVersion->removeMeta($meta);
 
@@ -469,21 +484,22 @@ class MediaController extends RestController implements ClassResourceInterface
 
     /**
      * get uploaded file when name is 'file' or 'file[]'
+     * @param Request $request
      * @param $name
      * @return array
      */
-    private function getUploadedFiles($name)
+    private function getUploadedFiles(Request $request, $name)
     {
-        if (is_null($this->getRequest()->files->get($name))) {
+        if (is_null($request->files->get($name))) {
             return array();
         }
 
-        if (is_array($this->getRequest()->files->get($name))) {
-            return $this->getRequest()->files->get($name);
+        if (is_array($request->files->get($name))) {
+            return $request->files->get($name);
         }
 
         return array(
-            $this->getRequest()->files->get($name)
+            $request->files->get($name)
         );
     }
 
@@ -501,7 +517,6 @@ class MediaController extends RestController implements ClassResourceInterface
         $unitInBytes = (defined('self::' . $digitalUnit)) ? constant('self::' . $digitalUnit) : self::B;
 
         $maxFileSize = intval($value) * $unitInBytes;
-
 
         return intval($maxFileSize);
     }
@@ -637,9 +652,10 @@ class MediaController extends RestController implements ClassResourceInterface
      * @param File $file
      * @param UploadedFile $uploadFile
      * @param $versionCounter
+     * @param $metas
      * @throws \Sulu\Component\Rest\Exception\RestException
      */
-    private function addFileVersions(File &$file, UploadedFile $uploadFile, &$versionCounter)
+    private function addFileVersions(File &$file, UploadedFile $uploadFile, &$versionCounter, $metas = array89)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -678,7 +694,7 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         // set metas
-        if (!$this->processMetas($fileVersion)) {
+        if (!$this->processMetas($fileVersion, $metas)) {
             throw new RestException('Updating dependencies is not possible', 0);
         }
 
