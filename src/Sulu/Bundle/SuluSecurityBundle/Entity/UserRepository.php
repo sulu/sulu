@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,10 +26,24 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
     /**
-     * The security system
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * The standard sulu system
      * @var string
      */
-    private $system;
+    private $suluSystem;
+
+    /**
+     * initializes the UserRepository
+     */
+    public function init($suluSystem, RequestAnalyzerInterface $requestAnalyzer = null)
+    {
+        $this->suluSystem = $suluSystem;
+        $this->requestAnalyzer = $requestAnalyzer;
+    }
 
     /**
      * {@inheritdoc}
@@ -192,20 +207,26 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Sets the security system
-     * @param string $system
+     * Sets the request analyzer
+     * @param \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer
      */
-    public function setSystem($system)
+    public function setRequestAnalyzer(RequestAnalyzerInterface $requestAnalyzer)
     {
-        $this->system = $system;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**
      * Returns the security system
      * @return string
      */
-    public function getSystem()
+    protected function getSystem()
     {
-        return $this->system;
+        $system = $this->suluSystem;
+        if ($this->requestAnalyzer != null) {
+            // if the request analyzer is available, overwrite the system
+            $system = $this->requestAnalyzer->getCurrentWebspace()->getSecurity()->getSystem();
+        }
+
+        return $system;
     }
 }
