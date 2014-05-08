@@ -44,6 +44,14 @@
         }
     }
 
+    .comma-before {
+        &:before {
+            content: ',';
+            margin-left: -4px; // this is a fix for parent controller dividing child spans 4px when set to display:inline-block;
+            margin-right: 4px;
+        }
+    }
+
     label {
         line-height:14px;
         text-overflow: hidden;
