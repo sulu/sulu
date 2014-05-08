@@ -58,11 +58,11 @@
   font-size: 11px;
 }
 
-/* line 69, ../scss/modules/utility.scss */
+/* line 67, ../scss/modules/utility.scss */
 .type-value:before {
   content: '(';
 }
-/* line 72, ../scss/modules/utility.scss */
+/* line 70, ../scss/modules/utility.scss */
 .type-value:after {
   content: ')';
 }
