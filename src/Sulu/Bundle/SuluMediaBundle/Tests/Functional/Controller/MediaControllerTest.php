@@ -260,7 +260,7 @@ class MediaControllerTest extends DatabaseTestCase
     /**
      * @description Test POST to create a new Collection
      */
-    public function testPostWithoutFile()
+    public function testPost()
     {
         $client = $this->createTestClient();
 
