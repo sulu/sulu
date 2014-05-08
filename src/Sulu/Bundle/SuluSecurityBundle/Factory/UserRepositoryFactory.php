@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Factory;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class UserRepositoryFactory implements UserRepositoryFactoryInterface
 {
@@ -21,14 +22,20 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
     private $em;
 
     /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var string
      */
     private $suluSystem;
 
-    public function __construct(EntityManager $em, $suluSystem)
+    public function __construct(EntityManager $em, $suluSystem, RequestAnalyzerInterface $requestAnalyzer = null)
     {
         $this->em = $em;
         $this->suluSystem = $suluSystem;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**
@@ -38,10 +45,7 @@ class UserRepositoryFactory implements UserRepositoryFactoryInterface
     {
         /** @var UserRepositoryInterface $repository */
         $repository = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User');
-
-        // Set initial security system sulu.
-        // If the `RequestAnalyzer` detects a security system it will get overwritten.
-        $repository->setSystem($this->suluSystem);
+        $repository->init($this->suluSystem, $this->requestAnalyzer);
 
         return $repository;
     }

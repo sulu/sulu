@@ -56,6 +56,7 @@
         <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument>%sulu_security.system%</argument>
+            <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
         </service>
 
         <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"
