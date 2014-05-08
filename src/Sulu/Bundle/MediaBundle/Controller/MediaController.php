@@ -25,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -120,6 +121,11 @@ class MediaController extends RestController implements ClassResourceInterface
     protected $entityNameCollection = 'SuluMediaBundle:Collection';
 
     /**
+     * @var string
+     */
+    protected $entityNameMediaType = 'SuluMediaBundle:MediaType';
+
+    /**
      * returns all fields that can be used by list
      * @Get("media/fields")
      * @return mixed
@@ -200,12 +206,27 @@ class MediaController extends RestController implements ClassResourceInterface
             $media->setCreator($this->getUser());
             $media->setChanger($this->getUser());
 
+            $mediaTypeId = $this->getMediaType('fileVersion');
+            $mediaType = $this->getDoctrine()
+                ->getRepository($this->entityNameMediaType)
+                ->find($mediaTypeId);
+            if (!$mediaType) {
+                throw new EntityNotFoundException('SuluMediaBundle:MediaType', $mediaTypeId);
+            }
+
+            $media->setType($mediaType);
+
             // set file
             $file = new File();
             $file->setCreated(new DateTime());
             $file->setChanged(new DateTime());
             $file->setCreator($this->getUser());
             $file->setChanger($this->getUser());
+            $file->setVersion(0);
+            $file->setMedia($media);
+
+            $em->persist($file);
+            $em->persist($media);
 
             // set fileVersions
             $versionCounter = 0;
@@ -221,8 +242,6 @@ class MediaController extends RestController implements ClassResourceInterface
 
             $file->setVersion($versionCounter);
 
-            $file->setMedia($media);
-
             $em->persist($file);
             $em->persist($media);
             $em->flush();
@@ -235,6 +254,40 @@ class MediaController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * get media type from post or set it from file mimetype
+     * @param $fileName
+     * @return mixed
+     */
+    protected function getMediaType($fileName)
+    {
+        $mediaTypeData = $this->getRequest()->get('type');
+        if (!is_null($mediaTypeData) && isset($mediaTypeData['id'])) {
+            return $mediaTypeData['id'];
+        }
+
+        $imageFileTypes = array(); // TODO from config
+        $videoFileTypes = array(); // TODO from config
+
+        $mediaTypeId = MediaType::TYPE_DEFAULT;
+
+        /**
+         * @var UploadedFile $uploadFile
+         */
+        foreach ($this->getUploadedFiles($fileName) as $uploadFile)
+        {
+            if (in_array($uploadFile->getMimeType(), $imageFileTypes)) {
+                $mediaTypeId = MediaType::TYPE_IMAGE;
+            } elseif (in_array($uploadFile->getMimeType(), $videoFileTypes)) {
+                $mediaTypeId = MediaType::TYPE_VIDEO;
+            } else {
+                $mediaTypeId = MediaType::TYPE_DEFAULT;
+            }
+            break;
+        }
+        return $mediaTypeId;
     }
 
     /**
@@ -421,7 +474,7 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     private function getUploadedFiles($name)
     {
-        if (!$this->getRequest()->files->get($name)) {
+        if (is_null($this->getRequest()->files->get($name))) {
             return array();
         }
 
@@ -586,7 +639,7 @@ class MediaController extends RestController implements ClassResourceInterface
      * @param $versionCounter
      * @throws \Sulu\Component\Rest\Exception\RestException
      */
-    private function addFileVersions(File $file, UploadedFile $uploadFile, &$versionCounter)
+    private function addFileVersions(File &$file, UploadedFile $uploadFile, &$versionCounter)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -598,7 +651,6 @@ class MediaController extends RestController implements ClassResourceInterface
         $fileVersion->setChanged(new DateTime());
         $fileVersion->setCreator($this->getUser());
         $fileVersion->setChanger($this->getUser());
-        $fileVersion->setVersion(1);
 
         $fileVersion->setSize($uploadFile->getSize());
 

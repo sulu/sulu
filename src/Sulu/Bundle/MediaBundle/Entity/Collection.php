@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Collection
 {
-    const TYPE_DEFAULT = 1;
+    const TYPE_DEFAULT = 1; // TODO change this to config
 
     /**
      * @var string
