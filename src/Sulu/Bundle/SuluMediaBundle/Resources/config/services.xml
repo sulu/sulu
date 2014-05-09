@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\SuluMediaAdmin</parameter>
+    </parameters>
+    <services>
+        <service id="sulu_media.admin" class="%sulu_media.admin.class%">
+            <tag name="sulu.admin"/>
+            <argument>%sulu_admin.name%</argument>
+        </service>
+        <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
+            <argument>%sulu_media.media_repository%</argument>
+            <argument>%sulu_security.user_repository%</argument>
+            <argument>%doctrine.orm.entity_manager%</argument>
+            <argument>%event_dispatcher%</argument>
+            <argument>%collection_id%</argument>
+            <argument>%max_file_size%</argument>
+            <argument>%blocked_file_types%</argument>
+        </service>
+    </services>
+</container>

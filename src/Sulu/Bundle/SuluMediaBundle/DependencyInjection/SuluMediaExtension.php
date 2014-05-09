@@ -35,7 +35,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.folder.path', '%kernel.root_dir%/uploads/sulumedia/');
         $container->setParameter('sulu_media.media.folder.segments', '10');
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.xml');
     }
 }

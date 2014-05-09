@@ -9,7 +9,7 @@
             <generator strategy="AUTO"/>
         </id>
         <field name="name" type="string" column="name" length="255" />
-        <field name="path" type="string" column="path" length="255" />
+        <field name="storageOptions" type="text" column="storageOptions" nullable="true" />
         <field name="version" type="integer" column="version" />
         <field name="size" type="integer" column="size" />
 
