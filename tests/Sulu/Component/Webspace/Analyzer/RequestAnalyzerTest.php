@@ -61,6 +61,16 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer = new RequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
     }
 
+    /**
+     * @param $portalInformation
+     */
+    protected function prepareWebspaceManager($portalInformation)
+    {
+        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
+            $this->returnValue($portalInformation)
+        );
+    }
+
     public function testAnalyze()
     {
         $webspace = new Webspace();
@@ -83,9 +93,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             null
         );
 
-        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
-            $this->returnValue($portalInformation)
-        );
+        $this->prepareWebspaceManager($portalInformation);
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
@@ -99,6 +107,45 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo/test', $this->requestAnalyzer->getCurrentPortalUrl());
         $this->assertEquals('/path/to', $this->requestAnalyzer->getCurrentResourceLocator());
         $this->assertEquals('/test', $this->requestAnalyzer->getCurrentResourceLocatorPrefix());
+    }
+
+    public function testAnalyzePartialMatch()
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
+        $portal = new Portal();
+        $portal->setKey('sulu');
+
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
+
+        $portalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
+            $webspace,
+            $portal,
+            $localization,
+            'sulu.lo',
+            null,
+            'sulu.lo/test'
+        );
+
+        $this->prepareWebspaceManager($portalInformation);
+
+        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
+        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue('/test/path/to'));
+        $this->requestAnalyzer->analyze($request);
+
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
+        $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
+        $this->assertEquals('sulu.lo', $this->requestAnalyzer->getCurrentPortalUrl());
+        $this->assertEquals('sulu.lo/test', $this->requestAnalyzer->getCurrentRedirect());
+        $this->assertEquals('/test/path/to', $this->requestAnalyzer->getCurrentResourceLocator());
+        $this->assertEquals('', $this->requestAnalyzer->getCurrentResourceLocatorPrefix());
     }
 
     /**
