@@ -67,7 +67,8 @@ class PortalRouteProvider implements RouteProviderInterface
     {
         $collection = new RouteCollection();
 
-        if ($this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
+        if ($this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
+            || $this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL) {
             // redirect by information from webspace config
             $route = new Route($request->getRequestUri(), array(
                 '_controller' => 'SuluWebsiteBundle:Default:redirect',
@@ -76,8 +77,6 @@ class PortalRouteProvider implements RouteProviderInterface
             ));
 
             $collection->add('redirect_' . uniqid(), $route);
-        } elseif($this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL) {
-            // redirect with information
         } else {
             // just show the page
             $portal = $this->requestAnalyzer->getCurrentPortal();
