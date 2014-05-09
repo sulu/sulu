@@ -42,8 +42,23 @@ class MediaControllerTest extends DatabaseTestCase
 
     public function tearDown()
     {
+        $this->cleanImage();
         parent::tearDown();
         self::$tool->dropSchema(self::$entities);
+    }
+
+    protected function cleanImage()
+    {
+        if (self::$kernel->getContainer()) { //
+            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.folder.path');
+            $movedFolder = $configPath . '/02';
+            $movedFile = $movedFolder . '/photo.jpeg';
+            if (file_exists($movedFile)) {
+                copy ($movedFile, $this->getImagePath());
+                unlink($movedFile);
+                rmdir($movedFolder);
+            }
+        }
     }
 
     public function setUpSchema()
@@ -202,16 +217,6 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->id);
 
-        /*
-        $this->assertEquals('Test Media', $response->metas[0]->title);
-        $this->assertEquals('This Description is only for testing', $response->metas[0]->description);
-        $this->assertEquals('en-gb', $response->metas[0]->locale);
-
-        $this->assertEquals('Test Media', $response->metas[1]->title);
-        $this->assertEquals('Dies ist eine Test Beschreibung', $response->metas[1]->description);
-        $this->assertEquals('de', $response->metas[1]->locale);
-        */
-
         $this->assertEquals(1, $response->type->id);
     }
 
@@ -264,7 +269,7 @@ class MediaControllerTest extends DatabaseTestCase
     {
         $client = $this->createTestClient();
 
-        $imagePath = __DIR__ . '/../../Resources/Resources/images/photo.jpeg';
+        $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
@@ -289,5 +294,13 @@ class MediaControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @return string
+     */
+    private function getImagePath()
+    {
+        return __DIR__ . '/../../Resources/Resources/images/photo.jpeg';
     }
 }
