@@ -138,11 +138,11 @@ class Localization implements \JsonSerializable
      * @param string $delimiter between language and country
      * @return string
      */
-    public function getLocalization()
+    public function getLocalization($delimiter = '_')
     {
         $localization = $this->getLanguage();
         if ($this->getCountry() != null) {
-            $localization .= '_' . $this->getCountry();
+            $localization .= $delimiter . $this->getCountry();
         }
 
         return $localization;

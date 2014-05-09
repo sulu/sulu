@@ -180,8 +180,8 @@ class WebspaceCollectionBuilder
                     );
 
                     $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization);
-                    $this->buildUrlPartialMatch($portal, $environment, $urlAddress);
                 }
+                $this->buildUrlPartialMatch($portal, $environment, $urlAddress);
             } else {
                 // create the redirect
                 $this->buildUrlRedirect($portal->getWebspace(), $environment, $urlAddress, $urlRedirect);
@@ -257,7 +257,19 @@ class WebspaceCollectionBuilder
      */
     private function buildUrlPartialMatch(Portal $portal, Environment $environment, $urlAddress)
     {
+        $replacers = array(
+            self::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
+            self::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
+            self::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-')
+        );
+
+        $defaultSegment = $portal->getWebspace()->getDefaultSegment();
+        if ($defaultSegment) {
+            $replacers[self::REPLACER_SEGMENT] = $defaultSegment->getKey();
+        }
+
         $urlResult = $this->removeUrlPlaceHolders($urlAddress);
+        $urlRedirect = $this->generateUrlAddress($urlAddress, $replacers);
 
         if ($this->validateUrlPartialMatch($urlResult, $environment)) {
             $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
@@ -266,7 +278,8 @@ class WebspaceCollectionBuilder
                 $portal,
                 $portal->getDefaultLocalization(),
                 $urlResult,
-                $portal->getWebspace()->getDefaultSegment()
+                $portal->getWebspace()->getDefaultSegment(),
+                $urlRedirect
             );
         }
     }
