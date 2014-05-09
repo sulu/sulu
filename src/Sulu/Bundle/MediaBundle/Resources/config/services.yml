@@ -1,9 +1,0 @@
-parameters:
-    sulu_media.admin.class: Sulu\Bundle\MediaBundle\Admin\SuluMediaAdmin
-
-services:
-    sulu_media.admin:
-        class: %sulu_media.admin.class%
-        arguments: [%sulu_admin.name%]
-        tags:
-        - { name: sulu.admin }

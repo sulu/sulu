@@ -83,30 +83,6 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     protected $bundlePrefix = 'media.media.';
 
-    /**
-     * @var int
-     * @description this exception code is set when $_FILES['error'] > 0
-     */
-    const EXCEPTION_CODE_UPLOAD_ERROR = 5001;
-
-    /**
-     * @var int
-     * @description this exception code is set when the uploaded file was not found
-     */
-    const EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND = 5002;
-
-    /**
-     * @var int
-     * @description this exception code is set when the file is bigger as the max file size in the config
-     */
-    const EXCEPTION_CODE_MAX_FILE_SIZE = 5003;
-
-    /**
-     * @var int
-     * @description this exception code is set when the file type is not supported
-     */
-    const EXCEPTION_CODE_BLOCKED_FILE_TYPE = 5004;
-
     /*
      * File Sizes
      */
