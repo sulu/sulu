@@ -107,9 +107,9 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
         if ($portalInformation != null) {
             $this->setCurrentMatchType($portalInformation->getType());
+            $this->setCurrentRedirect($portalInformation->getRedirect());
             if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
                 $this->setCurrentPortalUrl($portalInformation->getUrl());
-                $this->setCurrentRedirect($portalInformation->getRedirect());
                 $this->setCurrentWebspace($portalInformation->getWebspace());
             } else {
                 $this->setCurrentPortalUrl($portalInformation->getUrl());

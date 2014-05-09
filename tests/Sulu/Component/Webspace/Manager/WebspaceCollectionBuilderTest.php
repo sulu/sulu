@@ -92,18 +92,28 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(9, $devPortalInformations);
 
         $devPortalInformationKeys = array_keys($devPortalInformations);
+        /** @var PortalInformation[] $devPortalInformationValues */
         $devPortalInformationValues = array_values($devPortalInformations);
 
         // the values before have the same size, therefore the order cannot be determined
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[0]->getType());
+        $this->assertNull($devPortalInformationValues[0]->getRedirect());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[1]->getType());
+        $this->assertNull($devPortalInformationValues[1]->getRedirect());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[2]->getType());
+        $this->assertNull($devPortalInformationValues[2]->getRedirect());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[3]->getType());
+        $this->assertNull($devPortalInformationValues[3]->getRedirect());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[4]->getType());
+        $this->assertNull($devPortalInformationValues[4]->getRedirect());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[5]->getType());
+        $this->assertNull($devPortalInformationValues[5]->getRedirect());
         $this->assertEquals('massiveart-us.lo', $devPortalInformationKeys[6]);
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[6]->getType());
+        $this->assertEquals('massiveart-us.lo/en-us/s', $devPortalInformationValues[6]->getRedirect());
         $this->assertEquals('massiveart-ca.lo', $devPortalInformationKeys[7]);
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[7]->getType());
+        $this->assertEquals('massiveart-ca.lo/fr-ca/s', $devPortalInformationValues[7]->getRedirect());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[7]->getType());
         $this->assertEquals('sulu.lo', $devPortalInformationKeys[8]);
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[8]->getType());
