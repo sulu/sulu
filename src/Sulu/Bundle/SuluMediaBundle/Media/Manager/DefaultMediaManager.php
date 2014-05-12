@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\Validator\FileValidatorInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class DefaultMediaManager implements MediaManagerInterface
 {
@@ -113,7 +114,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function load($id)
+    public function get($id)
     {
         $media = $this->mediaRepository->findMediaById($id);
 
@@ -168,7 +169,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $file->addFileVersion($fileVersion);
 
         // update properties
-        $this->setProperties($file->getFileVersions(), $properties);
+        $this->setProperties($file->getFileVersions(), $properties, $user);
 
         // add file to media
         $media->addFile($file);
@@ -252,7 +253,7 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         // update properties
-        $this->setProperties($file->getFileVersions(), $properties);
+        $this->setProperties($file->getFileVersions(), $properties, $user);
 
         $this->em->persist($fileVersion);
         $this->em->persist($file);
@@ -265,10 +266,15 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * @param $fileVersions
      * @param $properties
+     * @param $user
      */
-    protected function setProperties($fileVersions, $properties)
+    protected function setProperties(&$fileVersions, $properties, $user)
     {
+        /**
+         * @var FileVersion $fileVersion
+         */
         foreach ($fileVersions as $fileVersion) {
+            $changed = false;
             foreach ($properties as $fileVersionProperties) {
                 $propertiesFileVersionId = $fileVersionProperties['id'] != null ? $fileVersionProperties['id'] : null;
                 if ($fileVersion->getId() == $propertiesFileVersionId) {
@@ -276,16 +282,26 @@ class DefaultMediaManager implements MediaManagerInterface
                         switch ($key) {
                             case 'metas':
                                 $this->updateMetas($fileVersion, $fileVersionProperties);
+                                $changed = true;
                                 break;
                             case 'contentLanguages':
                                 $this->updateContentLanguages($fileVersion, $fileVersionProperties);
+                                $changed = true;
                                 break;
                             case 'publishLanguages':
                                 $this->updatePublishLanguages($fileVersion, $fileVersionProperties);
+                                $changed = true;
                                 break;
                         }
                     }
                 }
+            }
+
+            if ($changed) {
+                $fileVersion->setChanged(new \Datetime());
+                $fileVersion->setChanger($user);
+
+                $this->em->persist($fileVersion);
             }
         }
     }
