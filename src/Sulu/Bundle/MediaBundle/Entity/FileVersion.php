@@ -28,11 +28,6 @@ class FileVersion
     private $name;
 
     /**
-     * @var string
-     */
-    private $path;
-
-    /**
      * @var integer
      */
     private $version;
@@ -41,6 +36,11 @@ class FileVersion
      * @var integer
      */
     private $size;
+
+    /**
+     * @var string
+     */
+    private $storageOption;
 
     /**
      * @var \DateTime
@@ -55,17 +55,17 @@ class FileVersion
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $fileVersionContentLanguages;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $fileVersionPublishLanguages;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
     private $metas;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contentLanguages;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $publishLanguages;
 
     /**
      * @var \Sulu\Bundle\MediaBundle\Entity\File
@@ -86,6 +86,7 @@ class FileVersion
      * @var \Sulu\Component\Security\UserInterface
      */
     private $creator;
+
 
     /**
      * Constructor
@@ -201,72 +202,6 @@ class FileVersion
     }
 
     /**
-     * Add fileVersionContentLanguages
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $fileVersionContentLanguages
-     * @return FileVersion
-     */
-    public function addFileVersionContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $fileVersionContentLanguages)
-    {
-        $this->fileVersionContentLanguages[] = $fileVersionContentLanguages;
-
-        return $this;
-    }
-
-    /**
-     * Remove fileVersionContentLanguages
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $fileVersionContentLanguages
-     */
-    public function removeFileVersionContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $fileVersionContentLanguages)
-    {
-        $this->fileVersionContentLanguages->removeElement($fileVersionContentLanguages);
-    }
-
-    /**
-     * Get fileVersionContentLanguages
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFileVersionContentLanguages()
-    {
-        return $this->fileVersionContentLanguages;
-    }
-
-    /**
-     * Add fileVersionPublishLanguages
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $fileVersionPublishLanguages
-     * @return FileVersion
-     */
-    public function addFileVersionPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $fileVersionPublishLanguages)
-    {
-        $this->fileVersionPublishLanguages[] = $fileVersionPublishLanguages;
-
-        return $this;
-    }
-
-    /**
-     * Remove fileVersionPublishLanguages
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $fileVersionPublishLanguages
-     */
-    public function removeFileVersionPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $fileVersionPublishLanguages)
-    {
-        $this->fileVersionPublishLanguages->removeElement($fileVersionPublishLanguages);
-    }
-
-    /**
-     * Get fileVersionPublishLanguages
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFileVersionPublishLanguages()
-    {
-        return $this->fileVersionPublishLanguages;
-    }
-
-    /**
      * Add metas
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $metas
@@ -297,6 +232,72 @@ class FileVersion
     public function getMetas()
     {
         return $this->metas;
+    }
+
+    /**
+     * Add contentLanguages
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
+     * @return FileVersion
+     */
+    public function addContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    {
+        $this->contentLanguages[] = $contentLanguages;
+
+        return $this;
+    }
+
+    /**
+     * Remove contentLanguages
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
+     */
+    public function removeContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    {
+        $this->contentLanguages->removeElement($contentLanguages);
+    }
+
+    /**
+     * Get contentLanguages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getContentLanguages()
+    {
+        return $this->contentLanguages;
+    }
+
+    /**
+     * Add publishLanguages
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
+     * @return FileVersion
+     */
+    public function addPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
+    {
+        $this->publishLanguages[] = $publishLanguages;
+
+        return $this;
+    }
+
+    /**
+     * Remove publishLanguages
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
+     */
+    public function removePublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
+    {
+        $this->publishLanguages->removeElement($publishLanguages);
+    }
+
+    /**
+     * Get publishLanguages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPublishLanguages()
+    {
+        return $this->publishLanguages;
     }
 
     /**
@@ -425,25 +426,25 @@ class FileVersion
     }
 
     /**
-     * Set path
+     * Set storageOption
      *
-     * @param string $path
+     * @param string $storageOption
      * @return FileVersion
      */
-    public function setPath($path)
+    public function setStorageOption($storageOption)
     {
-        $this->path = $path;
+        $this->storageOption = $storageOption;
     
         return $this;
     }
 
     /**
-     * Get path
+     * Get storageOption
      *
      * @return string 
      */
-    public function getPath()
+    public function getStorageOption()
     {
-        return $this->path;
+        return $this->storageOption;
     }
 }
