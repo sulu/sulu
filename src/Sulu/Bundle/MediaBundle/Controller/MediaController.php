@@ -26,11 +26,15 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileException;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use \DateTime;
+use Sulu\Component\Security\UserInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
@@ -83,25 +87,6 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     protected $bundlePrefix = 'media.media.';
 
-    /*
-     * File Sizes
-     */
-    const B = 1;
-    const KB = 1024;
-    const MB = 1048576;
-    const GB = 1073741824;
-    const TB = 1099511627776;
-
-    /**
-     * @var string
-     */
-    protected $entityNameCollection = 'SuluMediaBundle:Collection';
-
-    /**
-     * @var string
-     */
-    protected $entityNameMediaType = 'SuluMediaBundle:MediaType';
-
     /**
      * returns all fields that can be used by list
      * @Get("media/fields")
@@ -143,9 +128,7 @@ class MediaController extends RestController implements ClassResourceInterface
         $view = $this->responseGetById(
             $id,
             function ($id) {
-                return $this->getDoctrine()
-                    ->getRepository($this->entityName)
-                    ->findMediaById($id);
+                return $this->getMediaManager()->get($id);
             }
         );
 
@@ -156,116 +139,46 @@ class MediaController extends RestController implements ClassResourceInterface
      * Creates a new media
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
      */
     public function postAction(Request $request)
     {
         try {
-            $em = $this->getDoctrine()->getManager();
-
-            $media = new Media();
-
-            // set collection
+            // get collection id
             $collectionData = $request->get('collection');
+            $collectionId = null;
             if ($this->checkDataForId($collectionData)) {
-                $collection = $this->getDoctrine()
-                    ->getRepository($this->entityNameCollection)
-                    ->find($collectionData['id']);
-                if (!$collection) {
-                    throw new EntityNotFoundException('SuluMediaBundle:Collection', $collectionData['id']);
-                }
-                $media->setCollection($collection);
+                $collectionId = $collectionData['id'];
             }
 
-            // set creator / changer
-            $media->setCreated(new DateTime());
-            $media->setChanged(new DateTime());
-            $media->setCreator($this->getUser());
-            $media->setChanger($this->getUser());
-
-            $mediaTypeId = $this->getMediaType($request, 'fileVersion', $request->get('type'));
-            $mediaType = $this->getDoctrine()
-                ->getRepository($this->entityNameMediaType)
-                ->find($mediaTypeId);
-            if (!$mediaType) {
-                throw new EntityNotFoundException('SuluMediaBundle:MediaType', $mediaTypeId);
+            // get fileversions properties
+            $properties = array();
+            $files = $request->get('files');
+            if ($files) {
+                $properties = $this->getProperties($files);
             }
 
-            $media->setType($mediaType);
-
-            // set file
-            $file = new File();
-            $file->setCreated(new DateTime());
-            $file->setChanged(new DateTime());
-            $file->setCreator($this->getUser());
-            $file->setChanger($this->getUser());
-            $file->setVersion(0);
-            $file->setMedia($media);
-
-            $em->persist($file);
-            $em->persist($media);
-
-            // set fileVersions
-            $versionCounter = 0;
-
+            // generate media
             $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
             if (count($uploadFiles)) {
                 foreach ($uploadFiles as $uploadFile) {
-                    $this->addFileVersions($file, $uploadFile, $versionCounter, $request->get('metas'));
+                    $media = $this->getMediaManager()->add($uploadFile, $this->getUser()->getId(), $collectionId, $properties);
+                    break;
                 }
             } else {
                 throw new RestException('Uploaded file not found', self::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
             }
-
-            $file->setVersion($versionCounter);
-
-            $em->persist($file);
-            $em->persist($media);
-            $em->flush();
 
             $view = $this->view($media, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
+        } catch (UploadFileException $ufe) {
+            $view = $this->view($ufe->toArray(), 400);
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * get media type from post or set it from file mimetype
-     * @param Request $request
-     * @param $fileName
-     * @param string $defaultType
-     * @return int
-     */
-    protected function getMediaType(Request $request, $fileName, $defaultType = '')
-    {
-        $mediaTypeData = $defaultType;
-        if (!is_null($mediaTypeData) && isset($mediaTypeData['id'])) {
-            return $mediaTypeData['id'];
-        }
-
-        $imageFileTypes = array(); // TODO from config
-        $videoFileTypes = array(); // TODO from config
-
-        $mediaTypeId = MediaType::TYPE_DEFAULT;
-
-        /**
-         * @var UploadedFile $uploadFile
-         */
-        foreach ($this->getUploadedFiles($request, $fileName) as $uploadFile)
-        {
-            if (in_array($uploadFile->getMimeType(), $imageFileTypes)) {
-                $mediaTypeId = MediaType::TYPE_IMAGE;
-            } elseif (in_array($uploadFile->getMimeType(), $videoFileTypes)) {
-                $mediaTypeId = MediaType::TYPE_VIDEO;
-            } else {
-                $mediaTypeId = MediaType::TYPE_DEFAULT;
-            }
-            break;
-        }
-        return $mediaTypeId;
     }
 
     /**
@@ -277,69 +190,41 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
-        $mediaEntity = 'SuluMediaBundle:Media';
-
         try {
-            /** @var Media $media */
-            $media = $this->getDoctrine()
-                ->getRepository($mediaEntity)
-                ->findMediaById($id);
-
-            if (!$media) {
-                throw new EntityNotFoundException($mediaEntity, $id);
-            } else {
-                $em = $this->getDoctrine()->getManager();
-
-                // set collection
-                $collectionData = $request->get('collection');
-                if ($this->checkDataForId($collectionData)) {
-                    $collection = $this->getDoctrine()
-                        ->getRepository($this->entityName)
-                        ->findCollectionById($collectionData['id']);
-                    if (!$collection) {
-                        throw new EntityNotFoundException('SuluMediaBundle:Collection', $collectionData['id']);
-                    }
-                    $media->setCollection($collection);
-                }
-
-                // file Version update
-                /**
-                 * @var FileVersion $file
-                 */
-                $file = $request->get('file');
-                if (isset($file['id'])) {
-                    $fileId = $file['id'];
-                    $file = $media->getFiles()[$fileId];
-                    $versionCounter = $file->getVersion();
-                } else {
-                    $file = new File();
-                    $file->setCreated(new DateTime());
-                    $file->setChanged(new DateTime());
-                    $file->setCreator($this->getUser());
-                    $file->setChanger($this->getUser());
-                    $versionCounter = 0;
-                }
-
-                if (!empty($_FILES['fileVersion'])) {
-                    foreach ($this->getUploadedFiles($request, 'fileVersion') as $fileVersionData) {
-                        $this->addFileVersions($file, $fileVersionData, $versionCounter, $request->get('metas'));
-                    }
-                }
-
-                $file->setVersion($versionCounter);
-
-                // set changed
-                $media->setChanged(new DateTime());
-                $user = $this->getUser();
-                $media->setChanger($user);
-
-                $em->flush();
-                $view = $this->view($media, 200);
+            // get collection id
+            $collectionData = $request->get('collection');
+            $collectionId = null;
+            if ($this->checkDataForId($collectionData)) {
+                $collectionId = $collectionData['id'];
             }
+
+            // get fileversions properties
+            $properties = array();
+            $files = $request->get('files');
+            if ($files) {
+                $properties = $this->getProperties($files);
+            }
+
+            // update media
+            $uploadFiles = $this->getUploadedFiles($request, 'fileVersion');
+            if (count($uploadFiles)) {
+                // Add new Fileversion
+                foreach ($uploadFiles as $uploadFile) {
+                    $media = $this->getMediaManager()->update($uploadFile, $this->getUser()->getId(), $id, $collectionId, $properties);
+                    break;
+                }
+            } else {
+                // Update only properties
+                $media = $this->getMediaManager()->update(null, $this->getUser()->getId(), $id, $collectionId, $properties);
+            }
+
+            $view = $this->view($media, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
+        } catch (UploadFileException $ufe) {
+            $view = $this->view($ufe->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -353,21 +238,7 @@ class MediaController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         $delete = function ($id) {
-            $entityName = 'SuluMediaBundle:Media';
-
-            /* @var Media $media */
-            $media = $this->getDoctrine()
-                ->getRepository($entityName)
-                ->findMediaByIdForDelete($id);
-
-            if (!$media) {
-                throw new EntityNotFoundException($entityName, $id);
-            }
-
-            $em = $this->getDoctrine()->getManager();
-
-            $em->remove($media);
-            $em->flush();
+            $this->getMediaManager()->remove($id, $this->getUser()->getId());
         };
 
         $view = $this->responseDelete($id, $delete);
@@ -386,76 +257,6 @@ class MediaController extends RestController implements ClassResourceInterface
             return true;
         }
         return false;
-    }
-
-    /**
-     * Process all metas from request
-     * @param FileVersion $fileVersion The media on which is worked
-     * @param $metas
-     * @return bool True if the processing was sucessful, otherwise false
-     */
-    protected function processMetas(FileVersion $fileVersion, $metas)
-    {
-        $delete = function ($meta) use ($fileVersion) {
-            $fileVersion->removeMeta($meta);
-
-            return true;
-        };
-
-        $update = function ($meta, $matchedEntry) {
-            return $this->updateMeta($meta, $matchedEntry);
-        };
-
-        $add = function ($meta) use ($fileVersion) {
-            $this->addMetas($fileVersion, $meta);
-
-            return true;
-        };
-
-        return $this->processPut($fileVersion->getMetas(), $metas, $delete, $update, $add);
-    }
-
-    /**
-     * Adds META to a media
-     * @param FileVersion $fileVersion
-     * @param $metaData
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     */
-    private function addMetas(FileVersion $fileVersion, $metaData)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $metaEntity = 'SuluMediaBundle:FileVersionMeta';
-
-        if (isset($metaData['id'])) {
-            throw new EntityIdAlreadySetException($metaEntity, $metaData['id']);
-        } else {
-            $meta = new FileVersionMeta();
-            $meta->setMedia($fileVersion);
-            $meta->setTitle($metaData['title']);
-            $meta->setDescription($metaData['description']);
-            $meta->setLocale($metaData['locale']);
-
-            $em->persist($meta);
-            $fileVersion->addMeta($meta);
-        }
-    }
-
-    /**
-     * Updates the given meta
-     * @param FileVersionMeta $meta The fileversion meta object to update
-     * @param string $entry The entry with the new data
-     * @return bool True if successful, otherwise false
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    protected function updateMeta(FileVersionMeta $meta, $entry)
-    {
-        $success = true;
-
-        $meta->setTitle($entry['title']);
-        $meta->setDescription($entry['description']);
-        $meta->setLocale($entry['locale']);
-
-        return $success;
     }
 
     /**
@@ -480,251 +281,27 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * get the maximum allowed file size
-     * @return int
-     */
-    private function getMaxFileSize()
-    {
-        $configMaxFileSize = $this->container->getParameter('sulu_media.media.max_file_size');
-        $value = intval($configMaxFileSize);
-        $maxFileSizeParts = preg_split('/\d+/', $configMaxFileSize);
-        $digitalUnit = isset($maxFileSizeParts[1]) ? $maxFileSizeParts[1] : 'B';
-
-        $unitInBytes = (defined('self::' . $digitalUnit)) ? constant('self::' . $digitalUnit) : self::B;
-
-        $maxFileSize = intval($value) * $unitInBytes;
-
-        return intval($maxFileSize);
-    }
-
-    /**
-     * get all blocked file types
+     * give back the fileversion properties
+     * @param $files
      * @return array
      */
-    private function getBlockedFileTypes()
+    protected function getProperties($files)
     {
-        $blockedFileTypes = $this->container->getParameter('sulu_media.media.blocked_file_types');
-        return $blockedFileTypes;
+        $properties = array();
+
+        if (isset($files['fileVersions'])) {
+            $properties = $files['fileVersions'];
+        }
+
+        return $properties;
     }
 
     /**
-     * Validate uploaded File
-     * @param UploadedFile $uploadFile
-     * @param bool $bool
-     * @return bool
-     * @throws \Sulu\Component\Rest\Exception\RestException
+     * getMediaManager
+     * @return MediaManagerInterface
      */
-    protected function validateFile(UploadedFile $uploadFile, $bool = false)
+    protected function getMediaManager()
     {
-        $valid = true;
-        $maxFileSize = $this->getMaxFileSize();
-
-        $blockedFileTypes = $this->getBlockedFileTypes();
-
-        // validate if file was sent
-        if (!$uploadFile instanceof UploadedFile) {
-            if ($bool) {
-                $valid = false;
-            } else {
-                throw new RestException('Uploaded file not found', self::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
-            }
-        }
-
-        // validate if file upload has an error
-        if ($uploadFile->getError() > 0) {
-            if ($bool) {
-                $valid = false;
-            } else {
-                throw new RestException('Error in file upload', self::EXCEPTION_CODE_UPLOAD_ERROR);
-            }
-        }
-
-        // validate the file size
-        if ($uploadFile->getSize() >= $maxFileSize) {
-            if ($bool) {
-                $valid = false;
-            } else {
-                throw new RestException('Maximum file size is "' . ($maxFileSize / 1024) . '" kb', self::EXCEPTION_CODE_MAX_FILE_SIZE);
-            }
-        }
-
-        // validate file type
-        if (in_array($uploadFile->getMimeType(), $blockedFileTypes)) {
-            if ($bool) {
-                $valid = false;
-            } else {
-                throw new RestException('File type "' . $uploadFile->getMimeType() . '" is blocked', self::EXCEPTION_CODE_BLOCKED_FILE_TYPE);
-            }
-        }
-
-        return $valid;
-    }
-
-    /**
-     * move uploaded file in sulu media folder
-     * @param UploadedFile $uploadFile
-     * @param $fileId
-     * @return array
-     */
-    private function moveUploadedFile(UploadedFile $uploadFile, $fileId = null)
-    {
-        $uploadedFolder = $this->getUploadFolder($fileId);
-        $fileName = $this->getUniqueFileName($uploadedFolder, $uploadFile->getFilename());
-        $uploadFile->move($uploadedFolder, $fileName);
-
-        return array($uploadedFolder, $fileName);
-    }
-
-    /**
-     * get upload folder
-     * @param null $fileId
-     * @return string
-     */
-    private function getUploadFolder($fileId = null)
-    {
-        $segmenting = $this->container->getParameter('sulu_media.media.folder.segments');
-        $folder = $this->container->getParameter('sulu_media.media.folder.path');
-        $segmentId = $fileId;
-        if ($segmentId == null) {
-            $segmentId = rand(0, $segmenting);
-        }
-
-        if ($segmenting > 0) {
-            $segmentingPath = sprintf('%02d', ($segmentId % $segmenting + 1)) . '/';
-
-            $folder .= $segmentingPath;
-        }
-
-        return $folder;
-    }
-
-    /**
-     * get recursive a filename that don't exists
-     * @param $folder
-     * @param $fileName
-     * @param int $counter
-     * @return string
-     */
-    protected function getUniqueFileName($folder, $fileName, $counter = 0)
-    {
-        $newFileName = $fileName;
-
-        if ($counter > 0) {
-            $fileNameParts = explode('.', $fileName, 2);
-            $newFileName = $fileNameParts[0] . '-' . $counter . '.' . $fileNameParts[1];
-        }
-
-        $filePath = $folder . $newFileName;
-
-        if (!file_exists($filePath)) {
-            return $newFileName;
-        }
-
-        $counter++;
-        return $this->getUniqueFileName($folder, $fileName, $counter);
-    }
-
-    /**
-     * @param File $file
-     * @param UploadedFile $uploadFile
-     * @param $versionCounter
-     * @param $metas
-     * @throws \Sulu\Component\Rest\Exception\RestException
-     */
-    private function addFileVersions(File &$file, UploadedFile $uploadFile, &$versionCounter, $metas = array89)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $this->validateFile($uploadFile);
-
-        // set fileVersion
-        $fileVersion = new FileVersion();
-        $fileVersion->setCreated(new DateTime());
-        $fileVersion->setChanged(new DateTime());
-        $fileVersion->setCreator($this->getUser());
-        $fileVersion->setChanger($this->getUser());
-
-        $fileVersion->setSize($uploadFile->getSize());
-
-        // set Tempory Name Temporary
-        $fileVersion->setName($uploadFile->getFilename());
-        $fileVersion->setStorageOption('');
-
-
-        $fileVersion->setFile($file);
-        $versionCounter++;
-        $fileVersion->setVersion($versionCounter);
-        $file->addFileVersion($fileVersion);
-
-        $fileVersionContentLanguageDatas = $this->getRequest()->get('contentLanguages');
-        if (!empty($fileVersionContentLanguageDatas)) {
-            foreach ($fileVersionContentLanguageDatas as $fileVersionContentLanguageData) {
-                $this->addFileVersionContentLanguages($fileVersion, $fileVersionContentLanguageData);
-            }
-        }
-
-        $fileVersionPublishLanguageDatas = $this->getRequest()->get('publishLanguages');
-        if (!empty($fileVersionPublishLanguageDatas)) {
-            foreach ($fileVersionPublishLanguageDatas as $fileVersionPublishLanguageData) {
-                $this->addFileVersionPublishLanguages($fileVersion, $fileVersionPublishLanguageData);
-            }
-        }
-
-        // set metas
-        if (!$this->processMetas($fileVersion, $metas)) {
-            throw new RestException('Updating dependencies is not possible', 0);
-        }
-
-        $em->persist($fileVersion);
-        $em->flush();
-
-        list($path, $name) = $this->moveUploadedFile($uploadFile, $fileVersion->getId());
-
-        $fileVersion->setName($name);
-        $fileVersion->setStorageOption(json_encode(
-            array(
-                'path' => $path,
-                'filename' => $name
-            )
-        ));
-
-        $em->persist($fileVersion);
-        $em->flush();
-
-        $file->addFileVersion($fileVersion);
-    }
-
-    /**
-     * add content languages to fileversion
-     * @param FileVersion $fileVersion
-     * @param $fileVersionContentLanguageData
-     */
-    private function addFileVersionContentLanguages (FileVersion $fileVersion, $fileVersionContentLanguageData)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $fileVersionContentLanguages = new FileVersionContentLanguage();
-        $fileVersionContentLanguages->setLocale($fileVersionContentLanguageData['locale']);
-        $fileVersionContentLanguages->setFileVersion($fileVersion);
-
-        $em->persist($fileVersionContentLanguages);
-        $fileVersion->addFileVersionContentLanguage($fileVersionContentLanguages);
-    }
-
-    /**
-     * add publish languages to fileversion
-     * @param FileVersion $fileVersion
-     * @param $fileVersionPublishLanguageData
-     */
-    private function addFileVersionPublishLanguages (FileVersion $fileVersion, $fileVersionPublishLanguageData)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $fileVersionPublishLanguages = new FileVersionPublishLanguage();
-        $fileVersionPublishLanguages->setLocale($fileVersionPublishLanguageData['locale']);
-        $fileVersionPublishLanguages->setFileVersion($fileVersion);
-
-        $em->persist($fileVersionPublishLanguages);
-        $fileVersion->addFileVersionPublishLanguage($fileVersionPublishLanguages);
+        return $this->get('sulu_media.media_manager');
     }
 }
