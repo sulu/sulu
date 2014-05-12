@@ -644,9 +644,9 @@ define([], function() {
 
             // if passed template is a string get the corresponding default template
             if (!!options.template && typeof options.template === 'string' && toolbarTemplates.hasOwnProperty(options.template)) {
-                options.template = toolbarTemplates[options.template];
-                if (typeof options.template === 'function') {
-                    options.template = options.template.call(this);
+                options.data = toolbarTemplates[options.template];
+                if (typeof options.data === 'function') {
+                    options.data = options.data.call(this);
                 }
             }
 
