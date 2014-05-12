@@ -34,4 +34,11 @@ interface StorageInterface
      * @return mixed
      */
     public function load($fileName, $version, $storageOption);
+
+    /**
+     * Removes the file from storage
+     * @param $storageOption
+     * @return mixed
+     */
+    public function remove($storageOption);
 }

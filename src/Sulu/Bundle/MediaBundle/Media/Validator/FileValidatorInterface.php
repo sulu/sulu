@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media;
+namespace Sulu\Bundle\MediaBundle\Media\Validator;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

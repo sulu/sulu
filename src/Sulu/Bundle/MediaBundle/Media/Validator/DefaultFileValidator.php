@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media;
+namespace Sulu\Bundle\MediaBundle\Media\Validator;
 
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileValidationException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -35,19 +35,19 @@ class DefaultFileValidator implements FileValidatorInterface
         ))
     {
         if (in_array(self::VALIDATOR_FILE_SET, $methods) && $file->getClientOriginalName() != '') {
-            throw new UploadFileNotSetException('No file was set', UploadFileValidationException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
+            throw new UploadFileNotSetException('No file was set');
         }
 
         if (in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {
-            throw new InvalidFileException('The file upload had an error('.$file->getError().'): ' . $file->getErrorMessage(), UploadFileValidationException::EXCEPTION_CODE_UPLOAD_ERROR);
+            throw new InvalidFileException('The file upload had an error('.$file->getError().'): ' . $file->getErrorMessage());
         }
 
         if (in_array(self::VALIDATOR_BLOCK_FILE_TYPES, $methods) && !in_array($file->getMimeType(), $this->blockedMimeTypes)) {
-            throw new InvalidFileTypeException('The file type was blocked', UploadFileValidationException::EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND);
+            throw new InvalidFileTypeException('The file type was blocked');
         }
 
         if (in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && $file->getSize() <= $this->maxFileSize) {
-            throw new MaxFileSizeExceededException('The file is to big', UploadFileValidationException::EXCEPTION_CODE_MAX_FILE_SIZE);
+            throw new MaxFileSizeExceededException('The file is to big');
         }
     }
 
