@@ -26,6 +26,11 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../web/bundles/sulucontact/'}
                 ]
             },
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            },
             hooks: {
                 files: [
                     {
@@ -104,7 +109,7 @@ module.exports = function(grunt) {
                     prefix: ''
                 },
                 files: [
-                    {src: ['Resources/public/dist/main.js'], dest: 'Resources/public/dist/main.js'}
+                    {src: [destpath + '/main.js'], dest: destpath + '/main.js'}
                 ]
             }
         }
@@ -120,6 +125,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'uglify',
         'replace:build',
+        'copy:templates',
         'publish'
     ]);
 
