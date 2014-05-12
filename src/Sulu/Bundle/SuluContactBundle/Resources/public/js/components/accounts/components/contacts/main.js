@@ -65,55 +65,47 @@ define(['app-config'], function(AppConfig) {
 
         listTemplate = function() {
             return [
-                {
-                    id: 'delete',
-                    icon: 'bin',
-                    title: 'delete',
-                    disabled: true,
-                    callback: function() {
-                        this.sandbox.emit('sulu.list-toolbar.delete');
-                    }.bind(this)
-                }
-//                ,
 //                {
-//                    id: 'settings',
-//                    icon: 'cogwheel',
-//                    items: [
-//                        {
-//                            title: this.sandbox.translate('sulu.list-toolbar.import'),
-//                            disabled: true
-//                        },
-//                        {
-//                            title: this.sandbox.translate('sulu.list-toolbar.export'),
-//                            disabled: true
-//                        },
-//                        {
-//                            title: this.sandbox.translate('list-toolbar.column-options'),
-//                            disabled: false,
-//                            callback: function() {
-//                                var instanceName;
-//
-//                                this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
-//                                this.sandbox.start([
-//                                    {
-//                                        name: 'column-options@husky',
-//                                        options: {
-//                                            el: '#column-options-overlay',
-//                                            data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
-//                                            hidden: false,
-//                                            instanceName: this.options.instanceName,
-//                                            trigger: '.toggle'
-//                                        }
-//                                    }
-//                                ]);
-//                                instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
-//                                this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
-//                                    this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
-//                                }.bind(this));
-//                            }.bind(this)
-//                        }
-//                    ]
+//                    id: 'delete',
+//                    icon: 'bin',
+//                    title: 'delete',
+//                    disabled: true,
+//                    callback: function() {
+//                        this.sandbox.emit('sulu.list-toolbar.delete');
+//                    }.bind(this)
 //                }
+//                ,
+                {
+                    id: 'settings',
+                    icon: 'cogwheel',
+                    items: [
+                        {
+                            title: this.sandbox.translate('list-toolbar.column-options'),
+                            disabled: false,
+                            callback: function() {
+                                var instanceName;
+
+                                this.sandbox.dom.append('body', '<div id="column-options-overlay" />');
+                                this.sandbox.start([
+                                    {
+                                        name: 'column-options@husky',
+                                        options: {
+                                            el: '#column-options-overlay',
+                                            data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
+                                            hidden: false,
+                                            instanceName: this.options.instanceName,
+                                            trigger: '.toggle'
+                                        }
+                                    }
+                                ]);
+                                instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
+                                this.sandbox.once('husky.column-options.' + instanceName + 'saved', function(data) {
+                                    this.sandbox.sulu.saveUserSetting(this.options.columnOptions.key, data, this.options.columnOptions.url);
+                                }.bind(this));
+                            }.bind(this)
+                        }
+                    ]
+                }
             ]
         },
 
