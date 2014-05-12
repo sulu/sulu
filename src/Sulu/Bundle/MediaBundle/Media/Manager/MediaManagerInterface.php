@@ -24,7 +24,7 @@ interface MediaManagerInterface
      * @param $id
      * @return mixed
      */
-    public function load($id);
+    public function get($id);
 
     /**
      * Adds a new file to a media
