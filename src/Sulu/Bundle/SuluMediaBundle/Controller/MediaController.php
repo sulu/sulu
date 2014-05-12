@@ -648,7 +648,8 @@ class MediaController extends RestController implements ClassResourceInterface
 
         // set Tempory Name Temporary
         $fileVersion->setName($uploadFile->getFilename());
-        $fileVersion->setPath($uploadFile->getPath());
+        $fileVersion->setStorageOption('');
+
 
         $fileVersion->setFile($file);
         $versionCounter++;
@@ -680,7 +681,12 @@ class MediaController extends RestController implements ClassResourceInterface
         list($path, $name) = $this->moveUploadedFile($uploadFile, $fileVersion->getId());
 
         $fileVersion->setName($name);
-        $fileVersion->setPath($path);
+        $fileVersion->setStorageOption(json_encode(
+            array(
+                'path' => $path,
+                'filename' => $name
+            )
+        ));
 
         $em->persist($fileVersion);
         $em->flush();
