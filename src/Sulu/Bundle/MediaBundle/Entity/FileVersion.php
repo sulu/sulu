@@ -412,8 +412,18 @@ class FileVersion
     public function setSize($size)
     {
         $this->size = $size;
-    
+
         return $this;
+    }
+
+    /**
+     * Get size
+     *
+     * @return integer $size
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 
     /**
