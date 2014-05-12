@@ -40,7 +40,7 @@ class FileVersion
     /**
      * @var string
      */
-    private $storageOption;
+    private $storageOptions;
 
     /**
      * @var \DateTime
@@ -426,25 +426,25 @@ class FileVersion
     }
 
     /**
-     * Set storageOption
+     * Set storageOptions
      *
-     * @param string $storageOption
+     * @param string $storageOptions
      * @return FileVersion
      */
-    public function setStorageOption($storageOption)
+    public function setStorageOptions($storageOptions)
     {
-        $this->storageOption = $storageOption;
+        $this->storageOptions = $storageOptions;
     
         return $this;
     }
 
     /**
-     * Get storageOption
+     * Get storageOptions
      *
      * @return string 
      */
-    public function getStorageOption()
+    public function getStorageOptions()
     {
-        return $this->storageOption;
+        return $this->storageOptions;
     }
 }
