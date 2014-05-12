@@ -7591,7 +7591,7 @@ a.btn-black, a.btn-highlight {
   display: none;
 }
 /* line 32, ../scss/modules/content-types.scss */
-.text-block .head .options-change::after {
+.text-block .head .options-change .dropdown-toggle::after {
   margin-left: 0;
 }
 /* line 36, ../scss/modules/content-types.scss */
