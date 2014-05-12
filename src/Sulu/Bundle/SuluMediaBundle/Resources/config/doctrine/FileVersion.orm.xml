@@ -11,7 +11,7 @@
         <field name="name" type="string" column="name" length="255" />
         <field name="version" type="integer" column="version" />
         <field name="size" type="integer" column="size" />
-        <field name="storageOption" type="text" column="path" />
+        <field name="storageOption" type="text" column="storageOption" />
 
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
