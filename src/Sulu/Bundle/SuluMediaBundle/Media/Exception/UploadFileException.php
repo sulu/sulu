@@ -14,7 +14,7 @@ use Exception;
 
 /**
  * This Exception is thrown when a Uploaded File is not valid
- * @package Sulu\Bundle\TagBundle\Tag\Exception
+ * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
 class UploadFileException extends Exception
 {
@@ -47,6 +47,12 @@ class UploadFileException extends Exception
      * @description this exception code is thrown when the file type is not supported
      */
     const EXCEPTION_COLLECTION_NOT_FOUND = 5005;
+
+    /**
+     * @var int
+     * @description this exception code is thrown when the file version to update was not found
+     */
+    const EXCEPTION_CODE_FILE_VERSION_NOT_FOUND = 5006;
 
     /**
      * @param string $message

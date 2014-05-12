@@ -20,25 +20,32 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface MediaManagerInterface
 {
     /**
+     * Load the media object
+     * @param $id
+     * @return mixed
+     */
+    public function load($id);
+
+    /**
      * Adds a new file to a media
-     * @param UploadedFile $file
-     * @param $userId
-     * @param $collectionId
+     * @param UploadedFile $uploadedFile
+     * @param int $userId
+     * @param int $collectionId
      * @param array $properties contains e.g. meta data (title, description, locale), content- and publish languages
      * @return mixed
      */
-    public function add(UploadedFile $file, $userId, $collectionId, $properties = array());
+    public function add(UploadedFile $uploadedFile, $userId, $collectionId, $properties = array());
 
     /**
      * Update the file to a new fileversion
-     * @param UploadedFile $file
-     * @param $userId
-     * @param $id
-     * @param null $collectionId when null no changes!
+     * @param UploadedFile $uploadedFile
+     * @param int $userId
+     * @param int $id
+     * @param null|int $collectionId when null no changes!
      * @param array $properties
      * @return mixed
      */
-    public function update(UploadedFile $file, $userId, $id, $collectionId = null, $properties = array());
+    public function update(UploadedFile $uploadedFile, $userId, $id, $collectionId = null, $properties = array());
 
     /**
      * Remove a media
