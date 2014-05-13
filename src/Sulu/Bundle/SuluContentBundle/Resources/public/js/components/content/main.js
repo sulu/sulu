@@ -278,7 +278,7 @@ define([
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.row.remove', id);
+                                this.sandbox.emit('husky.datagrid.record.remove', id);
                             }.bind(this),
                             error: function() {
                                 // TODO error message
