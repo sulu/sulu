@@ -234,7 +234,9 @@ define([
                     el: this.sandbox.dom.find('#companies-list', this.$el),
                     url: '/admin/api/accounts?flat=true' + dataUrlAddition,
                     viewOptions: {
-                        fullWidth: true
+                        table: {
+                            fullWidth: true
+                        }
                     }
                 });
         }
