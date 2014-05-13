@@ -96,30 +96,22 @@ class MediaControllerTest extends DatabaseTestCase
         $media->setCreated(new DateTime());
         $media->setChanged(new DateTime());
 
-        // Media Meta 1
-        /*
-        $mediaMeta = new MediaMeta();
-        $mediaMeta->setTitle('Test Media');
-        $mediaMeta->setDescription('This Description is only for testing');
-        $mediaMeta->setLocale('en-gb');
-        $mediaMeta->setMedia($media);
-
-        $media->addMeta($mediaMeta);
-
-        // Media Meta 2
-        $mediaMeta2 = new MediaMeta();
-        $mediaMeta2->setTitle('Test Media');
-        $mediaMeta2->setDescription('Dies ist eine Test Beschreibung');
-        $mediaMeta2->setLocale('de');
-        $mediaMeta2->setMedia($media);
-
-        $media->addMeta($mediaMeta2);
-        */
-
         // Create Media Type
         $mediaType = new MediaType();
-        $mediaType->setName('Default Media Type');
-        $mediaType->setDescription('Default Media Type');
+        $mediaType->setName('Document Type');
+        $mediaType->setDescription('This is a document');
+
+        $imageType = new MediaType();
+        $imageType->setName('Image Type');
+        $imageType->setDescription('This is an image');
+
+        $videoType = new MediaType();
+        $videoType->setName('Video Type');
+        $videoType->setDescription('This is a video');
+
+        $videoType = new MediaType();
+        $videoType->setName('Audio Type');
+        $videoType->setDescription('This is an audio');
 
         $media->setType($mediaType);
 
@@ -133,6 +125,8 @@ class MediaControllerTest extends DatabaseTestCase
 
         self::$em->persist($media);
         self::$em->persist($mediaType);
+        self::$em->persist($imageType);
+        self::$em->persist($videoType);
         // self::$em->persist($mediaMeta);
         // self::$em->persist($mediaMeta2);
 
@@ -229,7 +223,10 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGet()
     {
-        /* cGet not working (routing problem)
+        $this->markTestSkipped(
+            'Test not running yet because of a routing problem in FOS RestBundle: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/761'
+        );
+
         $client = $this->createTestClient();
 
         $client->request(
@@ -244,7 +241,6 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        */
     }
 
     /**
@@ -281,9 +277,6 @@ class MediaControllerTest extends DatabaseTestCase
             'POST',
             '/api/media',
             array(
-                'type' => array(
-                    'id' => 1
-                ),
                 'collection' => array(
                     'id' => 1
                 )

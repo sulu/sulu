@@ -7,8 +7,6 @@
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\DefaultFileValidator</parameter>
-        <parameter key="max_file_size" type="string">16MB</parameter>
-        <parameter key="blocked_file_types" type="string"></parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -40,8 +38,9 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.file_validator" />
-            <argument>%max_file_size%</argument>
-            <argument>%blocked_file_types%</argument>
+            <argument>%sulu_media.media.max_file_size%</argument>
+            <argument>%sulu_media.media.blocked_file_types%</argument>
+            <argument>%sulu_media.media.types%</argument>
         </service>
     </services>
 </container>

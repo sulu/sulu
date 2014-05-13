@@ -72,6 +72,11 @@ class DefaultMediaManager implements MediaManagerInterface
     private $blockedMimeTypes;
 
     /**
+     * @var array
+     */
+    private $mediaTypes;
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param CollectionRepository $collectionRepository
      * @param UserRepositoryInterface $userRepository
@@ -79,7 +84,8 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param StorageInterface $storage
      * @param FileValidatorInterface $validator
      * @param string $maxFileSize
-     * @param string $blockedMimeTypes
+     * @param array $blockedMimeTypes
+     * @param array $mediaTypes
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -89,7 +95,8 @@ class DefaultMediaManager implements MediaManagerInterface
         StorageInterface $storage,
         FileValidatorInterface $validator,
         $maxFileSize,
-        $blockedMimeTypes
+        $blockedMimeTypes,
+        $mediaTypes
     )
     {
         $this->mediaRepository = $mediaRepository;
@@ -99,24 +106,8 @@ class DefaultMediaManager implements MediaManagerInterface
         $this->storage = $storage;
         $this->validator = $validator;
         $this->maxFileSize = $maxFileSize;
-        $this->setBlockedMimeTypes($blockedMimeTypes);
-    }
-
-    /**
-     * set blocked mime types from a string to an array
-     * @param $blockedMimeTypes
-     */
-    protected function setBlockedMimeTypes($blockedMimeTypes)
-    {
-        // set blocked mime types
-        $blockedMimeTypes = explode(',', $blockedMimeTypes);
-        $this->blockedMimeTypes = array();
-        foreach ($blockedMimeTypes as $blockedMimeType) {
-            $blockedMimeType = trim($blockedMimeType);
-            if (!empty($blockedMimeType)) {
-                array_push($this->blockedMimeTypes, $blockedMimeType);
-            }
-        }
+        $this->blockedMimeTypes = $blockedMimeTypes;
+        $this->mediaTypes = $mediaTypes;
     }
 
     /**
@@ -199,7 +190,13 @@ class DefaultMediaManager implements MediaManagerInterface
      */
     protected function getMediaType(File $uploadedFile)
     {
-        $id = 1; // TODO
+        $extension = $uploadedFile->getExtension();
+        $id = null;
+        foreach ($this->mediaTypes as $mediaType) {
+            if (in_array($extension, $mediaType['extensions']) || in_array('*', $mediaType['extensions'])) {
+                $id = $mediaType['id'];
+            }
+        }
 
         return $this->em->getRepository('SuluMediaBundle:MediaType')->find($id);
     }
