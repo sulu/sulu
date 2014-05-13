@@ -14,7 +14,7 @@
         <one-to-many field="fileVersions" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" mapped-by="file"/>
         <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" inversed-by="files">
             <join-columns>
-                <join-column name="idFiles" referenced-column-name="id" nullable="false"/>
+                <join-column name="idMedias" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
         <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
