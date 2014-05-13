@@ -16,6 +16,16 @@ class LocalStorage implements StorageInterface
 {
     private $storageOption = null;
 
+    private $uploadPath;
+
+    private $segments;
+
+    public function __construct($uploadPath, $segments)
+    {
+        $this->uploadPath = $uploadPath;
+        $this->segments = $segments;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -27,13 +37,16 @@ class LocalStorage implements StorageInterface
             $oldStorageOption = json_decode($storageOption);
             $segment = $oldStorageOption->segment;
         } else {
-            $segment = rand(1, $this->getConfigParameter('segments'));
+            $segment = rand(1, $this->segments);
         }
 
-        $uploadPath = $this->getConfigParameter('uploadPath');
-        $fileName = $this->getUniqueFileName($uploadPath . '/' . $segment , $fileName);
+        $segmentPath = $this->uploadPath . '/' . $segment;
+        $fileName = $this->getUniqueFileName($segmentPath , $fileName);
 
-        copy($tempPath, $uploadPath . '/' . $segment . '/' . $fileName);
+        if (!file_exists($segmentPath)) {
+            mkdir($segmentPath, 0777, true);
+        }
+        copy($tempPath, $segmentPath . '/' . $fileName);
 
         $this->addStorageOption('segment', $segment);
         $this->addStorageOption('fileName', $fileName);
@@ -48,11 +61,10 @@ class LocalStorage implements StorageInterface
     {
         $this->storageOption = json_decode($storageOption);
 
-        $uploadPath = $this->getConfigParameter('uploadPath');
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
 
-        return $uploadPath . '/' . $segment . '/' . $fileName;
+        return $this->uploadPath . '/' . $segment . '/' . $fileName;
     }
 
     /**
@@ -62,12 +74,10 @@ class LocalStorage implements StorageInterface
     {
         $this->storageOption = json_decode($storageOption);
 
-        $uploadPath = $this->getConfigParameter('uploadPath');
-
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
 
-        unlink($uploadPath . '/' . $segment . '/' . $fileName);
+        @unlink($this->uploadPath . '/' . $segment . '/' . $fileName);
     }
 
     /**
@@ -94,27 +104,6 @@ class LocalStorage implements StorageInterface
 
         $counter++;
         return $this->getUniqueFileName($folder, $fileName, $counter);
-    }
-
-    /**
-     * give back a config parameter
-     * @param $key
-     * @return int|null|string
-     */
-    private function getConfigParameter($key)
-    {
-        $value = null;
-
-        switch ($key) {
-            case 'segments':
-                $value = 10; // TODO from config
-                break;
-            case 'uploadPath':
-                $value = '/uploads/sulumedia'; // TODO from config
-                break;
-        }
-
-        return $value;
     }
 
     /**

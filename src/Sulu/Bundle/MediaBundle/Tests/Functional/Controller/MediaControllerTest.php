@@ -50,13 +50,17 @@ class MediaControllerTest extends DatabaseTestCase
     protected function cleanImage()
     {
         if (self::$kernel->getContainer()) { //
-            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.folder.path');
-            $movedFolder = $configPath . '/02';
-            $movedFile = $movedFolder . '/photo.jpeg';
-            if (file_exists($movedFile)) {
-                copy ($movedFile, $this->getImagePath());
-                unlink($movedFile);
-                rmdir($movedFolder);
+            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
+            $segments = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.segments');
+
+            for ($i = 1; $i <= intval($segments); $i++) {
+                $movedFolder = $configPath . '/' . $i;
+                $movedFile = $movedFolder . '/photo.jpeg';
+                if (file_exists($movedFile)) {
+                    copy ($movedFile, $this->getImagePath());
+                    unlink($movedFile);
+                    rmdir($movedFolder);
+                }
             }
         }
     }
